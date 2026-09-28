@@ -77,11 +77,11 @@
 | 项目浏览页的维护测试 | Node.js 18及以上的 `node --test`；不是普通制作的运行依赖 |
 | 技能格式校验 | 使用平台提供的 `skill-creator` 及其校验工具；按工具本身要求准备依赖 |
 
-Python命令示例使用 `python3`；Windows按实际安装可改为 `py -3`。macOS双击入口使用zsh，其他平台使用下面的Python命令。没有需要整体安装的Node前端工程。
+Python命令示例使用 `python3`；Windows按实际安装可改为 `py -3`。macOS双击入口使用zsh，Windows使用批处理启动文件，其他平台使用下面的Python命令。没有需要整体安装的Node前端工程。
 
 ## Krea2风格库
 
-macOS可打开 `Krea2风格库/启动Krea2风格库.command`。在工作区根目录也可运行：
+macOS可打开 `Krea2风格库/启动Krea2风格库.command`，Windows可双击 `Krea2风格库/启动Krea2风格库.bat`。在工作区根目录也可运行：
 
 ```sh
 python3 Krea2风格库/Krea2_更新工具/server.py
