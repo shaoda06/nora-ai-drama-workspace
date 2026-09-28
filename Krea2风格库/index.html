@@ -99,7 +99,7 @@ $('open-updates').onclick=()=>{$('updates').showModal();document.body.style.over
 $('close-updates').onclick=()=>$('updates').close();$('updates').onclose=()=>{document.body.style.overflow='';};
 async function checkService(){
  const status=$('service-status');
- if(location.protocol==='file:'){status.dataset.state='offline';status.textContent='后台服务：未连接（离线浏览）';return;}
+ if(location.protocol==='file:'){status.dataset.state='offline';status.textContent='后台服务：离线浏览';return;}
  try{
   await api('/api/state',{signal:AbortSignal.timeout(5000)});
   status.dataset.state='online';status.textContent='后台服务：已连接';status.title='';
