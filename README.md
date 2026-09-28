@@ -62,7 +62,6 @@
 ### 运行环境与后端来源
 
 - [Python](https://www.python.org/downloads/)：本地执行及浏览工具使用Python 3.9及以上标准库；具体用途见下方环境表。
-- [Git](https://git-scm.com/downloads)：本地版本管理；[GitHub CLI](https://cli.github.com/)或已授权的平台工具用于可选的远端操作。
 - [Node.js](https://nodejs.org/)：18及以上，仅用于项目浏览页的维护测试。
 - [ComfyUI](https://github.com/Comfy-Org/ComfyUI)：由使用者独立部署的图片／视频生成后端。本仓库携带工作流，不携带模型权重和服务端自定义节点。每个项目配置服务地址，具体节点、模型与兼容性按本地工作流及执行规范核对；这里的技能依赖清单不是后端安装清单。
 
