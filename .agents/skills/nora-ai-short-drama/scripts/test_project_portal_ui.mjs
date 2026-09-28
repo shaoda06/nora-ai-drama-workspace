@@ -329,17 +329,26 @@ test('formal and candidate cards both pass their generation section URL', () => 
 });
 
 
-test('closing a directory collapses all descendants; opening leaves descendants alone', () => {
+test('directory accordion closes only open siblings and descendants, including on reopening', () => {
   const folders=source.slice(source.indexOf('function renderEpisodeFolders('),source.indexOf('function renderCatalogueList('));
   const body=folders.match(/detail\.addEventListener\("toggle",\(\)=>\{([\s\S]*?)\}\);container\.append\(detail\)/)[1];
-  const child={open:true}, grandchild={open:true}, sibling={open:true};
-  let queries=0;
+  const child={open:true}, grandchild={open:true}, siblingChild={open:true}, ancestor={open:true};
+  const sibling={open:true,querySelectorAll(selector){assert.equal(selector,'details[open]');return [siblingChild]}};
+  let queries=0, peerQueries=0;
   const detail={open:false,querySelectorAll(selector){
     assert.equal(selector,'details[open]');queries++;return [child,grandchild];
   }};
-  const toggle=vm.runInNewContext(`()=>{${body}}`,{detail,loaded:true});
+  const container={querySelectorAll(selector){
+    assert.equal(selector,':scope > details[open]');peerQueries++;return [detail,sibling].filter(node=>node.open);
+  }};
+  const toggle=vm.runInNewContext(`()=>{${body}}`,{detail,container,loaded:true});
   toggle();
   assert.equal(child.open,false);assert.equal(grandchild.open,false);assert.equal(sibling.open,true);
+  assert.equal(peerQueries,0);
   detail.open=true;toggle();
-  assert.equal(queries,1);assert.equal(child.open,false);assert.equal(grandchild.open,false);
+  assert.equal(detail.open,true);assert.equal(sibling.open,false);assert.equal(siblingChild.open,false);
+  assert.equal(ancestor.open,true);assert.equal(queries,1);
+  assert.equal(child.open,false);assert.equal(grandchild.open,false);
+  sibling.open=true;siblingChild.open=true;toggle();
+  assert.equal(sibling.open,false);assert.equal(siblingChild.open,false);assert.equal(peerQueries,2);
 });
