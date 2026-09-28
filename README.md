@@ -57,7 +57,7 @@
 | Ray Moodboard资源包 | [Ray3780 / Ray Style Switching Extension](https://civitai.com/models/2856809/ray-style-switching-extension)；[发布元数据API](https://civitai.com/api/v1/models/2856809) |
 | Moodboard原始来源 | [Krea官方Moodboard介绍](https://www.krea.ai/blog/moodboards-krea-2)、[服务条款](https://www.krea.ai/terms) |
 
-现行资源随仓库保留，实际应用版本及来源下载地址见 [versions.json](Krea2风格库/Krea2_风格资源/versions.json)。第三方授权事项由工作区维护者负责处理；这项分发安排不表示agent已经核实取得全部授权，也不改变原始许可。详见[第三方来源与许可](Krea2风格库/THIRD_PARTY_NOTICES.md)。
+现行资源随仓库保留，实际应用版本及来源下载地址见 [versions.json](Krea2风格库/Krea2_风格资源/versions.json)。第三方授权事项由工作区维护者负责处理；这项分发安排不表示agent已经核实取得全部授权，也不改变原始许可。
 
 ### 运行环境与后端来源
 
@@ -87,9 +87,9 @@ macOS可打开 `Krea2风格库/启动Krea2风格库.command`，Windows可双击 
 python3 Krea2风格库/Krea2_更新工具/server.py
 ```
 
-默认访问 `http://127.0.0.1:8876/`，服务仅监听本机。`--port 8877` 可换端口，`--no-browser` 可只启动服务。结束时按Ctrl+C。直接打开 [离线浏览页](Krea2风格库/Krea2_风格浏览.html) 可浏览和复制提示词，但不能更新资源。
+默认访问 `http://127.0.0.1:8876/`，服务仅监听本机。`--port 8877` 可换端口，`--no-browser` 可只启动服务。结束时按Ctrl+C。直接打开 [离线浏览页](Krea2风格库/index.html) 可浏览和复制提示词，但不能更新资源。
 
-当前资源随工作区提供，后续由使用者在页面手动检查、准备、审阅差异、应用或恢复。更新程序不会自动在后台升级资源。详见[使用说明](Krea2风格库/Krea2_风格资源/使用说明.md)及[第三方来源与许可](Krea2风格库/THIRD_PARTY_NOTICES.md)。
+当前资源随工作区提供，后续由使用者在页面手动检查、准备、审阅差异、应用或恢复。更新程序不会自动在后台升级资源。详见[使用说明](Krea2风格库/使用说明.md)。
 
 ## 维护与检查
 
@@ -123,4 +123,4 @@ python3 -B -m unittest discover -s Krea2风格库/Krea2_更新工具 -p 'test_*.
 
 本工作区原创技能、脚本及文档采用根目录 [MIT许可证](LICENSE)，允许修改、再分发和商用，保留版权及许可声明。
 
-第三方内容不因放入本仓库自动改为MIT：三个ComfyUI适配技能保留各自许可证；Krea2风格文本、预览图及来源限制以[第三方说明](Krea2风格库/THIRD_PARTY_NOTICES.md)为准。
+第三方内容不因放入本仓库自动改为MIT：三个ComfyUI适配技能保留各自许可证；Krea2风格文本、预览图及来源限制以对应上游来源的许可声明为准。

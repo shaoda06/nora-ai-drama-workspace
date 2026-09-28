@@ -21,7 +21,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 ROOT = Path(__file__).resolve().parent.parent
 RES = ROOT / 'Krea2_风格资源'
 WORK = ROOT / 'Krea2_更新工具' / 'work'
-HTML = ROOT / 'Krea2_风格浏览.html'
+HTML = ROOT / 'index.html'
 SOURCES = {'clio': 'krea2_styles', 'ray': 'Krea2_moodboard'}
 RAY = 'https://civitai.com/models/2856809/ray-style-switching-extension'
 REPO = 'https://github.com/lumenastrum/clio-style-preview'
