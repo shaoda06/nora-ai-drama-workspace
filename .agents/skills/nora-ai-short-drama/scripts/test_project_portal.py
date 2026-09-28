@@ -247,7 +247,7 @@ class PortalTests(unittest.TestCase):
             self.put(root + "/" + name + "/记录.md", "# 记录")
         self.put(root + "/说明.md", "# 说明")
         self.put(root + "/场次索引.md", "# 索引")
-        other = "09-剧集制作/EP001/05-生成资料包/C001-场次生成资料"
+        other = "09-剧集制作/EP001/05-视频提示词/C001-场次生成资料"
         for name in ("P001-分段结果", "场次成片"):
             self.put(other + "/" + name + "/记录.md", "# 其他层级不受影响")
         portal.build(self.root)
@@ -255,7 +255,7 @@ class PortalTests(unittest.TestCase):
         results = next(n for n in ep["children"] if n["name"] == "06-生成结果")["children"][0]
         self.assertEqual([n["name"] for n in results["children"]],
                          ["场次索引.md", "说明.md", "场次成片", "P001-分段结果", "P002-分段结果", "P010-分段结果", "P1000-分段结果", "其他资料"])
-        preparation = next(n for n in ep["children"] if n["name"] == "05-生成资料包")["children"][0]
+        preparation = next(n for n in ep["children"] if n["name"] == "05-视频提示词")["children"][0]
         self.assertEqual([n["name"] for n in preparation["children"]], ["P001-分段结果", "场次成片"])
         self.assertTrue((self.root / root / "P001-分段结果/记录.md").is_file())
 
@@ -294,7 +294,7 @@ class PortalTests(unittest.TestCase):
         root = "09-剧集制作/EP001"
         self.put(root + "/03-分镜/C001-场次分镜/分段分镜/EP001-C001-P001-分段分镜.md", "# 分镜1")
         self.put(root + "/03-分镜/C001-场次分镜/分段分镜/EP001-C001-P002-分段分镜.md", "# 分镜2")
-        self.put(root + "/05-生成资料包/C001-场次生成资料/P001-分段生成资料/EP001-C001-P001-视频提示词.md", "# 准备")
+        self.put(root + "/05-视频提示词/C001-场次生成资料/P001-分段生成资料/EP001-C001-P001-视频提示词.md", "# 准备")
         self.put(root + "/06-生成结果/C001-场次结果/P001-分段结果/01-一采/选定/EP001-C001-P001-R001-一采.mp4", "fixture")
         self.put(root + "/06-生成结果/C001-场次结果/P001-分段结果/02-二采/候选/EP001-C001-P001-R002-二采.mp4", "fixture")
         self.put(root + "/其他资料/过程稿/EP001-C002-草稿.md", "# 非正式")
@@ -305,7 +305,7 @@ class PortalTests(unittest.TestCase):
         portal.build(self.root)
         ep = self.extract()["catalogues"]["09-剧集制作"]["children"][0]
         self.assertEqual([s["name"] for s in ep["children"]],
-                         ["说明.md", "01-制作前检查", "03-分镜", "05-生成资料包", "06-生成结果", "其他资料"])
+                         ["说明.md", "01-制作前检查", "03-分镜", "05-视频提示词", "06-生成结果", "其他资料"])
         self.assertEqual(ep["children"][1]["children"], [])
         def leaves(node):
             if node["kind"] != "group":

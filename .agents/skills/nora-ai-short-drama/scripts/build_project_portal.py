@@ -682,7 +682,7 @@ def build_data(project):
             parent["children"].append(item)
         for branch in branches.values():
             branch["children"].sort(key=file_order)
-            if re.fullmatch(r"09-剧集制作/EP\d{3,}/05-生成资料包", branch["key"]):
+            if re.fullmatch(r"09-剧集制作/EP\d{3,}/05-视频提示词", branch["key"]):
                 branch["children"].sort(key=lambda item: (
                     0 if re.fullmatch(r"EP\d{3,}-生成说明\.md", item["name"]) else 1,
                     item["name"],
