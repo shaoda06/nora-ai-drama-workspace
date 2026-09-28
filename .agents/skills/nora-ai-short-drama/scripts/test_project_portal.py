@@ -60,6 +60,21 @@ class PortalTests(unittest.TestCase):
         output = (self.root / "项目总览.html").read_text("utf-8")
         return json.loads(re.search(r'id="portal-data">(.*?)</script>', output, re.S).group(1))
 
+    def test_episode_materials_index_record_then_images_by_filename(self):
+        for episode, prefix in (("EP001", ""), ("EP002", "EP002-")):
+            root = f"09-剧集制作/{episode}/04-专用素材"
+            for name in [prefix + "C002-P001-首帧参考图.png", prefix + "素材生成记录.md",
+                         prefix + "C001-P002-首帧参考图.png", prefix + "素材索引.md",
+                         prefix + "C001-P001-首帧参考图.png"]:
+                self.put(root + "/" + name, "fixture")
+        portal.build(self.root)
+        episodes = self.extract()["catalogues"]["09-剧集制作"]["children"]
+        for episode, prefix in zip(episodes, ("", "EP002-")):
+            entries = episode["children"][0]["children"]
+            self.assertEqual([e["name"] for e in entries], [prefix + name for name in
+                             ["素材索引.md", "素材生成记录.md", "C001-P001-首帧参考图.png",
+                              "C001-P002-首帧参考图.png", "C002-P001-首帧参考图.png"]])
+
     def test_indexes_then_files_then_folders_at_each_level(self):
         root = "09-剧集制作/EP001"
         paths = ["EP001-制作索引.md", "03-分镜/EP001-分镜索引.md",
@@ -158,6 +173,43 @@ class PortalTests(unittest.TestCase):
                  "- agent 画面初审结论：通过；不等于用户批准。\n- 用户采用状态：待确认。\n"
                  "- 审阅记录：[审阅](../../审阅记录/CH001-审阅-001.md)\n")
         return card, record
+
+    def test_auxiliary_directories_preserve_asset_reviews_and_exclude_execution_images(self):
+        records = [("people", "03-人物资料", self.person_fixture()[1]),
+                   ("props", "05-道具资料", self.prop_fixture()),
+                   ("scenes", "04-场景资料", self.scene_fixture()[1])]
+        before = portal.build_data(self.root.resolve())
+        for kind, stage, record in records:
+            for group in ("过程稿", "审阅记录"):
+                source = self.root / stage / group
+                target = self.root / stage / "其他资料" / group
+                target.parent.mkdir(exist_ok=True)
+                source.rename(target)
+            record.write_text(record.read_text().replace("../../过程稿/", "../../其他资料/过程稿/")
+                              .replace("../../审阅记录/", "../../其他资料/审阅记录/"))
+            number = before[kind][0]["id"]
+            self.put(stage + "/其他资料/执行附件/" + number + "-请求.json", '{"prompt": {}}')
+            self.put(stage + "/其他资料/执行附件/" + number + "-技术检查.png", "fixture")
+        after = portal.build_data(self.root.resolve())
+        for kind, stage, record in records:
+            person = after[kind][0]
+            self.assertEqual(len(person["candidates"]), len(before[kind][0]["candidates"]))
+            self.assertEqual([x["approved"] for x in person["formal"]],
+                             [x["approved"] for x in before[kind][0]["formal"]])
+            self.assertTrue(all("/其他资料/过程稿/" in c["media"]["key"] for c in person["candidates"]))
+            groups = {g["name"]: g["files"] for g in person["groups"]}
+            self.assertEqual(len(groups["执行附件"]), 2)
+            self.assertTrue(all("/执行附件/" not in c["media"]["key"] for c in person["candidates"]))
+
+    def test_auxiliary_groups_include_new_and_unmigrated_files_once(self):
+        for name in ("其他资料/讨论记录/新.md", "讨论记录/旧.md", "其他资料/执行附件/请求.json"):
+            self.put("00-项目定位/" + name, "fixture")
+        data = portal.build_data(self.root.resolve())
+        groups = {g["name"]: g["files"] for g in data["groups"]}
+        self.assertEqual(len(groups["讨论记录"]), 2)
+        self.assertEqual(len(groups["执行附件"]), 1)
+        keys = [f["key"] for g in data["groups"] for f in g["files"]]
+        self.assertEqual(len(keys), len(set(keys)))
 
     def test_candidate_stage_order_does_not_depend_on_formal_assets(self):
         card, record = self.person_fixture()
@@ -669,8 +721,8 @@ class PortalTests(unittest.TestCase):
         href, key = portal.safe_link("../项目基本定位.md", "00-项目定位/审阅记录/记录.md")
         self.assertEqual(key, portal.POSITION)
         self.assertTrue(href.endswith(".md"))
-        href, key = portal.safe_link("../01-故事主旨与简介/故事主旨与简介.md#2-世界观与核心规则", portal.POSITION)
-        self.assertEqual(key, "01-故事主旨与简介/故事主旨与简介.md")
+        href, key = portal.safe_link("../01-主旨与简介/主旨与简介.md#2-世界观与核心规则", portal.POSITION)
+        self.assertEqual(key, "01-主旨与简介/主旨与简介.md")
         self.assertIn("#2-", href)
 
     def test_unsafe_links_and_raw_html_are_not_executed(self):
@@ -753,9 +805,9 @@ class PortalTests(unittest.TestCase):
         self.assertIn("第一日确认。补充条件仍有效；</li>", items)
 
     def test_story_formal_body_metadata_boundary_and_relative_links(self):
-        content = "# 故事主旨与简介\n- 文档版本：v2\n- 确认状态：待确认\n- 阅读边界：第六章用于观众。\n- 采用与来源：[审阅](审阅记录/审阅.md)\n\n## 1. 故事主旨\n原文不可改\n## 2. 世界观\n### 规则甲\n规则正文\n### 规则甲\n另一规则\n## 7. 结局方向\n结局原文"
+        content = "# 主旨与简介\n- 文档版本：v2\n- 确认状态：待确认\n- 阅读边界：第六章用于观众。\n- 采用与来源：[审阅](审阅记录/审阅.md)\n\n## 1. 故事主旨\n原文不可改\n## 2. 世界观\n### 规则甲\n规则正文\n### 规则甲\n另一规则\n## 7. 结局方向\n结局原文"
         source = self.put(portal.STORY, content)
-        self.put("01-故事主旨与简介/审阅记录/审阅.md", "# 审阅\n待确认")
+        self.put("01-主旨与简介/审阅记录/审阅.md", "# 审阅\n待确认")
         portal.build(self.root)
         story = self.extract()["story"]
         self.assertTrue(story["exists"])
@@ -763,40 +815,40 @@ class PortalTests(unittest.TestCase):
         self.assertIn("status-orange", story["confirmationHtml"])
         self.assertEqual(story["boundaryHtml"], "第六章用于观众。")
         self.assertNotIn("阅读边界", story["introHtml"])
-        self.assertIn('data-doc="01-故事主旨与简介/审阅记录/审阅.md"', story["introHtml"])
+        self.assertIn('data-doc="01-主旨与简介/审阅记录/审阅.md"', story["introHtml"])
         self.assertIn("结局原文", story["bodyHtml"])
         self.assertIn('id="规则甲-1"', story["bodyHtml"])
         self.assertEqual(source.read_text("utf-8"), content)
 
     def test_story_history_and_drafts_never_replace_missing_formal(self):
-        self.put("01-故事主旨与简介/过程稿/草稿.md", "# 故事\n候选内容")
-        self.put("01-故事主旨与简介/历史版本/世界观旧稿.md", "# 世界观\n旧规则")
+        self.put("01-主旨与简介/过程稿/草稿.md", "# 故事\n候选内容")
+        self.put("01-主旨与简介/历史版本/世界观旧稿.md", "# 世界观\n旧规则")
         portal.build(self.root)
         data = self.extract()
         self.assertFalse(data["story"]["exists"])
         self.assertEqual(data["story"]["bodyHtml"], "")
         self.assertEqual(data["story"]["boundaryHtml"], "")
-        self.assertEqual([len(g["files"]) for g in data["story"]["groups"]], [0, 1, 0, 1])
-        self.assertEqual([len(g["files"]) for g in data["groups"]], [0, 0, 0, 0])
-        self.assertFalse((self.root / "01-故事主旨与简介/讨论记录").exists())
+        self.assertEqual([len(g["files"]) for g in data["story"]["groups"]], [0, 1, 0, 1, 0])
+        self.assertEqual([len(g["files"]) for g in data["groups"]], [0, 0, 0, 0, 0])
+        self.assertFalse((self.root / "01-主旨与简介/讨论记录").exists())
 
     def test_story_outside_source_symlink_rejected(self):
         with tempfile.TemporaryDirectory() as outside:
             target = Path(outside) / "private.md"
             target.write_text("private", encoding="utf-8")
-            folder = self.root / "01-故事主旨与简介"
+            folder = self.root / "01-主旨与简介"
             folder.mkdir()
-            (folder / "故事主旨与简介.md").symlink_to(target)
+            (folder / "主旨与简介.md").symlink_to(target)
             with self.assertRaises(ValueError):
                 portal.build(self.root)
 
     def test_outline_preserves_five_chapters_tables_links_and_source(self):
         chapters = ["全剧故事主线", "故事阶段与重大转折", "主要人物作用与变化", "重要人物关系发展", "关键秘密与伏笔安排"]
-        content = "# 全局故事大纲\n- 文档版本：v0.7\n- 更新日期：2026-09-25\n- 确认状态：已确认；原始依据。\n- 规则依据：[世界观](../01-故事主旨与简介/故事主旨与简介.md#2-世界观与核心规则)\n- 制作规格：原规格\n\n"
+        content = "# 故事大纲\n- 文档版本：v0.7\n- 更新日期：2026-09-25\n- 确认状态：已确认；原始依据。\n- 规则依据：[世界观](../01-主旨与简介/主旨与简介.md#2-世界观与核心规则)\n- 制作规格：原规格\n\n"
         content += "\n".join("## " + str(i) + ". " + name + "\n原始正文" for i, name in enumerate(chapters, 1))
         content += "\n| 秘密 | 回收 |\n| --- | --- |\n| 原秘密 | 原结局 |\n"
         source = self.put(portal.OUTLINE, content)
-        self.put("02-全局故事大纲/审阅记录/记录.md", "# 审阅\n真实决定")
+        self.put("02-故事大纲/审阅记录/记录.md", "# 审阅\n真实决定")
         portal.build(self.root)
         data = self.extract()
         outline = data["outline"]
@@ -805,21 +857,21 @@ class PortalTests(unittest.TestCase):
         self.assertNotIn("<h3 ", outline["bodyHtml"])
         self.assertIn("<table>", outline["bodyHtml"])
         self.assertIn("原秘密", outline["bodyHtml"])
-        self.assertIn('data-doc="01-故事主旨与简介/故事主旨与简介.md"', outline["introHtml"])
+        self.assertIn('data-doc="01-主旨与简介/主旨与简介.md"', outline["introHtml"])
         self.assertEqual(outline["boundaryHtml"], "")
-        self.assertEqual([len(g["files"]) for g in outline["groups"]], [0, 0, 1, 0])
-        self.assertEqual([len(g["files"]) for g in data["story"]["groups"]], [0, 0, 0, 0])
+        self.assertEqual([len(g["files"]) for g in outline["groups"]], [0, 0, 1, 0, 0])
+        self.assertEqual([len(g["files"]) for g in data["story"]["groups"]], [0, 0, 0, 0, 0])
         self.assertEqual(source.read_text("utf-8"), content)
 
     def test_outline_draft_is_not_formal_and_no_extra_folders_created(self):
-        self.put("02-全局故事大纲/过程稿/草稿.md", "# 草稿\n候选大纲")
-        self.put("02-全局故事大纲/历史版本/旧大纲.md", "# 旧大纲\n旧结局")
+        self.put("02-故事大纲/过程稿/草稿.md", "# 草稿\n候选大纲")
+        self.put("02-故事大纲/历史版本/旧大纲.md", "# 旧大纲\n旧结局")
         portal.build(self.root)
         outline = self.extract()["outline"]
         self.assertFalse(outline["exists"])
         self.assertEqual(outline["bodyHtml"], "")
-        self.assertEqual([len(g["files"]) for g in outline["groups"]], [0, 1, 0, 1])
-        self.assertFalse((self.root / "02-全局故事大纲/讨论记录").exists())
+        self.assertEqual([len(g["files"]) for g in outline["groups"]], [0, 1, 0, 1, 0])
+        self.assertFalse((self.root / "02-故事大纲/讨论记录").exists())
 
     def test_rebuild_updates_view_not_source_files(self):
         source = self.put(portal.POSITION, "# 定位\n\n## 受众\n第一版")

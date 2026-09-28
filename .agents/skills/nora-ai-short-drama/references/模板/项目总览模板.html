@@ -93,22 +93,22 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 <section class="process" aria-label="项目定位过程资料"><h2>过程资料</h2><div id="folders"></div></section>
 </section>
 <section id="story-panel" role="tabpanel" tabindex="0" hidden>
-<div class="doc-head"><h2>故事主旨与简介</h2><a id="story-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
+<div class="doc-head"><h2>主旨与简介</h2><a id="story-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
 <div class="metadata" id="story-metadata"></div>
 <div class="reading-boundary" id="story-boundary"></div>
 <details class="intro" id="story-intro"><summary>说明与来源</summary><div class="prose" id="story-intro-body"></div></details>
 <section class="chapter-nav" id="story-navigation" aria-labelledby="story-navigation-title"><h3 id="story-navigation-title">章节导航</h3><ul id="story-toc"></ul></section>
 <article class="prose" id="story-body"></article>
-<section class="process" aria-label="故事主旨与简介过程资料"><h2>过程资料</h2><div id="story-folders"></div></section>
+<section class="process" aria-label="主旨与简介过程资料"><h2>过程资料</h2><div id="story-folders"></div></section>
 </section>
 <section id="outline-panel" role="tabpanel" tabindex="0" hidden>
-<div class="doc-head"><h2>全局故事大纲</h2><a id="outline-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
+<div class="doc-head"><h2>故事大纲</h2><a id="outline-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
 <div class="metadata" id="outline-metadata"></div>
 <div class="reading-boundary" id="outline-boundary"></div>
 <details class="intro" id="outline-intro"><summary>说明与来源</summary><div class="prose" id="outline-intro-body"></div></details>
 <section class="chapter-nav" id="outline-navigation" aria-labelledby="outline-navigation-title"><h3 id="outline-navigation-title">章节导航</h3><ul id="outline-toc"></ul></section>
 <article class="prose" id="outline-body"></article>
-<section class="process" aria-label="全局故事大纲过程资料"><h2>过程资料</h2><div id="outline-folders"></div></section>
+<section class="process" aria-label="故事大纲过程资料"><h2>过程资料</h2><div id="outline-folders"></div></section>
 </section>
 <section id="people-panel" role="tabpanel" tabindex="0" hidden>
 <div id="people-list">
@@ -116,7 +116,7 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 <p class="people-note">资料卡与参考图分别展示状态。封面仅取当前已批准图，不使用历史图或待审候选代替。</p>
 <div class="people-tools"><label class="people-search"><span class="people-search-label">查找人物</span><input id="people-search" type="search" placeholder="输入姓名或 CH 编号" autocomplete="off"></label><span class="dim" id="people-count" aria-live="polite"></span></div>
 <div class="person-grid" id="people-grid"></div>
-<section class="process"><h2>人物阶段过程资料</h2><p class="people-note">跨人物记录与全部分类文件；单个人物的相关资料也可在详情中查看。</p><div id="people-folders"></div></section>
+<section class="process"><h2>人物其他资料</h2><p class="people-note">跨人物记录与全部分类文件；单个人物的相关资料也可在详情中查看。</p><div id="people-folders"></div></section>
 </div>
 <div id="person-detail" hidden>
 <div class="person-detail-head"><h2 id="person-title" tabindex="-1"></h2><div id="person-subtitle" class="dim"></div></div>
@@ -129,7 +129,7 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 <section class="chapter-nav" id="person-navigation"><h3>章节导航</h3><ul id="person-toc"></ul></section><article class="prose" id="person-body"></article><div id="person-folders" hidden></div>
 </section>
 <section id="person-candidates" hidden><h3 class="person-section-title">候选与审阅</h3><p class="people-note">按生成条目列出留存候选；技术审查、非阻塞内容发现与用户采用状态分别保留原文；旧条目保留历史初审，不等于当前正式状态。复核请打开对应审阅依据；缺少记录不推断批准。</p><div class="person-tabs" id="person-candidate-stage-tabs" aria-label="候选人物阶段" hidden></div><div id="person-candidate-groups"></div></section>
-<section id="person-records" hidden><h3 class="person-section-title">相关记录</h3><div id="person-record-link"></div><div id="person-record-folders"></div></section>
+<section id="person-records" hidden><h3 class="person-section-title">相关记录</h3><div id="person-record-link"></div><p class="people-note">对应本阶段“其他资料”目录，按资产编号展示讨论记录、过程稿、审阅记录、历史版本和执行附件。</p><div id="person-record-folders"></div></section>
 </div>
 </section>
 <section id="scenes-panel" role="tabpanel" tabindex="0" hidden>
@@ -138,7 +138,7 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 <p class="people-note">资料卡与参考图分别展示状态。封面仅取有批准依据的场次环境图；旧图与结构辅助图另列，不充当场次封面。</p>
 <div class="people-tools"><label class="people-search"><span class="people-search-label">查找场景</span><input id="scenes-search" type="search" placeholder="输入名称或 SC 编号" autocomplete="off"></label><span class="dim" id="scenes-count" aria-live="polite"></span></div>
 <div class="person-grid scene-grid" id="scenes-grid"></div>
-<section class="process"><h2>场景过程资料</h2><p class="people-note">跨场景记录与全部分类文件；单个场景的相关资料也可在详情中查看。</p><div id="scenes-folders"></div></section>
+<section class="process"><h2>场景其他资料</h2><p class="people-note">跨场景记录与全部分类文件；单个场景的相关资料也可在详情中查看。</p><div id="scenes-folders"></div></section>
 </div>
 <div id="scene-detail" hidden>
 <div class="person-detail-head"><h2 id="scene-title" tabindex="-1"></h2><div id="scene-subtitle" class="dim"></div></div>
@@ -151,7 +151,7 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 <section class="chapter-nav" id="scene-navigation"><h3>章节导航</h3><ul id="scene-toc"></ul></section><article class="prose" id="scene-body"></article><div id="scene-folders" hidden></div>
 </section>
 <section id="scene-candidates" hidden><h3 class="person-section-title">候选与审阅</h3><p class="people-note">按生成条目列出留存候选；技术审查、非阻塞内容发现与用户采用状态分别保留原文；旧条目保留历史初审，不等于当前正式状态。复核请打开对应审阅依据；缺少记录不推断批准。</p><div id="scene-candidate-groups"></div></section>
-<section id="scene-records" hidden><h3 class="person-section-title">相关记录</h3><div id="scene-record-link"></div><div id="scene-supporting"></div><div id="scene-record-folders"></div></section>
+<section id="scene-records" hidden><h3 class="person-section-title">相关记录</h3><div id="scene-record-link"></div><div id="scene-supporting"></div><p class="people-note">对应本阶段“其他资料”目录，按资产编号展示讨论记录、过程稿、审阅记录、历史版本和执行附件。</p><div id="scene-record-folders"></div></section>
 </div>
 </section>
 <section id="props-panel" role="tabpanel" tabindex="0" hidden>
@@ -160,7 +160,7 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 <p class="people-note">资料卡与参考图分别展示状态。封面仅取当前已批准图，不使用历史图或待审候选代替。</p>
 <div class="people-tools"><label class="people-search"><span class="people-search-label">查找道具</span><input id="props-search" type="search" placeholder="输入名称或 PR 编号" autocomplete="off"></label><span class="dim" id="props-count" aria-live="polite"></span></div>
 <div class="person-grid prop-grid" id="props-grid"></div>
-<section class="process"><h2>道具阶段过程资料</h2><p class="people-note">跨道具记录与全部分类文件；单个道具的相关资料也可在详情中查看。</p><div id="props-folders"></div></section>
+<section class="process"><h2>道具其他资料</h2><p class="people-note">跨道具记录与全部分类文件；单个道具的相关资料也可在详情中查看。</p><div id="props-folders"></div></section>
 </div>
 <div id="prop-detail" hidden>
 <div class="person-detail-head"><h2 id="prop-title" tabindex="-1"></h2><div id="prop-subtitle" class="dim"></div></div>
@@ -173,7 +173,7 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 <section class="chapter-nav" id="prop-navigation"><h3>章节导航</h3><ul id="prop-toc"></ul></section><article class="prose" id="prop-body"></article><div id="prop-folders" hidden></div>
 </section>
 <section id="prop-candidates" hidden><h3 class="person-section-title">候选与审阅</h3><p class="people-note">按生成条目列出留存候选；技术审查、非阻塞内容发现与用户采用状态分别保留原文；旧条目保留历史初审，不等于当前正式状态。复核请打开对应审阅依据；缺少记录不推断批准。</p><div id="prop-candidate-groups"></div></section>
-<section id="prop-records" hidden><h3 class="person-section-title">相关记录</h3><div id="prop-record-link"></div><div id="prop-record-folders"></div></section>
+<section id="prop-records" hidden><h3 class="person-section-title">相关记录</h3><div id="prop-record-link"></div><p class="people-note">对应本阶段“其他资料”目录，按资产编号展示讨论记录、过程稿、审阅记录、历史版本和执行附件。</p><div id="prop-record-folders"></div></section>
 </div>
 </section>
 <section id="catalogue-panel" role="tabpanel" tabindex="0" hidden>
@@ -348,8 +348,8 @@ let chapterDockFrame=0;
 function scheduleChapterDock(){if(!chapterDockFrame)chapterDockFrame=requestAnimationFrame(()=>{chapterDockFrame=0;updateChapterDock()})}
 new MutationObserver(scheduleChapterDock).observe(el("main"),{subtree:true,childList:true,attributes:true,attributeFilter:["hidden","open"]});
 document.fonts?.ready.then(scheduleChapterDock);
-renderLongDocument("story",data.story,"尚未形成正式故事主旨与简介，不以草稿或历史世界观文件代替。");
-renderLongDocument("outline",data.outline,"尚未形成正式全局故事大纲，不以草稿或历史版本代替。");
+renderLongDocument("story",data.story,"尚未形成正式主旨与简介，不以草稿或历史世界观文件代替。");
+renderLongDocument("outline",data.outline,"尚未形成正式故事大纲，不以草稿或历史版本代替。");
 function docLink(key,label,url){const a=textNode("a",label);a.href=url||data.documents[key]?.url||"#";if(data.documents[key])a.dataset.doc=key;return a}
 function imageButton(media,label,css="asset-image"){const button=textNode("button","",css);button.type="button";button.setAttribute("aria-label","放大查看："+label);const img=document.createElement("img");img.src=media.url;img.alt=label;img.loading="lazy";img.decoding="async";img.addEventListener("error",()=>{button.replaceChildren(textNode("span","图片暂无法显示，请打开原文件","empty"))});button.append(img);button.addEventListener("click",()=>showImage(media,label));return button}
 function showImage(media,label){stopMedia();el("reader-title").textContent=label;el("reader-path").textContent=media.key;el("reader-raw").href=media.url;el("reader-content").replaceChildren();const hint=textNode("p","点击图片或按钮切换适应窗口／原始尺寸；本页不改变源图片。","media-help");const toggle=textNode("button","查看原始尺寸","outline");toggle.type="button";const view=document.createElement("div");view.className="media-view";const img=document.createElement("img");img.addEventListener("error",()=>{hint.textContent="图片无法显示，请使用右上角“原文件”打开；未修改或重新生成图片。";toggle.hidden=true;view.hidden=true});img.src=media.url;img.alt=label;view.append(img);const zoom=()=>{const native=view.classList.toggle("native");toggle.textContent=native?"适应窗口":"查看原始尺寸";toggle.setAttribute("aria-pressed",String(native))};toggle.setAttribute("aria-pressed","false");toggle.addEventListener("click",zoom);img.addEventListener("click",zoom);el("reader-content").append(hint,toggle,view);if(!reader.open)reader.showModal();reader.scrollTop=0;el("reader-close").focus();updateBackTop()}
@@ -448,7 +448,7 @@ function renderPersonCandidates(person){
   });
   select(0);
 }
-function openPerson(person,opener){peopleScroll=window.scrollY;personOpener=opener;el("people-list").hidden=true;el("person-detail").hidden=false;el("person-title").textContent=person.id+" · "+person.name;el("person-subtitle").textContent=person.role;renderLongDocument("person",person.card,"尚未形成正式人物资料卡，不以草稿代替。");renderPersonAssets(person);renderPersonCandidates(person);el("person-record-link").replaceChildren();if(person.recordKey)el("person-record-link").append(docLink(person.recordKey,"打开完整生成记录"));else el("person-record-link").append(textNode("p","尚无生成记录。","empty"));el("person-record-folders").replaceChildren();renderFolders(el("person-record-folders"),person.groups);el("person-tabs").replaceChildren();const sections=[["person-assets","正式参考图"],["person-document","人物资料卡"],["person-candidates","候选与审阅"],["person-records","相关记录"]];const select=id=>{sections.forEach(([key])=>el(key).hidden=key!==id);Array.from(el("person-tabs").children).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.section===id)))};sections.forEach(([id,label])=>{const b=textNode("button",label);b.type="button";b.dataset.section=id;b.setAttribute("aria-controls",id);b.addEventListener("click",()=>select(id));el("person-tabs").append(b)});select("person-assets");updateBackTop();el("person-title").scrollIntoView({block:"start"});el("person-title").focus({preventScroll:true});updateBackTop()}
+function openPerson(person,opener){peopleScroll=window.scrollY;personOpener=opener;el("people-list").hidden=true;el("person-detail").hidden=false;el("person-title").textContent=person.id+" · "+person.name;el("person-subtitle").textContent=person.role;renderLongDocument("person",person.card,"尚未形成正式人物资料卡，不以草稿代替。");renderPersonAssets(person);renderPersonCandidates(person);el("person-record-link").replaceChildren();if(person.recordKey)el("person-record-link").append(docLink(person.recordKey,"打开完整生成记录"));else el("person-record-link").append(textNode("p","尚无生成记录。","empty"));el("person-record-folders").replaceChildren();renderFolders(el("person-record-folders"),person.groups);el("person-tabs").replaceChildren();const sections=[["person-document","人物资料卡"],["person-assets","正式参考图"],["person-candidates","候选与审阅"],["person-records","相关记录"]];const select=id=>{sections.forEach(([key])=>el(key).hidden=key!==id);Array.from(el("person-tabs").children).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.section===id)))};sections.forEach(([id,label])=>{const b=textNode("button",label);b.type="button";b.dataset.section=id;b.setAttribute("aria-controls",id);b.addEventListener("click",()=>select(id));el("person-tabs").append(b)});select("person-document");updateBackTop();el("person-title").scrollIntoView({block:"start"});el("person-title").focus({preventScroll:true});updateBackTop()}
 function returnToPeople(){el("person-detail").hidden=true;el("people-list").hidden=false;personOpener?.focus({preventScroll:true});window.scrollTo({top:peopleScroll,behavior:"instant"});updateBackTop()}
 function matchingPeople(query){const q=query.trim().toLocaleLowerCase();return data.people.filter(p=>(p.id+" "+p.name).toLocaleLowerCase().includes(q))}
 function personEntryButton(person,label,className){const button=textNode("button",label,className);button.type="button";button.setAttribute("aria-label","查看人物资料："+person.id+" "+person.name);button.addEventListener("click",()=>openPerson(person,button));return button}
@@ -647,7 +647,7 @@ el("catalogue-next").addEventListener("click",()=>changeCataloguePage(1));
 el("catalogue-page-size").addEventListener("change",()=>{const state=catalogueStack.at(-1);state.page=1;state.pageSize=el("catalogue-page-size").value;renderCatalogueList();updateBackTop()});
 el("catalogue-search").addEventListener("input",()=>{catalogueStack.at(-1).page=1;catalogueStack.at(-1).query=el("catalogue-search").value;renderCatalogueList();updateBackTop()});
 el("catalogue-filter").addEventListener("change",()=>{catalogueStack.at(-1).page=1;catalogueStack.at(-1).category=el("catalogue-filter").value;renderCatalogueList();updateBackTop()});
-function panelId(dir){if(data.catalogues[dir.name])return "catalogue-panel";return {"00-项目定位":"position-panel","01-故事主旨与简介":"story-panel","02-全局故事大纲":"outline-panel","03-人物资料":"people-panel","04-场景资料":"scenes-panel","05-道具资料":"props-panel"}[dir.name]||"directory-panel"}
+function panelId(dir){if(data.catalogues[dir.name])return "catalogue-panel";return {"00-项目定位":"position-panel","01-主旨与简介":"story-panel","02-故事大纲":"outline-panel","03-人物资料":"people-panel","04-场景资料":"scenes-panel","05-道具资料":"props-panel"}[dir.name]||"directory-panel"}
 function selectTab(index,focus){activeTabIndex=index;Array.from(el("tabs").children).forEach((button,i)=>{button.setAttribute("aria-selected",String(i===index));button.tabIndex=i===index?0:-1});if(!el("catalogue-panel").hidden)saveCataloguePosition();const dir=data.directories[index];const id=panelId(dir);["position-panel","story-panel","outline-panel","people-panel","scenes-panel","props-panel","catalogue-panel","directory-panel"].forEach(p=>el(p).hidden=p!==id);el(id).setAttribute("aria-labelledby","tab-"+index);if(id==="catalogue-panel")openCatalogue(dir.name);if(id==="directory-panel"){el("directory-title").textContent=dir.label;el("directory-link").href=dir.url}if(focus)el("tabs").children[index].focus();updateBackTop()}
 data.directories.forEach((dir,index)=>{const button=textNode("button",dir.label,"tab");button.type="button";button.id="tab-"+index;button.setAttribute("role","tab");button.title=dir.name;button.setAttribute("aria-controls",panelId(dir));button.addEventListener("click",()=>selectTab(index,false));button.addEventListener("keydown",event=>{let next=index;if(event.key==="ArrowRight")next=(index+1)%data.directories.length;else if(event.key==="ArrowLeft")next=(index-1+data.directories.length)%data.directories.length;else if(event.key==="Home")next=0;else if(event.key==="End")next=data.directories.length-1;else return;event.preventDefault();selectTab(next,true)});el("tabs").append(button)});
 if(data.directories.length)selectTab(Math.max(0,data.directories.findIndex(d=>d.name==="00-项目定位")),false);

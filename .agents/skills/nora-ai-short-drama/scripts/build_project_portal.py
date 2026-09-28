@@ -13,10 +13,10 @@ from datetime import datetime
 from urllib.parse import quote, unquote, urlsplit
 
 MARKER = "<!-- nora-project-portal:generated-v1 -->"
-GROUPS = ("讨论记录", "过程稿", "审阅记录", "历史版本")
+GROUPS = ("讨论记录", "过程稿", "审阅记录", "历史版本", "执行附件")
 POSITION = "00-项目定位/项目基本定位.md"
-STORY = "01-故事主旨与简介/故事主旨与简介.md"
-OUTLINE = "02-全局故事大纲/全局故事大纲.md"
+STORY = "01-主旨与简介/主旨与简介.md"
+OUTLINE = "02-故事大纲/故事大纲.md"
 PROGRESS = "项目进度.md"
 PEOPLE = "03-人物资料"
 SCENES = "04-场景资料"
@@ -379,9 +379,8 @@ def build_data(project):
     def collect_groups(directory):
         result = []
         for group in GROUPS:
-            folder = project / directory / group
             files = []
-            if folder.is_dir():
+            for folder in (project / directory / "其他资料" / group, project / directory / group):
                 for path in sorted(folder.rglob("*")):
                     if not path.is_file() or any(p.startswith(".") for p in path.relative_to(folder).parts):
                         continue
@@ -424,7 +423,8 @@ def build_data(project):
         key = link["key"]
         path = project / key
         if (Path(key).suffix.lower() not in (".png", ".jpg", ".jpeg", ".webp")
-                or not path.is_file() or not path.resolve().is_relative_to((project / required_parent).resolve())
+                or not path.is_file() or not any(path.resolve().is_relative_to((project / parent).resolve())
+                           for parent in ((required_parent,) if isinstance(required_parent, str) else required_parent))
                 or not path.resolve().is_relative_to(project)):
             return None
         return dict(link)
@@ -485,7 +485,7 @@ def build_data(project):
             chunk = re.sub(r"^```[^\n]*\n.*?^```[^\n]*$", "", chunk, flags=re.M | re.S)
             output = field(chunk, "输出候选文件")
             media = [m for link in markdown_links(output, record_key)
-                     if (m := local_media(link, PEOPLE + "/过程稿"))]
+                     if (m := local_media(link, (PEOPLE + "/其他资料/过程稿", PEOPLE + "/过程稿")))]
             if not media:
                 continue
             review_line = next((line for line in chunk.splitlines() if re.match(r"^- 审阅记录[^：]*：", line)), "")
@@ -562,7 +562,7 @@ def build_data(project):
             chunk = re.sub(r"^```[^\n]*\n.*?^```[^\n]*$", "", chunk, flags=re.M | re.S)
             output = field(chunk, "输出候选文件")
             media = [m for link in markdown_links(output, record_key)
-                     if (m := local_media(link, PROPS + "/过程稿"))]
+                     if (m := local_media(link, (PROPS + "/其他资料/过程稿", PROPS + "/过程稿")))]
             if not media:
                 continue
             review_line = next((line for line in chunk.splitlines() if re.match(r"^- 审阅记录[^：]*：", line)), "")
@@ -664,7 +664,7 @@ def build_data(project):
                     origin = origins.pop()
             seen_outputs = set()
             for link in outputs:
-                media = local_media(link, SCENES + "/过程稿")
+                media = local_media(link, (SCENES + "/其他资料/过程稿", SCENES + "/过程稿"))
                 if not media or media["key"] in seen_outputs:
                     continue
                 seen_outputs.add(media["key"])
@@ -717,7 +717,13 @@ def build_data(project):
             parent["children"].append(item)
         for branch in branches.values():
             branch["children"].sort(key=file_order)
-            if re.fullmatch(r"09-剧集制作/EP\d{3,}/05-视频提示词", branch["key"]):
+            if re.fullmatch(r"09-剧集制作/EP\d{3,}/04-专用素材", branch["key"]):
+                branch["children"].sort(key=lambda item: (
+                    0 if re.fullmatch(r"(?:EP\d{3,}-)?素材索引\.md", item["name"]) else
+                    1 if re.fullmatch(r"(?:EP\d{3,}-)?素材生成记录\.md", item["name"]) else 2,
+                    item["name"],
+                ))
+            elif re.fullmatch(r"09-剧集制作/EP\d{3,}/05-视频提示词", branch["key"]):
                 branch["children"].sort(key=lambda item: (
                     0 if re.fullmatch(r"EP\d{3,}-生成说明\.md", item["name"]) else 1,
                     item["name"],
