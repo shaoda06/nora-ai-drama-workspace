@@ -128,7 +128,7 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 <details class="intro" id="person-intro"><summary>说明与来源</summary><div class="prose" id="person-intro-body"></div></details>
 <section class="chapter-nav" id="person-navigation"><h3>章节导航</h3><ul id="person-toc"></ul></section><article class="prose" id="person-body"></article><div id="person-folders" hidden></div>
 </section>
-<section id="person-candidates" hidden><h3 class="person-section-title">候选与审阅</h3><p class="people-note">按生成条目列出留存候选；技术审查、非阻塞内容发现与用户采用状态分别保留原文；旧条目保留历史初审，不等于当前正式状态。复核请打开对应审阅依据；缺少记录不推断批准。</p><div id="person-candidate-groups"></div></section>
+<section id="person-candidates" hidden><h3 class="person-section-title">候选与审阅</h3><p class="people-note">按生成条目列出留存候选；技术审查、非阻塞内容发现与用户采用状态分别保留原文；旧条目保留历史初审，不等于当前正式状态。复核请打开对应审阅依据；缺少记录不推断批准。</p><div class="person-tabs" id="person-candidate-stage-tabs" aria-label="候选人物阶段" hidden></div><div id="person-candidate-groups"></div></section>
 <section id="person-records" hidden><h3 class="person-section-title">相关记录</h3><div id="person-record-link"></div><div id="person-record-folders"></div></section>
 </div>
 </section>
@@ -392,7 +392,55 @@ function renderPersonAssets(person){
   });
   select(0);
 }
-function openPerson(person,opener){peopleScroll=window.scrollY;personOpener=opener;el("people-list").hidden=true;el("person-detail").hidden=false;el("person-title").textContent=person.id+" · "+person.name;el("person-subtitle").textContent=person.role;renderLongDocument("person",person.card,"尚未形成正式人物资料卡，不以草稿代替。");renderPersonAssets(person);el("person-candidate-groups").replaceChildren();const groups=new Map();person.candidates.forEach(a=>{const key=a.state+" · "+a.type;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(a)});if(!groups.size)el("person-candidate-groups").append(textNode("p","暂无已关联生成记录的候选图片；其余文件可从相关记录查看。","empty"));groups.forEach((items,label)=>{const details=document.createElement("details");details.className="candidate-group";details.append(textNode("summary",label+"（"+items.length+" 张）"));let loaded=false;details.addEventListener("toggle",()=>{if(!details.open||loaded)return;loaded=true;const grid=document.createElement("div");grid.className="asset-grid";items.slice().reverse().forEach(a=>grid.append(assetCard(a,person,true)));details.append(grid)});el("person-candidate-groups").append(details)});el("person-record-link").replaceChildren();if(person.recordKey)el("person-record-link").append(docLink(person.recordKey,"打开完整生成记录"));else el("person-record-link").append(textNode("p","尚无生成记录。","empty"));el("person-record-folders").replaceChildren();renderFolders(el("person-record-folders"),person.groups);el("person-tabs").replaceChildren();const sections=[["person-assets","正式参考图"],["person-document","人物资料卡"],["person-candidates","候选与审阅"],["person-records","相关记录"]];const select=id=>{sections.forEach(([key])=>el(key).hidden=key!==id);Array.from(el("person-tabs").children).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.section===id)))};sections.forEach(([id,label])=>{const b=textNode("button",label);b.type="button";b.dataset.section=id;b.setAttribute("aria-controls",id);b.addEventListener("click",()=>select(id));el("person-tabs").append(b)});select("person-assets");updateBackTop();el("person-title").scrollIntoView({block:"start"});el("person-title").focus({preventScroll:true});updateBackTop()}
+function personCandidateStages(person){
+  if(!person.candidateStages.length)return [];
+  const groups=person.candidateStages.map(label=>({label,assets:person.candidates.filter(a=>a.state===label)})).filter(g=>g.assets.length);
+  const unassigned=person.candidates.filter(a=>!person.candidateStages.includes(a.state));
+  if(unassigned.length)groups.push({label:"未归入阶段",assets:unassigned});
+  return groups;
+}
+function personCandidateGroups(assets){
+  const order=["人物上半身正面肖像图","人物多视角参考图","服装参考图","角色多视角参考图"];
+  const groups=new Map();
+  assets.forEach(asset=>{
+    const type=asset.type==="人物多视角参考图（人物本体六视图）"?"人物多视角参考图":asset.type;
+    if(!groups.has(type))groups.set(type,[]);
+    groups.get(type).push(asset);
+  });
+  return [...order,...Array.from(groups.keys()).filter(type=>!order.includes(type))]
+    .filter(type=>groups.has(type)).map(type=>({type,assets:groups.get(type)}));
+}
+function renderPersonCandidates(person){
+  const tabs=el("person-candidate-stage-tabs"),container=el("person-candidate-groups");
+  tabs.replaceChildren();container.replaceChildren();
+  const stages=personCandidateStages(person);tabs.hidden=!stages.length;
+  const show=assets=>{
+    container.replaceChildren();
+    if(!assets.length)container.append(textNode("p","暂无已关联生成记录的候选图片；其余文件可从相关记录查看。","empty"));
+    personCandidateGroups(assets).forEach(group=>{
+      const details=document.createElement("details");details.className="candidate-group";
+      details.append(textNode("summary",group.type+"（"+group.assets.length+" 张）"));
+      let loaded=false;
+      details.addEventListener("toggle",()=>{
+        if(!details.open||loaded)return;loaded=true;
+        const grid=document.createElement("div");grid.className="asset-grid";
+        group.assets.slice().reverse().forEach(a=>grid.append(assetCard(a,person,true)));details.append(grid);
+      });
+      container.append(details);
+    });
+  };
+  if(!stages.length){show(person.candidates);return;}
+  const select=index=>{
+    Array.from(tabs.children).forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
+    show(stages[index].assets);
+  };
+  stages.forEach((stage,index)=>{
+    const button=textNode("button",stage.label);button.type="button";
+    button.setAttribute("aria-controls","person-candidate-groups");button.addEventListener("click",()=>select(index));tabs.append(button);
+  });
+  select(0);
+}
+function openPerson(person,opener){peopleScroll=window.scrollY;personOpener=opener;el("people-list").hidden=true;el("person-detail").hidden=false;el("person-title").textContent=person.id+" · "+person.name;el("person-subtitle").textContent=person.role;renderLongDocument("person",person.card,"尚未形成正式人物资料卡，不以草稿代替。");renderPersonAssets(person);renderPersonCandidates(person);el("person-record-link").replaceChildren();if(person.recordKey)el("person-record-link").append(docLink(person.recordKey,"打开完整生成记录"));else el("person-record-link").append(textNode("p","尚无生成记录。","empty"));el("person-record-folders").replaceChildren();renderFolders(el("person-record-folders"),person.groups);el("person-tabs").replaceChildren();const sections=[["person-assets","正式参考图"],["person-document","人物资料卡"],["person-candidates","候选与审阅"],["person-records","相关记录"]];const select=id=>{sections.forEach(([key])=>el(key).hidden=key!==id);Array.from(el("person-tabs").children).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.section===id)))};sections.forEach(([id,label])=>{const b=textNode("button",label);b.type="button";b.dataset.section=id;b.setAttribute("aria-controls",id);b.addEventListener("click",()=>select(id));el("person-tabs").append(b)});select("person-assets");updateBackTop();el("person-title").scrollIntoView({block:"start"});el("person-title").focus({preventScroll:true});updateBackTop()}
 function returnToPeople(){el("person-detail").hidden=true;el("people-list").hidden=false;personOpener?.focus({preventScroll:true});window.scrollTo({top:peopleScroll,behavior:"instant"});updateBackTop()}
 function matchingPeople(query){const q=query.trim().toLocaleLowerCase();return data.people.filter(p=>(p.id+" "+p.name).toLocaleLowerCase().includes(q))}
 function personEntryButton(person,label,className){const button=textNode("button",label,className);button.type="button";button.setAttribute("aria-label","查看人物资料："+person.id+" "+person.name);button.addEventListener("click",()=>openPerson(person,button));return button}

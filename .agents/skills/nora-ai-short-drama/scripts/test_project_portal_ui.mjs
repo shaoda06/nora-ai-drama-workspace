@@ -282,3 +282,25 @@ test('formal portrait, body, clothes and character slots keep fixed order and mi
   assert.ok(personSlots([]).every(s=>s.assets.length===0));
   assert.deepEqual(assets.map(a=>a.id),[3,1,4,2]);
 });
+
+const candidateStages = loadFunction('personCandidateStages');
+const candidateGroups = loadFunction('personCandidateGroups');
+test('candidate tabs use card stages even without adopted images and preserve unmatched records', () => {
+  const candidates=[{state:'少年',id:1},{state:'成年',id:2},{state:'未知',id:3},{state:'少年',id:4}];
+  const groups=candidateStages({candidateStages:['成年','少年','老年'],candidates});
+  assert.deepEqual(Array.from(groups,g=>g.label),['成年','少年','未归入阶段']);
+  assert.deepEqual(Array.from(groups,g=>Array.from(g.assets,a=>a.id)),[[2],[1,4],[3]]);
+  assert.equal(candidateStages({candidateStages:[],candidates}).length,0);
+  assert.equal(candidateStages({candidateStages:['少年'],candidates:[]}).length,0);
+});
+test('candidate types follow formal order, combine the explicit body alias, and retain unknown types', () => {
+  const assets=[{type:'服装参考图',id:1},{type:'角色多视角参考图',id:2},
+    {type:'人物多视角参考图（人物本体六视图）',id:3},{type:'人物上半身正面肖像图',id:4},
+    {type:'人物多视角参考图',id:5},{type:'其他测试',id:6},{type:'服装参考图',id:7}];
+  const groups=candidateGroups(assets);
+  assert.deepEqual(Array.from(groups,g=>g.type),['人物上半身正面肖像图','人物多视角参考图','服装参考图','角色多视角参考图','其他测试']);
+  assert.deepEqual(Array.from(groups,g=>Array.from(g.assets,a=>a.id)),[[4],[3,5],[1,7],[2],[6]]);
+  assert.equal(assets[2].type,'人物多视角参考图（人物本体六视图）');
+  assert.deepEqual(assets.map(a=>a.id),[1,2,3,4,5,6,7]);
+  assert.equal(candidateGroups([]).length,0);
+});

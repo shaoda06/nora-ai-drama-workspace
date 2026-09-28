@@ -102,6 +102,14 @@ class PortalTests(unittest.TestCase):
                  "- 审阅记录：[审阅](../../审阅记录/CH001-审阅-001.md)\n")
         return card, record
 
+    def test_candidate_stage_order_does_not_depend_on_formal_assets(self):
+        card, record = self.person_fixture()
+        card.write_text(card.read_text() + "\n## 3. 外貌与基础造型\n### 3.1 成年\n成年外貌\n### 3.2 少年\n少年外貌\n")
+        data = portal.build_data(self.root.resolve())
+        self.assertEqual(data["people"][0]["stages"], [])
+        self.assertEqual(data["people"][0]["candidateStages"], ["成年", "少年"])
+        self.assertEqual(len(data["people"][0]["candidates"]), 1)
+
     def test_two_stage_review_content_deviation_does_not_block_user_review(self):
         records = [("people", self.person_fixture()[1]),
                    ("props", self.prop_fixture()), ("scenes", self.scene_fixture()[1])]

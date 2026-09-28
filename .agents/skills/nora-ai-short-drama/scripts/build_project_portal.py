@@ -463,6 +463,7 @@ def build_data(project):
                      next((a for a in formal if a["media"] and a["approved"] and a["type"] == "角色多视角参考图"), None))
         people.append({"id": number, "name": row["姓名"], "role": row["人物定位"],
                        "stages": [name for name in stage_names if any(a["stage"] == name for a in formal)],
+                       "candidateStages": stage_names if len(stage_names) > 1 else [],
                        "card": card, "cardKey": card_key, "formal": formal, "candidates": candidates,
                        "cover": cover, "recordKey": record_key if record else None,
                        "pendingCount": sum(c["pending"] for c in candidates), "groups": person_groups})
