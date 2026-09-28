@@ -316,3 +316,19 @@ test('formal and candidate cards both pass their generation section URL', () => 
     }
   }
 });
+
+
+test('closing a directory collapses all descendants; opening leaves descendants alone', () => {
+  const folders=source.slice(source.indexOf('function renderEpisodeFolders('),source.indexOf('function renderCatalogueList('));
+  const body=folders.match(/detail\.addEventListener\("toggle",\(\)=>\{([\s\S]*?)\}\);container\.append\(detail\)/)[1];
+  const child={open:true}, grandchild={open:true}, sibling={open:true};
+  let queries=0;
+  const detail={open:false,querySelectorAll(selector){
+    assert.equal(selector,'details[open]');queries++;return [child,grandchild];
+  }};
+  const toggle=vm.runInNewContext(`()=>{${body}}`,{detail,loaded:true});
+  toggle();
+  assert.equal(child.open,false);assert.equal(grandchild.open,false);assert.equal(sibling.open,true);
+  detail.open=true;toggle();
+  assert.equal(queries,1);assert.equal(child.open,false);assert.equal(grandchild.open,false);
+});

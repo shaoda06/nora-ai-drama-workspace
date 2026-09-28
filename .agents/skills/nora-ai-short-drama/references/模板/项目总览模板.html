@@ -579,7 +579,7 @@ function renderEpisodeFolders(container,items){
 items.forEach(item=>{
 if(item.kind!=="group"){const row=textNode("div","","file-row"),button=textNode("button",item.name);button.type="button";button.title=item.key;button.addEventListener("click",()=>previewFile(item));row.append(button,rawFileLink(item.url));container.append(row);return}
 const detail=textNode("details","","folder"),summary=textNode("summary",item.name);summary.append(textNode("span",item.children.length+" 项","count"));detail.append(summary);let loaded=false;
-detail.addEventListener("toggle",()=>{if(!detail.open||loaded)return;loaded=true;if(item.children.length)renderEpisodeFolders(detail,item.children);else detail.append(textNode("p","暂无文件。","empty"))});container.append(detail);
+detail.addEventListener("toggle",()=>{if(!detail.open){detail.querySelectorAll("details[open]").forEach(child=>{child.open=false});return}if(loaded)return;loaded=true;if(item.children.length)renderEpisodeFolders(detail,item.children);else detail.append(textNode("p","暂无文件。","empty"))});container.append(detail);
 });
 }
 function renderCatalogueList(){
