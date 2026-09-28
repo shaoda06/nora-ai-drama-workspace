@@ -1,5 +1,8 @@
 # 默认允许Git发现新增文件，仅排除以下本机内容。
 
+# 本机Codex配置。
+/.codex/
+
 # 已独立安装、由上游按需获取的技能，不随本模板重复分发。
 /.agents/skills/h3-prompt-writing/
 /.agents/skills/qwen-image-2-1-prompter/
