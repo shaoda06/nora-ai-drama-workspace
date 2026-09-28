@@ -307,6 +307,37 @@ def build_data(project):
             text, notice = "", "文件不是有效的UTF-8文本，无法页内预览；请打开原文件。"
         text_previews[relative] = {"text": text, "notice": notice}
 
+    def video_prompts(key):
+        match = re.fullmatch(
+            r"09-剧集制作/(EP\d+)/06-生成结果/(C\d+)-场次结果/(P\d+)-分段结果/"
+            r"(01-一采|02-二采)/(?:候选|选定)/(.+)\.(?:mp4|webm|mov)", key)
+        if not match:
+            return None
+        episode, scene, segment, stage, stem = match.groups()
+        identity = f"{episode}-{scene}-{segment}"
+        take = re.fullmatch(re.escape(identity) + r"-(R\d+)-" + stage[3:], stem)
+        if not take:
+            return None
+        stage_root = str(Path(key).parent.parent)
+        english_key = f"{stage_root}/执行记录/{take[1]}-{stage[3:]}/模型提示词.txt"
+        prompts = {"english": "", "chinese": ""}
+        english_path = project / english_key
+        if not english_path.is_file() or not english_path.resolve().is_relative_to(project):
+            return prompts
+        read_plain(english_key)
+        snapshot = text_previews[english_key]
+        if snapshot["notice"]:
+            return prompts
+        prompts["english"] = snapshot["text"]
+        document_key = f"09-剧集制作/{episode}/05-视频提示词/{identity}-视频提示词.md"
+        document = read(document_key)
+        if document:
+            english = re.search(r"^## 提交给节点263的完整提示词\s*\n```text\s*\n(.*?)```", document, re.M | re.S)
+            chinese = re.search(r"^## 中文提示词参考版\s*\n(?:(?!^## ).)*?```text\s*\n(.*?)```", document, re.M | re.S)
+            if english and chinese and english[1].strip() == prompts["english"].strip():
+                prompts["chinese"] = chinese[1].strip()
+        return prompts
+
     def file_entry(path):
         if not path.is_file() or not path.resolve().is_relative_to(project):
             return None
@@ -322,6 +353,10 @@ def build_data(project):
             item["statusHtml"] = status_markup(field(text, "确认状态"), key)
         elif kind == "text":
             read_plain(key)
+        elif kind == "video":
+            prompts = video_prompts(key)
+            if prompts is not None:
+                item["prompts"] = prompts
         return item
 
     progress = read(PROGRESS)

@@ -14,6 +14,17 @@ function loadFunction(name) {
   // Selected helpers have no top-level calls after their declaration.
   return vm.runInNewContext(`(${code.trim()})`);
 }
+test('segment video prompts render Chinese then execution English as plain text', () => {
+  const media=source.slice(source.indexOf('function showMedia('),source.indexOf('function catalogueMatches('));
+  assert.doesNotMatch(media,/点击播放；已加载首帧，不自动播放、转换或分析内容/);
+  assert.match(media,/if\(item.kind==="video"&&item.prompts\)/);
+  assert.ok(media.indexOf('中文参考提示词')<media.indexOf('英文执行提示词'));
+  assert.match(media,/textNode\(item.prompts\[key\]\?"pre":"p",item.prompts\[key\]\|\|missing\)/);
+  assert.doesNotMatch(media,/innerHTML/);
+  assert.match(media,/if\(!player.hidden\)hint.hidden=true/);
+  assert.match(media,/"error",\(\)=>\{hint.hidden=false/);
+});
+
 const paging = loadFunction('paginationState');
 const pageLabel = loadFunction('paginationLabel');
 const categories = loadFunction('catalogueCategories');

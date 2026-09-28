@@ -523,10 +523,18 @@ stopMedia();el("reader-title").textContent=item.name;el("reader-path").textConte
 const player=document.createElement(item.kind);player.className="media-player";player.controls=true;player.preload=item.kind==="video"?"auto":"none";player.setAttribute("aria-label",item.name);
 if(item.kind==="video"){player.playsInline=true;player.hidden=true;player.addEventListener("loadedmetadata",()=>{if(player.videoWidth&&player.videoHeight){player.style.setProperty("--video-ratio",String(player.videoWidth/player.videoHeight));player.hidden=false}else hint.textContent="无法读取视频画面尺寸，请打开原文件。"},{once:true})}
 const hint=textNode("p",item.kind==="video"?"正在加载视频首帧；点击播放，不自动播放。":"点击播放；不自动播放、转换或分析内容。浏览器不支持时请打开原文件。","media-help");
-if(item.kind==="video")player.addEventListener("loadeddata",()=>{if(!player.hidden)hint.textContent="点击播放；已加载首帧，不自动播放、转换或分析内容。"},{once:true});
-player.addEventListener("error",()=>{hint.textContent="浏览器无法播放此文件，请打开原文件；未进行转码。"});
+if(item.kind==="video")player.addEventListener("loadeddata",()=>{if(!player.hidden)hint.hidden=true},{once:true});
+player.addEventListener("error",()=>{hint.hidden=false;hint.textContent="浏览器无法播放此文件，请打开原文件；未进行转码。"});
 player.src=item.url;
-el("reader-content").append(player,hint);if(!reader.open)reader.showModal();reader.scrollTop=0;el("reader-close").focus();updateBackTop();
+el("reader-content").append(player,hint);
+if(item.kind==="video"&&item.prompts){
+[["中文参考提示词","chinese","未找到与本次执行英文一致的中文参考版。"],["英文执行提示词","english","未找到本次执行保存的完整英文提示词。"]].forEach(([title,key,missing])=>{
+el("reader-content").append(textNode("h2",title));
+const content=textNode(item.prompts[key]?"pre":"p",item.prompts[key]||missing);
+content.style.whiteSpace="pre-wrap";content.style.overflowWrap="anywhere";el("reader-content").append(content);
+});
+}
+if(!reader.open)reader.showModal();reader.scrollTop=0;el("reader-close").focus();updateBackTop();
 }
 function catalogueMatches(node,query,category){
 const q=query.trim().toLocaleLowerCase(),result=[],seen=new Set();

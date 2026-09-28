@@ -14,6 +14,42 @@ class PortalTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.addCleanup(self.temp.cleanup)
 
+    def test_video_prompts_match_execution_identity_and_translation(self):
+        episode = "09-剧集制作/EP001"
+        segment = episode + "/06-生成结果/C001-场次结果/P001-分段结果"
+        document = episode + "/05-视频提示词/EP001-C001-P001-视频提示词.md"
+        english = "Actual <Subject 1> & dialogue"
+        self.put(document, "## 提交给节点263的完整提示词\n\n```text\n" + english +
+                 "\n```\n\n## 中文提示词参考版\n\n说明\n\n```text\n中文参考正文\n```\n")
+        expected = {}
+        for stage, run, location, text in [("01-一采", "R001", "选定", english),
+                                           ("02-二采", "R002", "候选", english),
+                                           ("01-一采", "R003", "候选", "Different historical prompt")]:
+            self.put(f"{segment}/{stage}/执行记录/{run}-{stage[3:]}/模型提示词.txt", text)
+            video = f"{segment}/{stage}/{location}/EP001-C001-P001-{run}-{stage[3:]}.mp4"
+            self.put(video, "video fixture")
+            expected[video] = {"english": text, "chinese": "中文参考正文" if text == english else ""}
+        missing = segment + "/01-一采/候选/EP001-C001-P001-R004-一采.mp4"
+        self.put(missing, "video fixture")
+        expected[missing] = {"english": "", "chinese": ""}
+        excluded = [segment + "/03-后处理/选定/EP001-C001-P001-R005-后处理.mp4",
+                    episode + "/06-生成结果/C001-场次结果/场次成片/候选/EP001-C001-一采合并.mp4",
+                    segment + "/01-一采/候选/EP001-C001-P002-R001-一采.mp4"]
+        for path in excluded:
+            self.put(path, "video fixture")
+        portal.build(self.root)
+        videos = {}
+        def visit(node):
+            if node["kind"] == "video":
+                videos[node["key"]] = node
+            for child in node.get("children", []):
+                visit(child)
+        visit(self.extract()["catalogues"]["09-剧集制作"])
+        for key, prompts in expected.items():
+            self.assertEqual(videos[key]["prompts"], prompts)
+        for key in excluded:
+            self.assertNotIn("prompts", videos[key])
+
     def put(self, name, content):
         path = self.root / name
         path.parent.mkdir(parents=True, exist_ok=True)
