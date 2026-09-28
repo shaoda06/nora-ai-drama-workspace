@@ -226,13 +226,26 @@ def prepare(source):
         archive = stage / 'download.zip'
         JOB['message'] = '正在下载 ' + meta['label'] + '…'
         with request(meta['download']) as response, archive.open('wb') as out:
+            length = response.headers.get('Content-Length', '')
+            total = int(length) if length.isdigit() and int(length) > 0 else None
             downloaded = 0
+            JOB['download'] = {'received': downloaded, 'total': total}
             while chunk := response.read(1024 * 1024):
                 downloaded += len(chunk)
                 if downloaded > MAX_ZIP:
                     raise ValueError('资源包超过 300 MB 限制。')
                 out.write(chunk)
-                JOB['message'] = f'正在下载 {meta["label"]} · {downloaded // (1024 * 1024)} MB'
+                JOB['download'] = {'received': downloaded, 'total': total}
+                size = f'{downloaded / 1_000_000:.1f} MB'
+                if total:
+                    size += f' / {total / 1_000_000:.1f} MB · {downloaded / total:.1%}'
+                else:
+                    size += ' · 总大小未知'
+                JOB['message'] = f'正在下载 {meta["label"]} · {size}'
+            if total and downloaded != total:
+                raise ValueError('下载大小与来源声明不一致，请重新下载。')
+        JOB['download'] = None
+        JOB['message'] = '下载完成，正在整理资源并比较变化…'
         plan = build_library(source, archive, stage, meta)
         archive.unlink()
         if source in PLANS:
@@ -322,7 +335,7 @@ def start_job(action, source):
         raise ValueError('未知资源库。')
     if not LOCK.acquire(blocking=False):
         raise ValueError('另一个更新操作正在进行，请等待完成。')
-    JOB.update(running=True, error=None, message='正在开始…', source=source)
+    JOB.update(running=True, error=None, message='正在开始…', source=source, download=None)
     def run():
         try:
             if action == 'check': check(source)
@@ -339,6 +352,7 @@ def start_job(action, source):
             JOB.update(error=str(error), message='操作失败；请查看错误信息。')
         finally:
             JOB['running'] = False
+            JOB['download'] = None
             SOURCE_STATUS[source] = JOB.copy()
             LOCK.release()
     threading.Thread(target=run, daemon=True).start()

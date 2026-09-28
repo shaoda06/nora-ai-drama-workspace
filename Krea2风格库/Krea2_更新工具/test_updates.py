@@ -1,5 +1,6 @@
 """Tests for resource replacement and external ZIP boundaries; no network access."""
 import importlib.util
+import io
 import json
 from pathlib import Path
 import tempfile
@@ -79,6 +80,48 @@ class UpdatesTest(unittest.TestCase):
             u.build_library('ray', archive, u.WORK / 'stage', {'url':u.RAY,'revision':'x'})
         self.assertFalse((self.root / 'escape.txt').exists())
         self.assertEqual(u.catalog()['styles'], self.entries)
+
+    def test_download_progress_with_and_without_total(self):
+        payload = b'x' * (2 * 1024 * 1024)
+        for source, length in [('clio', str(len(payload))), ('ray', '')]:
+            with self.subTest(source=source):
+                snapshots = []
+                response = io.BytesIO(payload)
+                response.headers = {'Content-Length': length}
+                read = response.read
+
+                def read_chunk(size):
+                    snapshots.append((dict(u.JOB['download']), u.JOB['message']))
+                    return read(size)
+
+                response.read = read_chunk
+                meta = {'label': 'test', 'download': 'https://example.test/archive.zip'}
+                with patch.object(u, 'fetch_meta', return_value=meta), \
+                     patch.object(u, 'request', return_value=response), \
+                     patch.object(u, 'build_library', return_value={'count': 1}) as build:
+                    u.prepare(source)
+                self.assertEqual([p['received'] for p, _ in snapshots],
+                                 [0, 1024 * 1024, len(payload)])
+                self.assertEqual(snapshots[-1][0]['total'], len(payload) if length else None)
+                self.assertIn('50.0%' if length else '总大小未知', snapshots[1][1])
+                self.assertIn('2.1 MB', snapshots[-1][1])
+                self.assertIsNone(u.JOB['download'])
+                self.assertIn('资源已准备好', u.JOB['message'])
+                self.assertFalse(build.call_args.args[1].exists())
+                self.assertEqual(u.catalog()['styles'], self.entries)
+
+    def test_incomplete_download_is_not_prepared(self):
+        response = io.BytesIO(b'partial')
+        response.headers = {'Content-Length': '100'}
+        meta = {'label': 'test', 'download': 'https://example.test/archive.zip'}
+        with patch.object(u, 'fetch_meta', return_value=meta), \
+             patch.object(u, 'request', return_value=response), \
+             patch.object(u, 'build_library') as build:
+            with self.assertRaisesRegex(ValueError, '下载大小'):
+                u.prepare('clio')
+        build.assert_not_called()
+        self.assertNotIn('clio', u.PLANS)
+        self.assertEqual(list(u.WORK.iterdir()), [])
 
     def test_wrong_package_does_not_touch_library(self):
         archive = self.root / 'wrong.zip'
