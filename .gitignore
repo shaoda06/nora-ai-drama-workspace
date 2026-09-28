@@ -1,22 +1,16 @@
-# 默认只跟踪已明确属于公共模板的根目录内容。
-/*
-!/.gitignore
-!/README.md
-!/LICENSE
-!/AGENTS.md
-!/.agents/
-!/Krea2风格库/
-!/projects/
-!/综合资料/
+# 默认允许Git发现新增文件，仅排除以下本机内容。
 
-# 仅随仓库提供自维护的两个技能；其他依赖按主技能来源表获取。
-/.agents/*
-!/.agents/skills/
-/.agents/skills/*
-!/.agents/skills/nora-ai-short-drama/
-!/.agents/skills/krea2-style-library/
+# 个人配置及现有本机输出目录。
+/.codex/
+/.agents/plugins/
+/output/
 
-# 保留空目录的用途说明，真实项目和本机过程资料不公开。
+# 已独立安装、由上游按需获取的技能，不随本模板重复分发。
+/.agents/skills/h3-prompt-writing/
+/.agents/skills/qwen-image-2-1-prompter/
+/.agents/skills/screenwriting-master/
+
+# 真实项目和本机过程资料不公开，保留目录用途说明。
 /projects/*
 !/projects/README.md
 /综合资料/*
