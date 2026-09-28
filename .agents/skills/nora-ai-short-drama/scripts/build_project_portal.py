@@ -780,7 +780,8 @@ def build_data(project):
 
     directories = [{"name": p.name, "label": re.sub(r"^\d+-", "", p.name),
                     "url": quote(p.name, safe="-._~") + "/"}
-                   for p in sorted(project.iterdir()) if p.is_dir() and not p.name.startswith(".")]
+                   for p in sorted(project.iterdir())
+                   if p.is_dir() and not p.name.startswith(".") and p.name != "99-综合资料"]
     meta = {key: field(position or "", key) for key in ("文档版本", "更新日期", "确认状态")}
     body = position or ""
     body = re.sub(r"^# .+\n?", "", body, count=1)
