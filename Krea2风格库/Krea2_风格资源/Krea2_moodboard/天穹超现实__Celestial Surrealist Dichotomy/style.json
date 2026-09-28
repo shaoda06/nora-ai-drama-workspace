@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1030",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "天穹超现实",
+  "name": "Celestial Surrealist Dichotomy",
+  "prompt": "surrealist oil painting, celestial dichotomy, Magritte-inspired, starry night sky, volumetric clouds, chiaroscuro, classical craquelure texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹超现实__Celestial Surrealist Dichotomy/preview.webp",
+  "folder": "Krea2_moodboard/天穹超现实__Celestial Surrealist Dichotomy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

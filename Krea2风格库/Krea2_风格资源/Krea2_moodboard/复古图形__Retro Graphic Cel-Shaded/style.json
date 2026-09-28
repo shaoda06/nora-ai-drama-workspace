@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-121",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "复古图形",
+  "name": "Retro Graphic Cel-Shaded",
+  "prompt": "90s anime cel shading, bold ink outlines, vintage graphic illustration, high contrast teal and red palette, dynamic composition, retro manga style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古图形__Retro Graphic Cel-Shaded/preview.webp",
+  "folder": "Krea2_moodboard/复古图形__Retro Graphic Cel-Shaded",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

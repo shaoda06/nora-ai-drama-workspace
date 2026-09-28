@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1746",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "触觉植物极简",
+  "name": "Tactile Botanical Minimalism",
+  "prompt": "macro photography, shallow depth of field, botanical detail, soft diffused lighting, biomorphic geometry, tactile texture, minimalist nature. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉植物极简__Tactile Botanical Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/触觉植物极简__Tactile Botanical Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

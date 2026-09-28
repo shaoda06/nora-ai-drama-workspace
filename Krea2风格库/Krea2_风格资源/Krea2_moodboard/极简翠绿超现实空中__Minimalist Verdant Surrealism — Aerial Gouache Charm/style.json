@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1136",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "极简翠绿超现实空中",
+  "name": "Minimalist Verdant Surrealism — Aerial Gouache Charm",
+  "prompt": "high-angle aerial view, minimalist surrealism, lush green landscape, painterly gouache texture, dramatic graphic shadows, solitary subject, folk art influence. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简翠绿超现实空中__Minimalist Verdant Surrealism — Aerial Gouache Charm/preview.webp",
+  "folder": "Krea2_moodboard/极简翠绿超现实空中__Minimalist Verdant Surrealism — Aerial Gouache Charm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

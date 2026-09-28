@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-152",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "法比超精细漫画",
+  "name": "Franco-Belgian Ultradetailed Comics",
+  "prompt": "Style: Franco-Belgian Ultradetailed Comics: A meticulously rendered bande dessinée illustration style built on dense, obsessively fine linework and layered crosshatching that constructs every texture with architectural patience, richly detailed surface rendering across fabric, skin, and structure that rewards close inspection, a measured, cinematic pacing carried through carefully composed, deliberate framing, subtle atmospheric depth achieved through fine tonal gradation rather than bold contrast, and a sophisticated, painstakingly crafted graphic-novel gravitas. Influenced by: Jean \"Mœbius\" Giraud, François Schuiten, Franco-Belgian bande dessinée tradition, ligne claire and hatching technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/法比超精细漫画__Franco-Belgian Ultradetailed Comics/preview.jpg",
+  "folder": "krea2_styles/法比超精细漫画__Franco-Belgian Ultradetailed Comics",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

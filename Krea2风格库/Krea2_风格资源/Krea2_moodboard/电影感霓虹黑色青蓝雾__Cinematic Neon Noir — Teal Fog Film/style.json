@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1377",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感霓虹黑色青蓝雾",
+  "name": "Cinematic Neon Noir — Teal Fog Film",
+  "prompt": "cinematic neon noir, atmospheric fog, high-contrast lighting, wet asphalt reflections, monolithic architecture, saturated neon accents, moody low-key lighting, cyberpunk isolation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感霓虹黑色青蓝雾__Cinematic Neon Noir — Teal Fog Film/preview.webp",
+  "folder": "Krea2_moodboard/电影感霓虹黑色青蓝雾__Cinematic Neon Noir — Teal Fog Film",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

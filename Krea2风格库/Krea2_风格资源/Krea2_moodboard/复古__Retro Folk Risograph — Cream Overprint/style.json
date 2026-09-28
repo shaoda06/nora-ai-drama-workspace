@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-672",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "复古",
+  "name": "Retro Folk Risograph — Cream Overprint",
+  "prompt": "risograph print texture, mid-century modern illustration, flat geometric vector, naive folk art, textured screenprint aesthetic, halftone patterns, cream paper background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古__Retro Folk Risograph — Cream Overprint/preview.webp",
+  "folder": "Krea2_moodboard/复古__Retro Folk Risograph — Cream Overprint",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

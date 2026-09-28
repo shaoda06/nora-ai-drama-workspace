@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3287",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "碎片化有机超现实",
+  "name": "Fragmented Organic Surrealism",
+  "prompt": "surrealist portraiture, tactile mixed media, high-contrast editorial photography, fragmented identity, organic-synthetic fusion, geometric digital overlay, sharp-focus macro textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化有机超现实__Fragmented Organic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/碎片化有机超现实__Fragmented Organic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

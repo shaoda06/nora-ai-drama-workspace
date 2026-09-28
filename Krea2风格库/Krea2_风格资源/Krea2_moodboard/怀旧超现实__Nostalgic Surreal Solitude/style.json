@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1180",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "怀旧超现实",
+  "name": "Nostalgic Surreal Solitude",
+  "prompt": "surreal minimalism, heavy analog film grain, muted pastel color palette, dreamy soft focus, nostalgic atmospheric lighting, solitary existential compositions, painterly textured aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实__Nostalgic Surreal Solitude/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实__Nostalgic Surreal Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

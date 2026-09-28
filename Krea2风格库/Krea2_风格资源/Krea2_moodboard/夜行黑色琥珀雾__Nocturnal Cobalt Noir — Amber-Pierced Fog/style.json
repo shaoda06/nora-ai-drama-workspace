@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1720",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "夜行黑色琥珀雾",
+  "name": "Nocturnal Cobalt Noir — Amber-Pierced Fog",
+  "prompt": "deep cobalt and indigo palette, warm amber light contrast, cinematic minimalist composition, atmospheric fog and mist, sharp architectural silhouettes, solitary human figures, nocturnal noir mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行黑色琥珀雾__Nocturnal Cobalt Noir — Amber-Pierced Fog/preview.webp",
+  "folder": "Krea2_moodboard/夜行黑色琥珀雾__Nocturnal Cobalt Noir — Amber-Pierced Fog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-781",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "单色空灵",
+  "name": "Monochrome Ethereal Tempest",
+  "prompt": "high-contrast monochrome, intentional camera movement, long exposure seascape, grainy charcoal texture, spectral ethereal glow, moody atmospheric vignette, liminal nature photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色空灵__Monochrome Ethereal Tempest/preview.webp",
+  "folder": "Krea2_moodboard/单色空灵__Monochrome Ethereal Tempest",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

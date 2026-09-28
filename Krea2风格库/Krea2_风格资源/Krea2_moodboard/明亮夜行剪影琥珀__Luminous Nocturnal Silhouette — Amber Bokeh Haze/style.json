@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2404",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "明亮夜行剪影琥珀",
+  "name": "Luminous Nocturnal Silhouette — Amber Bokeh Haze",
+  "prompt": "cinematic backlighting, rim lighting, volumetric haze, nocturnal atmosphere, shallow depth of field, golden amber bokeh, mystical realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行剪影琥珀__Luminous Nocturnal Silhouette — Amber Bokeh Haze/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行剪影琥珀__Luminous Nocturnal Silhouette — Amber Bokeh Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

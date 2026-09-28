@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3285",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "动态超现实",
+  "name": "Dynamic Surrealist Streetwear",
+  "prompt": "extreme low-angle perspective, saturated primary colors, analog film grain, clear blue sky, sharp sunlight shadows, surrealist streetwear aesthetic, wide-angle distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态超现实__Dynamic Surrealist Streetwear/preview.webp",
+  "folder": "Krea2_moodboard/动态超现实__Dynamic Surrealist Streetwear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

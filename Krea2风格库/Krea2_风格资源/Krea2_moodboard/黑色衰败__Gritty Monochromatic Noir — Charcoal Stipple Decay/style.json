@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-765",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "黑色衰败",
+  "name": "Gritty Monochromatic Noir — Charcoal Stipple Decay",
+  "prompt": "high-contrast monochrome, photocopy texture, analog glitch, heavy film grain, gritty halftone, noir atmosphere, stippled charcoal, distressed lo-fi. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色衰败__Gritty Monochromatic Noir — Charcoal Stipple Decay/preview.webp",
+  "folder": "Krea2_moodboard/黑色衰败__Gritty Monochromatic Noir — Charcoal Stipple Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

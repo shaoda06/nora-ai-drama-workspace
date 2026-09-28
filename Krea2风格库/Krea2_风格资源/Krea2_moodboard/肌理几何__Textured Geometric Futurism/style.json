@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1304",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "肌理几何",
+  "name": "Textured Geometric Futurism",
+  "prompt": "impasto digital painting, geometric fragmentation, bold stylized brushstrokes, high-contrast lighting, cyber expressionism, dynamic perspective, vibrant blue palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理几何__Textured Geometric Futurism/preview.webp",
+  "folder": "Krea2_moodboard/肌理几何__Textured Geometric Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

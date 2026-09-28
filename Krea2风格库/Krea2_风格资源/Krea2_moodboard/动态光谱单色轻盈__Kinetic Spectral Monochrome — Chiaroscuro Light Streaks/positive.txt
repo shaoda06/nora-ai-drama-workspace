@@ -1,0 +1,1 @@
+motion blur, high contrast black and white, long exposure light streaks, heavy film grain, chiaroscuro lighting, ghostly kinetic abstraction, cinematic noir. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2958",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "动态光谱黑色阴影",
+  "name": "Kinetic Spectral Noir — Inky Shadow Pooling",
+  "prompt": "high-contrast monochrome, dramatic motion blur, chiaroscuro lighting, ethereal spectral distortion, tactile film grain, abstract figurative, analog noir aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态光谱黑色阴影__Kinetic Spectral Noir — Inky Shadow Pooling/preview.webp",
+  "folder": "Krea2_moodboard/动态光谱黑色阴影__Kinetic Spectral Noir — Inky Shadow Pooling",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

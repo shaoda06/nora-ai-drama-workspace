@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-77",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "剑风传奇漫画风格",
+  "name": "Berserk Manga Style",
+  "prompt": "Style: Berserk Manga Style: monumental dark fantasy manga aesthetics characterized by obsessive crosshatched detail, rugged textural density, dramatic black-and-white value structure, intricate ornamental craftsmanship, and an overwhelming sense of weight, scale, and historical depth. The style emphasizes brutal realism, weathered material rendering, architectural complexity, and emotionally intense visual storytelling, constructing imagery through countless layers of inked detail and highly disciplined draftsmanship. Rather than stylized simplification, it pursues visual immersion through realism, atmosphere, and relentless craftsmanship, creating artwork that feels ancient, tragic, and profoundly human. The visual language balances violence and beauty, grandeur and decay, with extraordinary attention to texture, structure, and narrative gravitas, reminiscent of Kentaro Miura and Hal Foster, inspired by Berserk and Prince Valiant.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/剑风传奇漫画风格__Berserk Manga Style/preview.jpg",
+  "folder": "krea2_styles/剑风传奇漫画风格__Berserk Manga Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

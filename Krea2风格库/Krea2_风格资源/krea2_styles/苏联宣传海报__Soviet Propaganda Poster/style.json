@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-210",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "苏联宣传海报",
+  "name": "Soviet Propaganda Poster",
+  "prompt": "Style: Soviet Propaganda Poster: A bold, graphic illustration style built on stark, high-contrast flat color fields separated by confident heavy outline, a monumental, low-angle compositional heroism that dramatically elevates the central figure, dynamic diagonal energy conveying collective momentum and forward-driving purpose, simplified, sculptural anatomy rendered with poster-ready graphic clarity over naturalistic nuance, and a bold, rousing propagandistic grandeur built for instant ideological impact at a distance. Influenced by: Constructivist poster-design tradition, Alexander Rodchenko, socialist-realist illustration technique, agitprop graphic-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/苏联宣传海报__Soviet Propaganda Poster/preview.jpg",
+  "folder": "krea2_styles/苏联宣传海报__Soviet Propaganda Poster",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

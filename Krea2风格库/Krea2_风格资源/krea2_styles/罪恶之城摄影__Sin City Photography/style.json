@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-371",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "罪恶之城摄影",
+  "name": "Sin City Photography",
+  "prompt": "Style: Sin City Photography: A stark, high-contrast black-and-white photographic style with razor-sharp shadow-to-highlight extremes, deep inky blacks pooling around a single dramatically lit subject, one isolated element rendered in bold selective color against the otherwise monochrome frame, and a hardboiled, pulp-noir cinematic tension dripping with danger and seduction. Influenced by: Sin City (Robert Rodriguez/Frank Miller), film noir cinematography, Frank Miller graphic novel art, chiaroscuro photography lighting.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/罪恶之城摄影__Sin City Photography/preview.jpg",
+  "folder": "krea2_styles/罪恶之城摄影__Sin City Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

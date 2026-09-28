@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1460",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵电影感怀旧光晕",
+  "name": "Ethereal Cinematic Nostalgia — Prism Flare",
+  "prompt": "prism lens flare, cinematic film grain, golden hour glow, chromatic aberration, dreamy soft focus, warm amber lighting, ethereal light leaks, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵电影感怀旧光晕__Ethereal Cinematic Nostalgia — Prism Flare/preview.webp",
+  "folder": "Krea2_moodboard/空灵电影感怀旧光晕__Ethereal Cinematic Nostalgia — Prism Flare",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

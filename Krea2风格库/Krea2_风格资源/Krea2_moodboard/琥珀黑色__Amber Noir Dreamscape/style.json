@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2269",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "琥珀黑色",
+  "name": "Amber Noir Dreamscape",
+  "prompt": "35mm analog film grain, amber tungsten glow, cinematic light halation, soft-focus dreamlike haze, nocturnal noir atmosphere, motion blur, chiaroscuro lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀黑色__Amber Noir Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/琥珀黑色__Amber Noir Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

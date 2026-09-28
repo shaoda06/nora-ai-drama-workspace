@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1556",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵模拟衰败",
+  "name": "Ethereal Analog Decay — Expired Jewel Fade",
+  "prompt": "expired polaroid texture, dreamy double exposure, vintage film grain, soft light leaks, chemical burn artifacts, desaturated jewel tones, hazy motion blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟衰败__Ethereal Analog Decay — Expired Jewel Fade/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟衰败__Ethereal Analog Decay — Expired Jewel Fade",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

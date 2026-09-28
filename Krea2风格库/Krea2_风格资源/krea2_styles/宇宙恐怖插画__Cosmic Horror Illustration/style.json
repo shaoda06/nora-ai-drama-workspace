@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-240",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "宇宙恐怖插画",
+  "name": "Cosmic Horror Illustration",
+  "prompt": "Style: Cosmic Horror Illustration: unsettling visionary aesthetics characterized by vast incomprehensible scale, intricate organic complexity, surreal symbolism, atmospheric dread, and richly detailed visual storytelling, blending refined craftsmanship with existential mystery through layered textures, immersive depth, dramatic illumination, and a profound sense of the unknown that transcends ordinary reality, reminiscent of H.R. Giger and Zdzisław Beksiński, inspired by At the Mountains of Madness and Bloodborne.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/宇宙恐怖插画__Cosmic Horror Illustration/preview.jpg",
+  "folder": "krea2_styles/宇宙恐怖插画__Cosmic Horror Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

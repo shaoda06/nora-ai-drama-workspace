@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-796",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "光谱黑曜运动",
+  "name": "Spectral Obsidian Motion",
+  "prompt": "high-contrast black and white, heavy film grain, motion blur, long exposure light trails, spectral noir, charcoal texture, atmospheric chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑曜运动__Spectral Obsidian Motion/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑曜运动__Spectral Obsidian Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

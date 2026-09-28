@@ -1,0 +1,1 @@
+motion blur, shutter drag, spectral double exposure, cyan and indigo color grade, analog film grain, chiaroscuro lighting, ghostly portrait, cinematic light leaks. Subject:{prompt}

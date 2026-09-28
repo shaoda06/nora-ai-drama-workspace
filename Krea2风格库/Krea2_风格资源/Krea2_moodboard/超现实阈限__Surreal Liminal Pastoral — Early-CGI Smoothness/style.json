@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-208",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "超现实阈限",
+  "name": "Surreal Liminal Pastoral — Early-CGI Smoothness",
+  "prompt": "dreamcore, liminal space, minimalist surrealism, saturated green hills, vibrant blue sky, nostalgic CGI aesthetic, solitary architectural elements. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实阈限__Surreal Liminal Pastoral — Early-CGI Smoothness/preview.webp",
+  "folder": "Krea2_moodboard/超现实阈限__Surreal Liminal Pastoral — Early-CGI Smoothness",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

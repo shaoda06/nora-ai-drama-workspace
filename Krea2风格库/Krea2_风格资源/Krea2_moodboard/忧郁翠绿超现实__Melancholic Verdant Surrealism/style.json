@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-861",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "忧郁翠绿超现实",
+  "name": "Melancholic Verdant Surrealism",
+  "prompt": "deep indigo and teal palette, minimalist surrealism, fine ink cross-hatching, high-angle aerial perspective, atmospheric gradient, poignant isolation, liminal space, textured paper grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁翠绿超现实__Melancholic Verdant Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/忧郁翠绿超现实__Melancholic Verdant Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

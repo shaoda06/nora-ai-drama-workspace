@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-164",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "Zenescope插画",
+  "name": "Zenescope Illustration",
+  "prompt": "Style: Zenescope Illustration: polished fantasy-comic aesthetics characterized by premium character-focused rendering, elegant anatomy, contemporary fantasy glamour, intricate ornamental detailing, cinematic presentation, and highly refined digital craftsmanship. The style emphasizes visual impact, clarity, collector-edition quality, and a seamless balance between realism and stylization through sophisticated lighting, luxurious material treatment, dynamic composition, and meticulously rendered textures. Rather than relying on gritty realism or abstraction, it prioritizes beauty, readability, and high-end commercial appeal, producing imagery that feels dramatic, immersive, and immediately marketable. The visual language merges modern comic-book aesthetics with fantasy art sensibilities, creating artwork that is vibrant, aspirational, and visually striking, reminiscent of J. Scott Campbell and Elias Chatzoudis, inspired by Grimm Fairy Tales and Wonderland.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Zenescope插画__Zenescope Illustration/preview.jpg",
+  "folder": "krea2_styles/Zenescope插画__Zenescope Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1588",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "明亮夜行忧郁",
+  "name": "Luminous Nocturnal Melancholy",
+  "prompt": "nocturnal silhouette, cinematic low-key lighting, deep indigo and teal palette, wet surface reflections, ethereal rim lighting, dreamlike mood, high-contrast monochrome, atmospheric bokeh. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行忧郁__Luminous Nocturnal Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行忧郁__Luminous Nocturnal Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

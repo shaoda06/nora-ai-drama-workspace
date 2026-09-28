@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1249",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "大胆图形",
+  "name": "Bold Graphic Printcraft",
+  "prompt": "linocut print style, halftone dot shading, high contrast graphic illustration, heavy black ink outlines, screenprint aesthetic, minimalist poster art, textured organic edges. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/大胆图形__Bold Graphic Printcraft/preview.webp",
+  "folder": "Krea2_moodboard/大胆图形__Bold Graphic Printcraft",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

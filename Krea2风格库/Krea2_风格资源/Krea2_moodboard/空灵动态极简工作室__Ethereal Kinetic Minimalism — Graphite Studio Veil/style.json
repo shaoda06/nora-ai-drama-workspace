@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-742",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵动态极简工作室",
+  "name": "Ethereal Kinetic Minimalism — Graphite Studio Veil",
+  "prompt": "long exposure motion blur, shutter drag, ghostly double exposure, ethereal silhouettes, minimalist high-contrast, kinetic energy, fleeting movement. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态极简工作室__Ethereal Kinetic Minimalism — Graphite Studio Veil/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态极简工作室__Ethereal Kinetic Minimalism — Graphite Studio Veil",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

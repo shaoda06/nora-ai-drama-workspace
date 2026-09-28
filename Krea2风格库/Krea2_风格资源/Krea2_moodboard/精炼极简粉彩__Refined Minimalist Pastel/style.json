@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2591",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "精炼极简粉彩",
+  "name": "Refined Minimalist Pastel",
+  "prompt": "minimalist studio portraiture, soft diffused lighting, pastel color palette, seamless backdrop, high-end lookbook aesthetic, sharp focus, clean geometric composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/精炼极简粉彩__Refined Minimalist Pastel/preview.webp",
+  "folder": "Krea2_moodboard/精炼极简粉彩__Refined Minimalist Pastel",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1385",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感暮光怀旧",
+  "name": "Cinematic Twilight Nostalgia",
+  "prompt": "cinematic twilight, 35mm film grain, warm amber glow, deep blue hour, soft focus bokeh, atmospheric low-light, nostalgic analog texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感暮光怀旧__Cinematic Twilight Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/电影感暮光怀旧__Cinematic Twilight Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

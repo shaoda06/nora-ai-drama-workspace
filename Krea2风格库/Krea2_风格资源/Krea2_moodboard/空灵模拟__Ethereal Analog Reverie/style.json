@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1455",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵模拟",
+  "name": "Ethereal Analog Reverie",
+  "prompt": "analog film grain, soft-focus portraiture, dreamy haze, dappled komorebi light, prism lens flares, muted vintage palette, shallow depth of field, cinematic intimacy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟__Ethereal Analog Reverie/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟__Ethereal Analog Reverie",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

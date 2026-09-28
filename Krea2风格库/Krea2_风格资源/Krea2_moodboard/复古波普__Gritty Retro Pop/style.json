@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-196",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "复古波普",
+  "name": "Gritty Retro Pop",
+  "prompt": "halftone dots, CMYK screen print, vintage comic book style, chromatic aberration, bold ink outlines, distressed paper texture, high-contrast pop art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古波普__Gritty Retro Pop/preview.webp",
+  "folder": "Krea2_moodboard/复古波普__Gritty Retro Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2856",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "明亮夜行棱镜颗粒",
+  "name": "Luminous Nocturnal Dreamscape — Prismatic Halation Grain",
+  "prompt": "cinematic backlighting, ethereal glow, analog film grain, chromatic aberration, dreamcore, soft-focus mist, nocturnal haze, prismatic light leaks. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行棱镜颗粒__Luminous Nocturnal Dreamscape — Prismatic Halation Grain/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行棱镜颗粒__Luminous Nocturnal Dreamscape — Prismatic Halation Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

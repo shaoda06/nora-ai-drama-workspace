@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1749",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "海岸黑色",
+  "name": "Redacted Coastal Noir",
+  "prompt": "vintage film grain, monochrome coastal landscape, stark red geometric overlay, heavy fog, existential noir, minimalist surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/海岸黑色__Redacted Coastal Noir/preview.webp",
+  "folder": "Krea2_moodboard/海岸黑色__Redacted Coastal Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

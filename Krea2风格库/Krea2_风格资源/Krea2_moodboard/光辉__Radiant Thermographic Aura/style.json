@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-484",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "光辉",
+  "name": "Radiant Thermographic Aura",
+  "prompt": "thermal imaging style, chromatic heat map gradient, analog grain texture, glowing blurred silhouette, psychedelic aura, risograph noise, soft-focus airbrush. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光辉__Radiant Thermographic Aura/preview.webp",
+  "folder": "Krea2_moodboard/光辉__Radiant Thermographic Aura",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

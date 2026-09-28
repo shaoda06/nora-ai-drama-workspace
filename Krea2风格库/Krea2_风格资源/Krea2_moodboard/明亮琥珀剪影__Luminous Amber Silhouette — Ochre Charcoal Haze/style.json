@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-770",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "明亮琥珀剪影",
+  "name": "Luminous Amber Silhouette — Ochre Charcoal Haze",
+  "prompt": "backlit silhouette, golden hour glow, amber and charcoal palette, atmospheric haze, high contrast, minimalist composition, dramatic sunset lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮琥珀剪影__Luminous Amber Silhouette — Ochre Charcoal Haze/preview.webp",
+  "folder": "Krea2_moodboard/明亮琥珀剪影__Luminous Amber Silhouette — Ochre Charcoal Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

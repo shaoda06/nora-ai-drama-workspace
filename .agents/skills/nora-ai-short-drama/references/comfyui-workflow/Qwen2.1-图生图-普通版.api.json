@@ -1,0 +1,198 @@
+{
+  "459:451": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "UNETLoader"
+    }
+  },
+  "459:469": {
+    "class_type": "QwenImage21Cache",
+    "inputs": {
+      "device": "auto",
+      "dtype": "default",
+      "model": [
+        "459:451",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "QwenImage21Cache"
+    }
+  },
+  "459:453": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_8b_bf16.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    },
+    "_meta": {
+      "title": "CLIPLoader"
+    }
+  },
+  "470": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "__待替换_输入素材_470__.png"
+    },
+    "_meta": {
+      "title": "LoadImage"
+    }
+  },
+  "459:454": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+    },
+    "_meta": {
+      "title": "VAELoader"
+    }
+  },
+  "475": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "__待替换_输入素材_475__.png"
+    },
+    "_meta": {
+      "title": "LoadImage"
+    }
+  },
+  "459:474": {
+    "class_type": "TextEncodeQwenImage21",
+    "inputs": {
+      "prompt": "待填写：本次任务的完整中文提示词",
+      "negative_prompt": "",
+      "resolution": 0,
+      "clip": [
+        "459:453",
+        0
+      ],
+      "images.image_1": [
+        "470",
+        0
+      ],
+      "vae": [
+        "459:454",
+        0
+      ],
+      "images.image_2": [
+        "475",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "TextEncodeQwenImage21"
+    }
+  },
+  "13": {
+    "class_type": "ResolutionSelector",
+    "inputs": {
+      "aspect_ratio": "1:1 (Square)",
+      "megapixels": 1,
+      "multiple": 32
+    },
+    "_meta": {
+      "title": "ResolutionSelector"
+    }
+  },
+  "459:456": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": [
+        "13",
+        0
+      ],
+      "height": [
+        "13",
+        1
+      ],
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "EmptyLatentImage"
+    }
+  },
+  "459:468": {
+    "class_type": "ComfySwitchNode",
+    "inputs": {
+      "switch": false,
+      "on_false": [
+        "459:474",
+        2
+      ],
+      "on_true": [
+        "459:456",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "ComfySwitchNode"
+    }
+  },
+  "459:458": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 1070478148268574,
+      "steps": 25,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1,
+      "model": [
+        "459:469",
+        0
+      ],
+      "positive": [
+        "459:474",
+        0
+      ],
+      "negative": [
+        "459:474",
+        1
+      ],
+      "latent_image": [
+        "459:468",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "459:457": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "459:458",
+        0
+      ],
+      "vae": [
+        "459:454",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VAEDecode"
+    }
+  },
+  "461": {
+    "class_type": "SaveImageAdvanced",
+    "inputs": {
+      "filename_prefix": "Qwen_image_2.1",
+      "format": "png",
+      "format.bit_depth": "8-bit",
+      "format.input_color_space": "sRGB",
+      "images": [
+        "459:457",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "SaveImageAdvanced"
+    }
+  }
+}

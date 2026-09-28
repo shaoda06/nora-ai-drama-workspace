@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1640",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "明亮水生太阳",
+  "name": "Luminous Aquatic Impressionism — Sun-Struck Caustics",
+  "prompt": "water caustics, sun-drenched, liquid distortion, turquoise aquatic palette, ethereal soft focus, analog film texture, shimmering refraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮水生太阳__Luminous Aquatic Impressionism — Sun-Struck Caustics/preview.webp",
+  "folder": "Krea2_moodboard/明亮水生太阳__Luminous Aquatic Impressionism — Sun-Struck Caustics",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

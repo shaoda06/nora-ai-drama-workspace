@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2715",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "超现实绯红黑色",
+  "name": "Surrealist Crimson Noir",
+  "prompt": "surrealist fashion photography, high-contrast color blocking, crimson and cobalt blue, theatrical directional lighting, tactile textures, editorial minimalism, stark shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实绯红黑色__Surrealist Crimson Noir/preview.webp",
+  "folder": "Krea2_moodboard/超现实绯红黑色__Surrealist Crimson Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

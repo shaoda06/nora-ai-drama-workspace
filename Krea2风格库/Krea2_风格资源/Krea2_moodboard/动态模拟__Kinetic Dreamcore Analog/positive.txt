@@ -1,0 +1,1 @@
+analog film grain, motion blur, chromatic aberration, dreamcore, long exposure light streaks, soft focus glow, lo-fi photography, phosphorescent color palette. Subject:{prompt}

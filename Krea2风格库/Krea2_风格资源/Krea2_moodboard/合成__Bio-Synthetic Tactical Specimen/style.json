@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1237",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "合成",
+  "name": "Bio-Synthetic Tactical Specimen",
+  "prompt": "bio-synthetic, translucent resin, glowing green HUD, cybernetic anatomy, stark black background, clinical studio lighting, intricate circuitry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/合成__Bio-Synthetic Tactical Specimen/preview.webp",
+  "folder": "Krea2_moodboard/合成__Bio-Synthetic Tactical Specimen",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

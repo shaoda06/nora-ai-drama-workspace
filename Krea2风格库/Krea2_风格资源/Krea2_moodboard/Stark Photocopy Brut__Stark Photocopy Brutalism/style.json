@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-503",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "Stark Photocopy Brut",
+  "name": "Stark Photocopy Brutalism",
+  "prompt": "high-contrast black and white, halftone texture, xerox photocopy aesthetic, brutalist graphic design, distressed ink bleed, stark minimalist composition, gritty analog grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Stark Photocopy Brut__Stark Photocopy Brutalism/preview.webp",
+  "folder": "Krea2_moodboard/Stark Photocopy Brut__Stark Photocopy Brutalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

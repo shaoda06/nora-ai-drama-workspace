@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1234",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "Cozy Isometric Minia",
+  "name": "Cozy Isometric Miniatures",
+  "prompt": "isometric perspective, miniature diorama, cozy fantasy atmosphere, vibrant earthy tones, soft ambient lighting, stylized world-building, charming retro aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Cozy Isometric Minia__Cozy Isometric Miniatures/preview.webp",
+  "folder": "Krea2_moodboard/Cozy Isometric Minia__Cozy Isometric Miniatures",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

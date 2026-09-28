@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2624",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "宇宙黑色",
+  "name": "Stark Cosmic Noir",
+  "prompt": "monochromatic astrophotography, high-contrast black and white, deep space void, stark celestial silhouettes, grainy film texture, harsh rim lighting, minimalist cosmic scale. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宇宙黑色__Stark Cosmic Noir/preview.webp",
+  "folder": "Krea2_moodboard/宇宙黑色__Stark Cosmic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

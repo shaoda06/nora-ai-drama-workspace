@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-297",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感黑色",
+  "name": "Cinematic Noir Portraiture",
+  "prompt": "chiaroscuro lighting, high-contrast black and white, cinematic film grain, intimate close-up portrait, low-key dramatic shadows, tactile skin texture, melancholic noir aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色__Cinematic Noir Portraiture/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色__Cinematic Noir Portraiture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1954",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态黑色",
+  "name": "Kinetic Noir Nocturne",
+  "prompt": "long exposure light trails, cinematic urban noir, neon crimson and cyan, brutalist architecture, high contrast chiaroscuro, motion blur, futuristic city night, dynamic light streaks. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态黑色__Kinetic Noir Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/动态黑色__Kinetic Noir Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

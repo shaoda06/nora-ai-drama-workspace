@@ -1,0 +1,1 @@
+motion blur, light trails, central perspective, futuristic velocity, high contrast neon, long exposure, kinetic energy. Subject:{prompt}

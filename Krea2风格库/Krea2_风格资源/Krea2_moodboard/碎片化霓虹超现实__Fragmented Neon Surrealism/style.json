@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3047",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "碎片化霓虹超现实",
+  "name": "Fragmented Neon Surrealism",
+  "prompt": "glitch art, chromatic aberration, fragmented reality, neon gradients, digital distortion, mixed-media collage, prismatic refraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化霓虹超现实__Fragmented Neon Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/碎片化霓虹超现实__Fragmented Neon Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

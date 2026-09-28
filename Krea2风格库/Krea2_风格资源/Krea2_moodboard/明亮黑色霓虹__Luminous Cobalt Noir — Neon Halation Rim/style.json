@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2865",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "明亮黑色霓虹",
+  "name": "Luminous Cobalt Noir — Neon Halation Rim",
+  "prompt": "cobalt blue neon, high-contrast noir, cinematic rim lighting, heavy film grain, ethereal halation, cybernetic noir, chiaroscuro shadows, bioluminescent glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色霓虹__Luminous Cobalt Noir — Neon Halation Rim/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色霓虹__Luminous Cobalt Noir — Neon Halation Rim",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

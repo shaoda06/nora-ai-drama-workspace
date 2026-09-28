@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2674",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "内脏感超现实",
+  "name": "Visceral Gloss Surrealism",
+  "prompt": "high-contrast cinematic portrait, glossy wet skin, shattered glass reflection, visceral liquid distortion, deep crimson accents, avant-garde beauty editorial, sharp directional lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感超现实__Visceral Gloss Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/内脏感超现实__Visceral Gloss Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

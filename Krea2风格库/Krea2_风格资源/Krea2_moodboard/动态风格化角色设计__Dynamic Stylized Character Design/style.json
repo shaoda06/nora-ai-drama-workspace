@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-21",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "动态风格化角色设计",
+  "name": "Dynamic Stylized Character Design",
+  "prompt": "character concept art sheet, clean bold line art, flat cel-shaded, dynamic poses, stylized anatomy, minimalist neutral background, expressive character design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态风格化角色设计__Dynamic Stylized Character Design/preview.webp",
+  "folder": "Krea2_moodboard/动态风格化角色设计__Dynamic Stylized Character Design",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

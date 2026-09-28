@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-549",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "忧郁夜行极简手勾勒靛蓝",
+  "name": "Melancholic Nocturnal Minimalism — Hand-Drawn Indigo",
+  "prompt": "deep indigo color palette, minimalist composition, nocturnal atmosphere, soft grainy texture, hand-drawn aesthetic, melancholic mood, subtle luminescence. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁夜行极简手勾勒靛蓝__Melancholic Nocturnal Minimalism — Hand-Drawn Indigo/preview.webp",
+  "folder": "Krea2_moodboard/忧郁夜行极简手勾勒靛蓝__Melancholic Nocturnal Minimalism — Hand-Drawn Indigo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

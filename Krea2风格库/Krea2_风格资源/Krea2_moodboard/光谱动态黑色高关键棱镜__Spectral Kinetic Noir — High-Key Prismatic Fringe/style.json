@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2241",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "光谱动态黑色高关键棱镜",
+  "name": "Spectral Kinetic Noir — High-Key Prismatic Fringe",
+  "prompt": "high-contrast silhouette, intentional motion blur, chromatic aberration, stark white background, spectral digital distortion, avant-garde fashion photography, prismatic light fringing. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱动态黑色高关键棱镜__Spectral Kinetic Noir — High-Key Prismatic Fringe/preview.webp",
+  "folder": "Krea2_moodboard/光谱动态黑色高关键棱镜__Spectral Kinetic Noir — High-Key Prismatic Fringe",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

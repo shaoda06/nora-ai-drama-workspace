@@ -1,0 +1,1 @@
+low-angle perspective, overcast sky background, cinematic documentary style, muted desaturated tones, film grain texture, candid urban portraiture, shallow depth of field. Subject:{prompt}

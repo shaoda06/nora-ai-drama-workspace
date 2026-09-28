@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-725",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "氛围黑色沧桑颗粒",
+  "name": "Atmospheric Monochromatic Noir — Aged Paper Grain",
+  "prompt": "high-contrast monochrome, heavy tactile grain, soft-focus silhouette, atmospheric chiaroscuro, motion blur, charcoal texture, cinematic noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围黑色沧桑颗粒__Atmospheric Monochromatic Noir — Aged Paper Grain/preview.webp",
+  "folder": "Krea2_moodboard/氛围黑色沧桑颗粒__Atmospheric Monochromatic Noir — Aged Paper Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

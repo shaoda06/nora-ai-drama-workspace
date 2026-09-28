@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-237",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "天鹅绒超现实",
+  "name": "Velvet Pastoral Surrealism",
+  "prompt": "plush velvet texture, rolling mossy hills, towering cumulus clouds, surreal pastoral landscape, hyper-clean 3D render, liminal dreamcore, soft directional lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天鹅绒超现实__Velvet Pastoral Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/天鹅绒超现实__Velvet Pastoral Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

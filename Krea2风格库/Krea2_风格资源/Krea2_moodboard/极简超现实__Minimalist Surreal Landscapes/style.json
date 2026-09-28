@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-232",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "极简超现实",
+  "name": "Minimalist Surreal Landscapes",
+  "prompt": "minimalist surrealism, 3D digital render, pristine natural landscape, reflective metallic geometry, conceptual art installation, hyper-realistic lighting, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简超现实__Minimalist Surreal Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/极简超现实__Minimalist Surreal Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

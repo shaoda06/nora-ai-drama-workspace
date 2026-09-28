@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2130",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "电影感极简",
+  "name": "Clinical Cinematic Minimalist",
+  "prompt": "cinematic chiaroscuro, cool blue rim lighting, minimalist profile portrait, high contrast silhouette, clinical tech aesthetic, moody atmospheric lighting, avant-garde fashion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感极简__Clinical Cinematic Minimalist/preview.webp",
+  "folder": "Krea2_moodboard/电影感极简__Clinical Cinematic Minimalist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

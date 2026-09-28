@@ -1,0 +1,1 @@
+double exposure, motion blur, cool-toned color palette, analog film grain, spectral silhouettes, chromatic aberration, cinematic lighting. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1512",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵绯红黑色",
+  "name": "Ethereal Crimson Noir — Cyan Halation",
+  "prompt": "analog film grain, saturated crimson and cyan, soft focus blur, dramatic silhouette, halation effect, low-fidelity texture, chromatic aberration, noir atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵绯红黑色__Ethereal Crimson Noir — Cyan Halation/preview.webp",
+  "folder": "Krea2_moodboard/空灵绯红黑色__Ethereal Crimson Noir — Cyan Halation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

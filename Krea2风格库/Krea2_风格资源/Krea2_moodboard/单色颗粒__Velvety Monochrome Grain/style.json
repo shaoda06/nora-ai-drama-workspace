@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-801",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "单色颗粒",
+  "name": "Velvety Monochrome Grain",
+  "prompt": "heavy grain texture, high-contrast monochrome, stippled charcoal effect, soft-focus blur, chiaroscuro lighting, atmospheric noise, pictorialist aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色颗粒__Velvety Monochrome Grain/preview.webp",
+  "folder": "Krea2_moodboard/单色颗粒__Velvety Monochrome Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

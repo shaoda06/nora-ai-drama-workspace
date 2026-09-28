@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3044",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "霓虹怀旧",
+  "name": "Distorted Neon Nostalgia",
+  "prompt": "fisheye lens distortion, hyper-saturated color palette, chromatic aberration, y2k nostalgic aesthetic, vintage flash photography, psychedelic surrealism, low angle perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹怀旧__Distorted Neon Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/霓虹怀旧__Distorted Neon Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

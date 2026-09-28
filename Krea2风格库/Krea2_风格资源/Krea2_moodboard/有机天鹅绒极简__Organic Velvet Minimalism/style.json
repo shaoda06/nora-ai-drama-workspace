@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2143",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "有机天鹅绒极简",
+  "name": "Organic Velvet Minimalism",
+  "prompt": "organic 3D sculpture, porous cellular texture, soft studio lighting, monochromatic violet palette, minimalist neutral background, tactile foam and clay, parametric bio-design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/有机天鹅绒极简__Organic Velvet Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/有机天鹅绒极简__Organic Velvet Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

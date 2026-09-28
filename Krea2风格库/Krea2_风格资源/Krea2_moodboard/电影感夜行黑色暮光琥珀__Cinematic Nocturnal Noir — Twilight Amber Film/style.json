@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1867",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感夜行黑色暮光琥珀",
+  "name": "Cinematic Nocturnal Noir — Twilight Amber Film",
+  "prompt": "cinematic night photography, teal and amber color grading, high contrast chiaroscuro, moody urban isolation, 35mm film grain, wet asphalt reflections, atmospheric haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色暮光琥珀__Cinematic Nocturnal Noir — Twilight Amber Film/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色暮光琥珀__Cinematic Nocturnal Noir — Twilight Amber Film",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

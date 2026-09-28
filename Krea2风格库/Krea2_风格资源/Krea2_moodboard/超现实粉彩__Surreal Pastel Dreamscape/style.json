@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-126",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "超现实粉彩",
+  "name": "Surreal Pastel Dreamscape",
+  "prompt": "pastel anime aesthetic, surreal whimsical landscape, clean line art, bubblegum pink and sky blue, fisheye perspective, floating sea creatures, lofi dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实粉彩__Surreal Pastel Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/超现实粉彩__Surreal Pastel Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

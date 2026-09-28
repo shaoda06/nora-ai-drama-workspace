@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2963",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "单色数字衰败古典",
+  "name": "Monochrome Digital Decay — Classical VHS Fringe",
+  "prompt": "pixel-sorting, digital degradation, chromatic aberration, monochrome portraiture, horizontal scanlines, surreal glitch art, high-contrast lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色数字衰败古典__Monochrome Digital Decay — Classical VHS Fringe/preview.webp",
+  "folder": "Krea2_moodboard/单色数字衰败古典__Monochrome Digital Decay — Classical VHS Fringe",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3451",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵超现实极简靛蓝",
+  "name": "Ethereal Surrealist Minimalism — Indigo Vapor",
+  "prompt": "surrealist minimalism, volumetric white elements, deep indigo background, magical realism, dramatic chiaroscuro, trompe l'oeil, clean architectural composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵超现实极简靛蓝__Ethereal Surrealist Minimalism — Indigo Vapor/preview.webp",
+  "folder": "Krea2_moodboard/空灵超现实极简靛蓝__Ethereal Surrealist Minimalism — Indigo Vapor",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

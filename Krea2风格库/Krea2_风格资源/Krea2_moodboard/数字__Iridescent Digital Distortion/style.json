@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-818",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "数字",
+  "name": "Iridescent Digital Distortion",
+  "prompt": "chromatic aberration, holographic iridescent texture, digital glitch distortion, neon spectrum gradients, CRT scanline artifacts, liquid metallic sheen, pixel sorted patterns. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字__Iridescent Digital Distortion/preview.webp",
+  "folder": "Krea2_moodboard/数字__Iridescent Digital Distortion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

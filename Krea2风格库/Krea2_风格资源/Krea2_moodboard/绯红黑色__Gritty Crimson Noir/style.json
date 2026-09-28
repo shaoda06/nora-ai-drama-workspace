@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-659",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "绯红黑色",
+  "name": "Gritty Crimson Noir",
+  "prompt": "high contrast graphic illustration, crimson red and black palette, distressed screenprint texture, halftone and stippling, gritty ink splatters, retro-futuristic noir, bold stencil linework. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色__Gritty Crimson Noir/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色__Gritty Crimson Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

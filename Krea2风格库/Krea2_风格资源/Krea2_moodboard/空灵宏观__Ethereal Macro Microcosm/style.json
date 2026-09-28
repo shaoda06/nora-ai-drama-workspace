@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1674",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵宏观",
+  "name": "Ethereal Macro Microcosm",
+  "prompt": "extreme macro photography, shallow depth of field, dreamy bokeh, luminous diffused lighting, intricate botanical texture, glistening water droplets, ethereal nature atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵宏观__Ethereal Macro Microcosm/preview.webp",
+  "folder": "Krea2_moodboard/空灵宏观__Ethereal Macro Microcosm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

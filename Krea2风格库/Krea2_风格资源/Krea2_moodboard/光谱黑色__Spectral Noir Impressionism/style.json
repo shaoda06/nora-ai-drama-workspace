@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-795",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "光谱黑色",
+  "name": "Spectral Noir Impressionism",
+  "prompt": "heavy analog film grain, high-contrast monochrome, ethereal motion blur, spectral silhouette, chiaroscuro lighting, distressed charcoal texture, darkroom experimentalism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色__Spectral Noir Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色__Spectral Noir Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

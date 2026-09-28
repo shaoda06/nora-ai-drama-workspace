@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-303",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感黑色写实",
+  "name": "Cinematic Noir Realism — Asphalt Ochre",
+  "prompt": "cinematic noir, chiaroscuro lighting, analog film grain, voyeuristic framing, gritty urban texture, desaturated color palette, atmospheric tension. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色写实__Cinematic Noir Realism — Asphalt Ochre/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色写实__Cinematic Noir Realism — Asphalt Ochre",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

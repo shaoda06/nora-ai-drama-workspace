@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1144",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "极简",
+  "name": "Minimalist Sumi-e Essence",
+  "prompt": "sumi-e ink wash, minimalist composition, monochromatic black ink, gestural brushstrokes, negative space, textured rice paper, zen atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Minimalist Sumi-e Essence/preview.webp",
+  "folder": "Krea2_moodboard/极简__Minimalist Sumi-e Essence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

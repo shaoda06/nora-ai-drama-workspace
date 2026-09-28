@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-769",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "明亮深渊黑色",
+  "name": "Luminous Abyssal Noir — Foggy Volumetric Beams",
+  "prompt": "bioluminescent glow, volumetric lighting, deep cyan and charcoal palette, cinematic high contrast, heavy film grain, ethereal silhouettes, atmospheric fog. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮深渊黑色__Luminous Abyssal Noir — Foggy Volumetric Beams/preview.webp",
+  "folder": "Krea2_moodboard/明亮深渊黑色__Luminous Abyssal Noir — Foggy Volumetric Beams",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

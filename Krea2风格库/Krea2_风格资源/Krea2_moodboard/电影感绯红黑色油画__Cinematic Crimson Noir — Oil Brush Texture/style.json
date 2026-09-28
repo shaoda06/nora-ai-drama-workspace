@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2244",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "电影感绯红黑色油画",
+  "name": "Cinematic Crimson Noir — Oil Brush Texture",
+  "prompt": "monochromatic crimson lighting, dramatic chiaroscuro portrait, high-contrast noir, reflective skin texture, pitch-black background, cinematic motion blur, avant-garde atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红黑色油画__Cinematic Crimson Noir — Oil Brush Texture/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红黑色油画__Cinematic Crimson Noir — Oil Brush Texture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

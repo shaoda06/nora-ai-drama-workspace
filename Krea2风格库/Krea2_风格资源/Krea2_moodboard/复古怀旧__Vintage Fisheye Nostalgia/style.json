@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2098",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "复古怀旧",
+  "name": "Vintage Fisheye Nostalgia",
+  "prompt": "circular fisheye lens, extreme low angle shot, analog film aesthetic, vibrant saturated colors, sun-drenched lens flare, barrel distortion, candid snapshot, nostalgic vintage quality. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古怀旧__Vintage Fisheye Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/复古怀旧__Vintage Fisheye Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1171",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵霓虹复古宇宙",
+  "name": "Ethereal Neon Retro-Cosmos",
+  "prompt": "1980s airbrush illustration, chromatic aberration, starburst lens flare, cosmic nebula glow, retro-futuristic vintage grain, prismatic light refraction, ethereal soft-focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵霓虹复古宇宙__Ethereal Neon Retro-Cosmos/preview.webp",
+  "folder": "Krea2_moodboard/空灵霓虹复古宇宙__Ethereal Neon Retro-Cosmos",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

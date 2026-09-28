@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-291",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "阿尔丰斯·穆夏杰作",
+  "name": "Alphonse Mucha Masterwork",
+  "prompt": "Style: Alphonse Mucha Masterwork: elegant decorative illustration characterized by flowing organic linework, intricate ornamental detailing, harmonious visual rhythms, refined craftsmanship, graceful contours, and highly polished surface treatment, blending fine art sophistication with graphic clarity and a strong sense of decorative unity, reminiscent of Alphonse Mucha and Gustav Klimt, inspired by Job Cigarettes Poster and The Slav Epic.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/阿尔丰斯·穆夏杰作__Alphonse Mucha Masterwork/preview.jpg",
+  "folder": "krea2_styles/阿尔丰斯·穆夏杰作__Alphonse Mucha Masterwork",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1878",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "Analytical Cyberneti",
+  "name": "Analytical Cybernetic Surveillance",
+  "prompt": "cyan HUD overlay, CRT scanlines, cybernetic surveillance, holographic telemetry, monochromatic blue-green, pixelated digital interface, high-contrast security footage. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Analytical Cyberneti__Analytical Cybernetic Surveillance/preview.webp",
+  "folder": "Krea2_moodboard/Analytical Cyberneti__Analytical Cybernetic Surveillance",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-392",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "图形双色调半色调",
+  "name": "Graphic Duotone Halftone",
+  "prompt": "halftone patterns, stipple texture, duotone color palette, screen print aesthetic, high-contrast graphic, retro printmaking, grainy ink texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形双色调半色调__Graphic Duotone Halftone/preview.webp",
+  "folder": "Krea2_moodboard/图形双色调半色调__Graphic Duotone Halftone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

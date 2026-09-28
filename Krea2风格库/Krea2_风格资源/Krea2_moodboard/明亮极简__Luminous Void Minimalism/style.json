@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2667",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "明亮极简",
+  "name": "Luminous Void Minimalism",
+  "prompt": "stark silhouette, high-contrast monochrome, luminous particle flow, cosmic light vortex, dramatic backlighting, existential scale, dynamic energy streaks. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮极简__Luminous Void Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/明亮极简__Luminous Void Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

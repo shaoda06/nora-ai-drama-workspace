@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-496",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "光谱故障",
+  "name": "Spectral Glitch Aura",
+  "prompt": "thermal aura glow, glitch art distortion, stark silhouette, grainy risograph texture, chromatic aberration, motion blur, spray paint halo. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱故障__Spectral Glitch Aura/preview.webp",
+  "folder": "Krea2_moodboard/光谱故障__Spectral Glitch Aura",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3302",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "明亮复古超现实",
+  "name": "Luminous Retro Surrealism — Magenta Airbrush Starburst",
+  "prompt": "1980s airbrush aesthetic, starburst lens flare, retro film grain, saturated cobalt and magenta, surreal dreamcore, iridescent light refraction, vintage sci-fi atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮复古超现实__Luminous Retro Surrealism — Magenta Airbrush Starburst/preview.webp",
+  "folder": "Krea2_moodboard/明亮复古超现实__Luminous Retro Surrealism — Magenta Airbrush Starburst",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

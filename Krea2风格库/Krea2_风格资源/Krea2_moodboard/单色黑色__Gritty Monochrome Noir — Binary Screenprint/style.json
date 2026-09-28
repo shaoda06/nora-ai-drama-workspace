@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-299",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "单色黑色",
+  "name": "Gritty Monochrome Noir — Binary Screenprint",
+  "prompt": "high-contrast black and white, stark silhouettes, distressed analog texture, grungy industrial aesthetic, cinematic noir lighting, graphic screenprint style, lo-fi film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色黑色__Gritty Monochrome Noir — Binary Screenprint/preview.webp",
+  "folder": "Krea2_moodboard/单色黑色__Gritty Monochrome Noir — Binary Screenprint",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

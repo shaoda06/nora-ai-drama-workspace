@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2927",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱黑色靛蓝霓虹",
+  "name": "Spectral Thermal Noir — Indigo Neon Aura",
+  "prompt": "thermal imaging glow, high-contrast silhouette, heavy film grain, ethereal aura, chromatic aberration, airbrushed neon gradient, surreal light leak, soft-focus diffusion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色靛蓝霓虹__Spectral Thermal Noir — Indigo Neon Aura/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色靛蓝霓虹__Spectral Thermal Noir — Indigo Neon Aura",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

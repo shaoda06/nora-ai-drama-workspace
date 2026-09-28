@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2719",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "电影感夜行暮光",
+  "name": "Cinematic Nocturnal Twilight",
+  "prompt": "cinematic twilight, deep blue hour, stark silhouette, analog film grain, starburst lens flare, retro-surrealist, high-contrast lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行暮光__Cinematic Nocturnal Twilight/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行暮光__Cinematic Nocturnal Twilight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

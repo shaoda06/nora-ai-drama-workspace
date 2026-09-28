@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1681",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵极简",
+  "name": "Ethereal Tonalist Minimalism",
+  "prompt": "monochromatic blue, atmospheric pointillism, minimalist landscape, soft-focus silhouette, misty tonalism, stippled texture, ethereal light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简__Ethereal Tonalist Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简__Ethereal Tonalist Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1006",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "触觉天真奇想",
+  "name": "Tactile Naive Whimsy",
+  "prompt": "naive art style, heavy impasto texture, whimsical illustration, bold primary colors, tactile brushstrokes, folk art aesthetic, childlike simplicity. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉天真奇想__Tactile Naive Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/触觉天真奇想__Tactile Naive Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

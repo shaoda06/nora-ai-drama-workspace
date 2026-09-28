@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-247",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "空灵棱镜",
+  "name": "Ethereal Prismatic Dreamscape",
+  "prompt": "translucent iridescent glass, starburst lens flare, surreal 3D render, ethereal cloud background, jelly-like refraction, pastel rainbow gradients, soft-focus depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵棱镜__Ethereal Prismatic Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/空灵棱镜__Ethereal Prismatic Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

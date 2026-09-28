@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-882",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "奇想泥土",
+  "name": "Whimsical Earthy Storytelling",
+  "prompt": "whimsical illustration, earthy color palette, painterly texture, cozy atmosphere, isometric perspective, folk art influence, nature-inspired storytelling. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想泥土__Whimsical Earthy Storytelling/preview.webp",
+  "folder": "Krea2_moodboard/奇想泥土__Whimsical Earthy Storytelling",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

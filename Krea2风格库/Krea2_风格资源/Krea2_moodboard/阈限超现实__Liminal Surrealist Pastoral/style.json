@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-248",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "阈限超现实",
+  "name": "Liminal Surrealist Pastoral",
+  "prompt": "minimalist surrealism, liminal space, vibrant green hills, saturated blue sky, dreamcore, sharp shadows, uncanny CGI. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/阈限超现实__Liminal Surrealist Pastoral/preview.webp",
+  "folder": "Krea2_moodboard/阈限超现实__Liminal Surrealist Pastoral",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

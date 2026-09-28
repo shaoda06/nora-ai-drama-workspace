@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3431",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵",
+  "name": "Ethereal Mosaic Impressionism",
+  "prompt": "mosaic tile texture, pointillist style, ethereal pastel palette, shimmering iridescent light, tesserae pattern, dreamy atmospheric, soft gradient transitions. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Mosaic Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Mosaic Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

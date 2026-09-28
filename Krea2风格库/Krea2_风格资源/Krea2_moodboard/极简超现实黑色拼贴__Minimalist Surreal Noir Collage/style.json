@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3537",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "极简超现实黑色拼贴",
+  "name": "Minimalist Surreal Noir Collage",
+  "prompt": "high-contrast monochrome, surrealist photomontage, stark white background, vintage paper collage, minimalist silhouette, uncanny juxtaposition, mid-century retro aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简超现实黑色拼贴__Minimalist Surreal Noir Collage/preview.webp",
+  "folder": "Krea2_moodboard/极简超现实黑色拼贴__Minimalist Surreal Noir Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

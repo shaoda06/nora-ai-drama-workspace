@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-438",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实拼贴",
+  "name": "Gritty Surrealist Collage",
+  "prompt": "vintage screenprint texture, surrealist paper collage, punk zine aesthetic, high-contrast halftone, saturated red and black, distressed ink overlay, graphic cutout art, dadaist montage. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实拼贴__Gritty Surrealist Collage/preview.webp",
+  "folder": "Krea2_moodboard/超现实拼贴__Gritty Surrealist Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-375",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "领英专业肖像",
+  "name": "LinkedIn Pro Portrait",
+  "prompt": "Style: LinkedIn Pro Portrait: A clean, approachable corporate-portrait photography style built on soft, evenly diffused lighting that flatters without dramatic contrast, confident, composed posing that reads as professional yet warm rather than stiff, a polished, subtly retouched finish that preserves natural authenticity over glossy artificiality, gentle, even exposure calibrated for consistent, trustworthy clarity, and a competent, approachable professional polish built for instant credibility at a glance. Influenced by: contemporary corporate-headshot photography, professional business-portrait practice, soft studio-lighting technique, LinkedIn/business-platform portrait convention.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/领英专业肖像__LinkedIn Pro Portrait/preview.jpg",
+  "folder": "krea2_styles/领英专业肖像__LinkedIn Pro Portrait",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-633",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "霓虹波普",
+  "name": "Neon Fauvist Pop",
+  "prompt": "neon pop art, fauvist brushwork, high-contrast color blocking, graphic black outlines, saturated neon palette, risograph grain texture, digital gouache painting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹波普__Neon Fauvist Pop/preview.webp",
+  "folder": "Krea2_moodboard/霓虹波普__Neon Fauvist Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

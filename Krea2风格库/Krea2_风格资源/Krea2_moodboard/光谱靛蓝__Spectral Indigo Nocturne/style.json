@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3421",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "光谱靛蓝",
+  "name": "Spectral Indigo Nocturne",
+  "prompt": "cyanotype print texture, Prussian blue and electric cyan, long exposure motion blur, high-contrast film grain, spectral silhouettes, liminal nocturne, overexposed luminescent glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱靛蓝__Spectral Indigo Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/光谱靛蓝__Spectral Indigo Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

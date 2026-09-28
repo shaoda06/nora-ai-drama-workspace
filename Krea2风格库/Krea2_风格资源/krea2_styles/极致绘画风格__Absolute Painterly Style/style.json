@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-229",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "极致绘画风格",
+  "name": "Absolute Painterly Style",
+  "prompt": "Style: Absolute Painterly Style: A richly tactile digital painting style built entirely on visible, confident brushwork rather than smooth blending, thick impasto-like strokes carrying real physical weight and direction across every surface, loose expressive edges that dissolve fine detail in favor of gestural energy, dramatic value contrast doing the heavy lifting instead of line, and a raw, emotive, unmistakably hand-painted intensity that celebrates the mark of the brush over polished precision. Influenced by: traditional oil painting technique, John Singer Sargent, impasto brushwork, classical atelier painting method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/极致绘画风格__Absolute Painterly Style/preview.jpg",
+  "folder": "krea2_styles/极致绘画风格__Absolute Painterly Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

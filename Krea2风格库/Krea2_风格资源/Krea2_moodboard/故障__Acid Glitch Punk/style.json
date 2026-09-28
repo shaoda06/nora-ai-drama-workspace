@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-330",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "故障",
+  "name": "Acid Glitch Punk",
+  "prompt": "digital glitch distortion, halftone dither pattern, acid green monochrome, high-contrast black and white, risograph texture, cyberpunk editorial, pixel sorting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/故障__Acid Glitch Punk/preview.webp",
+  "folder": "Krea2_moodboard/故障__Acid Glitch Punk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

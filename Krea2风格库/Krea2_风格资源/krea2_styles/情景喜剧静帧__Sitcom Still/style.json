@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-376",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "情景喜剧静帧",
+  "name": "Sitcom Still",
+  "prompt": "Style: Sitcom Still: A bright, evenly lit multi-camera photographic style built on flat, shadow-minimizing illumination that keeps every plane clearly and consistently visible, a clean, high-key exposure logic prioritizing legibility over dramatic mood, static, proscenium-adjacent framing that favors clarity and coverage over cinematic composition, an unhurried, staged stillness carried through deliberate, evenly balanced lighting setups, and a familiar, comfortably lit television-studio polish rooted in decades of broadcast-comedy production tradition. Influenced by: multi-camera sitcom lighting tradition, television-studio production practice, broadcast three-point lighting technique, classic American TV-comedy visual convention.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/情景喜剧静帧__Sitcom Still/preview.jpg",
+  "folder": "krea2_styles/情景喜剧静帧__Sitcom Still",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

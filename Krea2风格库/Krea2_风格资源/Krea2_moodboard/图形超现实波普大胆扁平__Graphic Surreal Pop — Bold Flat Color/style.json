@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-628",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "图形超现实波普大胆扁平",
+  "name": "Graphic Surreal Pop — Bold Flat Color",
+  "prompt": "flat vector illustration, bold black outlines, minimalist pop art, surrealist composition, clean graphic style, saturated color blocking, no gradients. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形超现实波普大胆扁平__Graphic Surreal Pop — Bold Flat Color/preview.webp",
+  "folder": "Krea2_moodboard/图形超现实波普大胆扁平__Graphic Surreal Pop — Bold Flat Color",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

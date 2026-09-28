@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2222",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "夜行都市",
+  "name": "Nocturnal Urban Geometry",
+  "prompt": "high-angle aerial photography, nocturnal urban grid, chiaroscuro lighting, geometric architectural composition, amber light trails, vertiginous perspective, metropolitan scale. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行都市__Nocturnal Urban Geometry/preview.webp",
+  "folder": "Krea2_moodboard/夜行都市__Nocturnal Urban Geometry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

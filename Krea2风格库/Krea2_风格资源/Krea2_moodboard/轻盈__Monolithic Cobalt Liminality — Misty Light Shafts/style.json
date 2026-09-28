@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1583",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "轻盈",
+  "name": "Monolithic Cobalt Liminality — Misty Light Shafts",
+  "prompt": "deep cobalt and indigo palette, cinematic high-contrast silhouette, monolithic brutalist structures, atmospheric misty liminality, ethereal glowing light shafts, grainy cinematic texture, cosmic isolation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/轻盈__Monolithic Cobalt Liminality — Misty Light Shafts/preview.webp",
+  "folder": "Krea2_moodboard/轻盈__Monolithic Cobalt Liminality — Misty Light Shafts",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-805",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "彩色故障",
+  "name": "Chromatic Glitch Etherea",
+  "prompt": "chromatic aberration, prismatic light leak, digital glitch distortion, ethereal dreamlike atmosphere, high-contrast dark aesthetic, pixel sorting, vhs scanline artifacts. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色故障__Chromatic Glitch Etherea/preview.webp",
+  "folder": "Krea2_moodboard/彩色故障__Chromatic Glitch Etherea",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-184",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "詹姆斯·让风格",
+  "name": "James Jean Style",
+  "prompt": "Style: James Jean Style: A richly symbolic, dreamlike illustration style built on flowing, intricate linework that weaves organic pattern seamlessly through composition, delicate translucent washes blending soft color transition with sharply rendered focal detail, a hushed, contemplative surrealism where imagery seems to grow and dissolve into itself, meticulous ornamental density balanced against generous atmospheric space, and a poetic, otherworldly elegance that feels both meticulously crafted and effortlessly dreamlike. Influenced by: James Jean, contemporary illustrative surrealism, ink-and-wash painting technique, gallery-adjacent narrative-illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/詹姆斯·让风格__James Jean Style/preview.jpg",
+  "folder": "krea2_styles/詹姆斯·让风格__James Jean Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

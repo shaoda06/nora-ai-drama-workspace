@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-53",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "明亮宇宙空灵",
+  "name": "Luminous Cosmic Ethereal",
+  "prompt": "celestial anime aesthetic, glowing liquid elements, deep indigo and teal palette, painterly ethereal atmosphere, high-contrast starlight, surreal cosmic illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮宇宙空灵__Luminous Cosmic Ethereal/preview.webp",
+  "folder": "Krea2_moodboard/明亮宇宙空灵__Luminous Cosmic Ethereal",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2617",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "剪影",
+  "name": "Monochromatic Sculptural Silhouette",
+  "prompt": "high-contrast silhouette, minimalist profile portrait, stark rim lighting, monochromatic studio photography, neutral gray backdrop, sculptural form, graphic fashion portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/剪影__Monochromatic Sculptural Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/剪影__Monochromatic Sculptural Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

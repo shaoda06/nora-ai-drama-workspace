@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2278",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "动态动态速度",
+  "name": "Dynamic Kinetic Velocity — Chronophotographic Streak",
+  "prompt": "motion blur, panning shot, kinetic energy, long exposure action, high speed photography, dynamic velocity trails, high contrast action. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态动态速度__Dynamic Kinetic Velocity — Chronophotographic Streak/preview.webp",
+  "folder": "Krea2_moodboard/动态动态速度__Dynamic Kinetic Velocity — Chronophotographic Streak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

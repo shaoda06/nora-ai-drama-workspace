@@ -1,0 +1,1 @@
+motion blur, heavy film grain, high-contrast noir, spectral glowing silhouette, thermal imaging palette, analog texture, long exposure. Subject:{prompt}

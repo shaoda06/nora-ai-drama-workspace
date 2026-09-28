@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3452",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "超现实阈限怀旧拼贴",
+  "name": "Surreal Liminal Nostalgia — Oversaturated Y2K Collage",
+  "prompt": "frutiger eco, weirdcore, dreamcore, surreal digital collage, oversaturated green landscape, uncanny liminal space, nostalgic analog texture, first-person perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实阈限怀旧拼贴__Surreal Liminal Nostalgia — Oversaturated Y2K Collage/preview.webp",
+  "folder": "Krea2_moodboard/超现实阈限怀旧拼贴__Surreal Liminal Nostalgia — Oversaturated Y2K Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

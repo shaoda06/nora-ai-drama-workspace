@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3352",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "翠绿超现实极简",
+  "name": "Verdant Surreal Minimalism",
+  "prompt": "undulating mossy textures, high-angle top-down view, deep forest green palette, surreal organic minimalism, soft diffuse lighting, tactile velvet foliage, contemplative atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/翠绿超现实极简__Verdant Surreal Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/翠绿超现实极简__Verdant Surreal Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+chiaroscuro lighting, dramatic low-key shadows, cinematic moody atmosphere, shallow depth of field, rich tactile textures, classical oil painting influence, warm ambient glow. Subject:{prompt}

@@ -1,0 +1,1 @@
+cinematic motion blur, analog film grain, shutter drag, painterly streaks, desaturated earth tones, fleeting transit, atmospheric noir. Subject:{prompt}

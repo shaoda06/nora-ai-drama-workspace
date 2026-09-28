@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1494",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "夜行动态怀旧",
+  "name": "Nocturnal Kinetic Nostalgia",
+  "prompt": "cinematic motion blur, analog film grain, twilight atmospheric lighting, lo-fi flash aesthetic, intentional camera movement, dreamy soft focus, nocturnal nostalgia. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行动态怀旧__Nocturnal Kinetic Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/夜行动态怀旧__Nocturnal Kinetic Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

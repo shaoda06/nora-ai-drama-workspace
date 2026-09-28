@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2582",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "植物",
+  "name": "Monochromatic Botanical Chiaroscuro",
+  "prompt": "chiaroscuro lighting, stark black background, macro botanical detail, minimalist composition, high contrast, sculptural organic forms, pristine white texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/植物__Monochromatic Botanical Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/植物__Monochromatic Botanical Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

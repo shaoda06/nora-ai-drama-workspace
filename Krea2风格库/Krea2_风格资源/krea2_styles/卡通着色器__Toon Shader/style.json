@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-136",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "卡通着色器",
+  "name": "Toon Shader",
+  "prompt": "Style: Toon Shader: A crisp, flat-shaded rendering style built on hard-edged tonal division that separates each plane of light and shadow into distinct, uniform steps rather than smooth gradation, confident bold outline holding every shape with graphic clarity, minimal color banding replacing any continuous blending, a clean, deliberate simplicity that mimics hand-drawn cel-animation logic within a fully dimensional render, and a punchy, graphic-meets-dimensional intensity that feels stylized, crisp, and instantly readable. Influenced by: cel-shading rendering technique, non-photorealistic 3D-rendering practice, anime-adjacent toon-shader method, stylized game-rendering tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/卡通着色器__Toon Shader/preview.jpg",
+  "folder": "krea2_styles/卡通着色器__Toon Shader",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

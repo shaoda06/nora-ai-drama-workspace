@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2520",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "靛蓝",
+  "name": "Luminescent Indigo Nocturne",
+  "prompt": "bioluminescent cyan glow, deep indigo monochrome, heavy analog film grain, high-contrast chiaroscuro, ethereal silhouettes, soft-focus halo, mysterious nocturnal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/靛蓝__Luminescent Indigo Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/靛蓝__Luminescent Indigo Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

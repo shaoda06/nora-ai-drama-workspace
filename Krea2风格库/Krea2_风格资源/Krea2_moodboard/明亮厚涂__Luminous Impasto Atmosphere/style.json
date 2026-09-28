@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1053",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "明亮厚涂",
+  "name": "Luminous Impasto Atmosphere",
+  "prompt": "heavy impasto oil painting, expressive palette knife texture, dappled light and shadow, chiaroscuro mood, emerald and teal palette, ethereal atmosphere, shimmering caustic reflections. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮厚涂__Luminous Impasto Atmosphere/preview.webp",
+  "folder": "Krea2_moodboard/明亮厚涂__Luminous Impasto Atmosphere",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

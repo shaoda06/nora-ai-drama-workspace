@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1892",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "棱镜数字泥土",
+  "name": "Prismatic Digital Fragmentation — Earthy Datamosh",
+  "prompt": "pixel sorting, chromatic aberration, digital glitch art, datamoshing, prismatic light leaks, iridescent textures, organic-cybernetic fusion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜数字泥土__Prismatic Digital Fragmentation — Earthy Datamosh/preview.webp",
+  "folder": "Krea2_moodboard/棱镜数字泥土__Prismatic Digital Fragmentation — Earthy Datamosh",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

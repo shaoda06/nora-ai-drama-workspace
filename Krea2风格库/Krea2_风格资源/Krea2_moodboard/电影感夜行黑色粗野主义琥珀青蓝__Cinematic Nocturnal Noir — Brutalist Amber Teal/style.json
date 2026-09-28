@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1855",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感夜行黑色粗野主义琥珀青蓝",
+  "name": "Cinematic Nocturnal Noir — Brutalist Amber Teal",
+  "prompt": "cinematic lighting, chiaroscuro, brutalist architecture, amber and teal palette, atmospheric haze, urban noir, 35mm film grain, low-key moody composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色粗野主义琥珀青蓝__Cinematic Nocturnal Noir — Brutalist Amber Teal/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色粗野主义琥珀青蓝__Cinematic Nocturnal Noir — Brutalist Amber Teal",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

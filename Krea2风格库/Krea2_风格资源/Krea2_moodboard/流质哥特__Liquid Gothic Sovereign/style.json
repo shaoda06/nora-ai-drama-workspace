@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2445",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "流质哥特",
+  "name": "Liquid Gothic Sovereign",
+  "prompt": "dark gothic fantasy, liquid chrome texture, sharp metallic spikes, high-contrast studio lighting, avant-garde armor, monochromatic palette, reflective metallic sheen, ritualistic elegance. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/流质哥特__Liquid Gothic Sovereign/preview.webp",
+  "folder": "Krea2_moodboard/流质哥特__Liquid Gothic Sovereign",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

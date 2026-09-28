@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-163",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "DC漫画风格",
+  "name": "DC Comics Style",
+  "prompt": "Style: DC Comics Style: A bold, dynamic mainstream superhero comic-illustration style built on confident heavy inking over powerful, heroic figure work, punchy saturated color-block application with sharp graphic contrast, dramatic action-driven posing and foreshortening designed for kinetic panel-to-panel storytelling, crisp linework balancing classic heroic silhouette with modern rendering polish, and an iconic, larger-than-life heroic gravitas instantly recognizable as classic mainstream American superhero comics. Influenced by: Jim Lee, Neal Adams, DC Comics house style, mainstream superhero-illustration tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/DC漫画风格__DC Comics Style/preview.jpg",
+  "folder": "krea2_styles/DC漫画风格__DC Comics Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

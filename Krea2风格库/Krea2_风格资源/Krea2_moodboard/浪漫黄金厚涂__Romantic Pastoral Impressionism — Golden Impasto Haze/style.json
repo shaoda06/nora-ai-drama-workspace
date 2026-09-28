@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1090",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "浪漫黄金厚涂",
+  "name": "Romantic Pastoral Impressionism — Golden Impasto Haze",
+  "prompt": "impressionist oil painting, dappled sunlight, pastoral landscape, thick impasto brushstrokes, golden hour atmosphere, romanticized nature, atmospheric haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/浪漫黄金厚涂__Romantic Pastoral Impressionism — Golden Impasto Haze/preview.webp",
+  "folder": "Krea2_moodboard/浪漫黄金厚涂__Romantic Pastoral Impressionism — Golden Impasto Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

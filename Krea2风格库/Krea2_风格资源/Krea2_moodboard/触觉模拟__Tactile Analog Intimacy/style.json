@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1401",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "触觉模拟",
+  "name": "Tactile Analog Intimacy",
+  "prompt": "35mm film grain, warm cinematic tones, tactile skin texture, shallow depth of field, crimson and amber palette, retro editorial lighting, intimate macro detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉模拟__Tactile Analog Intimacy/preview.webp",
+  "folder": "Krea2_moodboard/触觉模拟__Tactile Analog Intimacy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

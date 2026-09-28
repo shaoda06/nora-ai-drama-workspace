@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3492",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "电影感",
+  "name": "Cinematic Acid Nocturne",
+  "prompt": "cinematic neon mist, acid green lighting, nocturnal urban isolation, high contrast silhouettes, wet asphalt reflections, atmospheric film grain, eerie liminal spaces. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感__Cinematic Acid Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/电影感__Cinematic Acid Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

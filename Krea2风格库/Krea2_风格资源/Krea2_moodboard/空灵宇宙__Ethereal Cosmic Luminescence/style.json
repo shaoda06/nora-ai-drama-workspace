@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2530",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "空灵宇宙",
+  "name": "Ethereal Cosmic Luminescence",
+  "prompt": "nebula luminescence, deep space void, magenta and violet palette, ethereal stardust, high-contrast celestial light, bioluminescent textures, analog film grain, cosmic mysticism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵宇宙__Ethereal Cosmic Luminescence/preview.webp",
+  "folder": "Krea2_moodboard/空灵宇宙__Ethereal Cosmic Luminescence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

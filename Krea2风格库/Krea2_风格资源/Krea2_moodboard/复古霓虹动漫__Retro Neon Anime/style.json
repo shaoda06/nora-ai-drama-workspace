@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-122",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "复古霓虹动漫",
+  "name": "Retro Neon Anime",
+  "prompt": "90s anime style, bold ink outlines, cel-shaded illustration, high-contrast color palette, halftone textures, cyberpunk aesthetic, retro-futuristic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古霓虹动漫__Retro Neon Anime/preview.webp",
+  "folder": "Krea2_moodboard/复古霓虹动漫__Retro Neon Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

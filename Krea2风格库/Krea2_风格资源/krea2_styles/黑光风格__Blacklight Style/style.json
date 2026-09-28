@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-234",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "黑光风格",
+  "name": "Blacklight Style",
+  "prompt": "Style: Blacklight Style: A luminous glow-reactive illustration style built on stark contrast between an inert, absorbed base surface and intensely radiant fluorescing accents, an otherworldly internal luminosity that appears to emit rather than reflect, sharp separation between glowing and non-glowing regions with almost no transitional gradation, a surreal, electric intensity charged with nightclub-adjacent energy, and a hypnotic, ultraviolet-reactive vibrancy that feels alive in the dark. Influenced by: blacklight poster art tradition, fluorescent pigment illustration technique, psychedelic 1960s-70s poster design, UV-reactive body-art photography.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/黑光风格__Blacklight Style/preview.jpg",
+  "folder": "krea2_styles/黑光风格__Blacklight Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

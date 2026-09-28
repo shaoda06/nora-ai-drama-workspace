@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-164",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "绯红黑色图形动漫扁平墨水",
+  "name": "Crimson Noir Graphic — Anime Flat Ink",
+  "prompt": "crimson and black palette, high-contrast noir lighting, bold ink outlines, graphic novel style, nocturnal atmosphere, sharp anime-inspired linework, minimalist shading. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色图形动漫扁平墨水__Crimson Noir Graphic — Anime Flat Ink/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色图形动漫扁平墨水__Crimson Noir Graphic — Anime Flat Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

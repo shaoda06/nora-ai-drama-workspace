@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-359",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "数字现代主义拼贴",
+  "name": "Digital Modernist Collage",
+  "prompt": "pixelated collage, Swiss modernist layout, halftone textures, papercut window effect, muted earthy palette, minimalist negative space, lo-fi digital artifacts. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字现代主义拼贴__Digital Modernist Collage/preview.webp",
+  "folder": "Krea2_moodboard/数字现代主义拼贴__Digital Modernist Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

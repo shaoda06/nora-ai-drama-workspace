@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-236",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "布拉塞夜景摄影",
+  "name": "Brassaï Night Photography",
+  "prompt": "Style: Brassaï Night Photography: nocturnal photographic aesthetics characterized by atmospheric illumination, deep tonal richness, urban mystery, reflective surfaces, cinematic shadow play, and evocative documentary realism, capturing the poetry of night through carefully observed light, immersive mood, and timeless visual storytelling while maintaining exceptional compositional discipline and photographic craftsmanship, reminiscent of Brassaï and Robert Doisneau, inspired by Paris de Nuit and French Humanist Photography.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/布拉塞夜景摄影__Brassaï Night Photography/preview.jpg",
+  "folder": "krea2_styles/布拉塞夜景摄影__Brassaï Night Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

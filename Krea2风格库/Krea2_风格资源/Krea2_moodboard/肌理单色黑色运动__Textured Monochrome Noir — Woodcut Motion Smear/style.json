@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-523",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "肌理单色黑色运动",
+  "name": "Textured Monochrome Noir — Woodcut Motion Smear",
+  "prompt": "high-contrast monochrome, halftone dot pattern, chiaroscuro lighting, vintage print texture, stipple shading, motion blur, graphic black and white. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理单色黑色运动__Textured Monochrome Noir — Woodcut Motion Smear/preview.webp",
+  "folder": "Krea2_moodboard/肌理单色黑色运动__Textured Monochrome Noir — Woodcut Motion Smear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

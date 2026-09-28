@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2906",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "绯红光谱黑色发光",
+  "name": "Crimson Spectral Noir — Smeared Ember Glow",
+  "prompt": "saturated crimson background, analog film grain, motion blur, spectral silhouette, shutter drag, dark surrealism, ethereal glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红光谱黑色发光__Crimson Spectral Noir — Smeared Ember Glow/preview.webp",
+  "folder": "Krea2_moodboard/绯红光谱黑色发光__Crimson Spectral Noir — Smeared Ember Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

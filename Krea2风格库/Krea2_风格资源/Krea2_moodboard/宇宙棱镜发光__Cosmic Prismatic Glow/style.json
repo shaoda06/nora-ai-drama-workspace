@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2749",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "宇宙棱镜发光",
+  "name": "Cosmic Prismatic Glow",
+  "prompt": "prismatic light dispersion, cosmic glitter makeup, shimmering stardust texture, starburst flare, ethereal glow, high contrast dark background, iridescent highlights. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宇宙棱镜发光__Cosmic Prismatic Glow/preview.webp",
+  "folder": "Krea2_moodboard/宇宙棱镜发光__Cosmic Prismatic Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

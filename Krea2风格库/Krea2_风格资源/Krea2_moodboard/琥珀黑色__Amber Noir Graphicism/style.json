@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-329",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "琥珀黑色",
+  "name": "Amber Noir Graphicism",
+  "prompt": "high-contrast silhouette, amber and black palette, screenprint texture, minimalist graphic design, chiaroscuro lighting, distressed ink, bold geometric lines. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀黑色__Amber Noir Graphicism/preview.webp",
+  "folder": "Krea2_moodboard/琥珀黑色__Amber Noir Graphicism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

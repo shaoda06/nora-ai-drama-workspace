@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3480",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "电影感单色黑色沧桑",
+  "name": "Cinematic Monochrome Noir — Aged Paper",
+  "prompt": "high-contrast monochrome, heavy film grain, 35mm film aesthetic, low-key lighting, cinematic noir atmosphere, stark shadows, liminal space, melancholic mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感单色黑色沧桑__Cinematic Monochrome Noir — Aged Paper/preview.webp",
+  "folder": "Krea2_moodboard/电影感单色黑色沧桑__Cinematic Monochrome Noir — Aged Paper",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

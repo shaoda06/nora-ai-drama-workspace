@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1279",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "空灵暮光",
+  "name": "Ethereal Twilight Narratives",
+  "prompt": "painterly digital illustration, twilight atmosphere, soft glowing light, melancholic narrative, dreamy pastel accents, textured gouache overlay, surreal landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵暮光__Ethereal Twilight Narratives/preview.webp",
+  "folder": "Krea2_moodboard/空灵暮光__Ethereal Twilight Narratives",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

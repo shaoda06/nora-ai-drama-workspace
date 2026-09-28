@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-616",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "大胆复古波普图解",
+  "name": "Bold Retro Pop Illustration",
+  "prompt": "bold black ink outlines, saturated pop art palette, risograph screenprint texture, flat graphic illustration, halftone dot shading, retro nostalgic mood, vibrant vector style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/大胆复古波普图解__Bold Retro Pop Illustration/preview.webp",
+  "folder": "Krea2_moodboard/大胆复古波普图解__Bold Retro Pop Illustration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

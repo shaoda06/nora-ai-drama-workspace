@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-524",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "肌理单色超现实",
+  "name": "Textured Monochrome Surrealism",
+  "prompt": "monochrome printmaking, stippled halftone texture, ink bleed on fibrous paper, high-contrast surrealism, grainy lithograph aesthetic, minimalist negative space, tactile pointillism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理单色超现实__Textured Monochrome Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/肌理单色超现实__Textured Monochrome Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

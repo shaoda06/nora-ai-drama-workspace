@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2408",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "绯红超现实编辑",
+  "name": "Crimson Surrealist Editorial",
+  "prompt": "high-contrast editorial, avant-garde makeup, macro beauty photography, crimson and black palette, surrealist macabre, graphic studio portrait, minimalist white background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红超现实编辑__Crimson Surrealist Editorial/preview.webp",
+  "folder": "Krea2_moodboard/绯红超现实编辑__Crimson Surrealist Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

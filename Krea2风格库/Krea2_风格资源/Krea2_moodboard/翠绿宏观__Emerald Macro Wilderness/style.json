@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1805",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "翠绿宏观",
+  "name": "Emerald Macro Wilderness",
+  "prompt": "macro photography, vibrant emerald green, shallow depth of field, dappled forest light, intricate organic texture, soft bokeh background, dewy naturalism, backlit forest details. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/翠绿宏观__Emerald Macro Wilderness/preview.webp",
+  "folder": "Krea2_moodboard/翠绿宏观__Emerald Macro Wilderness",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

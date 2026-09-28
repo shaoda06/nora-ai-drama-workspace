@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2978",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱动态黑色",
+  "name": "Spectral Kinetic Noir — Lo-Fi Double Exposure",
+  "prompt": "high-contrast black and white, heavy film grain, ethereal motion blur, spectral double exposure, chiaroscuro lighting, lo-fi analog texture, surreal long exposure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱动态黑色__Spectral Kinetic Noir — Lo-Fi Double Exposure/preview.webp",
+  "folder": "Krea2_moodboard/光谱动态黑色__Spectral Kinetic Noir — Lo-Fi Double Exposure",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3118",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵沙漠",
+  "name": "Ethereal Desert Futurism",
+  "prompt": "cinematic golden hour lighting, atmospheric dust and haze, geometric futurism, sharp metallic silhouettes, minimalist landscape photography, warm desert earth tones, ethereal mist, epic scale. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵沙漠__Ethereal Desert Futurism/preview.webp",
+  "folder": "Krea2_moodboard/空灵沙漠__Ethereal Desert Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

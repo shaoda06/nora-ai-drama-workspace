@@ -1,0 +1,1 @@
+minimalist 3D abstraction, volumetric gradient lighting, geometric precision, high-contrast composition, soft ambient glow, chromatic highlights, industrial graphic form. Subject:{prompt}

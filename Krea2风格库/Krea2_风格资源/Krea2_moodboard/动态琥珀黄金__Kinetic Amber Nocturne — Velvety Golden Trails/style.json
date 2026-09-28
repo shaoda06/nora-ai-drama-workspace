@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2263",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "动态琥珀黄金",
+  "name": "Kinetic Amber Nocturne — Velvety Golden Trails",
+  "prompt": "motion blur, long exposure, amber glow, cinematic night photography, kinetic light trails, analog film grain, high contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态琥珀黄金__Kinetic Amber Nocturne — Velvety Golden Trails/preview.webp",
+  "folder": "Krea2_moodboard/动态琥珀黄金__Kinetic Amber Nocturne — Velvety Golden Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

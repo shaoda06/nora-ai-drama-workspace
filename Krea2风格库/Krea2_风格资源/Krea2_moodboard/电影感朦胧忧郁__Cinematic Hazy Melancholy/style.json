@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1590",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "电影感朦胧忧郁",
+  "name": "Cinematic Hazy Melancholy",
+  "prompt": "cinematic film grain, muted desaturated palette, soft diffused lighting, dreamy low contrast, atmospheric fog, vintage 35mm aesthetic, melancholic mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感朦胧忧郁__Cinematic Hazy Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/电影感朦胧忧郁__Cinematic Hazy Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

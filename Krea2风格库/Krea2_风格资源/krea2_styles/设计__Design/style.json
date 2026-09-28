@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-205",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "设计",
+  "name": "Design",
+  "prompt": "Style: Design: A clean, purposeful graphic-illustration style built on confident, simplified shape construction that prioritizes function and clarity over decorative detail, flat or minimally gradated color application applied with intentional restraint, a balanced, structured compositional logic guided by clear visual hierarchy, deliberate, uncluttered spacing that lets each element read instantly, and a versatile, contemporary graphic-design clarity rooted in modern commercial and digital design convention. Influenced by: modern graphic-design tradition, minimalist design practice, contemporary commercial-design technique, digital-design composition method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/设计__Design/preview.jpg",
+  "folder": "krea2_styles/设计__Design",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-364",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "低调摄影",
+  "name": "Low-Key Photography",
+  "prompt": "Style: Low-Key Photography: A moody, dramatically shadowed photographic style built on a single dominant light source that carves the subject out of near-total darkness, a narrow, concentrated tonal range weighted heavily toward deep shadow with only selective highlight breaking through, sharp falloff that lets form dissolve quickly into blackness at the edges, a hushed, introspective intensity carried through restrained, deliberate exposure, and a polished, cinematic gravitas that feels intimate, mysterious, and controlled. Influenced by: low-key studio photography technique, film-noir lighting tradition, chiaroscuro photographic method, dramatic portrait lighting practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/低调摄影__Low-Key Photography/preview.jpg",
+  "folder": "krea2_styles/低调摄影__Low-Key Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

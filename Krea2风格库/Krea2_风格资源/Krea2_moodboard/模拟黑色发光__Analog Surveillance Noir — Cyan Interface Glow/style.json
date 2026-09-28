@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1909",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "模拟黑色发光",
+  "name": "Analog Surveillance Noir — Cyan Interface Glow",
+  "prompt": "CRT scanlines, cyberpunk surveillance, thermal imaging, cyanotype aesthetic, HUD data overlays, phosphor glow, chromatic aberration, monochromatic indigo. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟黑色发光__Analog Surveillance Noir — Cyan Interface Glow/preview.webp",
+  "folder": "Krea2_moodboard/模拟黑色发光__Analog Surveillance Noir — Cyan Interface Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

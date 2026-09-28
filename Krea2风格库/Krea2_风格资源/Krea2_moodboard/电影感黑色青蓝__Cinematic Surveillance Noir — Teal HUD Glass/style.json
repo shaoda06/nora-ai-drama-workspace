@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1341",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感黑色青蓝",
+  "name": "Cinematic Surveillance Noir — Teal HUD Glass",
+  "prompt": "cinematic noir, low-key lighting, teal and green grading, scratched glass reflection, holographic HUD overlay, gritty texture, shallow depth of field, intense gaze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色青蓝__Cinematic Surveillance Noir — Teal HUD Glass/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色青蓝__Cinematic Surveillance Noir — Teal HUD Glass",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

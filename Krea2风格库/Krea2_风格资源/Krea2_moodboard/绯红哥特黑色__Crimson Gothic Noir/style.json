@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2488",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "绯红哥特黑色",
+  "name": "Crimson Gothic Noir",
+  "prompt": "crimson and emerald palette, gothic dark romanticism, cinematic moody lighting, theatrical surrealism, opulent velvet textures, atmospheric fog, melancholic aristocratic isolation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红哥特黑色__Crimson Gothic Noir/preview.webp",
+  "folder": "Krea2_moodboard/绯红哥特黑色__Crimson Gothic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

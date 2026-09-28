@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2283",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "颗粒",
+  "name": "Thermal Grain Chromaticism",
+  "prompt": "high-contrast silhouette, thermal gradient aura, analog film grain, chromatic aberration, textured paper background, distorted light leaks, lo-fi screenprint aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/颗粒__Thermal Grain Chromaticism/preview.webp",
+  "folder": "Krea2_moodboard/颗粒__Thermal Grain Chromaticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

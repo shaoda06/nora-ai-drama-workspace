@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1506",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "绯红模拟黑色漏光",
+  "name": "Crimson Analog Noir — Flash Glare Leak",
+  "prompt": "saturated crimson lighting, heavy analog film grain, dramatic high-contrast chiaroscuro, soft focus portraiture, lo-fi light leaks, psychological noir atmosphere, harsh flash overexposure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红模拟黑色漏光__Crimson Analog Noir — Flash Glare Leak/preview.webp",
+  "folder": "Krea2_moodboard/绯红模拟黑色漏光__Crimson Analog Noir — Flash Glare Leak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-485",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "原始模拟拼贴",
+  "name": "Raw Analog Collage",
+  "prompt": "mixed-media collage, torn paper texture, high-contrast monochrome, analog zine aesthetic, deconstructed portrait, halftone printing, distressed tactile layers. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始模拟拼贴__Raw Analog Collage/preview.webp",
+  "folder": "Krea2_moodboard/原始模拟拼贴__Raw Analog Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

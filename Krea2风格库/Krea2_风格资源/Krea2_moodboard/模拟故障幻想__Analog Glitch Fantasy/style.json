@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2768",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "模拟故障幻想",
+  "name": "Analog Glitch Fantasy",
+  "prompt": "low-poly 3D, PS1 graphics style, CRT scanlines, pixel art, dithering, chromatic aberration, retro computer UI, surreal dark fantasy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟故障幻想__Analog Glitch Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/模拟故障幻想__Analog Glitch Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1597",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "怀旧电影感温馨酷分裂",
+  "name": "Nostalgic Cinematic Solitude — Warm-Cool Split",
+  "prompt": "cinematic lighting, golden hour, nostalgic film grain, shallow depth of field, moody silhouette, dreamy atmosphere, oceanic horizon. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧电影感温馨酷分裂__Nostalgic Cinematic Solitude — Warm-Cool Split/preview.webp",
+  "folder": "Krea2_moodboard/怀旧电影感温馨酷分裂__Nostalgic Cinematic Solitude — Warm-Cool Split",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

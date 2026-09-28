@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2383",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "超现实",
+  "name": "Surrealist Topiary Labyrinths",
+  "prompt": "surrealist topiary maze, manicured geometric hedges, cinematic high-angle composition, lush mossy textures, mysterious solitary figure, theatrical dreamscape, vibrant green and crimson palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Surrealist Topiary Labyrinths/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Surrealist Topiary Labyrinths",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

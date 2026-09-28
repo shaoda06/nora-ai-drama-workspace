@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1916",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感黑色",
+  "name": "Cinematic Fractured Noir",
+  "prompt": "chiaroscuro lighting, slitscan distortion, cold blue palette, cinematic motion blur, voyeuristic perspective, experimental darkroom texture, fractured portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色__Cinematic Fractured Noir/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色__Cinematic Fractured Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

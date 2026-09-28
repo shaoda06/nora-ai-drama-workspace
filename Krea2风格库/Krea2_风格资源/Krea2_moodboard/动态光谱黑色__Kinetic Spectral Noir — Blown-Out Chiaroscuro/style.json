@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2028",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态光谱黑色",
+  "name": "Kinetic Spectral Noir — Blown-Out Chiaroscuro",
+  "prompt": "motion blur portraiture, analog film grain, high-contrast chiaroscuro, shutter drag effect, dreamlike distortion, psychological intensity, spectral silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态光谱黑色__Kinetic Spectral Noir — Blown-Out Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/动态光谱黑色__Kinetic Spectral Noir — Blown-Out Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-564",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "夜行图形超现实",
+  "name": "Nocturnal Graphic Surrealism",
+  "prompt": "cobalt and yellow duotone, high-contrast ink illustration, nocturnal atmosphere, surreal graphic narrative, luminous light source, textured grain finish, liminal space aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行图形超现实__Nocturnal Graphic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/夜行图形超现实__Nocturnal Graphic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

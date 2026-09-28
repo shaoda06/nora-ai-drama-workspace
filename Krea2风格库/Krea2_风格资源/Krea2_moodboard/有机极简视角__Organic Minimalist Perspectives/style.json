@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2583",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "有机极简视角",
+  "name": "Organic Minimalist Perspectives",
+  "prompt": "high-angle perspective, sharp contrast lighting, vibrant green landscape, stark white clothing, elongated shadows, minimalist composition, sun-drenched organic textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/有机极简视角__Organic Minimalist Perspectives/preview.webp",
+  "folder": "Krea2_moodboard/有机极简视角__Organic Minimalist Perspectives",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-976",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "空灵粉彩超现实厚涂渐变",
+  "name": "Ethereal Pastel Surrealism — Impasto Gradient",
+  "prompt": "surreal digital landscape, pastel color palette, dreamy atmospheric light, whimsical nature, minimalist composition, painterly texture, vibrant sky gradient. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩超现实厚涂渐变__Ethereal Pastel Surrealism — Impasto Gradient/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩超现实厚涂渐变__Ethereal Pastel Surrealism — Impasto Gradient",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

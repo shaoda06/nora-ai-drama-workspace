@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-298",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感单色",
+  "name": "Gritty Cinematic Monochrome",
+  "prompt": "heavy film grain, high contrast black and white, stark silhouette, cinematic chiaroscuro, analog noise, gelatin silver print, noir atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感单色__Gritty Cinematic Monochrome/preview.webp",
+  "folder": "Krea2_moodboard/电影感单色__Gritty Cinematic Monochrome",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

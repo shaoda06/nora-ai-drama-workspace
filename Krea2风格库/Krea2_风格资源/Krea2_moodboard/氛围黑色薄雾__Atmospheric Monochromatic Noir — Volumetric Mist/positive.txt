@@ -1,0 +1,1 @@
+high-contrast monochrome, heavy film grain, chiaroscuro lighting, volumetric mist, stark silhouettes, mid-century cinematic, atmospheric noir. Subject:{prompt}

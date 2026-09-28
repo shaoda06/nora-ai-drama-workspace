@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1977",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "视角都市波普",
+  "name": "Hyper-Perspective Urban Pop",
+  "prompt": "extreme low-angle perspective, wide-angle fisheye lens, monumental urban scale, vibrant high-contrast daylight, Y2K streetwear energy, sharp architectural lines, distorted urban geometry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/视角都市波普__Hyper-Perspective Urban Pop/preview.webp",
+  "folder": "Krea2_moodboard/视角都市波普__Hyper-Perspective Urban Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

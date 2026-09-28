@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1163",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵",
+  "name": "Ethereal Blurred Impressionism",
+  "prompt": "intentional motion blur, heavy analog film grain, soft focus impressionism, dreamy hazy atmosphere, muted nostalgic color palette, abstracted bokeh, low-resolution aesthetic, painterly texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Blurred Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Blurred Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

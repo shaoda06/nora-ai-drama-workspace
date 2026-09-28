@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2366",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感绯红黑色阴影",
+  "name": "Cinematic Crimson Noir — Shadow Geometry",
+  "prompt": "monochromatic crimson lighting, high-contrast chiaroscuro, stark shadow silhouettes, analog film grain, cinematic suspense, low-key moody lighting, theatrical red atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红黑色阴影__Cinematic Crimson Noir — Shadow Geometry/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红黑色阴影__Cinematic Crimson Noir — Shadow Geometry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

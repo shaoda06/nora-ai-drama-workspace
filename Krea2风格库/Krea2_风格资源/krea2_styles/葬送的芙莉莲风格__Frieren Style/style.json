@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-79",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "葬送的芙莉莲风格",
+  "name": "Frieren Style",
+  "prompt": "Style: Frieren Style: A gentle, atmospheric anime-illustration style built on soft, delicate linework carrying a quiet, contemplative restraint, muted cel-based shading with subtle gradation rather than dramatic contrast, a hushed, melancholic stillness pervading even fantastical composition, meticulous attention to naturalistic environmental detail balanced against calm, understated character design, and a serene, wistful anime intensity that feels contemplative, tender, and quietly profound. Influenced by: Kanehito Yamada (original), Studio Madhouse animation-adaptation tradition, atmospheric anime-illustration technique, contemplative fantasy character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/葬送的芙莉莲风格__Frieren Style/preview.jpg",
+  "folder": "krea2_styles/葬送的芙莉莲风格__Frieren Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-266",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "收藏级故事书插画",
+  "name": "Collector Storybook Illustration",
+  "prompt": "Style: Collector Storybook Illustration: premium narrative illustration aesthetics characterized by refined draftsmanship, elegant visual storytelling, intricate decorative detail, polished painterly rendering, and a timeless sense of wonder, blending classic storybook craftsmanship with modern production-quality execution through sophisticated composition, atmospheric depth, and meticulously curated visual richness, reminiscent of Arthur Rackham and Kinuko Y. Craft, inspired by The Fairy Tales of the Brothers Grimm and The Chronicles of Narnia.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/收藏级故事书插画__Collector Storybook Illustration/preview.jpg",
+  "folder": "krea2_styles/收藏级故事书插画__Collector Storybook Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

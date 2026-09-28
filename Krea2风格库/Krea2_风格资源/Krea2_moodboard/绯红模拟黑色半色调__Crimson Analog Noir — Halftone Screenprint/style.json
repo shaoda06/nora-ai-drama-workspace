@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-352",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "绯红模拟黑色半色调",
+  "name": "Crimson Analog Noir — Halftone Screenprint",
+  "prompt": "duotone red and black, heavy analog film grain, halftone screenprint texture, chromatic aberration, chiaroscuro lighting, lo-fi dreamscape, soft-focus blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红模拟黑色半色调__Crimson Analog Noir — Halftone Screenprint/preview.webp",
+  "folder": "Krea2_moodboard/绯红模拟黑色半色调__Crimson Analog Noir — Halftone Screenprint",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

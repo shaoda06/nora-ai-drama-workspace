@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-190",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "图形黑色",
+  "name": "Distorted Graphic Noir",
+  "prompt": "fisheye lens perspective, bold black ink outlines, dense cross-hatching, triadic color scheme, graphic novel illustration, high contrast shadows, surreal gothic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形黑色__Distorted Graphic Noir/preview.webp",
+  "folder": "Krea2_moodboard/图形黑色__Distorted Graphic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1153",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "明亮光谱黑色哥特绘画感发光",
+  "name": "Luminous Spectral Noir — Gothic Painterly Glow",
+  "prompt": "bioluminescent glow, dark fantasy illustration, chiaroscuro lighting, painterly digital texture, neon accent lighting, ethereal atmospheric depth, high-contrast noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮光谱黑色哥特绘画感发光__Luminous Spectral Noir — Gothic Painterly Glow/preview.webp",
+  "folder": "Krea2_moodboard/明亮光谱黑色哥特绘画感发光__Luminous Spectral Noir — Gothic Painterly Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

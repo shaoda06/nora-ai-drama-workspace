@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-85",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "碧蓝幻想海报风格",
+  "name": "Granblue Fantasy Pin-Up Style",
+  "prompt": "Style: Granblue Fantasy Pin-Up Style: A richly detailed JRPG character-illustration style built on crisp painterly linework blended seamlessly into soft airbrushed shading, glossy semi-realistic rendering that gives skin and hair a polished, luminous finish without tipping into full photorealism, confident glamorous pin-up posing framed with clean graphic composition, delicately layered ornamental costume detail rendered with meticulous craftsmanship, and a vibrant, high-production mobile-gacha polish that feels equally at home as key art and collectible card illustration. Influenced by: Minaba Hideo, Cygames character-art direction, JRPG gacha illustration technique, semi-realistic anime rendering.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/碧蓝幻想海报风格__Granblue Fantasy Pin-Up Style/preview.jpg",
+  "folder": "krea2_styles/碧蓝幻想海报风格__Granblue Fantasy Pin-Up Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

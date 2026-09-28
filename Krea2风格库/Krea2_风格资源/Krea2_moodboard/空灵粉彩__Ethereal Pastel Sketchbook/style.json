@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-759",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵粉彩",
+  "name": "Ethereal Pastel Sketchbook",
+  "prompt": "soft watercolor wash, delicate pencil sketch, ethereal pastel palette, hazy dreamlike atmosphere, high-key lighting, textured paper, iridescent shimmer. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩__Ethereal Pastel Sketchbook/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩__Ethereal Pastel Sketchbook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

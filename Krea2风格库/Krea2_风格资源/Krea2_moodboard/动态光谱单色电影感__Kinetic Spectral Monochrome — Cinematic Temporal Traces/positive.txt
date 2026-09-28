@@ -1,0 +1,1 @@
+intentional camera movement, high-contrast monochrome, ghostly motion blur, shutter drag, cinematic film grain, ethereal portraiture, long exposure distortion. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1711",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感暮光琥珀雾",
+  "name": "Cinematic Twilight Solitude — Amber Fog Beam",
+  "prompt": "cinematic blue hour, vintage car, misty atmospheric fog, warm headlight glow, 35mm film grain, melancholic solitude, minimalist landscape, moody color grading. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感暮光琥珀雾__Cinematic Twilight Solitude — Amber Fog Beam/preview.webp",
+  "folder": "Krea2_moodboard/电影感暮光琥珀雾__Cinematic Twilight Solitude — Amber Fog Beam",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

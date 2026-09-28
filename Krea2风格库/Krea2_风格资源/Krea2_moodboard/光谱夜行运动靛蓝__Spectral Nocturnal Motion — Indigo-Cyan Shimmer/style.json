@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3034",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "光谱夜行运动靛蓝",
+  "name": "Spectral Nocturnal Motion — Indigo-Cyan Shimmer",
+  "prompt": "motion blur, long exposure, spectral glow, deep cyan and indigo, heavy film grain, ethereal silhouettes, lo-fi aesthetic, high-contrast darkness. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱夜行运动靛蓝__Spectral Nocturnal Motion — Indigo-Cyan Shimmer/preview.webp",
+  "folder": "Krea2_moodboard/光谱夜行运动靛蓝__Spectral Nocturnal Motion — Indigo-Cyan Shimmer",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

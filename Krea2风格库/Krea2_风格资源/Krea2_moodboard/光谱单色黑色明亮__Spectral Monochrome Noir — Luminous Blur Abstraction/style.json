@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2984",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱单色黑色明亮",
+  "name": "Spectral Monochrome Noir — Luminous Blur Abstraction",
+  "prompt": "high-contrast monochrome, ethereal motion blur, chiaroscuro lighting, long exposure photography, spectral silhouette, stark black background, luminous glow, surreal double exposure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱单色黑色明亮__Spectral Monochrome Noir — Luminous Blur Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/光谱单色黑色明亮__Spectral Monochrome Noir — Luminous Blur Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

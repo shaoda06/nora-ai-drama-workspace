@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2431",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "空灵光谱",
+  "name": "Ethereal Spectral Chiaroscuro",
+  "prompt": "extreme overexposure, high-contrast black and white, ethereal light bloom, spectral silhouette, heavy film grain, pitch-black background, mysterious halation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵光谱__Ethereal Spectral Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/空灵光谱__Ethereal Spectral Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

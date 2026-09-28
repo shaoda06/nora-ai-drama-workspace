@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2842",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "棱镜数字温馨清冷",
+  "name": "Prismatic Digital Fragmentation — Crystalline Warm-Cold",
+  "prompt": "chromatic aberration, pixel sorting, digital glitch distortion, prismatic light refraction, fragmented crystalline textures, cinematic lighting, surreal digital decay. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜数字温馨清冷__Prismatic Digital Fragmentation — Crystalline Warm-Cold/preview.webp",
+  "folder": "Krea2_moodboard/棱镜数字温馨清冷__Prismatic Digital Fragmentation — Crystalline Warm-Cold",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+stylized 3D character, cinematic lighting, octane render, subsurface scattering, rich tactile textures, expressive character design, fantasy atmosphere. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-562",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "明亮夜行",
+  "name": "Luminous Nocturnal Dreamscapes — Bioluminescent Haze",
+  "prompt": "painterly digital art, bioluminescent glow, twilight blue hour palette, expressive brushwork, mystical atmosphere, atmospheric dreamscape, gothic fantasy lens. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行__Luminous Nocturnal Dreamscapes — Bioluminescent Haze/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行__Luminous Nocturnal Dreamscapes — Bioluminescent Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

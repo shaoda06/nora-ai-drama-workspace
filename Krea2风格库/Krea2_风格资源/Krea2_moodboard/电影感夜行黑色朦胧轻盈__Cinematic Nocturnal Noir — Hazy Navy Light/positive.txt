@@ -1,0 +1,1 @@
+chiaroscuro lighting, volumetric fog, cinematic noir, cool blue monochrome, high-ISO film grain, stark silhouettes, atmospheric haze, industrial thriller aesthetic. Subject:{prompt}

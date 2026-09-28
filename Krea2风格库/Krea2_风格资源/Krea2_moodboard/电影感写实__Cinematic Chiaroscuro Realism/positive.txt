@@ -1,0 +1,1 @@
+chiaroscuro lighting, rim lighting, high contrast, tactile textures, cinematic film look, golden hour, shallow depth of field, moody atmosphere. Subject:{prompt}

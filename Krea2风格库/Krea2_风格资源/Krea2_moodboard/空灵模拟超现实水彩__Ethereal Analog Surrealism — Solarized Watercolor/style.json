@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1126",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "空灵模拟超现实水彩",
+  "name": "Ethereal Analog Surrealism — Solarized Watercolor",
+  "prompt": "double exposure, analog film grain, ethereal light leaks, watercolor texture, solarized distortion, dreamy nostalgia, chromatic abstraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟超现实水彩__Ethereal Analog Surrealism — Solarized Watercolor/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟超现实水彩__Ethereal Analog Surrealism — Solarized Watercolor",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

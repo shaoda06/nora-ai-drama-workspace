@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-220",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "怀旧低多数字",
+  "name": "Nostalgic Low-Poly Digital",
+  "prompt": "low-poly 3D, retro game graphics, flat shading, pixelated textures, 90s CGI aesthetic, sharp faceted geometry, vibrant saturated colors, nostalgic digital render. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧低多数字__Nostalgic Low-Poly Digital/preview.webp",
+  "folder": "Krea2_moodboard/怀旧低多数字__Nostalgic Low-Poly Digital",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

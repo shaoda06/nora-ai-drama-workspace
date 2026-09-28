@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-881",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "复古",
+  "name": "Vintage Japanese Naturalism",
+  "prompt": "Shin-Hanga style, Japanese woodblock print, vintage botanical illustration, aged parchment texture, hand-colored lithograph, delicate ink linework, muted earth tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古__Vintage Japanese Naturalism/preview.webp",
+  "folder": "Krea2_moodboard/复古__Vintage Japanese Naturalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

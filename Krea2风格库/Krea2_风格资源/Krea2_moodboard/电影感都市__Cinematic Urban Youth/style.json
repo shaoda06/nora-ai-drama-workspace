@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1780",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感都市",
+  "name": "Cinematic Urban Youth",
+  "prompt": "low-angle perspective, overcast sky background, cinematic documentary style, muted desaturated tones, film grain texture, candid urban portraiture, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市__Cinematic Urban Youth/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市__Cinematic Urban Youth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

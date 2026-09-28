@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2067",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "模拟故障黑色绽放",
+  "name": "Analog Glitch Noir — Phosphor Magenta Bloom",
+  "prompt": "analog CRT monitor, lo-fi glitch art, high-contrast neon glow, vintage scanlines, retro-futuristic surveillance, film grain and dust, chromatic aberration, analog sci-fi archive. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟故障黑色绽放__Analog Glitch Noir — Phosphor Magenta Bloom/preview.webp",
+  "folder": "Krea2_moodboard/模拟故障黑色绽放__Analog Glitch Noir — Phosphor Magenta Bloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

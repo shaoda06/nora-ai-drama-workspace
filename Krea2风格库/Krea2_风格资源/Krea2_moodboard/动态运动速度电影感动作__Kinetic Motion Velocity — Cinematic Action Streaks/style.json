@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-591",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "动态运动速度电影感动作",
+  "name": "Kinetic Motion Velocity — Cinematic Action Streaks",
+  "prompt": "panning shot, motion blur, kinetic energy, shutter drag, dynamic velocity, painterly streaks, cinematic action. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态运动速度电影感动作__Kinetic Motion Velocity — Cinematic Action Streaks/preview.webp",
+  "folder": "Krea2_moodboard/动态运动速度电影感动作__Kinetic Motion Velocity — Cinematic Action Streaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2967",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "单色故障超现实古典扫视",
+  "name": "Monochrome Glitch Surrealism — Classical Slit-Scan",
+  "prompt": "monochrome glitch art, pixel sorting, high contrast black and white, digital decay, surreal minimalism, slit-scan photography, datamoshing. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障超现实古典扫视__Monochrome Glitch Surrealism — Classical Slit-Scan/preview.webp",
+  "folder": "Krea2_moodboard/单色故障超现实古典扫视__Monochrome Glitch Surrealism — Classical Slit-Scan",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

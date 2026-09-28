@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1211",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "动态梦",
+  "name": "Kinetic Dream Impressionism",
+  "prompt": "intentional motion blur, vintage film grain, dreamy impressionism, sun-drenched warm glow, kinetic candid movement, saturated retro palette, shutter speed streaks, painterly analog aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态梦__Kinetic Dream Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/动态梦__Kinetic Dream Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1477",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵模拟忧郁",
+  "name": "Ethereal Analog Melancholy",
+  "prompt": "analog film grain, dreamy soft focus, muted blue and gold tones, heavy bokeh atmosphere, vintage cinematic texture, hazy light leaks, introspective melancholy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟忧郁__Ethereal Analog Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟忧郁__Ethereal Analog Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

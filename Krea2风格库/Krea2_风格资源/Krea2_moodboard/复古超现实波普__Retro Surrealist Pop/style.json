@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-492",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "复古超现实波普",
+  "name": "Retro Surrealist Pop",
+  "prompt": "duotone screenprint, halftone pattern, surrealist collage, electric blue and orange, risograph texture, high-contrast graphic, torn paper aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古超现实波普__Retro Surrealist Pop/preview.webp",
+  "folder": "Krea2_moodboard/复古超现实波普__Retro Surrealist Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

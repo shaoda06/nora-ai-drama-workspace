@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2533",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "绯红黑色极简编辑",
+  "name": "Crimson Noir Minimalism — Sculptural Editorial",
+  "prompt": "crimson and black palette, high-contrast studio lighting, sculptural silhouettes, gothic surrealism, minimalist composition, dramatic shadows, avant-garde fashion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色极简编辑__Crimson Noir Minimalism — Sculptural Editorial/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色极简编辑__Crimson Noir Minimalism — Sculptural Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

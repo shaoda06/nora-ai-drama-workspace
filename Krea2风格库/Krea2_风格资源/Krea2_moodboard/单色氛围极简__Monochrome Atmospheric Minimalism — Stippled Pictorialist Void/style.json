@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2618",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "单色氛围极简",
+  "name": "Monochrome Atmospheric Minimalism — Stippled Pictorialist Void",
+  "prompt": "high-contrast monochrome, heavy film grain, stippling texture, stark silhouette, desolate landscape, pictorialism, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色氛围极简__Monochrome Atmospheric Minimalism — Stippled Pictorialist Void/preview.webp",
+  "folder": "Krea2_moodboard/单色氛围极简__Monochrome Atmospheric Minimalism — Stippled Pictorialist Void",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

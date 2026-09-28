@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1638",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "复古黑色",
+  "name": "Luminescent Retro Noir",
+  "prompt": "heavy film grain, retro-futuristic, glowing halo effect, high contrast, cerulean and amber palette, soft focus bloom, liminal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古黑色__Luminescent Retro Noir/preview.webp",
+  "folder": "Krea2_moodboard/复古黑色__Luminescent Retro Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

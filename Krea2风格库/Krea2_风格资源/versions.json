@@ -1,0 +1,22 @@
+{
+  "ray": {
+    "revision": "3135400",
+    "label": "3549_moodboard_styles_local v1.1.zip",
+    "date": "2026-08-21T16:18:15.566Z",
+    "note": "日期为作者发布页最后修改时间；更新按资源文件 ID 识别。",
+    "url": "https://civitai.com/models/2856809/ray-style-switching-extension",
+    "download": "https://civitai.com/api/download/models/3237838?type=Archive&format=Other&fileId=3135400",
+    "installed_at": "2026-09-27T21:18:23.673115+00:00",
+    "count": 3549
+  },
+  "clio": {
+    "revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f",
+    "label": "82b8b79a",
+    "date": "2026-09-24T02:31:39Z",
+    "note": "library: rewrite five styles that weren't landing, add Breath of the Wild (398)",
+    "url": "https://github.com/lumenastrum/clio-style-preview",
+    "download": "https://codeload.github.com/lumenastrum/clio-style-preview/zip/82b8b79a2e52d3a53d52ba11c99c100c991dc15f",
+    "installed_at": "2026-09-28T00:55:51.654395+00:00",
+    "count": 398
+  }
+}

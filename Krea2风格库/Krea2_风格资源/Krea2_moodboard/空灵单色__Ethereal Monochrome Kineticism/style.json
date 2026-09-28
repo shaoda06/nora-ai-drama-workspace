@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2940",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵单色",
+  "name": "Ethereal Monochrome Kineticism",
+  "prompt": "high-contrast monochrome, intentional camera movement, ghostly motion blur, minimalist silhouette, long exposure photography, ethereal atmospheric abstraction, heavy film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色__Ethereal Monochrome Kineticism/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色__Ethereal Monochrome Kineticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

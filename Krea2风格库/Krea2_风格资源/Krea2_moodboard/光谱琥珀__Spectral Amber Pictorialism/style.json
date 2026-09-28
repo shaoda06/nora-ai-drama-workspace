@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2428",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "光谱琥珀",
+  "name": "Spectral Amber Pictorialism",
+  "prompt": "spectral chiaroscuro, analog motion blur, sepia and amber palette, heavy film grain, pictorialist aesthetic, slitscan distortion, atmospheric haze, gothic minimalism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱琥珀__Spectral Amber Pictorialism/preview.webp",
+  "folder": "Krea2_moodboard/光谱琥珀__Spectral Amber Pictorialism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

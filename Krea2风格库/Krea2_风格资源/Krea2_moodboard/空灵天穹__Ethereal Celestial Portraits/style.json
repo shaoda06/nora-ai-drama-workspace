@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1629",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵天穹",
+  "name": "Ethereal Celestial Portraits",
+  "prompt": "celestial portrait, nebula light glow, iridescent shimmer, vintage film grain, ethereal porcelain skin, cosmic dust particles, low-key lighting, dreamy soft focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵天穹__Ethereal Celestial Portraits/preview.webp",
+  "folder": "Krea2_moodboard/空灵天穹__Ethereal Celestial Portraits",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

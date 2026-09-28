@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-620",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "复古半色调",
+  "name": "Retro Halftone Printworks",
+  "prompt": "halftone dot pattern, vintage screenprint texture, risograph print aesthetic, duotone color palette, retro analog grain, surreal graphic illustration, aged paper texture, bold ink outlines. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古半色调__Retro Halftone Printworks/preview.webp",
+  "folder": "Krea2_moodboard/复古半色调__Retro Halftone Printworks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

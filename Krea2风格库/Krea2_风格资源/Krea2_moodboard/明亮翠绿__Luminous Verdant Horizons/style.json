@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-965",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮翠绿",
+  "name": "Luminous Verdant Horizons",
+  "prompt": "high-angle bird's-eye view, vibrant emerald and turquoise palette, painterly digital gouache, dappled sunlight, luminous light rays, serene atmospheric landscape, lush textured foliage. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮翠绿__Luminous Verdant Horizons/preview.webp",
+  "folder": "Krea2_moodboard/明亮翠绿__Luminous Verdant Horizons",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

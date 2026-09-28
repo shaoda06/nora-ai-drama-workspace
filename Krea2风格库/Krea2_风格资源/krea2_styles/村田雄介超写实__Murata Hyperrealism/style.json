@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-88",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "村田雄介超写实",
+  "name": "Murata Hyperrealism",
+  "prompt": "Style: Murata Hyperrealism: A meticulously rendered manga-illustration style built on obsessive anatomical precision that treats musculature and material detail with near-photographic exactness, dramatic high-contrast shading carving powerful, sculptural form through confident cross-hatched shadow, a technically disciplined realism that pushes traditional manga linework toward hyperreal density, dynamic, kinetic posing charged with explosive physical presence, and a bold, virtuosic manga intensity that feels equal parts scientific precision and raw physical spectacle. Influenced by: Yusuke Murata, One-Punch Man manga tradition, hyper-detailed manga illustration technique, technical-precision character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/村田雄介超写实__Murata Hyperrealism/preview.jpg",
+  "folder": "krea2_styles/村田雄介超写实__Murata Hyperrealism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

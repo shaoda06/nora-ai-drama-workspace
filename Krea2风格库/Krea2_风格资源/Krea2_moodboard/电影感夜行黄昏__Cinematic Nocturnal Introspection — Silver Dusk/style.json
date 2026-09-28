@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1774",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感夜行黄昏",
+  "name": "Cinematic Nocturnal Introspection — Silver Dusk",
+  "prompt": "cinematic 35mm film grain, low-key moody lighting, shallow depth of field, cool blue and slate tones, introspective candid portrait, urban nocturnal bokeh, atmospheric blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黄昏__Cinematic Nocturnal Introspection — Silver Dusk/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黄昏__Cinematic Nocturnal Introspection — Silver Dusk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

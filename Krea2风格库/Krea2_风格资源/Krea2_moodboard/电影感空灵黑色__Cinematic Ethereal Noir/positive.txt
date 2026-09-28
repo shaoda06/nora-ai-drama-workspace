@@ -1,0 +1,1 @@
+cinematic chiaroscuro, motion blur, translucent textures, desaturated cool tones, ghostly multiple exposure, high-contrast lighting, clinical anonymity. Subject:{prompt}

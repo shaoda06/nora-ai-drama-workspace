@@ -1,0 +1,1 @@
+macro photography, ethereal bokeh, hoarfrost, soft diffused light, icy blue palette, shallow depth of field, glistening dew, dreamy atmosphere. Subject:{prompt}

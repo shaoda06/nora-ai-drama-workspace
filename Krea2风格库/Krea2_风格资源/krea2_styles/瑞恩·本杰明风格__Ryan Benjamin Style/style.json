@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-165",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "瑞恩·本杰明风格",
+  "name": "Ryan Benjamin Style",
+  "prompt": "Style: Ryan Benjamin Style: A dynamic, high-detail comic illustration style combining gritty painterly digital rendering with powerful, dramatically foreshortened action poses, richly textured musculature and costume detail rendered with sharp directional lighting and deep contrast shadow, moody desaturated backgrounds punctuated by bold accent lighting, confident heavy inking blended into painted color for a weighty, tactile finish, and an intense, larger-than-life comic-book gravitas built for splash-page impact. Influenced by: Ryan Benjamin, comic art, digital comic painting technique, modern cover illustration.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/瑞恩·本杰明风格__Ryan Benjamin Style/preview.jpg",
+  "folder": "krea2_styles/瑞恩·本杰明风格__Ryan Benjamin Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

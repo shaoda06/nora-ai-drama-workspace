@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3042",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "超现实花卉",
+  "name": "Surreal Fisheye Floral",
+  "prompt": "extreme low-angle fisheye, worms-eye view, circular floral framing, bright blue sky backdrop, vibrant orange and pink color palette, dramatic lens distortion, golden hour backlighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实花卉__Surreal Fisheye Floral/preview.webp",
+  "folder": "Krea2_moodboard/超现实花卉__Surreal Fisheye Floral",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

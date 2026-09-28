@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-140",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "单色漫画黑色",
+  "name": "Monochrome Manga Noir",
+  "prompt": "high contrast monochrome, manga ink linework, screentone texture, halftone print, dramatic shadows, graphic novel aesthetic, stippling, retro manga style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色漫画黑色__Monochrome Manga Noir/preview.webp",
+  "folder": "Krea2_moodboard/单色漫画黑色__Monochrome Manga Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

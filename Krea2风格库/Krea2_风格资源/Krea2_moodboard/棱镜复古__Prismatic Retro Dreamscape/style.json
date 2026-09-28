@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3024",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "棱镜复古",
+  "name": "Prismatic Retro Dreamscape",
+  "prompt": "prismatic light dispersion, vintage analog film grain, starburst lens flare, retro-futuristic aesthetic, chromatic aberration, ethereal iridescent glow, high-contrast dark composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜复古__Prismatic Retro Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/棱镜复古__Prismatic Retro Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

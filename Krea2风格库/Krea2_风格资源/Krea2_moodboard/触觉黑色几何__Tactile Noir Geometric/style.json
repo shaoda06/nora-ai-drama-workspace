@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-900",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "触觉黑色几何",
+  "name": "Tactile Noir Geometric",
+  "prompt": "tactile paint texture, minimalist geometric abstraction, earthy matte palette, chiaroscuro graphic illustration, vintage print grain, hard-edged composition, organic modernism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉黑色几何__Tactile Noir Geometric/preview.webp",
+  "folder": "Krea2_moodboard/触觉黑色几何__Tactile Noir Geometric",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

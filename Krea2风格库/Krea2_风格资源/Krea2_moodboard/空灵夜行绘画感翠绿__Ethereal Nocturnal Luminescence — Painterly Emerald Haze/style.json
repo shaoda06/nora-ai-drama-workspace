@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-555",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵夜行绘画感翠绿",
+  "name": "Ethereal Nocturnal Luminescence — Painterly Emerald Haze",
+  "prompt": "bioluminescent glow, nocturnal atmosphere, painterly texture, deep indigo and teal palette, ethereal silhouettes, chiaroscuro lighting, mystical surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行绘画感翠绿__Ethereal Nocturnal Luminescence — Painterly Emerald Haze/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行绘画感翠绿__Ethereal Nocturnal Luminescence — Painterly Emerald Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-244",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "漫画肖像",
+  "name": "Caricature",
+  "prompt": "Style: Caricature: A playful exaggeration-driven illustration style built on bold distortion of proportion that amplifies distinctive features for comedic and expressive impact, loose, confident linework capturing likeness through economical, energetic mark-making rather than exhaustive detail, light, quick shading applied to suggest form without slowing the gestural energy, an exuberant, larger-than-life comic timing embedded in every exaggerated feature, and a witty, high-energy sketch-illustration charm that celebrates personality over precision. Influenced by: classic caricature-illustration tradition, quick-sketch portraiture technique, satirical editorial illustration, gestural ink-and-wash caricature.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/漫画肖像__Caricature/preview.jpg",
+  "folder": "krea2_styles/漫画肖像__Caricature",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

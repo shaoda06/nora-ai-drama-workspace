@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2817",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "碎片化单色超现实故障",
+  "name": "Fragmented Monochrome Surrealism — Glitch Ghosting",
+  "prompt": "monochrome minimalism, high-contrast studio portrait, digital glitch distortion, motion blur, geometric fragmentation, surreal photographic collage, shutter drag, cinematic black and white. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化单色超现实故障__Fragmented Monochrome Surrealism — Glitch Ghosting/preview.webp",
+  "folder": "Krea2_moodboard/碎片化单色超现实故障__Fragmented Monochrome Surrealism — Glitch Ghosting",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

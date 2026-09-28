@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2227",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "碎片化模拟拼贴",
+  "name": "Fragmented Analog Collage",
+  "prompt": "analog collage, fragmented portraiture, torn paper edges, cubist photomontage, warm amber lighting, heavy film grain, deconstructed composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化模拟拼贴__Fragmented Analog Collage/preview.webp",
+  "folder": "Krea2_moodboard/碎片化模拟拼贴__Fragmented Analog Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

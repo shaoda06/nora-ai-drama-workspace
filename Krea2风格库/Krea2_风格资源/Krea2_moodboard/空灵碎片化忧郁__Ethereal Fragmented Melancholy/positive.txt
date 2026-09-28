@@ -1,0 +1,1 @@
+double exposure, motion blur, analog film grain, ethereal portraiture, muted pastel tones, refractive glass distortion, cinematic melancholy. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-972",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "绯红黑色哥特",
+  "name": "Crimson Noir Gothic",
+  "prompt": "deep crimson and black palette, stark high-contrast silhouettes, gothic noir atmosphere, heavy impasto texture, cinematic lighting, eerie glowing accents, film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色哥特__Crimson Noir Gothic/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色哥特__Crimson Noir Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

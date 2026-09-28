@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-303",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "2020年代海报女郎",
+  "name": "2020s Pin-Up",
+  "prompt": "Style: 2020s Pin-Up: A polished, contemporary glamour-illustration style built on smooth digital rendering that blends idealized, curve-forward proportion with a cleaner, high-production finish than its mid-century roots, richly airbrushed shading giving skin a flawless, luminous glow, a confident, self-assured posing sensibility balancing playful charm with modern empowerment, meticulous attention to crisp, contemporary silhouette and expression, and a vibrant, current glamour-illustration polish that feels playful, confident, and unmistakably of-the-moment. Influenced by: contemporary digital pin-up illustration tradition, semi-realistic airbrush-rendering technique, modern glamour-illustration practice, digital-painting portrait method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/2020年代海报女郎__2020s Pin-Up/preview.jpg",
+  "folder": "krea2_styles/2020年代海报女郎__2020s Pin-Up",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

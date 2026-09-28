@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3401",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "单色故障黑色",
+  "name": "Monochrome Glitch Noir — Haunted CRT Interference",
+  "prompt": "monochrome analog glitch, high contrast noir, VHS scanlines, pixel sorting distortion, CRT signal interference, liminal surveillance aesthetic, spectral motion blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障黑色__Monochrome Glitch Noir — Haunted CRT Interference/preview.webp",
+  "folder": "Krea2_moodboard/单色故障黑色__Monochrome Glitch Noir — Haunted CRT Interference",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

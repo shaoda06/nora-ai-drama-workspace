@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-267",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "深渊宏观",
+  "name": "Bioluminescent Abyssal Macro",
+  "prompt": "bioluminescent macro photography, translucent organic textures, electric neon glow, deep ocean abyss, subsurface scattering, vibrant high-contrast marine life, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/深渊宏观__Bioluminescent Abyssal Macro/preview.webp",
+  "folder": "Krea2_moodboard/深渊宏观__Bioluminescent Abyssal Macro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

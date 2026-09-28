@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2996",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "宇宙复古超现实",
+  "name": "Cosmic Retro-Surreal Glitz",
+  "prompt": "vintage airbrush aesthetic, deep cobalt blue background, prismatic light leaks, heavy film grain, starburst lens flares, surreal retro-futurism, glittering ethereal texture, 1970s sci-fi fantasy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宇宙复古超现实__Cosmic Retro-Surreal Glitz/preview.webp",
+  "folder": "Krea2_moodboard/宇宙复古超现实__Cosmic Retro-Surreal Glitz",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

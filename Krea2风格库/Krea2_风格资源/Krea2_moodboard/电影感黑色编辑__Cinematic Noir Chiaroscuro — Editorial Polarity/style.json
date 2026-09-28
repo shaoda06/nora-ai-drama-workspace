@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-295",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感黑色编辑",
+  "name": "Cinematic Noir Chiaroscuro — Editorial Polarity",
+  "prompt": "high-contrast black and white, extreme chiaroscuro lighting, cinematic noir portraiture, dramatic shadow play, sharp focus, film grain texture, intimate emotional intensity. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色编辑__Cinematic Noir Chiaroscuro — Editorial Polarity/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色编辑__Cinematic Noir Chiaroscuro — Editorial Polarity",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

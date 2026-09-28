@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2753",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵动态极简高饱和领域",
+  "name": "Ethereal Kinetic Minimalism — Saturated Field Streak",
+  "prompt": "motion blur, ethereal silhouettes, minimalist composition, high-contrast lighting, kinetic energy, shutter drag, saturated color field, botanical abstraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态极简高饱和领域__Ethereal Kinetic Minimalism — Saturated Field Streak/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态极简高饱和领域__Ethereal Kinetic Minimalism — Saturated Field Streak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

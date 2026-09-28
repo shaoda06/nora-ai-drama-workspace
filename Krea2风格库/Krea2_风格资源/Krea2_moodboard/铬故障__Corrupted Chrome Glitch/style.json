@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1899",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "铬故障",
+  "name": "Corrupted Chrome Glitch",
+  "prompt": "analog glitch art, liquid chrome texture, chromatic aberration, pixel sorting, CRT scanlines, high contrast noir, digital signal decay, iridescent metallic ripple. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/铬故障__Corrupted Chrome Glitch/preview.webp",
+  "folder": "Krea2_moodboard/铬故障__Corrupted Chrome Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

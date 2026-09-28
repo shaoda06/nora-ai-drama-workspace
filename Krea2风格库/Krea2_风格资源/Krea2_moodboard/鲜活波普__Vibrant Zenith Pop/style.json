@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1846",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "鲜活波普",
+  "name": "Vibrant Zenith Pop",
+  "prompt": "extreme low-angle perspective, saturated color-blocking, vibrant cobalt blue sky, sharp high-contrast sunlight, editorial fashion photography, vivid orange and electric pink, worm's-eye view. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活波普__Vibrant Zenith Pop/preview.webp",
+  "folder": "Krea2_moodboard/鲜活波普__Vibrant Zenith Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

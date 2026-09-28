@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3156",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "夜行超现实",
+  "name": "Nocturnal Cobalt Surrealism",
+  "prompt": "nocturnal cobalt palette, high-contrast chiaroscuro, minimalist surrealism, glowing cyan light, grainy atmospheric texture, dreamlike silhouette, volumetric indigo haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行超现实__Nocturnal Cobalt Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/夜行超现实__Nocturnal Cobalt Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

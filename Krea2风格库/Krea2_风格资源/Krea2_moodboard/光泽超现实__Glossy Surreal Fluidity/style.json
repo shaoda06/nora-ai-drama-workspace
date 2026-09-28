@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3338",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "光泽超现实",
+  "name": "Glossy Surreal Fluidity",
+  "prompt": "liquid chrome, melting distortion, glossy fluid dynamics, surreal digital render, warm neutral palette, specular highlights, hyper-realistic texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光泽超现实__Glossy Surreal Fluidity/preview.webp",
+  "folder": "Krea2_moodboard/光泽超现实__Glossy Surreal Fluidity",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

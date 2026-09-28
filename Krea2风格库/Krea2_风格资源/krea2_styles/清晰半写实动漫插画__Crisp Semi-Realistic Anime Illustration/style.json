@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-197",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "清晰半写实动漫插画",
+  "name": "Crisp Semi-Realistic Anime Illustration",
+  "prompt": "Style: Crisp Semi-Realistic Anime Illustration: A polished, glossy digital-illustration style built on confident, clean linework merged seamlessly with smooth cel-to-gradient shading, luminous semi-realistic skin rendering with sharp specular highlight concentrated in the eyes for immediate emotional focus, meticulous attention to reflective glassy detail rendered with crisp precision, a bright, high-key illumination logic keeping the whole composition feeling vivid and immediate, and a vibrant, contemporary character-illustration polish that feels editorial, lively, and effortlessly appealing. Influenced by: Ilya Kuvshinov, WLOP, semi-realistic anime-portrait rendering technique, contemporary gacha-adjacent character-illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/清晰半写实动漫插画__Crisp Semi-Realistic Anime Illustration/preview.jpg",
+  "folder": "krea2_styles/清晰半写实动漫插画__Crisp Semi-Realistic Anime Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

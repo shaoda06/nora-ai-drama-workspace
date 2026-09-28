@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-271",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "碧雅翠丝·波特风格",
+  "name": "Beatrix Potter Style",
+  "prompt": "Style: Beatrix Potter Style: A gentle, meticulously observed watercolor illustration style built on delicate, softly blended washes carrying quiet naturalist precision, fine detailed linework reserved for texture and form rather than bold outline, a hushed pastoral tenderness radiating through soft diffused lighting, restrained old-world charm achieved through understated, unhurried brushwork, and a tender, storybook intimacy that feels both scientifically observant and gently whimsical. Influenced by: Beatrix Potter, English watercolor illustration, naturalist botanical illustration, Golden Age children's book art.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/碧雅翠丝·波特风格__Beatrix Potter Style/preview.jpg",
+  "folder": "krea2_styles/碧雅翠丝·波特风格__Beatrix Potter Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

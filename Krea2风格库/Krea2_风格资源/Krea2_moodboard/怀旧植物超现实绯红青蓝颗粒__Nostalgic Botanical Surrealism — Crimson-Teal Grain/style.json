@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2723",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "怀旧植物超现实绯红青蓝颗粒",
+  "name": "Nostalgic Botanical Surrealism — Crimson-Teal Grain",
+  "prompt": "heavy 35mm film grain, vintage analogue color grading, moody high-contrast palette, soft-focus botanical surrealism, distressed tactile texture, saturated crimson and teal accents, nostalgic dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧植物超现实绯红青蓝颗粒__Nostalgic Botanical Surrealism — Crimson-Teal Grain/preview.webp",
+  "folder": "Krea2_moodboard/怀旧植物超现实绯红青蓝颗粒__Nostalgic Botanical Surrealism — Crimson-Teal Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

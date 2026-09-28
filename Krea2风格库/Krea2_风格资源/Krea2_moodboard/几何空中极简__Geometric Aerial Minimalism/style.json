@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2342",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "几何空中极简",
+  "name": "Geometric Aerial Minimalism",
+  "prompt": "top-down aerial view, geometric composition, sharp dramatic shadows, minimalist graphic layout, high-angle perspective, structured urban patterns, high contrast, stark color accents. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何空中极简__Geometric Aerial Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/几何空中极简__Geometric Aerial Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

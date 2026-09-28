@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-357",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "Instagram模特魅力摄影",
+  "name": "Instagram Model Glamour Photography",
+  "prompt": "Style: Instagram Model Glamour Photography: A polished, aspirational glamour-photography style built on soft, evenly diffused lighting that flatters skin with a warm, flawless glow, confident curve-forward posing shot with a slight low angle for a flattering elongated silhouette, glossy heavy retouching that smooths texture while keeping a believable, photographic sheen, gentle golden-hour warmth or clean bright-studio evenness depending on setting, and a polished, algorithm-friendly commercial appeal built for maximum aspirational impact. Influenced by: contemporary Instagram influencer photography, commercial glamour retouching technique, social-media beauty content, golden-hour portrait lighting.inspired by Demi Rose photoshoot, Amouranth Stream, Emily Ratajkowski glamour photo,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Instagram模特魅力摄影__Instagram Model Glamour Photography/preview.jpg",
+  "folder": "krea2_styles/Instagram模特魅力摄影__Instagram Model Glamour Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

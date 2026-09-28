@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2117",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "电影感绯红黑色湿润",
+  "name": "Cinematic Crimson Noir — Wet Vinyl Gloss",
+  "prompt": "high-contrast cinematic lighting, saturated crimson and neon palette, sharp chiaroscuro shadows, avant-garde fashion aesthetic, glossy wet-look textures, minimalist graphic composition, cyberpunk atmospheric mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红黑色湿润__Cinematic Crimson Noir — Wet Vinyl Gloss/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红黑色湿润__Cinematic Crimson Noir — Wet Vinyl Gloss",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

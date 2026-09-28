@@ -1,0 +1,1 @@
+monochrome noir, CRT scanlines, chiaroscuro lighting, analog grain, surveillance aesthetic, glitch distortion, double exposure. Subject:{prompt}

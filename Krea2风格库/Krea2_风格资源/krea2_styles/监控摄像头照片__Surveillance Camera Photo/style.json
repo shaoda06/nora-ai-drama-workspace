@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-347",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "监控摄像头照片",
+  "name": "Surveillance Camera Photo",
+  "prompt": "Style: Surveillance Camera Photo: A detached, utilitarian photographic style built on flat, unflattering illumination typical of fixed automated capture rather than deliberate lighting design, a grainy, low-resolution degradation inherent to compressed continuous recording, a wide, slightly distorted angle characteristic of fixed elevated positioning, a clinical, indifferent framing that feels observed rather than composed, and a cold, detached authenticity that carries an unmistakably impersonal, institutional quality. Influenced by: closed-circuit surveillance-camera technique, low-resolution CCTV footage aesthetic, fixed-angle security-camera practice, found-footage documentary method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/监控摄像头照片__Surveillance Camera Photo/preview.jpg",
+  "folder": "krea2_styles/监控摄像头照片__Surveillance Camera Photo",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

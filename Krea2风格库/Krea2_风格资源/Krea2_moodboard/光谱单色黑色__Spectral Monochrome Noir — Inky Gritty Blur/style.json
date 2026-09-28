@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2292",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "光谱单色黑色",
+  "name": "Spectral Monochrome Noir — Inky Gritty Blur",
+  "prompt": "monochromatic film noir, intense motion blur, heavy film grain, chiaroscuro lighting, long exposure portraiture, spectral silhouette, high contrast textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱单色黑色__Spectral Monochrome Noir — Inky Gritty Blur/preview.webp",
+  "folder": "Krea2_moodboard/光谱单色黑色__Spectral Monochrome Noir — Inky Gritty Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

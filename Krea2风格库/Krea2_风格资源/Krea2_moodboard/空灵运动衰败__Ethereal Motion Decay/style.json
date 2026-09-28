@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3395",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵运动衰败",
+  "name": "Ethereal Motion Decay",
+  "prompt": "high contrast monochrome, kinetic motion blur, ghostly silhouette, digital decay, shutter drag, chiaroscuro, grainy film texture, liminal abstraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵运动衰败__Ethereal Motion Decay/preview.webp",
+  "folder": "Krea2_moodboard/空灵运动衰败__Ethereal Motion Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

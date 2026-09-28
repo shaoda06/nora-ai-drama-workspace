@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1026",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "巴洛克哥特",
+  "name": "Baroque Infernal Gothic",
+  "prompt": "chiaroscuro lighting, baroque oil painting style, deep crimson and black palette, regal gothic aesthetic, intricate metallic textures, dramatic shadows, infernal dark fantasy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/巴洛克哥特__Baroque Infernal Gothic/preview.webp",
+  "folder": "Krea2_moodboard/巴洛克哥特__Baroque Infernal Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-352",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "HDR摄影",
+  "name": "HDR Photography",
+  "prompt": "Style: HDR Photography: A richly detailed photographic technique built on merging multiple exposures to capture an expanded tonal range beyond a single capture's limitation, meticulously balanced highlight and shadow detail that reveals nuance across the entire dynamic spectrum simultaneously, a hyper-clarified, almost otherworldly evenness in illumination that flattens typical contrast extremes, dense, saturated micro-contrast enhancing texture across every plane, and a technically ambitious, heightened-reality intensity that pushes photographic capture toward a hyper-vivid, almost painterly clarity. Influenced by: high-dynamic-range exposure-blending technique, tone-mapping photographic practice, landscape HDR-photography tradition, technically enhanced digital-photography method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/HDR摄影__HDR Photography/preview.jpg",
+  "folder": "krea2_styles/HDR摄影__HDR Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

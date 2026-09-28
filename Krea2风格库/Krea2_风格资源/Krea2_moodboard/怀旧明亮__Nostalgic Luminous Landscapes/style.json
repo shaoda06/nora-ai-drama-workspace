@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-718",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "怀旧明亮",
+  "name": "Nostalgic Luminous Landscapes",
+  "prompt": "textured paper grain, soft gradient lighting, nostalgic color palette, stippled halftone texture, stylized landscape, fine ink contours, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧明亮__Nostalgic Luminous Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/怀旧明亮__Nostalgic Luminous Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

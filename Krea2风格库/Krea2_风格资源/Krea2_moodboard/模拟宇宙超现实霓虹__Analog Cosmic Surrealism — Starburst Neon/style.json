@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1228",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "模拟宇宙超现实霓虹",
+  "name": "Analog Cosmic Surrealism — Starburst Neon",
+  "prompt": "retro-futurism, analog film grain, cosmic surrealism, starburst lens flare, airbrush illustration, neon chromatic aberration, vintage sci-fi aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟宇宙超现实霓虹__Analog Cosmic Surrealism — Starburst Neon/preview.webp",
+  "folder": "Krea2_moodboard/模拟宇宙超现实霓虹__Analog Cosmic Surrealism — Starburst Neon",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

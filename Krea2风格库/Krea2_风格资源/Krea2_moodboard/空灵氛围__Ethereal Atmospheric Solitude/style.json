@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1689",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵氛围",
+  "name": "Ethereal Atmospheric Solitude",
+  "prompt": "atmospheric fog, minimalist landscape, cool monochromatic palette, diffused soft lighting, vast negative space, cinematic desolation, dreamy ethereal mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵氛围__Ethereal Atmospheric Solitude/preview.webp",
+  "folder": "Krea2_moodboard/空灵氛围__Ethereal Atmospheric Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

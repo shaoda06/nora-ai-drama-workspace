@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2215",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "电影感黄金时刻画布",
+  "name": "Cinematic Chiaroscuro Solitude — Golden Hour Canvas",
+  "prompt": "chiaroscuro lighting, cinematic solitude, deep forest greens, dramatic shadow play, high contrast, golden hour glow, filmic texture, voyeuristic framing. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黄金时刻画布__Cinematic Chiaroscuro Solitude — Golden Hour Canvas/preview.webp",
+  "folder": "Krea2_moodboard/电影感黄金时刻画布__Cinematic Chiaroscuro Solitude — Golden Hour Canvas",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

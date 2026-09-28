@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2182",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "波普",
+  "name": "Electric Pop Punk",
+  "prompt": "high-contrast editorial, saturated primary colors, electric blue background, direct flash photography, tactile textures, low-angle perspective, 90s club kid. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/波普__Electric Pop Punk/preview.webp",
+  "folder": "Krea2_moodboard/波普__Electric Pop Punk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

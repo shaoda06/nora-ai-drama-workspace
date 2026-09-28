@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-75",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "咒术回战风格",
+  "name": "Jujutsu Kaisen Style",
+  "prompt": "Style: Jujutsu Kaisen Style: A dynamic, high-contrast shōnen-manga illustration style built on confident, angular linework carrying sharp, kinetic action-driven posing, dense, moody shading with dramatic ink-heavy shadow blocking, a stylish, contemporary silhouette design balancing realism with graphic exaggeration, meticulous attention to fluid, high-impact motion within otherwise tightly controlled composition, and a fierce, cinematic shōnen intensity that feels equal parts stylish and visceral. Influenced by: Gege Akutami, MAPPA animation-adaptation tradition, cel-shaded dark-shōnen technique, contemporary action-manga character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/咒术回战风格__Jujutsu Kaisen Style/preview.jpg",
+  "folder": "krea2_styles/咒术回战风格__Jujutsu Kaisen Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

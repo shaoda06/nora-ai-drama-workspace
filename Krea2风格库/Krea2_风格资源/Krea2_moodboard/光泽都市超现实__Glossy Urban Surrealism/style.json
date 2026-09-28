@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3278",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "光泽都市超现实",
+  "name": "Glossy Urban Surrealism",
+  "prompt": "glossy 3D vinyl character, urban surrealism, inflated balloon aesthetic, hyper-realistic street photography, vibrant candy colors, whimsical juxtaposition, smooth plastic texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光泽都市超现实__Glossy Urban Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/光泽都市超现实__Glossy Urban Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

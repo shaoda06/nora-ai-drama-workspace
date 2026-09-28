@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-350",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "欧普艺术",
+  "name": "Cobalt Pixel Op-Art — Risograph Weave",
+  "prompt": "cobalt blue and cream, op-art geometric grid, pixelation glitch, risograph texture, minimalist duotone, scanline pattern, digital tapestry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/欧普艺术__Cobalt Pixel Op-Art — Risograph Weave/preview.webp",
+  "folder": "Krea2_moodboard/欧普艺术__Cobalt Pixel Op-Art — Risograph Weave",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

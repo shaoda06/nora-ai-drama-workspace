@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1565",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵棱镜",
+  "name": "Ethereal Prismatic Refraction",
+  "prompt": "prismatic light refraction, ethereal soft focus, chromatic aberration, golden hour glow, dreamy lens flare, analog film grain, shimmering bokeh. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵棱镜__Ethereal Prismatic Refraction/preview.webp",
+  "folder": "Krea2_moodboard/空灵棱镜__Ethereal Prismatic Refraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

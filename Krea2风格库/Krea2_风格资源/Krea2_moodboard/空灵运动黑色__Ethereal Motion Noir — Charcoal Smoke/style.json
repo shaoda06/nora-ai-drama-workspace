@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-754",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵运动黑色",
+  "name": "Ethereal Motion Noir — Charcoal Smoke",
+  "prompt": "high-contrast monochrome, heavy analog film grain, intentional motion blur, spectral noir, chiaroscuro lighting, ghostly silhouette, dreamlike charcoal texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵运动黑色__Ethereal Motion Noir — Charcoal Smoke/preview.webp",
+  "folder": "Krea2_moodboard/空灵运动黑色__Ethereal Motion Noir — Charcoal Smoke",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

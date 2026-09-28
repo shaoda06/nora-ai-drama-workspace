@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2355",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "图形绯红极简坚硬工作室",
+  "name": "Graphic Crimson Minimalism — Hard Studio Gloss",
+  "prompt": "saturated crimson background, sharp high-contrast shadows, glossy reflective textures, graphic minimalist composition, hard direct lighting, editorial product photography, bold color blocking. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形绯红极简坚硬工作室__Graphic Crimson Minimalism — Hard Studio Gloss/preview.webp",
+  "folder": "Krea2_moodboard/图形绯红极简坚硬工作室__Graphic Crimson Minimalism — Hard Studio Gloss",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

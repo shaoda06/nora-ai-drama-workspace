@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1682",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵暮光超现实发光",
+  "name": "Ethereal Twilight Surrealism — Misty Cyan Glow",
+  "prompt": "surreal twilight blue hour, liminal dreamscape, glowing geometric portal, minimalist atmospheric composition, high-contrast silhouette, misty ethereal haze, monochromatic cool tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵暮光超现实发光__Ethereal Twilight Surrealism — Misty Cyan Glow/preview.webp",
+  "folder": "Krea2_moodboard/空灵暮光超现实发光__Ethereal Twilight Surrealism — Misty Cyan Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

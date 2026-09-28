@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-101",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "动漫主视觉图",
+  "name": "Anime Key Visual",
+  "prompt": "Style: Anime Key Visual: A polished, high-production anime-illustration style built on crisp, confident linework merged with meticulously blended cel-to-gradient shading, dramatic promotional-grade lighting establishing bold mood within a single striking composition, richly detailed costume and character rendering balanced against clean, poster-ready silhouette clarity, dynamic yet composed posing calibrated for maximum visual impact at a glance, and a polished, franchise-defining illustration intensity built for instant recognition and promotional impact. Influenced by: contemporary anime-production key-visual tradition, promotional illustration technique, franchise-defining character-art practice, high-production anime-studio rendering method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/动漫主视觉图__Anime Key Visual/preview.jpg",
+  "folder": "krea2_styles/动漫主视觉图__Anime Key Visual",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1848",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感夜行黑色清冷柔软",
+  "name": "Cinematic Nocturnal Noir — Cold Grey Soft",
+  "prompt": "cinematic noir, low-key lighting, atmospheric rain, wet textures, desaturated cool tones, high contrast, introspective mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色清冷柔软__Cinematic Nocturnal Noir — Cold Grey Soft/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色清冷柔软__Cinematic Nocturnal Noir — Cold Grey Soft",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

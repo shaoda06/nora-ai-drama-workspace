@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1481",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵动态绯红漏光",
+  "name": "Ethereal Kinetic Impressionism — Crimson Peach Leak",
+  "prompt": "dreamy soft focus, motion blur abstraction, saturated crimson and peach, cinematic shallow depth of field, analog film grain, ethereal light leaks, shutter drag distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态绯红漏光__Ethereal Kinetic Impressionism — Crimson Peach Leak/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态绯红漏光__Ethereal Kinetic Impressionism — Crimson Peach Leak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1775",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感都市琥珀",
+  "name": "Cinematic Urban Kineticism — Flash Burst Amber",
+  "prompt": "cinematic urban photography, motion blur, shallow depth of field, direct flash, film grain texture, teal and amber lighting, candid nightlife. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市琥珀__Cinematic Urban Kineticism — Flash Burst Amber/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市琥珀__Cinematic Urban Kineticism — Flash Burst Amber",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1499",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "彩色颗粒",
+  "name": "Chromatic Grain Dreamscape",
+  "prompt": "heavy film grain, chromatic aberration, thermal color gradient, stippled texture, dreamy soft focus, saturated sunset palette, analog glitch, surreal silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色颗粒__Chromatic Grain Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/彩色颗粒__Chromatic Grain Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

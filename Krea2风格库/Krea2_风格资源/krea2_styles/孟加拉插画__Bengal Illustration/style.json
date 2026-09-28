@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-149",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "孟加拉插画",
+  "name": "Bengal Illustration",
+  "prompt": "Style: Bengal Illustration: vibrant contemporary comic and illustration aesthetics characterized by fluid linework, dynamic visual energy, expressive anatomy, clean graphic readability, sophisticated shape language, and highly polished rendering, balancing stylization and realism through elegant design choices, refined draftsmanship, and cinematic storytelling sensibilities, reminiscent of Bengal and Olivier Vatine, inspired by Naja and Meka.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/孟加拉插画__Bengal Illustration/preview.jpg",
+  "folder": "krea2_styles/孟加拉插画__Bengal Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

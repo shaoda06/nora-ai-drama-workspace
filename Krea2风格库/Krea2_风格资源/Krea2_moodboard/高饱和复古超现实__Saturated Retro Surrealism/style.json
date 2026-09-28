@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3292",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "高饱和复古超现实",
+  "name": "Saturated Retro Surrealism",
+  "prompt": "vintage film grain, saturated primary colors, surrealist composition, mid-century aesthetic, high-contrast lighting, dreamlike atmosphere, tactile texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高饱和复古超现实__Saturated Retro Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/高饱和复古超现实__Saturated Retro Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

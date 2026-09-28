@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3473",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "明亮暮光时刻",
+  "name": "Luminous Twilight Liminality — Volumetric Blue-Hour",
+  "prompt": "cinematic twilight, cool blue and warm amber contrast, liminal space, volumetric lighting, moody atmospheric, high-contrast silhouettes, surreal landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮暮光时刻__Luminous Twilight Liminality — Volumetric Blue-Hour/preview.webp",
+  "folder": "Krea2_moodboard/明亮暮光时刻__Luminous Twilight Liminality — Volumetric Blue-Hour",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

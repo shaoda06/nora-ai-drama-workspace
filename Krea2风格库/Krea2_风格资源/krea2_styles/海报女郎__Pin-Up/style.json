@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-302",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "海报女郎",
+  "name": "Pin-Up",
+  "prompt": "Style: Pin-Up: A charming, playful glamour-illustration style built on smooth, confident linework tracing idealized, curve-forward proportion with cheerful vitality, soft, evenly blended shading giving skin a flattering, luminous glow, a flirtatious, lighthearted posing sensibility charged with cheeky confidence, meticulous attention to graceful gesture and inviting expression, and a nostalgic, wholesome glamour charm that feels playful, warm, and effortlessly appealing. Influenced by: Gil Elvgren, Alberto Vargas, classic American pin-up illustration tradition, mid-century airbrush glamour technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/海报女郎__Pin-Up/preview.jpg",
+  "folder": "krea2_styles/海报女郎__Pin-Up",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

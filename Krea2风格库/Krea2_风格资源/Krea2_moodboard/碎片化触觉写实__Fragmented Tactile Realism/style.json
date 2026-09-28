@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2318",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "碎片化触觉写实",
+  "name": "Fragmented Tactile Realism",
+  "prompt": "tactile paper collage, shattered mirror refraction, layered dimensional composition, analogue deconstruction, soft drop shadows, muted earth tones, fragmented perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化触觉写实__Fragmented Tactile Realism/preview.webp",
+  "folder": "Krea2_moodboard/碎片化触觉写实__Fragmented Tactile Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

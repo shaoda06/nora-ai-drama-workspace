@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2905",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "光谱故障超现实",
+  "name": "Spectral Glitch Surrealism — Reeded Glass Flash",
+  "prompt": "analog glitch art, motion blur, cobalt blue and stark white, spectral silhouette, CRT scanlines, reeded glass distortion, high-contrast flash photography, digital decay. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱故障超现实__Spectral Glitch Surrealism — Reeded Glass Flash/preview.webp",
+  "folder": "Krea2_moodboard/光谱故障超现实__Spectral Glitch Surrealism — Reeded Glass Flash",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

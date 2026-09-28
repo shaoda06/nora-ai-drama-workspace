@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-163",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "鲜活太阳海岸",
+  "name": "Vibrant Sun-Drenched Coastal",
+  "prompt": "painterly digital art, vibrant saturated colors, sun-drenched coastal landscape, towering cumulus clouds, anime-inspired background, stylized geometric shapes, dramatic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活太阳海岸__Vibrant Sun-Drenched Coastal/preview.webp",
+  "folder": "Krea2_moodboard/鲜活太阳海岸__Vibrant Sun-Drenched Coastal",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

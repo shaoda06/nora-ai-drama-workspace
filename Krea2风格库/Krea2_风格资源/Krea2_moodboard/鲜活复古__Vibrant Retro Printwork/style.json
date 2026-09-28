@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-685",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "鲜活复古",
+  "name": "Vibrant Retro Printwork",
+  "prompt": "risograph print style, halftone texture, bold graphic illustration, mid-century aesthetic, saturated color palette, vintage screenprint effect, chromatic aberration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活复古__Vibrant Retro Printwork/preview.webp",
+  "folder": "Krea2_moodboard/鲜活复古__Vibrant Retro Printwork",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

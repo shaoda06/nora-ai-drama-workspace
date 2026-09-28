@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1503",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "氛围模拟怀旧",
+  "name": "Atmospheric Analog Nostalgia",
+  "prompt": "vintage 35mm film, heavy film grain, analog light leaks, soft focus, dreamy haze, high contrast silhouettes, nostalgic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围模拟怀旧__Atmospheric Analog Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/氛围模拟怀旧__Atmospheric Analog Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

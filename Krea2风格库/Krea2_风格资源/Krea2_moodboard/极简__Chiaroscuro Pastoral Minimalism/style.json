@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2359",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "极简",
+  "name": "Chiaroscuro Pastoral Minimalism",
+  "prompt": "chiaroscuro landscape, minimalist composition, dramatic golden hour lighting, high-angle aerial perspective, long graphic shadows, vast textured topography, solitary focal point, velvety color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Chiaroscuro Pastoral Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Chiaroscuro Pastoral Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

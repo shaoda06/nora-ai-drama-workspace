@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-522",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "肌理单色黑色半色调",
+  "name": "Textured Monochrome Noir — Swallowing Void Halftone",
+  "prompt": "high-contrast monochrome, heavy film grain, stippled engraving texture, chiaroscuro lighting, noir atmosphere, distressed halftone, low-fidelity analog aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理单色黑色半色调__Textured Monochrome Noir — Swallowing Void Halftone/preview.webp",
+  "folder": "Krea2_moodboard/肌理单色黑色半色调__Textured Monochrome Noir — Swallowing Void Halftone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

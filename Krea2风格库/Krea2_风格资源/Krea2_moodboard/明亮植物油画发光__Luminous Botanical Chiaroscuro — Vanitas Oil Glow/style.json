@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3334",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "明亮植物油画发光",
+  "name": "Luminous Botanical Chiaroscuro — Vanitas Oil Glow",
+  "prompt": "chiaroscuro, bioluminescent botanical, dark dramatic background, oil on canvas texture, hyper-detailed organic, surreal nature study, saturated color gradients. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮植物油画发光__Luminous Botanical Chiaroscuro — Vanitas Oil Glow/preview.webp",
+  "folder": "Krea2_moodboard/明亮植物油画发光__Luminous Botanical Chiaroscuro — Vanitas Oil Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

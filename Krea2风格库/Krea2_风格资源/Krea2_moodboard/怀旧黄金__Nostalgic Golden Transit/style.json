@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2219",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "怀旧黄金",
+  "name": "Nostalgic Golden Transit",
+  "prompt": "golden hour lighting, cinematic transit perspective, frame-within-a-frame, warm amber glow, nostalgic travel photography, sun-drenched interior, scenic landscape vista. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧黄金__Nostalgic Golden Transit/preview.webp",
+  "folder": "Krea2_moodboard/怀旧黄金__Nostalgic Golden Transit",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-250",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "怀旧超现实",
+  "name": "Nostalgic Surrealist Dreamcore",
+  "prompt": "surreal dreamcore, vintage analog grain, deep cobalt blue palette, early 3D retro CGI, lo-fi dithered texture, glowing starburst lens flare, whimsical symbolic imagery, high-contrast moody lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实__Nostalgic Surrealist Dreamcore/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实__Nostalgic Surrealist Dreamcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-118",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "游戏王风格",
+  "name": "Yu-Gi-Oh! Style",
+  "prompt": "Style: Yu-Gi-Oh! Style: A bold, expressive shōnen-manga illustration style built on confident, angular linework carrying dramatic, dynamic design, dense cel-based shading punctuated by sharp specular highlight detail, a theatrical, high-stakes intensity conveyed through dramatic composition, meticulous attention to costume and design rendering rewarding close inspection. Influenced by: Kazuki Takahashi,   Yu-Gi-Oh! Anime, Studio Gallop animation, cel-shaded shōnen illustration technique,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/游戏王风格__Yu-Gi-Oh! Style/preview.jpg",
+  "folder": "krea2_styles/游戏王风格__Yu-Gi-Oh! Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

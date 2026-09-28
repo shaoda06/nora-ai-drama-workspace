@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2392",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "氛围午夜黑色",
+  "name": "Atmospheric Midnight Noir",
+  "prompt": "cinematic noir, blue hour atmosphere, volumetric lighting, rain-slicked surfaces, mysterious silhouettes, high-contrast low-key, cinestill film aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围午夜黑色__Atmospheric Midnight Noir/preview.webp",
+  "folder": "Krea2_moodboard/氛围午夜黑色__Atmospheric Midnight Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

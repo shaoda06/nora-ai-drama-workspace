@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2918",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "单色光谱超现实",
+  "name": "Monochrome Spectral Surrealism",
+  "prompt": "high-contrast black and white, double exposure portrait, analog film grain, ghostly motion blur, minimalist studio lighting, surrealist layered anatomy, translucent silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色光谱超现实__Monochrome Spectral Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/单色光谱超现实__Monochrome Spectral Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

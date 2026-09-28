@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2257",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "绯红黑色",
+  "name": "Crimson Noir Cinema",
+  "prompt": "saturated crimson and black, high-contrast silhouette, heavy analog film grain, atmospheric cinematic noir, minimalist chiaroscuro, motion blur, dreamlike haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色__Crimson Noir Cinema/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色__Crimson Noir Cinema",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3385",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "夜行光谱",
+  "name": "Nocturnal Spectral Blur",
+  "prompt": "extreme film grain, heavy motion blur, chiaroscuro lighting, spectral blue glow, low-fidelity aesthetic, liminal atmosphere, shutter drag. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行光谱__Nocturnal Spectral Blur/preview.webp",
+  "folder": "Krea2_moodboard/夜行光谱__Nocturnal Spectral Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

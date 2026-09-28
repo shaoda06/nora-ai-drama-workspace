@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3472",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "粗野主义阈限衰败",
+  "name": "Brutalist Liminal Decay",
+  "prompt": "brutalist architecture, liminal space, desaturated teal and green, cinematic industrial decay, overcast diffuse lighting, monolithic concrete textures, moody urban alienation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粗野主义阈限衰败__Brutalist Liminal Decay/preview.webp",
+  "folder": "Krea2_moodboard/粗野主义阈限衰败__Brutalist Liminal Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

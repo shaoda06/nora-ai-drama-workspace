@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2261",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "绯红动态黑色",
+  "name": "Crimson Kinetic Noir — Orange Ember Smear",
+  "prompt": "high-contrast silhouette, crimson and black duotone, intentional motion blur, analog film grain, cinematic thriller atmosphere, long exposure distortion, minimalist noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红动态黑色__Crimson Kinetic Noir — Orange Ember Smear/preview.webp",
+  "folder": "Krea2_moodboard/绯红动态黑色__Crimson Kinetic Noir — Orange Ember Smear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

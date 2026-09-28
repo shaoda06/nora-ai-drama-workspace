@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1277",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "绯红暮光剪影",
+  "name": "Crimson Twilight Silhouette",
+  "prompt": "high-contrast silhouette, fiery sunset gradient, cinematic urban melancholy, bold graphic lighting, saturated orange and purple, stylized digital illustration, dramatic low-angle perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红暮光剪影__Crimson Twilight Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/绯红暮光剪影__Crimson Twilight Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

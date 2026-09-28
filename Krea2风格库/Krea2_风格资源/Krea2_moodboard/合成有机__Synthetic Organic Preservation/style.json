@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1243",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "合成有机",
+  "name": "Synthetic Organic Preservation",
+  "prompt": "vacuum-sealed, chiaroscuro lighting, organic vs synthetic, crinkled plastic texture, clinical still life, high-contrast studio lighting, botanical preservation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/合成有机__Synthetic Organic Preservation/preview.webp",
+  "folder": "Krea2_moodboard/合成有机__Synthetic Organic Preservation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-600",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "动态夜行暮光琥珀",
+  "name": "Kinetic Nocturnal Impressionism — Twilight Amber Trails",
+  "prompt": "intentional motion blur, analog film grain, twilight blue and amber palette, painterly light trails, dreamy long exposure, cinematic night atmosphere, ghostly silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态夜行暮光琥珀__Kinetic Nocturnal Impressionism — Twilight Amber Trails/preview.webp",
+  "folder": "Krea2_moodboard/动态夜行暮光琥珀__Kinetic Nocturnal Impressionism — Twilight Amber Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

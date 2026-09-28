@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1100",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "厚涂超现实",
+  "name": "Submerged Impasto Surrealism",
+  "prompt": "thick impasto oil painting, underwater caustic lighting, surreal submerged atmosphere, expressive visible brushstrokes, deep teal and emerald palette, refracted light patterns, dreamlike fluid motion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/厚涂超现实__Submerged Impasto Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/厚涂超现实__Submerged Impasto Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

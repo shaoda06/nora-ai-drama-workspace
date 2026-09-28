@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1593",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵夜行怀旧",
+  "name": "Ethereal Nocturnal Nostalgia",
+  "prompt": "deep indigo night sky, dreamy cinematic lighting, shimmering stardust bokeh, vintage analog film grain, soft-focus ethereal atmosphere, magical realism, nocturnal silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行怀旧__Ethereal Nocturnal Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行怀旧__Ethereal Nocturnal Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

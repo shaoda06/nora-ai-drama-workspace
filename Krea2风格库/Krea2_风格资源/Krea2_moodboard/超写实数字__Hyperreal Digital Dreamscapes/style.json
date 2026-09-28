@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-205",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "超写实数字",
+  "name": "Hyperreal Digital Dreamscapes",
+  "prompt": "hyperreal digital aesthetic, vibrant green and cobalt blue palette, surreal liminal landscape, clean 3D CGI render, miniature world diorama, nostalgic dreamscape, minimalist surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超写实数字__Hyperreal Digital Dreamscapes/preview.webp",
+  "folder": "Krea2_moodboard/超写实数字__Hyperreal Digital Dreamscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

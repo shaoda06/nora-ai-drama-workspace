@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2406",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "内脏感",
+  "name": "Visceral Chiaroscuro Portraits",
+  "prompt": "extreme macro portrait, chiaroscuro lighting, hyper-detailed skin texture, glistening ocular reflection, low-key moody atmosphere, high-contrast shadows, primal intensity. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感__Visceral Chiaroscuro Portraits/preview.webp",
+  "folder": "Krea2_moodboard/内脏感__Visceral Chiaroscuro Portraits",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1403",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感私密",
+  "name": "Cinematic Intimate Chiaroscuro",
+  "prompt": "low-key lighting, heavy film grain, chiaroscuro portrait, shallow depth of field, cinematic intimacy, tactile skin texture, warm amber tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感私密__Cinematic Intimate Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/电影感私密__Cinematic Intimate Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

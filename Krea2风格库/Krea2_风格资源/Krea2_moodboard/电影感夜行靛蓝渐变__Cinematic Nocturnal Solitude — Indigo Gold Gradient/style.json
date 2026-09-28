@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2694",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "电影感夜行靛蓝渐变",
+  "name": "Cinematic Nocturnal Solitude — Indigo Gold Gradient",
+  "prompt": "cinematic twilight, indigo night sky, warm amber glow, isolated vehicle, moody atmospheric lighting, film grain texture, vast landscape, brutalist surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行靛蓝渐变__Cinematic Nocturnal Solitude — Indigo Gold Gradient/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行靛蓝渐变__Cinematic Nocturnal Solitude — Indigo Gold Gradient",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

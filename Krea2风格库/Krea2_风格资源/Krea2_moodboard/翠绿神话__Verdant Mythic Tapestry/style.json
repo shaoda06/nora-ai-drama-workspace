@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-930",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "翠绿神话",
+  "name": "Verdant Mythic Tapestry",
+  "prompt": "verdant botanical tapestry, painterly texture, dense layered foliage, diffused atmospheric light, emerald and moss palette, whimsical folk art influence, intricate natural patterns. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/翠绿神话__Verdant Mythic Tapestry/preview.webp",
+  "folder": "Krea2_moodboard/翠绿神话__Verdant Mythic Tapestry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

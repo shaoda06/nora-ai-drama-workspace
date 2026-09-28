@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-422",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "黑色工业故障",
+  "name": "Gritty Monochromatic Noir — Industrial Glitch Stipple",
+  "prompt": "high-contrast black and white, stipple and halftone texture, gritty analog horror, chiaroscuro lighting, distorted digital glitch, raw zine aesthetic, deep shadows, film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色工业故障__Gritty Monochromatic Noir — Industrial Glitch Stipple/preview.webp",
+  "folder": "Krea2_moodboard/黑色工业故障__Gritty Monochromatic Noir — Industrial Glitch Stipple",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

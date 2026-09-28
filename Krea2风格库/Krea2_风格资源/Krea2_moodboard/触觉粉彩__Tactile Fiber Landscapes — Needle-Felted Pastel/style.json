@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1190",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "触觉粉彩",
+  "name": "Tactile Fiber Landscapes — Needle-Felted Pastel",
+  "prompt": "3D textile embroidery, tactile yarn relief, soft pastel color palette, needle-felted fiber art, whimsical wool texture, macro fiber photography, handcrafted textile illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉粉彩__Tactile Fiber Landscapes — Needle-Felted Pastel/preview.webp",
+  "folder": "Krea2_moodboard/触觉粉彩__Tactile Fiber Landscapes — Needle-Felted Pastel",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

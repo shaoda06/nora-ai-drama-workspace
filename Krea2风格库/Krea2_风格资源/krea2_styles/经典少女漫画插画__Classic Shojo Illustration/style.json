@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-82",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "经典少女漫画插画",
+  "name": "Classic Shojo Illustration",
+  "prompt": "Style: Classic Shojo Illustration: elegant manga-inspired aesthetics characterized by graceful linework, refined visual delicacy, expressive emotional storytelling, sophisticated composition, ornamental detailing, and a strong sense of romantic atmosphere, blending stylized beauty with polished illustration craftsmanship through airy visual rhythms, nuanced rendering, and timeless narrative charm, reminiscent of Riyoko Ikeda and CLAMP, inspired by The Rose of Versailles and Cardcaptor Sakura.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/经典少女漫画插画__Classic Shojo Illustration/preview.jpg",
+  "folder": "krea2_styles/经典少女漫画插画__Classic Shojo Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

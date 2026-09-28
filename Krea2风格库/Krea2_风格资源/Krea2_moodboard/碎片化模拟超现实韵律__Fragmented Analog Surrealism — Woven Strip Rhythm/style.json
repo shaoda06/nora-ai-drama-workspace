@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2724",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "碎片化模拟超现实韵律",
+  "name": "Fragmented Analog Surrealism — Woven Strip Rhythm",
+  "prompt": "analog collage, vertical slice distortion, vintage paper texture, staggered photo weaving, surrealist fragmentation, muted retro palette, tactile film grain, Dadaist montage. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化模拟超现实韵律__Fragmented Analog Surrealism — Woven Strip Rhythm/preview.webp",
+  "folder": "Krea2_moodboard/碎片化模拟超现实韵律__Fragmented Analog Surrealism — Woven Strip Rhythm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

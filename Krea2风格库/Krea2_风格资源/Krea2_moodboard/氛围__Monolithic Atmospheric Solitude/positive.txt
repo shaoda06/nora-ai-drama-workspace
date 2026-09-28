@@ -1,0 +1,1 @@
+monochromatic, atmospheric fog, cinematic solitude, high contrast, film grain, surrealist scale, stark silhouettes. Subject:{prompt}

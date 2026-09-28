@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-104",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "超精细漫画插画",
+  "name": "Ultradetailed Manga Illustration",
+  "prompt": "Style: Ultradetailed Manga Illustration: exceptionally dense manga aesthetics characterized by obsessive line fidelity, intricate textural rendering, advanced visual layering, meticulous hatch work, precise structural draftsmanship, and an extraordinary concentration of graphical information. The style emphasizes complexity, craftsmanship, and prolonged visual exploration, rewarding close inspection through micro-detail, architectural precision, elaborate costume design, and highly refined material interpretation. Rather than relying on simplified manga shorthand, it pursues visual richness, technical virtuosity, and immersive image construction while preserving strong readability and compositional control. The overall effect feels ambitious, authoritative, and intensely crafted, balancing narrative clarity with astonishing detail density and artistic dedication, reminiscent of Kentaro Miura and Tsutomu Nihei, inspired by Berserk and BLAME!.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/超精细漫画插画__Ultradetailed Manga Illustration/preview.jpg",
+  "folder": "krea2_styles/超精细漫画插画__Ultradetailed Manga Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

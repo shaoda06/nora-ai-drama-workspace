@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2093",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "原始复古",
+  "name": "Raw Retro Snapshot",
+  "prompt": "candid snapshot, 35mm film grain, fisheye lens distortion, high contrast, saturated retro colors, harsh direct sunlight, urban youth culture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始复古__Raw Retro Snapshot/preview.webp",
+  "folder": "Krea2_moodboard/原始复古__Raw Retro Snapshot",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

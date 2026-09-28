@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2239",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "大地",
+  "name": "Primeval Earth Textures",
+  "prompt": "macro texture, weathered stone, moss-covered detail, diffused natural light, earthy desaturated palette, rugged geological patterns, organic forest floor. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/大地__Primeval Earth Textures/preview.webp",
+  "folder": "Krea2_moodboard/大地__Primeval Earth Textures",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

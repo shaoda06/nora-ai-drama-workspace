@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-17",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "电影感复古黑色",
+  "name": "Cinematic Retro Noir",
+  "prompt": "1990s anime cel style, dramatic chiaroscuro lighting, analog film grain, saturated retro palette, star lens flare, hand-drawn ink outlines, noir cinematic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感复古黑色__Cinematic Retro Noir/preview.webp",
+  "folder": "Krea2_moodboard/电影感复古黑色__Cinematic Retro Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

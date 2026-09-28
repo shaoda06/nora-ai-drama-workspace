@@ -1,0 +1,1 @@
+cinematic chiaroscuro, motion blur, low-key lighting, deep blue shadows, film grain texture, selective focus, introspective atmosphere, cool color grading. Subject:{prompt}

@@ -1,0 +1,1 @@
+voxel art, isometric diorama, cinematic lighting, tilt-shift photography, warm atmospheric bloom, blocky geometry, soft volumetric shadows. Subject:{prompt}

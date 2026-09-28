@@ -1,0 +1,1 @@
+monochrome, heavy film grain, high contrast, chiaroscuro, motion blur, nocturnal atmosphere, stippled texture, lo-fi mystery. Subject:{prompt}

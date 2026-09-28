@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1409",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感宏观写实",
+  "name": "Cinematic Macro Realism",
+  "prompt": "extreme macro portraiture, hyper-realistic skin texture, chiaroscuro lighting, golden hour tones, shallow depth of field, cinematic film grain, intimate high-contrast lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感宏观写实__Cinematic Macro Realism/preview.webp",
+  "folder": "Krea2_moodboard/电影感宏观写实__Cinematic Macro Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

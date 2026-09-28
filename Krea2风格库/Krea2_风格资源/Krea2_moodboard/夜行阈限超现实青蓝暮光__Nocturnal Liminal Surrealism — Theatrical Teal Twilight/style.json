@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3457",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "夜行阈限超现实青蓝暮光",
+  "name": "Nocturnal Liminal Surrealism — Theatrical Teal Twilight",
+  "prompt": "liminal space, chiaroscuro lighting, surrealist minimalism, deep twilight palette, atmospheric solitude, high-contrast shadows, dreamlike landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行阈限超现实青蓝暮光__Nocturnal Liminal Surrealism — Theatrical Teal Twilight/preview.webp",
+  "folder": "Krea2_moodboard/夜行阈限超现实青蓝暮光__Nocturnal Liminal Surrealism — Theatrical Teal Twilight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

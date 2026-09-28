@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2127",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "明亮都市",
+  "name": "Luminous Urban Solitude",
+  "prompt": "minimalist architectural photography, stark blue hour contrast, glowing warm yellow window, geometric skyscraper facade, cinematic urban isolation, symmetrical grid composition, solitary silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮都市__Luminous Urban Solitude/preview.webp",
+  "folder": "Krea2_moodboard/明亮都市__Luminous Urban Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

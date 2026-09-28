@@ -1,0 +1,1 @@
+heavy grain texture, high-contrast monochrome, stippled charcoal effect, soft-focus blur, chiaroscuro lighting, atmospheric noise, pictorialist aesthetic. Subject:{prompt}

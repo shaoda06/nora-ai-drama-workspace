@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-837",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "柔软极简有机",
+  "name": "Soft Minimalist Organic",
+  "prompt": "minimalist vector illustration, continuous line art, muted earth tone palette, organic abstract shapes, flat graphic design, gentle feminine contours, soft pastel backgrounds. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/柔软极简有机__Soft Minimalist Organic/preview.webp",
+  "folder": "Krea2_moodboard/柔软极简有机__Soft Minimalist Organic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

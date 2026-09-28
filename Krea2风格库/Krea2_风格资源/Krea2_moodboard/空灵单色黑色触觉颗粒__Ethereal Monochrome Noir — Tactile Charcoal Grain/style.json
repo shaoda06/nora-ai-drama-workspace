@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-753",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵单色黑色触觉颗粒",
+  "name": "Ethereal Monochrome Noir — Tactile Charcoal Grain",
+  "prompt": "high-contrast black and white, heavy tactile film grain, soft-focus silhouettes, atmospheric blur, charcoal texture, minimalist composition, pictorialist aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色黑色触觉颗粒__Ethereal Monochrome Noir — Tactile Charcoal Grain/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色黑色触觉颗粒__Ethereal Monochrome Noir — Tactile Charcoal Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

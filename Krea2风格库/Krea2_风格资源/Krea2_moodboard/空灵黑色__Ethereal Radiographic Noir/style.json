@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3263",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵黑色",
+  "name": "Ethereal Radiographic Noir",
+  "prompt": "photogram art, radiographic aesthetic, high-contrast monochrome, glowing translucent structures, wet plate collodion, ethereal light halos, scientific vintage photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色__Ethereal Radiographic Noir/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色__Ethereal Radiographic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

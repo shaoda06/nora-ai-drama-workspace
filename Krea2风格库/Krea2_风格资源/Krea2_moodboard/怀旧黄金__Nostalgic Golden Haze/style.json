@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3040",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "怀旧黄金",
+  "name": "Nostalgic Golden Haze",
+  "prompt": "golden hour backlighting, dreamy soft-focus haze, vintage 35mm film aesthetic, diffused sheer curtain light, warm amber color palette, ethereal lens flare, nostalgic motion blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧黄金__Nostalgic Golden Haze/preview.webp",
+  "folder": "Krea2_moodboard/怀旧黄金__Nostalgic Golden Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

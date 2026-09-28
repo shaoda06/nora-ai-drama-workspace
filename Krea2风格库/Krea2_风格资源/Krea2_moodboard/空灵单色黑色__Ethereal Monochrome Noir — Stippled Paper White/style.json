@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-752",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵单色黑色",
+  "name": "Ethereal Monochrome Noir — Stippled Paper White",
+  "prompt": "monochrome photography, charcoal drawing texture, heavy film grain, soft-focus blur, high-contrast noir, ethereal silhouettes, stippled atmospheric depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色黑色__Ethereal Monochrome Noir — Stippled Paper White/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色黑色__Ethereal Monochrome Noir — Stippled Paper White",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

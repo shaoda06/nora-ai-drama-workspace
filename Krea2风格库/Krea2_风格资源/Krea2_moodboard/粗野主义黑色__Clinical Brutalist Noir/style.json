@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2118",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "粗野主义黑色",
+  "name": "Clinical Brutalist Noir",
+  "prompt": "brutalist architecture, clinical blue lighting, dystopian noir, high-contrast shadows, desaturated color grading, minimalist sci-fi, cinematic low-key lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粗野主义黑色__Clinical Brutalist Noir/preview.webp",
+  "folder": "Krea2_moodboard/粗野主义黑色__Clinical Brutalist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3323",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "宇宙",
+  "name": "Monolithic Cosmic Void",
+  "prompt": "monolithic minimalism, deep indigo palette, volumetric light, surreal scale, chiaroscuro, atmospheric haze, brutalist architecture, contemplative silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宇宙__Monolithic Cosmic Void/preview.webp",
+  "folder": "Krea2_moodboard/宇宙__Monolithic Cosmic Void",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

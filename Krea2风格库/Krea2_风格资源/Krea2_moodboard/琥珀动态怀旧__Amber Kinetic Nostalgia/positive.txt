@@ -1,0 +1,1 @@
+motion blur, shutter drag, analog film grain, amber sunset gradient, dreamlike silhouette, ethereal light leaks, cinematic haze, golden hour glow. Subject:{prompt}

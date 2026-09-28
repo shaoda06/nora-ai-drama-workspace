@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1015",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "鲜活天真奇想",
+  "name": "Vibrant Naive Whimsy",
+  "prompt": "naive art style, tactile hand-painted texture, vibrant saturated palette, whimsical character design, bold simplified shapes, thick impasto or gouache medium, playful folk art influence. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活天真奇想__Vibrant Naive Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/鲜活天真奇想__Vibrant Naive Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

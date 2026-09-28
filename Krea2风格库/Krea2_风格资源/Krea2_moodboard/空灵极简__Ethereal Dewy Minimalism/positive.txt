@@ -1,0 +1,1 @@
+macro beauty portrait, dewy glass skin, ethereal soft lighting, shallow depth of field, foreground bokeh, pastel color palette, high-gloss finish, dreamy editorial photography. Subject:{prompt}

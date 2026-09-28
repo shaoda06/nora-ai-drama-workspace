@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3274",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "明亮宇宙黑色",
+  "name": "Luminous Cosmic Noir",
+  "prompt": "deep space noir, ethereal light, analog film grain, glowing nebula, chiaroscuro lighting, retro-futuristic haze, cosmic mystery, diffused lens flare. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮宇宙黑色__Luminous Cosmic Noir/preview.webp",
+  "folder": "Krea2_moodboard/明亮宇宙黑色__Luminous Cosmic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

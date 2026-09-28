@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-223",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "复古数字",
+  "name": "Retro Digital Diorama",
+  "prompt": "isometric pixel art, dithered texture, 90s retro computing, low-poly 3D render, 16-bit aesthetic, high contrast digital palette, voxel diorama. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古数字__Retro Digital Diorama/preview.webp",
+  "folder": "Krea2_moodboard/复古数字__Retro Digital Diorama",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

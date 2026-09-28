@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1003",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "浪漫厚涂",
+  "name": "Romantic Academic Impasto",
+  "prompt": "academic realism, thick impasto oil, chiaroscuro lighting, romantic pastoral, pre-raphaelite influence, earthy color palette, painterly texture, melancholic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/浪漫厚涂__Romantic Academic Impasto/preview.webp",
+  "folder": "Krea2_moodboard/浪漫厚涂__Romantic Academic Impasto",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

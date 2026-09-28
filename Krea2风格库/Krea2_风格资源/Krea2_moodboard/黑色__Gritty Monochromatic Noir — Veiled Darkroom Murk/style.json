@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3506",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "黑色",
+  "name": "Gritty Monochromatic Noir — Veiled Darkroom Murk",
+  "prompt": "high-contrast monochrome, heavy film grain, chiaroscuro lighting, stippled texture, soft-focus blur, lo-fi noir aesthetic, liminal dark ambient. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Gritty Monochromatic Noir — Veiled Darkroom Murk/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Gritty Monochromatic Noir — Veiled Darkroom Murk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

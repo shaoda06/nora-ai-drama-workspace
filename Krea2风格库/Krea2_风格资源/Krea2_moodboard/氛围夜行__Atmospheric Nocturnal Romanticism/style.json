@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-954",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "氛围夜行",
+  "name": "Atmospheric Nocturnal Romanticism",
+  "prompt": "impasto oil painting, chiaroscuro lighting, nocturnal atmospheric landscape, sublime romanticism, mystical hazy glow, textured brushstrokes, deep moody palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围夜行__Atmospheric Nocturnal Romanticism/preview.webp",
+  "folder": "Krea2_moodboard/氛围夜行__Atmospheric Nocturnal Romanticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-338",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "蝴蝶光",
+  "name": "Butterfly Lighting",
+  "prompt": "Style: Butterfly Lighting: classic portrait photography aesthetics characterized by symmetrical facial illumination, refined shadow placement, sculptural volume, elegant tonal transitions, and timeless studio craftsmanship, creating a polished and flattering visual presentation through carefully controlled frontal lighting, balanced contrast, and sophisticated portrait execution, reminiscent of George Hurrell and Yousuf Karsh, inspired by Hollywood Glamour Photography and Vanity Fair Portraiture.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/蝴蝶光__Butterfly Lighting/preview.jpg",
+  "folder": "krea2_styles/蝴蝶光__Butterfly Lighting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

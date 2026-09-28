@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-664",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "Monochromatic Magent",
+  "name": "Monochromatic Magenta Engraving",
+  "prompt": "monochromatic magenta, halftone engraving, stipple and cross-hatch, vintage print aesthetic, high-contrast graphic, woodcut illustration, dot matrix shading. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Monochromatic Magent__Monochromatic Magenta Engraving/preview.webp",
+  "folder": "Krea2_moodboard/Monochromatic Magent__Monochromatic Magenta Engraving",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

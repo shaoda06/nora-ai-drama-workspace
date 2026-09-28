@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-984",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "图形黑色",
+  "name": "Graphic Fauvist Noir",
+  "prompt": "profile portrait, high-contrast lighting, graphic silhouette, fauvist color palette, bold impasto brushstrokes, minimalist background, chiaroscuro, modern expressionism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形黑色__Graphic Fauvist Noir/preview.webp",
+  "folder": "Krea2_moodboard/图形黑色__Graphic Fauvist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

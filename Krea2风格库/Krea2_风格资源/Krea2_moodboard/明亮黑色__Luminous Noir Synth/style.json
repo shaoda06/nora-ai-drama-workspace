@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1984",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "明亮黑色",
+  "name": "Luminous Noir Synth",
+  "prompt": "monochromatic neon green, pitch black background, heavy film grain, glowing aura, retro-futuristic scanlines, high-contrast chiaroscuro, bioluminescent light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色__Luminous Noir Synth/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色__Luminous Noir Synth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

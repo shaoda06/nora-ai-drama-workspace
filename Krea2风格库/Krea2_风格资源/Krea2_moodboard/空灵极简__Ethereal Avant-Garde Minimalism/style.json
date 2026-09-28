@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1688",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵极简",
+  "name": "Ethereal Avant-Garde Minimalism",
+  "prompt": "high-fashion editorial, stark minimalist silhouette, high-contrast chiaroscuro, ethereal soft-focus glow, cobalt and deep black palette, avant-garde portraiture, misty liminal atmosphere, dramatic directional lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简__Ethereal Avant-Garde Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简__Ethereal Avant-Garde Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

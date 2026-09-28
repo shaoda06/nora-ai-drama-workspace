@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-264",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "半透明绯红",
+  "name": "Translucent Crimson Etherealism",
+  "prompt": "translucent layering, ethereal lighting, saturated crimson accents, soft-focus textures, fluid minimalist forms, subsurface scattering, romantic avant-garde, clean studio composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/半透明绯红__Translucent Crimson Etherealism/preview.webp",
+  "folder": "Krea2_moodboard/半透明绯红__Translucent Crimson Etherealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

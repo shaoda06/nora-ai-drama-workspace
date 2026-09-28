@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2921",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "夜行故障黑色靛蓝",
+  "name": "Nocturnal Glitch Noir — Indigo VHS Tracking",
+  "prompt": "analog glitch art, ethereal glowing silhouette, deep indigo monochrome, heavy film grain, nocturnal atmospheric void, VHS tracking distortion, lo-fi digital surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行故障黑色靛蓝__Nocturnal Glitch Noir — Indigo VHS Tracking/preview.webp",
+  "folder": "Krea2_moodboard/夜行故障黑色靛蓝__Nocturnal Glitch Noir — Indigo VHS Tracking",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

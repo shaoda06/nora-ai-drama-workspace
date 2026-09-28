@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1833",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "极简",
+  "name": "Electric Fractal Minimalism",
+  "prompt": "fractal geometry, electric cobalt blue, high-contrast digital art, recursive algorithmic patterns, cold winter aesthetic, procedural displacement, sharp vector detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Electric Fractal Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Electric Fractal Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

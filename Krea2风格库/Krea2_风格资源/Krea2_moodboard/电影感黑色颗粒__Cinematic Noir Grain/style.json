@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-296",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感黑色颗粒",
+  "name": "Cinematic Noir Grain",
+  "prompt": "heavy film grain, chiaroscuro lighting, low-key noir, high-contrast monochrome, tactile noise texture, spectral portrait, dramatic shadow play. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色颗粒__Cinematic Noir Grain/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色颗粒__Cinematic Noir Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

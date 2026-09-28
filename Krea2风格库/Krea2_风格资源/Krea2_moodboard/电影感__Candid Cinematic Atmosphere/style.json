@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1769",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感",
+  "name": "Candid Cinematic Atmosphere",
+  "prompt": "wind-swept hair, shallow depth of field, candid portraiture, cinematic film look, natural lighting, authentic emotion, atmospheric texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感__Candid Cinematic Atmosphere/preview.webp",
+  "folder": "Krea2_moodboard/电影感__Candid Cinematic Atmosphere",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

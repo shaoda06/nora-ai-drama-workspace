@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3380",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "电影感夜行坚硬剪影",
+  "name": "Cinematic Nocturnal Blur — Hard Silhouette",
+  "prompt": "cinematic motion blur, long exposure light trails, analog film grain, nocturnal atmosphere, intentional camera movement, saturated cool tones, liminal space, high contrast shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行坚硬剪影__Cinematic Nocturnal Blur — Hard Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行坚硬剪影__Cinematic Nocturnal Blur — Hard Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

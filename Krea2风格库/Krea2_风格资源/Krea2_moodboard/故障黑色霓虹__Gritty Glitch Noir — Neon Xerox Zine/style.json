@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-407",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "故障黑色霓虹",
+  "name": "Gritty Glitch Noir — Neon Xerox Zine",
+  "prompt": "high-contrast halftone, xerox texture, glitch art, distressed collage, monochrome with neon accents, lo-fi experimental printmaking, tactile digital decay. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/故障黑色霓虹__Gritty Glitch Noir — Neon Xerox Zine/preview.webp",
+  "folder": "Krea2_moodboard/故障黑色霓虹__Gritty Glitch Noir — Neon Xerox Zine",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

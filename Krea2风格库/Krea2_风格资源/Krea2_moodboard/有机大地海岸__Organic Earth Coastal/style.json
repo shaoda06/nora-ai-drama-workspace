@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2651",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "有机大地海岸",
+  "name": "Organic Earth Coastal",
+  "prompt": "macro photography, tactile organic textures, wet glistening surfaces, earthy and coastal color palette, sharp natural light, intricate knolling composition, translucent marine details. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/有机大地海岸__Organic Earth Coastal/preview.webp",
+  "folder": "Krea2_moodboard/有机大地海岸__Organic Earth Coastal",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

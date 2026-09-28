@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-27",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "空灵粉彩可爱光晕",
+  "name": "Ethereal Pastel Kawaii — Sparkling Lens Flare",
+  "prompt": "pastel anime style, ethereal high-key lighting, sparkling expressive eyes, cherry blossom background, clean digital line art, whimsical dreamlike atmosphere, soft focus lens flare. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩可爱光晕__Ethereal Pastel Kawaii — Sparkling Lens Flare/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩可爱光晕__Ethereal Pastel Kawaii — Sparkling Lens Flare",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

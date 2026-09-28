@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2289",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "动态光谱黑色流动",
+  "name": "Kinetic Spectral Noir — Fluid Void Trails",
+  "prompt": "motion blur, high-contrast black and white, heavy film grain, long exposure, spectral photography, chiaroscuro, ghostly silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态光谱黑色流动__Kinetic Spectral Noir — Fluid Void Trails/preview.webp",
+  "folder": "Krea2_moodboard/动态光谱黑色流动__Kinetic Spectral Noir — Fluid Void Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

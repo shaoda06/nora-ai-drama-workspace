@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-675",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "Rustic Risograph Ame",
+  "name": "Rustic Risograph Americana",
+  "prompt": "risograph print, linocut illustration, textured cream paper, hand-carved aesthetic, grainy ink texture, bold graphic minimalism, vintage woodblock print, misregistered ink layers. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Rustic Risograph Ame__Rustic Risograph Americana/preview.webp",
+  "folder": "Krea2_moodboard/Rustic Risograph Ame__Rustic Risograph Americana",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1060",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "明亮厚涂流质",
+  "name": "Luminous Impasto Waters — Dappled Liquid Chiaroscuro",
+  "prompt": "thick impasto oil painting, shimmering water caustics, emerald and teal palette, expressive palette knife texture, dappled sunlight, liquid refraction, high-contrast chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮厚涂流质__Luminous Impasto Waters — Dappled Liquid Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/明亮厚涂流质__Luminous Impasto Waters — Dappled Liquid Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

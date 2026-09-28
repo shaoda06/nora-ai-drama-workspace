@@ -1,0 +1,1 @@
+stippling art, pointillism, high-contrast monochrome, pitch-black background, chiaroscuro, analog grain, dithered texture. Subject:{prompt}

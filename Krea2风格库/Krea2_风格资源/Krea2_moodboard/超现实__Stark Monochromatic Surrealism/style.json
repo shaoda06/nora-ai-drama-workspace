@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3198",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "超现实",
+  "name": "Stark Monochromatic Surrealism",
+  "prompt": "monochromatic noir, heavy film grain, chiaroscuro lighting, minimalist surrealism, stark geometric forms, extreme scale contrast, atmospheric void. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Stark Monochromatic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Stark Monochromatic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

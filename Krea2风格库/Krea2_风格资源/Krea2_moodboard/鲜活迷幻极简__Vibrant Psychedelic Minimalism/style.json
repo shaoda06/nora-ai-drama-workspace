@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-706",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "鲜活迷幻极简",
+  "name": "Vibrant Psychedelic Minimalism",
+  "prompt": "vibrant saturated palette, psychedelic minimalism, bold graphic contours, fluid organic shapes, high-contrast color blocking, clean vector aesthetics, intricate mosaic texturing. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活迷幻极简__Vibrant Psychedelic Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/鲜活迷幻极简__Vibrant Psychedelic Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

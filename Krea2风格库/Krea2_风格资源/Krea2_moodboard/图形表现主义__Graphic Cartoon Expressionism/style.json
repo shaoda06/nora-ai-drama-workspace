@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-177",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "图形表现主义",
+  "name": "Graphic Cartoon Expressionism",
+  "prompt": "character model sheet, bold black linework, expressive cartoon style, flat digital color, indie animation aesthetic, exaggerated proportions, minimalist solid background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形表现主义__Graphic Cartoon Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/图形表现主义__Graphic Cartoon Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

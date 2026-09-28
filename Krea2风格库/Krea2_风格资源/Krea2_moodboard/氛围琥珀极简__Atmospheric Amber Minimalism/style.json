@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1702",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "氛围琥珀极简",
+  "name": "Atmospheric Amber Minimalism",
+  "prompt": "amber gradient, atmospheric fog, minimalist silhouette, soft-focus haze, cinematic backlighting, liminal space, warm color field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围琥珀极简__Atmospheric Amber Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/氛围琥珀极简__Atmospheric Amber Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

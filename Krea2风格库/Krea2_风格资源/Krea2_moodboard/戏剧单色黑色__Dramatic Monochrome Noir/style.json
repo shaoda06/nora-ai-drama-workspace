@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2107",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "戏剧单色黑色",
+  "name": "Dramatic Monochrome Noir",
+  "prompt": "monochrome portrait photography, chiaroscuro lighting, high contrast, sharp focus, dramatic shadows, minimalist studio background, editorial aesthetic, intense gaze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/戏剧单色黑色__Dramatic Monochrome Noir/preview.webp",
+  "folder": "Krea2_moodboard/戏剧单色黑色__Dramatic Monochrome Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

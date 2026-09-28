@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1070",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "明亮",
+  "name": "Luminous Sylvan Impressionism",
+  "prompt": "impressionist oil painting, thick impasto texture, ethereal god rays, shimmering golden highlights, deep teal and emerald palette, luminous atmospheric lighting, dreamy overgrown nature. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Sylvan Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Sylvan Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

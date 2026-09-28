@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-38",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "图形波普综合",
+  "name": "Graphic Pop Synthesis",
+  "prompt": "bold black outlines, flat color illustration, vibrant saturated palette, high-contrast graphic style, ligne claire influence, modern anime aesthetics, solid minimalist background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形波普综合__Graphic Pop Synthesis/preview.webp",
+  "folder": "Krea2_moodboard/图形波普综合__Graphic Pop Synthesis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

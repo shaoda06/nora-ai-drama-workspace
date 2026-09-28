@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-142",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "明亮怀旧动漫",
+  "name": "Luminous Nostalgic Anime — Dappled Pencil Warmth",
+  "prompt": "studio ghibli inspired, watercolor and colored pencil texture, dappled sunlight, lush green foliage, nostalgic slice of life, hand-drawn ink outlines, warm summer atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮怀旧动漫__Luminous Nostalgic Anime — Dappled Pencil Warmth/preview.webp",
+  "folder": "Krea2_moodboard/明亮怀旧动漫__Luminous Nostalgic Anime — Dappled Pencil Warmth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

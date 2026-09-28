@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3252",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "超现实模拟复古拼贴",
+  "name": "Surreal Analog Retro-Collage",
+  "prompt": "vintage black and white photography, analog paper collage, surreal pop juxtaposition, high contrast monochrome, grainy film texture, mixed media art, retro-futuristic whimsy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实模拟复古拼贴__Surreal Analog Retro-Collage/preview.webp",
+  "folder": "Krea2_moodboard/超现实模拟复古拼贴__Surreal Analog Retro-Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

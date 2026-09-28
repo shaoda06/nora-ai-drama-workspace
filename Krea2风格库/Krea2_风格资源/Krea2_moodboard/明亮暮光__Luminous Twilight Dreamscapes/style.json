@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-607",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "明亮暮光",
+  "name": "Luminous Twilight Dreamscapes",
+  "prompt": "volumetric cumulus clouds, deep indigo and fiery orange gradient, golden hour twilight, painterly texture, high contrast silhouettes, cinematic atmospheric lighting, sublime skyscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮暮光__Luminous Twilight Dreamscapes/preview.webp",
+  "folder": "Krea2_moodboard/明亮暮光__Luminous Twilight Dreamscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

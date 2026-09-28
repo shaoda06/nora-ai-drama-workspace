@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2735",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵夜行薄雾",
+  "name": "Ethereal Nocturnal Cyan — Frosted Mist Halo",
+  "prompt": "monochromatic cyan, spectral silhouette, frosted glass texture, atmospheric haze, deep cobalt indigo, grainy film photography, ethereal backlighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行薄雾__Ethereal Nocturnal Cyan — Frosted Mist Halo/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行薄雾__Ethereal Nocturnal Cyan — Frosted Mist Halo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

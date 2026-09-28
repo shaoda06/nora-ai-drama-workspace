@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-950",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "肌理绘画感",
+  "name": "Textured Painterly Vignettes",
+  "prompt": "digital gouache, painterly texture, warm sun-kissed lighting, slice of life, loose brushstrokes, expressive character vignette, earthy and vibrant palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理绘画感__Textured Painterly Vignettes/preview.webp",
+  "folder": "Krea2_moodboard/肌理绘画感__Textured Painterly Vignettes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

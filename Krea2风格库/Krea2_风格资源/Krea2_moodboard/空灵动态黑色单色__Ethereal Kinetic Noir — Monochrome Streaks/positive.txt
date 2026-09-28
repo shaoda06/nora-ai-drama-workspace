@@ -1,0 +1,1 @@
+monochrome long exposure, intentional camera movement, ghostly motion blur, chiaroscuro lighting, fragmented double exposure, cinematic shutter drag, high contrast black and white. Subject:{prompt}

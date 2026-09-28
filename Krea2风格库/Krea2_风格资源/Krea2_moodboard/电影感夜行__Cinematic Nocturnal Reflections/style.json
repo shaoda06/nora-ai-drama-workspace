@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1454",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "电影感夜行",
+  "name": "Cinematic Nocturnal Reflections",
+  "prompt": "cinematic reflection, shot through glass, double exposure effect, analog 35mm film grain, warm urban bokeh, teal and orange grading, moody night portrait. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Reflections/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Reflections",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

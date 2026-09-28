@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2129",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "极简海洋",
+  "name": "Minimalist Oceanic Solitude",
+  "prompt": "high-angle aerial perspective, minimalist composition, deep indigo and teal palette, isolated subject, vast ocean scale, dramatic shadows, cinematic cold lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简海洋__Minimalist Oceanic Solitude/preview.webp",
+  "folder": "Krea2_moodboard/极简海洋__Minimalist Oceanic Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

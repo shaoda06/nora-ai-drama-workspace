@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1449",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "动态电影感运动",
+  "name": "Kinetic Cinematic Motion",
+  "prompt": "intentional camera movement, dynamic motion blur, cinematic lighting, long exposure, high contrast, athletic energy, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态电影感运动__Kinetic Cinematic Motion/preview.webp",
+  "folder": "Krea2_moodboard/动态电影感运动__Kinetic Cinematic Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

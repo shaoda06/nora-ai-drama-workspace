@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-142",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "亚历克斯·罗斯风格",
+  "name": "Alex Ross Style",
+  "prompt": "Style: Alex Ross Style: A monumental, painterly superhero-realism style rendered in traditional gouache and oil technique translated into hyperreal digital polish, richly lit subject with photoreal textures grounded in classical painting light logic, epic, reverent compositions that frame subject like religious or historical icon, warm painterly color harmonies bathing every scene in golden, dignified light, and a grand, mythic gravitas that elevates comic-book imagery into fine-art portraiture. Influenced by: Alex Ross, Norman Rockwell, classical gouache painting technique, Kingdom Come comic art direction.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/亚历克斯·罗斯风格__Alex Ross Style/preview.jpg",
+  "folder": "krea2_styles/亚历克斯·罗斯风格__Alex Ross Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

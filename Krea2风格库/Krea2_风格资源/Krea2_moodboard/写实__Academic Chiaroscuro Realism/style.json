@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-722",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "写实",
+  "name": "Academic Chiaroscuro Realism",
+  "prompt": "graphite and charcoal portrait, chiaroscuro lighting, hyper-realistic skin texture, academic drawing style, volumetric shading, monochromatic fine art, gestural sketch elements. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/写实__Academic Chiaroscuro Realism/preview.webp",
+  "folder": "Krea2_moodboard/写实__Academic Chiaroscuro Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

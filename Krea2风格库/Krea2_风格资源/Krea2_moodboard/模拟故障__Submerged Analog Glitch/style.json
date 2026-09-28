@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3358",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "模拟故障",
+  "name": "Submerged Analog Glitch",
+  "prompt": "analog CRT scanlines, VHS tracking glitch, submerged liquid distortion, monochromatic blue aesthetic, chromatic aberration, liminal dreamscape, caustic light refraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟故障__Submerged Analog Glitch/preview.webp",
+  "folder": "Krea2_moodboard/模拟故障__Submerged Analog Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

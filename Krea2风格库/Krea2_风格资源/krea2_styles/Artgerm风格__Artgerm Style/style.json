@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-230",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "Artgerm风格",
+  "name": "Artgerm Style",
+  "prompt": "Style: Artgerm Style: A polished digital-painting portrait style blending photorealistic rendering with idealized comic-glamour proportions, luminous porcelain skin with soft airbrushed gradients and crisp specular highlights, richly detailed glossy rendering carried strand by strand where fine linework is called for, confident glamorous poses framed with clean painterly composition, and a slick, high-production pin-up polish that bridges Western comic-cover art and digital beauty illustration. Influenced by: Stanley \"Artgerm\" Lau, comic-book cover illustration, digital pin-up art, airbrush portrait technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Artgerm风格__Artgerm Style/preview.jpg",
+  "folder": "krea2_styles/Artgerm风格__Artgerm Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-143",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "另类漫画风格",
+  "name": "Alternative Comics Style",
+  "prompt": "Style: Alternative Comics Style: A raw, personal illustration style built on deliberately imperfect, loose linework that resists mainstream polish in favor of authentic idiosyncratic mark-making, minimal or improvised shading applied with a sketchbook-like immediacy, unconventional panel logic and compositional looseness that prioritizes voice over convention, a candid, confessional intimacy carried through visibly handmade imperfection, and an independent, unpolished sincerity that feels personal, experimental, and unmistakably auteur-driven. Influenced by: Robert Crumb, underground comix tradition, indie/alternative comics movement, sketchbook-diary illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/另类漫画风格__Alternative Comics Style/preview.jpg",
+  "folder": "krea2_styles/另类漫画风格__Alternative Comics Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

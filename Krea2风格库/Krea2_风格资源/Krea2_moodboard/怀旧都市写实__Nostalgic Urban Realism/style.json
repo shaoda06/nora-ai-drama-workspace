@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1817",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "怀旧都市写实",
+  "name": "Nostalgic Urban Realism",
+  "prompt": "35mm film photography, muted desaturated color palette, soft overcast natural light, analog film grain, urban realism, melancholic mood, shallow depth of field, poetic candid moments. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧都市写实__Nostalgic Urban Realism/preview.webp",
+  "folder": "Krea2_moodboard/怀旧都市写实__Nostalgic Urban Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

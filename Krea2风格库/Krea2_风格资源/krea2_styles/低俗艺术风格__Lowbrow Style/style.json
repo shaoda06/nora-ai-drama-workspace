@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-25",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "低俗艺术风格",
+  "name": "Lowbrow Style",
+  "prompt": "Style: Lowbrow Style: A darkly whimsical illustration style built on cartoonish exaggeration mixed with unsettling, surreal juxtaposition, confident smooth rendering that gives every form a glossy, pop-adjacent polish, bold caricatured proportion pushed toward grotesque or absurd extremes, a rebellious, subversive humor woven through otherwise technically polished composition, and a bold, countercultural intensity that feels irreverent, playful, and quietly unsettling. Influenced by: Robert Williams, Mark Ryden, lowbrow-art movement tradition, pop-surrealist illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/低俗艺术风格__Lowbrow Style/preview.jpg",
+  "folder": "krea2_styles/低俗艺术风格__Lowbrow Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

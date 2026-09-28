@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2508",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "超现实绯红",
+  "name": "Surreal Infrared Crimson",
+  "prompt": "infrared photography style, crimson and cyan palette, surreal nature, ethereal dreamscape, high-contrast color blocking, gothic atmosphere, glowing red foliage. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实绯红__Surreal Infrared Crimson/preview.webp",
+  "folder": "Krea2_moodboard/超现实绯红__Surreal Infrared Crimson",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

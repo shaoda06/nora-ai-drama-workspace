@@ -1,0 +1,1 @@
+CRT scanlines, chromatic aberration, VHS analog distortion, neon light leaks, digital glitch art, phosphor screen texture, motion blur distortion. Subject:{prompt}

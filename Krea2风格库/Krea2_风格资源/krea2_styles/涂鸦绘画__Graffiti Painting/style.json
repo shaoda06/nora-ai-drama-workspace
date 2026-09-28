@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-299",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "涂鸦绘画",
+  "name": "Graffiti Painting",
+  "prompt": "Style: Graffiti Painting: A bold, kinetic street-art illustration style built on dynamic, exaggerated linework with dripping, spray-textured edges that carry raw improvisational energy, confident layered tagging and lettering integrated directly into the composition as rhythmic graphic accents, a rough, unpolished texture that embraces overspray and imperfection as part of its character, aggressive diagonal composition charged with urgent, rebellious momentum, and a raw, unapologetic street-culture intensity that feels loud, immediate, and defiantly handmade. Influenced by: Jean-Michel Basquiat, spray-paint stencil technique, New York subway graffiti tradition, street-art muralism.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/涂鸦绘画__Graffiti Painting/preview.jpg",
+  "folder": "krea2_styles/涂鸦绘画__Graffiti Painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2627",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "黑色极简",
+  "name": "Stark Noir Minimalism",
+  "prompt": "high-contrast monochrome photography, stark chiaroscuro lighting, dramatic geometric shadows, minimalist composition, vintage film grain, sharp focus, graphic silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色极简__Stark Noir Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/黑色极简__Stark Noir Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

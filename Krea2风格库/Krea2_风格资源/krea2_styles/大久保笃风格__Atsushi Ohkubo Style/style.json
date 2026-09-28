@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-72",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "大久保笃风格",
+  "name": "Atsushi Ohkubo Style",
+  "prompt": "Style: Atsushi Ohkubo Style: bold graphic aesthetics characterized by sharp silhouette design, dynamic linework, stylized anatomy, exaggerated visual rhythm, striking contrast, and highly recognizable shape language, blending manga expressiveness with contemporary illustration sensibilities through energetic compositions, refined ink work, and a distinctive balance between elegance and intensity, reminiscent of Atsushi Ohkubo and Tite Kubo, inspired by Soul Eater and Fire Force.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/大久保笃风格__Atsushi Ohkubo Style/preview.jpg",
+  "folder": "krea2_styles/大久保笃风格__Atsushi Ohkubo Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

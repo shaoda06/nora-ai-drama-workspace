@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2334",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "明亮琥珀剪影光辉发光",
+  "name": "Luminous Amber Silhouette — Radiant Rim Glow",
+  "prompt": "stark silhouette, monochromatic amber glow, dramatic rim lighting, high contrast composition, cinematic haze, minimalist backlighting, warm golden hour tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮琥珀剪影光辉发光__Luminous Amber Silhouette — Radiant Rim Glow/preview.webp",
+  "folder": "Krea2_moodboard/明亮琥珀剪影光辉发光__Luminous Amber Silhouette — Radiant Rim Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

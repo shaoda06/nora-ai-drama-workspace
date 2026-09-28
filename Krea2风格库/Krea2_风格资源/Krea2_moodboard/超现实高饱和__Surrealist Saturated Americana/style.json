@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3526",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "超现实高饱和",
+  "name": "Surrealist Saturated Americana",
+  "prompt": "hyper-saturated primary colors, sharp natural sunlight, vibrant blue sky, minimalist pastoral composition, uncanny surrealist juxtapostion, high contrast cinematography, liminal dreamcore atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实高饱和__Surrealist Saturated Americana/preview.webp",
+  "folder": "Krea2_moodboard/超现实高饱和__Surrealist Saturated Americana",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

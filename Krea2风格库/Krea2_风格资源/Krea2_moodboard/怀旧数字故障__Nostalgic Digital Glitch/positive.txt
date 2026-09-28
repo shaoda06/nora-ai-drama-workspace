@@ -1,0 +1,1 @@
+1-bit pixel art, 90s retro OS interface, chromatic aberration, dithering pattern, aliased pixelated lines, glitch art, vintage CRT monitor effect. Subject:{prompt}

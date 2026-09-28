@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2188",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷4",
+  "category_name": "摄影特效冷4",
+  "name_cn": "工业",
+  "name": "Industrial Sculptural Avant-Garde",
+  "prompt": "brutalist editorial fashion, sculptural portraiture, desaturated blue-grey tones, metallic industrial hardware, gritty film grain, sharp skin texture, avant-garde minimalism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/工业__Industrial Sculptural Avant-Garde/preview.webp",
+  "folder": "Krea2_moodboard/工业__Industrial Sculptural Avant-Garde",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

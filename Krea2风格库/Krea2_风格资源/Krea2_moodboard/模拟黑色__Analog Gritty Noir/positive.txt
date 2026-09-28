@@ -1,0 +1,1 @@
+high-contrast monochrome, halftone print texture, analog CRT scanlines, grungy photocopy noise, chiaroscuro lighting, distressed film grain, dystopian noir atmosphere. Subject:{prompt}

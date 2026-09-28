@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1703",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感",
+  "name": "Cinematic Cobalt Chiaroscuro",
+  "prompt": "chiaroscuro, volumetric lighting, deep cobalt and midnight blue, cinematic isolation, minimalist composition, dramatic spotlight, atmospheric fog, high contrast silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感__Cinematic Cobalt Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/电影感__Cinematic Cobalt Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

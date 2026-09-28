@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2473",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "明亮深渊轻盈",
+  "name": "Luminous Abyssal Dreamscape — Caustic Light Shafts",
+  "prompt": "underwater photography, chiaroscuro lighting, bioluminescent particles, caustic light ripples, deep blue and teal palette, ethereal light shafts, high contrast silhouettes, dreamlike cinematic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮深渊轻盈__Luminous Abyssal Dreamscape — Caustic Light Shafts/preview.webp",
+  "folder": "Krea2_moodboard/明亮深渊轻盈__Luminous Abyssal Dreamscape — Caustic Light Shafts",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

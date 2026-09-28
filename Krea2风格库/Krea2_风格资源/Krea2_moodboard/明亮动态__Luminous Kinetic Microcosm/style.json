@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1248",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "明亮动态",
+  "name": "Luminous Kinetic Microcosm",
+  "prompt": "bioluminescent glow, stark black background, vibrant neon gradients, microscopic organic texture, high-speed fluid dynamics, radial symmetry, intense chromatic contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮动态__Luminous Kinetic Microcosm/preview.webp",
+  "folder": "Krea2_moodboard/明亮动态__Luminous Kinetic Microcosm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

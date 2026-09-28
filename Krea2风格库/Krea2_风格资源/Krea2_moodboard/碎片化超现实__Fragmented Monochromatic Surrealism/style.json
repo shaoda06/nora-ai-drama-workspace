@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2912",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "碎片化超现实",
+  "name": "Fragmented Monochromatic Surrealism",
+  "prompt": "monochromatic portraiture, geometric deconstruction, digital glitch distortion, surrealist collage, high-contrast chiaroscuro, film grain texture, fractured identity. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化超现实__Fragmented Monochromatic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/碎片化超现实__Fragmented Monochromatic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

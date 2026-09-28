@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1792",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "宏观袖珍奇想",
+  "name": "Macro Miniature Whimsy",
+  "prompt": "miniature diorama, macro photography, tilt-shift effect, shallow depth of field, vibrant saturated colors, whimsical scale play, clean studio lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宏观袖珍奇想__Macro Miniature Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/宏观袖珍奇想__Macro Miniature Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

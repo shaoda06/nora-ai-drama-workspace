@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-340",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "电影感摄影",
+  "name": "Cinematic Photography",
+  "prompt": "Style: Cinematic Photography: A dramatically composed photographic style built on deliberate, film-like framing that favors wide aspect ratios and purposeful negative space, controlled color-grading logic that unifies highlight and shadow into a single cohesive mood, soft, motivated lighting sources that feel narratively justified rather than purely technical, a patient, unhurried compositional stillness charged with implied story beyond the frame, and a polished, narrative-driven visual gravitas rooted in feature-film visual-language tradition. Influenced by: Roger Deakins cinematography tradition, anamorphic-lens visual technique, narrative film-lighting practice, color-grading post-production method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/电影感摄影__Cinematic Photography/preview.jpg",
+  "folder": "krea2_styles/电影感摄影__Cinematic Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

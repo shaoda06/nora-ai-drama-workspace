@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1086",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "哥特超现实",
+  "name": "Opulent Gothic Surrealism",
+  "prompt": "dark baroque, gothic couture, spiked halo crown, chiaroscuro lighting, intricate gold filigree, black lace veil, macabre elegance. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/哥特超现实__Opulent Gothic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/哥特超现实__Opulent Gothic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

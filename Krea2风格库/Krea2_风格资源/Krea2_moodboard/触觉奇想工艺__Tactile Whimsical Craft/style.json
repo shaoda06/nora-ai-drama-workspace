@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1236",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "触觉奇想工艺",
+  "name": "Tactile Whimsical Craft",
+  "prompt": "tactile fiber textures, felted wool aesthetic, whimsical stop-motion style, soft pastel color palette, miniature diorama look, fuzzy flocked surfaces, bright optimistic daylight, cozy yarncraft details. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉奇想工艺__Tactile Whimsical Craft/preview.webp",
+  "folder": "Krea2_moodboard/触觉奇想工艺__Tactile Whimsical Craft",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

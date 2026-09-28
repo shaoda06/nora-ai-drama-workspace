@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2424",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "夜行故障忧郁",
+  "name": "Nocturnal Glitch Melancholy",
+  "prompt": "deep indigo and neon palette, atmospheric motion blur, analog glitch textures, mysterious silhouettes, dreamy blue hour, lo-fi film grain, chromatic aberration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行故障忧郁__Nocturnal Glitch Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/夜行故障忧郁__Nocturnal Glitch Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

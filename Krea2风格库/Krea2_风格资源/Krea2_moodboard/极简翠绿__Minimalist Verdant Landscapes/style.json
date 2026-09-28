@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2557",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "极简翠绿",
+  "name": "Minimalist Verdant Landscapes",
+  "prompt": "minimalist aerial landscape, velvety moss texture, rolling green hills, dramatic low-angle light, chiaroscuro shadows, solitary focal point, monochromatic verdant palette, cinematic scale contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简翠绿__Minimalist Verdant Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/极简翠绿__Minimalist Verdant Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2453",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "内脏感绯红",
+  "name": "Visceral Crimson Abstraction",
+  "prompt": "visceral crimson and black, biomorphic abstraction, high-contrast neural networks, gritty organic textures, macabre anatomical surrealism, shattered graphic composition, synthetic biology aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感绯红__Visceral Crimson Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/内脏感绯红__Visceral Crimson Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-428",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "Gritty Monochromatic",
+  "name": "Gritty Monochromatic Punk",
+  "prompt": "high-contrast black and white, threshold effect, punk zine aesthetic, halftone pattern, xerox photocopy texture, graphic silhouette, stark monochrome. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Gritty Monochromatic__Gritty Monochromatic Punk/preview.webp",
+  "folder": "Krea2_moodboard/Gritty Monochromatic__Gritty Monochromatic Punk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

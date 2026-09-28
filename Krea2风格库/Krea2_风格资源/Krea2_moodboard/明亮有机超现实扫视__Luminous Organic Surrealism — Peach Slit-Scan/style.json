@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3443",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "明亮有机超现实扫视",
+  "name": "Luminous Organic Surrealism — Peach Slit-Scan",
+  "prompt": "translucent organic curves, slit-scan light trails, warm gradient palette, volumetric luminosity, deep black background, ethereal fluid abstraction, velvety texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮有机超现实扫视__Luminous Organic Surrealism — Peach Slit-Scan/preview.webp",
+  "folder": "Krea2_moodboard/明亮有机超现实扫视__Luminous Organic Surrealism — Peach Slit-Scan",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-760",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵黑色",
+  "name": "Ethereal Pictorialist Noir",
+  "prompt": "pictorialism, monochrome film grain, soft-focus blur, high-contrast chiaroscuro, atmospheric haze, dreamlike vignette, charcoal texture, mysterious liminality. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色__Ethereal Pictorialist Noir/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色__Ethereal Pictorialist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

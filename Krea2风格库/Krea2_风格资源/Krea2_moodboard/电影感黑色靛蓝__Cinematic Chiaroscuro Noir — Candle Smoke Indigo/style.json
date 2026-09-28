@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1830",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感黑色靛蓝",
+  "name": "Cinematic Chiaroscuro Noir — Candle Smoke Indigo",
+  "prompt": "chiaroscuro lighting, cinematic atmosphere, analog film grain, dramatic shafts of light, high-contrast shadows, atmospheric dust motes, deep indigo and amber palette, tactile textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色靛蓝__Cinematic Chiaroscuro Noir — Candle Smoke Indigo/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色靛蓝__Cinematic Chiaroscuro Noir — Candle Smoke Indigo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

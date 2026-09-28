@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2422",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "粗野主义",
+  "name": "Monolithic Brutalist Distortion",
+  "prompt": "brutalist architecture, extreme fisheye lens, desaturated moody palette, monolithic scale, atmospheric fog, high-contrast chiaroscuro, ominous storm clouds. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粗野主义__Monolithic Brutalist Distortion/preview.webp",
+  "folder": "Krea2_moodboard/粗野主义__Monolithic Brutalist Distortion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

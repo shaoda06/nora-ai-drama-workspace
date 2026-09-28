@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1501",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "琥珀",
+  "name": "Amber Haze Nocturne",
+  "prompt": "amber glow, motion blur, soft focus, analog film grain, pictorialism, dreamy ethereal lighting, sepia tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀__Amber Haze Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/琥珀__Amber Haze Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

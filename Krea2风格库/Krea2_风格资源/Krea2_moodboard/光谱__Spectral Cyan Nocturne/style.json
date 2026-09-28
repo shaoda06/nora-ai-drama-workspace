@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2514",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "光谱",
+  "name": "Spectral Cyan Nocturne",
+  "prompt": "glowing cyan aura, stark dark silhouette, heavy analog grain, ethereal smoky light, Kirlian photography aesthetic, mysterious nocturnal atmosphere, soft-focus bleeding edges. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱__Spectral Cyan Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/光谱__Spectral Cyan Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1893",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "复古数字",
+  "name": "Retro Digital Artifacts",
+  "prompt": "90s retro OS GUI, dithered pixel art, CRT scanline effect, chromatic aberration, webcore collage, cobalt blue duotone, lo-fi digital noise. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古数字__Retro Digital Artifacts/preview.webp",
+  "folder": "Krea2_moodboard/复古数字__Retro Digital Artifacts",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

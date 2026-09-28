@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2554",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "单色建筑黑色",
+  "name": "Monochrome Architectural Noir",
+  "prompt": "black and white architectural photography, high-contrast chiaroscuro lighting, brutalist concrete geometry, extreme perspective, geometric repetition, cinematic noir atmosphere, minimalist structural depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色建筑黑色__Monochrome Architectural Noir/preview.webp",
+  "folder": "Krea2_moodboard/单色建筑黑色__Monochrome Architectural Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

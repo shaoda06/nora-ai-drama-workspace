@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-581",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "光谱宇宙黑色棱镜",
+  "name": "Spectral Cosmic Noir — Prismatic Airbrush Beams",
+  "prompt": "minimalist surrealism, prismatic light leaks, deep black background, vintage grainy texture, isolated cabin, chiaroscuro lighting, retro airbrush illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱宇宙黑色棱镜__Spectral Cosmic Noir — Prismatic Airbrush Beams/preview.webp",
+  "folder": "Krea2_moodboard/光谱宇宙黑色棱镜__Spectral Cosmic Noir — Prismatic Airbrush Beams",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

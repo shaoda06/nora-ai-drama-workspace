@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-495",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "高饱和模拟复古",
+  "name": "Saturated Analog Retro-Print",
+  "prompt": "risograph print style, analog film grain, saturated blue and red, high-contrast graphic, vintage halftone texture, retro surrealism, stark lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高饱和模拟复古__Saturated Analog Retro-Print/preview.webp",
+  "folder": "Krea2_moodboard/高饱和模拟复古__Saturated Analog Retro-Print",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

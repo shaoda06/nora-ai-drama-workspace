@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-27",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "鬼妈妈定格动画风格",
+  "name": "Coraline Stop-Motion Style",
+  "prompt": "Style: Coraline Stop-Motion Style: A meticulously crafted stop-motion illustration style built on precise, doll-like proportion carrying an uncanny, porcelain-smooth finish, subtle handcrafted imperfection visible in gentle asymmetry rather than digital uniformity, moody, controlled lighting establishing a quietly unsettling, dreamlike atmosphere, meticulous attention to fine detail rendered with obsessive miniature-scale patience, and a whimsical yet faintly eerie handcrafted intensity that feels intimate, meticulous, and gently uncanny. Influenced by: Henry Selick, LAIKA Studios stop-motion tradition, meticulous puppet-fabrication technique, gothic-whimsical animation practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/鬼妈妈定格动画风格__Coraline Stop-Motion Style/preview.jpg",
+  "folder": "krea2_styles/鬼妈妈定格动画风格__Coraline Stop-Motion Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-452",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "数字",
+  "name": "Monochromatic Digital Brutalism",
+  "prompt": "cobalt blue and white, duotone high contrast, dithered pixel art, halftone pattern, minimalist geometric, retro digital printmaking, stark graphic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字__Monochromatic Digital Brutalism/preview.webp",
+  "folder": "Krea2_moodboard/数字__Monochromatic Digital Brutalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

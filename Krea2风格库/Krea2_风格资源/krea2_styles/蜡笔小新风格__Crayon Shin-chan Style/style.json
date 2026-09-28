@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-114",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "蜡笔小新风格",
+  "name": "Crayon Shin-chan Style",
+  "prompt": "Style: Crayon Shin-chan Style: A bold, flat cartoon illustration style built on thick, confident outline holding simplified, blocky proportions, bright, evenly applied flat color with minimal shading complexity, an exaggerated, oversized-head simplicity favoring instant graphic readability over anatomical detail, a loose, wobbly linework carrying deliberately crude, comedic charm, and a cheeky, irreverent cartoon energy that feels playful, satirical, and effortlessly recognizable. Influenced by: Yoshito Usui, crayon Shin-Chan character style, Studio Shin-Ei Animation tradition, flat-color cartoon technique, satirical children's-cartoon character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/蜡笔小新风格__Crayon Shin-chan Style/preview.jpg",
+  "folder": "krea2_styles/蜡笔小新风格__Crayon Shin-chan Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

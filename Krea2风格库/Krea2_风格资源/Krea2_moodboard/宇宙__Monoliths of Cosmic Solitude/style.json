@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3342",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "宇宙",
+  "name": "Monoliths of Cosmic Solitude",
+  "prompt": "tiny solitary silhouette, extreme scale contrast, deep cobalt and crimson palette, atmospheric chiaroscuro lighting, surreal organic textures, cosmic minimalism, dreamlike melancholic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宇宙__Monoliths of Cosmic Solitude/preview.webp",
+  "folder": "Krea2_moodboard/宇宙__Monoliths of Cosmic Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2742",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵暮光怀旧高饱和黄昏绽放",
+  "name": "Ethereal Twilight Nostalgia — Saturated Dusk Bloom",
+  "prompt": "lo-fi analogue film photography, heavy film grain, ethereal light bloom, twilight blue hour, high contrast silhouettes, dreamy vintage atmosphere, saturated sunset palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵暮光怀旧高饱和黄昏绽放__Ethereal Twilight Nostalgia — Saturated Dusk Bloom/preview.webp",
+  "folder": "Krea2_moodboard/空灵暮光怀旧高饱和黄昏绽放__Ethereal Twilight Nostalgia — Saturated Dusk Bloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

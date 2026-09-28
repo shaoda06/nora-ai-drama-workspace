@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-14",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "电影感夜行动漫",
+  "name": "Cinematic Nocturnal Anime",
+  "prompt": "cinematic retro anime style, nocturnal atmosphere, deep indigo and navy palette, high-contrast warm light, industrial silhouette, lo-fi melancholy, atmospheric twilight gradient, hand-drawn cel-shaded texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行动漫__Cinematic Nocturnal Anime/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行动漫__Cinematic Nocturnal Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1038",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "宇宙暮光超现实",
+  "name": "Cosmic Twilight Surrealism",
+  "prompt": "surrealist oil painting, twilight gradient sky, deep blue and orange palette, cosmic scale, biomorphic forms, chiaroscuro lighting, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宇宙暮光超现实__Cosmic Twilight Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/宇宙暮光超现实__Cosmic Twilight Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

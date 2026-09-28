@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-980",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "几何数字",
+  "name": "Geometric Digital Impressionism",
+  "prompt": "stylized digital landscape, geometric blocky brushstrokes, vibrant saturated palette, surreal digital pastoral, impasto texture, high-contrast lighting, sharp-edged terrain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何数字__Geometric Digital Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/几何数字__Geometric Digital Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

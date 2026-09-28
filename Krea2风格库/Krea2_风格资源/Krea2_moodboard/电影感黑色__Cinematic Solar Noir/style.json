@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-304",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感黑色",
+  "name": "Cinematic Solar Noir",
+  "prompt": "extreme close-up portrait, harsh direct sunlight, analog film grain, high-contrast color blocking, ultramarine and terracotta palette, cinematic shadows, tactile skin texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色__Cinematic Solar Noir/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色__Cinematic Solar Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

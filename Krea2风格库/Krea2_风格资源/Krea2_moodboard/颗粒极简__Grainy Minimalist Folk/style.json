@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-624",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "颗粒极简",
+  "name": "Grainy Minimalist Folk",
+  "prompt": "minimalist vector illustration, grainy risograph texture, soft pastel color palette, mid-century folk influence, stippled shading, flat graphic shapes, whimsical botanical motifs. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/颗粒极简__Grainy Minimalist Folk/preview.webp",
+  "folder": "Krea2_moodboard/颗粒极简__Grainy Minimalist Folk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

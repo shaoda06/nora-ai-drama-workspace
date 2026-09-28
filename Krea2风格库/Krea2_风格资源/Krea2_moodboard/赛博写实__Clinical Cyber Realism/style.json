@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2156",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "赛博写实",
+  "name": "Clinical Cyber Realism",
+  "prompt": "clinical studio lighting, stark white background, hyper-detailed skin texture, cyber minimalist, cool ice-blue tones, high-contrast editorial, avant-garde technical wear, wet-look glossy aesthetics. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/赛博写实__Clinical Cyber Realism/preview.webp",
+  "folder": "Krea2_moodboard/赛博写实__Clinical Cyber Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

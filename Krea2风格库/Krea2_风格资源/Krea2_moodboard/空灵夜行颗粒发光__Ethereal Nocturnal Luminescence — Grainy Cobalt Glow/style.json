@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2512",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "空灵夜行颗粒发光",
+  "name": "Ethereal Nocturnal Luminescence — Grainy Cobalt Glow",
+  "prompt": "analog film grain, cobalt and cyan palette, ethereal bioluminescent glow, high-contrast night photography, surreal nocturnal atmosphere, soft-focus lens flare, mystical chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行颗粒发光__Ethereal Nocturnal Luminescence — Grainy Cobalt Glow/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行颗粒发光__Ethereal Nocturnal Luminescence — Grainy Cobalt Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

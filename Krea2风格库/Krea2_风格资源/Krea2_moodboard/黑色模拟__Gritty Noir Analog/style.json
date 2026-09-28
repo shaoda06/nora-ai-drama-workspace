@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3251",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "黑色模拟",
+  "name": "Gritty Noir Analog",
+  "prompt": "heavy film grain, high contrast monochrome, chiaroscuro lighting, analog horror texture, distorted surrealism, vintage 1970s thriller aesthetic, intimate noir portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色模拟__Gritty Noir Analog/preview.webp",
+  "folder": "Krea2_moodboard/黑色模拟__Gritty Noir Analog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

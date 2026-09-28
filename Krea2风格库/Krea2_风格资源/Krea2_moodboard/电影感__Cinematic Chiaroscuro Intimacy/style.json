@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1314",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感",
+  "name": "Cinematic Chiaroscuro Intimacy",
+  "prompt": "chiaroscuro lighting, low-key photography, absolute black background, cinematic realism, high-contrast portrait, shallow depth of field, intimate macro detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感__Cinematic Chiaroscuro Intimacy/preview.webp",
+  "folder": "Krea2_moodboard/电影感__Cinematic Chiaroscuro Intimacy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-111",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧",
+  "name": "Nostalgic Solarpunk Cottagecore",
+  "prompt": "retro anime style, Ghibli inspired, lush green landscape, whimsical cottagecore, hand-drawn line art, vibrant saturated colors, fluffy cumulus clouds, solarpunk fantasy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧__Nostalgic Solarpunk Cottagecore/preview.webp",
+  "folder": "Krea2_moodboard/怀旧__Nostalgic Solarpunk Cottagecore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

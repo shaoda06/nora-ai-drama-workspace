@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3067",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵流质",
+  "name": "Ethereal Liquid Iridescence",
+  "prompt": "translucent liquid glass, iridescent violet gradient, organic 3D fluid curves, soft studio lighting, glossy specular reflections, ethereal surrealism, minimalist digital tranquility. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵流质__Ethereal Liquid Iridescence/preview.webp",
+  "folder": "Krea2_moodboard/空灵流质__Ethereal Liquid Iridescence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2085",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "工业新黑色",
+  "name": "Industrial Neo-Noir Grunge",
+  "prompt": "candid urban photography, high contrast shadows, fisheye lens, gritty industrial texture, desaturated 35mm film, brutalist architecture, streetwear fashion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/工业新黑色__Industrial Neo-Noir Grunge/preview.webp",
+  "folder": "Krea2_moodboard/工业新黑色__Industrial Neo-Noir Grunge",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

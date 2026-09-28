@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-271",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "动态都市",
+  "name": "Dynamic Urban Wormseye",
+  "prompt": "extreme low angle, worm's-eye view, wide-angle lens distortion, vibrant streetwear, urban skyscraper geometry, sun-drenched, high-contrast color, cinematic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态都市__Dynamic Urban Wormseye/preview.webp",
+  "folder": "Krea2_moodboard/动态都市__Dynamic Urban Wormseye",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

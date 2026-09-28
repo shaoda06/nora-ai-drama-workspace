@@ -1,0 +1,1 @@
+macro botanical photography, tactile organic textures, muted earthy color palette, soft diffuse backlighting, shallow depth of field, vintage film grain, intricate fibrous detail. Subject:{prompt}

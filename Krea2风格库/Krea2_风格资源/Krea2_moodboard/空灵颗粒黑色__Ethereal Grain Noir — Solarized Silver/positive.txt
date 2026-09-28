@@ -1,0 +1,1 @@
+high-contrast monochrome, stark chiaroscuro, heavy film grain, ethereal motion blur, solarized texture, ghostly silhouettes, vintage gelatin silver print. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2317",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "图形绯红黑色",
+  "name": "Graphic Crimson Noir",
+  "prompt": "saturated crimson background, high-contrast studio lighting, bold graphic silhouettes, intense black texture, modern noir aesthetic, stipple and ink detailing, vibrant color blocking. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形绯红黑色__Graphic Crimson Noir/preview.webp",
+  "folder": "Krea2_moodboard/图形绯红黑色__Graphic Crimson Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

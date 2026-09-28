@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2585",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "触觉泥土极简",
+  "name": "Tactile Earthy Minimalism",
+  "prompt": "minimalist still life, tactile textures, soft studio lighting, wabi-sabi aesthetic, neutral earthy palette, sculptural composition, matte and glossy contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉泥土极简__Tactile Earthy Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/触觉泥土极简__Tactile Earthy Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-589",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵夜行",
+  "name": "Ethereal Nocturnal Kinematics",
+  "prompt": "long exposure motion blur, ethereal spectral atmosphere, deep indigo and teal palette, ghostly kinetic silhouettes, painterly light streaks, cinematic nocturnal mood, high contrast shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行__Ethereal Nocturnal Kinematics/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行__Ethereal Nocturnal Kinematics",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1522",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "明亮空灵发光",
+  "name": "Luminous Ethereal Glow",
+  "prompt": "ethereal glow, prismatic bokeh, high-key studio lighting, dewy skin, soft focus, iridescent highlights, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮空灵发光__Luminous Ethereal Glow/preview.webp",
+  "folder": "Krea2_moodboard/明亮空灵发光__Luminous Ethereal Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

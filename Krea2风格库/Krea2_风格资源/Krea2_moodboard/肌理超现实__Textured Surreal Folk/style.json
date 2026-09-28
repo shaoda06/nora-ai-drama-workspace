@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-683",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "肌理超现实",
+  "name": "Textured Surreal Folk",
+  "prompt": "stippled texture, risograph print style, naive folk art, minimalist surrealism, vibrant flat color blocks, grainy halftone effect, graphic illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理超现实__Textured Surreal Folk/preview.webp",
+  "folder": "Krea2_moodboard/肌理超现实__Textured Surreal Folk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

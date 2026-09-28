@@ -1,0 +1,1 @@
+analog film grain, chiaroscuro lighting, low-key cinematic portrait, deep shadows, crimson and amber glow, atmospheric smoke haze, high contrast silhouette. Subject:{prompt}

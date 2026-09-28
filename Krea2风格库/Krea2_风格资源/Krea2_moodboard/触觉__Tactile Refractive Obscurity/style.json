@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2350",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "触觉",
+  "name": "Tactile Refractive Obscurity",
+  "prompt": "textured glass refraction, soft diffused lighting, tactile barrier distortion, dreamlike atmosphere, abstracted silhouette, grainy film aesthetic, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉__Tactile Refractive Obscurity/preview.webp",
+  "folder": "Krea2_moodboard/触觉__Tactile Refractive Obscurity",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

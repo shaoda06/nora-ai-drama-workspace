@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-68",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "午夜审美",
+  "name": "Midnight Cel Aesthetic",
+  "prompt": "1990s retro anime cel, hand-drawn ink linework, nocturnal moody color palette, cinematic atmospheric lighting, vintage OVA aesthetic, high contrast cell shading, nostalgic sci-fi design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/午夜审美__Midnight Cel Aesthetic/preview.webp",
+  "folder": "Krea2_moodboard/午夜审美__Midnight Cel Aesthetic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-315",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "复古数字图形综合",
+  "name": "Retro-Digital Graphic Synthesis",
+  "prompt": "geometric abstraction, halftone dot pattern, primary color palette, retro graphic design, minimalist vector art, digital glitch texture, risograph print effect. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古数字图形综合__Retro-Digital Graphic Synthesis/preview.webp",
+  "folder": "Krea2_moodboard/复古数字图形综合__Retro-Digital Graphic Synthesis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

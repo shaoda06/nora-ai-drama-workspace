@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1109",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "肌理氛围表现主义",
+  "name": "Textured Atmospheric Expressionism",
+  "prompt": "heavy impasto oil painting, sculptural palette knife texture, atmospheric moody lighting, swirling dynamic brushstrokes, muted teal and sage palette, chiaroscuro, expressive painterly style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理氛围表现主义__Textured Atmospheric Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/肌理氛围表现主义__Textured Atmospheric Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

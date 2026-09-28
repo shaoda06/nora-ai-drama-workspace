@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-154",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "恩基·比拉尔漫画与数字绘画",
+  "name": "Enki Bilal-Inspired Comic and Digital Painting",
+  "prompt": "Style: Enki Bilal-Inspired Comic and Digital Painting: A moody, dystopian illustration style built on desaturated, atmospheric color grading applied through layered painterly glazing over confident linework, richly weathered surface texture giving skin and structure a worn, melancholic gravity, muted directional lighting casting a cold, cinematic pall across every composition, a hushed, brooding stillness charged with quiet political and existential unease, and a meticulous, painterly European bande dessinée gravitas that feels both futuristic and haunted by history. Influenced by: Enki Bilal, French bande dessinée illustration, dystopian science-fiction comic art, painterly graphic-novel technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/恩基·比拉尔漫画与数字绘画__Enki Bilal-Inspired Comic and Digital Painting/preview.jpg",
+  "folder": "krea2_styles/恩基·比拉尔漫画与数字绘画__Enki Bilal-Inspired Comic and Digital Painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-663",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "现代复古",
+  "name": "Modern Retro Printmaker",
+  "prompt": "risograph texture, minimalist screenprint, halftone dots, retro color palette, vintage print aesthetic, bold graphic illustration, grainy paper texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/现代复古__Modern Retro Printmaker/preview.webp",
+  "folder": "Krea2_moodboard/现代复古__Modern Retro Printmaker",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

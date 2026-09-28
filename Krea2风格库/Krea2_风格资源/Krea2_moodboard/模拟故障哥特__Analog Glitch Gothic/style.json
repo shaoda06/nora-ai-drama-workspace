@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2413",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "模拟故障哥特",
+  "name": "Analog Glitch Gothic",
+  "prompt": "analog glitch art, chromatic aberration, CRT scanlines, pixel sorting, gothic portraiture, horizontal distortion, desaturated moody lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟故障哥特__Analog Glitch Gothic/preview.webp",
+  "folder": "Krea2_moodboard/模拟故障哥特__Analog Glitch Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

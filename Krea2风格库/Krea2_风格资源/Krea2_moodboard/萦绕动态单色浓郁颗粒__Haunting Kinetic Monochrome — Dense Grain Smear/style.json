@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2287",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "萦绕动态单色浓郁颗粒",
+  "name": "Haunting Kinetic Monochrome — Dense Grain Smear",
+  "prompt": "long exposure motion blur, heavy analog film grain, stark chiaroscuro lighting, monochrome spectral abstraction, ghostly silhouette, intentional camera movement, high-contrast noir photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/萦绕动态单色浓郁颗粒__Haunting Kinetic Monochrome — Dense Grain Smear/preview.webp",
+  "folder": "Krea2_moodboard/萦绕动态单色浓郁颗粒__Haunting Kinetic Monochrome — Dense Grain Smear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

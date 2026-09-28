@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2822",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "电影感单色黑色",
+  "name": "Cinematic Monochrome Noir — Glitched Double Exposure",
+  "prompt": "high-contrast black and white, heavy film grain, dramatic chiaroscuro, surreal double exposure, analog noir photography, distressed texture, fragmented digital glitch. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感单色黑色__Cinematic Monochrome Noir — Glitched Double Exposure/preview.webp",
+  "folder": "Krea2_moodboard/电影感单色黑色__Cinematic Monochrome Noir — Glitched Double Exposure",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2559",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "电影感黑色图形阴影",
+  "name": "Cinematic Chiaroscuro Noir — Graphic Shadow Play",
+  "prompt": "chiaroscuro lighting, high-contrast monochrome, film noir aesthetic, graphic shadows, cinematic portrait, film grain texture, minimalist studio photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色图形阴影__Cinematic Chiaroscuro Noir — Graphic Shadow Play/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色图形阴影__Cinematic Chiaroscuro Noir — Graphic Shadow Play",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

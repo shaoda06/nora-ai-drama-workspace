@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-638",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "肌理",
+  "name": "Textured Corporate Memphis",
+  "prompt": "corporate memphis, grainy risograph texture, flat vector illustration, stippled noise overlay, stylized geometric figures, vibrant pastel palette, minimalist editorial design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理__Textured Corporate Memphis/preview.webp",
+  "folder": "Krea2_moodboard/肌理__Textured Corporate Memphis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

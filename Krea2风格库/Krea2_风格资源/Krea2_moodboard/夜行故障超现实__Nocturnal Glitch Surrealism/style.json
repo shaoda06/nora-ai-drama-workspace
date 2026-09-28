@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-80",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "夜行故障超现实",
+  "name": "Nocturnal Glitch Surrealism",
+  "prompt": "vintage anime aesthetic, bioluminescent glow, CRT scanlines, surreal dreamlike atmosphere, indigo and amber palette, fine ink crosshatching, analog glitch artifacts. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行故障超现实__Nocturnal Glitch Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/夜行故障超现实__Nocturnal Glitch Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

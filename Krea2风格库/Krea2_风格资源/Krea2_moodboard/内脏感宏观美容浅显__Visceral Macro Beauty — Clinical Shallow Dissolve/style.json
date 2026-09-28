@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1809",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "内脏感宏观美容浅显",
+  "name": "Visceral Macro Beauty — Clinical Shallow Dissolve",
+  "prompt": "extreme macro photography, hyper-detailed skin texture, glossy saturated pigments, visceral organic textures, clinical lighting, shallow depth of field, sensory surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感宏观美容浅显__Visceral Macro Beauty — Clinical Shallow Dissolve/preview.webp",
+  "folder": "Krea2_moodboard/内脏感宏观美容浅显__Visceral Macro Beauty — Clinical Shallow Dissolve",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

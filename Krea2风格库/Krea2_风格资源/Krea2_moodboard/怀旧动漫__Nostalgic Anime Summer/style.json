@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-87",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧动漫",
+  "name": "Nostalgic Anime Summer",
+  "prompt": "studio ghibli background style, towering cumulonimbus clouds, vibrant cobalt blue sky, nostalgic anime aesthetic, painterly digital brushstrokes, high-contrast sunlit landscape, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧动漫__Nostalgic Anime Summer/preview.webp",
+  "folder": "Krea2_moodboard/怀旧动漫__Nostalgic Anime Summer",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

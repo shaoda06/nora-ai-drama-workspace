@@ -1,0 +1,1 @@
+monochromatic, chiaroscuro, ethereal motion blur, soft-focus pictorialism, heavy film grain, dreamlike silhouette, high-contrast noir. Subject:{prompt}

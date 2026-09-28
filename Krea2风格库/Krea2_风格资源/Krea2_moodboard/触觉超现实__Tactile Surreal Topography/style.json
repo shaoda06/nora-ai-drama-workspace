@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3171",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "触觉超现实",
+  "name": "Tactile Surreal Topography",
+  "prompt": "tactile landscape sculpture, muted earth-tone palette, soft diffused studio lighting, minimalist surrealism, fiber art texture, sculpted topography, solid color background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉超现实__Tactile Surreal Topography/preview.webp",
+  "folder": "Krea2_moodboard/触觉超现实__Tactile Surreal Topography",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

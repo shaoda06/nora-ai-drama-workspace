@@ -1,0 +1,1 @@
+volumetric cyan light, chiaroscuro, cinematic dark atmosphere, surrealist texture, chromatic aberration, high contrast composition, shallow depth of field. Subject:{prompt}

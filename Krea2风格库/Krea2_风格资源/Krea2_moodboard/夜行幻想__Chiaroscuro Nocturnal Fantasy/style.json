@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2469",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "夜行幻想",
+  "name": "Chiaroscuro Nocturnal Fantasy",
+  "prompt": "chiaroscuro lighting, deep blue and amber contrast, atmospheric nocturnal fantasy, monumental scale, gothic architecture, mystical silhouettes, cinematic fog. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行幻想__Chiaroscuro Nocturnal Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/夜行幻想__Chiaroscuro Nocturnal Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

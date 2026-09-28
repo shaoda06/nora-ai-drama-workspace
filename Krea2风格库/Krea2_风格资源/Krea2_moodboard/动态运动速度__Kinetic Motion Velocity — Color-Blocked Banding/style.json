@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1994",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态运动速度",
+  "name": "Kinetic Motion Velocity — Color-Blocked Banding",
+  "prompt": "panning motion blur, shutter drag, kinetic energy, streaked background, high-speed photography, vibrant color contrast, dynamic velocity. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态运动速度__Kinetic Motion Velocity — Color-Blocked Banding/preview.webp",
+  "folder": "Krea2_moodboard/动态运动速度__Kinetic Motion Velocity — Color-Blocked Banding",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

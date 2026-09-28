@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2220",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "氛围工业黄金",
+  "name": "Atmospheric Industrial Dystopia — Golden Haze Shafts",
+  "prompt": "cinematic industrial dystopia, atmospheric haze, volumetric golden lighting, brutalist megastructures, chiaroscuro shadows, weathered industrial decay, solitary silhouetted figure, gritty retro-futurism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围工业黄金__Atmospheric Industrial Dystopia — Golden Haze Shafts/preview.webp",
+  "folder": "Krea2_moodboard/氛围工业黄金__Atmospheric Industrial Dystopia — Golden Haze Shafts",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-260",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "超现实霓虹忧郁",
+  "name": "Surreal Neon Melancholy",
+  "prompt": "high-contrast surrealism, glowing neon liquid, desaturated moody landscape, atmospheric dark tones, minimalist 3D render, vibrant color bleed, overcast misty environment. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实霓虹忧郁__Surreal Neon Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/超现实霓虹忧郁__Surreal Neon Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

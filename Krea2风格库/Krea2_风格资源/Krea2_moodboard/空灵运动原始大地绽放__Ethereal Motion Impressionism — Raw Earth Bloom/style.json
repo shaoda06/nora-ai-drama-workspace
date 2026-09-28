@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1214",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵运动原始大地绽放",
+  "name": "Ethereal Motion Impressionism — Raw Earth Bloom",
+  "prompt": "intentional camera movement, heavy analog film grain, soft-focus pictorialism, painterly motion blur, muted earth tones, dreamlike haze, raw desaturated palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵运动原始大地绽放__Ethereal Motion Impressionism — Raw Earth Bloom/preview.webp",
+  "folder": "Krea2_moodboard/空灵运动原始大地绽放__Ethereal Motion Impressionism — Raw Earth Bloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

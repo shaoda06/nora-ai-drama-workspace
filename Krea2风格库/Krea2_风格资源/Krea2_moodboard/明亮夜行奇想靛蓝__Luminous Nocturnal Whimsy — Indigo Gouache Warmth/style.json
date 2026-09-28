@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1288",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "明亮夜行奇想靛蓝",
+  "name": "Luminous Nocturnal Whimsy — Indigo Gouache Warmth",
+  "prompt": "nocturnal digital illustration, high-contrast indigo and gold, glowing light sources, whimsical surrealism, textured painterly brushstrokes, atmospheric night scene, cozy fantasy narrative. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行奇想靛蓝__Luminous Nocturnal Whimsy — Indigo Gouache Warmth/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行奇想靛蓝__Luminous Nocturnal Whimsy — Indigo Gouache Warmth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

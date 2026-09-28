@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1080",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "夜行哥特",
+  "name": "Nocturnal Gothic Romanticism",
+  "prompt": "chiaroscuro oil painting, gothic romanticism, nocturnal landscape, dramatic atmospheric lighting, 19th century art style, moody dark aesthetic, impasto canvas texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行哥特__Nocturnal Gothic Romanticism/preview.webp",
+  "folder": "Krea2_moodboard/夜行哥特__Nocturnal Gothic Romanticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-157",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "复古可爱",
+  "name": "Cozy Retro Kawaii Pixels",
+  "prompt": "pixel art, kawaii aesthetic, pastel color palette, 8-bit retro style, chibi character design, clean isolated sprite, nostalgic game asset. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古可爱__Cozy Retro Kawaii Pixels/preview.webp",
+  "folder": "Krea2_moodboard/复古可爱__Cozy Retro Kawaii Pixels",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

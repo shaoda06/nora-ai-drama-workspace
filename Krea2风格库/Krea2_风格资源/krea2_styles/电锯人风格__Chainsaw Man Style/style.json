@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-74",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "电锯人风格",
+  "name": "Chainsaw Man Style",
+  "prompt": "Style: Chainsaw Man Style: A raw, gritty manga-illustration style built on loose, aggressive linework carrying deliberately unpolished, visceral energy, stark high-contrast shading that swallows much of the composition in engulfing shadow , a chaotic, kinetic sense of motion charged with unpredictable, feral intensity, meticulous grotesque body-horror rendering balanced against darkly comedic character design, and a raw, unflinching contemporary shōnen edge that feels equal parts brutal and irreverently funny. Influenced by: Tatsuki Fujimoto, contemporary dark-shōnen manga tradition, raw ink-heavy illustration technique, body-horror action-manga practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/电锯人风格__Chainsaw Man Style/preview.jpg",
+  "folder": "krea2_styles/电锯人风格__Chainsaw Man Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

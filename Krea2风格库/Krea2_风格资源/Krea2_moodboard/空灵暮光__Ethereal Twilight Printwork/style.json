@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-715",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵暮光",
+  "name": "Ethereal Twilight Printwork",
+  "prompt": "cross-hatching, fine line ink illustration, twilight color palette, surreal melancholic mood, vintage woodblock texture, glowing gradients, risograph grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵暮光__Ethereal Twilight Printwork/preview.webp",
+  "folder": "Krea2_moodboard/空灵暮光__Ethereal Twilight Printwork",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

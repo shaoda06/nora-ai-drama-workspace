@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-469",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "霓虹图形",
+  "name": "Neon Dithered Graphic",
+  "prompt": "dithered stipple texture, risograph halftone pattern, high-contrast duotone portrait, retro-futuristic graphic, saturated neon palette, screen-printed aesthetic, ink-splattered shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹图形__Neon Dithered Graphic/preview.webp",
+  "folder": "Krea2_moodboard/霓虹图形__Neon Dithered Graphic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

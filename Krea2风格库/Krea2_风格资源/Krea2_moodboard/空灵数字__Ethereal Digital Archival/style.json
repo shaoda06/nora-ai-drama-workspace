@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1192",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵数字",
+  "name": "Ethereal Digital Archival",
+  "prompt": "analog film grain, digital glitch artifacts, painterly texture, glowing data overlays, nostalgic color palette, hazy soft focus, surreal digital hybrid. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵数字__Ethereal Digital Archival/preview.webp",
+  "folder": "Krea2_moodboard/空灵数字__Ethereal Digital Archival",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

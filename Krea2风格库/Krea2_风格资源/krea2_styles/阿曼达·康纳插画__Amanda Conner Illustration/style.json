@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-144",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "阿曼达·康纳插画",
+  "name": "Amanda Conner Illustration",
+  "prompt": "Style: Amanda Conner Illustration: expressive comic illustration defined by lively draftsmanship, fluid linework, dynamic visual rhythm, appealing stylization, confident character-centric design, polished rendering, and strong storytelling clarity, balancing playful energy with professional craftsmanship through highly readable forms and engaging visual expression, reminiscent of Amanda Conner and Bruce Timm, inspired by Harley Quinn and Power Girl.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/阿曼达·康纳插画__Amanda Conner Illustration/preview.jpg",
+  "folder": "krea2_styles/阿曼达·康纳插画__Amanda Conner Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,1 @@
+high-contrast black and white, chiaroscuro lighting, heavy film grain, liquid distortion, motion blur, gritty macro detail, surreal fragmentation. Subject:{prompt}

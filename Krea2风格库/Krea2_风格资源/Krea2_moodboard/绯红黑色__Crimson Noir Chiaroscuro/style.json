@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2338",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "绯红黑色",
+  "name": "Crimson Noir Chiaroscuro",
+  "prompt": "high-contrast noir, crimson red lighting, dramatic silhouette, rim lighting, cinematic film grain, chiaroscuro, minimalist editorial. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色__Crimson Noir Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色__Crimson Noir Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

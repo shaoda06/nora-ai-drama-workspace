@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2763",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "光谱",
+  "name": "Spectral Cyan Luminescence",
+  "prompt": "spectral blue glow, ethereal motion blur, high contrast chiaroscuro, cyanotype negative aesthetic, low key ambient lighting, ghostly light trails, dreamlike liquid distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱__Spectral Cyan Luminescence/preview.webp",
+  "folder": "Krea2_moodboard/光谱__Spectral Cyan Luminescence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

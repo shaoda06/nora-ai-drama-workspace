@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-860",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "图形哥特超现实",
+  "name": "Graphic Gothic Surrealism",
+  "prompt": "minimalist ink illustration, geometric surrealism, stippled texture, cross-hatching, cream paper background, high contrast monochrome, folk-inspired shapes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形哥特超现实__Graphic Gothic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/图形哥特超现实__Graphic Gothic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

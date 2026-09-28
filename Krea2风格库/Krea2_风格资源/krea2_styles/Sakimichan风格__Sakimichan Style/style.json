@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-226",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "Sakimichan风格",
+  "name": "Sakimichan Style",
+  "prompt": "Style: Sakimichan Style: A glossy, ultra-polished fan-art illustration style blending photorealistic skin rendering and soft airbrushed shading with idealized anime facial proportions and large luminous eyes, richly saturated skin tones warmed by dramatic rim lighting and soft glowing highlights, meticulously rendered hair with individually defined glossy strands, sensual curve-forward poses softened by smooth gradient blending rather than hard cel lines, and a dreamy, high-production digital-painting finish that reads as premium fantasy pin-up art. Influenced by: Sakimichan, digital painting airbrush technique, anime-realism fusion art, fantasy character illustration.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Sakimichan风格__Sakimichan Style/preview.jpg",
+  "folder": "krea2_styles/Sakimichan风格__Sakimichan Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-621",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "霓虹迷幻波普",
+  "name": "Neon Psychedelic Pop",
+  "prompt": "psychedelic pop art, bold black outlines, vibrant neon palette, surreal vector illustration, retro 70s aesthetic, metaphysical iconography, grainy paper texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹迷幻波普__Neon Psychedelic Pop/preview.webp",
+  "folder": "Krea2_moodboard/霓虹迷幻波普__Neon Psychedelic Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

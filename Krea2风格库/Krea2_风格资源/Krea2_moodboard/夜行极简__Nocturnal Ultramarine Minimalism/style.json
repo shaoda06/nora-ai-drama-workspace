@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3512",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "夜行极简",
+  "name": "Nocturnal Ultramarine Minimalism",
+  "prompt": "minimalist ultramarine background, nocturnal liminality, dramatic high-contrast lighting, isolated subject, surreal solitude, long sharp shadows, deep cobalt atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行极简__Nocturnal Ultramarine Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/夜行极简__Nocturnal Ultramarine Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

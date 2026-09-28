@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-394",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "疾速追杀启发霓虹摄影",
+  "name": "John Wick-Inspired Neon Photography",
+  "prompt": "Style: John Wick-Inspired Neon Photography: A stylish, high-contrast cinematic photographic technique built on saturated neon-colored gel lighting crossing the frame in sharp, deliberate bands, deep, engulfing shadow surrounding pockets of intense colored illumination, glossy reflective surfaces catching and bouncing colored light throughout the composition, dramatic silhouette-driven framing charged with restrained, cool tension, and a sleek, stylish nocturnal intensity that feels moody, deliberate, and unmistakably cinematic. Influenced by: contemporary action-thriller cinematography tradition, neon-gel lighting technique, stylized nightclub-noir photographic practice, high-contrast cinematic color-grading method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/疾速追杀启发霓虹摄影__John Wick-Inspired Neon Photography/preview.jpg",
+  "folder": "krea2_styles/疾速追杀启发霓虹摄影__John Wick-Inspired Neon Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

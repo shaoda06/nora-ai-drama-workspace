@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1049",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "表现主义",
+  "name": "Gilded Chiaroscuro Expressionism",
+  "prompt": "chiaroscuro lighting, metallic gold accents, impasto texture, dramatic low-key portraiture, baroque botanical motifs, deep black background, avant-garde artistry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/表现主义__Gilded Chiaroscuro Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/表现主义__Gilded Chiaroscuro Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

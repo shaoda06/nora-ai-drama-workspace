@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2823",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "电影感单色超现实",
+  "name": "Cinematic Monochrome Surrealism",
+  "prompt": "high-contrast black and white photography, chiaroscuro lighting, heavy analog film grain, surreal double exposure, cinematic motion blur, haunting noir atmosphere, shutter drag. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感单色超现实__Cinematic Monochrome Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/电影感单色超现实__Cinematic Monochrome Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

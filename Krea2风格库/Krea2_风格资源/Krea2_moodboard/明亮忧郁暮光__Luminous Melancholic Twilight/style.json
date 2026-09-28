@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1417",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "明亮忧郁暮光",
+  "name": "Luminous Melancholic Twilight",
+  "prompt": "cinematic moody atmosphere, warm amber light contrast, dense fog, twilight color palette, nostalgic melancholic tone, soft focus, ornate historical details. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮忧郁暮光__Luminous Melancholic Twilight/preview.webp",
+  "folder": "Krea2_moodboard/明亮忧郁暮光__Luminous Melancholic Twilight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

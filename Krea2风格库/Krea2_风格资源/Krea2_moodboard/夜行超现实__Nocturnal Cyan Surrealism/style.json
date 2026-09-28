@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1440",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "夜行超现实",
+  "name": "Nocturnal Cyan Surrealism",
+  "prompt": "volumetric cyan light, chiaroscuro, cinematic dark atmosphere, surrealist texture, chromatic aberration, high contrast composition, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行超现实__Nocturnal Cyan Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/夜行超现实__Nocturnal Cyan Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

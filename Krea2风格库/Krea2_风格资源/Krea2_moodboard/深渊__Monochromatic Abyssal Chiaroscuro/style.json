@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2475",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "深渊",
+  "name": "Monochromatic Abyssal Chiaroscuro",
+  "prompt": "chiaroscuro lighting, volumetric light beams, deep blue and black palette, atmospheric haze, monolithic structures, high contrast, cinematic isolation, nocturnal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/深渊__Monochromatic Abyssal Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/深渊__Monochromatic Abyssal Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

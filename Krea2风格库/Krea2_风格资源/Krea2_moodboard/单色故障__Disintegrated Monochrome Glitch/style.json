@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-362",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "单色故障",
+  "name": "Disintegrated Monochrome Glitch",
+  "prompt": "monochrome glitch art, pixel sorting, data corruption, halftone xerox texture, motion blur, high contrast, digital disintegration, chromatic aberration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障__Disintegrated Monochrome Glitch/preview.webp",
+  "folder": "Krea2_moodboard/单色故障__Disintegrated Monochrome Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

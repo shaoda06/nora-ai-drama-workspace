@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-911",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "图形天真墨水",
+  "name": "Graphic Naive Ink",
+  "prompt": "minimalist black ink illustration, naive hand-drawn style, bold linework, vibrant orange accents, block print texture, flat graphic composition, high contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形天真墨水__Graphic Naive Ink/preview.webp",
+  "folder": "Krea2_moodboard/图形天真墨水__Graphic Naive Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

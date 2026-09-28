@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1410",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "明亮琥珀宏观",
+  "name": "Luminous Amber Macro",
+  "prompt": "extreme macro photography, golden hour lighting, hyper-realistic skin texture, glistening liquid droplets, amber color palette, shallow depth of field, sensual cinematic mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮琥珀宏观__Luminous Amber Macro/preview.webp",
+  "folder": "Krea2_moodboard/明亮琥珀宏观__Luminous Amber Macro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

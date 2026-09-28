@@ -1,0 +1,1 @@
+motion blur, chromatic aberration, heavy film grain, ethereal silhouettes, dreamlike atmosphere, lo-fi analog texture, nocturnal glow. Subject:{prompt}

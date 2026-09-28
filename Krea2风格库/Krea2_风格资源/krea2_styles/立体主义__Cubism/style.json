@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-310",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "立体主义",
+  "name": "Cubism",
+  "prompt": "Style: Cubism: A fragmented, multi-perspective painting style built on form broken into overlapping angular facets viewed from several vantage points simultaneously, a flattened, deconstructed sense of depth that rejects single-viewpoint realism entirely, confident geometric simplification reducing figure and space alike into intersecting planar shards, a rigorous, analytical restructuring that prioritizes conceptual seeing over optical accuracy, and a bold, intellectually radical visual rhythm rooted in early-20th-century avant-garde rebellion. Influenced by: Pablo Picasso, Georges Braque, Analytic Cubism tradition, early-20th-century avant-garde painting movement.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/立体主义__Cubism/preview.jpg",
+  "folder": "krea2_styles/立体主义__Cubism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

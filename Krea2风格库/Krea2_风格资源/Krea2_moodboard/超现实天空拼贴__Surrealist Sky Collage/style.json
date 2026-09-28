@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3462",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "超现实天空拼贴",
+  "name": "Surrealist Sky Collage",
+  "prompt": "surrealist sky collage, floating architectural fragments, deep blue cumulus sky, vintage 1970s grain, magical realism, liminal dreamcore, absurdist juxtaposition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实天空拼贴__Surrealist Sky Collage/preview.webp",
+  "folder": "Krea2_moodboard/超现实天空拼贴__Surrealist Sky Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

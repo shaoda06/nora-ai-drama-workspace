@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1392",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "氛围黑色雾",
+  "name": "Atmospheric Monochromatic Noir — Fog Halo Softness",
+  "prompt": "monochromatic, heavy film grain, soft focus blur, haunting silhouettes, dense fog, high contrast noir, pictorialist texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围黑色雾__Atmospheric Monochromatic Noir — Fog Halo Softness/preview.webp",
+  "folder": "Krea2_moodboard/氛围黑色雾__Atmospheric Monochromatic Noir — Fog Halo Softness",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

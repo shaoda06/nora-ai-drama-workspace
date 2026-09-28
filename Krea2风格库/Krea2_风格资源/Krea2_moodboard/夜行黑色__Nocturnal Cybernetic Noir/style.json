@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1434",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "夜行黑色",
+  "name": "Nocturnal Cybernetic Noir",
+  "prompt": "monochromatic cobalt blue lighting, extreme close-up portrait, high-contrast chiaroscuro, cybernetic noir aesthetic, shallow depth of field, bioluminescent skin texture, cinematic anamorphic lens flare. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行黑色__Nocturnal Cybernetic Noir/preview.webp",
+  "folder": "Krea2_moodboard/夜行黑色__Nocturnal Cybernetic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

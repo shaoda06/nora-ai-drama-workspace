@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-366",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "彼得·林德伯格启发摄影风格",
+  "name": "Peter Lindbergh–inspired photography style",
+  "prompt": "Style: Peter Lindbergh–inspired photography style: timeless portraiture with a raw and humanist aesthetic, natural and available light emphasizing texture over polish, high-contrast yet soft tonal range with deep blacks and luminous skin highlights, minimal retouching preserving wrinkles, pores, and authenticity, straightforward compositions often shot at eye level or slightly low angle, emotional and introspective expressions prioritized over glamour, cinematic use of wind, movement, and imperfect environments, fashion imagery stripped of excess to reveal character and strength, inspired by Peter Lindbergh and Herb Ritts.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/彼得·林德伯格启发摄影风格__Peter Lindbergh–inspired photography style/preview.jpg",
+  "folder": "krea2_styles/彼得·林德伯格启发摄影风格__Peter Lindbergh–inspired photography style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

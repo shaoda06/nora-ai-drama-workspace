@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2867",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "夜行动态",
+  "name": "Nocturnal Kinetic Blur",
+  "prompt": "motion blur, long exposure, nocturnal blue palette, shutter drag, kinetic light trails, high contrast, ethereal silhouettes, cinematic haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行动态__Nocturnal Kinetic Blur/preview.webp",
+  "folder": "Krea2_moodboard/夜行动态__Nocturnal Kinetic Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

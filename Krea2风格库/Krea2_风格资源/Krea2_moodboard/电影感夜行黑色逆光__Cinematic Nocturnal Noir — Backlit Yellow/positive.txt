@@ -1,0 +1,1 @@
+cinematic low-key lighting, volumetric headlight glow, dense atmospheric fog, deep twilight blue palette, chiaroscuro, moody noir mystery, vintage car silhouette. Subject:{prompt}

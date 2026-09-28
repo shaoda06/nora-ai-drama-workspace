@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2523",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "光谱哥特黑色阴影",
+  "name": "Spectral Gothic Noir — Inked Shadow Blend",
+  "prompt": "chiaroscuro lighting, monochromatic noir, liminal space, high-contrast shadow play, film grain, spectral silhouette, uncanny surrealism, gothic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱哥特黑色阴影__Spectral Gothic Noir — Inked Shadow Blend/preview.webp",
+  "folder": "Krea2_moodboard/光谱哥特黑色阴影__Spectral Gothic Noir — Inked Shadow Blend",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

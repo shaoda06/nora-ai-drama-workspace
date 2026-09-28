@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2584",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "太阳极简建筑",
+  "name": "Sun-Drenched Minimalist Architecture",
+  "prompt": "harsh sunlight, geometric shadow play, ochre stucco texture, minimalist composition, vibrant color blocking, mediterranean architecture, high contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/太阳极简建筑__Sun-Drenched Minimalist Architecture/preview.webp",
+  "folder": "Krea2_moodboard/太阳极简建筑__Sun-Drenched Minimalist Architecture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-777",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "超现实",
+  "name": "Monochromatic Surrealist Deconstruction",
+  "prompt": "monochromatic surrealism, high-contrast portrait collage, fragmented human form, tactile charcoal texture, stark negative space, conceptual double exposure, chiaroscuro lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Monochromatic Surrealist Deconstruction/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Monochromatic Surrealist Deconstruction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

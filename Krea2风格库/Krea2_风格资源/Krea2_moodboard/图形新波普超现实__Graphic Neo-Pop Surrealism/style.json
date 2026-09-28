@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3176",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "图形新波普超现实",
+  "name": "Graphic Neo-Pop Surrealism",
+  "prompt": "high-contrast studio photography, vibrant saturated solid background, minimalist graphic composition, mixed media collage elements, sharp clean edges, bold color blocking, xerox punk textures, surrealist digital overlay. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形新波普超现实__Graphic Neo-Pop Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/图形新波普超现实__Graphic Neo-Pop Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2201",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "电影感琥珀黑色油画绘制",
+  "name": "Cinematic Amber Noir — Oil Paint Warmth",
+  "prompt": "chiaroscuro lighting, dramatic shadow patterns, golden hour amber glow, cinematic noir portrait, high contrast, intimate close-up, fiery red and warm orange palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感琥珀黑色油画绘制__Cinematic Amber Noir — Oil Paint Warmth/preview.webp",
+  "folder": "Krea2_moodboard/电影感琥珀黑色油画绘制__Cinematic Amber Noir — Oil Paint Warmth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

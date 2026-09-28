@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3416",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "琥珀暮光",
+  "name": "Amber Twilight Liminality",
+  "prompt": "analog film grain, amber and teal color grading, motion blur, high-contrast silhouette, retro-futurist airbrush, dreamy sunset haze, liminal space aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀暮光__Amber Twilight Liminality/preview.webp",
+  "folder": "Krea2_moodboard/琥珀暮光__Amber Twilight Liminality",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

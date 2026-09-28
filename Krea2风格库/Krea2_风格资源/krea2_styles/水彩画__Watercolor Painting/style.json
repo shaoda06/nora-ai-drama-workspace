@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-313",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "水彩画",
+  "name": "Watercolor Painting",
+  "prompt": "Style: Watercolor Painting: A fluid, translucent painting style built on delicate layered washes that build depth through repeated transparent passes rather than opaque coverage, soft, feathered edges where pigment bleeds and diffuses with organic unpredictability, a luminous quality achieved by letting light pass through thin pigment layers, an unhurried, patient looseness carried through the medium's inherent fluidity, and a poetic, gentle sincerity that captures spontaneity within controlled technical discipline. Influenced by: traditional watercolor-painting tradition, wet-on-wet washing technique, plein-air watercolor practice, classical wash-and-glaze method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/水彩画__Watercolor Painting/preview.jpg",
+  "folder": "krea2_styles/水彩画__Watercolor Painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

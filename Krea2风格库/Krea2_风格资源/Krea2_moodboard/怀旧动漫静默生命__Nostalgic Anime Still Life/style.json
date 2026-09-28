@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-86",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧动漫静默生命",
+  "name": "Nostalgic Anime Still Life",
+  "prompt": "90s anime style, cel-shaded illustration, cozy domestic atmosphere, Studio Ghibli inspired, vibrant saturated palette, high-contrast lighting, hand-drawn digital art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧动漫静默生命__Nostalgic Anime Still Life/preview.webp",
+  "folder": "Krea2_moodboard/怀旧动漫静默生命__Nostalgic Anime Still Life",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-294",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感单色黑色私密模拟",
+  "name": "Cinematic Monochrome Noir — Intimate Analog",
+  "prompt": "high-contrast black and white photography, heavy film grain, chiaroscuro lighting, cinematic noir aesthetic, raw textures, dramatic shadows, mid-century portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感单色黑色私密模拟__Cinematic Monochrome Noir — Intimate Analog/preview.webp",
+  "folder": "Krea2_moodboard/电影感单色黑色私密模拟__Cinematic Monochrome Noir — Intimate Analog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

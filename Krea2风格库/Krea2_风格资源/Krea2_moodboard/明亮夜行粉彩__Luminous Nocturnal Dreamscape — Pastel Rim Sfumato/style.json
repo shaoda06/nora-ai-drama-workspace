@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3464",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "明亮夜行粉彩",
+  "name": "Luminous Nocturnal Dreamscape — Pastel Rim Sfumato",
+  "prompt": "ethereal nocturne, glowing silhouettes, grainy texture, deep indigo background, luminous pastel accents, soft-focus surrealism, dreamy sfumato. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行粉彩__Luminous Nocturnal Dreamscape — Pastel Rim Sfumato/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行粉彩__Luminous Nocturnal Dreamscape — Pastel Rim Sfumato",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2907",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "单色超现实",
+  "name": "Distressed Monochrome Surrealism",
+  "prompt": "monochrome analog film, heavy film grain, scratched texture, experimental motion blur, obscured subject, gritty noir aesthetic, distressed photographic artifacts. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色超现实__Distressed Monochrome Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/单色超现实__Distressed Monochrome Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

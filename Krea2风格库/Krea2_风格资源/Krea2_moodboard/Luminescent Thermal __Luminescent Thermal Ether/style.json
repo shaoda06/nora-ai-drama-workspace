@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1540",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "Luminescent Thermal ",
+  "name": "Luminescent Thermal Ether",
+  "prompt": "high contrast silhouette, electric cyan and cobalt glow, heavy film grain, thermal imaging aesthetic, soft focus bloom, digital glitch artifacts, ethereal atmospheric haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Luminescent Thermal __Luminescent Thermal Ether/preview.webp",
+  "folder": "Krea2_moodboard/Luminescent Thermal __Luminescent Thermal Ether",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

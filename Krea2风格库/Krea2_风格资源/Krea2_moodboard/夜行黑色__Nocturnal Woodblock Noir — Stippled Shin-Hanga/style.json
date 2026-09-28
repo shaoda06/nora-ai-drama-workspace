@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-929",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "夜行黑色",
+  "name": "Nocturnal Woodblock Noir — Stippled Shin-Hanga",
+  "prompt": "shin-hanga style, indigo and cobalt nocturne, traditional woodblock texture, atmospheric noir lighting, warm glowing contrast, grainy stippled illustration, serene twilight landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行黑色__Nocturnal Woodblock Noir — Stippled Shin-Hanga/preview.webp",
+  "folder": "Krea2_moodboard/夜行黑色__Nocturnal Woodblock Noir — Stippled Shin-Hanga",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

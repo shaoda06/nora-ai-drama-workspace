@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2792",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "碎片化",
+  "name": "Fragmented Structural Portraiture",
+  "prompt": "slit-scan portraiture, pixel sorted glitch, fragmented photo collage, geometric deconstruction, tactile paper texture, avant-garde editorial, surrealist portrait, high-contrast studio lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化__Fragmented Structural Portraiture/preview.webp",
+  "folder": "Krea2_moodboard/碎片化__Fragmented Structural Portraiture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

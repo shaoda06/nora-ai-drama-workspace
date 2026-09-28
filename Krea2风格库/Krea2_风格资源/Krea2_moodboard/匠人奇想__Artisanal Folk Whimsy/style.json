@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-961",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "匠人奇想",
+  "name": "Artisanal Folk Whimsy",
+  "prompt": "gouache illustration, folk art aesthetic, hand-painted textures, simplified organic silhouettes, flat color blocking, minimalist composition, whimsical storytelling. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/匠人奇想__Artisanal Folk Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/匠人奇想__Artisanal Folk Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

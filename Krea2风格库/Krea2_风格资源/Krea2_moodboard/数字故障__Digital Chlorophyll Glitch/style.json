@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-216",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "数字故障",
+  "name": "Digital Chlorophyll Glitch",
+  "prompt": "monochromatic green, pixel sorting, organic glitch art, datamoshing, hyper-detailed foliage, digital disintegration, voxel extrusion, surreal nature. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字故障__Digital Chlorophyll Glitch/preview.webp",
+  "folder": "Krea2_moodboard/数字故障__Digital Chlorophyll Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

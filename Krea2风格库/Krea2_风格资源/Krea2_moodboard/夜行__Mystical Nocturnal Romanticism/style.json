@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1074",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "夜行",
+  "name": "Mystical Nocturnal Romanticism",
+  "prompt": "classical oil painting, atmospheric chiaroscuro, mystical forest landscape, bioluminescent accents, romanticist texture, dark whimsical folklore, crepuscular lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行__Mystical Nocturnal Romanticism/preview.webp",
+  "folder": "Krea2_moodboard/夜行__Mystical Nocturnal Romanticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

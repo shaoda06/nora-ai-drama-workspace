@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-406",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "黑色",
+  "name": "Gritty Dithered Noir",
+  "prompt": "high-contrast duotone, stippled texture, dithered ink, halftone pattern, gritty printmaking, distressed stencil, 1-bit aesthetic, graphic silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Gritty Dithered Noir/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Gritty Dithered Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

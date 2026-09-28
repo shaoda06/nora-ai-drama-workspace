@@ -1,0 +1,1 @@
+high-contrast black and white, extreme chiaroscuro, heavy film grain, xerox texture, low-key lighting, gritty analog noise, macro photography. Subject:{prompt}

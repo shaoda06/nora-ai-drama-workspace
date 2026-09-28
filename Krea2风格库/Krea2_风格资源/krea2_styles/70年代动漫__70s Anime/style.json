@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-68",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "70年代动漫",
+  "name": "70s Anime",
+  "prompt": "Style: 70s Anime: vintage Japanese animation aesthetics characterized by bold graphic draftsmanship, angular yet elegant character construction, expressive hand-drawn linework, simplified cel-painted rendering, dramatic visual staging, and a strong sense of romantic adventure. The style favors iconic silhouettes, emotional intensity, mechanical precision, and cinematic composition over contemporary polish, embracing the charm of traditional animation techniques, visible artistic craftsmanship, and classic storytelling sensibilities. Its visual identity balances dynamism, sincerity, and retro-futurist imagination, reminiscent of Leiji Matsumoto and Yoshikazu Yasuhiko, inspired by Space Battleship Yamato and Mobile Suit Gundam.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/70年代动漫__70s Anime/preview.jpg",
+  "folder": "krea2_styles/70年代动漫__70s Anime",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

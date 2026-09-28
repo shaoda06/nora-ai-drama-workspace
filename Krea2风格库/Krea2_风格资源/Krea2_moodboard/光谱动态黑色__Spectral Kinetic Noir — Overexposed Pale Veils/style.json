@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2979",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱动态黑色",
+  "name": "Spectral Kinetic Noir — Overexposed Pale Veils",
+  "prompt": "motion blur photography, high-contrast black and white, heavy film grain, ghostly silhouettes, shutter drag effect, ethereal atmospheric noir, minimalist kinetic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱动态黑色__Spectral Kinetic Noir — Overexposed Pale Veils/preview.webp",
+  "folder": "Krea2_moodboard/光谱动态黑色__Spectral Kinetic Noir — Overexposed Pale Veils",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

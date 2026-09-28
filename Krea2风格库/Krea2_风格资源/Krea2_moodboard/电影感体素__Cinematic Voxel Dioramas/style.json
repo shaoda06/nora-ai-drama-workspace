@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-212",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "电影感体素",
+  "name": "Cinematic Voxel Dioramas",
+  "prompt": "voxel art, isometric diorama, cinematic lighting, tilt-shift photography, warm atmospheric bloom, blocky geometry, soft volumetric shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感体素__Cinematic Voxel Dioramas/preview.webp",
+  "folder": "Krea2_moodboard/电影感体素__Cinematic Voxel Dioramas",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

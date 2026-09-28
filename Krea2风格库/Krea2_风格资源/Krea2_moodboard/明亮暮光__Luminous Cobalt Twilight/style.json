@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2855",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "明亮暮光",
+  "name": "Luminous Cobalt Twilight",
+  "prompt": "bioluminescent glow, cobalt blue twilight, silhouette contrast, anamorphic lens flare, soft film grain, ethereal atmosphere, cinematic deep shadow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮暮光__Luminous Cobalt Twilight/preview.webp",
+  "folder": "Krea2_moodboard/明亮暮光__Luminous Cobalt Twilight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2659",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "流动写实",
+  "name": "Hyper-Luminescent Fluid Realism",
+  "prompt": "hyper-realistic macro photography, glistening glass skin, sculpted liquid dynamics, high-contrast studio lighting, metallic accents, intimate facial detail, refractive water textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/流动写实__Hyper-Luminescent Fluid Realism/preview.webp",
+  "folder": "Krea2_moodboard/流动写实__Hyper-Luminescent Fluid Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

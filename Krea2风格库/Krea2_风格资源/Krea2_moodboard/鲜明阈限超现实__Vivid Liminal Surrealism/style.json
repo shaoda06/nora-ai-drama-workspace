@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3515",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "鲜明阈限超现实",
+  "name": "Vivid Liminal Surrealism",
+  "prompt": "hyper-saturated color-blocking, liminal space aesthetic, minimalist surrealism, stark geometric composition, harsh direct sunlight, vivid primary palette, symmetrical architecture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜明阈限超现实__Vivid Liminal Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/鲜明阈限超现实__Vivid Liminal Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

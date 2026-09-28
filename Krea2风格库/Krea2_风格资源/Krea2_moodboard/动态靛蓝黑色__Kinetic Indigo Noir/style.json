@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1923",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "动态靛蓝黑色",
+  "name": "Kinetic Indigo Noir",
+  "prompt": "motion blur, shutter drag, analog film grain, cinematic noir, indigo color palette, ghostly silhouettes, atmospheric tension, high-contrast photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态靛蓝黑色__Kinetic Indigo Noir/preview.webp",
+  "folder": "Krea2_moodboard/动态靛蓝黑色__Kinetic Indigo Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

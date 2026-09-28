@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3196",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "怀旧超现实天空",
+  "name": "Nostalgic Surrealist Sky",
+  "prompt": "analog film photography, minimalist surrealism, vintage Kodachrome palette, fluffy clouds, levitating objects, golden hour lighting, saturated azure sky, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实天空__Nostalgic Surrealist Sky/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实天空__Nostalgic Surrealist Sky",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

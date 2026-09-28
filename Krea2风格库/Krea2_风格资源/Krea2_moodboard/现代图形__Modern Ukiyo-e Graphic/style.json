@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-917",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "现代图形",
+  "name": "Modern Ukiyo-e Graphic",
+  "prompt": "neo-traditional Japanese style, bold black outlines, ukiyo-e graphic illustration, flat color fields, dynamic character composition, washi paper texture, vibrant high-contrast palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/现代图形__Modern Ukiyo-e Graphic/preview.webp",
+  "folder": "Krea2_moodboard/现代图形__Modern Ukiyo-e Graphic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

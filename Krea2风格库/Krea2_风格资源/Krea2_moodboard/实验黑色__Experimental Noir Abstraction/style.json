@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2279",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "实验黑色",
+  "name": "Experimental Noir Abstraction",
+  "prompt": "high-contrast monochrome, heavy film grain, motion blur, chiaroscuro lighting, experimental darkroom, long exposure, atmospheric noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/实验黑色__Experimental Noir Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/实验黑色__Experimental Noir Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

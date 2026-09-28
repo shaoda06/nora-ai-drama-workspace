@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1376",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感暮光",
+  "name": "Cinematic Introspective Twilight",
+  "prompt": "cinematic 35mm film grain, moody twilight lighting, shallow depth of field, soft diffused glow, introspective portrait, teal and amber color grading, muted earth tones, bokeh city lights. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感暮光__Cinematic Introspective Twilight/preview.webp",
+  "folder": "Krea2_moodboard/电影感暮光__Cinematic Introspective Twilight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-146",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "欧漫精品风格",
+  "name": "Comic Européen Prestige",
+  "prompt": "Style: Comic Européen Prestige: sophisticated European graphic storytelling aesthetics characterized by meticulous draftsmanship, refined linework, atmospheric realism, rich visual detail, and mature narrative sensibilities, blending artistic individuality with exceptional craftsmanship through carefully structured composition, nuanced rendering, immersive worldbuilding, and album-quality presentation, reminiscent of François Schuiten and Enki Bilal, inspired by Les Cités Obscures and La Trilogie Nikopol.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/欧漫精品风格__Comic Européen Prestige/preview.jpg",
+  "folder": "krea2_styles/欧漫精品风格__Comic Européen Prestige",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

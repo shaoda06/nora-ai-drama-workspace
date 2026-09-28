@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-113",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "精致手游抽卡风格",
+  "name": "Polished Mobile Gacha Style",
+  "prompt": "Style: Polished Mobile Gacha Style: A glossy, high-production character-illustration style built on crisp painterly linework blended seamlessly into soft airbrushed shading, richly luminous textures and rendering that reads as premium and collectible at a glance, confident dynamic vibes framed for maximum instant appeal within a compact card format,  vibrant, high-polish mobile-game key-art sheen optimized for eye-catching showcase. Influenced by: Cygames art direction, Hoyoverse gacha illustration technique, semi-realistic anime rendering, mobile key-art production standard.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/精致手游抽卡风格__Polished Mobile Gacha Style/preview.jpg",
+  "folder": "krea2_styles/精致手游抽卡风格__Polished Mobile Gacha Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

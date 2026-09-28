@@ -1,0 +1,1 @@
+thermal imaging style, chromatic heat map gradient, analog grain texture, glowing blurred silhouette, psychedelic aura, risograph noise, soft-focus airbrush. Subject:{prompt}

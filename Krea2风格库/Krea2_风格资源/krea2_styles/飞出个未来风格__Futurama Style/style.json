@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-139",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "飞出个未来风格",
+  "name": "Futurama Style",
+  "prompt": "Style: Futurama Style: A bold, flat cartoon illustration style built on confident, evenly weighted outline holding rounded, slightly angular proportions, bright, evenly applied flat color with minimal shading beyond basic form-defining contact shadow, a retro-futurist visual sensibility balancing comedic exaggeration with sleek design confidence, cheerful, uncomplicated composition prioritizing instant readability, and a witty, satirical animated energy that feels playful, imaginative, and unmistakably adult-oriented. Influenced by: Matt Groening, David X. Cohen, flat-color adult-animation tradition, retro-futurist cartoon-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/飞出个未来风格__Futurama Style/preview.jpg",
+  "folder": "krea2_styles/飞出个未来风格__Futurama Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

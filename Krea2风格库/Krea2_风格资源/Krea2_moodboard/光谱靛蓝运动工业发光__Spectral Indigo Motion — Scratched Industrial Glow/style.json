@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2902",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "光谱靛蓝运动工业发光",
+  "name": "Spectral Indigo Motion — Scratched Industrial Glow",
+  "prompt": "intentional motion blur, deep indigo and cyan palette, heavy analog film grain, spectral abstraction, soft-focus ethereal light, scratched industrial texture, high-contrast noir atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱靛蓝运动工业发光__Spectral Indigo Motion — Scratched Industrial Glow/preview.webp",
+  "folder": "Krea2_moodboard/光谱靛蓝运动工业发光__Spectral Indigo Motion — Scratched Industrial Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

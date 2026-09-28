@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-847",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "鲜活天真",
+  "name": "Vibrant Naive Sketchbook",
+  "prompt": "naive art style, textured paper grain, expressive colored pencil hatching, vibrant wax pastel aesthetic, hand-drawn sketchbook illustration, saturated fauvist landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活天真__Vibrant Naive Sketchbook/preview.webp",
+  "folder": "Krea2_moodboard/鲜活天真__Vibrant Naive Sketchbook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

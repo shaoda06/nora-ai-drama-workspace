@@ -1,0 +1,1 @@
+motion blur portrait, high-contrast black and white, shutter drag effect, heavy film grain, spectral photography, chiaroscuro lighting, abstract human form. Subject:{prompt}

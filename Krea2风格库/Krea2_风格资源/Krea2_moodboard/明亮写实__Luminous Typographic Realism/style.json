@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1216",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "明亮写实",
+  "name": "Luminous Typographic Realism",
+  "prompt": "ASCII art overlay, soft-focus atmosphere, luminous typographic silhouette, analog film grain, painterly realism, ethereal bloom, mixed media digital art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮写实__Luminous Typographic Realism/preview.webp",
+  "folder": "Krea2_moodboard/明亮写实__Luminous Typographic Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

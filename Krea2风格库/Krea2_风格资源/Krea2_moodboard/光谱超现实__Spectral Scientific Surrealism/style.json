@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2797",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "光谱超现实",
+  "name": "Spectral Scientific Surrealism",
+  "prompt": "vintage photogram, solarized negative, high-contrast chiaroscuro, sepia-toned grain, kinetic motion blur, ethereal spectral glow, geometric light streaks, scientific darkroom aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱超现实__Spectral Scientific Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/光谱超现实__Spectral Scientific Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

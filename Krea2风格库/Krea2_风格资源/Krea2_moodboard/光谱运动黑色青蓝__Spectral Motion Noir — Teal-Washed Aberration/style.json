@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3423",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "光谱运动黑色青蓝",
+  "name": "Spectral Motion Noir — Teal-Washed Aberration",
+  "prompt": "motion blur, heavy film grain, chromatic aberration, teal and cool-toned palette, liminal space, ethereal silhouette, surreal distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱运动黑色青蓝__Spectral Motion Noir — Teal-Washed Aberration/preview.webp",
+  "folder": "Krea2_moodboard/光谱运动黑色青蓝__Spectral Motion Noir — Teal-Washed Aberration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

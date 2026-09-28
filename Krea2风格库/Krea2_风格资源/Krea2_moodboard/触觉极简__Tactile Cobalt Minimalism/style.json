@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-318",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "触觉极简",
+  "name": "Tactile Cobalt Minimalism",
+  "prompt": "risograph texture, cobalt blue and yellow duotone, minimalist geometric vector, grainy noise texture, high contrast graphic design, flat design, sharp vector lines. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉极简__Tactile Cobalt Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/触觉极简__Tactile Cobalt Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

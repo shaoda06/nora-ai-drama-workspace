@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-619",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "迷幻半色调波普",
+  "name": "Psychedelic Halftone Pop",
+  "prompt": "vintage screenprint texture, halftone dot pattern, psychedelic pop art, saturated electric blue and orange, distressed paper grain, bold comic outlines, high-contrast graphic illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/迷幻半色调波普__Psychedelic Halftone Pop/preview.webp",
+  "folder": "Krea2_moodboard/迷幻半色调波普__Psychedelic Halftone Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

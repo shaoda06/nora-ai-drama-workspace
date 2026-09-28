@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3365",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "空灵动态",
+  "name": "Ethereal Kinetic Fragmentation",
+  "prompt": "long exposure portrait, motion blur, ethereal ghost effect, digital glitch art, desaturated monochromatic, cinematic film grain, pixel sorting, liminal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态__Ethereal Kinetic Fragmentation/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态__Ethereal Kinetic Fragmentation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

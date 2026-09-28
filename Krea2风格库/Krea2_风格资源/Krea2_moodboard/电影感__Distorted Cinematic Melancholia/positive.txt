@@ -1,0 +1,1 @@
+analog film grain, digital glitch distortion, low-key cinematic lighting, desaturated cool tones, introspective silhouette, scanline texture, somber mood. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-439",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "高对比图形",
+  "name": "High Contrast Monochromatic Graphic",
+  "prompt": "high contrast duotone, halftone grain texture, minimalist graphic composition, cobalt and cyan palette, risograph print aesthetic, dramatic chiaroscuro lighting, stippled texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高对比图形__High Contrast Monochromatic Graphic/preview.webp",
+  "folder": "Krea2_moodboard/高对比图形__High Contrast Monochromatic Graphic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

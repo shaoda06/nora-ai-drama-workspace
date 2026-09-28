@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2994",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "彩色梦",
+  "name": "Chromatic Dream Haze",
+  "prompt": "chromatic aberration, liquid metal textures, psychedelic gradients, analog film grain, ethereal aura, retro-futuristic surrealism, prismatic light leaks. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色梦__Chromatic Dream Haze/preview.webp",
+  "folder": "Krea2_moodboard/彩色梦__Chromatic Dream Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

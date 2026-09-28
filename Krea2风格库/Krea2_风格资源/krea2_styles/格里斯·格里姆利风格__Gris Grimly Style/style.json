@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-253",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "格里斯·格里姆利风格",
+  "name": "Gris Grimly Style",
+  "prompt": "Style: Gris Grimly Style: A whimsically macabre illustration style built on gnarled, spindly linework that twists proportion into gothic, storybook exaggeration, scratchy, textured crosshatching layered with unsettling nervous energy, elongated, angular form carrying a darkly comedic fragility, a hushed, eerie theatricality pervading every composition, and a darkly whimsical, gothic-fairytale charm that feels equal parts sinister and playful. Influenced by: Gris Grimly, gothic children's-book illustration tradition, macabre hand-drawn illustration technique, whimsical dark-fantasy character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/格里斯·格里姆利风格__Gris Grimly Style/preview.jpg",
+  "folder": "krea2_styles/格里斯·格里姆利风格__Gris Grimly Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-219",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "海报艺术",
+  "name": "Poster Art",
+  "prompt": "Style: Poster Art: A bold, graphic illustration style built on confident, simplified composition designed to communicate instantly at a distance, flat or minimally gradated color application applied with deliberate visual punch, strong compositional hierarchy that guides the eye directly to a single focal statement, meticulous economy of detail favoring immediate readability over exhaustive rendering, and a striking, commercial-grade graphic impact rooted in traditional advertising and print-design practice. Influenced by: mid-century poster-design tradition, commercial advertising-illustration technique, graphic-design composition practice, print-poster illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/海报艺术__Poster Art/preview.jpg",
+  "folder": "krea2_styles/海报艺术__Poster Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

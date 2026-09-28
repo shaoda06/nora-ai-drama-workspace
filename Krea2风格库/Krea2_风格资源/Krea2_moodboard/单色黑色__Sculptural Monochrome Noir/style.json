@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2648",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "单色黑色",
+  "name": "Sculptural Monochrome Noir",
+  "prompt": "avant-garde couture, sculptural silhouettes, high-contrast monochrome, stark minimalism, graphic studio lighting, film grain texture, geometric fashion design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色黑色__Sculptural Monochrome Noir/preview.webp",
+  "folder": "Krea2_moodboard/单色黑色__Sculptural Monochrome Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

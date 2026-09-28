@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-933",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮夜行奇想发光",
+  "name": "Luminous Nocturnal Whimsy — Swirling Storybook Glow",
+  "prompt": "whimsical storybook illustration, painterly texture, glowing celestial elements, dreamy nocturnal landscape, swirling brushstrokes, vibrant indigo and emerald palette, soft-focus fantasy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行奇想发光__Luminous Nocturnal Whimsy — Swirling Storybook Glow/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行奇想发光__Luminous Nocturnal Whimsy — Swirling Storybook Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

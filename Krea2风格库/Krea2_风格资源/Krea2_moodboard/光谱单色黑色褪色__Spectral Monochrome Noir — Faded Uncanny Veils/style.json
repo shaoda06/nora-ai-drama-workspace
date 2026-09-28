@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2048",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "光谱单色黑色褪色",
+  "name": "Spectral Monochrome Noir — Faded Uncanny Veils",
+  "prompt": "high-contrast monochrome, heavy analog film grain, extreme motion blur, ghostly silhouette, chiaroscuro lighting, soft-focus dreamscape, vintage noir texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱单色黑色褪色__Spectral Monochrome Noir — Faded Uncanny Veils/preview.webp",
+  "folder": "Krea2_moodboard/光谱单色黑色褪色__Spectral Monochrome Noir — Faded Uncanny Veils",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3344",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "俏皮超现实袖珍",
+  "name": "Playful Surrealist Miniature",
+  "prompt": "vibrant surrealism, clean studio lighting, saturated color palette, whimsical miniature scale, high-contrast compositions, dreamlike diorama, sharp focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/俏皮超现实袖珍__Playful Surrealist Miniature/preview.webp",
+  "folder": "Krea2_moodboard/俏皮超现实袖珍__Playful Surrealist Miniature",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

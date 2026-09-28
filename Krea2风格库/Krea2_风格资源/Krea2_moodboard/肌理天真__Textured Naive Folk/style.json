@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1009",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "肌理天真",
+  "name": "Textured Naive Folk",
+  "prompt": "naive art style, visible impasto brushstrokes, folk art aesthetic, bold black outlines, flat perspective, saturated color palette, textured acrylic painting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理天真__Textured Naive Folk/preview.webp",
+  "folder": "Krea2_moodboard/肌理天真__Textured Naive Folk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

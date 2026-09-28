@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-189",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "RossDraws风格",
+  "name": "RossDraws Style",
+  "prompt": "Style: RossDraws Style: An energetic, glowing painterly illustration style built on bold, confident brushwork radiating vibrant internal luminosity, a dynamic push-and-pull between crisp focal rendering and loose, expressive atmospheric edges, gentle bloom and glow accents scattered across the composition for lively visual rhythm, an upbeat, spontaneous energy carried through confident gestural mark-making, and a warm, charismatic painterly polish that feels enthusiastic, immediate, and effortlessly appealing. Influenced by: RossDraws, painterly digital-illustration technique, glow-driven character-illustration practice, contemporary streaming-artist rendering method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/RossDraws风格__RossDraws Style/preview.jpg",
+  "folder": "krea2_styles/RossDraws风格__RossDraws Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-213",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "超风格化插画",
+  "name": "Hyper-Stylized Illustration",
+  "prompt": "Style: Hyper-Stylized Illustration: A boldly exaggerated illustration style built on confident distortion of proportion that pushes form far beyond naturalistic reference, sharp, graphic linework holding dramatically simplified or elongated silhouette with total confidence, flat-to-gradient shading applied with deliberate, controlled boldness rather than subtlety, an assertive, larger-than-life visual rhythm carried through exaggerated posing and composition, and a striking, unapologetically stylized intensity that treats distortion itself as the core creative statement. Influenced by: contemporary stylized character-design tradition, exaggerated-proportion illustration technique, bold graphic-design-adjacent rendering practice, confident stylization-driven concept-art method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/超风格化插画__Hyper-Stylized Illustration/preview.jpg",
+  "folder": "krea2_styles/超风格化插画__Hyper-Stylized Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

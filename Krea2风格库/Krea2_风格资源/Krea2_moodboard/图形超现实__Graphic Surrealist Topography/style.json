@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-852",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "图形超现实",
+  "name": "Graphic Surrealist Topography",
+  "prompt": "topographic linework, surrealist geometry, minimalist 3D texture, high-contrast crimson palette, rhythmic contour patterns, existential silhouette, layered geological strata. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形超现实__Graphic Surrealist Topography/preview.webp",
+  "folder": "Krea2_moodboard/图形超现实__Graphic Surrealist Topography",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

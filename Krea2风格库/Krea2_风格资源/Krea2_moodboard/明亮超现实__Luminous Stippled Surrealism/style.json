@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-447",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "明亮超现实",
+  "name": "Luminous Stippled Surrealism",
+  "prompt": "stippled texture, risograph print, chromatic diffusion, neon gradients, soft-focus pointillism, retro-futuristic airbrush, vibrant color bleed. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮超现实__Luminous Stippled Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/明亮超现实__Luminous Stippled Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

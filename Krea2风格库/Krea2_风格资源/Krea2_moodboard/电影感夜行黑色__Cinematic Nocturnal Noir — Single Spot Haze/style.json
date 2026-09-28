@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2171",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "电影感夜行黑色",
+  "name": "Cinematic Nocturnal Noir — Single Spot Haze",
+  "prompt": "chiaroscuro lighting, cinematic spotlight, volumetric haze, cool blue color grading, deep shadows, lo-fi film grain, high-contrast noir, nocturnal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色__Cinematic Nocturnal Noir — Single Spot Haze/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色__Cinematic Nocturnal Noir — Single Spot Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

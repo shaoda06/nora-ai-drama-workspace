@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1413",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "怀旧电影感忧郁",
+  "name": "Nostalgic Cinematic Melancholy",
+  "prompt": "analog film grain, cinematic low-key lighting, golden hour lens flare, brutalist architecture, silhouetted figure, vintage 35mm aesthetic, hazy atmospheric depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧电影感忧郁__Nostalgic Cinematic Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/怀旧电影感忧郁__Nostalgic Cinematic Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

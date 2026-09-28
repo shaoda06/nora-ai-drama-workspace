@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-815",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "图形复古极简",
+  "name": "Graphic Retro Minimalist",
+  "prompt": "vintage fashion illustration, minimalist line art, bold ink strokes, limited color palette, retro graphic style, high-contrast composition, textured paper background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形复古极简__Graphic Retro Minimalist/preview.webp",
+  "folder": "Krea2_moodboard/图形复古极简__Graphic Retro Minimalist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

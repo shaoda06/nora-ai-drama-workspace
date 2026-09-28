@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2418",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "光谱",
+  "name": "Spectral Chiaroscuro Dreamscape",
+  "prompt": "prismatic light refraction, dramatic chiaroscuro, chromatic aberration, ethereal film grain, spectral rainbow flares, cinematic backlighting, mysterious moody atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱__Spectral Chiaroscuro Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/光谱__Spectral Chiaroscuro Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

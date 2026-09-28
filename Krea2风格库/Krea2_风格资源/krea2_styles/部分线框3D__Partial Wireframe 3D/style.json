@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-65",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "部分线框3D",
+  "name": "Partial Wireframe 3D",
+  "prompt": "Style: Partial Wireframe 3D: A dimensionally precise digital-illustration style built on smooth, volumetric modeling that transitions abruptly into exposed geometric mesh across a portion of the extent, meticulously calculated illumination and specular response covering the fully rendered sections while the mesh-revealed areas stay flat and diagrammatic, confident sculptural construction contrasted against clean, technical grid-lines, a deliberate tension between finished dimensional realism and raw underlying structure, and a technically precise, computer-generated intensity that treats construction itself as part of the compositional subject. Influenced by: real-time 3D-rendering technique, wireframe-mesh visualization practice, physically based rendering (PBR) method, CGI production-pipeline aesthetic.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/部分线框3D__Partial Wireframe 3D/preview.jpg",
+  "folder": "krea2_styles/部分线框3D__Partial Wireframe 3D",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3130",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "绯红极简",
+  "name": "Crimson Monolith Minimalism",
+  "prompt": "saturarted crimson palette, minimalist brutalism, tactile velvet and stone, high contrast silhouettes, industrial dystopian atmosphere, surreal geometric forms. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红极简__Crimson Monolith Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/绯红极简__Crimson Monolith Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

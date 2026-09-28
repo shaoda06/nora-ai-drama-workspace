@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2948",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵光谱黑色",
+  "name": "Ethereal Spectral Noir — Crystalline Scanography",
+  "prompt": "high-contrast monochrome, ethereal spectral motion, ghostly silhouettes, heavy analog grain, long exposure blur, dark atmospheric noir, distorted light trails. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵光谱黑色__Ethereal Spectral Noir — Crystalline Scanography/preview.webp",
+  "folder": "Krea2_moodboard/空灵光谱黑色__Ethereal Spectral Noir — Crystalline Scanography",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

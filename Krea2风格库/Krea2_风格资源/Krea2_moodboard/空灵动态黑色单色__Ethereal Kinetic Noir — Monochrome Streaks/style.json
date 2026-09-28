@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2825",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵动态黑色单色",
+  "name": "Ethereal Kinetic Noir — Monochrome Streaks",
+  "prompt": "monochrome long exposure, intentional camera movement, ghostly motion blur, chiaroscuro lighting, fragmented double exposure, cinematic shutter drag, high contrast black and white. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态黑色单色__Ethereal Kinetic Noir — Monochrome Streaks/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态黑色单色__Ethereal Kinetic Noir — Monochrome Streaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

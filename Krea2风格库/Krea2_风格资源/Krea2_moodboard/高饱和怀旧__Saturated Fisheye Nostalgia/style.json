@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2094",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "高饱和怀旧",
+  "name": "Saturated Fisheye Nostalgia",
+  "prompt": "fisheye lens, 90s retro aesthetic, ultra-wide angle distortion, highly saturated colors, harsh direct sunlight, candid snapshot photography, dynamic perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高饱和怀旧__Saturated Fisheye Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/高饱和怀旧__Saturated Fisheye Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

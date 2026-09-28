@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-408",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "故障黑色暴力",
+  "name": "Gritty Glitch Noir — Violent Red Scanlines",
+  "prompt": "high-contrast noir, heavy film grain, analog glitch distortion, distressed halftone texture, intense red and black palette, lo-fi xerox aesthetic, ominous liminal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/故障黑色暴力__Gritty Glitch Noir — Violent Red Scanlines/preview.webp",
+  "folder": "Krea2_moodboard/故障黑色暴力__Gritty Glitch Noir — Violent Red Scanlines",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

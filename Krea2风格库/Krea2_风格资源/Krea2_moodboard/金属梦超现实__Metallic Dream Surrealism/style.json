@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3087",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "金属梦超现实",
+  "name": "Metallic Dream Surrealism",
+  "prompt": "liquid chrome, airbrush surrealism, chiaroscuro lighting, retro-futuristic, high-contrast gradients, minimalist composition, metallic organic forms. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/金属梦超现实__Metallic Dream Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/金属梦超现实__Metallic Dream Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

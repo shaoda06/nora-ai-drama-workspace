@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3389",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "黑色颗粒",
+  "name": "Submerged Noir Grain",
+  "prompt": "high-contrast monochrome, heavy film grain, submerged urban noir, chiaroscuro lighting, lo-fi texture, motion blur, liminal mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色颗粒__Submerged Noir Grain/preview.webp",
+  "folder": "Krea2_moodboard/黑色颗粒__Submerged Noir Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

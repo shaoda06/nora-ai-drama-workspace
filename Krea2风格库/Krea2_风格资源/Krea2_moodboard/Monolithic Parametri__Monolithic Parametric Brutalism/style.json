@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2606",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "Monolithic Parametri",
+  "name": "Monolithic Parametric Brutalism",
+  "prompt": "parametric brutalist hybrid, sculptural concrete facade, geometric architectural rhythm, chiaroscuro shadow play, minimalist modular structure, biomorphic stone textures, high-contrast architectural photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Monolithic Parametri__Monolithic Parametric Brutalism/preview.webp",
+  "folder": "Krea2_moodboard/Monolithic Parametri__Monolithic Parametric Brutalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

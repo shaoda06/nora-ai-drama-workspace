@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1917",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感黑色工业",
+  "name": "Cinematic Surveillance Noir — Industrial Grime",
+  "prompt": "high-angle surveillance perspective, cinematic noir lighting, gritty industrial texture, stark chiaroscuro shadows, desaturated moody palette, distorted fisheye lens, claustrophobic architectural framing. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色工业__Cinematic Surveillance Noir — Industrial Grime/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色工业__Cinematic Surveillance Noir — Industrial Grime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

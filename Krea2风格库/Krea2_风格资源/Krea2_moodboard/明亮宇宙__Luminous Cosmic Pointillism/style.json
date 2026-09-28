@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2759",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "明亮宇宙",
+  "name": "Luminous Cosmic Pointillism",
+  "prompt": "glowing micro-particle rendering, stardust texture, chiaroscuro lighting, ethereal bioluminescence, prismatic light refraction, high-contrast digital art, cosmic pointillism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮宇宙__Luminous Cosmic Pointillism/preview.webp",
+  "folder": "Krea2_moodboard/明亮宇宙__Luminous Cosmic Pointillism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-257",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "Wojak/梗图速写风格",
+  "name": "Wojak/Meme-Sketch Style",
+  "prompt": "Style: Wojak/Meme-Sketch Style: A crude, minimal-effort illustration style built on loose, deliberately unrefined ballpoint-pen linework that abandons anatomical precision for rapid expressive shorthand, flat, mostly absent shading beyond the barest suggestion of form, a blunt, economical mark-making approach that prioritizes instant emotional legibility over any technical polish, an intentionally amateur roughness that reads as sincere rather than sloppy, and a deadpan, internet-native rawness that turns crudeness itself into the entire expressive language. Influenced by: internet meme-illustration tradition, minimalist ballpoint-sketch technique, imageboard-culture drawing practice, deliberately crude digital-doodle method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Wojak_梗图速写风格__Wojak_Meme-Sketch Style/preview.jpg",
+  "folder": "krea2_styles/Wojak_梗图速写风格__Wojak_Meme-Sketch Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

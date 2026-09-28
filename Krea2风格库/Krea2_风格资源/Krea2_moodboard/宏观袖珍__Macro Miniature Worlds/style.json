@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1807",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "宏观袖珍",
+  "name": "Macro Miniature Worlds",
+  "prompt": "tilt-shift photography, miniature diorama, macro lens, shallow depth of field, high-angle perspective, verdant moss textures, whimsical scale model. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宏观袖珍__Macro Miniature Worlds/preview.webp",
+  "folder": "Krea2_moodboard/宏观袖珍__Macro Miniature Worlds",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

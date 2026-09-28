@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2613",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "黑色宏观",
+  "name": "Gritty Chiaroscuro Noir — Macro Midtone Crush",
+  "prompt": "high-contrast black and white, extreme chiaroscuro lighting, heavy film grain, minimalist macro portrait, stark shadows, gritty noir texture, experimental xerox aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色宏观__Gritty Chiaroscuro Noir — Macro Midtone Crush/preview.webp",
+  "folder": "Krea2_moodboard/黑色宏观__Gritty Chiaroscuro Noir — Macro Midtone Crush",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

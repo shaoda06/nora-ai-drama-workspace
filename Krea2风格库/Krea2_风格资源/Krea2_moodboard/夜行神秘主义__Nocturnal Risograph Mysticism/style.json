@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-690",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "夜行神秘主义",
+  "name": "Nocturnal Risograph Mysticism",
+  "prompt": "risograph print style, grainy halftone texture, deep teal and coral palette, nocturnal mystical illustration, minimalist chiaroscuro, folk-horror surrealism, lo-fi screenprint aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行神秘主义__Nocturnal Risograph Mysticism/preview.webp",
+  "folder": "Krea2_moodboard/夜行神秘主义__Nocturnal Risograph Mysticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

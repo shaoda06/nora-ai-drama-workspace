@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-802",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "氛围墨水极简",
+  "name": "Atmospheric Ink Minimalism",
+  "prompt": "Sumi-e ink wash, monochrome watercolor, atmospheric mist, minimalist landscape, negative space, fluid brushstrokes, charcoal graphite texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围墨水极简__Atmospheric Ink Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/氛围墨水极简__Atmospheric Ink Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

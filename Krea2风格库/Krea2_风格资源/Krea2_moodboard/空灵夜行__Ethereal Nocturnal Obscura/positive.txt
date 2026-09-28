@@ -1,0 +1,1 @@
+nocturnal, cobalt and indigo palette, painterly grain, pictorialist soft focus, chiaroscuro, atmospheric haze, ghostly luminosity. Subject:{prompt}

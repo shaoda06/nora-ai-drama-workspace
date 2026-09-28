@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-145",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "明亮",
+  "name": "Luminous Solarpunk Sanctuary",
+  "prompt": "Studio Ghibli aesthetic, dappled sunlight, lush emerald foliage, painterly textures, serene turquoise water, solarpunk atmosphere, warm cinematic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Solarpunk Sanctuary/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Solarpunk Sanctuary",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

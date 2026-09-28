@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-994",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮夜行厚涂翠绿发光",
+  "name": "Luminous Nocturnal Impasto — Cozy Emerald Glow",
+  "prompt": "chiaroscuro lighting, thick impasto brushstrokes, glowing amber highlights, moody emerald and navy palette, tactile oil paint texture, whimsical magical realism, soft-focus atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行厚涂翠绿发光__Luminous Nocturnal Impasto — Cozy Emerald Glow/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行厚涂翠绿发光__Luminous Nocturnal Impasto — Cozy Emerald Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

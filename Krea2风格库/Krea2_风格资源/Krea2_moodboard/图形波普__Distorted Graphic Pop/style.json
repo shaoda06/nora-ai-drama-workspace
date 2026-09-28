@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-614",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "图形波普",
+  "name": "Distorted Graphic Pop",
+  "prompt": "extreme fisheye lens distortion, bold black ink outlines, textured risograph grain, dynamic spherical perspective, vibrant flat cell shading, nostalgic pop illustration, high-angle dramatic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形波普__Distorted Graphic Pop/preview.webp",
+  "folder": "Krea2_moodboard/图形波普__Distorted Graphic Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

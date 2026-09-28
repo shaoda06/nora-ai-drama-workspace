@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-87",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "韩漫超精细画风",
+  "name": "Manhwa Ultradetailed Art",
+  "prompt": "Style: Manhwa Ultradetailed Art: A richly polished Korean digital-comic illustration style built on crisp, precise linework merged seamlessly with dense, meticulous rendering across skin, hair, and costume, exhaustive layered shading that builds photographic depth while retaining a clean, semi-realistic anime-adjacent finish, luminous soft-gradient highlights giving every surface a glossy, high-production sheen, obsessive attention to fine ornamental and textural detail rewarding close inspection, and a polished, high-stakes cinematic webtoon intensity built for full-screen serialized impact. Influenced by: Redice Studio digital-coloring technique, Korean manhwa production standard, semi-realistic webtoon rendering practice, high-detail digital-comic illustration tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/韩漫超精细画风__Manhwa Ultradetailed Art/preview.jpg",
+  "folder": "krea2_styles/韩漫超精细画风__Manhwa Ultradetailed Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

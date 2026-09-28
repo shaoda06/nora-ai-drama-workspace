@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2507",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "明亮深渊剪影",
+  "name": "Luminous Abyssal Silhouette",
+  "prompt": "underwater photography, backlit silhouette, low angle shot, shimmering sun rays, deep blue and indigo palette, high contrast, ethereal aquatic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮深渊剪影__Luminous Abyssal Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/明亮深渊剪影__Luminous Abyssal Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

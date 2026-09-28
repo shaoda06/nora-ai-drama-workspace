@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-476",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "夜行模拟故障",
+  "name": "Nocturnal Analog Glitch",
+  "prompt": "monochromatic cobalt blue, CRT scanline distortion, analog glitch art, heavy digital grain, chromatic aberration, high contrast silhouettes, phosphor glow, tactile halftone texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行模拟故障__Nocturnal Analog Glitch/preview.webp",
+  "folder": "Krea2_moodboard/夜行模拟故障__Nocturnal Analog Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

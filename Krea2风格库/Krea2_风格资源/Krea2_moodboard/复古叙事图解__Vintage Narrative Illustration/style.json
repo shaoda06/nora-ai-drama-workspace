@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-198",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "复古叙事图解",
+  "name": "Vintage Narrative Illustration",
+  "prompt": "vintage comic illustration, bold ink outlines, mid-century aesthetic, screen-print texture, muted earth tones, surreal narrative, retro pulp paper grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古叙事图解__Vintage Narrative Illustration/preview.webp",
+  "folder": "Krea2_moodboard/复古叙事图解__Vintage Narrative Illustration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

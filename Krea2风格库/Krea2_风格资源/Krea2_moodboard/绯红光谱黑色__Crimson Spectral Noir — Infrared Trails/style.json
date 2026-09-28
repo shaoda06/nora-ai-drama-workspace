@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2997",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "绯红光谱黑色",
+  "name": "Crimson Spectral Noir — Infrared Trails",
+  "prompt": "infrared crimson and black, heavy analog film grain, motion blur shutter drag, surreal silhouette, eerie dreamlike atmosphere, long exposure light trails, high contrast noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红光谱黑色__Crimson Spectral Noir — Infrared Trails/preview.webp",
+  "folder": "Krea2_moodboard/绯红光谱黑色__Crimson Spectral Noir — Infrared Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

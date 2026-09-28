@@ -1,0 +1,1 @@
+diffused silhouette, acid green glow, heavy film grain, chromatic aberration, soft-focus abstraction, ethereal halo, high-contrast noir, motion blur. Subject:{prompt}

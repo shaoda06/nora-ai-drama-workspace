@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1421",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "明亮琥珀植物",
+  "name": "Luminous Amber Botanical",
+  "prompt": "extreme macro photography, amber and terracotta palette, backlit botanical, chiaroscuro lighting, shallow depth of field, translucent petal texture, golden hour glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮琥珀植物__Luminous Amber Botanical/preview.webp",
+  "folder": "Krea2_moodboard/明亮琥珀植物__Luminous Amber Botanical",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-543",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "极简超现实",
+  "name": "Minimalist Surrealist Montage",
+  "prompt": "surrealist collage, minimalist composition, mixed media, high-key lighting, organic texture, double exposure, editorial graphic design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简超现实__Minimalist Surrealist Montage/preview.webp",
+  "folder": "Krea2_moodboard/极简超现实__Minimalist Surrealist Montage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

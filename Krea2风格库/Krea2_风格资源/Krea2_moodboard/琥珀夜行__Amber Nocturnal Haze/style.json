@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1467",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "琥珀夜行",
+  "name": "Amber Nocturnal Haze",
+  "prompt": "amber atmospheric haze, cinematic film grain, dreamy soft focus, intentional motion blur, nocturnal golden glow, long exposure light trails, monochromatic amber palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀夜行__Amber Nocturnal Haze/preview.webp",
+  "folder": "Krea2_moodboard/琥珀夜行__Amber Nocturnal Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

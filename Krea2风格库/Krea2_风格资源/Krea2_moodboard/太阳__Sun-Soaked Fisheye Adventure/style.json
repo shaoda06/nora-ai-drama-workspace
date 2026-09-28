@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2096",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "太阳",
+  "name": "Sun-Soaked Fisheye Adventure",
+  "prompt": "fisheye lens distortion, saturated sunlight, POV perspective, vibrant Y2K aesthetic, crystal-clear water, dynamic wide-angle, candid summer energy, high-contrast outdoor action. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/太阳__Sun-Soaked Fisheye Adventure/preview.webp",
+  "folder": "Krea2_moodboard/太阳__Sun-Soaked Fisheye Adventure",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

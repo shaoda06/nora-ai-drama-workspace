@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1469",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "电影感模拟",
+  "name": "Cinematic Analog Dreamscape",
+  "prompt": "analog film grain, cinematic light leak, soft focus motion blur, lo-fi aesthetic, chromatic aberration, dreamy silhouette, muted desaturated tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感模拟__Cinematic Analog Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/电影感模拟__Cinematic Analog Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

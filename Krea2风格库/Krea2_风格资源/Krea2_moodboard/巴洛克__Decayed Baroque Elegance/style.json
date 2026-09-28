@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1042",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "巴洛克",
+  "name": "Decayed Baroque Elegance",
+  "prompt": "baroque chiaroscuro, weathered metallic textures, faded crimson damask, ornate filigree detail, cinematic dramatic shadows, cracked porcelain, historical dark fantasy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/巴洛克__Decayed Baroque Elegance/preview.webp",
+  "folder": "Krea2_moodboard/巴洛克__Decayed Baroque Elegance",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

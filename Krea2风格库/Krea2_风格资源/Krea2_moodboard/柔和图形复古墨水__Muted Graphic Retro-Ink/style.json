@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-618",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "柔和图形复古墨水",
+  "name": "Muted Graphic Retro-Ink",
+  "prompt": "bold black ink outlines, muted screenprint color palette, textured paper background, halftone and stipple shading, minimalist graphic illustration, retro indie comic style, flat composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/柔和图形复古墨水__Muted Graphic Retro-Ink/preview.webp",
+  "folder": "Krea2_moodboard/柔和图形复古墨水__Muted Graphic Retro-Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

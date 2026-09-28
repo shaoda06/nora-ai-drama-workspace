@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1387",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "模拟黑色",
+  "name": "Moody Analog Noir",
+  "prompt": "heavy analog film grain, low-key moody lighting, soft focus blur, high contrast shadow play, vintage cinematic texture, nocturnal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟黑色__Moody Analog Noir/preview.webp",
+  "folder": "Krea2_moodboard/模拟黑色__Moody Analog Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

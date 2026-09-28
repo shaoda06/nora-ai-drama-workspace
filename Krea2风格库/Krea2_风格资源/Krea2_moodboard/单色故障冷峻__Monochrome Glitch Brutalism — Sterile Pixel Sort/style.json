@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2040",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "单色故障冷峻",
+  "name": "Monochrome Glitch Brutalism — Sterile Pixel Sort",
+  "prompt": "monochrome glitch art, pixel sorting, high-contrast black and white, digital fragmentation, stark minimalist studio portraiture, data corruption, experimental distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障冷峻__Monochrome Glitch Brutalism — Sterile Pixel Sort/preview.webp",
+  "folder": "Krea2_moodboard/单色故障冷峻__Monochrome Glitch Brutalism — Sterile Pixel Sort",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

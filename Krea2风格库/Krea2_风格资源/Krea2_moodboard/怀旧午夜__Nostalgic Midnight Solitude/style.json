@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-103",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧午夜",
+  "name": "Nostalgic Midnight Solitude",
+  "prompt": "90s retro anime style, melancholic nocturnal mood, muted cool color palette, hand-drawn cel animation, soft cinematic lighting, introspective urban solitude, lo-fi aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧午夜__Nostalgic Midnight Solitude/preview.webp",
+  "folder": "Krea2_moodboard/怀旧午夜__Nostalgic Midnight Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-185",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "魏菊风格",
+  "name": "Victo Ngai Style",
+  "prompt": "Style: Victo Ngai Style: A luminous, decorative illustration style built on richly patterned ornamental linework woven seamlessly through flowing, dreamlike composition, soft glowing color transitions blending seamlessly across intricate layered detail, a hushed, whimsical stillness carried through generous negative space balanced against dense focal ornamentation, meticulous narrative symbolism embedded within every decorative flourish, and a poetic, storybook elegance that feels both meticulously crafted and effortlessly enchanting. Influenced by: Victo Ngai, contemporary editorial-illustration tradition, decorative gouache-painting technique, narrative symbolic-illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/魏菊风格__Victo Ngai Style/preview.jpg",
+  "folder": "krea2_styles/魏菊风格__Victo Ngai Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1578",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵神话",
+  "name": "Ethereal Frost Mythos",
+  "prompt": "cinematic winter dark fantasy, misty blue and white palette, warm amber light accents, monumental frozen architecture, atmospheric volumetric fog, solitary explorer, ethereal chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵神话__Ethereal Frost Mythos/preview.webp",
+  "folder": "Krea2_moodboard/空灵神话__Ethereal Frost Mythos",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

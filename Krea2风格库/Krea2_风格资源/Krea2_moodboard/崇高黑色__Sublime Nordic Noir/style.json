@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1697",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "崇高黑色",
+  "name": "Sublime Nordic Noir",
+  "prompt": "nordic noir aesthetic, sublime atmospheric landscape, desaturated blue and gray palette, heavy overcast sky, dense coastal fog, cinematic moody lighting, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/崇高黑色__Sublime Nordic Noir/preview.webp",
+  "folder": "Krea2_moodboard/崇高黑色__Sublime Nordic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

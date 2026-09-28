@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-730",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "电影感夜行绯红",
+  "name": "Cinematic Nocturnal Crimson",
+  "prompt": "cinematic nocturnal photography, glowing neon red highlights, deep indigo and charcoal palette, high contrast dramatic lighting, long exposure motion blur, sleek minimalist silhouettes, atmospheric fog and reflections. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行绯红__Cinematic Nocturnal Crimson/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行绯红__Cinematic Nocturnal Crimson",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

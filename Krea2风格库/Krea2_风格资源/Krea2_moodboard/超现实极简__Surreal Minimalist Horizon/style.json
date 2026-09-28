@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-566",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "超现实极简",
+  "name": "Surreal Minimalist Horizon",
+  "prompt": "surreal minimalism, cobalt blue sky, terracotta landscape, liminal space, stark graphic shadows, painterly texture, vibrant color blocking. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实极简__Surreal Minimalist Horizon/preview.webp",
+  "folder": "Krea2_moodboard/超现实极简__Surreal Minimalist Horizon",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3272",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵颗粒",
+  "name": "Ethereal Bio-Luminescent Grain",
+  "prompt": "heavy film grain, soft-focus blur, bioluminescent glow, organic abstraction, acidic color gradients, airbrushed texture, dreamcore atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒__Ethereal Bio-Luminescent Grain/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒__Ethereal Bio-Luminescent Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

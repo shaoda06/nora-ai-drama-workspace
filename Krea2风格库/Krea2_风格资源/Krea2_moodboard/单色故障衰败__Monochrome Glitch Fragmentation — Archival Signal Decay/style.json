@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2041",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "单色故障衰败",
+  "name": "Monochrome Glitch Fragmentation — Archival Signal Decay",
+  "prompt": "high-contrast monochrome, pixel sorting, digital corruption, analog signal decay, film grain texture, fragmented realism, data bending. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障衰败__Monochrome Glitch Fragmentation — Archival Signal Decay/preview.webp",
+  "folder": "Krea2_moodboard/单色故障衰败__Monochrome Glitch Fragmentation — Archival Signal Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

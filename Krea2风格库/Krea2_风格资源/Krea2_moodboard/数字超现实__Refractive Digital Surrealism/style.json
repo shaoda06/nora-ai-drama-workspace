@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-253",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "数字超现实",
+  "name": "Refractive Digital Surrealism",
+  "prompt": "translucent glass refraction, liquid chrome, minimalist studio lighting, digital glitch artifacts, chromatic dispersion, biomechanical surrealism, high-fidelity 3D render. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字超现实__Refractive Digital Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/数字超现实__Refractive Digital Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

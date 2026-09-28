@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-302",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "触觉黑色极简宏观颗粒",
+  "name": "Tactile Noir Minimalism — Macro Chiaroscuro Grain",
+  "prompt": "high-contrast black and white, heavy film grain, chiaroscuro lighting, tactile texture, intimate macro, cinematic noir, moody minimalism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉黑色极简宏观颗粒__Tactile Noir Minimalism — Macro Chiaroscuro Grain/preview.webp",
+  "folder": "Krea2_moodboard/触觉黑色极简宏观颗粒__Tactile Noir Minimalism — Macro Chiaroscuro Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

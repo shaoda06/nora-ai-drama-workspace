@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2203",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "电影感琥珀怀旧",
+  "name": "Cinematic Chiaroscuro Portraiture — Amber Nostalgia",
+  "prompt": "cinematic chiaroscuro, sharp light sliver, deep black background, high contrast portraiture, warm amber glow, introspective mood, analog film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感琥珀怀旧__Cinematic Chiaroscuro Portraiture — Amber Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/电影感琥珀怀旧__Cinematic Chiaroscuro Portraiture — Amber Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

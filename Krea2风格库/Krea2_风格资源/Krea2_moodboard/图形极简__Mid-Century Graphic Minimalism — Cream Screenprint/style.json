@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-887",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "图形极简",
+  "name": "Mid-Century Graphic Minimalism — Cream Screenprint",
+  "prompt": "mid-century modern graphic, flat vector illustration, biomorphic and geometric abstraction, matte screenprint texture, bold color blocking, minimalist composition, warm cream background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形极简__Mid-Century Graphic Minimalism — Cream Screenprint/preview.webp",
+  "folder": "Krea2_moodboard/图形极简__Mid-Century Graphic Minimalism — Cream Screenprint",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

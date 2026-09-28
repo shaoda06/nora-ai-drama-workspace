@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3178",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "黑色沧桑",
+  "name": "Monochromatic Avant-Garde Noir — Aged Paper Severity",
+  "prompt": "high-contrast noir, vintage paper texture, minimalist geometric composition, surrealist collage, aged monochromatic film grain, stark typography, tactile dark background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色沧桑__Monochromatic Avant-Garde Noir — Aged Paper Severity/preview.webp",
+  "folder": "Krea2_moodboard/黑色沧桑__Monochromatic Avant-Garde Noir — Aged Paper Severity",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

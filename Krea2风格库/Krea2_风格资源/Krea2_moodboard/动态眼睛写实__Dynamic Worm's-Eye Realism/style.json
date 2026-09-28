@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2180",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "动态眼睛写实",
+  "name": "Dynamic Worm's-Eye Realism",
+  "prompt": "extreme low-angle shot, worm's-eye view, wide-angle lens distortion, vibrant blue sky, harsh direct sunlight, high-contrast action photography, forced perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态眼睛写实__Dynamic Worm's-Eye Realism/preview.webp",
+  "folder": "Krea2_moodboard/动态眼睛写实__Dynamic Worm's-Eye Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3107",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "怀旧模拟超现实霓虹暮光渐变",
+  "name": "Nostalgic Analog Surrealism — Neon Twilight Gradient",
+  "prompt": "heavy film grain, analog lo-fi texture, minimalist silhouette, ethereal light gradient, cinematic dreamscape, nocturnal atmospheric haze, vibrant color contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧模拟超现实霓虹暮光渐变__Nostalgic Analog Surrealism — Neon Twilight Gradient/preview.webp",
+  "folder": "Krea2_moodboard/怀旧模拟超现实霓虹暮光渐变__Nostalgic Analog Surrealism — Neon Twilight Gradient",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

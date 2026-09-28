@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1790",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "夜行暮光忧郁柔和青蓝",
+  "name": "Nocturnal Twilight Melancholy — Muted Teal Diffusion",
+  "prompt": "cinematic 35mm film, twilight blue hour, muted teal and indigo, introspective candid portrait, soft analog film grain, dreamlike shallow depth, nocturnal liminal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行暮光忧郁柔和青蓝__Nocturnal Twilight Melancholy — Muted Teal Diffusion/preview.webp",
+  "folder": "Krea2_moodboard/夜行暮光忧郁柔和青蓝__Nocturnal Twilight Melancholy — Muted Teal Diffusion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

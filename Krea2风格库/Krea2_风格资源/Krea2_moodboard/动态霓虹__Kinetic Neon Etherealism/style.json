@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3048",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "动态霓虹",
+  "name": "Kinetic Neon Etherealism",
+  "prompt": "long exposure motion blur, neon light painting, high contrast dark background, kinetic light streaks, ethereal glow, cyberpunk color palette, shutter drag. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态霓虹__Kinetic Neon Etherealism/preview.webp",
+  "folder": "Krea2_moodboard/动态霓虹__Kinetic Neon Etherealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

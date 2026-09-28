@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-758",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵粉彩极简",
+  "name": "Ethereal Pastel Minimalism — Colored Pencil Tooth",
+  "prompt": "soft pastel color palette, ethereal diffused light, tactile paper texture, minimalist composition, impressionistic brushstrokes, nostalgic dreamlike atmosphere, gentle hand-drawn quality. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩极简__Ethereal Pastel Minimalism — Colored Pencil Tooth/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩极简__Ethereal Pastel Minimalism — Colored Pencil Tooth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

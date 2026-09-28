@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-909",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "暮光幻想",
+  "name": "Cozy Twilight Fantasy",
+  "prompt": "warm glowing windows, twilight blue hour, whimsical architecture, cozy fantasy atmosphere, high contrast lighting, storybook illustration style, ink outline. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/暮光幻想__Cozy Twilight Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/暮光幻想__Cozy Twilight Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

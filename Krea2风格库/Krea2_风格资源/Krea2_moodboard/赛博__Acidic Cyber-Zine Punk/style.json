@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-332",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "赛博",
+  "name": "Acidic Cyber-Zine Punk",
+  "prompt": "acid green and hot pink, halftone print texture, glitch art, high contrast duotone, cyberpunk zine aesthetic, thermal solarization, distorted digital graphics. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/赛博__Acidic Cyber-Zine Punk/preview.webp",
+  "folder": "Krea2_moodboard/赛博__Acidic Cyber-Zine Punk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

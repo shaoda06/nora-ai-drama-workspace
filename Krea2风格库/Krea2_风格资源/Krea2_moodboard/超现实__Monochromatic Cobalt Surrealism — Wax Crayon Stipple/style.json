@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-926",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "超现实",
+  "name": "Monochromatic Cobalt Surrealism — Wax Crayon Stipple",
+  "prompt": "monochromatic ultramarine blue, textured cream paper grain, stippled and cross-hatched shading, surreal minimalist illustration, dramatic chiaroscuro lighting, introspective dreamlike atmosphere, hand-drawn wax crayon texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Monochromatic Cobalt Surrealism — Wax Crayon Stipple/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Monochromatic Cobalt Surrealism — Wax Crayon Stipple",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

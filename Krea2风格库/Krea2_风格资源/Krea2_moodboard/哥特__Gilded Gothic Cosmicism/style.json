@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2500",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "哥特",
+  "name": "Gilded Gothic Cosmicism",
+  "prompt": "ornate gilded armor, chiaroscuro lighting, vintage film texture, jeweled mosaic details, high-contrast cinematic composition, mystical fantasy atmosphere, retro-futuristic sci-fi elements. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/哥特__Gilded Gothic Cosmicism/preview.webp",
+  "folder": "Krea2_moodboard/哥特__Gilded Gothic Cosmicism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

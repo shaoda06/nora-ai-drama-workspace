@@ -1,0 +1,1 @@
+CRT monitor glow, analog VHS glitch, chromatic aberration, visible scanlines, retro-futuristic neon, lo-fi digital decay, phosphor texture. Subject:{prompt}

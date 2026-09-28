@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2183",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷4",
+  "category_name": "摄影特效冷4",
+  "name_cn": "动态复古怀旧",
+  "name": "Dynamic Retro Street Nostalgia",
+  "prompt": "extreme low angle shot, wide-angle lens distortion, analog film grain, vivid blue sky background, harsh sunlight, candid streetwear aesthetic, dynamic perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态复古怀旧__Dynamic Retro Street Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/动态复古怀旧__Dynamic Retro Street Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

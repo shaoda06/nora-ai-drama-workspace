@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-694",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "超现实",
+  "name": "Midcentury Mod Surrealist",
+  "prompt": "mid-century modern illustration, bold ink outlines, flat color blocking, vintage fashion aesthetic, whimsical surrealism, paper grain texture, minimalist graphic design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Midcentury Mod Surrealist/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Midcentury Mod Surrealist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

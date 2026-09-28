@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-351",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "拼贴",
+  "name": "Constructivist Punk Collage",
+  "prompt": "mixed media collage, high-contrast graphic design, bold geometric overlays, tactile paper texture, constructivist punk aesthetic, vibrant color blocking, halftone grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/拼贴__Constructivist Punk Collage/preview.webp",
+  "folder": "Krea2_moodboard/拼贴__Constructivist Punk Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

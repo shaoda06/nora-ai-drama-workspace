@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-160",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "天空",
+  "name": "Monolithic Summer Sky",
+  "prompt": "monumental cumulonimbus clouds, deep cobalt blue sky, low angle perspective, anime background aesthetic, volumetric lighting, nostalgic summer atmosphere, dramatic high contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天空__Monolithic Summer Sky/preview.webp",
+  "folder": "Krea2_moodboard/天空__Monolithic Summer Sky",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

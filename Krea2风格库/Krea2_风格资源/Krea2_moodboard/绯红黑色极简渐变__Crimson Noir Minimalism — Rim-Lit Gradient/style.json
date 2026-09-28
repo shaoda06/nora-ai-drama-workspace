@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2331",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "绯红黑色极简渐变",
+  "name": "Crimson Noir Minimalism — Rim-Lit Gradient",
+  "prompt": "high-contrast silhouette, crimson red background, chiaroscuro lighting, cinematic noir, graphic minimalist portrait, deep shadows, sharp profile. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色极简渐变__Crimson Noir Minimalism — Rim-Lit Gradient/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色极简渐变__Crimson Noir Minimalism — Rim-Lit Gradient",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

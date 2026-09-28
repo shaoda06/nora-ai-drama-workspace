@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3355",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "模拟数字",
+  "name": "Analog Digital Liminality",
+  "prompt": "CRT scanline effect, dithered shading, low-poly aesthetic, pixelated texture, retro computer graphics, liminal atmosphere, 90s software render. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟数字__Analog Digital Liminality/preview.webp",
+  "folder": "Krea2_moodboard/模拟数字__Analog Digital Liminality",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

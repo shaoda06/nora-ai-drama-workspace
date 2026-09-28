@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-858",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "电影感黑色绘画感",
+  "name": "Cinematic Chiaroscuro Noir — Painterly Backlight",
+  "prompt": "chiaroscuro noir, high-contrast black and white, dramatic low-key lighting, extreme close-up, cinematic shadows, textured skin detail, stipple and cross-hatching, moody atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色绘画感__Cinematic Chiaroscuro Noir — Painterly Backlight/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色绘画感__Cinematic Chiaroscuro Noir — Painterly Backlight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2535",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "绯红黑色超现实几何",
+  "name": "Crimson Noir Surrealism — Geometric Void",
+  "prompt": "stark crimson and black, surreal noir, high-contrast silhouette, textured organic forms, atmospheric chiaroscuro, minimalist cosmic landscape, gothic occult symbolism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色超现实几何__Crimson Noir Surrealism — Geometric Void/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色超现实几何__Crimson Noir Surrealism — Geometric Void",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

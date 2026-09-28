@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1645",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "翠绿超现实",
+  "name": "Refractive Emerald Surrealism",
+  "prompt": "glass block distortion, refractive liquid texture, monochromatic emerald palette, warm amber backlighting, surreal warped perspective, volumetric light rays, translucent glossy finish, dreamy soft focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/翠绿超现实__Refractive Emerald Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/翠绿超现实__Refractive Emerald Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1998",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "模拟",
+  "name": "Analog CRT Glitchcore",
+  "prompt": "CRT monitor glow, analog VHS glitch, chromatic aberration, visible scanlines, retro-futuristic neon, lo-fi digital decay, phosphor texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟__Analog CRT Glitchcore/preview.webp",
+  "folder": "Krea2_moodboard/模拟__Analog CRT Glitchcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

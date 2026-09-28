@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3304",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "模拟超现实",
+  "name": "Uncanny Analog Surrealism",
+  "prompt": "vintage analog film grain, uncanny surrealism, harsh direct flash, dreamlike atmosphere, liquid refraction, muted warm palette, low-fidelity snapshot. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟超现实__Uncanny Analog Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/模拟超现实__Uncanny Analog Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

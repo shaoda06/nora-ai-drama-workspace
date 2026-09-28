@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-365",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "夜景摄影",
+  "name": "Night Photography",
+  "prompt": "Style: Night Photography: A moody, low-light photographic style built on deep, engulfing darkness broken only by isolated pockets of available illumination, long, patient exposure logic that gathers scarce light into soft, glowing pools, a hushed, quiet stillness carried through the extended time required to capture the scene, subtle grain and reduced dynamic range typical of low-light capture rather than artificial correction, and a contemplative, nocturnal atmosphere that feels intimate, mysterious, and quietly suspended in time. Influenced by: available-light night-photography tradition, long-exposure technique, urban nocturne photographic practice, low-light documentary method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/夜景摄影__Night Photography/preview.jpg",
+  "folder": "krea2_styles/夜景摄影__Night Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

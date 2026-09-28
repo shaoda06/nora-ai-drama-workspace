@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-378",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "怪奇物语启发艺术",
+  "name": "Stranger Things-Inspired Art",
+  "prompt": "Style: Stranger Things-Inspired Art: A painted 1980s movie-poster illustration in the manner of the Stranger Things key art: airbrushed and colored-pencil rendering, glowing red rim light against a deep blue night, hazy halos and lens glow, rich painterly skin and fabric, nostalgic Amblin-era theatrical poster painting with dramatic lighting and a cinematic mood. Influenced by: Drew Struzan, Kyle Lambert, 1980s airbrushed movie-poster tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/怪奇物语启发艺术__Stranger Things-Inspired Art/preview.jpg",
+  "folder": "krea2_styles/怪奇物语启发艺术__Stranger Things-Inspired Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

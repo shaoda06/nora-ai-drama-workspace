@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-92",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧电影感动漫",
+  "name": "Nostalgic Cinematic Anime",
+  "prompt": "classic 2D anime style, painterly backgrounds, golden hour rim lighting, dramatic sky palettes, cel-shaded characters, nostalgic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧电影感动漫__Nostalgic Cinematic Anime/preview.webp",
+  "folder": "Krea2_moodboard/怀旧电影感动漫__Nostalgic Cinematic Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+cinematic lighting, amber golden glow, high contrast shadows, lo-fi film grain, atmospheric rain, refracted light, dramatic silhouette, shallow depth of field. Subject:{prompt}

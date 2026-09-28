@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3064",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵极简深邃",
+  "name": "Ethereal Aura Minimalism — Airbrushed Deep Blue",
+  "prompt": "soft-focus gradient, ethereal blue aura, minimalist atmospheric abstraction, airbrushed color field, tactile grain texture, biomorphic silhouette, chromatic blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简深邃__Ethereal Aura Minimalism — Airbrushed Deep Blue/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简深邃__Ethereal Aura Minimalism — Airbrushed Deep Blue",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

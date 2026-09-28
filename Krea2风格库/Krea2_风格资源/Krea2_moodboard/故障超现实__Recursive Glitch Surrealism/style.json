@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2808",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "故障超现实",
+  "name": "Recursive Glitch Surrealism",
+  "prompt": "recursive Droste effect, digital glitch art, chromatic aberration, volumetric clouds, pixel sorting, surreal dreamscape, holographic light leaks, infinite feedback loop. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/故障超现实__Recursive Glitch Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/故障超现实__Recursive Glitch Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

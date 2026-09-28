@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2397",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "电影感琥珀黑色沧桑画布发光",
+  "name": "Cinematic Amber Noir — Aged Canvas Glow",
+  "prompt": "amber glow, cinematic chiaroscuro, fiery orange palette, analog film grain, dramatic backlighting, tactile texture, soft focus bloom, mysterious noir atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感琥珀黑色沧桑画布发光__Cinematic Amber Noir — Aged Canvas Glow/preview.webp",
+  "folder": "Krea2_moodboard/电影感琥珀黑色沧桑画布发光__Cinematic Amber Noir — Aged Canvas Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

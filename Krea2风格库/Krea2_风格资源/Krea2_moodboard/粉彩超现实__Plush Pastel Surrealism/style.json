@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-233",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "粉彩超现实",
+  "name": "Plush Pastel Surrealism",
+  "prompt": "3D digital render, soft pastel palette, tactile plush textures, dreamy surrealism, floating geometric forms, diffused studio lighting, whimsical minimalist landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粉彩超现实__Plush Pastel Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/粉彩超现实__Plush Pastel Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1835",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "高山",
+  "name": "Alpine Distortion Tech",
+  "prompt": "fish-eye lens distortion, reflective ski goggles, alpine winter adventure, high-contrast cold lighting, technical gear, metallic textures, dynamic low-angle shot. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高山__Alpine Distortion Tech/preview.webp",
+  "folder": "Krea2_moodboard/高山__Alpine Distortion Tech",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

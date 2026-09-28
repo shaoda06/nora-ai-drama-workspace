@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1573",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵超现实",
+  "name": "Ethereal Mossy Surrealism",
+  "prompt": "surreal moss-covered landscape, ethereal soft-focus lighting, whimsical nature fantasy, pastel color palette, hyper-detailed organic textures, dreamlike atmosphere, mythic reclamation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵超现实__Ethereal Mossy Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/空灵超现实__Ethereal Mossy Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

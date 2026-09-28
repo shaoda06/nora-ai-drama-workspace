@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2258",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "动态琥珀低关键",
+  "name": "Kinetic Amber Dreamscape — Fiery Low-Key Streaks",
+  "prompt": "intentional camera movement, long exposure light streaks, amber and fiery orange palette, dreamlike motion blur, analog film grain, low-key cinematic lighting, shutter drag. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态琥珀低关键__Kinetic Amber Dreamscape — Fiery Low-Key Streaks/preview.webp",
+  "folder": "Krea2_moodboard/动态琥珀低关键__Kinetic Amber Dreamscape — Fiery Low-Key Streaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

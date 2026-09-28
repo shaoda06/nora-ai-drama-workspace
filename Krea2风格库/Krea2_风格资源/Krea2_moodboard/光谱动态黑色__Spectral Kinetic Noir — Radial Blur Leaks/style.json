@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2980",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱动态黑色",
+  "name": "Spectral Kinetic Noir — Radial Blur Leaks",
+  "prompt": "high-contrast monochrome, intentional motion blur, heavy film grain, ethereal light leaks, spectral silhouettes, gritty analog texture, distorted perspective, dynamic shutter drag. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱动态黑色__Spectral Kinetic Noir — Radial Blur Leaks/preview.webp",
+  "folder": "Krea2_moodboard/光谱动态黑色__Spectral Kinetic Noir — Radial Blur Leaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2525",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "绯红黑色",
+  "name": "Crimson Noir Dreamscape",
+  "prompt": "saturated crimson glow, heavy analog film grain, high-contrast silhouette, soft-focus ethereal blur, infrared photography aesthetic, ominous gothic atmosphere, lo-fi darkroom texture, liminal dreamcore noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色__Crimson Noir Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色__Crimson Noir Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

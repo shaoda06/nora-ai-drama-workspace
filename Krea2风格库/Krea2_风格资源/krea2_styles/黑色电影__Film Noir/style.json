@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-355",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "黑色电影",
+  "name": "Film Noir",
+  "prompt": "Style: Film Noir: A stark, high-contrast photographic and cinematic style built on dramatic slatted-shadow patterns cutting sharply across the frame, a single low, hard-angled light source carving deep, engulfing darkness against isolated highlight, a hardboiled, morally ambiguous tension conveyed entirely through shadow and withheld detail, a deliberate, unhurried stillness charged with suspicion and menace, and a moody, cinematic gravitas rooted in mid-century crime-thriller visual tradition. Influenced by: classic film-noir cinematography tradition, chiaroscuro lighting technique, hardboiled crime-thriller visual practice, high-contrast black-and-white photographic method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/黑色电影__Film Noir/preview.jpg",
+  "folder": "krea2_styles/黑色电影__Film Noir",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

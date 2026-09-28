@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1479",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵模拟怀旧琥珀漏光",
+  "name": "Ethereal Analog Nostalgia — Navy Amber Leak",
+  "prompt": "analog film grain, ethereal light leaks, moody teal and amber palette, soft focus motion blur, chiaroscuro lighting, vintage cinematic texture, dreamy halation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟怀旧琥珀漏光__Ethereal Analog Nostalgia — Navy Amber Leak/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟怀旧琥珀漏光__Ethereal Analog Nostalgia — Navy Amber Leak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

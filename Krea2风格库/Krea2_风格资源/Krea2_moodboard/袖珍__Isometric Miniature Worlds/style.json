@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-218",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "袖珍",
+  "name": "Isometric Miniature Worlds",
+  "prompt": "voxel art, isometric diorama, tilt-shift photography, shallow depth of field, miniature model, soft global illumination, blocky 3D render. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/袖珍__Isometric Miniature Worlds/preview.webp",
+  "folder": "Krea2_moodboard/袖珍__Isometric Miniature Worlds",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

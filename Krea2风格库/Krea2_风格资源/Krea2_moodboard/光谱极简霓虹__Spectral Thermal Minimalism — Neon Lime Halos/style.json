@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2599",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "光谱极简霓虹",
+  "name": "Spectral Thermal Minimalism — Neon Lime Halos",
+  "prompt": "blurry silhouette, neon lime-green aura, thermal imaging effect, grainy film texture, soft-focus diffusion, minimalist composition, airbrushed gradient. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱极简霓虹__Spectral Thermal Minimalism — Neon Lime Halos/preview.webp",
+  "folder": "Krea2_moodboard/光谱极简霓虹__Spectral Thermal Minimalism — Neon Lime Halos",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

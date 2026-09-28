@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-55",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "地形线条插画",
+  "name": "Topographic Linework Illustration",
+  "prompt": "Style: Topographic Linework Illustration: intricate graphic aesthetics characterized by flowing contour networks, layered elevation-inspired line structures, organic spatial mapping, rhythmic density variation, and a strong emphasis on visual terrain-like construction. The style builds form through successive line accumulations rather than traditional shading, creating depth, volume, and movement through contour logic, directional patterning, and carefully orchestrated line repetition. Rather than relying on solid masses or painterly rendering, it celebrates structure, flow, and information-rich design, producing imagery that feels both analytical and artistic. The resulting aesthetic combines cartographic sophistication, decorative complexity, and contemporary illustration sensibilities into highly distinctive visual compositions, reminiscent of Matthew Cusick and Paula Scher, inspired by USGS Topographic Maps and The Atlas of Design.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/地形线条插画__Topographic Linework Illustration/preview.jpg",
+  "folder": "krea2_styles/地形线条插画__Topographic Linework Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2345",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "极简",
+  "name": "Monolithic Solar Minimalism",
+  "prompt": "monolithic brutalism, warm earth-toned concrete, sharp architectural shadows, minimalist geometric composition, stark sunlight, textural plaster, serene desert atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Monolithic Solar Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Monolithic Solar Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

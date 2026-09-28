@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1945",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "明亮赛博黑色",
+  "name": "Luminous Cobalt Cyber-Noir",
+  "prompt": "cobalt blue noir, bioluminescent cybernetic glow, high-contrast chiaroscuro, chromatic aberration, cinematic film grain, macro skin texture, prismatic lens refraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮赛博黑色__Luminous Cobalt Cyber-Noir/preview.webp",
+  "folder": "Krea2_moodboard/明亮赛博黑色__Luminous Cobalt Cyber-Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3145",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "绯红超现实",
+  "name": "Crimson Surreal Monoliths",
+  "prompt": "saturated crimson red, monolithic brutalist architecture, high-contrast surrealism, perfect water reflections, mythological scale, minimalist composition, infrared color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红超现实__Crimson Surreal Monoliths/preview.webp",
+  "folder": "Krea2_moodboard/绯红超现实__Crimson Surreal Monoliths",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

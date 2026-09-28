@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-789",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "原始黑色",
+  "name": "Raw Monochromatic Noir",
+  "prompt": "high-contrast monochrome, expressive ink work, gritty distressed texture, raw charcoal mark-making, chiaroscuro lighting, analog photocopy aesthetic, chaotic gestural lines. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始黑色__Raw Monochromatic Noir/preview.webp",
+  "folder": "Krea2_moodboard/原始黑色__Raw Monochromatic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

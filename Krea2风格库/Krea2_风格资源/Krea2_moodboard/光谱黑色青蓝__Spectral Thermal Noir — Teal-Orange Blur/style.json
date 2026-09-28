@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1530",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "光谱黑色青蓝",
+  "name": "Spectral Thermal Noir — Teal-Orange Blur",
+  "prompt": "long exposure motion blur, heavy film grain, teal and orange contrast, spectral silhouette, ethereal light streaks, atmospheric noir, thermal glow, dreamy soft focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色青蓝__Spectral Thermal Noir — Teal-Orange Blur/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色青蓝__Spectral Thermal Noir — Teal-Orange Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+shallow depth of field, analog film grain, atmospheric chiaroscuro, desaturated cold palette, ethereal underwater mood, soft focus, mysterious silhouette. Subject:{prompt}

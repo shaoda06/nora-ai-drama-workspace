@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2782",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "光谱运动",
+  "name": "Spectral Glacial Motion",
+  "prompt": "cyanotype motion blur, monochromatic cobalt palette, spectral light leaks, long exposure decay, ethereal ghosting, analog digital hybrid, high contrast cool tones, dreamlike temporal smear. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱运动__Spectral Glacial Motion/preview.webp",
+  "folder": "Krea2_moodboard/光谱运动__Spectral Glacial Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

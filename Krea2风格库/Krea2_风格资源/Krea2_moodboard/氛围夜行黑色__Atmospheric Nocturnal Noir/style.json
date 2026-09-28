@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1714",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "氛围夜行黑色",
+  "name": "Atmospheric Nocturnal Noir",
+  "prompt": "cinematic noir, volumetric lighting, dense atmospheric fog, high-contrast silhouette, minimalist composition, teal and amber palette, glowing light sources, liminal night landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围夜行黑色__Atmospheric Nocturnal Noir/preview.webp",
+  "folder": "Krea2_moodboard/氛围夜行黑色__Atmospheric Nocturnal Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

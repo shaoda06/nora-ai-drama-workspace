@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3409",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "光谱动态单色阈限张力",
+  "name": "Spectral Kinetic Monochrome — Liminal Smear Tension",
+  "prompt": "high-contrast black and white photography, ethereal motion blur, spectral chiaroscuro, shutter drag surrealism, ghostly kinetic atmosphere, long exposure portraiture, liminal dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱动态单色阈限张力__Spectral Kinetic Monochrome — Liminal Smear Tension/preview.webp",
+  "folder": "Krea2_moodboard/光谱动态单色阈限张力__Spectral Kinetic Monochrome — Liminal Smear Tension",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2850",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵绯红黑色运动轻盈漏光",
+  "name": "Ethereal Crimson Noir — Motion Light Leak",
+  "prompt": "stark black silhouette, saturated crimson background, analog film grain, ethereal bloom effect, cinematic chiaroscuro, minimalist moody composition, motion blur light leak. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵绯红黑色运动轻盈漏光__Ethereal Crimson Noir — Motion Light Leak/preview.webp",
+  "folder": "Krea2_moodboard/空灵绯红黑色运动轻盈漏光__Ethereal Crimson Noir — Motion Light Leak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

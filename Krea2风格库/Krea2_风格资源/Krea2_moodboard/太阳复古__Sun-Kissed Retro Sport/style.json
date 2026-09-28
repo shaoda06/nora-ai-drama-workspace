@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-274",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "太阳复古",
+  "name": "Sun-Kissed Retro Sport",
+  "prompt": "sun-drenched lighting, vintage athletic wear, retro film aesthetic, vibrant color blocking, sharp shadows, outdoor lifestyle, cinematic grain, streetwear fashion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/太阳复古__Sun-Kissed Retro Sport/preview.webp",
+  "folder": "Krea2_moodboard/太阳复古__Sun-Kissed Retro Sport",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

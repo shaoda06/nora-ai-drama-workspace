@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1289",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "霓虹超现实",
+  "name": "Neon Frontier Surrealism",
+  "prompt": "painterly digital illustration, vibrant sunset color palette, high-contrast rim lighting, vast desert frontier, atmospheric solitude, neon orange and purple highlights, stylized landscapes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹超现实__Neon Frontier Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/霓虹超现实__Neon Frontier Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

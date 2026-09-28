@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-632",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "现代主义",
+  "name": "Modernist Paper Cutout",
+  "prompt": "flat vector illustration, mid-century modern graphic design, minimalist geometric shapes, Matisse cutout style, bold primary color palette, clean hard edges, cream background, graphic paper cutout style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/现代主义__Modernist Paper Cutout/preview.webp",
+  "folder": "Krea2_moodboard/现代主义__Modernist Paper Cutout",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+volumetric light beams, chiaroscuro lighting, atmospheric haze, dramatic silhouette, cinematic contrast, ethereal glow, misty environment. Subject:{prompt}

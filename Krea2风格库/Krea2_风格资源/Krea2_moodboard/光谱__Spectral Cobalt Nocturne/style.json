@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1647",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "光谱",
+  "name": "Spectral Cobalt Nocturne",
+  "prompt": "heavy film grain, ethereal cyan glow, soft focus silhouette, monochromatic cobalt palette, dreamlike atmospheric haze, high-contrast noir lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱__Spectral Cobalt Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/光谱__Spectral Cobalt Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

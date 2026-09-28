@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-552",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "图形",
+  "name": "Graphic Ligne Claire",
+  "prompt": "ligne claire style, clean black outlines, flat color illustration, retro-futuristic, graphic comic art, whimsical storytelling, saturated pastel palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形__Graphic Ligne Claire/preview.webp",
+  "folder": "Krea2_moodboard/图形__Graphic Ligne Claire",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2961",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "动态超现实",
+  "name": "Monochromatic Kinetic Surrealism",
+  "prompt": "stroboscopic motion blur, chiaroscuro lighting, monochromatic minimalism, sculptural silhouettes, long exposure photography, avant-garde texture, high contrast black background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态超现实__Monochromatic Kinetic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/动态超现实__Monochromatic Kinetic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

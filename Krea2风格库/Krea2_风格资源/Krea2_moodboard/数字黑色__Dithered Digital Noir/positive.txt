@@ -1,0 +1,1 @@
+1-bit dithered texture, high-contrast monochrome, pixelated halftone, retro-computing aesthetic, digital glitch, CRT monitor effect, generative pixel art. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1151",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "动态印象派运动",
+  "name": "Kinetic Impressionist Motion — Green Summer Haze",
+  "prompt": "intentional camera movement, motion blur, impressionistic photography, kinetic energy, painterly texture, dreamy summer haze, vibrant green palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态印象派运动__Kinetic Impressionist Motion — Green Summer Haze/preview.webp",
+  "folder": "Krea2_moodboard/动态印象派运动__Kinetic Impressionist Motion — Green Summer Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

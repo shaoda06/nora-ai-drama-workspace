@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3383",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "夜行超现实琥珀",
+  "name": "Electric Nocturnal Surrealism — Amber Trail Burn",
+  "prompt": "analog film grain, deep teal and amber palette, long exposure light trails, surreal atmosphere, high contrast silhouettes, liminal space photography, ethereal motion blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行超现实琥珀__Electric Nocturnal Surrealism — Amber Trail Burn/preview.webp",
+  "folder": "Krea2_moodboard/夜行超现实琥珀__Electric Nocturnal Surrealism — Amber Trail Burn",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

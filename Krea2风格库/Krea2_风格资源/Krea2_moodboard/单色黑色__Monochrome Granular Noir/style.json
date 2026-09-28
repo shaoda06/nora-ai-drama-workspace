@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-459",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "单色黑色",
+  "name": "Monochrome Granular Noir",
+  "prompt": "stark monochrome, heavy film grain, stippled texture, high-contrast silhouette, minimalist ink wash, halftone patterns, smoky diffusion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色黑色__Monochrome Granular Noir/preview.webp",
+  "folder": "Krea2_moodboard/单色黑色__Monochrome Granular Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

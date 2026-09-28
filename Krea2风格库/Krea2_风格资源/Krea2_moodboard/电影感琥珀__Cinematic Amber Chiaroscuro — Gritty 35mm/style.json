@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1406",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感琥珀",
+  "name": "Cinematic Amber Chiaroscuro — Gritty 35mm",
+  "prompt": "chiaroscuro lighting, golden hour glow, 35mm film grain, low-key portraiture, shallow depth of field, amber color palette, cinematic suspense. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感琥珀__Cinematic Amber Chiaroscuro — Gritty 35mm/preview.webp",
+  "folder": "Krea2_moodboard/电影感琥珀__Cinematic Amber Chiaroscuro — Gritty 35mm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

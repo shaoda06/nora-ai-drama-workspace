@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2601",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "极简",
+  "name": "Minimalist Gestural Abstraction",
+  "prompt": "minimalist studio photography, soft diffused lighting, neutral seamless background, sculptural hand gestures, tactile fabric textures, clean geometric composition, conceptual human form. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Minimalist Gestural Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/极简__Minimalist Gestural Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

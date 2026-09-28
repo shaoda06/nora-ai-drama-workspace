@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-520",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "复古超现实",
+  "name": "Technicolor Retro Surrealism",
+  "prompt": "vintage halftone print, saturated technicolor palette, heavy film grain, mid-century retro aesthetic, lo-fi airbrush texture, pop surrealism, warm sun-drenched lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古超现实__Technicolor Retro Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/复古超现实__Technicolor Retro Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

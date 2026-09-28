@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-321",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "当代哥特艺术",
+  "name": "Contemporary Gothic Art",
+  "prompt": "Style: Contemporary Gothic Art: A darkly atmospheric illustration style built on deep, engulfing tenebrist shadow that swallows the edges of every composition, meticulous ornamental detail rendered with obsessive, moody precision, luminous, porcelain-pale skin contrasted against densely rendered dark ornamentation, a hushed, melancholic stillness carried through restrained directional glow, and a haunting, romantic intensity that feels both reverent and quietly unsettling. Influenced by: Marta Bevacqua, Andrew Ferez, contemporary dark-portrait photography practice, gothic-romantic digital-painting technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/当代哥特艺术__Contemporary Gothic Art/preview.jpg",
+  "folder": "krea2_styles/当代哥特艺术__Contemporary Gothic Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

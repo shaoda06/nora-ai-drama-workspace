@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-365",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "复古",
+  "name": "Distressed Retro Printwork",
+  "prompt": "risograph print texture, halftone pattern, high-contrast graphic style, CMYK color separation, distressed paper texture, retro pop art, lo-fi digital glitch. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古__Distressed Retro Printwork/preview.webp",
+  "folder": "Krea2_moodboard/复古__Distressed Retro Printwork",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

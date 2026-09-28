@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-856",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "地下民俗",
+  "name": "Enchanted Subterranean Folklore",
+  "prompt": "storybook illustration, intricate ink linework, atmospheric watercolor wash, deep forest and grotto motifs, muted earthy palette, subtle bioluminescent lighting, cross-hatching textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/地下民俗__Enchanted Subterranean Folklore/preview.webp",
+  "folder": "Krea2_moodboard/地下民俗__Enchanted Subterranean Folklore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

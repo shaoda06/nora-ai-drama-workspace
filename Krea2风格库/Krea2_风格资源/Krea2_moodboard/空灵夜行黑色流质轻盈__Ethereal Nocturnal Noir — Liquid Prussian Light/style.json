@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3071",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵夜行黑色流质轻盈",
+  "name": "Ethereal Nocturnal Noir — Liquid Prussian Light",
+  "prompt": "high-contrast silhouette, grainy analog texture, ethereal atmospheric mist, deep teal and Prussian blue palette, soft-focus glow, surreal liquid light, minimalist nocturne composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行黑色流质轻盈__Ethereal Nocturnal Noir — Liquid Prussian Light/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行黑色流质轻盈__Ethereal Nocturnal Noir — Liquid Prussian Light",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

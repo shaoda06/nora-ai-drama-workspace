@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1955",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "夜行电影感琥珀",
+  "name": "Nocturnal Cinematic Blur — Cyan-Amber 35mm",
+  "prompt": "intentional camera movement, analog film grain, cinematic motion blur, low-key moody lighting, shutter drag, deep cyan and warm amber tones, vintage 35mm aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行电影感琥珀__Nocturnal Cinematic Blur — Cyan-Amber 35mm/preview.webp",
+  "folder": "Krea2_moodboard/夜行电影感琥珀__Nocturnal Cinematic Blur — Cyan-Amber 35mm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

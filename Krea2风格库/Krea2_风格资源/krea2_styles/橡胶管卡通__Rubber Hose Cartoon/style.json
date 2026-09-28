@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-130",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "橡胶管卡通",
+  "name": "Rubber Hose Cartoon",
+  "prompt": "Style: Rubber Hose Cartoon: A bouncy, elastic illustration style built on limbs and forms constructed as smooth, tubular curves entirely free of joints or rigid structure, confident thick, uniform outline holding simplified, exaggerated proportions, flat, minimal shading applied with cheerful graphic simplicity, a springy, perpetually-in-motion sense of pose even in stillness, and a nostalgic, early-animation charm that feels playful, fluid, and unmistakably vintage. Influenced by: 1920s-30s American cel-animation tradition, Fleischer Studios technique, rubber-hose character-design practice, early Disney/Warner Bros animation method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/橡胶管卡通__Rubber Hose Cartoon/preview.jpg",
+  "folder": "krea2_styles/橡胶管卡通__Rubber Hose Cartoon",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

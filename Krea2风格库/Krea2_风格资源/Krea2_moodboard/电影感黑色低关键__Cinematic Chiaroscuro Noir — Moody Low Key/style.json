@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-289",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感黑色低关键",
+  "name": "Cinematic Chiaroscuro Noir — Moody Low Key",
+  "prompt": "high contrast black and white, chiaroscuro lighting, heavy film grain, cinematic noir, introspective portrait, moody shadow play, raw monochrome texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色低关键__Cinematic Chiaroscuro Noir — Moody Low Key/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色低关键__Cinematic Chiaroscuro Noir — Moody Low Key",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

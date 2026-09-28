@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-809",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "Expressive Fauvist S",
+  "name": "Expressive Fauvist Sketchbook",
+  "prompt": "Fauvist color palette, oil pastel texture, expressive gestural brushstrokes, naive folk art influence, wax crayon aesthetic, minimalist line art, non-naturalistic color blocking, cream background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Expressive Fauvist S__Expressive Fauvist Sketchbook/preview.webp",
+  "folder": "Krea2_moodboard/Expressive Fauvist S__Expressive Fauvist Sketchbook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

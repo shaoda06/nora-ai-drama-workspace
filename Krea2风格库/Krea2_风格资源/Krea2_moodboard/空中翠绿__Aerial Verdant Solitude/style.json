@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2593",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "空中翠绿",
+  "name": "Aerial Verdant Solitude",
+  "prompt": "high-angle aerial photography, lush forest canopy, moody diffused lighting, deep emerald and moss tones, minimalist composition, scale contrast, secluded wilderness. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空中翠绿__Aerial Verdant Solitude/preview.webp",
+  "folder": "Krea2_moodboard/空中翠绿__Aerial Verdant Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

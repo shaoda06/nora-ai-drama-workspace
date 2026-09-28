@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-786",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "夜行奇想",
+  "name": "Moody Nocturnal Whimsy",
+  "prompt": "stylized graphic illustration, atmospheric chiaroscuro, deep teal and charcoal palette, glowing bioluminescent accents, mid-century screenprint texture, dark fairytale narrative, minimalist geometric silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行奇想__Moody Nocturnal Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/夜行奇想__Moody Nocturnal Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

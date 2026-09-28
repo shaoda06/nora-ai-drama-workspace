@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2432",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "单色",
+  "name": "Monochrome Fisheye Monumentalism",
+  "prompt": "extreme fisheye lens, worm's eye view, monochrome high contrast, gothic monumental architecture, circular vignette, desaturated moody atmosphere, weathered stone texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色__Monochrome Fisheye Monumentalism/preview.webp",
+  "folder": "Krea2_moodboard/单色__Monochrome Fisheye Monumentalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

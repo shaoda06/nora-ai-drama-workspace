@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2243",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "绯红夜行",
+  "name": "Crimson Nocturnal Blur",
+  "prompt": "motion blur, shutter drag, crimson and amber palette, heavy analog film grain, high contrast silhouettes, cinematic chiaroscuro, lo-fi darkroom aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红夜行__Crimson Nocturnal Blur/preview.webp",
+  "folder": "Krea2_moodboard/绯红夜行__Crimson Nocturnal Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

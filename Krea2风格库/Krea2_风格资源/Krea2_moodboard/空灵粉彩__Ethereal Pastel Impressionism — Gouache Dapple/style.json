@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-704",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵粉彩",
+  "name": "Ethereal Pastel Impressionism — Gouache Dapple",
+  "prompt": "whimsical pastel aesthetic, dreamy impressionistic texture, soft gouache and colored pencil blend, hazy atmospheric lighting, minimalist organic forms, shimmering dappled sunlight, delicate hand-drawn character. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩__Ethereal Pastel Impressionism — Gouache Dapple/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩__Ethereal Pastel Impressionism — Gouache Dapple",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

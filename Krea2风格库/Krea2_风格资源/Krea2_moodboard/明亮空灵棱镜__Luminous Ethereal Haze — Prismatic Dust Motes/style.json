@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1490",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "明亮空灵棱镜",
+  "name": "Luminous Ethereal Haze — Prismatic Dust Motes",
+  "prompt": "dreamy soft focus, prismatic light leaks, floating dust motes, ethereal bokeh, cinematic haze, bioluminescent glow, nostalgic motion blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮空灵棱镜__Luminous Ethereal Haze — Prismatic Dust Motes/preview.webp",
+  "folder": "Krea2_moodboard/明亮空灵棱镜__Luminous Ethereal Haze — Prismatic Dust Motes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

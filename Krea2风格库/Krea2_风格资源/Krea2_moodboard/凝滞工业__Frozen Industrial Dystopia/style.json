@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1851",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "凝滞工业",
+  "name": "Frozen Industrial Dystopia",
+  "prompt": "cinematic industrial decay, monochromatic cyan and teal lighting, brutalist architecture ruins, volumetric atmospheric haze, post-apocalyptic winter, high contrast silhouettes, gritty metallic textures, desolate interior. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/凝滞工业__Frozen Industrial Dystopia/preview.webp",
+  "folder": "Krea2_moodboard/凝滞工业__Frozen Industrial Dystopia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

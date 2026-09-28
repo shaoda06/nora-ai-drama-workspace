@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-221",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "奇想",
+  "name": "Plush Whimsical 3D",
+  "prompt": "3D character render, tactile plush texture, knitted wool, soft studio lighting, saturated pastel palette, claymation aesthetic, rounded organic forms. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想__Plush Whimsical 3D/preview.webp",
+  "folder": "Krea2_moodboard/奇想__Plush Whimsical 3D",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2373",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "黑色极简",
+  "name": "Chiaroscuro Noir Minimalism",
+  "prompt": "chiaroscuro lighting, low-key photography, dramatic shadows, stark black background, Dutch Golden Age influence, high-contrast minimalism, vibrant yellow accents, intricate organic textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色极简__Chiaroscuro Noir Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/黑色极简__Chiaroscuro Noir Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

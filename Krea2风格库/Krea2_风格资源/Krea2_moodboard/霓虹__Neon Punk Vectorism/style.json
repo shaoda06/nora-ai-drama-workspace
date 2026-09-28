@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-308",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "霓虹",
+  "name": "Neon Punk Vectorism",
+  "prompt": "bold black vector outlines, vibrant neon lime and cyan, high-contrast cel-shading, sharp graphic design style, cyberpunk street-art influence, aggressive mascot aesthetic, clean digital vector art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹__Neon Punk Vectorism/preview.webp",
+  "folder": "Krea2_moodboard/霓虹__Neon Punk Vectorism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

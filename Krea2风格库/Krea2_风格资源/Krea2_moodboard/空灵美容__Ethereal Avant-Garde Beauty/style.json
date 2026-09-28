@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2718",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵美容",
+  "name": "Ethereal Avant-Garde Beauty",
+  "prompt": "macro beauty photography, dewy skin texture, high-fashion editorial, surreal makeup, soft-focus lighting, glass skin effect, intense color contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵美容__Ethereal Avant-Garde Beauty/preview.webp",
+  "folder": "Krea2_moodboard/空灵美容__Ethereal Avant-Garde Beauty",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

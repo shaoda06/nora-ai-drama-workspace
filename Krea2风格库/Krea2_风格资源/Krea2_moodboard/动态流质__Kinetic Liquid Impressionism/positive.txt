@@ -1,0 +1,1 @@
+intentional camera movement, painterly motion blur, liquid emulsion distortion, kinetic light streaks, abstract urban dreamscape, fluid long exposure, saturated atmospheric blur. Subject:{prompt}

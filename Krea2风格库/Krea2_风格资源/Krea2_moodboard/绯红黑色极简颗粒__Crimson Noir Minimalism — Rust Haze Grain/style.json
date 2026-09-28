@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2333",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "绯红黑色极简颗粒",
+  "name": "Crimson Noir Minimalism — Rust Haze Grain",
+  "prompt": "stark silhouette, heavy film grain, crimson and rust palette, atmospheric haze, minimalist composition, cinematic noir, lo-fi sci-fi. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色极简颗粒__Crimson Noir Minimalism — Rust Haze Grain/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色极简颗粒__Crimson Noir Minimalism — Rust Haze Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

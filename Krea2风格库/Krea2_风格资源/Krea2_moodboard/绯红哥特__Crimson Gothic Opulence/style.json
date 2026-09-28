@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1040",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "绯红哥特",
+  "name": "Crimson Gothic Opulence",
+  "prompt": "crimson and gold palette, gothic surrealism, baroque and byzantine textures, dramatic low-key lighting, intricate gold leaf ornamentation, uncanny theatrical portraiture, mystical sci-fi fusion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红哥特__Crimson Gothic Opulence/preview.webp",
+  "folder": "Krea2_moodboard/绯红哥特__Crimson Gothic Opulence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

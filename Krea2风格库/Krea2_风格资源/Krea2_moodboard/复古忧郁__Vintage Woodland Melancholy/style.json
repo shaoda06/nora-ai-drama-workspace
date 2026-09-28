@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2364",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "复古忧郁",
+  "name": "Vintage Woodland Melancholy",
+  "prompt": "1970s vintage film grain, muted forest tones, overcast diffused lighting, cinematic realism, overgrown rustic pastoral, weathered organic textures, melancholic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古忧郁__Vintage Woodland Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/复古忧郁__Vintage Woodland Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2266",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "动态夜行",
+  "name": "Kinetic Nocturnal Flow",
+  "prompt": "long exposure photography, kinetic light trails, nocturnal urban cityscape, motion blur, neon color palette, high contrast composition, cinematic urban flow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态夜行__Kinetic Nocturnal Flow/preview.webp",
+  "folder": "Krea2_moodboard/动态夜行__Kinetic Nocturnal Flow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

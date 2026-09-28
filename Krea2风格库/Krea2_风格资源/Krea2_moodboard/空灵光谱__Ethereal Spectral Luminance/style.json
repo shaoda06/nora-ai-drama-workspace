@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2426",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "空灵光谱",
+  "name": "Ethereal Spectral Luminance",
+  "prompt": "ethereal double exposure, heavy film grain texture, soft-focus glow, teal and orange contrast, dreamlike hazy silhouettes, mystical light trails, surreal atmospheric lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵光谱__Ethereal Spectral Luminance/preview.webp",
+  "folder": "Krea2_moodboard/空灵光谱__Ethereal Spectral Luminance",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3335",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "复古超现实",
+  "name": "Retro-Futurist Surreal Dreamscapes",
+  "prompt": "1970s sci-fi aesthetic, surrealist landscape, magical realism, levitating land masses, reflective chrome surfaces, crisp volumetric clouds, vibrant retro color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古超现实__Retro-Futurist Surreal Dreamscapes/preview.webp",
+  "folder": "Krea2_moodboard/复古超现实__Retro-Futurist Surreal Dreamscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

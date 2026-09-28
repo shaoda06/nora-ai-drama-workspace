@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2896",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "故障",
+  "name": "Thermal Acid Glitch",
+  "prompt": "thermal imaging palette, psychedelic liquid distortion, analog grain texture, neon chromatic aberration, retro-futuristic glitch art, melting silhouette, high-contrast airbrush glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/故障__Thermal Acid Glitch/preview.webp",
+  "folder": "Krea2_moodboard/故障__Thermal Acid Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

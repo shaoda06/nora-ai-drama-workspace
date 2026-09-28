@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1442",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵单色黑色雾分散发光",
+  "name": "Ethereal Monochrome Noir — Fog-Scattered Glow",
+  "prompt": "heavy film grain, atmospheric monochrome, soft-focus silhouette, cinematic motion blur, high-contrast noir, ethereal fog, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色黑色雾分散发光__Ethereal Monochrome Noir — Fog-Scattered Glow/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色黑色雾分散发光__Ethereal Monochrome Noir — Fog-Scattered Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

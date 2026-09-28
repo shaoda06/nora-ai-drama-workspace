@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1267",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "神话",
+  "name": "Lush Mythic Solarpunk",
+  "prompt": "stylized digital painting, volumetric lighting, overgrown architecture, painterly texture, vibrant color palette, solarpunk aesthetic, dramatic golden hour, mythic scale. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/神话__Lush Mythic Solarpunk/preview.webp",
+  "folder": "Krea2_moodboard/神话__Lush Mythic Solarpunk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

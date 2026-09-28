@@ -1,0 +1,1 @@
+high-contrast monochrome, intentional motion blur, heavy film grain, ethereal light leaks, spectral silhouettes, gritty analog texture, distorted perspective, dynamic shutter drag. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-582",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "鲜活肌理叙事",
+  "name": "Vibrant Textured Narrative",
+  "prompt": "intricate crosshatching, vibrant saturated palette, maximalist patterned interior, storybook illustration style, tactile printmaking textures, dreamy surreal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活肌理叙事__Vibrant Textured Narrative/preview.webp",
+  "folder": "Krea2_moodboard/鲜活肌理叙事__Vibrant Textured Narrative",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-869",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "温馨泥土图解",
+  "name": "Warm Earthy Illustration",
+  "prompt": "warm earthy color palette, expressive ink linework, cross-hatched shading, stylized illustrative portrait, tactile hand-drawn texture, vintage engraving style, character-focused composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/温馨泥土图解__Warm Earthy Illustration/preview.webp",
+  "folder": "Krea2_moodboard/温馨泥土图解__Warm Earthy Illustration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

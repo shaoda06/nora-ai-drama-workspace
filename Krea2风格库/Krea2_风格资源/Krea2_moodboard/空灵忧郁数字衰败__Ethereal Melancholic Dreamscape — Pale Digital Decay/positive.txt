@@ -1,0 +1,1 @@
+ethereal, melancholic, soft-focus, muted color palette, cinematic diffusion, translucent textures, dreamlike atmosphere. Subject:{prompt}

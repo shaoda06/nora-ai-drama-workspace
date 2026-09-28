@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-289",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "莫奈风格",
+  "name": "Monet Style",
+  "prompt": "Style: Monet Style: A luminous, atmospheric painting style built on loose, broken brushstrokes that dissolve precise form in favor of captured light and momentary sensation, delicate layered dabs of pigment that blend optically at a distance rather than through physical mixing, a soft, hazy compositional atmosphere that prioritizes fleeting impression over structural clarity, an unhurried, contemplative rhythm carried through repeated, patient mark-making, and a tranquil, light-drenched painterly sincerity rooted in plein-air impressionist observation. Influenced by: Claude Monet, French impressionist painting tradition, plein-air painting technique, broken-color brushwork practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/莫奈风格__Monet Style/preview.jpg",
+  "folder": "krea2_styles/莫奈风格__Monet Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

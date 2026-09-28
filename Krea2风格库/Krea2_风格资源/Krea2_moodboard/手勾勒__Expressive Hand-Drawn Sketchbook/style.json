@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-842",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "手勾勒",
+  "name": "Expressive Hand-Drawn Sketchbook",
+  "prompt": "expressive sketchbook illustration, textured paper grain, hand-drawn linework, mixed media aesthetic, fauvist color palette, dreamy impressionistic style, intimate character portrait. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/手勾勒__Expressive Hand-Drawn Sketchbook/preview.webp",
+  "folder": "Krea2_moodboard/手勾勒__Expressive Hand-Drawn Sketchbook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

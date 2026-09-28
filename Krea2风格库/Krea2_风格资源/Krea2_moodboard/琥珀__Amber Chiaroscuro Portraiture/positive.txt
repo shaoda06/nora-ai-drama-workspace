@@ -1,0 +1,1 @@
+macro portrait photography, golden hour lighting, chiaroscuro, tactile skin texture, warm amber tones, shallow depth of field, analog film grain. Subject:{prompt}

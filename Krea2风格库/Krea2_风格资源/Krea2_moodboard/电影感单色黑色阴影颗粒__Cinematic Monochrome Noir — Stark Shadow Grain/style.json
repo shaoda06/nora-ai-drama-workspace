@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3099",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "电影感单色黑色阴影颗粒",
+  "name": "Cinematic Monochrome Noir — Stark Shadow Grain",
+  "prompt": "high-contrast black and white, heavy film grain, stark silhouettes, dramatic perspective, noir atmosphere, surrealist composition, minimalist negative space. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感单色黑色阴影颗粒__Cinematic Monochrome Noir — Stark Shadow Grain/preview.webp",
+  "folder": "Krea2_moodboard/电影感单色黑色阴影颗粒__Cinematic Monochrome Noir — Stark Shadow Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

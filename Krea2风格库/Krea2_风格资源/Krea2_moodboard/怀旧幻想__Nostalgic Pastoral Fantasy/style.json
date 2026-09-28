@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-108",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧幻想",
+  "name": "Nostalgic Pastoral Fantasy",
+  "prompt": "Studio Ghibli inspired, nostalgic 2d hand-drawn animation, warm golden hour lighting, painterly lush landscapes, whimsical storybook fantasy, soft cel-shaded style, volumetric clouds. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧幻想__Nostalgic Pastoral Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/怀旧幻想__Nostalgic Pastoral Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

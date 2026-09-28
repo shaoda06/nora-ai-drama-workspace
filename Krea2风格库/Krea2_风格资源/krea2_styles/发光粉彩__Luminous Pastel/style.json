@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-200",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "发光粉彩",
+  "name": "Luminous Pastel",
+  "prompt": "Style: Luminous Pastel: A softly radiant illustration style built on gentle, powdery tonal layering that blends effortlessly at every transition, a diffused, glowing luminosity emerging from within rather than reflecting off the exterior, delicate, unhurried blending replacing any sharp contrast or hard edge, a hushed, tender softness carried through subtle textural graininess reminiscent of layered chalk, and a quietly graceful, dreamlike gentleness that feels intimate, delicate, and effortlessly warm. Influenced by: pastel painting tradition, soft-chalk blending technique, classical photographic drawing practice, contemporary digital pastel-rendering method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/发光粉彩__Luminous Pastel/preview.jpg",
+  "folder": "krea2_styles/发光粉彩__Luminous Pastel",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

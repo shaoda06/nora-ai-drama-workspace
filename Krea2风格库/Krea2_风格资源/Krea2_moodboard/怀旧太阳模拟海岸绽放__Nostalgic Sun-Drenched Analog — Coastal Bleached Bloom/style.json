@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1821",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "怀旧太阳模拟海岸绽放",
+  "name": "Nostalgic Sun-Drenched Analog — Coastal Bleached Bloom",
+  "prompt": "35mm analog film photography, heavy film grain, golden hour lighting, candid portraiture, soft focus bloom, muted pastel palette, motion blur, nostalgic vintage aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧太阳模拟海岸绽放__Nostalgic Sun-Drenched Analog — Coastal Bleached Bloom/preview.webp",
+  "folder": "Krea2_moodboard/怀旧太阳模拟海岸绽放__Nostalgic Sun-Drenched Analog — Coastal Bleached Bloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

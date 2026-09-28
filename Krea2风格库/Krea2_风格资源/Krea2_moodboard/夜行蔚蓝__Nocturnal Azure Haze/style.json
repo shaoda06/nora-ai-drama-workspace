@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1615",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "夜行蔚蓝",
+  "name": "Nocturnal Azure Haze",
+  "prompt": "cobalt blue color palette, dramatic backlit silhouette, volumetric lighting, heavy analog film grain, dreamy soft focus, nocturnal atmospheric haze, cinematic high contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行蔚蓝__Nocturnal Azure Haze/preview.webp",
+  "folder": "Krea2_moodboard/夜行蔚蓝__Nocturnal Azure Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2971",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "夜行模拟",
+  "name": "Nocturnal Analog Distortion",
+  "prompt": "Prussian blue monochrome, high-contrast noir, analog signal distortion, heavy film grain, motion blur abstraction, reeded glass refraction, scanline texture, ethereal glowing aura. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行模拟__Nocturnal Analog Distortion/preview.webp",
+  "folder": "Krea2_moodboard/夜行模拟__Nocturnal Analog Distortion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

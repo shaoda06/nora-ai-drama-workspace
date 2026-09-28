@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1628",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵模拟",
+  "name": "Ethereal Analog Solitude",
+  "prompt": "analog film grain, high-contrast silhouette, sunset gradient, dreamlike soft focus, nostalgic solitude, lo-fi aesthetic, ethereal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟__Ethereal Analog Solitude/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟__Ethereal Analog Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

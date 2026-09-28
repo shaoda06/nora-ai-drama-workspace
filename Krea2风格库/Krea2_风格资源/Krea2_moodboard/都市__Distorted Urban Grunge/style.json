@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2053",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "都市",
+  "name": "Distorted Urban Grunge",
+  "prompt": "fisheye lens, extreme wide-angle, Y2K grunge aesthetic, distorted perspective, gritty urban setting, high-contrast photography, lo-fi street fashion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/都市__Distorted Urban Grunge/preview.webp",
+  "folder": "Krea2_moodboard/都市__Distorted Urban Grunge",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2262",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "明亮黑色",
+  "name": "Luminous Apocalyptic Noir",
+  "prompt": "heavy analog film grain, blinding backlight, fiery amber glow, high-contrast silhouette, cinematic retro-futurism, halation bloom, gritty texture, apocalyptic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色__Luminous Apocalyptic Noir/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色__Luminous Apocalyptic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

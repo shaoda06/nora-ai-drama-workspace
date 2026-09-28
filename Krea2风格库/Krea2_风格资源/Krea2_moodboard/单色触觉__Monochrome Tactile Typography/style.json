@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-551",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "单色触觉",
+  "name": "Monochrome Tactile Typography",
+  "prompt": "high-contrast monochrome, tactile texture, hand-drawn aesthetic, stark white on black, expressive typography, gritty surface detail, minimalist graphic art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色触觉__Monochrome Tactile Typography/preview.webp",
+  "folder": "Krea2_moodboard/单色触觉__Monochrome Tactile Typography",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

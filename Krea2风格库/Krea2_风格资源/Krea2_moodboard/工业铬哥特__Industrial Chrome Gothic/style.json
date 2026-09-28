@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2519",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "工业铬哥特",
+  "name": "Industrial Chrome Gothic",
+  "prompt": "high-contrast monochrome, polished liquid chrome, industrial gothic, sacred geometry, symmetrical metallic structures, stark black background, precision engineering, chiaroscuro studio lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/工业铬哥特__Industrial Chrome Gothic/preview.webp",
+  "folder": "Krea2_moodboard/工业铬哥特__Industrial Chrome Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

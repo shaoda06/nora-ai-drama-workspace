@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2354",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "极简",
+  "name": "Deconstructed Archival Minimalism",
+  "prompt": "minimalist gallery layout, deconstructed photo collage, staggered paper layers, archival photography aesthetic, fragmented cubist perspective, muted earth tones, tactile paper edges. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Deconstructed Archival Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Deconstructed Archival Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2270",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "琥珀电影感",
+  "name": "Amber Refracted Cinematic",
+  "prompt": "amber and crimson palette, dramatic chiaroscuro lighting, prismatic glass refraction, tactile surface detail, vintage analog film grain, cinematic lens flares, retro-futuristic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀电影感__Amber Refracted Cinematic/preview.webp",
+  "folder": "Krea2_moodboard/琥珀电影感__Amber Refracted Cinematic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

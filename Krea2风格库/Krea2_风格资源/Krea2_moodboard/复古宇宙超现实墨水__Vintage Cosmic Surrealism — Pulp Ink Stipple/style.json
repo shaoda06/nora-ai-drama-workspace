@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-202",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "复古宇宙超现实墨水",
+  "name": "Vintage Cosmic Surrealism — Pulp Ink Stipple",
+  "prompt": "vintage sci-fi book cover, Moebius style, halftone print texture, retro-futuristic illustration, surreal cosmic landscape, volumetric clouds, stippling and cross-hatching. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古宇宙超现实墨水__Vintage Cosmic Surrealism — Pulp Ink Stipple/preview.webp",
+  "folder": "Krea2_moodboard/复古宇宙超现实墨水__Vintage Cosmic Surrealism — Pulp Ink Stipple",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3062",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "超现实",
+  "name": "Surreal Terracotta Specimen",
+  "prompt": "terracotta color palette, sharp direct sunlight, refractive glass distortion, minimalist sculptural composition, retro-futuristic editorial, dramatic caustics, tactile textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Surreal Terracotta Specimen/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Surreal Terracotta Specimen",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-700",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "鲜活角色艺术",
+  "name": "Vibrant Webcomic Character Art",
+  "prompt": "bold ink outlines, expressive character design, cel shaded, vibrant color palette, stylized 2D illustration, modern webcomic aesthetic, clean digital line art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活角色艺术__Vibrant Webcomic Character Art/preview.webp",
+  "folder": "Krea2_moodboard/鲜活角色艺术__Vibrant Webcomic Character Art",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

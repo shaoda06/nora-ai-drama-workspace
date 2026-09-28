@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3267",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "光谱黑色绽放",
+  "name": "Spectral Stippled Noir — Rim-Lit White Bloom",
+  "prompt": "stippled texture, chiaroscuro, absolute black background, ethereal white glow, grainy pointillism, intense rim lighting, monochrome high contrast, spectral bloom. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色绽放__Spectral Stippled Noir — Rim-Lit White Bloom/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色绽放__Spectral Stippled Noir — Rim-Lit White Bloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

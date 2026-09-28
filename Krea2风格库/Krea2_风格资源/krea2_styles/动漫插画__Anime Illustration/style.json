@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-103",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "动漫插画",
+  "name": "Anime Illustration",
+  "prompt": "Style: Anime Illustration: polished anime-inspired artwork featuring clean linework, expressive design language, refined cel-shading, controlled stylization, appealing visual clarity, carefully structured forms, and high-quality rendering that balances readability with emotional impact, emphasizing professional animation aesthetics and contemporary illustration craftsmanship, reminiscent of Yoshiyuki Sadamoto and Shingo Abe, inspired by Neon Genesis Evangelion and Your Name.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/动漫插画__Anime Illustration/preview.jpg",
+  "folder": "krea2_styles/动漫插画__Anime Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

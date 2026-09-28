@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-373",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "主播魅力自拍写实",
+  "name": "Streamer Glam Selfie Realism",
+  "prompt": "Style: Streamer Glam Selfie Realism: contemporary social-media aesthetics characterized by premium beauty-focused realism, immaculate skin rendering, sophisticated lens behavior, polished image finishing, flattering facial illumination, and a strong sense of aspirational digital presence. The style emphasizes visual confidence, curated authenticity, lifestyle luxury, and camera-aware presentation through refined detail management, subtle optical effects, clean composition, and influencer-era image culture. Rather than editorial formality or cinematic drama, it prioritizes immediacy, relatability, and high-engagement visual appeal while maintaining a technically refined appearance. The resulting imagery feels modern, charismatic, and effortlessly polished, blending lifestyle branding, beauty photography, and creator-culture aesthetics into a visually compelling digital identity, reminiscent of Sam Dameshek and Brandon Woelfel, inspired by Instagram Creator Culture and Twitch Front Page Photography.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/主播魅力自拍写实__Streamer Glam Selfie Realism/preview.jpg",
+  "folder": "krea2_styles/主播魅力自拍写实__Streamer Glam Selfie Realism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

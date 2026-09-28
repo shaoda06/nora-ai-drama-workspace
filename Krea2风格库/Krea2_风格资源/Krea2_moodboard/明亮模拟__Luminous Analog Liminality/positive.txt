@@ -1,0 +1,1 @@
+motion blur, analog film grain, twilight blue and amber, glowing light leaks, dreamy haze, liminal space, chromatic aberration. Subject:{prompt}

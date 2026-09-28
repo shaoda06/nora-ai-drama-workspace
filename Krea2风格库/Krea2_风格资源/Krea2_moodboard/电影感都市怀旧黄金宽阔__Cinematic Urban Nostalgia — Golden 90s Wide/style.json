@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1950",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "电影感都市怀旧黄金宽阔",
+  "name": "Cinematic Urban Nostalgia — Golden 90s Wide",
+  "prompt": "low-angle cinematic perspective, golden hour lighting, 90s streetwear influence, fisheye lens distortion, vibrant blue sky, high-contrast photography, youthful urban nostalgia. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市怀旧黄金宽阔__Cinematic Urban Nostalgia — Golden 90s Wide/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市怀旧黄金宽阔__Cinematic Urban Nostalgia — Golden 90s Wide",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

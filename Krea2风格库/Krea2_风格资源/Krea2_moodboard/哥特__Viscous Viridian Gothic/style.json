@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1018",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "哥特",
+  "name": "Viscous Viridian Gothic",
+  "prompt": "high-contrast green and black, viscous liquid texture, organic shrouded figures, ebru marbling, chiaroscuro lighting, impasto brushstrokes, acidic monochromatic palette, tactile sculptural forms. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/哥特__Viscous Viridian Gothic/preview.webp",
+  "folder": "Krea2_moodboard/哥特__Viscous Viridian Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

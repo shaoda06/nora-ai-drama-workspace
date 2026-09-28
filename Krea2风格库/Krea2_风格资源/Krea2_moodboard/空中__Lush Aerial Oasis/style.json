@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1242",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "空中",
+  "name": "Lush Aerial Oasis",
+  "prompt": "high-angle drone perspective, lush botanical sanctuary, volumetric sunlight, turquoise water feature, tropical modernism, vibrant jungle foliage, secluded serene atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空中__Lush Aerial Oasis/preview.webp",
+  "folder": "Krea2_moodboard/空中__Lush Aerial Oasis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

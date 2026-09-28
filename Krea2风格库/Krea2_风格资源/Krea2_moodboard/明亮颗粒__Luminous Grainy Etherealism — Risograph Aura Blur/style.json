@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-445",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "明亮颗粒",
+  "name": "Luminous Grainy Etherealism — Risograph Aura Blur",
+  "prompt": "heavy grain texture, soft focus aura, luminous gradient, risograph aesthetic, dreamy light bleed, minimalist surrealism, atmospheric blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮颗粒__Luminous Grainy Etherealism — Risograph Aura Blur/preview.webp",
+  "folder": "Krea2_moodboard/明亮颗粒__Luminous Grainy Etherealism — Risograph Aura Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

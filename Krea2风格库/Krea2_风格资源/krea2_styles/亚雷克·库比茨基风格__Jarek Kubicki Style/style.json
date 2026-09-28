@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-247",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "亚雷克·库比茨基风格",
+  "name": "Jarek Kubicki Style",
+  "prompt": "Style: Jarek Kubicki Style: A darkly whimsical illustration style built on confident, sketch-like linework carrying gothic-adjacent playfulness, a muted, atmospheric tonal palette balanced against bold, graphic character silhouettes, a slightly unsettling yet endearing character-design sensibility blending humor with quiet unease, meticulous textural mark-making giving surfaces a hand-drawn, tactile roughness, and a distinctive, contemporary illustration voice that feels equally macabre and playful. Influenced by: Jarek Kubicki, contemporary character-illustration tradition, gothic-whimsical illustration technique, hand-drawn textural rendering practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/亚雷克·库比茨基风格__Jarek Kubicki Style/preview.jpg",
+  "folder": "krea2_styles/亚雷克·库比茨基风格__Jarek Kubicki Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3535",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "绯红极简",
+  "name": "Crimson Dystopian Minimalism",
+  "prompt": "monochromatic crimson, atmospheric red haze, stark black silhouette, minimalist dystopian landscape, cinematic film grain, low-key lighting, surreal liminal space. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红极简__Crimson Dystopian Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/绯红极简__Crimson Dystopian Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

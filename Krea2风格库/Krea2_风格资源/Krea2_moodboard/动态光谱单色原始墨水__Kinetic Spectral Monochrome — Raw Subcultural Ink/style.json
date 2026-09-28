@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2027",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态光谱单色原始墨水",
+  "name": "Kinetic Spectral Monochrome — Raw Subcultural Ink",
+  "prompt": "high-contrast monochrome, intense motion blur, shutter drag, heavy film grain, ghostly silhouette, chiaroscuro lighting, raw analog aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态光谱单色原始墨水__Kinetic Spectral Monochrome — Raw Subcultural Ink/preview.webp",
+  "folder": "Krea2_moodboard/动态光谱单色原始墨水__Kinetic Spectral Monochrome — Raw Subcultural Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

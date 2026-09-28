@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2722",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "电影感暮光",
+  "name": "Cinematic Twilight Inferno",
+  "prompt": "cinematic blue hour, fiery high contrast, surreal solitude, dramatic fire glow, reflective surfaces, moody atmospheric lighting, cinematic storytelling. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感暮光__Cinematic Twilight Inferno/preview.webp",
+  "folder": "Krea2_moodboard/电影感暮光__Cinematic Twilight Inferno",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

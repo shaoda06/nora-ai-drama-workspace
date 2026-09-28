@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1352",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感绯红黑色泥土温馨阴影",
+  "name": "Cinematic Crimson Noir — Earthy Warm Shadow",
+  "prompt": "cinematic film still, shallow depth of field, vibrant crimson accents, moody low-key lighting, intimate close-up, subtle film grain, noir atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红黑色泥土温馨阴影__Cinematic Crimson Noir — Earthy Warm Shadow/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红黑色泥土温馨阴影__Cinematic Crimson Noir — Earthy Warm Shadow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

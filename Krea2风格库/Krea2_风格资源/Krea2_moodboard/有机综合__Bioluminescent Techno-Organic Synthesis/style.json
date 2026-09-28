@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2654",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "有机综合",
+  "name": "Bioluminescent Techno-Organic Synthesis",
+  "prompt": "translucent resin sculpture, bioluminescent circuitry, techno-organic anatomy, stark black background, fiber optic wiring, macro studio photography, refractive glass textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/有机综合__Bioluminescent Techno-Organic Synthesis/preview.webp",
+  "folder": "Krea2_moodboard/有机综合__Bioluminescent Techno-Organic Synthesis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

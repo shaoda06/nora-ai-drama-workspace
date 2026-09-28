@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-28",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "空灵粉彩可爱半透明花卉发光",
+  "name": "Ethereal Pastel Kawaii — Translucent Floral Glow",
+  "prompt": "kawaii anime illustration, pastel color palette, ethereal lighting, shimmering expressive eyes, whimsical dreamlike atmosphere, delicate line art, lolita fashion elements. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩可爱半透明花卉发光__Ethereal Pastel Kawaii — Translucent Floral Glow/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩可爱半透明花卉发光__Ethereal Pastel Kawaii — Translucent Floral Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

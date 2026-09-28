@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2401",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "绯红黑色",
+  "name": "Crimson Noir Nocturne",
+  "prompt": "analog film grain, high contrast noir, saturated crimson lighting, infrared thermal aesthetic, lo-fi night photography, ominous silhouettes, red monochrome. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色__Crimson Noir Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色__Crimson Noir Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

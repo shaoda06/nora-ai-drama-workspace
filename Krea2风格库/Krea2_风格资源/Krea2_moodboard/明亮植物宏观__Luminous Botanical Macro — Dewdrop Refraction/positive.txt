@@ -1,0 +1,1 @@
+macro photography, dewdrops, shallow depth of field, botanical details, soft bokeh, refractive light, vibrant emerald green. Subject:{prompt}

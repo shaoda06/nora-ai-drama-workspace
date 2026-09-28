@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2154",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "午夜极简",
+  "name": "Monolithic Midnight Minimalism",
+  "prompt": "minimalist landscape, nocturnal indigo palette, high-contrast silhouette, vast atmospheric scale, monolithic composition, soft moonlit haze, matte texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/午夜极简__Monolithic Midnight Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/午夜极简__Monolithic Midnight Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

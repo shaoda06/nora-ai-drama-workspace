@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2770",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "模拟",
+  "name": "Analog Cobalt Nocturne",
+  "prompt": "cobalt blue palette, analog VHS aesthetic, CRT scanlines, minimalist composition, lo-fi grain, dreamcore atmosphere, nocturnal surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟__Analog Cobalt Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/模拟__Analog Cobalt Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

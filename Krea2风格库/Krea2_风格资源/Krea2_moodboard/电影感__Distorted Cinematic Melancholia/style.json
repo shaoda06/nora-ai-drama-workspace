@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1912",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感",
+  "name": "Distorted Cinematic Melancholia",
+  "prompt": "analog film grain, digital glitch distortion, low-key cinematic lighting, desaturated cool tones, introspective silhouette, scanline texture, somber mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感__Distorted Cinematic Melancholia/preview.webp",
+  "folder": "Krea2_moodboard/电影感__Distorted Cinematic Melancholia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

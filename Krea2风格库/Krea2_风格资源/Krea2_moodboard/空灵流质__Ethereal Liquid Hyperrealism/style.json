@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2726",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵流质",
+  "name": "Ethereal Liquid Hyperrealism",
+  "prompt": "hyper-realistic macro portrait, glistening water droplets, ethereal cool-toned lighting, translucent frost textures, soft-focus dreamy atmosphere, dewy skin finish, liquid refraction, high-contrast cinematic detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵流质__Ethereal Liquid Hyperrealism/preview.webp",
+  "folder": "Krea2_moodboard/空灵流质__Ethereal Liquid Hyperrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3283",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "流质超现实",
+  "name": "Clinical Liquid Surrealism",
+  "prompt": "monochrome, clinical lighting, glass refraction, fluid dynamics, stark minimalism, high-contrast photography, surrealist distortion, macro textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/流质超现实__Clinical Liquid Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/流质超现实__Clinical Liquid Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

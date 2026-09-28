@@ -1,0 +1,1 @@
+high-contrast monochrome, heavy film grain, stippled dither texture, chiaroscuro lighting, cinematic noir, spectral motion blur, liminal atmosphere. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-34",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "图形忧郁",
+  "name": "Graphic Melancholic Futurism",
+  "prompt": "ligne claire, retro anime aesthetic, bold ink outlines, high-contrast cel shading, minimalist composition, saturated crimson and blue, vast atmospheric landscapes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形忧郁__Graphic Melancholic Futurism/preview.webp",
+  "folder": "Krea2_moodboard/图形忧郁__Graphic Melancholic Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

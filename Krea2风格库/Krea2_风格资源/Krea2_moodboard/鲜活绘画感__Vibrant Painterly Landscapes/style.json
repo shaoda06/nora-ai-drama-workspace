@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-939",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "鲜活绘画感",
+  "name": "Vibrant Painterly Landscapes",
+  "prompt": "digital painterly style, bold blocky brushstrokes, high-contrast lighting, vibrant color palette, stylized realism, atmospheric perspective, expressive texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活绘画感__Vibrant Painterly Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/鲜活绘画感__Vibrant Painterly Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

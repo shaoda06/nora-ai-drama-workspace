@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-278",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "西方赛璐珞着色插画",
+  "name": "Western Cel-Shaded Illustration",
+  "prompt": "Style: Western Cel-Shaded Illustration: A bright, cheerful cartoon-illustration style built on thick, confident discontinuous outline holding rounded, super-deformed proportion, flat, evenly applied color fill with minimal shading beyond soft contact shadow, sparkling highlight accents for maximum emotional charm, energetic frame, and a joyful, polish that feels playful, festive, and effortlessly appealing. Influenced by: Nintendo Kirby promotional art,Western indie-cartoon design tradition, flat-color illustration technique, celebratory merchandise-illustration practice, contemporary Western adjacent cartoon method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/西方赛璐珞着色插画__Western Cel-Shaded Illustration/preview.jpg",
+  "folder": "krea2_styles/西方赛璐珞着色插画__Western Cel-Shaded Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

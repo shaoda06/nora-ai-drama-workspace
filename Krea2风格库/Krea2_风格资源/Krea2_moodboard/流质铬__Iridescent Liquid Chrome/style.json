@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2547",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "流质铬",
+  "name": "Iridescent Liquid Chrome",
+  "prompt": "liquid chrome, iridescent metallic, 3D fluid sculpture, holographic reflection, minimalist studio lighting, gradient background, futuristic design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/流质铬__Iridescent Liquid Chrome/preview.webp",
+  "folder": "Krea2_moodboard/流质铬__Iridescent Liquid Chrome",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

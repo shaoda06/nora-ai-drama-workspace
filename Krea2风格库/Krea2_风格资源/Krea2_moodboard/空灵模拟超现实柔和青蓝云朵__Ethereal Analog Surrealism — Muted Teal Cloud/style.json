@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3188",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵模拟超现实柔和青蓝云朵",
+  "name": "Ethereal Analog Surrealism — Muted Teal Cloud",
+  "prompt": "surrealist dreamscape, analog film grain, muted teal sky, fluffy cumulus clouds, minimalist composition, nostalgic desaturated palette, soft diffused lighting, ethereal floating surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟超现实柔和青蓝云朵__Ethereal Analog Surrealism — Muted Teal Cloud/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟超现实柔和青蓝云朵__Ethereal Analog Surrealism — Muted Teal Cloud",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

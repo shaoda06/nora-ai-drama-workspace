@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-115",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧暮光动漫",
+  "name": "Nostalgic Twilight Anime — Lo-Fi Ambient Glimmer",
+  "prompt": "1990s anime aesthetic, cel-shaded illustration, twilight color palette, urban nostalgia, atmospheric cityscape, lo-fi melancholic mood, cinematic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧暮光动漫__Nostalgic Twilight Anime — Lo-Fi Ambient Glimmer/preview.webp",
+  "folder": "Krea2_moodboard/怀旧暮光动漫__Nostalgic Twilight Anime — Lo-Fi Ambient Glimmer",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

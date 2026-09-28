@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-940",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "鲜活都市",
+  "name": "Vibrant Urban Impressionism",
+  "prompt": "digital gouache painting, painterly brushstrokes, urban impressionism, high contrast sunlight, sharp graphic shadows, vibrant saturated palette, stylized cityscape, slice of life. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活都市__Vibrant Urban Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/鲜活都市__Vibrant Urban Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

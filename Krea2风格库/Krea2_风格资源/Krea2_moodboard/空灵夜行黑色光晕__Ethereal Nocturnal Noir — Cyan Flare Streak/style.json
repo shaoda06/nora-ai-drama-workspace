@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2854",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵夜行黑色光晕",
+  "name": "Ethereal Nocturnal Noir — Cyan Flare Streak",
+  "prompt": "nocturnal noir, cyan halation, motion blur, ethereal glow, cinematic grain, high contrast silhouette, long exposure light streaks. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行黑色光晕__Ethereal Nocturnal Noir — Cyan Flare Streak/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行黑色光晕__Ethereal Nocturnal Noir — Cyan Flare Streak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

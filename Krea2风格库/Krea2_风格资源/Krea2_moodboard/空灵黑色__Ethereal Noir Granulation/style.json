@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2910",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵黑色",
+  "name": "Ethereal Noir Granulation",
+  "prompt": "high-contrast monochrome, heavy film grain, chiaroscuro lighting, analog xerox texture, surrealist distortion, ethereal motion blur, low-key noir, tactile noise. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色__Ethereal Noir Granulation/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色__Ethereal Noir Granulation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

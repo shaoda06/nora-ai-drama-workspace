@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1766",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感都市运动",
+  "name": "Cinematic Urban Solitude — Grey Motion Streak",
+  "prompt": "cinematic street photography, motion blur crowd, sharp focus subject, urban solitude, desaturated color palette, long exposure, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市运动__Cinematic Urban Solitude — Grey Motion Streak/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市运动__Cinematic Urban Solitude — Grey Motion Streak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

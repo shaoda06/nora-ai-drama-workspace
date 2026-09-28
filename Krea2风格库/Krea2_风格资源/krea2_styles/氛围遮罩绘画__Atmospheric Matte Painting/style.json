@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-333",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "氛围遮罩绘画",
+  "name": "Atmospheric Matte Painting",
+  "prompt": "Style: Atmospheric Matte Painting: cinematic worldbuilding aesthetics emphasizing expansive visual depth, seamless environmental integration, refined lighting gradients, realistic atmospheric perspective, meticulously crafted detail distribution, and a strong sense of scale, creating immersive and believable imagery through polished rendering, subtle mood construction, and production-quality visual storytelling, reminiscent of Dylan Cole and Craig Mullins, inspired by The Lord of the Rings film matte paintings and Avatar.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/氛围遮罩绘画__Atmospheric Matte Painting/preview.jpg",
+  "folder": "krea2_styles/氛围遮罩绘画__Atmospheric Matte Painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

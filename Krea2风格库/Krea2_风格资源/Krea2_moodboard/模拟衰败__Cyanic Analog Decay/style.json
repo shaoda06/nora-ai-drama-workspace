@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1883",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "模拟衰败",
+  "name": "Cyanic Analog Decay",
+  "prompt": "monochromatic cyan and deep blue, analog VHS glitch, high-contrast chiaroscuro, horizontal scanlines, chromatic aberration, visceral skin texture, digital surveillance aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟衰败__Cyanic Analog Decay/preview.webp",
+  "folder": "Krea2_moodboard/模拟衰败__Cyanic Analog Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

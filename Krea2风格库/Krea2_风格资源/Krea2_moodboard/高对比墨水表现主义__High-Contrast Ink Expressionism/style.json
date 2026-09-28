@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-139",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "高对比墨水表现主义",
+  "name": "High-Contrast Ink Expressionism",
+  "prompt": "high-contrast ink illustration, expressive cross-hatching, bold graphic linework, screentone textures, chiaroscuro shading, stark negative space, monochrome manga aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高对比墨水表现主义__High-Contrast Ink Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/高对比墨水表现主义__High-Contrast Ink Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

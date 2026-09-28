@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2181",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "动态",
+  "name": "Dynamic Skyward Radiance",
+  "prompt": "low-angle perspective, vibrant blue sky background, bright natural sunlight, high-contrast photography, wide-angle lens, airy atmosphere, saturated color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态__Dynamic Skyward Radiance/preview.webp",
+  "folder": "Krea2_moodboard/动态__Dynamic Skyward Radiance",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

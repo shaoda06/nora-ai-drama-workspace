@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-676",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "触觉双色调",
+  "name": "Tactile Risograph Duotone",
+  "prompt": "risograph print, duotone color palette, halftone texture, screenprint registration error, textured off-white paper, minimalist graphic illustration, retro printmaking. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉双色调__Tactile Risograph Duotone/preview.webp",
+  "folder": "Krea2_moodboard/触觉双色调__Tactile Risograph Duotone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

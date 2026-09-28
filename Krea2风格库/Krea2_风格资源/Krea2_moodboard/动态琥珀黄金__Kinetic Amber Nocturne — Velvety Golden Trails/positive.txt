@@ -1,0 +1,1 @@
+motion blur, long exposure, amber glow, cinematic night photography, kinetic light trails, analog film grain, high contrast. Subject:{prompt}

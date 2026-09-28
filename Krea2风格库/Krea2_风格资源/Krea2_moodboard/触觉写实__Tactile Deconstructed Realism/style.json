@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1103",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "触觉写实",
+  "name": "Tactile Deconstructed Realism",
+  "prompt": "heavy impasto texture, sculptural oil paint, torn paper collage, deconstructed portraiture, tactile mixed media, muted earth tones, fine art oil painting, distorted realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉写实__Tactile Deconstructed Realism/preview.webp",
+  "folder": "Krea2_moodboard/触觉写实__Tactile Deconstructed Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

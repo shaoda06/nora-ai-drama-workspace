@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3360",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "电影感运动",
+  "name": "Cinematic Motion Impressionism",
+  "prompt": "heavy film grain, motion blur, cinematic low light, ghostly silhouette, liminal atmosphere, long exposure, moody color grading. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感运动__Cinematic Motion Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/电影感运动__Cinematic Motion Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-393",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "高对比度摄影",
+  "name": "High-Contrast Photography",
+  "prompt": "Style: High-Contrast Photography: A striking photography technique built on a bright, blown-out backdrop that turns the surrounding area nearly pure white, a strong rim of illumination tracing the edge of the subject while the front stays comparatively underexposed and rich in shadow detail, sharp, decisive focus concentrated tightly on the figure against a softly overexposed, low-detail surround, deliberate exposure contrast pushing the tonal range toward extremes rather than an even middle, and a bold, graphic, high-impact clarity that isolates form through light alone. Influenced by: high-contrast lighting practice, controlled exposure-contrast photographic tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/高对比度摄影__High-Contrast Photography/preview.jpg",
+  "folder": "krea2_styles/高对比度摄影__High-Contrast Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

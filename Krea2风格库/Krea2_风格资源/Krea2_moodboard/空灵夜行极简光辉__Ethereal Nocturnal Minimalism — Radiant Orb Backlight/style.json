@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3070",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵夜行极简光辉",
+  "name": "Ethereal Nocturnal Minimalism — Radiant Orb Backlight",
+  "prompt": "bioluminescent glow, nocturnal atmosphere, minimalist composition, deep indigo palette, ethereal light source, stark silhouette, dreamlike haze, celestial geometry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行极简光辉__Ethereal Nocturnal Minimalism — Radiant Orb Backlight/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行极简光辉__Ethereal Nocturnal Minimalism — Radiant Orb Backlight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

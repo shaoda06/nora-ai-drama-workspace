@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2442",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "深渊",
+  "name": "Bioluminescent Abyssal Resonance",
+  "prompt": "bioluminescent abyss, indigo midnight palette, concentric light tunnel, solitary silhouetted figure, ethereal atmospheric glow, surreal cosmic scale, high contrast chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/深渊__Bioluminescent Abyssal Resonance/preview.webp",
+  "folder": "Krea2_moodboard/深渊__Bioluminescent Abyssal Resonance",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-156",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "阿奇漫画风格",
+  "name": "Archie Comics Style",
+  "prompt": "Style: Archie Comics Style: A clean, wholesome cartoon illustration style built on confident, evenly weighted outline defining simplified, appealing proportions, flat, bright color fill with minimal shading beyond basic form-defining shadow, an approachable, mid-century newspaper-strip charm carried through rounded, friendly facial design, cheerful, uncomplicated composition prioritizing instant readability over rendering complexity, and a nostalgic, all-American wholesome energy that feels timeless and effortlessly friendly. Influenced by: Dan DeCarlo, mid-century American comic-strip tradition, flat-color comic-inking technique, newspaper-syndicate cartoon practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/阿奇漫画风格__Archie Comics Style/preview.jpg",
+  "folder": "krea2_styles/阿奇漫画风格__Archie Comics Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2124",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "电影感黑色哑光画布",
+  "name": "Cinematic Chiaroscuro Noir — Matte Canvas Blue",
+  "prompt": "chiaroscuro, low-key lighting, dramatic rim light, high contrast, minimalist background, cinematic noir, tactile texture, silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色哑光画布__Cinematic Chiaroscuro Noir — Matte Canvas Blue/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色哑光画布__Cinematic Chiaroscuro Noir — Matte Canvas Blue",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

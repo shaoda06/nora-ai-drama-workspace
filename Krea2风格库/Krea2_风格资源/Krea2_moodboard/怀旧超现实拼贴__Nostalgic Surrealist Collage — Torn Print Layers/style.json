@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-482",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "怀旧超现实拼贴",
+  "name": "Nostalgic Surrealist Collage — Torn Print Layers",
+  "prompt": "analog paper collage, vintage print texture, surreal juxtaposition, torn paper edges, halftone grain, mid-century aesthetic, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实拼贴__Nostalgic Surrealist Collage — Torn Print Layers/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实拼贴__Nostalgic Surrealist Collage — Torn Print Layers",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

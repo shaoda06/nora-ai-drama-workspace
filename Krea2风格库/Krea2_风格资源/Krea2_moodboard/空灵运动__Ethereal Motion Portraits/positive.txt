@@ -1,0 +1,1 @@
+motion blur, shutter drag, spectral photography, sepia tone, analog film grain, pictorialism, long exposure portrait. Subject:{prompt}

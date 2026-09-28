@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2569",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "电影感怀旧",
+  "name": "Monochromatic Cinematic Nostalgia",
+  "prompt": "monochromatic color palette, heavy analog film grain, diffused atmospheric lighting, nostalgic melancholic tone, minimalist composition, distressed film texture, cinematic shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感怀旧__Monochromatic Cinematic Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/电影感怀旧__Monochromatic Cinematic Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

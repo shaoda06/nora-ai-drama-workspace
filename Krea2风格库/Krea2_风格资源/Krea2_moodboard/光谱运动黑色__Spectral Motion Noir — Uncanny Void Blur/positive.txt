@@ -1,0 +1,1 @@
+motion blur portrait, high-contrast monochrome, heavy film grain, chiaroscuro lighting, spectral photography, long exposure, uncanny surrealism. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2671",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "模拟",
+  "name": "Gritty Analog Snapshot",
+  "prompt": "harsh direct flash, analog film grain, lo-fi aesthetic, vintage snapshot, high contrast, candid photography, chemical degradation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟__Gritty Analog Snapshot/preview.webp",
+  "folder": "Krea2_moodboard/模拟__Gritty Analog Snapshot",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

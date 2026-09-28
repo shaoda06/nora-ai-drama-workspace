@@ -1,0 +1,1 @@
+stippled texture, thermal heat map palette, chiaroscuro lighting, chromatic grain, high-contrast illustration, soft-focus blur, glowing neon gradients. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2943",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵夜行",
+  "name": "Ethereal Nocturnal Luminescence — Solarized Photogram",
+  "prompt": "high contrast black and white, ethereal glowing silhouette, photogram style, solarized texture, stark black background, atmospheric film grain, radiant halation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行__Ethereal Nocturnal Luminescence — Solarized Photogram/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行__Ethereal Nocturnal Luminescence — Solarized Photogram",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

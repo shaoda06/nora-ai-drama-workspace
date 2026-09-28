@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1637",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵极简墨水",
+  "name": "Ethereal Thermal Minimalism — Kirlian Ink Bleed",
+  "prompt": "heavy film grain, soft focus blur, ethereal silhouettes, thermal imaging glow, ink bleed texture, neon chromatic aura, atmospheric minimalism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简墨水__Ethereal Thermal Minimalism — Kirlian Ink Bleed/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简墨水__Ethereal Thermal Minimalism — Kirlian Ink Bleed",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

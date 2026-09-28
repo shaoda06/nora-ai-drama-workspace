@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1532",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "触觉空灵噪点",
+  "name": "Tactile Ethereal Noise",
+  "prompt": "grainy gradient, tactile noise texture, soft focus blur, chromatic aura, dreamy pastel palette, analog film grain, ethereal light leak. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉空灵噪点__Tactile Ethereal Noise/preview.webp",
+  "folder": "Krea2_moodboard/触觉空灵噪点__Tactile Ethereal Noise",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

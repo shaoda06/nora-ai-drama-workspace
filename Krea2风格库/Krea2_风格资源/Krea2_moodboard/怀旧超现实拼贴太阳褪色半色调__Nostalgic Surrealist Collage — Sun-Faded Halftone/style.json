@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-481",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "怀旧超现实拼贴太阳褪色半色调",
+  "name": "Nostalgic Surrealist Collage — Sun-Faded Halftone",
+  "prompt": "analog paper collage, surrealist photomontage, vintage halftone texture, mid-century magazine aesthetic, sun-faded color palette, dreamy scale juxtaposition, retro print grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实拼贴太阳褪色半色调__Nostalgic Surrealist Collage — Sun-Faded Halftone/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实拼贴太阳褪色半色调__Nostalgic Surrealist Collage — Sun-Faded Halftone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-775",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "明亮表现主义",
+  "name": "Luminous Thermal Expressionism",
+  "prompt": "thermal infrared aesthetic, saturated crimson and orange, heavy analog film grain, glowing heat signature, dramatic chiaroscuro, gestural charcoal texture, ethereal chromatic bloom. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮表现主义__Luminous Thermal Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/明亮表现主义__Luminous Thermal Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

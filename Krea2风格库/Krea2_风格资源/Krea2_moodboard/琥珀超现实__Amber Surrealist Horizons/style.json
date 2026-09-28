@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1420",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "琥珀超现实",
+  "name": "Amber Surrealist Horizons",
+  "prompt": "monochromatic amber palette, hazy atmospheric perspective, colossal surrealism, golden hour lighting, vast alien landscapes, existential scale, dreamlike soft focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀超现实__Amber Surrealist Horizons/preview.webp",
+  "folder": "Krea2_moodboard/琥珀超现实__Amber Surrealist Horizons",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

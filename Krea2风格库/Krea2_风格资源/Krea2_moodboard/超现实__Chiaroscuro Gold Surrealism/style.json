@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-727",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "超现实",
+  "name": "Chiaroscuro Gold Surrealism",
+  "prompt": "chiaroscuro lighting, graphite and charcoal realism, metallic gold leaf accents, baroque filigree, ethereal atmospheric shadows, monochrome fine art, surreal symbolic portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Chiaroscuro Gold Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Chiaroscuro Gold Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1187",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "动态动态主要",
+  "name": "Dynamic Kinetic Abstraction — Radial Primary Streaks",
+  "prompt": "radial motion blur, kinetic energy, painterly streaks, high-speed photography, saturated primary colors, dynamic abstraction, action-oriented composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态动态主要__Dynamic Kinetic Abstraction — Radial Primary Streaks/preview.webp",
+  "folder": "Krea2_moodboard/动态动态主要__Dynamic Kinetic Abstraction — Radial Primary Streaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

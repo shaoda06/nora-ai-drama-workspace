@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-455",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "单色粗野主义极简",
+  "name": "Monochrome Brutalist Minimalism",
+  "prompt": "stark monochrome, high-contrast minimalism, brutalist graphic design, grainy paper texture, geometric abstraction, Swiss design style, chiaroscuro lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色粗野主义极简__Monochrome Brutalist Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/单色粗野主义极简__Monochrome Brutalist Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

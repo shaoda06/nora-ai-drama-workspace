@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1301",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "彩色表现主义",
+  "name": "Chromatic Expressionist Portraits",
+  "prompt": "expressive brushwork, high-contrast lighting, saturated color blocking, profile view portrait, dramatic chiaroscuro, impasto texture, vibrant digital painting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色表现主义__Chromatic Expressionist Portraits/preview.webp",
+  "folder": "Krea2_moodboard/彩色表现主义__Chromatic Expressionist Portraits",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

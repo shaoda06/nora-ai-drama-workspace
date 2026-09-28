@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-112",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "火影忍者风格",
+  "name": "Naruto Style",
+  "prompt": "Style: Naruto Style: A bold, expressive shōnen-manga illustration style built on confident, energetic linework carrying dynamic, action-driven proportion, cel-based shading applied with punchy, graphic clarity rather than smooth gradation, high-impact composition, meticulous attention to fluid, high-speed motion balanced against grounded emotional character work. Influenced by: Masashi Kishimoto, Studio Pierrot animation-adaptation tradition, cel-shaded shōnen illustration technique, Naruto Manga, Boruto Manga, adventure-shōnen character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/火影忍者风格__Naruto Style/preview.jpg",
+  "folder": "krea2_styles/火影忍者风格__Naruto Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

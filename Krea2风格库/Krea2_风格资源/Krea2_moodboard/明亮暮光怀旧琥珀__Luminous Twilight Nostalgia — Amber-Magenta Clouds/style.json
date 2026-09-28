@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-62",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "明亮暮光怀旧琥珀",
+  "name": "Luminous Twilight Nostalgia — Amber-Magenta Clouds",
+  "prompt": "painterly digital art, twilight color palette, volumetric sunset clouds, cinematic lighting, high contrast silhouettes, nostalgic anime aesthetic, vibrant indigo and orange. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮暮光怀旧琥珀__Luminous Twilight Nostalgia — Amber-Magenta Clouds/preview.webp",
+  "folder": "Krea2_moodboard/明亮暮光怀旧琥珀__Luminous Twilight Nostalgia — Amber-Magenta Clouds",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1555",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "光谱黑色",
+  "name": "Spectral Blue Noir",
+  "prompt": "monochromatic blue palette, ethereal motion blur, heavy analog film grain, high-contrast silhouette, liminal atmosphere, soft focus haze, spectral backlighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色__Spectral Blue Noir/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色__Spectral Blue Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1531",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "超现实故障",
+  "name": "Surreal Glitch Etherea",
+  "prompt": "analog glitch art, ethereal motion blur, chromatic aberration, surreal distortion, soft focus glow, fleshy rose and crimson palette, temporal warp. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实故障__Surreal Glitch Etherea/preview.webp",
+  "folder": "Krea2_moodboard/超现实故障__Surreal Glitch Etherea",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

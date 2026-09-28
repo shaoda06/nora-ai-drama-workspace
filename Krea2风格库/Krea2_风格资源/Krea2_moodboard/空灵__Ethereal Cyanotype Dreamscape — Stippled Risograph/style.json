@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-376",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "空灵",
+  "name": "Ethereal Cyanotype Dreamscape — Stippled Risograph",
+  "prompt": "cyanotype print aesthetic, monochromatic indigo and white, airbrushed soft glow, stippled grain texture, ethereal dreamscape, minimalist silhouettes, nocturnal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Cyanotype Dreamscape — Stippled Risograph/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Cyanotype Dreamscape — Stippled Risograph",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

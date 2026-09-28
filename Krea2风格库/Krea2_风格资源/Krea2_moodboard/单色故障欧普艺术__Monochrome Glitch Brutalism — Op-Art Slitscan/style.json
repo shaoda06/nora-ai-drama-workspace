@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-542",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "单色故障欧普艺术",
+  "name": "Monochrome Glitch Brutalism — Op-Art Slitscan",
+  "prompt": "high-contrast monochrome, scanline glitch, op-art distortion, halftone patterns, dithered bitmap, minimalist brutalism, analogue screen artifact. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障欧普艺术__Monochrome Glitch Brutalism — Op-Art Slitscan/preview.webp",
+  "folder": "Krea2_moodboard/单色故障欧普艺术__Monochrome Glitch Brutalism — Op-Art Slitscan",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

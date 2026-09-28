@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-895",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "极简",
+  "name": "Expressive NaÃ¯ve Minimalism",
+  "prompt": "naive art style, expressive hand-drawn lines, wax crayon texture, minimalist graphic illustration, bold primary colors, stark negative space, folksy whimsicality. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Expressive NaÃ¯ve Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Expressive NaÃ¯ve Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

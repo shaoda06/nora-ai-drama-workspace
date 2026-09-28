@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3546",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "怀旧写实",
+  "name": "Nostalgic Pastoral Realism",
+  "prompt": "nostalgic atmosphere, earthy color palette, liminal landscape, soft natural lighting, tactile artistic texture, historical realism, detailed architectural composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧写实__Nostalgic Pastoral Realism/preview.webp",
+  "folder": "Krea2_moodboard/怀旧写实__Nostalgic Pastoral Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

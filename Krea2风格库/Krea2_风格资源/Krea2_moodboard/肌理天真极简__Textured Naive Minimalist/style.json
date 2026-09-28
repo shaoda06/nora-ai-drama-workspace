@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-681",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "肌理天真极简",
+  "name": "Textured Naive Minimalist",
+  "prompt": "naive art style, wax crayon texture, risograph print aesthetic, minimalist blocky shapes, halftone stippling, hand-drawn tactile illustration, vibrant limited color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理天真极简__Textured Naive Minimalist/preview.webp",
+  "folder": "Krea2_moodboard/肌理天真极简__Textured Naive Minimalist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

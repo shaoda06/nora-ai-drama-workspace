@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2988",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "黑色",
+  "name": "Velvety Noir Spectralism",
+  "prompt": "monochromatic film grain, high-contrast chiaroscuro, ethereal motion blur, tactile noise texture, haunting psychological mood, soft-focus depth of field, nocturnal noir aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Velvety Noir Spectralism/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Velvety Noir Spectralism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

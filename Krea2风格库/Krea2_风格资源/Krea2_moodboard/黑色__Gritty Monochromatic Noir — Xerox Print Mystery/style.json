@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-427",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "黑色",
+  "name": "Gritty Monochromatic Noir — Xerox Print Mystery",
+  "prompt": "high-contrast monochrome, heavy film grain, halftone dot pattern, distressed xerox texture, stark noir lighting, gritty analogue noise, raw zine aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Gritty Monochromatic Noir — Xerox Print Mystery/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Gritty Monochromatic Noir — Xerox Print Mystery",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

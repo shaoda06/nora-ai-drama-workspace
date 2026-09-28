@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1881",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "模拟故障怀旧",
+  "name": "Analog Glitch Nostalgia — Cobalt Signal Burst",
+  "prompt": "analog glitch art, CRT scanlines, chromatic aberration, VHS tracking error, pixelated decay, interlaced signal, cobalt blue aesthetic, retro digital distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟故障怀旧__Analog Glitch Nostalgia — Cobalt Signal Burst/preview.webp",
+  "folder": "Krea2_moodboard/模拟故障怀旧__Analog Glitch Nostalgia — Cobalt Signal Burst",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3085",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵超现实",
+  "name": "Ethereal Surrealist Dreamscapes",
+  "prompt": "surrealism, magritte-inspired, ethereal blue sky, fluffy cumulus clouds, minimalist composition, dreamlike atmosphere, soft diffused lighting, whimsical fantasy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵超现实__Ethereal Surrealist Dreamscapes/preview.webp",
+  "folder": "Krea2_moodboard/空灵超现实__Ethereal Surrealist Dreamscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

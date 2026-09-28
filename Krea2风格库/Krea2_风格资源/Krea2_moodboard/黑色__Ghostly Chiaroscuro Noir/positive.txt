@@ -1,0 +1,1 @@
+high-contrast monochrome, chiaroscuro lighting, heavy film grain, ghostly motion blur, stark shadow play, cinematic noir portraiture, analog decay, low-key photography. Subject:{prompt}

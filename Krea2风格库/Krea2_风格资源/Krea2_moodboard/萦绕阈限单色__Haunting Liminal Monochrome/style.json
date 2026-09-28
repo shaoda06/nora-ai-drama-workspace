@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-766",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "萦绕阈限单色",
+  "name": "Haunting Liminal Monochrome",
+  "prompt": "high-contrast monochrome, ethereal silhouettes, motion blur, liminal atmosphere, stark minimalism, grainy charcoal texture, ghostly dreamlike haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/萦绕阈限单色__Haunting Liminal Monochrome/preview.webp",
+  "folder": "Krea2_moodboard/萦绕阈限单色__Haunting Liminal Monochrome",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

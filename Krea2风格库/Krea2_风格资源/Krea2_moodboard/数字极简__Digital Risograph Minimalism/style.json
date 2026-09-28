@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-361",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "数字极简",
+  "name": "Digital Risograph Minimalism",
+  "prompt": "duotone blue and cream, risograph print texture, digital halftone dithering, geometric grid fragmentation, vertical barcode scanlines, minimalist glitch abstraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字极简__Digital Risograph Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/数字极简__Digital Risograph Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

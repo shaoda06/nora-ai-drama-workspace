@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2284",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "动态速度",
+  "name": "Kinetic Velocity Abstraction",
+  "prompt": "panning motion blur, long exposure photography, kinetic energy, dynamic velocity streaks, abstract motion, vibrant primary colors, shutter drag. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态速度__Kinetic Velocity Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/动态速度__Kinetic Velocity Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

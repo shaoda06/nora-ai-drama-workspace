@@ -1,0 +1,1 @@
+chromatic aberration, digital glitch distortion, VHS scanline texture, RGB subpixel grid, halftone noise, neon saturated palette, reeded glass refraction. Subject:{prompt}

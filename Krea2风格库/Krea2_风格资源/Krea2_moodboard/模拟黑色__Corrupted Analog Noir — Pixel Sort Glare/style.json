@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2003",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "模拟黑色",
+  "name": "Corrupted Analog Noir — Pixel Sort Glare",
+  "prompt": "CRT scanlines, analog glitch art, monochrome silhouette, high-contrast static noise, chromatic aberration, corrupted video signal, pixel sorting, analog horror aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟黑色__Corrupted Analog Noir — Pixel Sort Glare/preview.webp",
+  "folder": "Krea2_moodboard/模拟黑色__Corrupted Analog Noir — Pixel Sort Glare",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

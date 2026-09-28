@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1818",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "触觉有机",
+  "name": "Tactile Organic Wilderness",
+  "prompt": "macro botanical photography, tactile organic textures, muted earthy color palette, soft diffuse backlighting, shallow depth of field, vintage film grain, intricate fibrous detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉有机__Tactile Organic Wilderness/preview.webp",
+  "folder": "Krea2_moodboard/触觉有机__Tactile Organic Wilderness",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

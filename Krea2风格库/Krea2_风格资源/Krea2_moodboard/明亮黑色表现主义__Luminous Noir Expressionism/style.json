@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-996",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮黑色表现主义",
+  "name": "Luminous Noir Expressionism",
+  "prompt": "chiaroscuro lighting, electric blue and neon accents, thick impasto textures, bioluminescent glow, expressive brushwork, ethereal silhouettes, high-contrast noir atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色表现主义__Luminous Noir Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色表现主义__Luminous Noir Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

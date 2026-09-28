@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1157",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "霓虹超现实",
+  "name": "Neon Aura Surrealism",
+  "prompt": "chromatic aura, neon airbrush, soft radial gradient, grainy paper texture, stark black silhouette, psychedelic dreamscape, retro-futuristic illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹超现实__Neon Aura Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/霓虹超现实__Neon Aura Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

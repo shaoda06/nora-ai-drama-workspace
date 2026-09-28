@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-927",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "复古超现实暮光",
+  "name": "Retro Surrealist Twilight",
+  "prompt": "retro airbrush illustration, grainy film texture, minimalist surrealism, twilight color gradient, high-contrast silhouette, 70s sci-fi aesthetic, glowing atmospheric light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古超现实暮光__Retro Surrealist Twilight/preview.webp",
+  "folder": "Krea2_moodboard/复古超现实暮光__Retro Surrealist Twilight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

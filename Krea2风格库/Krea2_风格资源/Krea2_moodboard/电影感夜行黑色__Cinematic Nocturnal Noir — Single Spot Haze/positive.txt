@@ -1,0 +1,1 @@
+chiaroscuro lighting, cinematic spotlight, volumetric haze, cool blue color grading, deep shadows, lo-fi film grain, high-contrast noir, nocturnal atmosphere. Subject:{prompt}

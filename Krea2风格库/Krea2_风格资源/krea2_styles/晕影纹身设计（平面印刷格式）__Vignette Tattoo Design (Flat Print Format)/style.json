@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-36",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "晕影纹身设计（平面印刷格式）",
+  "name": "Vignette Tattoo Design (Flat Print Format)",
+  "prompt": "Style: Vignette Tattoo Design (Flat Print Format): A bold, graphic linework style built on confident unbroken contour lines contained within a distinct central cluster, generous negative space surrounding that cluster rather than a full-frame composition, deliberate simplification of form into clean readable shapes with minimal fine detail, restrained shading achieved through controlled linework density rather than gradation, a strong emphasis on symmetrical, balanced compositional flow suited for clean printable reproduction, and a bold, timeless graphic durability that reads clearly at both close range and a distance. Influenced by: traditional American tattoo flash-art tradition, Japanese irezumi technique, blackwork tattoo-design practice, negative-space compositional design.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/晕影纹身设计（平面印刷格式）__Vignette Tattoo Design (Flat Print Format)/preview.jpg",
+  "folder": "krea2_styles/晕影纹身设计（平面印刷格式）__Vignette Tattoo Design (Flat Print Format)",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

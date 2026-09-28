@@ -1,0 +1,1 @@
+3D digital render, pastel color palette, chibi character design, soft volumetric lighting, tactile plush textures, dreamy bokeh, shallow depth of field. Subject:{prompt}

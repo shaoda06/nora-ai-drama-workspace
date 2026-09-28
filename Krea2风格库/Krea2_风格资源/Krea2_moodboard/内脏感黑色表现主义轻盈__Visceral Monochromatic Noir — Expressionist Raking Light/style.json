@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-945",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "内脏感黑色表现主义轻盈",
+  "name": "Visceral Monochromatic Noir — Expressionist Raking Light",
+  "prompt": "high contrast black and white, chiaroscuro lighting, gritty film grain, visceral texture, stark monochromatic, dramatic shadows, raw expressionism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感黑色表现主义轻盈__Visceral Monochromatic Noir — Expressionist Raking Light/preview.webp",
+  "folder": "Krea2_moodboard/内脏感黑色表现主义轻盈__Visceral Monochromatic Noir — Expressionist Raking Light",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

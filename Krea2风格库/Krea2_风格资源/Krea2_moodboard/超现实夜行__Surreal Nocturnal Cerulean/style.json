@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1101",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "超现实夜行",
+  "name": "Surreal Nocturnal Cerulean",
+  "prompt": "monochromatic cerulean and indigo palette, thick impasto palette knife textures, surreal dreamlike atmosphere, high contrast chiaroscuro lighting, gouache and oil painting aesthetic, billowing cumulonimbus clouds, melancholic nocturnal mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实夜行__Surreal Nocturnal Cerulean/preview.webp",
+  "folder": "Krea2_moodboard/超现实夜行__Surreal Nocturnal Cerulean",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

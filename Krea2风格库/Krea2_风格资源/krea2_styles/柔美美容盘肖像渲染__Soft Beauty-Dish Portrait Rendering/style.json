@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-372",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "柔美美容盘肖像渲染",
+  "name": "Soft Beauty-Dish Portrait Rendering",
+  "prompt": "Style: Soft Beauty-Dish Portrait Rendering: A gently flattering portrait-lighting technique, softly diffused light that wraps the face in even, shadowless illumination, a smooth falloff that eliminates harsh contrast while preserving subtle dimensional modeling beneath the eyes and along the jaw, a glossy, luminous quality settling naturally into the eyes, refined tonal transition that keeps skin reading as soft and touchable rather than flat, and a polished, classically flattering studio-portrait clarity built for timeless, dependable beauty photography. Influenced by: beauty-dish studio-lighting technique, classical glamour-photography practice, softbox-adjacent portrait-lighting method, professional beauty-retouching tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/柔美美容盘肖像渲染__Soft Beauty-Dish Portrait Rendering/preview.jpg",
+  "folder": "krea2_styles/柔美美容盘肖像渲染__Soft Beauty-Dish Portrait Rendering",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

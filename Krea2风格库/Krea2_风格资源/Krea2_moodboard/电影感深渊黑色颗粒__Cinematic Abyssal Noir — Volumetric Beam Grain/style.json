@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2498",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "电影感深渊黑色颗粒",
+  "name": "Cinematic Abyssal Noir — Volumetric Beam Grain",
+  "prompt": "cinematic chiaroscuro, volumetric backlighting, cyan and teal color grading, high contrast silhouettes, atmospheric film grain, mystical noir mood, ethereal light shafts. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感深渊黑色颗粒__Cinematic Abyssal Noir — Volumetric Beam Grain/preview.webp",
+  "folder": "Krea2_moodboard/电影感深渊黑色颗粒__Cinematic Abyssal Noir — Volumetric Beam Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

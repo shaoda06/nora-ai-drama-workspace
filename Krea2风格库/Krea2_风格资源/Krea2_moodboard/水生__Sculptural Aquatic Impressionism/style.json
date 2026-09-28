@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1093",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "水生",
+  "name": "Sculptural Aquatic Impressionism",
+  "prompt": "thick sculptural impasto, heavy palette knife texture, tactile oil painting, shimmering light refraction, expressive brushwork, moody blue and teal palette, dappled atmospheric light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/水生__Sculptural Aquatic Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/水生__Sculptural Aquatic Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

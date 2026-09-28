@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2274",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "棱镜宇宙",
+  "name": "Prismatic Cosmic Glamour",
+  "prompt": "prismatic starburst lens flare, high-contrast moody lighting, iridescent crystalline textures, chromatic aberration, opulent jeweled embellishments, celestial stardust atmosphere, theatrical high-fashion portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜宇宙__Prismatic Cosmic Glamour/preview.webp",
+  "folder": "Krea2_moodboard/棱镜宇宙__Prismatic Cosmic Glamour",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

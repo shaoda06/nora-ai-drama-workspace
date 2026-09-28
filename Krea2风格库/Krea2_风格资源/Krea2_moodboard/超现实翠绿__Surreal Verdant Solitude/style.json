@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-968",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "超现实翠绿",
+  "name": "Surreal Verdant Solitude",
+  "prompt": "surreal minimalism, bird's-eye view, swirling pointillist texture, solitary central subject, deep teal and moss green, dreamlike atmospheric lighting, painterly brushstrokes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实翠绿__Surreal Verdant Solitude/preview.webp",
+  "folder": "Krea2_moodboard/超现实翠绿__Surreal Verdant Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

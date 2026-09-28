@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-732",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "电影感夜行极简轻盈颗粒",
+  "name": "Cinematic Nocturnal Minimalism — Pinpoint Light Grain",
+  "prompt": "chiaroscuro lighting, volumetric atmospheric fog, deep indigo and charcoal palette, minimalist composition, cinematic isolation, stark silhouettes, dreamlike surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行极简轻盈颗粒__Cinematic Nocturnal Minimalism — Pinpoint Light Grain/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行极简轻盈颗粒__Cinematic Nocturnal Minimalism — Pinpoint Light Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

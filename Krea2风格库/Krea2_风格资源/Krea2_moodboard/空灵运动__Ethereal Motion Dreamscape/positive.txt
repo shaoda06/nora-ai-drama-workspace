@@ -1,0 +1,1 @@
+motion blur, analog film grain, ethereal light, double exposure, chromatic aberration, dreamy haze, light leaks, impressionistic photography. Subject:{prompt}

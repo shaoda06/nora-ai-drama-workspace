@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-284",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "丙烯梦幻风景",
+  "name": "Acrylic Dreamscape",
+  "prompt": "Style: Acrylic Dreamscape: expressive painterly rendering with layered acrylic textures, blended edges, atmospheric transitions, rich surface variation, handcrafted brushwork, contemporary fine art sensibilities, dreamlike visual rhythm, softly abstracted realism, tactile material presence, luminous depth, gallery-quality execution, reminiscent of Gerhard Richter and Jeremy Mann, inspired by Abstract Painting and Contemporary Fine Art Exhibitions.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/丙烯梦幻风景__Acrylic Dreamscape/preview.jpg",
+  "folder": "krea2_styles/丙烯梦幻风景__Acrylic Dreamscape",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

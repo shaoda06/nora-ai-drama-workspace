@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-599",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "电影感哥特",
+  "name": "Cinematic Gothic Chiaroscuro",
+  "prompt": "chiaroscuro lighting, dark romanticism, cinematic film still, painterly texture, Victorian gothic, dramatic shadows, introspective mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感哥特__Cinematic Gothic Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/电影感哥特__Cinematic Gothic Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

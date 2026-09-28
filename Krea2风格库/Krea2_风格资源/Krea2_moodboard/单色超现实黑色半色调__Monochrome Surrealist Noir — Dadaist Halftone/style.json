@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-464",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "单色超现实黑色半色调",
+  "name": "Monochrome Surrealist Noir — Dadaist Halftone",
+  "prompt": "surrealist monochrome collage, high-contrast noir photography, grainy vintage texture, chiaroscuro lighting, dadaist photomontage, stark halftone effect, fragmented psychological symbolism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色超现实黑色半色调__Monochrome Surrealist Noir — Dadaist Halftone/preview.webp",
+  "folder": "Krea2_moodboard/单色超现实黑色半色调__Monochrome Surrealist Noir — Dadaist Halftone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

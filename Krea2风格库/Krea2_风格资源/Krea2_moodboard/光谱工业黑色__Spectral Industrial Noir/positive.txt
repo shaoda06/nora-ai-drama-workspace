@@ -1,0 +1,1 @@
+high-contrast monochrome, heavy film grain, chiaroscuro lighting, long exposure motion blur, shutter drag, xerox texture, ghostly silhouettes, cinematic noir. Subject:{prompt}

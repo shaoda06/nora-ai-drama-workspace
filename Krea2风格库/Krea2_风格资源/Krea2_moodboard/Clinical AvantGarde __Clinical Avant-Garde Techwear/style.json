@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2158",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "Clinical AvantGarde ",
+  "name": "Clinical Avant-Garde Techwear",
+  "prompt": "minimalist studio photography, tactical techwear, muted cool tones, high-contrast lighting, avant-garde tailoring, technical fabric textures, neutral gray backdrop. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Clinical AvantGarde __Clinical Avant-Garde Techwear/preview.webp",
+  "folder": "Krea2_moodboard/Clinical AvantGarde __Clinical Avant-Garde Techwear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

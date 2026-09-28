@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-114",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧超现实",
+  "name": "Nostalgic Surreal Dreamscape",
+  "prompt": "retro anime style, saturated pastel palette, volumetric cumulus clouds, clean ink outlines, surreal dreamscape, lo-fi aesthetic, vibrant twilight lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实__Nostalgic Surreal Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实__Nostalgic Surreal Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

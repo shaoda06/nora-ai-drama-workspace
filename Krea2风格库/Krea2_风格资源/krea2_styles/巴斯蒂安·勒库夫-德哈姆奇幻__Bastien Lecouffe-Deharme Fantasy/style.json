@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-232",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "巴斯蒂安·勒库夫-德哈姆奇幻",
+  "name": "Bastien Lecouffe-Deharme Fantasy",
+  "prompt": "Style: Bastien Lecouffe-Deharme Fantasy: ethereal dark fantasy aesthetics blending refined realism, dreamlike atmosphere, elegant visual storytelling, painterly textures, and sophisticated cinematic lighting, emphasizing emotional depth, poetic melancholy, intricate craftsmanship, and immersive worldbuilding through highly polished rendering and a strong sense of mystery, reminiscent of Bastien Lecouffe-Deharme and Kinuko Y. Craft, inspired by Memories of Emanon and Pan's Labyrinth.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/巴斯蒂安·勒库夫-德哈姆奇幻__Bastien Lecouffe-Deharme Fantasy/preview.jpg",
+  "folder": "krea2_styles/巴斯蒂安·勒库夫-德哈姆奇幻__Bastien Lecouffe-Deharme Fantasy",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

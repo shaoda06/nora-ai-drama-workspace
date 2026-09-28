@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2425",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "空灵夜行棱镜漏光",
+  "name": "Ethereal Nocturnal Blur — Prismatic Leak",
+  "prompt": "heavy film grain, soft focus motion blur, twilight blue and amber palette, ethereal light leaks, lo-fi silhouette, experimental darkroom aesthetic, mystical atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行棱镜漏光__Ethereal Nocturnal Blur — Prismatic Leak/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行棱镜漏光__Ethereal Nocturnal Blur — Prismatic Leak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

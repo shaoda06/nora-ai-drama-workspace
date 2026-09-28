@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2886",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "Apocalyptic Thermal ",
+  "name": "Apocalyptic Thermal Nocturne",
+  "prompt": "high-contrast silhouette, analog film grain, thermal halo glow, solarized dark surrealism, fiery orange and cyan palette, chromatic aberration, vintage airbrush texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Apocalyptic Thermal __Apocalyptic Thermal Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/Apocalyptic Thermal __Apocalyptic Thermal Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

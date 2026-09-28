@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3271",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "绯红超现实",
+  "name": "Crimson Astral Surrealism",
+  "prompt": "deep crimson palette, bioluminescent glow, analog film grain, high-contrast silhouette, cosmic surrealism, ethereal bloom, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红超现实__Crimson Astral Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/绯红超现实__Crimson Astral Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

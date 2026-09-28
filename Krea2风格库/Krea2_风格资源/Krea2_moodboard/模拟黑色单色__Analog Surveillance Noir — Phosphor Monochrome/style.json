@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2001",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "模拟黑色单色",
+  "name": "Analog Surveillance Noir — Phosphor Monochrome",
+  "prompt": "monochrome noir, CRT scanlines, chiaroscuro lighting, analog grain, surveillance aesthetic, glitch distortion, double exposure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟黑色单色__Analog Surveillance Noir — Phosphor Monochrome/preview.webp",
+  "folder": "Krea2_moodboard/模拟黑色单色__Analog Surveillance Noir — Phosphor Monochrome",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

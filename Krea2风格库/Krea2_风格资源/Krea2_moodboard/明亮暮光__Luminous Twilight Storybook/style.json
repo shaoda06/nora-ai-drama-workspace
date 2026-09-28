@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-916",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮暮光",
+  "name": "Luminous Twilight Storybook",
+  "prompt": "storybook illustration style, glowing amber light, deep twilight blue palette, volumetric clouds, fine ink linework, whimsical cozy fantasy, surreal dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮暮光__Luminous Twilight Storybook/preview.webp",
+  "folder": "Krea2_moodboard/明亮暮光__Luminous Twilight Storybook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1370",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感暮光柔软",
+  "name": "Cinematic Twilight Solitude — Soft Overcast Blue",
+  "prompt": "cinematic 35mm film, blue hour photography, muted desaturated tones, analog film grain, moody introspective atmosphere, soft bokeh, overcast diffused lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感暮光柔软__Cinematic Twilight Solitude — Soft Overcast Blue/preview.webp",
+  "folder": "Krea2_moodboard/电影感暮光柔软__Cinematic Twilight Solitude — Soft Overcast Blue",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

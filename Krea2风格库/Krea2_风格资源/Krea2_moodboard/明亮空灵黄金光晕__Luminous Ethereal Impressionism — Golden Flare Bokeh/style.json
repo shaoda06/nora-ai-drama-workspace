@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1226",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "明亮空灵黄金光晕",
+  "name": "Luminous Ethereal Impressionism — Golden Flare Bokeh",
+  "prompt": "dreamy soft focus, sun-drenched golden hour, ethereal bokeh, painterly motion blur, nostalgic film aesthetic, lens flare, double exposure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮空灵黄金光晕__Luminous Ethereal Impressionism — Golden Flare Bokeh/preview.webp",
+  "folder": "Krea2_moodboard/明亮空灵黄金光晕__Luminous Ethereal Impressionism — Golden Flare Bokeh",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

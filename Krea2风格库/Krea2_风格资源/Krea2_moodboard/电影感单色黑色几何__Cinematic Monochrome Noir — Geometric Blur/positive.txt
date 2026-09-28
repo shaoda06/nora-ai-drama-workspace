@@ -1,0 +1,1 @@
+chiaroscuro lighting, high-contrast monochrome, stark shadows, minimalist composition, atmospheric film grain, cinematic noir, motion blur. Subject:{prompt}

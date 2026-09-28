@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-285",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "冒险插画",
+  "name": "Adventure Illustration",
+  "prompt": "Style: Adventure Illustration: dynamic narrative artwork emphasizing strong visual storytelling, confident draftsmanship, expressive action, atmospheric depth, adventurous mood, detailed craftsmanship, readable composition, classic illustration traditions, polished rendering, and timeless sense of exploration, reminiscent of N.C. Wyeth and Howard Pyle, inspired by Treasure Island and The Adventures of Robin Hood.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/冒险插画__Adventure Illustration/preview.jpg",
+  "folder": "krea2_styles/冒险插画__Adventure Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

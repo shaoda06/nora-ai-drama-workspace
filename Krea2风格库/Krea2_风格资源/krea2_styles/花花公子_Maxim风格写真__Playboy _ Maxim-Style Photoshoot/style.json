@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-368",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "花花公子/Maxim风格写真",
+  "name": "Playboy / Maxim-Style Photoshoot",
+  "prompt": "Style: Playboy / Maxim-Style Photoshoot: A glossy, confident glamour-photography style built on flattering studio or golden-hour lighting that sculpts skin with a warm, sun-kissed glow, playful, flirtatious posing that favors curve-forward silhouettes and direct eye contact with the camera, saturated yet naturalistic color grading, tasteful wardrobe styling ranging from lingerie to casual glamour wear, and a confident, aspirational lifestyle-magazine polish that balances sensuality with an approachable, editorial sheen. Influenced by: Playboy magazine photography, Maxim magazine editorial style, glamour studio lighting technique, lifestyle commercial photography.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/花花公子_Maxim风格写真__Playboy _ Maxim-Style Photoshoot/preview.jpg",
+  "folder": "krea2_styles/花花公子_Maxim风格写真__Playboy _ Maxim-Style Photoshoot",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

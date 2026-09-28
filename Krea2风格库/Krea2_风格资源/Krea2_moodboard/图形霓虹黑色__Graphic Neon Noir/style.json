@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-193",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "图形霓虹黑色",
+  "name": "Graphic Neon Noir",
+  "prompt": "high-contrast ink illustration, stark black and white, vibrant magenta accent, cross-hatching, graphic novel aesthetic, apocalyptic surrealism, sharp angular linework. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形霓虹黑色__Graphic Neon Noir/preview.webp",
+  "folder": "Krea2_moodboard/图形霓虹黑色__Graphic Neon Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

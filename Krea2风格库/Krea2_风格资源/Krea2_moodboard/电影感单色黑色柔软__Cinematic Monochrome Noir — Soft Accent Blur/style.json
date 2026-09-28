@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1763",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感单色黑色柔软",
+  "name": "Cinematic Monochrome Noir — Soft Accent Blur",
+  "prompt": "heavy film grain, high contrast monochrome, cinematic noir, soft focus blur, dramatic chiaroscuro lighting, vintage analog texture, ethereal atmosphere, intimate candid photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感单色黑色柔软__Cinematic Monochrome Noir — Soft Accent Blur/preview.webp",
+  "folder": "Krea2_moodboard/电影感单色黑色柔软__Cinematic Monochrome Noir — Soft Accent Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

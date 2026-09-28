@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2878",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "粗野主义超现实",
+  "name": "Vertiginous Brutalist Surrealism",
+  "prompt": "extreme wide-angle fisheye, curved architectural perspective, brutalist megastructure, high-contrast daylight, surreal urban vortex, infinite geometry, vertigo-inducing scale. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粗野主义超现实__Vertiginous Brutalist Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/粗野主义超现实__Vertiginous Brutalist Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

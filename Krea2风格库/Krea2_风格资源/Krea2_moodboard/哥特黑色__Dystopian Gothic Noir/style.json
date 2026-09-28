@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-590",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "哥特黑色",
+  "name": "Dystopian Gothic Noir",
+  "prompt": "dark gothic fantasy, atmospheric smog, high-contrast silhouette, industrial dystopian, painterly texture, teal and amber lighting, moody cinematic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/哥特黑色__Dystopian Gothic Noir/preview.webp",
+  "folder": "Krea2_moodboard/哥特黑色__Dystopian Gothic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

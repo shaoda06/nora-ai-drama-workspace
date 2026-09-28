@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-383",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "精致社交媒体摄影",
+  "name": "Refined social-media  photography",
+  "prompt": "Style: Refined social-media  photography: natural-light–driven editorial imagery emphasizing authenticity and presence, minimalist compositions that center the subject with confident simplicity, soft yet high-contrast lighting that enhances textures without heavy stylization, fashion-forward framing blending casual intimacy with magazine polish, relaxed body language conveying self-possession and modern sensuality, clean color palettes with warm organic hues, contemporary lifestyle aesthetic balanced between candid and posed moments, social-media–era visual language refined for high-end fashion contexts, by Zoë Ghertner, Cass Bird,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/精致社交媒体摄影__Refined social-media  photography/preview.jpg",
+  "folder": "krea2_styles/精致社交媒体摄影__Refined social-media  photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

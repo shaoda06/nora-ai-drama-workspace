@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-986",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "触觉超现实美容",
+  "name": "Hyper-Tactile Surrealist Beauty",
+  "prompt": "avant-garde beauty portrait, hyper-detailed skin texture, surreal collage elements, vibrant jewel-toned palette, glossy wet-look finish, tactile impasto and metallic accents, dramatic studio lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉超现实美容__Hyper-Tactile Surrealist Beauty/preview.webp",
+  "folder": "Krea2_moodboard/触觉超现实美容__Hyper-Tactile Surrealist Beauty",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

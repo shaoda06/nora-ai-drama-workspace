@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-215",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "粉彩体素",
+  "name": "Cozy Pastel Voxel",
+  "prompt": "voxel art, pastel color scheme, isometric 3D diorama, miniature toy aesthetic, soft volumetric lighting, cute blocky design, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粉彩体素__Cozy Pastel Voxel/preview.webp",
+  "folder": "Krea2_moodboard/粉彩体素__Cozy Pastel Voxel",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

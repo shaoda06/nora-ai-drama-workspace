@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-312",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "单色故障",
+  "name": "Monochrome Glitch Brutalism — Vector Glyph Corruption",
+  "prompt": "high-contrast black and white, brutalist geometric glyphs, digital glitch distortion, minimalist vector art, datamoshing artifacts, sharp industrial iconography, stark chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障__Monochrome Glitch Brutalism — Vector Glyph Corruption/preview.webp",
+  "folder": "Krea2_moodboard/单色故障__Monochrome Glitch Brutalism — Vector Glyph Corruption",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

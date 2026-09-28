@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3137",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "超现实",
+  "name": "Surreal Biophilic Vortex",
+  "prompt": "biophilic surrealism, vortex composition, concentric organic patterns, lush green foliage, infinite depth, minimalist product integration, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Surreal Biophilic Vortex/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Surreal Biophilic Vortex",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

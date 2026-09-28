@@ -1,0 +1,594 @@
+<!doctype html>
+<!-- nora-project-portal:generated-v1 -->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' file:; media-src 'self' file:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>__PROJECT_TITLE__ · 项目总览</title>
+<style>
+:root{--ink:#202d39;--muted:#617080;--green:#257163;--line:#dce2e7;--wash:#f8fafb;--white:#fff;--radius:4px;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--white)}
+*{box-sizing:border-box}body{margin:0;font-size:16px;line-height:1.8}button,a,summary{-webkit-tap-highlight-color:transparent}button{font:inherit;font-size:14px;cursor:pointer}button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--green);outline-offset:4px}a{color:var(--green);text-decoration:underline;text-underline-offset:4px;overflow-wrap:anywhere}button{color:var(--ink)}.shell{max-width:1440px;margin:auto;padding:34px 5.3% 0}.topline{display:flex;gap:24px;align-items:center;justify-content:space-between}h1{font-size:30px;line-height:1.35;letter-spacing:-.7px;margin:0;font-weight:700}.outline{border:1px solid var(--green);border-radius:var(--radius);background:white;color:var(--green);padding:7px 20px;white-space:nowrap}.outline:hover{background:#f2f8f6}.subline{display:flex;gap:12px 30px;flex-wrap:wrap;margin:9px 0 20px;font-size:14px;color:var(--muted)}details>summary{list-style:none;cursor:pointer;position:relative;padding-right:28px;font-weight:500}summary::-webkit-details-marker{display:none}summary:after{content:"";position:absolute;right:4px;top:calc(50% - 4px);width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}details[open]>summary:after{transform:rotate(225deg);top:calc(50% - 1px)}.pending{border:1px solid var(--line);border-radius:var(--radius);padding:12px 18px;background:var(--wash);font-size:14px}.pending-row{padding:14px 0;border-top:1px solid var(--line)}.pending-row:first-child{margin-top:12px}.pending-row p{margin:5px 0}.pending-row strong{color:var(--ink)}.dim{color:var(--muted)}nav{border-bottom:1px solid var(--line);margin-top:15px}.tabs{display:flex;flex-wrap:wrap;gap:0 10px}.tab{border:0;border-bottom:3px solid transparent;background:none;padding:14px 11px 12px;font-size:14px;white-space:nowrap;line-height:1.5}.tab[aria-selected=true]{border-color:var(--green);color:var(--green);font-weight:650}.tab:hover{color:var(--green);background:var(--wash)}main{max-width:1040px;padding:32px 24px 48px;margin:auto;min-height:400px}h2{font-size:25px;line-height:1.5;margin:0 0 12px}.doc-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px}.doc-head a{font-size:14px;white-space:nowrap}.metadata{display:flex;gap:6px 22px;flex-wrap:wrap;padding-bottom:16px;font-size:13px;color:var(--muted)}.metadata span{overflow-wrap:anywhere}.intro{font-size:14px;margin:0 0 24px;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted)}.prose{overflow-wrap:anywhere}.prose h1{font-size:26px;margin-bottom:22px}.prose h2{font-size:21px;margin:28px 0 12px;padding-top:21px;border-top:1px solid var(--line)}.prose>h2:first-child{margin-top:0;border-top:0;padding-top:0}.prose h3{font-size:18px;margin:22px 0 10px}.prose h4{font-size:16px;margin:18px 0 8px}.prose p{margin:10px 0}.prose ul,.prose ol{padding-left:24px;margin:10px 0}.prose li{margin:5px 0}.prose code{font:13px/1.7 ui-monospace,SFMono-Regular,monospace;background:var(--wash);padding:2px 4px;border-radius:3px;overflow-wrap:anywhere}.prose pre{white-space:pre-wrap;padding:14px;background:var(--wash);border:1px solid var(--line);overflow:auto}.prose blockquote{border-left:3px solid var(--line);padding:8px 16px;margin:16px 0;color:var(--muted)}.table-scroll{overflow:auto;max-width:100%;margin:16px 0}table{border-collapse:collapse;font-size:14px;width:100%}td,th{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top;min-width:110px}th{background:var(--wash)}.process{margin-top:32px;border-top:1px solid var(--line);padding-top:20px}.process h2{font-size:21px}.folder{border:1px solid var(--line);border-radius:var(--radius);margin:8px 0;padding:8px 14px;font-size:14px}.folder summary{padding:3px 28px 3px 0}.folder .count{font-size:13px;color:var(--muted);margin-left:10px}.file-row{display:flex;gap:20px;align-items:baseline;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line)}.file-row:first-of-type{margin-top:10px}.file-row button{background:none;border:0;padding:0;text-align:left;color:var(--green);overflow-wrap:anywhere}.file-row a{font-size:12px;white-space:nowrap}.empty{padding:14px 0;color:var(--muted);font-size:14px}.unbuilt{padding:28px 0}.notice{font-size:14px;color:#805821;background:#fffbf2;padding:12px 16px;border-left:3px solid #bb9349;margin-bottom:24px}footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:12px;max-width:992px;margin:0 auto 24px;line-height:1.8}dialog{width:min(1080px,calc(100vw - 48px));max-height:90vh;border:1px solid var(--line);border-radius:6px;padding:0;color:var(--ink);box-shadow:0 16px 70px #102b3626}dialog::backdrop{background:#152b3a55}.dialog-bar{display:flex;align-items:center;gap:20px;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:white;z-index:1}.dialog-bar strong{font-size:14px;overflow-wrap:anywhere}.dialog-tools{display:flex;gap:18px;align-items:center;flex-shrink:0}.dialog-tools a{font-size:13px}.dialog-body{padding:28px 38px}.dialog-path{font-size:12px;color:var(--muted);margin-bottom:20px;overflow-wrap:anywhere}.dialog-body.prose h1{font-size:25px}body:has(dialog[open]){overflow:hidden}[hidden]{display:none!important}
+@media(max-width:650px){.shell{padding:24px 20px 0}.topline{align-items:flex-start;gap:14px}h1{font-size:24px}.outline{padding:6px 11px;font-size:13px}.subline{font-size:12px;gap:5px}.tabs{gap:0 5px}.tab{font-size:13px;padding:11px 8px}main{padding:25px 20px}.doc-head{display:block}.doc-head h2{font-size:23px;margin-bottom:6px}.doc-head a{display:inline-block;margin-bottom:10px}.metadata{font-size:12px;display:block}.metadata span{display:block}.prose{font-size:15px}.prose h2{font-size:20px}.file-row{align-items:flex-start;gap:14px}.file-row button{font-size:13px}footer{margin:0 20px 24px}dialog{width:calc(100vw - 20px);max-height:94vh}.dialog-bar{padding:12px;align-items:flex-start}.dialog-tools{gap:10px}.dialog-bar strong{max-width:55%}.dialog-body{padding:20px}.pending{padding:10px 13px;font-size:13px}}
+.subline{align-items:center;gap:12px 24px;margin-top:16px}.phase{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding:10px 14px;border-left:4px solid var(--green);border-radius:4px;background:#edf6f2;color:#164e43;font-size:16px;line-height:1.6}.phase-label{font-size:13px;font-weight:600}.phase-name{font-weight:700}.phase-name+.phase-name:before{content:"／";margin-right:12px;color:#608b80;font-weight:400}.prose .approval-items{margin:6px 0 12px;padding-left:24px}.prose .approval-items li{margin:6px 0}
+@media(max-width:650px){.phase{width:100%;font-size:15px}.subline #updated{font-size:12px}}
+.status-badge{display:inline-block;padding:2px 9px;border-radius:4px;font-size:13px;font-weight:600;line-height:1.65;vertical-align:baseline;max-width:100%;overflow-wrap:anywhere}.status-green{color:#17613c;background:#e8f5ec}.status-blue{color:#18579b;background:#eaf2fc}.status-orange{color:#874500;background:#fff2de}.status-red{color:#a12828;background:#fdecec}.status-gray{color:#536171;background:#edf0f3}.phase{background:var(--wash);color:var(--ink);border-left-color:#617080}.phase-item{display:inline-flex;align-items:center;flex-wrap:wrap;gap:8px}.pending-row .status-badge{margin-left:10px}
+@media(max-width:650px){.metadata .status-badge{display:inline-block}}
+.chapter-nav{margin:22px 0 28px;padding:16px 20px;border:1px solid var(--line);border-radius:4px;font-size:14px}.chapter-nav h3{font-size:16px;margin:0 0 10px}.chapter-nav ul{list-style:none;margin:0;padding:0}.chapter-nav li{margin:7px 0}.chapter-nav .chapter-children{margin:6px 0 12px;padding-left:18px;border-left:2px solid var(--line)}.chapter-nav details{margin-top:4px;color:var(--muted)}.chapter-nav summary{display:inline-block;font-size:12px}.chapter-nav a{display:inline-block}.reading-boundary{padding:12px 16px;margin:0 0 20px;border-left:3px solid #617080;background:var(--wash);font-size:14px}.prose h2,.prose h3{scroll-margin-top:24px}
+.chapter-toggle{display:inline-flex;align-items:center;gap:6px;margin-left:12px;padding:2px 5px;border:0;background:none;color:var(--muted);font-size:12px;vertical-align:baseline;white-space:nowrap}.chapter-toggle:after{content:"";width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor}.chapter-toggle[aria-expanded=true]:after{transform:rotate(180deg)}.chapter-toggle:hover{color:var(--green)}.back-top{position:fixed;right:max(24px,env(safe-area-inset-right));bottom:max(24px,env(safe-area-inset-bottom));z-index:20;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:6px;background:white;color:var(--green);box-shadow:0 3px 14px #202d391f;font-size:13px}.back-top:hover{background:#f2f8f6}body{padding-bottom:64px}.dialog-body{padding-bottom:84px}dialog .back-top{z-index:3}
+@media(max-width:650px){.back-top{right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom))}}
+.phase.phase-floating{position:fixed;top:max(16px,env(safe-area-inset-top));left:max(16px,env(safe-area-inset-left));z-index:15;width:max-content;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--line);border-left:4px solid #617080;box-shadow:0 3px 16px #202d3924}.phase-floating .phase-item{min-width:0}.phase-floating .phase-name{overflow-wrap:anywhere}#main .prose h2,#main .prose h3{scroll-margin-top:var(--phase-jump-offset,96px)}
+@media(prefers-reduced-motion:no-preference){button,a{transition:background-color .12s,color .12s}}
+.people-tools{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:18px 0 24px}.people-search{display:flex;align-items:center;gap:12px;flex:1;max-width:440px;font-size:14px}.people-search input{font:inherit;min-width:0;width:100%;padding:10px 13px;border:1px solid var(--line);border-radius:4px;background:var(--wash);color:var(--ink)}input:focus-visible{outline:2px solid var(--green);outline-offset:2px}.person-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.person-card{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;display:flex;flex-direction:column}.person-cover{height:240px;display:flex;align-items:center;justify-content:center;background:#f5f7f8;border-bottom:1px solid var(--line);position:relative}.person-cover img{height:100%;width:100%;object-fit:contain;background:white}.person-placeholder{font-size:32px;font-weight:600;color:#a1adb4;letter-spacing:2px}.person-info{padding:16px;display:flex;flex-direction:column;flex:1;gap:8px}.person-info h3{font-size:21px;margin:0}.person-id{font-size:12px;color:var(--muted);letter-spacing:1px}.person-role{font-size:13px;color:var(--muted);margin:0;min-height:24px}.person-info .outline{margin-top:auto;align-self:stretch}.person-cover-label{font-size:12px;color:var(--muted);margin:0}.person-stats{font-size:13px;margin:0 0 8px}.person-card .status-badge{font-size:12px}.person-back{margin-bottom:18px}.person-detail-head{border-bottom:1px solid var(--line);padding-bottom:15px;margin-bottom:16px}.person-detail-head h2{margin:0 0 6px}.person-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 24px}.person-tabs button{background:var(--wash);border:1px solid var(--line);border-radius:4px;padding:7px 14px}.person-tabs button[aria-pressed=true]{background:#edf6f2;color:var(--green);border-color:var(--green);font-weight:600}.asset-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.asset-card{border:1px solid var(--line);border-radius:5px;overflow:hidden;min-width:0}.asset-image{display:block;width:100%;height:300px;border:0;border-bottom:1px solid var(--line);padding:12px;background:#fff;cursor:zoom-in}.asset-image img{height:100%;width:100%;object-fit:contain}.asset-copy{padding:14px 16px;font-size:13px;overflow-wrap:anywhere}.asset-copy h4{font-size:16px;margin:0 0 8px}.asset-copy p{margin:7px 0}.asset-links{display:flex;gap:8px 15px;flex-wrap:wrap;margin-top:10px}.asset-links a{font-size:13px}.asset-state{font-size:19px;margin:24px 0 14px}.candidate-group{border:1px solid var(--line);padding:12px 16px;border-radius:4px;margin:12px 0}.candidate-group>summary{font-size:14px}.candidate-group .asset-grid{margin:16px 0 4px}.media-view{overflow:auto;text-align:center}.media-view img{display:block;margin:16px auto;max-width:100%;height:auto;cursor:zoom-in}.media-view.native img{max-width:none;cursor:zoom-out}.media-help{font-size:13px;color:var(--muted)}.people-note{font-size:13px;color:var(--muted);margin:8px 0 20px}.person-section-title{font-size:21px;margin:0 0 14px}
+#person-title{scroll-margin-top:var(--phase-jump-offset,96px)}
+.people-search-label{flex:none;white-space:nowrap}
+.people-search input{flex:1 1 0;width:0}
+.person-status-row{display:flex;align-items:center;gap:6px}
+.person-status-label{flex:none;white-space:nowrap}
+.person-status-row>span:last-child{min-width:0}
+.person-stats .status-badge{max-width:100%;display:block;overflow-wrap:anywhere}
+button.person-cover{width:100%;padding:0;border:0;border-bottom:1px solid var(--line);border-radius:0;flex:none}
+button.person-cover:focus-visible{outline-offset:-3px}
+button.person-cover:hover{background:#edf3f2}
+.person-pending{margin:0;padding:7px 10px;border-left:3px solid #b87723;border-radius:4px;font-size:13px;font-weight:600;line-height:1.7}
+.person-back-floating{position:fixed;left:max(16px,env(safe-area-inset-left));top:16px;z-index:15;max-width:calc(100vw - 32px);white-space:normal;box-shadow:0 3px 14px #202d3924}
+@media(max-width:850px){.person-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){.person-grid,.asset-grid{grid-template-columns:1fr}.person-cover{height:270px}.people-search{max-width:none}.people-tools{align-items:stretch}.asset-image{height:300px}.person-tabs{gap:6px}.person-tabs button{font-size:13px;padding:7px 10px}}
+.scene-grid .person-cover{height:auto;aspect-ratio:16/9}.scene-media .asset-image{height:auto;aspect-ratio:16/9}#scene-title{scroll-margin-top:var(--phase-jump-offset,96px)}
+.prop-grid .person-cover{height:auto;aspect-ratio:43/24}.prop-media .asset-image{height:auto;aspect-ratio:43/24}#prop-title{scroll-margin-top:var(--phase-jump-offset,96px)}
+.catalogue-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.catalogue-card{border:1px solid var(--line);border-radius:6px;padding:20px;min-width:0;display:flex;flex-direction:column;gap:10px}.catalogue-card h3{margin:0;font-size:19px;overflow-wrap:anywhere}.catalogue-card p{margin:0;font-size:14px;overflow-wrap:anywhere}.catalogue-card .outline{align-self:flex-start;margin-top:auto}.catalogue-status{font-size:13px}.catalogue-status .status-badge{max-height:5.1em;overflow:auto}.catalogue-path{font-size:12px!important;color:var(--muted);overflow-wrap:anywhere}.catalogue-breadcrumbs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}.catalogue-breadcrumbs button{border:0;background:none;color:var(--green);padding:4px 6px;text-align:left;overflow-wrap:anywhere}.catalogue-filter{padding:9px 12px;border:1px solid var(--line);background:var(--wash);color:var(--ink);font:inherit;max-width:100%}.catalogue-grid .empty{grid-column:1/-1}.media-player{display:block;width:100%;max-height:65vh;background:var(--wash);margin:20px 0}#catalogue-title{scroll-margin-top:var(--phase-jump-offset,96px)}@media(max-width:650px){.catalogue-grid{grid-template-columns:1fr}.catalogue-card{padding:16px}}
+.page-navigation{display:flex;align-items:center;flex-wrap:wrap;gap:10px 18px;margin:0 0 24px;min-width:0}.page-breadcrumbs{display:flex;align-items:center;flex-wrap:wrap;gap:5px;min-width:0;font-size:14px}.page-breadcrumbs button{border:0;background:none;color:var(--green);padding:4px 6px;text-align:left;overflow-wrap:anywhere}.page-breadcrumbs [aria-current]{color:var(--muted);padding:4px 6px;overflow-wrap:anywhere}.page-navigation .outline{flex:none}.navigation-floating{position:fixed;left:max(16px,env(safe-area-inset-left));top:16px;z-index:15;width:max-content;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--line);border-radius:5px;box-shadow:0 3px 14px #202d3924;padding:8px 12px;margin:0}.pagination{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin:-6px 0 22px;font-size:14px}.pagination label{display:flex;align-items:center;gap:8px;white-space:nowrap}.pagination select{font:inherit;color:var(--ink);padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--wash)}button:disabled{cursor:default;opacity:.5}.pagination button:disabled:hover{background:white}.filter-label{display:flex;align-items:center;gap:8px;min-width:0}.filter-label>span{white-space:nowrap;flex:none}.filter-label select{min-width:0}.page-navigation{scroll-margin-top:var(--phase-jump-offset,96px)}
+.path-prefix{white-space:nowrap;color:var(--muted);margin-right:-3px}.path-prefix+button,.path-prefix+[aria-current]{padding-left:0}.pagination{position:fixed;left:max(24px,env(safe-area-inset-left));bottom:max(24px,env(safe-area-inset-bottom));z-index:20;display:flex;align-items:center;flex-wrap:wrap;gap:10px;width:max-content;max-width:calc(100vw - 168px);margin:0;padding:10px 14px;border:1px solid var(--line);border-radius:6px;background:white;box-shadow:0 3px 14px #202d391f}.pagination-center{display:contents}.pagination-center .outline{padding:7px 12px}.pagination-size{margin-left:8px}.pagination-center #catalogue-range{font-variant-numeric:tabular-nums}.pagination .outline{flex:none}body{padding-bottom:var(--pagination-clearance,64px)}body:has(#reader[open]) #catalogue-pagination{visibility:hidden}@media(max-width:900px){.pagination{left:max(14px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));max-width:calc(100vw - 28px);padding:10px;gap:8px}.pagination-size{margin-left:6px}#back-top{bottom:max(var(--pagination-back-top-bottom,14px),env(safe-area-inset-bottom))}}
+.catalogue-grid.episode-folders{display:block}.episode-folders summary{overflow-wrap:anywhere}
+.catalogue-card:hover,.catalogue-card:focus-within{border-color:var(--green)}
+details.intro>summary:hover,details.intro>summary:focus-visible,details.intro[open]>summary{color:var(--green);text-decoration:underline;text-decoration-color:currentColor;text-underline-offset:4px}
+details:is(.folder,.candidate-group,.pending):hover:not(:has(details:hover)),details:is(.folder,.candidate-group,.pending):has(>summary:focus-visible){border-color:var(--green)}
+.catalogue-grid.outline-rows{grid-template-columns:minmax(0,1fr);gap:10px}.outline-rows .catalogue-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:20px;padding:14px 18px}.outline-row-copy{display:flex;flex-direction:column;gap:5px;min-width:0}.outline-row-heading{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px}.outline-row-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px}.outline-rows .outline-row-actions .outline{align-self:flex-end;margin:0;white-space:nowrap;border:0;background:transparent;padding:4px 6px;line-height:26px;color:var(--green)}.outline-rows .outline-row-actions .outline:hover{background:var(--wash);text-decoration:underline;text-underline-offset:4px}.outline-rows .outline-row-actions .outline:focus-visible{outline:2px solid var(--green);outline-offset:2px}.outline-rows .catalogue-status .status-badge{max-height:none;overflow:visible}.outline-rows .catalogue-path{font-size:11px!important}@media(max-width:650px){.outline-rows .catalogue-card{grid-template-columns:minmax(0,1fr);gap:10px;padding:12px 14px}.outline-row-actions{justify-self:end}}
+.outline-rows .catalogue-card.outline-slide{position:relative;display:block;overflow:hidden;min-height:128px;padding-right:64px;cursor:pointer;background:white;transition:border-color .2s ease,background-color .2s ease}
+.outline-rows .catalogue-card.outline-slide:hover,.outline-rows .catalogue-card.outline-slide:focus-within{border-color:var(--green);background:#edf6f2}
+.outline-slide:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.outline-slide .outline-row-actions{position:absolute;inset:2px 2px 2px auto;width:44px;transform:translateX(calc(100% + 2px));transition:transform .22s ease;pointer-events:none;background:inherit}
+.outline-slide:hover .outline-row-actions,.outline-slide:focus-within .outline-row-actions{transform:translateX(0)}
+.outline-read-hint{width:100%;height:100%;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:3px;line-height:1.5;padding:12px 0;color:var(--green);font-size:14px}
+.outline-row-heading.production-heading{align-items:center;column-gap:10px}.production-heading .catalogue-status{display:flex;align-items:center}
+@media(hover:none){.outline-slide .outline-row-actions{transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){.outline-rows .catalogue-card.outline-slide,.outline-slide .outline-row-actions{transition:none}}
+.chapter-dock{position:fixed;left:0;top:50%;z-index:14;width:max-content;max-width:calc(100vw - 16px);height:224px;filter:drop-shadow(0 3px 10px #202d3924)}
+.chapter-dock[data-collapsed=true]{transform:translateX(calc(-100% + 32px))}
+.chapter-dock-panel.chapter-nav{display:flex;flex-direction:column;width:max-content;max-width:calc(100vw - 16px);height:100%;margin:0;padding:12px 16px;background:white;border-radius:0 6px 6px 0;min-width:180px}
+.chapter-dock-panel h3{flex:none;height:26px;line-height:26px;margin:0 0 8px;padding-right:28px}
+.chapter-dock-panel>.chapter-dock-list{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding-right:4px}
+.chapter-dock-list li{display:grid;grid-template-columns:max-content max-content;align-items:center;margin:0;white-space:nowrap;line-height:32px}
+.chapter-dock-list a{display:block;white-space:nowrap;overflow-wrap:normal;max-width:calc(100vw - 70px);overflow:hidden;text-overflow:ellipsis;height:32px;line-height:32px}
+.chapter-dock-list li:has(>.chapter-toggle)>a{max-width:calc(100vw - 142px)}
+.chapter-dock-list .chapter-children{grid-column:1 / -1;margin:0;padding-left:14px}
+.chapter-dock-list .chapter-toggle{height:32px;margin-left:8px;padding:0 5px}
+.chapter-dock-handle{position:absolute;top:11px;right:8px;display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;border-radius:4px;background:transparent;color:var(--muted)}
+.chapter-dock-handle:after{content:"";width:7px;height:7px;border-left:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}
+.chapter-dock-handle:hover{background:var(--wash);color:var(--green)}
+.chapter-dock[data-collapsed=true] .chapter-dock-handle{top:calc(50% - 16px);right:0;width:32px;height:32px;background:white;border:1px solid var(--line);border-left:0;border-radius:0 6px 6px 0}
+.chapter-dock[data-collapsed=true] .chapter-dock-handle:after{transform:rotate(225deg)}
+.chapter-dock-panel[inert]{visibility:hidden}.chapter-dock a:focus-visible{outline-offset:-2px}
+video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;max-height:none;aspect-ratio:var(--video-ratio);object-fit:contain;margin:20px auto}
+.person-asset-slot{display:grid;align-content:start;gap:20px;min-width:0}.asset-placeholder-image{height:300px;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--wash);color:var(--muted);border-bottom:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+<div class="topline"><h1 id="project-title" tabindex="-1"></h1><button type="button" class="outline" id="progress-open">项目进度</button></div>
+<div class="subline"><div id="phase" class="phase" aria-label="当前阶段"></div><span id="updated"></span></div>
+<details class="pending"><summary>待处理事项（来源：项目进度）</summary><div id="pending-content"></div></details>
+</header>
+<nav aria-label="项目目录"><div class="tabs" role="tablist" aria-label="项目顶层目录" id="tabs"></div></nav>
+</div>
+<main id="main">
+<div id="warnings"></div>
+<div class="page-navigation" id="page-navigation"><div class="page-breadcrumbs" id="page-breadcrumbs" aria-label="当前位置"></div><button type="button" class="outline" id="page-back" hidden>← 返回上一级</button></div>
+<section id="position-panel" role="tabpanel" tabindex="0">
+<div class="doc-head"><h2>项目基本定位</h2><a id="position-raw" href="00-项目定位/项目基本定位.md" target="_blank" rel="noopener">原始 Markdown</a></div>
+<div class="metadata" id="metadata"></div>
+<details class="intro" id="intro"><summary>确认依据与资料入口</summary><div class="prose" id="intro-body"></div></details>
+<article class="prose" id="position-body"></article>
+<section class="process" aria-label="项目定位过程资料"><h2>过程资料</h2><div id="folders"></div></section>
+</section>
+<section id="story-panel" role="tabpanel" tabindex="0" hidden>
+<div class="doc-head"><h2>故事主旨与简介</h2><a id="story-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
+<div class="metadata" id="story-metadata"></div>
+<div class="reading-boundary" id="story-boundary"></div>
+<details class="intro" id="story-intro"><summary>说明与来源</summary><div class="prose" id="story-intro-body"></div></details>
+<section class="chapter-nav" id="story-navigation" aria-labelledby="story-navigation-title"><h3 id="story-navigation-title">章节导航</h3><ul id="story-toc"></ul></section>
+<article class="prose" id="story-body"></article>
+<section class="process" aria-label="故事主旨与简介过程资料"><h2>过程资料</h2><div id="story-folders"></div></section>
+</section>
+<section id="outline-panel" role="tabpanel" tabindex="0" hidden>
+<div class="doc-head"><h2>全局故事大纲</h2><a id="outline-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
+<div class="metadata" id="outline-metadata"></div>
+<div class="reading-boundary" id="outline-boundary"></div>
+<details class="intro" id="outline-intro"><summary>说明与来源</summary><div class="prose" id="outline-intro-body"></div></details>
+<section class="chapter-nav" id="outline-navigation" aria-labelledby="outline-navigation-title"><h3 id="outline-navigation-title">章节导航</h3><ul id="outline-toc"></ul></section>
+<article class="prose" id="outline-body"></article>
+<section class="process" aria-label="全局故事大纲过程资料"><h2>过程资料</h2><div id="outline-folders"></div></section>
+</section>
+<section id="people-panel" role="tabpanel" tabindex="0" hidden>
+<div id="people-list">
+<div class="doc-head"><h2>人物资料</h2><a id="people-index">人物索引</a></div>
+<p class="people-note">资料卡与参考图分别展示状态。封面仅取当前已批准图，不使用历史图或待审候选代替。</p>
+<div class="people-tools"><label class="people-search"><span class="people-search-label">查找人物</span><input id="people-search" type="search" placeholder="输入姓名或 CH 编号" autocomplete="off"></label><span class="dim" id="people-count" aria-live="polite"></span></div>
+<div class="person-grid" id="people-grid"></div>
+<section class="process"><h2>人物阶段过程资料</h2><p class="people-note">跨人物记录与全部分类文件；单个人物的相关资料也可在详情中查看。</p><div id="people-folders"></div></section>
+</div>
+<div id="person-detail" hidden>
+<div class="person-detail-head"><h2 id="person-title" tabindex="-1"></h2><div id="person-subtitle" class="dim"></div></div>
+<div class="person-tabs" id="person-tabs" aria-label="人物详情栏目"></div>
+<section id="person-assets"><h3 class="person-section-title">当前正式参考图</h3><p class="people-note">按生成记录的当前正式资产表展示。批准范围以对应审阅记录为准。</p><div class="person-tabs" id="person-stage-tabs" aria-label="人物阶段" hidden></div><div id="person-gallery"></div></section>
+<section id="person-document" hidden>
+<div class="doc-head"><h3 class="person-section-title">人物资料卡</h3><a id="person-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
+<div class="metadata" id="person-metadata"></div><div class="reading-boundary" id="person-boundary" hidden></div>
+<details class="intro" id="person-intro"><summary>说明与来源</summary><div class="prose" id="person-intro-body"></div></details>
+<section class="chapter-nav" id="person-navigation"><h3>章节导航</h3><ul id="person-toc"></ul></section><article class="prose" id="person-body"></article><div id="person-folders" hidden></div>
+</section>
+<section id="person-candidates" hidden><h3 class="person-section-title">候选与审阅</h3><p class="people-note">按生成条目列出留存候选；技术审查、非阻塞内容发现与用户采用状态分别保留原文；旧条目保留历史初审，不等于当前正式状态。复核请打开对应审阅依据；缺少记录不推断批准。</p><div id="person-candidate-groups"></div></section>
+<section id="person-records" hidden><h3 class="person-section-title">相关记录</h3><div id="person-record-link"></div><div id="person-record-folders"></div></section>
+</div>
+</section>
+<section id="scenes-panel" role="tabpanel" tabindex="0" hidden>
+<div id="scenes-list">
+<div class="doc-head"><h2>场景资料</h2><a id="scenes-index">场景索引</a></div>
+<p class="people-note">资料卡与参考图分别展示状态。封面仅取有批准依据的场次环境图；旧图与结构辅助图另列，不充当场次封面。</p>
+<div class="people-tools"><label class="people-search"><span class="people-search-label">查找场景</span><input id="scenes-search" type="search" placeholder="输入名称或 SC 编号" autocomplete="off"></label><span class="dim" id="scenes-count" aria-live="polite"></span></div>
+<div class="person-grid scene-grid" id="scenes-grid"></div>
+<section class="process"><h2>场景过程资料</h2><p class="people-note">跨场景记录与全部分类文件；单个场景的相关资料也可在详情中查看。</p><div id="scenes-folders"></div></section>
+</div>
+<div id="scene-detail" hidden>
+<div class="person-detail-head"><h2 id="scene-title" tabindex="-1"></h2><div id="scene-subtitle" class="dim"></div></div>
+<div class="person-tabs" id="scene-tabs" aria-label="场景详情栏目"></div>
+<section id="scene-assets"><h3 class="person-section-title">场次环境参考图</h3><p class="people-note">按当前正式资产表展示各场次环境图，不合并不同状态。“可复用”不代表后续场次已采用。</p><div id="scene-gallery"></div></section>
+<section id="scene-document" hidden>
+<div class="doc-head"><h3 class="person-section-title">场景资料卡</h3><a id="scene-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
+<div class="metadata" id="scene-metadata"></div><div class="reading-boundary" id="scene-boundary" hidden></div>
+<details class="intro" id="scene-intro"><summary>说明与来源</summary><div class="prose" id="scene-intro-body"></div></details>
+<section class="chapter-nav" id="scene-navigation"><h3>章节导航</h3><ul id="scene-toc"></ul></section><article class="prose" id="scene-body"></article><div id="scene-folders" hidden></div>
+</section>
+<section id="scene-candidates" hidden><h3 class="person-section-title">候选与审阅</h3><p class="people-note">按生成条目列出留存候选；技术审查、非阻塞内容发现与用户采用状态分别保留原文；旧条目保留历史初审，不等于当前正式状态。复核请打开对应审阅依据；缺少记录不推断批准。</p><div id="scene-candidate-groups"></div></section>
+<section id="scene-records" hidden><h3 class="person-section-title">相关记录</h3><div id="scene-record-link"></div><div id="scene-supporting"></div><div id="scene-record-folders"></div></section>
+</div>
+</section>
+<section id="props-panel" role="tabpanel" tabindex="0" hidden>
+<div id="props-list">
+<div class="doc-head"><h2>道具资料</h2><a id="props-index">道具索引</a></div>
+<p class="people-note">资料卡与参考图分别展示状态。封面仅取当前已批准图，不使用历史图或待审候选代替。</p>
+<div class="people-tools"><label class="people-search"><span class="people-search-label">查找道具</span><input id="props-search" type="search" placeholder="输入名称或 PR 编号" autocomplete="off"></label><span class="dim" id="props-count" aria-live="polite"></span></div>
+<div class="person-grid prop-grid" id="props-grid"></div>
+<section class="process"><h2>道具阶段过程资料</h2><p class="people-note">跨道具记录与全部分类文件；单个道具的相关资料也可在详情中查看。</p><div id="props-folders"></div></section>
+</div>
+<div id="prop-detail" hidden>
+<div class="person-detail-head"><h2 id="prop-title" tabindex="-1"></h2><div id="prop-subtitle" class="dim"></div></div>
+<div class="person-tabs" id="prop-tabs" aria-label="道具详情栏目"></div>
+<section id="prop-assets"><h3 class="person-section-title">当前正式参考图</h3><p class="people-note">按道具状态展示当前正式参考图；不同状态可同时有效，批准范围以对应审阅记录为准。</p><div id="prop-gallery"></div></section>
+<section id="prop-document" hidden>
+<div class="doc-head"><h3 class="person-section-title">道具资料卡</h3><a id="prop-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
+<div class="metadata" id="prop-metadata"></div><div class="reading-boundary" id="prop-boundary" hidden></div>
+<details class="intro" id="prop-intro"><summary>说明与来源</summary><div class="prose" id="prop-intro-body"></div></details>
+<section class="chapter-nav" id="prop-navigation"><h3>章节导航</h3><ul id="prop-toc"></ul></section><article class="prose" id="prop-body"></article><div id="prop-folders" hidden></div>
+</section>
+<section id="prop-candidates" hidden><h3 class="person-section-title">候选与审阅</h3><p class="people-note">按生成条目列出留存候选；技术审查、非阻塞内容发现与用户采用状态分别保留原文；旧条目保留历史初审，不等于当前正式状态。复核请打开对应审阅依据；缺少记录不推断批准。</p><div id="prop-candidate-groups"></div></section>
+<section id="prop-records" hidden><h3 class="person-section-title">相关记录</h3><div id="prop-record-link"></div><div id="prop-record-folders"></div></section>
+</div>
+</section>
+<section id="catalogue-panel" role="tabpanel" tabindex="0" hidden>
+<div id="catalogue-detail">
+<div class="doc-head"><h2 id="catalogue-title" tabindex="-1"></h2><a id="catalogue-index">打开索引</a></div>
+<p class="people-note" id="catalogue-note"></p>
+<div id="catalogue-list">
+<div class="people-tools"><label class="people-search"><span class="people-search-label">查找资料</span><input id="catalogue-search" type="search" placeholder="输入编号、名称或关键词" autocomplete="off"></label><label class="filter-label"><span id="catalogue-filter-label">分类</span><select class="catalogue-filter" id="catalogue-filter" aria-label="资料分类"></select></label><span class="dim" id="catalogue-count" aria-live="polite"></span></div>
+<div class="pagination" id="catalogue-pagination" aria-label="资料分页"><div class="pagination-center"><button class="outline" type="button" id="catalogue-prev">上一页</button><span id="catalogue-range" aria-live="polite"></span><button class="outline" type="button" id="catalogue-next">下一页</button></div><label class="pagination-size">每页显示<select id="catalogue-page-size" aria-label="每页显示数量"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="all">全部</option></select></label></div>
+<div class="catalogue-grid" id="catalogue-grid"></div>
+</div>
+<section id="catalogue-document" hidden>
+<div class="doc-head"><h3>文档正文</h3><a id="catalogue-doc-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
+<div class="metadata" id="catalogue-doc-metadata"></div><div class="reading-boundary" id="catalogue-doc-boundary"></div>
+<details class="intro" id="catalogue-doc-intro"><summary>说明与来源</summary><div class="prose" id="catalogue-doc-intro-body"></div></details>
+<section class="chapter-nav" id="catalogue-doc-navigation"><h3>章节导航</h3><ul id="catalogue-doc-toc"></ul></section>
+<article class="prose" id="catalogue-doc-body"></article><div id="catalogue-doc-folders" hidden></div>
+</section>
+</div></section>
+<section id="directory-panel" class="unbuilt" role="tabpanel" tabindex="0" hidden><h2 id="directory-title"></h2><p class="dim">本栏目提供目录入口。</p><a id="directory-link">打开对应目录</a></section>
+</main>
+<footer>本页是正式资料的只读浏览快照，不另维护内容或审批状态。资料更新后由 agent 同步生成本页；刷新浏览器不会重新扫描文件。<br><span id="progress-updated"></span></footer>
+<button type="button" class="back-top" id="back-top" aria-label="返回页面顶部" hidden>↑ 返回顶部</button>
+<div id="floating-phase" class="phase phase-floating" aria-hidden="true" hidden></div>
+<div class="page-navigation navigation-floating" id="floating-navigation" hidden><div class="page-breadcrumbs" id="floating-breadcrumbs" aria-label="当前位置（悬浮）"></div><button type="button" class="outline" id="floating-page-back" hidden>← 返回上一级</button></div>
+<aside id="chapter-dock" class="chapter-dock" data-collapsed="false" aria-label="悬浮章节导航" hidden><section id="chapter-dock-panel" class="chapter-nav chapter-dock-panel" aria-labelledby="chapter-dock-title"><h3 id="chapter-dock-title">章节导航</h3><ul id="chapter-dock-list" class="chapter-dock-list"></ul></section><button type="button" id="chapter-dock-toggle" class="chapter-dock-handle" aria-controls="chapter-dock-panel" aria-expanded="true" aria-label="向左收起章节导航" title="向左收起章节导航"></button></aside>
+<dialog id="reader" aria-labelledby="reader-title"><div class="dialog-bar"><strong id="reader-title" tabindex="-1"></strong><div class="dialog-tools"><a id="reader-raw" target="_blank" rel="noopener">原文件</a><button type="button" class="outline" id="reader-close">关闭</button></div></div><div class="dialog-body prose"><div class="dialog-path" id="reader-path"></div><div id="reader-content"></div></div><button type="button" class="back-top" id="reader-back-top" aria-label="返回当前文档顶部" hidden>↑ 返回顶部</button></dialog>
+<noscript><p>请启用浏览器 JavaScript 查看本地只读页面；无需联网。</p></noscript>
+<script type="application/json" id="portal-data">__PORTAL_DATA__</script>
+<script>
+"use strict";
+const data=JSON.parse(document.getElementById("portal-data").textContent);
+const el=id=>document.getElementById(id);
+const positionKey="00-项目定位/项目基本定位.md";
+const reader=el("reader");
+let activeTabIndex=0,navigationSignature="";
+const catalogueViews=new Map();
+let catalogueStack=[],catalogueRoot="";
+function navigationPath(root,detail,stack){return stack.length?stack.map(entry=>entry.node.name):[root,...(detail?[detail]:[])]}
+function navigationContext(){
+const dir=data.directories[activeTabIndex];if(!dir)return {labels:[],prefix:null,catalogue:false};
+const prefix={"03-人物资料":"person","04-场景资料":"scene","05-道具资料":"prop"}[dir.name];
+const detail=prefix&&!el(prefix+"-detail").hidden?el(prefix+"-title").textContent:"";
+const catalogue=Boolean(data.catalogues[dir.name]);
+return {labels:navigationPath(dir.label,detail,catalogue?catalogueStack:[]),prefix:detail?prefix:null,catalogue};
+}
+function navigateAncestor(index){const context=navigationContext();if(context.catalogue)backCatalogue(index);else if(context.prefix==="person")returnToPeople();else if(context.prefix==="scene")returnToScenes();else if(context.prefix==="prop")returnToProps()}
+function handlePageBack(){const labels=navigationContext().labels;if(labels.length>1)navigateAncestor(labels.length-2)}
+function syncPageNavigation(){
+const context=navigationContext(),signature=JSON.stringify([activeTabIndex,context.labels]);if(signature===navigationSignature)return;navigationSignature=signature;
+for(const id of ["page-breadcrumbs","floating-breadcrumbs"]){const holder=el(id);holder.replaceChildren(textNode("span","当前路径：","path-prefix"));context.labels.forEach((label,index)=>{
+if(index){const separator=textNode("span","/");separator.setAttribute("aria-hidden","true");holder.append(separator)}
+if(index===context.labels.length-1){const current=textNode("span",label);current.setAttribute("aria-current","page");holder.append(current)}
+else{const button=textNode("button",label);button.type="button";button.addEventListener("click",()=>navigateAncestor(index));holder.append(button)}
+})}
+el("page-back").hidden=context.labels.length<2;el("floating-page-back").hidden=context.labels.length<2;
+}
+el("page-back").addEventListener("click",handlePageBack);
+el("floating-page-back").addEventListener("click",handlePageBack);
+function textNode(tag,text,className){const node=document.createElement(tag);node.textContent=text;if(className)node.className=className;return node}
+function showDoc(key,anchor){const doc=data.documents[key];if(!doc)return;el("reader-title").textContent=doc.title;el("reader-path").textContent=key;el("reader-raw").href=doc.url;el("reader-content").innerHTML=doc.html;if(!reader.open)reader.showModal();reader.scrollTop=0;if(anchor){const target=Array.from(el("reader-content").querySelectorAll("[id]")).find(n=>n.id===anchor);if(target)target.scrollIntoView()}el("reader-close").focus();updateBackTop()}
+el("reader-close").addEventListener("click",()=>reader.close());
+function backTopState(pageY,readerOpen,readerY){return {page:!readerOpen&&pageY>300,reader:readerOpen&&readerY>300}}
+function phaseFloatingVisible(bottom,readerOpen){return bottom<=0&&!readerOpen}
+let phaseFloatingBottom=80;
+function personBackFloatingVisible(detailVisible,bottom,readerOpen){return detailVisible&&bottom<=0&&!readerOpen}
+function personBackFloatingTop(phaseVisible,phaseBottom,baseTop){return phaseVisible?phaseBottom+10:baseTop}
+function updatePhaseFloating(){
+syncPageNavigation();
+const phase=el("floating-phase");phase.hidden=!phaseFloatingVisible(el("phase").getBoundingClientRect().bottom,reader.open);
+const original=el("page-navigation"),floating=el("floating-navigation");
+floating.hidden=!phaseFloatingVisible(original.getBoundingClientRect().bottom,reader.open);
+floating.style.top=personBackFloatingTop(!phase.hidden,phase.getBoundingClientRect().bottom,parseFloat(getComputedStyle(phase).top)||16)+"px";
+const wasHidden=floating.hidden;floating.style.visibility="hidden";floating.hidden=false;
+const navigationHeight=floating.getBoundingClientRect().height;floating.hidden=wasHidden;floating.style.visibility="";
+document.documentElement.style.setProperty("--phase-jump-offset",Math.ceil(phaseFloatingBottom+navigationHeight+26)+"px");
+}
+function measureFloatingPhase(){const floating=el("floating-phase");const wasHidden=floating.hidden;floating.style.visibility="hidden";floating.hidden=false;phaseFloatingBottom=floating.getBoundingClientRect().bottom;floating.hidden=wasHidden;floating.style.visibility=""}
+function paginationClearance(height){return {bottomPadding:Math.max(64,height+48),backTopBottom:height?height+38:14}}
+function updatePaginationSpace(){const clearance=paginationClearance(el("catalogue-pagination").getBoundingClientRect().height);document.documentElement.style.setProperty("--pagination-clearance",clearance.bottomPadding+"px");document.documentElement.style.setProperty("--pagination-back-top-bottom",clearance.backTopBottom+"px")}
+function updateBackTop(){updatePaginationSpace();const state=backTopState(window.scrollY,reader.open,reader.scrollTop);el("back-top").hidden=!state.page;el("reader-back-top").hidden=!state.reader;if(reader.open){const rect=reader.getBoundingClientRect();el("reader-back-top").style.right=Math.max(14,window.innerWidth-rect.right+16)+"px";el("reader-back-top").style.bottom=Math.max(14,window.innerHeight-rect.bottom+16)+"px"}updatePhaseFloating();updateChapterDock()}
+function returnToTop(inReader){const target=inReader?reader:window;const title=el(inReader?"reader-title":"project-title");title.focus({preventScroll:true});target.scrollTo({top:0,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"})}
+el("back-top").addEventListener("click",()=>returnToTop(false));
+el("reader-back-top").addEventListener("click",()=>returnToTop(true));
+window.addEventListener("scroll",updateBackTop,{passive:true});
+window.addEventListener("resize",()=>{measureFloatingPhase();updateBackTop()},{passive:true});
+reader.addEventListener("scroll",updateBackTop,{passive:true});
+reader.addEventListener("close",updateBackTop);
+document.addEventListener("click",event=>{const link=event.target.closest("a[data-doc]");if(!link||!shouldPreviewDocumentLink(link.target,link.hasAttribute("download"),Boolean(data.documents[link.dataset.doc]),event.metaKey||event.ctrlKey||event.shiftKey||event.altKey))return;event.preventDefault();const hash=new URL(link.href,location.href).hash;showDoc(link.dataset.doc,hash?decodeURIComponent(hash.slice(1)):null)});
+el("project-title").textContent=data.project;
+el("phase").append(textNode("span","当前阶段","phase-label"));
+if(data.active.length)data.active.forEach(row=>{const item=document.createElement("span");item.className="phase-item";item.append(textNode("span",row.name,"phase-name"));const status=document.createElement("span");status.innerHTML=row.statusHtml;item.append(status);el("phase").append(item)});
+else el("phase").append(textNode("span","未记录进行中或待确认阶段","phase-name"));
+el("floating-phase").replaceChildren(...Array.from(el("phase").children,node=>node.cloneNode(true)));
+el("updated").textContent="页面更新："+data.builtAt+"（上海时间）";
+el("progress-updated").textContent="项目进度原记录更新时间："+data.progressUpdated;
+el("progress-open").addEventListener("click",()=>showDoc("项目进度.md"));
+if(!data.documents["项目进度.md"]){el("progress-open").disabled=true;el("progress-open").textContent="进度未记录"}
+if(!data.active.length)el("pending-content").append(textNode("p","暂无进行中或待确认阶段，请以项目进度原记录为准。","dim"));
+data.active.forEach(row=>{const section=document.createElement("section");section.className="pending-row";const heading=textNode("strong",row.name);const status=document.createElement("span");status.innerHTML=row.statusHtml;heading.append(status);section.append(heading);const pending=document.createElement("p");pending.innerHTML="待决事项："+row.pendingHtml;section.append(pending);const next=document.createElement("p");next.innerHTML="下一步："+row.nextHtml;section.append(next);el("pending-content").append(section)});
+data.warnings.forEach(w=>el("warnings").append(textNode("div",w,"notice")));
+function renderMetadata(container,meta,confirmationHtml){container.replaceChildren();Object.entries(meta).forEach(([key,value])=>{const item=textNode("span",key+"：");if(key==="确认状态"){const status=document.createElement("span");status.innerHTML=confirmationHtml;item.append(status)}else item.append(document.createTextNode(value));container.append(item)})}
+renderMetadata(el("metadata"),data.meta,data.confirmationHtml);
+el("intro-body").innerHTML=data.introHtml;if(!data.introHtml)el("intro").hidden=true;
+el("position-body").innerHTML=data.positionExists?data.positionHtml:'<p class="empty">尚未形成正式定位，不以草稿代替。</p>';
+if(!data.positionExists){el("position-raw").hidden=true;el("metadata").hidden=true}
+function renderFolders(container,groups){groups.forEach(group=>{const detail=document.createElement("details");detail.className="folder";const summary=document.createElement("summary");summary.append(document.createTextNode(group.name));summary.append(textNode("span",group.files.length?group.files.length+" 份":"暂无","count"));detail.append(summary);if(!group.files.length)detail.append(textNode("p","暂无文件，未创建空目录。","empty"));let loaded=false;detail.addEventListener("toggle",()=>{if(!detail.open||loaded)return;loaded=true;group.files.forEach(file=>{const row=document.createElement("div");row.className="file-row";const button=textNode("button",file.name);button.type="button";button.addEventListener("click",()=>previewFile(file));row.append(button,rawFileLink(file.url));detail.append(row)})});container.append(detail)})}
+renderFolders(el("folders"),data.groups);
+function renderLongDocument(prefix,doc,emptyText){
+el(prefix+"-raw").hidden=!doc.exists;el(prefix+"-metadata").hidden=!doc.exists;el(prefix+"-body").replaceChildren();el(prefix+"-folders").replaceChildren();
+renderMetadata(el(prefix+"-metadata"),doc.meta,doc.confirmationHtml);
+el(prefix+"-raw").href=doc.url;
+el(prefix+"-boundary").innerHTML="阅读边界："+doc.boundaryHtml;
+el(prefix+"-boundary").hidden=!doc.boundaryHtml;
+el(prefix+"-intro-body").innerHTML=doc.introHtml;
+el(prefix+"-intro").hidden=!doc.introHtml;
+if(doc.exists)el(prefix+"-body").innerHTML=doc.bodyHtml;
+else{el(prefix+"-body").append(textNode("p",emptyText,"empty"));el(prefix+"-raw").hidden=true;el(prefix+"-metadata").hidden=true}
+renderFolders(el(prefix+"-folders"),doc.groups);
+renderChapters(prefix);
+}
+function setChapterExpanded(button,list,open){button.setAttribute("aria-expanded",String(open));button.textContent=open?"收起":"展开";list.hidden=!open}
+const chapterDocks=new Map();
+let currentChapterDock=null,chapterDockCollapsed=false;
+function chapterDockVisible(active,bottom,readerOpen,count){return active&&bottom<=0&&!readerOpen&&count>0}
+function chapterDockLayout(viewHeight,topObstacle,bottomObstacle){const minTop=Math.max(12,topObstacle+12),maxBottom=Math.min(viewHeight-12,bottomObstacle-12);const height=Math.max(0,Math.min(224,maxBottom-minTop));return {height,top:Math.max(minTop,Math.min((viewHeight-height)/2,maxBottom-height))}}
+function renderChapterLinks(holder,headings,namespace){
+holder.replaceChildren();
+let chapter=null,subchapters=null;
+headings.forEach(heading=>{
+  const link=textNode("a",heading.textContent);link.href="#"+encodeURIComponent(heading.id);
+  link.title=heading.textContent;
+  link.addEventListener("click",event=>{if(event.metaKey||event.ctrlKey||event.shiftKey)return;event.preventDefault();heading.scrollIntoView({block:"start"});heading.focus({preventScroll:true})});
+  const item=document.createElement("li");item.append(link);
+  if(heading.tagName==="H2"){chapter=item;subchapters=null;holder.append(item)}
+  else if(chapter){if(!subchapters){const button=textNode("button","展开","chapter-toggle");button.type="button";subchapters=document.createElement("ul");subchapters.className="chapter-children";subchapters.id=namespace+"-children-"+heading.id;button.setAttribute("aria-controls",subchapters.id);const list=subchapters;setChapterExpanded(button,list,false);button.addEventListener("click",()=>setChapterExpanded(button,list,list.hidden));chapter.append(button,list)}subchapters.append(item)}
+  else holder.append(item);
+});
+}
+function renderChapters(prefix){
+const headings=Array.from(el(prefix+"-body").querySelectorAll("h2,h3"));
+headings.forEach(heading=>{heading.id=prefix+"-"+heading.id;heading.tabIndex=-1});
+renderChapterLinks(el(prefix+"-toc"),headings,prefix);
+const navigation=el(prefix+"-navigation");navigation.hidden=!headings.length;
+chapterDocks.set(prefix,{navigation,headings});
+}
+function updateChapterDock(){
+const active=Array.from(chapterDocks.values()).find(item=>!item.navigation.closest("[hidden]")&&item.navigation.getClientRects().length);
+const dock=el("chapter-dock");
+dock.hidden=!chapterDockVisible(Boolean(active),active?.navigation.getBoundingClientRect().bottom??1,reader.open,active?.headings.length??0);
+if(dock.hidden)return;
+if(currentChapterDock!==active){currentChapterDock=active;renderChapterLinks(el("chapter-dock-list"),active.headings,"floating");el("chapter-dock-list").scrollTop=0}
+const topObstacle=Math.max(...["floating-phase","floating-navigation"].map(id=>el(id).hidden?0:el(id).getBoundingClientRect().bottom));
+const pagination=el("catalogue-pagination");const bottomObstacle=reader.open||!pagination.getClientRects().length?window.innerHeight:pagination.getBoundingClientRect().top;
+const layout=chapterDockLayout(window.innerHeight,topObstacle,bottomObstacle);dock.style.top=layout.top+"px";dock.style.height=layout.height+"px";dock.hidden=layout.height<66;
+}
+el("chapter-dock-toggle").addEventListener("click",()=>{
+chapterDockCollapsed=!chapterDockCollapsed;el("chapter-dock").dataset.collapsed=String(chapterDockCollapsed);
+el("chapter-dock-panel").inert=chapterDockCollapsed;el("chapter-dock-panel").setAttribute("aria-hidden",String(chapterDockCollapsed));
+el("chapter-dock-toggle").title=chapterDockCollapsed?"展开章节导航":"向左收起章节导航";
+el("chapter-dock-toggle").setAttribute("aria-expanded",String(!chapterDockCollapsed));el("chapter-dock-toggle").setAttribute("aria-label",chapterDockCollapsed?"展开章节导航":"向左收起章节导航");
+});
+let chapterDockFrame=0;
+function scheduleChapterDock(){if(!chapterDockFrame)chapterDockFrame=requestAnimationFrame(()=>{chapterDockFrame=0;updateChapterDock()})}
+new MutationObserver(scheduleChapterDock).observe(el("main"),{subtree:true,childList:true,attributes:true,attributeFilter:["hidden","open"]});
+document.fonts?.ready.then(scheduleChapterDock);
+renderLongDocument("story",data.story,"尚未形成正式故事主旨与简介，不以草稿或历史世界观文件代替。");
+renderLongDocument("outline",data.outline,"尚未形成正式全局故事大纲，不以草稿或历史版本代替。");
+function docLink(key,label,url){const a=textNode("a",label);a.href=url||data.documents[key]?.url||"#";if(data.documents[key])a.dataset.doc=key;return a}
+function imageButton(media,label,css="asset-image"){const button=textNode("button","",css);button.type="button";button.setAttribute("aria-label","放大查看："+label);const img=document.createElement("img");img.src=media.url;img.alt=label;img.loading="lazy";img.decoding="async";img.addEventListener("error",()=>{button.replaceChildren(textNode("span","图片暂无法显示，请打开原文件","empty"))});button.append(img);button.addEventListener("click",()=>showImage(media,label));return button}
+function showImage(media,label){stopMedia();el("reader-title").textContent=label;el("reader-path").textContent=media.key;el("reader-raw").href=media.url;el("reader-content").replaceChildren();const hint=textNode("p","点击图片或按钮切换适应窗口／原始尺寸；本页不改变源图片。","media-help");const toggle=textNode("button","查看原始尺寸","outline");toggle.type="button";const view=document.createElement("div");view.className="media-view";const img=document.createElement("img");img.addEventListener("error",()=>{hint.textContent="图片无法显示，请使用右上角“原文件”打开；未修改或重新生成图片。";toggle.hidden=true;view.hidden=true});img.src=media.url;img.alt=label;view.append(img);const zoom=()=>{const native=view.classList.toggle("native");toggle.textContent=native?"适应窗口":"查看原始尺寸";toggle.setAttribute("aria-pressed",String(native))};toggle.setAttribute("aria-pressed","false");toggle.addEventListener("click",zoom);img.addEventListener("click",zoom);el("reader-content").append(hint,toggle,view);if(!reader.open)reader.showModal();reader.scrollTop=0;el("reader-close").focus();updateBackTop()}
+function candidateReviewFields(asset){return asset.twoStageReview?[["技术审查（生成条目）",asset.technicalHtml],["内容审查（非阻塞）",asset.contentHtml],["内容发现",asset.contentFindingsHtml],["用户采用（生成条目）",asset.userHtml]]:[["历史agent初审（生成条目）",asset.agentHtml],["用户采用（生成条目）",asset.userHtml]]}
+function assetCard(asset,person,candidate){if(asset.prop)return propAssetCard(asset,person,candidate);if(asset.scene)return sceneAssetCard(asset,person,candidate);const box=document.createElement("article");box.className="asset-card";const label=person.name+" · "+asset.state+" · "+asset.type;if(asset.media)box.append(imageButton(asset.media,label));else box.append(textNode("p","已登记的图片缺失或路径不适用，请核对原记录。","notice"));const copy=document.createElement("div");copy.className="asset-copy";copy.append(textNode("h4",asset.type));copy.append(textNode("p","人物状态："+asset.state));copy.append(textNode("p","服装状态："+asset.costume));if(candidate){copy.append(textNode("p",asset.media.name+" · "+asset.generation));for(const [title,content] of candidateReviewFields(asset)){const p=textNode("p",title+"：");const state=document.createElement("span");state.innerHTML=content;p.append(state);copy.append(p)}}else{const version=textNode("p","采用版本：");const value=document.createElement("span");value.innerHTML=asset.versionHtml;version.append(value);copy.append(version);const state=textNode("p","用户确认（审阅依据）：");const value2=document.createElement("span");value2.innerHTML=asset.statusHtml;state.append(value2);copy.append(state);copy.append(textNode("p","适用范围："+asset.scope));if(!asset.approved)copy.append(textNode("p","批准依据需核对；不用于人物封面。","notice"))}const links=document.createElement("div");links.className="asset-links";if(asset.media){const raw=docLink(null,"原图",asset.media.url);raw.target="_blank";raw.rel="noopener";links.append(raw)}asset.reviews.forEach(r=>links.append(docLink(r.key,r.name,r.url)));if(candidate)links.append(docLink(person.recordKey,asset.generation,asset.recordUrl));copy.append(links);box.append(copy);return box}
+let peopleScroll=0,personOpener=null;
+function personAssetGroups(person){
+  if(!person.stages.length)return [];
+  const groups=person.stages.map(stage=>({label:stage,assets:person.formal.filter(a=>a.stage===stage)}));
+  const unassigned=person.formal.filter(a=>!person.stages.includes(a.stage));
+  if(unassigned.length)groups.push({label:"未归入阶段",assets:unassigned});
+  return groups;
+}
+function personAssetSlots(assets){
+  return ["人物上半身正面肖像图","人物多视角参考图","服装参考图","角色多视角参考图"].map(type=>({type,assets:assets.filter(asset=>asset.type===type)}));
+}
+function personAssetPlaceholder(type){
+  const box=textNode("article","","asset-card");
+  box.append(textNode("div","暂无正式图片","asset-placeholder-image"));
+  const copy=textNode("div","","asset-copy");
+  copy.append(textNode("h4",type),textNode("p","尚未登记此类型的正式参考图；候选及审阅状态可在“候选与审阅”查看。"));
+  box.append(copy);return box;
+}
+function renderPersonAssets(person){
+  const tabs=el("person-stage-tabs"),gallery=el("person-gallery");
+  tabs.replaceChildren();gallery.replaceChildren();
+  const groups=personAssetGroups(person);
+  tabs.hidden=!groups.length;
+  const show=assets=>{
+    gallery.replaceChildren();
+    const grid=document.createElement("div");grid.className="asset-grid";
+    personAssetSlots(assets).forEach(slot=>{
+      const region=textNode("div","","person-asset-slot");
+      if(slot.assets.length)slot.assets.forEach(asset=>region.append(assetCard(asset,person,false)));
+      else region.append(personAssetPlaceholder(slot.type));
+      grid.append(region);
+    });gallery.append(grid);
+  };
+  if(!groups.length){show(person.formal);return}
+  const select=index=>{
+    Array.from(tabs.children).forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
+    show(groups[index].assets);
+    if(groups[index].assets.some(a=>!a.stage))gallery.prepend(textNode("p","这些正式资产尚未归入资料卡中的阶段，请核对目录与记录。","notice"));
+  };
+  groups.forEach((group,index)=>{
+    const button=textNode("button",group.label);button.type="button";
+    button.setAttribute("aria-controls","person-gallery");button.addEventListener("click",()=>select(index));tabs.append(button);
+  });
+  select(0);
+}
+function openPerson(person,opener){peopleScroll=window.scrollY;personOpener=opener;el("people-list").hidden=true;el("person-detail").hidden=false;el("person-title").textContent=person.id+" · "+person.name;el("person-subtitle").textContent=person.role;renderLongDocument("person",person.card,"尚未形成正式人物资料卡，不以草稿代替。");renderPersonAssets(person);el("person-candidate-groups").replaceChildren();const groups=new Map();person.candidates.forEach(a=>{const key=a.state+" · "+a.type;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(a)});if(!groups.size)el("person-candidate-groups").append(textNode("p","暂无已关联生成记录的候选图片；其余文件可从相关记录查看。","empty"));groups.forEach((items,label)=>{const details=document.createElement("details");details.className="candidate-group";details.append(textNode("summary",label+"（"+items.length+" 张）"));let loaded=false;details.addEventListener("toggle",()=>{if(!details.open||loaded)return;loaded=true;const grid=document.createElement("div");grid.className="asset-grid";items.slice().reverse().forEach(a=>grid.append(assetCard(a,person,true)));details.append(grid)});el("person-candidate-groups").append(details)});el("person-record-link").replaceChildren();if(person.recordKey)el("person-record-link").append(docLink(person.recordKey,"打开完整生成记录"));else el("person-record-link").append(textNode("p","尚无生成记录。","empty"));el("person-record-folders").replaceChildren();renderFolders(el("person-record-folders"),person.groups);el("person-tabs").replaceChildren();const sections=[["person-assets","正式参考图"],["person-document","人物资料卡"],["person-candidates","候选与审阅"],["person-records","相关记录"]];const select=id=>{sections.forEach(([key])=>el(key).hidden=key!==id);Array.from(el("person-tabs").children).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.section===id)))};sections.forEach(([id,label])=>{const b=textNode("button",label);b.type="button";b.dataset.section=id;b.setAttribute("aria-controls",id);b.addEventListener("click",()=>select(id));el("person-tabs").append(b)});select("person-assets");updateBackTop();el("person-title").scrollIntoView({block:"start"});el("person-title").focus({preventScroll:true});updateBackTop()}
+function returnToPeople(){el("person-detail").hidden=true;el("people-list").hidden=false;personOpener?.focus({preventScroll:true});window.scrollTo({top:peopleScroll,behavior:"instant"});updateBackTop()}
+function matchingPeople(query){const q=query.trim().toLocaleLowerCase();return data.people.filter(p=>(p.id+" "+p.name).toLocaleLowerCase().includes(q))}
+function personEntryButton(person,label,className){const button=textNode("button",label,className);button.type="button";button.setAttribute("aria-label","查看人物资料："+person.id+" "+person.name);button.addEventListener("click",()=>openPerson(person,button));return button}
+function renderPeople(){const people=matchingPeople(el("people-search").value);el("people-count").textContent=people.length+" / "+data.people.length+" 位人物";el("people-grid").replaceChildren();if(!people.length)el("people-grid").append(textNode("p","没有匹配人物。","empty"));people.forEach(person=>{const card=document.createElement("article");card.className="person-card";const cover=personEntryButton(person,"","person-cover");if(person.cover){const img=document.createElement("img");img.src=person.cover.media.url;img.alt=person.name+" · "+person.cover.state+"（已批准封面）";img.loading="lazy";img.addEventListener("error",()=>cover.replaceChildren(textNode("span","图片无法显示","empty")));cover.append(img)}else cover.append(textNode("span",person.id,"person-placeholder"));card.append(cover);const info=document.createElement("div");info.className="person-info";info.append(textNode("span",person.id,"person-id"),textNode("h3",person.name),textNode("p",person.role,"person-role"));info.append(textNode("p",person.cover?"封面："+person.cover.state:"暂无可用的已批准封面","person-cover-label"));const status=textNode("div","","person-stats person-status-row");status.append(textNode("span","资料卡：","person-status-label"));const badge=document.createElement("span");badge.innerHTML=person.card.confirmationHtml.match(/^<span\b[^>]*>[\s\S]*?<\/span>/)?.[0]||person.card.confirmationHtml;status.title=person.card.meta["确认状态"];status.append(badge);info.append(status);info.append(textNode("p","正式表登记 "+person.formal.length+" 张 · 留存候选 "+person.candidates.length+" 张","person-stats"));if(person.pendingCount)info.append(textNode("p","留存条目仍标待确认／待审核："+person.pendingCount+" 张","person-pending status-orange"));const open=personEntryButton(person,"查看人物资料 →","outline");info.append(open);card.append(info);el("people-grid").append(card)})}
+el("people-search").addEventListener("input",renderPeople);
+if(data.peopleIndex){el("people-index").href=data.documents[data.peopleIndex].url;el("people-index").dataset.doc=data.peopleIndex}else el("people-index").hidden=true;
+renderPeople();renderFolders(el("people-folders"),data.peopleGroups);
+function sceneAssetCard(asset,scene,candidate){
+const box=textNode("article","","asset-card scene-media");
+const label=scene.name+" · "+asset.state+" · "+asset.type;
+if(asset.media)box.append(imageButton(asset.media,label));else box.append(textNode("p","登记图片缺失或路径不适用，请核对原记录。","notice"));
+const copy=textNode("div","","asset-copy");copy.append(textNode("h4",asset.type),textNode("p","最初制作场次："+asset.state),textNode("p","状态与适用条件："+asset.scope));
+const fields=candidate?candidateReviewFields(asset):[["采用版本",asset.versionHtml],["用户确认（审阅依据）",asset.statusHtml],["来源参考",asset.sourceHtml]];
+if(candidate)copy.append(textNode("p",asset.media.name+" · "+asset.generation));
+fields.forEach(([label,html])=>{const p=textNode("p",label+"：");const value=textNode("span","");value.innerHTML=html;p.append(value);copy.append(p)});
+if(!candidate&&!asset.approved)copy.append(textNode("p","批准依据未按当前格式确认，请查看原记录；不用于场景封面。","notice"));
+const links=textNode("div","","asset-links");
+if(asset.media){const raw=docLink(null,"原图",asset.media.url);raw.target="_blank";raw.rel="noopener";links.append(raw)}
+asset.reviews.forEach(r=>links.append(docLink(r.key,r.name,r.url)));
+if(candidate)links.append(docLink(scene.recordKey,asset.generation,asset.recordUrl));
+copy.append(links);box.append(copy);return box;
+}
+function renderSceneSupporting(scene){
+const holder=el("scene-supporting");holder.replaceChildren();
+if(!scene.auxiliary.length&&!scene.legacy.length)return;
+const details=textNode("details","","candidate-group");
+details.append(textNode("summary","辅助／既有参考图（"+(scene.auxiliary.length+scene.legacy.length)+" 张）"),textNode("p","这些图片不作为当前场次封面。结构辅助用途、旧格式采用与限制请以完整生成记录及审阅依据为准；此处分区不撤销原批准。","people-note"));
+let loaded=false;details.addEventListener("toggle",()=>{if(!details.open||loaded)return;loaded=true;const grid=textNode("div","","asset-grid scene-media");scene.auxiliary.forEach(a=>grid.append(sceneAssetCard(a,scene,false)));scene.legacy.forEach(media=>{const box=textNode("article","","asset-card");box.append(imageButton(media,media.name));const copy=textNode("div","","asset-copy");copy.append(textNode("h4",media.name),textNode("p","既有文件：未转换为按场次登记的当前资产，具体用途与批准范围请查看原记录。"));const raw=docLink(null,"原图",media.url);raw.target="_blank";raw.rel="noopener";copy.append(raw);if(scene.recordKey)copy.append(document.createTextNode(" · "),docLink(scene.recordKey,"生成记录"));box.append(copy);grid.append(box)});details.append(grid)});holder.append(details);
+}
+let scenesScroll=0,sceneOpener=null;
+function openScene(person,opener){scenesScroll=window.scrollY;sceneOpener=opener;el("scenes-list").hidden=true;el("scene-detail").hidden=false;el("scene-title").textContent=person.id+" · "+person.name;el("scene-subtitle").textContent=person.role;renderLongDocument("scene",person.card,"尚未形成正式场景资料卡，不以草稿代替。");el("scene-gallery").replaceChildren();const states=[...new Set(person.formal.map(a=>a.state))];if(!states.length)el("scene-gallery").append(textNode("p","暂无按场次登记的正式环境图；候选请看“候选与审阅”，旧格式图片请看“相关记录”。","empty"));states.forEach(state=>{el("scene-gallery").append(textNode("h4",state,"asset-state"));const grid=document.createElement("div");grid.className="asset-grid scene-media";person.formal.filter(a=>a.state===state).forEach(a=>grid.append(assetCard(a,person,false)));el("scene-gallery").append(grid)});el("scene-candidate-groups").replaceChildren();const groups=new Map();person.candidates.forEach(a=>{const key=a.state+" · "+a.type;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(a)});if(!groups.size)el("scene-candidate-groups").append(textNode("p","暂无已关联生成记录的候选图片；其余文件可从相关记录查看。","empty"));groups.forEach((items,label)=>{const details=document.createElement("details");details.className="candidate-group";details.append(textNode("summary",label+"（"+items.length+" 张）"));let loaded=false;details.addEventListener("toggle",()=>{if(!details.open||loaded)return;loaded=true;const grid=document.createElement("div");grid.className="asset-grid";items.slice().reverse().forEach(a=>grid.append(assetCard(a,person,true)));details.append(grid)});el("scene-candidate-groups").append(details)});el("scene-record-link").replaceChildren();if(person.recordKey)el("scene-record-link").append(docLink(person.recordKey,"打开完整生成记录"));else el("scene-record-link").append(textNode("p","尚无生成记录。","empty"));renderSceneSupporting(person);el("scene-record-folders").replaceChildren();renderFolders(el("scene-record-folders"),person.groups);el("scene-tabs").replaceChildren();const sections=[["scene-assets","正式参考图"],["scene-document","场景资料卡"],["scene-candidates","候选与审阅"],["scene-records","相关记录"]];const select=id=>{sections.forEach(([key])=>el(key).hidden=key!==id);Array.from(el("scene-tabs").children).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.section===id)))};sections.forEach(([id,label])=>{const b=textNode("button",label);b.type="button";b.dataset.section=id;b.setAttribute("aria-controls",id);b.addEventListener("click",()=>select(id));el("scene-tabs").append(b)});select("scene-assets");updateBackTop();el("scene-title").scrollIntoView({block:"start"});el("scene-title").focus({preventScroll:true});updateBackTop()}
+function returnToScenes(){el("scene-detail").hidden=true;el("scenes-list").hidden=false;sceneOpener?.focus({preventScroll:true});window.scrollTo({top:scenesScroll,behavior:"instant"});updateBackTop()}
+function matchingScenes(query){const q=query.trim().toLocaleLowerCase();return data.scenes.filter(p=>(p.id+" "+p.name).toLocaleLowerCase().includes(q))}
+function sceneEntryButton(person,label,className){const button=textNode("button",label,className);button.type="button";button.setAttribute("aria-label","查看场景资料："+person.id+" "+person.name);button.addEventListener("click",()=>openScene(person,button));return button}
+function renderScenes(){const people=matchingScenes(el("scenes-search").value);el("scenes-count").textContent=people.length+" / "+data.scenes.length+" 处场景";el("scenes-grid").replaceChildren();if(!people.length)el("scenes-grid").append(textNode("p","没有匹配场景。","empty"));people.forEach(person=>{const card=document.createElement("article");card.className="person-card";const cover=sceneEntryButton(person,"","person-cover");if(person.cover){const img=document.createElement("img");img.src=person.cover.media.url;img.alt=person.name+" · "+person.cover.state+"（已批准封面）";img.loading="lazy";img.addEventListener("error",()=>cover.replaceChildren(textNode("span","图片无法显示","empty")));cover.append(img)}else cover.append(textNode("span",person.id,"person-placeholder"));card.append(cover);const info=document.createElement("div");info.className="person-info";info.append(textNode("span",person.id,"person-id"),textNode("h3",person.name),textNode("p",person.role,"person-role"));info.append(textNode("p",person.cover?"封面："+person.cover.state+" · "+person.cover.scope:"暂无可用的已批准封面","person-cover-label"));const status=textNode("div","","person-stats person-status-row");status.append(textNode("span","资料卡：","person-status-label"));const badge=document.createElement("span");badge.innerHTML=person.card.confirmationHtml.match(/^<span\b[^>]*>[\s\S]*?<\/span>/)?.[0]||person.card.confirmationHtml;status.title=person.card.meta["确认状态"];status.append(badge);info.append(status);info.append(textNode("p", "场次环境图登记 "+person.formal.length+" 张 · 留存候选 "+person.candidates.length+" 张","person-stats"));if(person.pendingCount)info.append(textNode("p","留存条目仍标待确认／待审核："+person.pendingCount+" 张","person-pending status-orange"));const open=sceneEntryButton(person,"查看场景资料 →","outline");info.append(open);card.append(info);el("scenes-grid").append(card)})}
+el("scenes-search").addEventListener("input",renderScenes);
+if(data.sceneIndex){el("scenes-index").href=data.documents[data.sceneIndex].url;el("scenes-index").dataset.doc=data.sceneIndex}else el("scenes-index").hidden=true;
+renderScenes();renderFolders(el("scenes-folders"),data.sceneGroups);
+function propAssetCard(asset,prop,candidate){
+const box=textNode("article","","asset-card prop-media");
+const label=prop.name+" · "+asset.state+" · "+asset.type;
+if(asset.media)box.append(imageButton(asset.media,label));else box.append(textNode("p","登记图片缺失或路径不适用，请核对原记录。","notice"));
+const copy=textNode("div","","asset-copy");copy.append(textNode("h4",asset.type),textNode("p","道具状态："+asset.state),textNode("p","状态与适用条件："+asset.scope));
+const fields=candidate?candidateReviewFields(asset):[["采用版本",asset.versionHtml],["用户确认（审阅依据）",asset.statusHtml],["来源参考",asset.sourceHtml]];
+if(candidate)copy.append(textNode("p",asset.media.name+" · "+asset.generation));
+fields.forEach(([label,html])=>{const p=textNode("p",label+"：");const value=textNode("span","");value.innerHTML=html;p.append(value);copy.append(p)});
+if(!candidate&&!asset.approved)copy.append(textNode("p","批准依据未按当前格式确认，请查看原记录；不用于道具封面。","notice"));
+const links=textNode("div","","asset-links");
+if(asset.media){const raw=docLink(null,"原图",asset.media.url);raw.target="_blank";raw.rel="noopener";links.append(raw)}
+asset.reviews.forEach(r=>links.append(docLink(r.key,r.name,r.url)));
+if(candidate)links.append(docLink(prop.recordKey,asset.generation,asset.recordUrl));
+copy.append(links);box.append(copy);return box;
+}
+let propsScroll=0,propOpener=null;
+function openProp(person,opener){propsScroll=window.scrollY;propOpener=opener;el("props-list").hidden=true;el("prop-detail").hidden=false;el("prop-title").textContent=person.id+" · "+person.name;el("prop-subtitle").textContent=person.role;renderLongDocument("prop",person.card,"尚未形成正式道具资料卡，不以草稿代替。");el("prop-gallery").replaceChildren();const states=[...new Set(person.formal.map(a=>a.state))];if(!states.length)el("prop-gallery").append(textNode("p","暂无当前正式参考图。候选及其审阅状态请查看“候选与审阅”。","empty"));states.forEach(state=>{el("prop-gallery").append(textNode("h4",state,"asset-state"));const grid=document.createElement("div");grid.className="asset-grid";person.formal.filter(a=>a.state===state).forEach(a=>grid.append(assetCard(a,person,false)));el("prop-gallery").append(grid)});el("prop-candidate-groups").replaceChildren();const groups=new Map();person.candidates.forEach(a=>{const key=a.state+" · "+a.type;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(a)});if(!groups.size)el("prop-candidate-groups").append(textNode("p","暂无已关联生成记录的候选图片；其余文件可从相关记录查看。","empty"));groups.forEach((items,label)=>{const details=document.createElement("details");details.className="candidate-group";details.append(textNode("summary",label+"（"+items.length+" 张）"));let loaded=false;details.addEventListener("toggle",()=>{if(!details.open||loaded)return;loaded=true;const grid=document.createElement("div");grid.className="asset-grid";items.slice().reverse().forEach(a=>grid.append(assetCard(a,person,true)));details.append(grid)});el("prop-candidate-groups").append(details)});el("prop-record-link").replaceChildren();if(person.recordKey)el("prop-record-link").append(docLink(person.recordKey,"打开完整生成记录"));else el("prop-record-link").append(textNode("p","尚无生成记录。","empty"));el("prop-record-folders").replaceChildren();renderFolders(el("prop-record-folders"),person.groups);el("prop-tabs").replaceChildren();const sections=[["prop-assets","正式参考图"],["prop-document","道具资料卡"],["prop-candidates","候选与审阅"],["prop-records","相关记录"]];const select=id=>{sections.forEach(([key])=>el(key).hidden=key!==id);Array.from(el("prop-tabs").children).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.section===id)))};sections.forEach(([id,label])=>{const b=textNode("button",label);b.type="button";b.dataset.section=id;b.setAttribute("aria-controls",id);b.addEventListener("click",()=>select(id));el("prop-tabs").append(b)});select("prop-assets");updateBackTop();el("prop-title").scrollIntoView({block:"start"});el("prop-title").focus({preventScroll:true});updateBackTop()}
+function returnToProps(){el("prop-detail").hidden=true;el("props-list").hidden=false;propOpener?.focus({preventScroll:true});window.scrollTo({top:propsScroll,behavior:"instant"});updateBackTop()}
+function matchingProps(query){const q=query.trim().toLocaleLowerCase();return data.props.filter(p=>(p.id+" "+p.name).toLocaleLowerCase().includes(q))}
+function propEntryButton(person,label,className){const button=textNode("button",label,className);button.type="button";button.setAttribute("aria-label","查看道具资料："+person.id+" "+person.name);button.addEventListener("click",()=>openProp(person,button));return button}
+function renderProps(){const people=matchingProps(el("props-search").value);el("props-count").textContent=people.length+" / "+data.props.length+" 项道具";el("props-grid").replaceChildren();if(!people.length)el("props-grid").append(textNode("p","没有匹配道具。","empty"));people.forEach(person=>{const card=document.createElement("article");card.className="person-card";const cover=propEntryButton(person,"","person-cover");if(person.cover){const img=document.createElement("img");img.src=person.cover.media.url;img.alt=person.name+" · "+person.cover.state+"（已批准封面）";img.loading="lazy";img.addEventListener("error",()=>cover.replaceChildren(textNode("span","图片无法显示","empty")));cover.append(img)}else cover.append(textNode("span",person.id,"person-placeholder"));card.append(cover);const info=document.createElement("div");info.className="person-info";info.append(textNode("span",person.id,"person-id"),textNode("h3",person.name),textNode("p",person.role,"person-role"));info.append(textNode("p",person.cover?"封面："+person.cover.state:"暂无可用的已批准封面","person-cover-label"));const status=textNode("div","","person-stats person-status-row");status.append(textNode("span","资料卡：","person-status-label"));const badge=document.createElement("span");badge.innerHTML=person.card.confirmationHtml.match(/^<span\b[^>]*>[\s\S]*?<\/span>/)?.[0]||person.card.confirmationHtml;status.title=person.card.meta["确认状态"];status.append(badge);info.append(status);info.append(textNode("p","正式表登记 "+person.formal.length+" 张 · 留存候选 "+person.candidates.length+" 张","person-stats"));if(person.pendingCount)info.append(textNode("p","留存条目仍标待确认／待审核："+person.pendingCount+" 张","person-pending status-orange"));const open=propEntryButton(person,"查看道具资料 →","outline");info.append(open);card.append(info);el("props-grid").append(card)})}
+el("props-search").addEventListener("input",renderProps);
+if(data.propIndex){el("props-index").href=data.documents[data.propIndex].url;el("props-index").dataset.doc=data.propIndex}else el("props-index").hidden=true;
+renderProps();renderFolders(el("props-folders"),data.propGroups);
+function stopMedia(){el("reader-content").querySelectorAll("audio,video").forEach(media=>media.pause())}
+reader.addEventListener("close",stopMedia);
+function shouldPreviewDocumentLink(target,download,known,modified){return known&&!target&&!download&&!modified}
+function rawFileLink(url){const link=textNode("a","原文件");link.href=url;link.target="_blank";link.rel="noopener noreferrer";return link}
+function filePreviewMode(kind){return ["document","text","image","audio","video"].includes(kind)?kind:"unsupported"}
+function previewFile(item){
+stopMedia();const mode=filePreviewMode(item.kind);
+if(mode==="document"&&data.documents[item.key]){showDoc(item.key);return}
+if(mode==="image"){showImage(item,item.name);return}
+if(mode==="audio"||mode==="video"){showMedia(item);return}
+el("reader-title").textContent=item.name;el("reader-path").textContent=item.key;el("reader-raw").href=item.url;el("reader-content").replaceChildren();
+const snapshot=mode==="text"?data.textPreviews?.[item.key]:null;
+if(snapshot){if(snapshot.notice)el("reader-content").append(textNode("p",snapshot.notice,"notice"));const pre=textNode("pre",snapshot.text);pre.style.whiteSpace="pre-wrap";pre.style.overflowWrap="anywhere";el("reader-content").append(pre)}
+else el("reader-content").append(textNode("p","暂不支持此文件的页内预览，请使用右上角“原文件”在新标签页打开。","notice"));
+if(!reader.open)reader.showModal();reader.scrollTop=0;el("reader-close").focus();updateBackTop();
+}
+function showMedia(item){
+stopMedia();el("reader-title").textContent=item.name;el("reader-path").textContent=item.key;el("reader-raw").href=item.url;el("reader-content").replaceChildren();
+const player=document.createElement(item.kind);player.className="media-player";player.controls=true;player.preload=item.kind==="video"?"auto":"none";player.setAttribute("aria-label",item.name);
+if(item.kind==="video"){player.playsInline=true;player.hidden=true;player.addEventListener("loadedmetadata",()=>{if(player.videoWidth&&player.videoHeight){player.style.setProperty("--video-ratio",String(player.videoWidth/player.videoHeight));player.hidden=false}else hint.textContent="无法读取视频画面尺寸，请打开原文件。"},{once:true})}
+const hint=textNode("p",item.kind==="video"?"正在加载视频首帧；点击播放，不自动播放。":"点击播放；不自动播放、转换或分析内容。浏览器不支持时请打开原文件。","media-help");
+if(item.kind==="video")player.addEventListener("loadeddata",()=>{if(!player.hidden)hint.textContent="点击播放；已加载首帧，不自动播放、转换或分析内容。"},{once:true});
+player.addEventListener("error",()=>{hint.textContent="浏览器无法播放此文件，请打开原文件；未进行转码。"});
+player.src=item.url;
+el("reader-content").append(player,hint);if(!reader.open)reader.showModal();reader.scrollTop=0;el("reader-close").focus();updateBackTop();
+}
+function catalogueMatches(node,query,category){
+const q=query.trim().toLocaleLowerCase(),result=[],seen=new Set();
+function visit(items){items.forEach(item=>{
+const match=(!category||item.category===category)&&(!q||(item.name+" "+(item.summary||"")+" "+item.key).toLocaleLowerCase().includes(q));
+if(match&&!seen.has(item.key)){result.push(item);seen.add(item.key)}
+if(q&&item.kind==="group")visit(item.children||[]);
+})}
+visit(node.children||[]);return result;
+}
+function saveCataloguePosition(){const state=catalogueStack.at(-1);if(state)state.scroll=window.scrollY}
+function openCatalogue(root){
+if(catalogueRoot)saveCataloguePosition();
+catalogueRoot=root;
+if(!catalogueViews.has(root))catalogueViews.set(root,[{node:data.catalogues[root],query:"",category:"",scroll:0}]);
+catalogueStack=catalogueViews.get(root);renderCatalogue();
+}
+function enterCatalogue(item,opener){
+saveCataloguePosition();catalogueStack.push({node:item,query:"",category:"",scroll:0,opener});renderCatalogue();
+updateBackTop();el("catalogue-title").scrollIntoView({block:"start"});el("catalogue-title").focus({preventScroll:true});updateBackTop();
+}
+function backCatalogue(to){
+if(catalogueStack.length<2)return;const target=typeof to==="number"?to:catalogueStack.length-2;
+const opener=catalogueStack[target+1]?.opener;catalogueStack.splice(target+1);renderCatalogue();window.scrollTo({top:catalogueStack.at(-1).scroll,behavior:"instant"});
+const replacement=opener&&Array.from(el("catalogue-grid").querySelectorAll("[data-key]")).find(b=>b.dataset.key===opener);
+(replacement||el("catalogue-title")).focus({preventScroll:true});updateBackTop();
+}
+function openCatalogueItem(item){
+if(item.kind==="group"||item.kind==="outline")enterCatalogue(item,item.key);
+else if(item.kind==="reference"&&item.media)showMedia({...item.media,name:item.name});
+else previewFile(item);
+}
+function renderCatalogue(){
+const state=catalogueStack.at(-1);if(!state)return;const node=state.node;
+el("catalogue-title").textContent=node.name;el("catalogue-note").textContent=[data.catalogues[catalogueRoot]?.note,node.note!==data.catalogues[catalogueRoot]?.note?node.note:""].filter(Boolean).join(" ");
+syncPageNavigation();
+const index=data.documents[node.indexKey];el("catalogue-index").hidden=!index;if(index){el("catalogue-index").href=index.url;el("catalogue-index").dataset.doc=node.indexKey}else delete el("catalogue-index").dataset.doc;
+const isDoc=node.kind==="outline";el("catalogue-list").hidden=isDoc;el("catalogue-document").hidden=!isDoc;
+if(isDoc){renderLongDocument("catalogue-doc",node.doc,"尚无正式大纲，不以草稿代替。");return}
+el("catalogue-search").value=state.query;const filter=el("catalogue-filter");filter.replaceChildren();filter.append(new Option("全部",""));
+const stageMode=catalogueRoot==="06-分集大纲";
+const filterLabel=stageMode?"阶段":"分类";el("catalogue-filter-label").textContent=filterLabel;filter.setAttribute("aria-label",filterLabel);
+const categories=catalogueCategories(node,stageMode);categories.forEach(c=>filter.append(new Option(c,c)));filter.value=state.category;filter.parentElement.hidden=!categories.length;
+renderCatalogueList();
+}
+function catalogueCategories(node,stageMode){return [...new Set([...(node.categories||[]),...(node.children||[]).map(i=>i.category)].filter(c=>c&&c.trim()&&(!stageMode||!["未记录","待确认","不适用","无","未划分","未划分阶段"].includes(c.trim()))))]}
+function paginationState(total,page,size){const pageSize=size==="all"?"all":[10,20,50].includes(Number(size))?Number(size):20;const count=pageSize==="all"?Math.max(1,total):pageSize;const pages=Math.ceil(total/count);const current=Math.min(Math.max(1,Number(page)||1),Math.max(1,pages));const start=(current-1)*count;return {page:current,size:pageSize,pages,start,end:Math.min(start+count,total)}}
+function paginationLabel(total,paging){return "第 "+(total?paging.page:0)+" 页 · "+(total?paging.start+1:0)+"-"+paging.end+" · 共 "+paging.pages+" 页 · 共 "+total+" 项"}
+function renderEpisodeFolders(container,items){
+items.forEach(item=>{
+if(item.kind!=="group"){const row=textNode("div","","file-row"),button=textNode("button",item.name);button.type="button";button.title=item.key;button.addEventListener("click",()=>previewFile(item));row.append(button,rawFileLink(item.url));container.append(row);return}
+const detail=textNode("details","","folder"),summary=textNode("summary",item.name);summary.append(textNode("span",item.children.length+" 项","count"));detail.append(summary);let loaded=false;
+detail.addEventListener("toggle",()=>{if(!detail.open||loaded)return;loaded=true;if(item.children.length)renderEpisodeFolders(detail,item.children);else detail.append(textNode("p","暂无文件。","empty"))});container.append(detail);
+});
+}
+function renderCatalogueList(){
+const state=catalogueStack.at(-1);if(!state)return;const items=catalogueMatches(state.node,state.query,state.category),grid=el("catalogue-grid");grid.replaceChildren();
+const folders=catalogueRoot==="09-剧集制作"&&catalogueStack.length>1;grid.classList.toggle("episode-folders",folders);
+const productionRows=catalogueRoot==="09-剧集制作"&&catalogueStack.length===1;
+const outlineRows=catalogueRoot==="06-分集大纲"||productionRows;grid.classList.toggle("outline-rows",outlineRows);
+const paging=paginationState(items.length,state.page,state.pageSize);state.page=paging.page;state.pageSize=paging.size;
+el("catalogue-count").textContent=items.length+" 项";
+el("catalogue-range").textContent=paginationLabel(items.length,paging);
+el("catalogue-prev").disabled=paging.page<=1;el("catalogue-next").disabled=!paging.pages||paging.page>=paging.pages;el("catalogue-page-size").value=String(paging.size);
+if(!items.length)grid.append(textNode("p",state.query||state.category?"没有匹配资料。":"暂无资料；未创建空文件或制作任务。","empty"));
+if(folders){renderEpisodeFolders(grid,items.slice(paging.start,paging.end));return}
+items.slice(paging.start,paging.end).forEach(item=>{
+const box=textNode("article","","catalogue-card"),copy=outlineRows?textNode("div","","outline-row-copy"):box;
+const slideCard=outlineRows&&(item.kind==="outline"||(productionRows&&item.kind==="group"&&/^09-剧集制作\/EP\d{3,}$/.test(item.key)));
+if(slideCard)box.classList.add("outline-slide");
+const heading=outlineRows?textNode("div","","outline-row-heading"):copy;heading.append(textNode("h3",item.name));
+if(productionRows&&slideCard)heading.classList.add("production-heading");
+if(item.category)heading.append(textNode("p",item.category,"dim"));
+if(outlineRows){copy.append(heading);box.append(copy)}
+if(item.summary)copy.append(textNode("p",item.summary));
+if(item.kind==="group")copy.append(textNode("p",(item.children||[]).length+" 项直接入口","dim"));
+if(item.statusHtml){const status=textNode("div","","catalogue-status");status.innerHTML=item.statusHtml;(productionRows&&slideCard?heading:copy).append(status)}
+copy.append(textNode("p",item.key,"catalogue-path"));
+if(item.kind==="reference"){
+const source=textNode("p","来源与授权：");const v=textNode("span","");v.innerHTML=item.sourceHtml;source.append(v);box.append(source,textNode("p","索引实测时长："+item.duration));
+if(!item.media)box.append(textNode("p","索引文件缺失、类型不符或路径不适用，请核对。","notice"));
+}
+const actions=outlineRows?textNode("div","","outline-row-actions"):box;
+if(slideCard){
+const actionLabel=item.kind==="outline"?"阅读原文":"进入查看";
+box.tabIndex=0;box.dataset.key=item.key;box.setAttribute("role","button");box.setAttribute("aria-label",actionLabel+"："+item.name);
+box.addEventListener("click",event=>{if(!event.target.closest("a"))openCatalogueItem(item)});
+box.addEventListener("keydown",event=>{if(event.target===box&&(event.key==="Enter"||event.key===" ")){event.preventDefault();openCatalogueItem(item)}});
+actions.setAttribute("aria-hidden","true");actions.append(textNode("span",actionLabel,"outline-read-hint"));box.append(actions);grid.append(box);return;
+}
+const b=textNode("button",item.kind==="group"?"进入查看 →":item.kind==="reference"||item.kind==="audio"||item.kind==="video"?"播放预览":item.kind==="image"?"查看图片":item.kind==="file"?"查看文件":outlineRows?"阅读原文 →":"阅读文档 →","outline");b.type="button";b.dataset.key=item.key;b.disabled=item.kind==="reference"&&!item.media;b.addEventListener("click",()=>openCatalogueItem(item));actions.append(b);
+if(item.url)actions.append(rawFileLink(item.url));
+if(item.kind==="reference"&&item.media)actions.append(rawFileLink(item.media.url));
+if(outlineRows)box.append(actions);
+grid.append(box);
+});
+}
+function changeCataloguePage(delta){const state=catalogueStack.at(-1);state.page=(state.page||1)+delta;renderCatalogueList();updateBackTop()}
+el("catalogue-prev").addEventListener("click",()=>changeCataloguePage(-1));
+el("catalogue-next").addEventListener("click",()=>changeCataloguePage(1));
+el("catalogue-page-size").addEventListener("change",()=>{const state=catalogueStack.at(-1);state.page=1;state.pageSize=el("catalogue-page-size").value;renderCatalogueList();updateBackTop()});
+el("catalogue-search").addEventListener("input",()=>{catalogueStack.at(-1).page=1;catalogueStack.at(-1).query=el("catalogue-search").value;renderCatalogueList();updateBackTop()});
+el("catalogue-filter").addEventListener("change",()=>{catalogueStack.at(-1).page=1;catalogueStack.at(-1).category=el("catalogue-filter").value;renderCatalogueList();updateBackTop()});
+function panelId(dir){if(data.catalogues[dir.name])return "catalogue-panel";return {"00-项目定位":"position-panel","01-故事主旨与简介":"story-panel","02-全局故事大纲":"outline-panel","03-人物资料":"people-panel","04-场景资料":"scenes-panel","05-道具资料":"props-panel"}[dir.name]||"directory-panel"}
+function selectTab(index,focus){activeTabIndex=index;Array.from(el("tabs").children).forEach((button,i)=>{button.setAttribute("aria-selected",String(i===index));button.tabIndex=i===index?0:-1});if(!el("catalogue-panel").hidden)saveCataloguePosition();const dir=data.directories[index];const id=panelId(dir);["position-panel","story-panel","outline-panel","people-panel","scenes-panel","props-panel","catalogue-panel","directory-panel"].forEach(p=>el(p).hidden=p!==id);el(id).setAttribute("aria-labelledby","tab-"+index);if(id==="catalogue-panel")openCatalogue(dir.name);if(id==="directory-panel"){el("directory-title").textContent=dir.label;el("directory-link").href=dir.url}if(focus)el("tabs").children[index].focus();updateBackTop()}
+data.directories.forEach((dir,index)=>{const button=textNode("button",dir.label,"tab");button.type="button";button.id="tab-"+index;button.setAttribute("role","tab");button.title=dir.name;button.setAttribute("aria-controls",panelId(dir));button.addEventListener("click",()=>selectTab(index,false));button.addEventListener("keydown",event=>{let next=index;if(event.key==="ArrowRight")next=(index+1)%data.directories.length;else if(event.key==="ArrowLeft")next=(index-1+data.directories.length)%data.directories.length;else if(event.key==="Home")next=0;else if(event.key==="End")next=data.directories.length-1;else return;event.preventDefault();selectTab(next,true)});el("tabs").append(button)});
+if(data.directories.length)selectTab(Math.max(0,data.directories.findIndex(d=>d.name==="00-项目定位")),false);
+measureFloatingPhase();
+updateBackTop();
+</script>
+</body>
+</html>

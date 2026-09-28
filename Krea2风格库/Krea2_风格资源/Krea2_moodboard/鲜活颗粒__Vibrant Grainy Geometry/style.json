@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-696",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "鲜活颗粒",
+  "name": "Vibrant Grainy Geometry",
+  "prompt": "flat vector illustration, fine grain noise texture, bold geometric abstraction, saturated color palette, risograph print style, minimalist graphic design, stippled gradient. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活颗粒__Vibrant Grainy Geometry/preview.webp",
+  "folder": "Krea2_moodboard/鲜活颗粒__Vibrant Grainy Geometry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

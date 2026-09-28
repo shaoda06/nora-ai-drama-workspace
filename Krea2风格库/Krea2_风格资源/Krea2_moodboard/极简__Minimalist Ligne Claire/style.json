@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1308",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "极简",
+  "name": "Minimalist Ligne Claire",
+  "prompt": "clean line art, flat color fills, minimalist composition, ligne claire, muted pastel palette, graphic silhouette, digital illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Minimalist Ligne Claire/preview.webp",
+  "folder": "Krea2_moodboard/极简__Minimalist Ligne Claire",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

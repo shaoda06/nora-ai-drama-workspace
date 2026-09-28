@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1364",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感黑色",
+  "name": "Cinematic Gritty Noir",
+  "prompt": "cinematic suspense, low-key lighting, desaturated cool tones, shallow depth of field, gritty realism, high contrast shadows, neo-noir aesthetic, 35mm film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色__Cinematic Gritty Noir/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色__Cinematic Gritty Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

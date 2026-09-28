@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3222",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "明亮光谱黑色发光",
+  "name": "Luminous Spectral Noir — Photogram Aura Glow",
+  "prompt": "luminous silhouette, heavy film grain, ethereal glowing aura, minimalist surrealism, analog photogram texture, chromatic backlight. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮光谱黑色发光__Luminous Spectral Noir — Photogram Aura Glow/preview.webp",
+  "folder": "Krea2_moodboard/明亮光谱黑色发光__Luminous Spectral Noir — Photogram Aura Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

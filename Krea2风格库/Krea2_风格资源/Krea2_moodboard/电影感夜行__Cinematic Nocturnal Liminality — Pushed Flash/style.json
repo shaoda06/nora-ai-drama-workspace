@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1606",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "电影感夜行",
+  "name": "Cinematic Nocturnal Liminality — Pushed Flash",
+  "prompt": "cinematic film grain, nocturnal liminal space, high contrast chiaroscuro, moody twilight atmosphere, harsh direct flash, desaturated cool tones, solitary figure, soft urban bokeh. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Liminality — Pushed Flash/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Liminality — Pushed Flash",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

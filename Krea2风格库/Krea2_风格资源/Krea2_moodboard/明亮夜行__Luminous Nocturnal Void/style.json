@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-995",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮夜行",
+  "name": "Luminous Nocturnal Void",
+  "prompt": "deep indigo and cobalt palette, stark black void, surreal high-contrast lighting, ethereal glowing focal point, minimalist composition, tactile impasto texture, existential atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行__Luminous Nocturnal Void/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行__Luminous Nocturnal Void",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

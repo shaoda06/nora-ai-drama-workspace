@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3008",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵暮光超现实黄昏",
+  "name": "Ethereal Twilight Surrealism — Double Exposure Dusk",
+  "prompt": "atmospheric silhouette, double exposure, analog film grain, glowing botanical elements, soft-focus dreamscape, twilight gradient, melancholic whimsy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵暮光超现实黄昏__Ethereal Twilight Surrealism — Double Exposure Dusk/preview.webp",
+  "folder": "Krea2_moodboard/空灵暮光超现实黄昏__Ethereal Twilight Surrealism — Double Exposure Dusk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

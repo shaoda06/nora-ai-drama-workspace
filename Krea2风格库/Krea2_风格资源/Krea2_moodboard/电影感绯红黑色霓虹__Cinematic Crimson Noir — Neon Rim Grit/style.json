@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2372",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感绯红黑色霓虹",
+  "name": "Cinematic Crimson Noir — Neon Rim Grit",
+  "prompt": "cinematic noir, high-contrast chiaroscuro, saturated crimson and black, heavy analog film grain, neon red rim light, gritty urban texture, moody underground aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红黑色霓虹__Cinematic Crimson Noir — Neon Rim Grit/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红黑色霓虹__Cinematic Crimson Noir — Neon Rim Grit",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

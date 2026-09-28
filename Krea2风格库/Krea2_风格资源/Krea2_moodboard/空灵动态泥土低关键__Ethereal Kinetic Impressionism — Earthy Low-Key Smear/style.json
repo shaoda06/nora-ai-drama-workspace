@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1167",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵动态泥土低关键",
+  "name": "Ethereal Kinetic Impressionism — Earthy Low-Key Smear",
+  "prompt": "intentional camera movement, painterly motion blur, analog film grain, muted earth tones, impressionistic photography, ethereal dreamcore, dynamic kinetic smear. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态泥土低关键__Ethereal Kinetic Impressionism — Earthy Low-Key Smear/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态泥土低关键__Ethereal Kinetic Impressionism — Earthy Low-Key Smear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

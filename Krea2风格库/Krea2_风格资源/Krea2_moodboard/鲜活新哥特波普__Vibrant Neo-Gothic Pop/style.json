@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-130",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "鲜活新哥特波普",
+  "name": "Vibrant Neo-Gothic Pop",
+  "prompt": "bold cel-shaded line art, vibrant high-contrast palette, expressive character illustration, graphic vector style, neon accents, contemporary comic aesthetic, sharp geometric composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活新哥特波普__Vibrant Neo-Gothic Pop/preview.webp",
+  "folder": "Krea2_moodboard/鲜活新哥特波普__Vibrant Neo-Gothic Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+long exposure portrait, heavy motion blur, analog film grain, painterly light streaks, ethereal atmospheric glow, dreamlike soft focus, muted desaturated palette. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1776",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感都市忧郁",
+  "name": "Cinematic Urban Melancholy — Overcast Grey",
+  "prompt": "cinematic street photography, muted desaturated palette, wet asphalt reflections, overcast atmospheric lighting, vintage urban architecture, candid narrative realism, shallow depth of field, grainy film aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市忧郁__Cinematic Urban Melancholy — Overcast Grey/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市忧郁__Cinematic Urban Melancholy — Overcast Grey",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-234",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "棱镜空灵",
+  "name": "Prismatic Ethereal Glass",
+  "prompt": "translucent glass, chromatic dispersion, ethereal blue sky, liquid gloss texture, prismatic caustics, surreal 3D render, high-fidelity highlights. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜空灵__Prismatic Ethereal Glass/preview.webp",
+  "folder": "Krea2_moodboard/棱镜空灵__Prismatic Ethereal Glass",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

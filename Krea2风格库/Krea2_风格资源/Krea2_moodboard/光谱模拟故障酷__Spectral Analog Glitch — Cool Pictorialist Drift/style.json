@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1527",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "光谱模拟故障酷",
+  "name": "Spectral Analog Glitch — Cool Pictorialist Drift",
+  "prompt": "heavy analog film grain, dreamlike motion blur, chromatic aberration, moody cool tones, spectral silhouette, VHS glitch artifacts, soft focus pictorialism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱模拟故障酷__Spectral Analog Glitch — Cool Pictorialist Drift/preview.webp",
+  "folder": "Krea2_moodboard/光谱模拟故障酷__Spectral Analog Glitch — Cool Pictorialist Drift",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

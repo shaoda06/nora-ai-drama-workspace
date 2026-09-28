@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-263",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "藏书票插画",
+  "name": "Bookplate Illustration",
+  "prompt": "Style: Bookplate Illustration: refined decorative illustration aesthetics characterized by meticulous linework, engraved-inspired detailing, ornamental sophistication, literary craftsmanship, balanced composition, and timeless artisanal quality, blending classical printmaking traditions with elegant visual storytelling through intricate textures, disciplined draftsmanship, and exceptionally polished design sensibilities, reminiscent of Arthur Rackham and Aubrey Beardsley, inspired by Golden Age Bookplates and The Fairy Tales of the Brothers Grimm.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/藏书票插画__Bookplate Illustration/preview.jpg",
+  "folder": "krea2_styles/藏书票插画__Bookplate Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1631",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵植物",
+  "name": "Ethereal Frost Botanical",
+  "prompt": "macro photography, ethereal bokeh, hoarfrost, soft diffused light, icy blue palette, shallow depth of field, glistening dew, dreamy atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵植物__Ethereal Frost Botanical/preview.webp",
+  "folder": "Krea2_moodboard/空灵植物__Ethereal Frost Botanical",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

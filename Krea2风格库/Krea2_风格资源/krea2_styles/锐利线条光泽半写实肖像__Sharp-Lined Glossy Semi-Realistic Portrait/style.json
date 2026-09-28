@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-194",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "锐利线条光泽半写实肖像",
+  "name": "Sharp-Lined Glossy Semi-Realistic Portrait",
+  "prompt": "Style: Sharp-Lined Glossy Semi-Realistic Portrait: A striking digital-illustration style built on confident, angular linework combined with smooth airbrushed shading, glassy, high-shine specular highlight concentrated in the eyes and lips for immediate emotional focus, meticulous attention to soft luminous rendering contrasted against crisp, decisive contour, a hushed, contemplative intimacy carried through close, direct framing, and a polished, contemporary character-illustration intensity that feels both painterly and graphically sharp. Influenced by: Ilya Kuvshinov, WLOP, Guweiz, semi-realistic anime-portrait rendering technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/锐利线条光泽半写实肖像__Sharp-Lined Glossy Semi-Realistic Portrait/preview.jpg",
+  "folder": "krea2_styles/锐利线条光泽半写实肖像__Sharp-Lined Glossy Semi-Realistic Portrait",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

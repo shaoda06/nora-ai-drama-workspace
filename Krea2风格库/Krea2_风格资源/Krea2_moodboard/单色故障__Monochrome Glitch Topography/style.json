@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-831",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "单色故障",
+  "name": "Monochrome Glitch Topography",
+  "prompt": "high-contrast monochrome, topographic line art, glitch art distortion, moire pattern, chromatic aberration, optical illusion, digital signal degradation, psychedelic wave. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障__Monochrome Glitch Topography/preview.webp",
+  "folder": "Krea2_moodboard/单色故障__Monochrome Glitch Topography",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

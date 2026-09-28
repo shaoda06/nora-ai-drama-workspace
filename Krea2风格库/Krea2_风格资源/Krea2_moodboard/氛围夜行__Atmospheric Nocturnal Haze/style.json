@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1716",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "氛围夜行",
+  "name": "Atmospheric Nocturnal Haze",
+  "prompt": "cinematic heavy grain, atmospheric fog and mist, teal and amber contrast, dreamy soft focus, nocturnal chiaroscuro, minimalist abstract composition, pictorialist texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围夜行__Atmospheric Nocturnal Haze/preview.webp",
+  "folder": "Krea2_moodboard/氛围夜行__Atmospheric Nocturnal Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

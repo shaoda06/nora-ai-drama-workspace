@@ -1,0 +1,1 @@
+cinematic noir, low-key chiaroscuro lighting, deep cool shadows, filmic grain, shallow depth of field, moody atmospheric portraiture, desaturated color palette, tactile textures. Subject:{prompt}

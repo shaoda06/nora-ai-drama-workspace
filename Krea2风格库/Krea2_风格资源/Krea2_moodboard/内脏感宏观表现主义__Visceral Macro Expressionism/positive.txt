@@ -1,0 +1,1 @@
+macro beauty portrait, tactile impasto texture, glossy wet paint, glass overlay, vibrant saturated palette, high-contrast studio lighting, hyper-detailed skin. Subject:{prompt}

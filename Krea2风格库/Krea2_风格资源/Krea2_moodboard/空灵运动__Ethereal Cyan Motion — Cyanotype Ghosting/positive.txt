@@ -1,0 +1,1 @@
+motion blur portrait, monochromatic cyan, ethereal dreamlike quality, grainy film texture, high-contrast silhouette, shutter drag effect, psychological atmosphere. Subject:{prompt}

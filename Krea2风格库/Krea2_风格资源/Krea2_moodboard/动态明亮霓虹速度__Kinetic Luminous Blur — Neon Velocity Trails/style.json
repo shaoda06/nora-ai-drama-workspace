@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1231",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "动态明亮霓虹速度",
+  "name": "Kinetic Luminous Blur — Neon Velocity Trails",
+  "prompt": "intentional camera movement, long exposure light trails, kinetic motion blur, high-contrast neon palette, abstract velocity, dynamic light streaks, painterly abstraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态明亮霓虹速度__Kinetic Luminous Blur — Neon Velocity Trails/preview.webp",
+  "folder": "Krea2_moodboard/动态明亮霓虹速度__Kinetic Luminous Blur — Neon Velocity Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

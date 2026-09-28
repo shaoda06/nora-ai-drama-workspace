@@ -1,0 +1,1 @@
+high-contrast monochrome, motion blur portrait, chiaroscuro lighting, spectral distortion, shutter drag, ghostly motion trails, surreal noir. Subject:{prompt}

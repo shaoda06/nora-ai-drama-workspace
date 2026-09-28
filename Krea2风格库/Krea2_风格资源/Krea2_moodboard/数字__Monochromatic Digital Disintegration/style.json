@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1903",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "数字",
+  "name": "Monochromatic Digital Disintegration",
+  "prompt": "monochromatic glitch art, pixel sorting, linear displacement, high-contrast minimalism, digital disintegration, abstract geometric distortion, fluted glass texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字__Monochromatic Digital Disintegration/preview.webp",
+  "folder": "Krea2_moodboard/数字__Monochromatic Digital Disintegration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

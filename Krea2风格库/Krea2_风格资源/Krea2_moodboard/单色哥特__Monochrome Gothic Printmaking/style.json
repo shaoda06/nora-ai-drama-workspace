@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-864",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "单色哥特",
+  "name": "Monochrome Gothic Printmaking",
+  "prompt": "vintage intaglio etching, gothic architecture, chiaroscuro lighting, cross-hatching, sepia monochrome, atmospheric haze, aged paper texture, fine linework. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色哥特__Monochrome Gothic Printmaking/preview.webp",
+  "folder": "Krea2_moodboard/单色哥特__Monochrome Gothic Printmaking",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

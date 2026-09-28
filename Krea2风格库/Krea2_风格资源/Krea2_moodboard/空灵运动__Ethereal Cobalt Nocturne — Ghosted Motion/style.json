@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2801",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵运动",
+  "name": "Ethereal Cobalt Nocturne — Ghosted Motion",
+  "prompt": "monochromatic cobalt blue, high-contrast noir lighting, ethereal motion blur, minimalist dark background, ghostly silhouette, dreamlike nocturnal atmosphere, sharp textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵运动__Ethereal Cobalt Nocturne — Ghosted Motion/preview.webp",
+  "folder": "Krea2_moodboard/空灵运动__Ethereal Cobalt Nocturne — Ghosted Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

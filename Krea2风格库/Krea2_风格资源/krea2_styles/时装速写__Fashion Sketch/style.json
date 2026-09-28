@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-255",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "时装速写",
+  "name": "Fashion Sketch",
+  "prompt": "Style: Fashion Sketch: An elegant, elongated illustration style built on fluid, confident linework stretching proportion into graceful, statuesque exaggeration, minimal, loose shading applied with quick, economical strokes rather than full rendering, a light, airy sense of movement carried through unhurried, gestural mark-making, deliberate emphasis on flowing silhouette and pose over anatomical exactness, and a chic, effortless sketch-illustration elegance that feels immediate, stylish, and quietly sophisticated. Influenced by: fashion-illustration tradition, croquis sketching technique, editorial fashion-sketch practice, elongated figure-drawing method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/时装速写__Fashion Sketch/preview.jpg",
+  "folder": "krea2_styles/时装速写__Fashion Sketch",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

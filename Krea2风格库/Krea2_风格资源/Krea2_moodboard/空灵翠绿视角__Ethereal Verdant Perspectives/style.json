@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2687",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵翠绿视角",
+  "name": "Ethereal Verdant Perspectives",
+  "prompt": "high-angle drone perspective, lush forest canopy, dappled golden sunlight, mossy emerald palette, cinematic moody lighting, intricate natural textures, whimsical realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵翠绿视角__Ethereal Verdant Perspectives/preview.webp",
+  "folder": "Krea2_moodboard/空灵翠绿视角__Ethereal Verdant Perspectives",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

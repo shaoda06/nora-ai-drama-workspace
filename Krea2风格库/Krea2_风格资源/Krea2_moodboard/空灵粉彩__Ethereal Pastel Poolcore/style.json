@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3469",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵粉彩",
+  "name": "Ethereal Pastel Poolcore",
+  "prompt": "poolcore, liminal space, vaporwave aesthetic, pastel grid tiles, dreamcore, surreal indoor oasis, soft diffused lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩__Ethereal Pastel Poolcore/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩__Ethereal Pastel Poolcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

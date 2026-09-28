@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2544",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "黑色极简",
+  "name": "Cobalt Noir Minimalist",
+  "prompt": "deep cobalt blue and black palette, stark high-contrast silhouette, dramatic chiaroscuro lighting, minimalist editorial fashion, metallic and glossy textures, cool mysterious atmosphere, symmetrical studio composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色极简__Cobalt Noir Minimalist/preview.webp",
+  "folder": "Krea2_moodboard/黑色极简__Cobalt Noir Minimalist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

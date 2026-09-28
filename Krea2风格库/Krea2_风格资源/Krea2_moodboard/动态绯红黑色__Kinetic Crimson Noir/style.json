@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-441",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "动态绯红黑色",
+  "name": "Kinetic Crimson Noir",
+  "prompt": "risograph halftone texture, geometric moirÃ© patterns, high-contrast crimson and neutral, fine-line guilloche engraving, digital glitch distortion, minimalist graphic composition, kinetic motion silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态绯红黑色__Kinetic Crimson Noir/preview.webp",
+  "folder": "Krea2_moodboard/动态绯红黑色__Kinetic Crimson Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

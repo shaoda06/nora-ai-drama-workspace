@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-379",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "空灵颗粒超现实",
+  "name": "Ethereal Grain Surrealism",
+  "prompt": "high-contrast silhouette, grainy film texture, liminal surrealism, retro-futuristic lighting, risograph halftone, motion blur, luminescent gradients. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒超现实__Ethereal Grain Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒超现实__Ethereal Grain Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

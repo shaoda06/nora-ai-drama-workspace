@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-37",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "晕影贴纸",
+  "name": "Vignette Sticker",
+  "prompt": "Style: Vignette Sticker: A bold, self-contained graphic illustration style built on a crisp, clean bold white outline that isolates the subject from a plain white background, as a single cohesive shape contained within a distinct central cluster, generous white negative space surrounding that cluster with a thick, uniform contour holding the entire boundary, confidently simplified color fields with minimal internal shading, a slightly raised, glossy die-cut quality suggested through a subtle contour highlight tracing the outer extent, and a cheerful, punchy graphic charm built for immediate, repeatable visual impact. Influenced by: vinyl sticker/decal design tradition, detailed vector illustration technique, die-cut print production method, negative-space compositional design.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/晕影贴纸__Vignette Sticker/preview.jpg",
+  "folder": "krea2_styles/晕影贴纸__Vignette Sticker",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

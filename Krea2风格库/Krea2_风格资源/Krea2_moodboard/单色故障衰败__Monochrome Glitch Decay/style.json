@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-457",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "单色故障衰败",
+  "name": "Monochrome Glitch Decay",
+  "prompt": "monochrome glitch art, high contrast black and white, datamoshing, halftone texture, pixel sorting, scan lines, digital decay. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障衰败__Monochrome Glitch Decay/preview.webp",
+  "folder": "Krea2_moodboard/单色故障衰败__Monochrome Glitch Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

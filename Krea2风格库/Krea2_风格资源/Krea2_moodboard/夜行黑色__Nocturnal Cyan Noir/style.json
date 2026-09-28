@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2483",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "夜行黑色",
+  "name": "Nocturnal Cyan Noir",
+  "prompt": "monochromatic cyan and teal, dense atmospheric fog, grainy analog film texture, mysterious backlit silhouettes, volumetric light haze, cinematic liminal space, nocturnal noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行黑色__Nocturnal Cyan Noir/preview.webp",
+  "folder": "Krea2_moodboard/夜行黑色__Nocturnal Cyan Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

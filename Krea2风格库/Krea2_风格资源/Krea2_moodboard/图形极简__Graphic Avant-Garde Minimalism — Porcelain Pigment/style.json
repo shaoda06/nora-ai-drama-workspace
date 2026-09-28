@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2608",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "图形极简",
+  "name": "Graphic Avant-Garde Minimalism — Porcelain Pigment",
+  "prompt": "avant-garde beauty, high-contrast editorial, graphic makeup, minimalist studio photography, visceral paint textures, theatrical pigment, sharp facial geometry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形极简__Graphic Avant-Garde Minimalism — Porcelain Pigment/preview.webp",
+  "folder": "Krea2_moodboard/图形极简__Graphic Avant-Garde Minimalism — Porcelain Pigment",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

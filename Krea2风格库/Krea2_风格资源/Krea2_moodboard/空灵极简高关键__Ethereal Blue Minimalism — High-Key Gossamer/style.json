@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1726",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵极简高关键",
+  "name": "Ethereal Blue Minimalism — High-Key Gossamer",
+  "prompt": "macro photography, ethereal blue palette, translucent textures, shallow depth of field, soft-focus background, high-key lighting, minimalist botanical. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简高关键__Ethereal Blue Minimalism — High-Key Gossamer/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简高关键__Ethereal Blue Minimalism — High-Key Gossamer",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

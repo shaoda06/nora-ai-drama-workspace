@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-191",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "J.C.莱恩德克风格",
+  "name": "J.C. Leyendecker Style",
+  "prompt": "Style: J.C. Leyendecker Style: A crisp, confident golden-age illustration style built on bold, brushy strokes that define form with economical precision rather than exhaustive detail, richly modeled rendering through sweeping tonal transition that suggests weight and movement, idealized, statuesque figures posed with theatrical poise and confident presence, a smooth, glowing painterly light that wraps forms in graduated highlight, and a polished, commercial-art elegance that feels both classical and unmistakably iconic. Influenced by: J.C. Leyendecker, Golden Age American illustration, oil-painting technique, classic advertising-illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/J.C.莱恩德克风格__J.C. Leyendecker Style/preview.jpg",
+  "folder": "krea2_styles/J.C.莱恩德克风格__J.C. Leyendecker Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2236",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "天穹翠绿",
+  "name": "Celestial Emerald Opulence",
+  "prompt": "emerald and gold palette, starry cosmic background, ornate Art Nouveau filigree, medieval fantasy realism, jewel-encrusted textures, dramatic chiaroscuro lighting, opulent metallic surfaces. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹翠绿__Celestial Emerald Opulence/preview.webp",
+  "folder": "Krea2_moodboard/天穹翠绿__Celestial Emerald Opulence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

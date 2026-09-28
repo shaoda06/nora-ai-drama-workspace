@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1235",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "明亮彩色",
+  "name": "Luminous Chromatic Pointillism",
+  "prompt": "pointillism, divisionism, neo-impressionism, stippled texture, optical color mixing, vibrant pastel gradients, luminous atmosphere, shimmering mosaic brushwork. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮彩色__Luminous Chromatic Pointillism/preview.webp",
+  "folder": "Krea2_moodboard/明亮彩色__Luminous Chromatic Pointillism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

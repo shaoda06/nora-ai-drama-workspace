@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3231",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵极简",
+  "name": "Ethereal Thermal Minimalism — Airbrushed Dreamcore",
+  "prompt": "high-contrast silhouette, analog film grain, chromatic thermal gradient, minimalist surrealism, neon aura luminescence, ethereal airbrushed texture, dreamcore aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简__Ethereal Thermal Minimalism — Airbrushed Dreamcore/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简__Ethereal Thermal Minimalism — Airbrushed Dreamcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

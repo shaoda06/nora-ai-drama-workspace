@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-49",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "守望先锋概念艺术",
+  "name": "Overwatch Concept Art",
+  "prompt": "Style: Overwatch Concept Art: A polished, vibrant game-illustration style built on clean, confident linework blended with smooth painterly rendering, bright, saturated lighting logic establishing bold, heroic clarity within a single dynamic composition, clean, readable silhouette design, dynamic, energetic posing charged with confident personality and readable character archetype, and a polished, blockbuster-grade game-art vibrancy built for instant character appeal and franchise recognition. Influenced by: Overwatch video-game, Blizzard Entertainment concept-art direction, stylized hero-shooter character-design tradition, painterly game-illustration technique, vibrant franchise key-art practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/守望先锋概念艺术__Overwatch Concept Art/preview.jpg",
+  "folder": "krea2_styles/守望先锋概念艺术__Overwatch Concept Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

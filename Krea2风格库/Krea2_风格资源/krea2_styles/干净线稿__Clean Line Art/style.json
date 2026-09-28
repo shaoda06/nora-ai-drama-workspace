@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-169",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "干净线稿",
+  "name": "Clean Line Art",
+  "prompt": "Style: Clean Line Art: A clean, precise line-art illustration style built on steady black ink contours of uniform, unmodulated weight, every shape fully closed and crisply defined, flat unshaded color fills with no hatching, no texture and no gradients, restrained modern palette, generous negative space, careful proportions and tidy draftsmanship, and a calm, contemporary editorial clarity that reads instantly at any size. Influenced by: contemporary editorial line illustration, technical-pen drafting, flat-color print illustration, minimalist ink drawing.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/干净线稿__Clean Line Art/preview.jpg",
+  "folder": "krea2_styles/干净线稿__Clean Line Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

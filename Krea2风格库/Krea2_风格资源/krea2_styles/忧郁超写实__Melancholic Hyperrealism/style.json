@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-201",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "忧郁超写实",
+  "name": "Melancholic Hyperrealism",
+  "prompt": "Style: Melancholic Hyperrealism: A quietly haunting hyperrealist illustration style built on obsessive photographic precision applied with restrained, contemplative sensitivity rather than clinical detachment, soft, muted directional light casting long, wistful shadow across meticulously rendered form, a hushed, introspective stillness carried through subtle, unhurried tonal transition, painstaking attention to subtle emotional nuance in expression rendered with the same devotion as physical detail, and a technically masterful yet deeply tender intensity that treats sorrow itself as worthy of meticulous, patient craft. Influenced by: hyperrealist oil-painting technique, contemporary photorealism tradition, emotionally driven fine-art portraiture practice, melancholic figurative-painting method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/忧郁超写实__Melancholic Hyperrealism/preview.jpg",
+  "folder": "krea2_styles/忧郁超写实__Melancholic Hyperrealism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

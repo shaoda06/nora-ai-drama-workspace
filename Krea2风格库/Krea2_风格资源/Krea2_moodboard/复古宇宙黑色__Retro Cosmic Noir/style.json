@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-899",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "复古宇宙黑色",
+  "name": "Retro Cosmic Noir",
+  "prompt": "1980s retro-futurism, high-contrast chiaroscuro, stippled and gritty texture, cosmic surrealism, vintage sci-fi illustration, ultramarine and crimson palette, dramatic lens flares. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古宇宙黑色__Retro Cosmic Noir/preview.webp",
+  "folder": "Krea2_moodboard/复古宇宙黑色__Retro Cosmic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

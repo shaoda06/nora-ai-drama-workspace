@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2137",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "琥珀极简酷颗粒",
+  "name": "Amber Chiaroscuro Minimalism — Cool Blue Grain",
+  "prompt": "chiaroscuro lighting, golden hour glow, dramatic long shadows, minimalist interior, amber and obsidian palette, textured surfaces, cinematic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀极简酷颗粒__Amber Chiaroscuro Minimalism — Cool Blue Grain/preview.webp",
+  "folder": "Krea2_moodboard/琥珀极简酷颗粒__Amber Chiaroscuro Minimalism — Cool Blue Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

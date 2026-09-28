@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-150",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "太阳奇想怀旧",
+  "name": "Sun-Drenched Whimsical Nostalgia",
+  "prompt": "storybook illustration style, soft painterly gouache texture, sun-drenched golden light, whimsical nostalgic atmosphere, vibrant pastel color palette, gentle backlit glow, Ghibli-inspired landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/太阳奇想怀旧__Sun-Drenched Whimsical Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/太阳奇想怀旧__Sun-Drenched Whimsical Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

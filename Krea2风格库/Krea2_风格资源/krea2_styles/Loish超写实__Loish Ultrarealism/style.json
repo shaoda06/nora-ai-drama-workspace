@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-190",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "Loish超写实",
+  "name": "Loish Ultrarealism",
+  "prompt": "Style: Loish Ultrarealism: A luminous, painterly digital illustration style blending soft ultrarealistic rendering with expressive, loosely gestural brushwork at the edges, richly glowing skin built through translucent layered glazing rather than flat shading, delicate visible brushstrokes preserved even within highly refined facial detail, a dreamy, romantic softness radiating from confident directional lighting, and a warm, emotionally intimate polish that balances technical realism with unmistakably hand-painted feeling. Influenced by: Loish (Lois van Baarle), digital gouache painting, painterly portrait illustration, semi-realistic character art.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Loish超写实__Loish Ultrarealism/preview.jpg",
+  "folder": "krea2_styles/Loish超写实__Loish Ultrarealism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

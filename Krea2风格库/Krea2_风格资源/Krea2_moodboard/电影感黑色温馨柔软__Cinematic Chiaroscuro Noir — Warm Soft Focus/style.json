@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1345",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感黑色温馨柔软",
+  "name": "Cinematic Chiaroscuro Noir — Warm Soft Focus",
+  "prompt": "black and white film noir, dramatic rim lighting, chiaroscuro, high-contrast monochrome, heavy film grain, low-key photography, cinematic depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色温馨柔软__Cinematic Chiaroscuro Noir — Warm Soft Focus/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色温馨柔软__Cinematic Chiaroscuro Noir — Warm Soft Focus",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

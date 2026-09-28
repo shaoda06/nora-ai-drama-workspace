@@ -1,0 +1,1 @@
+intentional camera movement, dynamic motion blur, cinematic lighting, long exposure, high contrast, athletic energy, shallow depth of field. Subject:{prompt}

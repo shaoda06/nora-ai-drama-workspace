@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3045",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵颗粒渐变",
+  "name": "Ethereal Grain Gradient",
+  "prompt": "ethereal airbrush gradient, stippled grain texture, soft-focus abstraction, pastel neon color blend, holographic light leak, tactile felt paper surface, dreamy atmospheric aura. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒渐变__Ethereal Grain Gradient/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒渐变__Ethereal Grain Gradient",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

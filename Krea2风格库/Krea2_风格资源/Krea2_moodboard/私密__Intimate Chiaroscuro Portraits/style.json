@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1325",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "私密",
+  "name": "Intimate Chiaroscuro Portraits",
+  "prompt": "cinematic chiaroscuro portrait, dramatic low-key lighting, tactile skin and hair texture, analog film grain, muted earthy palette, intimate close-up, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/私密__Intimate Chiaroscuro Portraits/preview.webp",
+  "folder": "Krea2_moodboard/私密__Intimate Chiaroscuro Portraits",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

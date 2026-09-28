@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1695",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "霓虹极简",
+  "name": "Monolithic Neon Minimalism",
+  "prompt": "minimalist cyberpunk, monolithic brutalism, glowing neon light, high-contrast chiaroscuro, cinematic atmospheric fog, geometric silhouettes, deep black voids, scale contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹极简__Monolithic Neon Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/霓虹极简__Monolithic Neon Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

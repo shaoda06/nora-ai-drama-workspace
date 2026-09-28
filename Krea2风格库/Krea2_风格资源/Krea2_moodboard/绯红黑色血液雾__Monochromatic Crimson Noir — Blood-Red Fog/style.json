@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1589",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "绯红黑色血液雾",
+  "name": "Monochromatic Crimson Noir — Blood-Red Fog",
+  "prompt": "monochromatic crimson red, heavy atmospheric fog, stark black silhouettes, cinematic noir, post-apocalyptic desolation, high-contrast lighting, grainy film texture, liminal space. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色血液雾__Monochromatic Crimson Noir — Blood-Red Fog/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色血液雾__Monochromatic Crimson Noir — Blood-Red Fog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

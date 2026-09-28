@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1537",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "动态都市",
+  "name": "Dynamic Urban Skyward",
+  "prompt": "extreme low-angle perspective, vibrant blue sky background, fisheye lens distortion, saturated streetwear fashion, harsh direct sunlight, dynamic urban composition, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态都市__Dynamic Urban Skyward/preview.webp",
+  "folder": "Krea2_moodboard/动态都市__Dynamic Urban Skyward",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

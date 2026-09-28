@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-145",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "美式漫画写实",
+  "name": "American Comic Realism",
+  "prompt": "Style: American Comic Realism: highly polished comic-book realism emphasizing convincing anatomy, dramatic visual storytelling, cinematic composition, realistic material rendering, strong volumetric lighting, and detailed environmental integration, combining classical illustration discipline with modern entertainment-art sensibilities to create imagery that feels both grounded and iconic, reminiscent of Bryan Hitch and Alex Ross, inspired by The Ultimates and Kingdom Come.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/美式漫画写实__American Comic Realism/preview.jpg",
+  "folder": "krea2_styles/美式漫画写实__American Comic Realism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

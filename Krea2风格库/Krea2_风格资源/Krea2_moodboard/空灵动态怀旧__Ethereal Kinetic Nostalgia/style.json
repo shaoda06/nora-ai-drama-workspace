@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1168",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵动态怀旧",
+  "name": "Ethereal Kinetic Nostalgia",
+  "prompt": "motion blur, soft focus, ethereal light trails, film grain, double exposure, painterly texture, nostalgic dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态怀旧__Ethereal Kinetic Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态怀旧__Ethereal Kinetic Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

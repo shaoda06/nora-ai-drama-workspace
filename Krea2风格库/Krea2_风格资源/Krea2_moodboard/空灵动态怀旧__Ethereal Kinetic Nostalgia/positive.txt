@@ -1,0 +1,1 @@
+motion blur, soft focus, ethereal light trails, film grain, double exposure, painterly texture, nostalgic dreamscape. Subject:{prompt}

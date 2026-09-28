@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2857",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "夜行电影感",
+  "name": "Nocturnal Cinematic Luminescence",
+  "prompt": "analog film grain, teal and orange contrast, nocturnal atmospheric glow, soft-focus silhouette, cinematic light leaks, vintage lens flares, dreamy twilight aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行电影感__Nocturnal Cinematic Luminescence/preview.webp",
+  "folder": "Krea2_moodboard/夜行电影感__Nocturnal Cinematic Luminescence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

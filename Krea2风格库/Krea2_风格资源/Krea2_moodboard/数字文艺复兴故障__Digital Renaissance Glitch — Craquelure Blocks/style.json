@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1044",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "数字文艺复兴故障",
+  "name": "Digital Renaissance Glitch — Craquelure Blocks",
+  "prompt": "classical oil painting, digital glitch art, chiaroscuro lighting, data corruption, anachronistic collage, pixelated artifacts, textured canvas, surreal fusion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字文艺复兴故障__Digital Renaissance Glitch — Craquelure Blocks/preview.webp",
+  "folder": "Krea2_moodboard/数字文艺复兴故障__Digital Renaissance Glitch — Craquelure Blocks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

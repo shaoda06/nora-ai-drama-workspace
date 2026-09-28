@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-246",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "超写实彩色钢笔速写",
+  "name": "Hyperrealistic Colored-Pen Sketch",
+  "prompt": "Style: Hyperrealistic Colored-Pen Sketch: A meticulously rendered drawing style built on dense, layered pen strokes that build tonal depth and material realism entirely through cross-hatching, stippling, and controlled ink-layering rather than blended shading, painstaking precision in capturing texture and light behavior with a fine-tipped, linear medium, an obsessive patience carried through countless overlapping passes to achieve photographic depth, a technically virtuosic tension between the rigidity of the pen medium and the softness of the rendered subject, and an intensely disciplined, prolonged-focus rendering intensity. Influenced by: hyperrealist pen-and-ink illustration technique, fine-liner cross-hatching method, contemporary colored-pen portrait artists, meticulous layered-ink rendering practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/超写实彩色钢笔速写__Hyperrealistic Colored-Pen Sketch/preview.jpg",
+  "folder": "krea2_styles/超写实彩色钢笔速写__Hyperrealistic Colored-Pen Sketch",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

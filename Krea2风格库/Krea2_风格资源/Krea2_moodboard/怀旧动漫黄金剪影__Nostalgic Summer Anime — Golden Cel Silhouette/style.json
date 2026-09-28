@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-113",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧动漫黄金剪影",
+  "name": "Nostalgic Summer Anime — Golden Cel Silhouette",
+  "prompt": "anime aesthetic, cumulonimbus clouds, golden hour lighting, nostalgic summer, graphic silhouettes, cel-shaded illustration, scenic background art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧动漫黄金剪影__Nostalgic Summer Anime — Golden Cel Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/怀旧动漫黄金剪影__Nostalgic Summer Anime — Golden Cel Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

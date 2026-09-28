@@ -1,0 +1,1 @@
+motion blur, intentional camera movement, saturated primary colors, shutter drag, painterly streaks, high contrast lighting, dynamic energy. Subject:{prompt}

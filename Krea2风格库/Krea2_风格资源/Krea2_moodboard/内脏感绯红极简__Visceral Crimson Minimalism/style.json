@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3185",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "内脏感绯红极简",
+  "name": "Visceral Crimson Minimalism",
+  "prompt": "extreme macro photography, vibrant crimson palette, high-contrast studio lighting, glistening wet textures, minimalist composition, clinical surrealism, raw skin detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感绯红极简__Visceral Crimson Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/内脏感绯红极简__Visceral Crimson Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

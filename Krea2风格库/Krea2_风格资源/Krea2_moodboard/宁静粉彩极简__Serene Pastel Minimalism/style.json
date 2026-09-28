@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3513",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "宁静粉彩极简",
+  "name": "Serene Pastel Minimalism",
+  "prompt": "minimalist surrealism, soft pastel gradients, vast negative space, serene dreamlike atmosphere, fine-grained texture, symmetrical composition, liminal landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宁静粉彩极简__Serene Pastel Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/宁静粉彩极简__Serene Pastel Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

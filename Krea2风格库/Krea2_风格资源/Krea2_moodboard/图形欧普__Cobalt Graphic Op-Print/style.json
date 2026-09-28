@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2152",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "图形欧普",
+  "name": "Cobalt Graphic Op-Print",
+  "prompt": "cobalt blue and off-white, op art, linocut print style, topographic line patterns, high contrast graphic, minimalist screenprint, monochromatic engraving. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形欧普__Cobalt Graphic Op-Print/preview.webp",
+  "folder": "Krea2_moodboard/图形欧普__Cobalt Graphic Op-Print",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

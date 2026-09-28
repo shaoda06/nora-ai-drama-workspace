@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1458",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "夜行电影感青蓝雾",
+  "name": "Nocturnal Cinematic Blur — Teal-Orange Fog",
+  "prompt": "intentional motion blur, analog film grain, teal and orange cinematic color grade, nocturnal atmospheric fog, soft-focus dreamy aesthetic, high-contrast noir shadows, glowing nocturnal light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行电影感青蓝雾__Nocturnal Cinematic Blur — Teal-Orange Fog/preview.webp",
+  "folder": "Krea2_moodboard/夜行电影感青蓝雾__Nocturnal Cinematic Blur — Teal-Orange Fog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

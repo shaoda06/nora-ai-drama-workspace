@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3143",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "氛围",
+  "name": "Atmospheric Print Modernism",
+  "prompt": "woodblock print texture, atmospheric tonalism, muted color palette, geometric surrealism, stippled engraving detail, vintage lithograph aesthetic, graphic minimalist landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围__Atmospheric Print Modernism/preview.webp",
+  "folder": "Krea2_moodboard/氛围__Atmospheric Print Modernism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-640",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "肌理几何极简",
+  "name": "Textured Geometric Minimalism — Gouache Paper Warmth",
+  "prompt": "minimalist illustration, textured gouache, flat design, geometric silhouettes, screenprint aesthetic, warm paper background, limited color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理几何极简__Textured Geometric Minimalism — Gouache Paper Warmth/preview.webp",
+  "folder": "Krea2_moodboard/肌理几何极简__Textured Geometric Minimalism — Gouache Paper Warmth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

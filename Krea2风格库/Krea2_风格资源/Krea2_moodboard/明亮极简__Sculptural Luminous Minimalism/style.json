@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2592",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "明亮极简",
+  "name": "Sculptural Luminous Minimalism",
+  "prompt": "sculptural avant-garde fashion, hyper-detailed rendering, soft diffused studio lighting, minimalist neutral palette, metallic specular highlights, volumetric rim lighting, pristine satin textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮极简__Sculptural Luminous Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/明亮极简__Sculptural Luminous Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

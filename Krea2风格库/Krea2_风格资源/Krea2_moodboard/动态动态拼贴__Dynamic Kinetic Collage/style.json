@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-534",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "动态动态拼贴",
+  "name": "Dynamic Kinetic Collage",
+  "prompt": "mixed media collage, vibrant paint splatters, digital scribble overlay, dynamic action photography, tactile paper texture, high-contrast pop art, kinetic motion trails. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态动态拼贴__Dynamic Kinetic Collage/preview.webp",
+  "folder": "Krea2_moodboard/动态动态拼贴__Dynamic Kinetic Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2235",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "电影感模拟怀旧",
+  "name": "Cinematic Analog Nostalgia",
+  "prompt": "35mm film photograph, candid cinematic composition, visible film grain, golden hour lighting, muted earth tones, high-contrast shadows, nostalgic analog texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感模拟怀旧__Cinematic Analog Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/电影感模拟怀旧__Cinematic Analog Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

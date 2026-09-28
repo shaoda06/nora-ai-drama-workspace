@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2286",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "模拟恐怖",
+  "name": "Fractured Analog Horror",
+  "prompt": "high contrast black and white, heavy film grain, motion blur, double exposure, analog horror, photocopy texture, psychological fragmentation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟恐怖__Fractured Analog Horror/preview.webp",
+  "folder": "Krea2_moodboard/模拟恐怖__Fractured Analog Horror",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

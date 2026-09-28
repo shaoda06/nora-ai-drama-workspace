@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-710",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "怀旧颗粒",
+  "name": "Nostalgic Grain Storybook",
+  "prompt": "grainy colored pencil texture, minimalist character design, soft stipple shading, warm nostalgic color palette, whimsical storybook illustration, clean white background, organic shapes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧颗粒__Nostalgic Grain Storybook/preview.webp",
+  "folder": "Krea2_moodboard/怀旧颗粒__Nostalgic Grain Storybook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

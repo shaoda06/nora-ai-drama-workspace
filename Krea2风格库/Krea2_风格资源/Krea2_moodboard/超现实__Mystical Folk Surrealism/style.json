@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-924",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "超现实",
+  "name": "Mystical Folk Surrealism",
+  "prompt": "mystical folk surrealism, oil on canvas texture, soft chiaroscuro lighting, deep forest palette, stylized organic forms, dreamlike atmosphere, symbolist illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Mystical Folk Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Mystical Folk Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

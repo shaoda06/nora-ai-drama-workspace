@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-40",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "大胆厚涂绘画",
+  "name": "Bold Painterly Impasto",
+  "prompt": "Style: Bold Painterly Impasto: A richly textured painting style built on thick, confident circular brushstrokes that curl and swirl across every extent, dense impasto ridges catching directional light with sculptural, tactile weight, sweeping curved strokes carrying dynamic, windswept motion throughout the composition, a warm, glowing luminosity built through layered circular dabs rather than smooth blending, and a lush, expressive painterly grandeur that feels alive with rhythmic, swirling energy. Influenced by: J.C. Leyendecker, Vincent van Gogh, impasto oil-painting technique, contemporary digital-painting practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/大胆厚涂绘画__Bold Painterly Impasto/preview.jpg",
+  "folder": "krea2_styles/大胆厚涂绘画__Bold Painterly Impasto",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-583",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "幽暗奇想超现实",
+  "name": "Dark Whimsical Storybook Surrealism",
+  "prompt": "dark whimsical illustration, storybook aesthetic, lowbrow surrealism, painterly textures, stylized character design, muted earthy palette, expressive ink outlines, gothic fairytale atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/幽暗奇想超现实__Dark Whimsical Storybook Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/幽暗奇想超现实__Dark Whimsical Storybook Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

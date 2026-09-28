@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1857",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感模拟黑色对比",
+  "name": "Cinematic Analog Noir — Blue-Gold Contrast",
+  "prompt": "35mm film grain, cinematic chiaroscuro, analog nostalgic aesthetic, high-contrast moody lighting, vintage lens flare, desaturated cool tones, tactile film texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感模拟黑色对比__Cinematic Analog Noir — Blue-Gold Contrast/preview.webp",
+  "folder": "Krea2_moodboard/电影感模拟黑色对比__Cinematic Analog Noir — Blue-Gold Contrast",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

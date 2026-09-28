@@ -1,0 +1,1 @@
+isometric 3D voxel art, low poly blocky style, soft studio lighting, diorama composition, minimalist geometry, atmospheric shadow rendering, solid dark background. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2848",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "夜行",
+  "name": "Electric Nocturnal Luminescence",
+  "prompt": "deep indigo nocturnal, anamorphic starburst flare, high contrast grain, lo-fi analog aesthetic, bioluminescent highlights, surreal electric atmosphere, cinematic nightscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行__Electric Nocturnal Luminescence/preview.webp",
+  "folder": "Krea2_moodboard/夜行__Electric Nocturnal Luminescence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

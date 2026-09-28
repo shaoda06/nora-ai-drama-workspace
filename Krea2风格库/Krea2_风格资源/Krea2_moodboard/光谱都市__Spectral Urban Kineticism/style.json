@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2294",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "光谱都市",
+  "name": "Spectral Urban Kineticism",
+  "prompt": "high contrast black and white, long exposure motion blur, spectral silhouettes, urban isolation, kinetic energy, silver gelatin print aesthetic, shutter drag. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱都市__Spectral Urban Kineticism/preview.webp",
+  "folder": "Krea2_moodboard/光谱都市__Spectral Urban Kineticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+chiaroscuro, tenebrism, painterly realism, ethereal lighting, sfumato, celestial glow, classical portraiture, high contrast. Subject:{prompt}

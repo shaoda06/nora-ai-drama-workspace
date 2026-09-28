@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2194",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "内脏感写实",
+  "name": "Visceral Tenebrist Realism",
+  "prompt": "extreme chiaroscuro, hyper-detailed tactile texture, low-key dramatic lighting, intimate macro portrait, tenebrous atmosphere, weathered skin, cinematic warm light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感写实__Visceral Tenebrist Realism/preview.webp",
+  "folder": "Krea2_moodboard/内脏感写实__Visceral Tenebrist Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-572",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "柔和超现实哥特",
+  "name": "Muted Surreal Gothic",
+  "prompt": "desaturated earth tones, somber atmospheric lighting, surreal melancholic fantasy, textured painterly style, uncanny anatomical motifs, delicate line work, vintage photographic texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/柔和超现实哥特__Muted Surreal Gothic/preview.webp",
+  "folder": "Krea2_moodboard/柔和超现实哥特__Muted Surreal Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

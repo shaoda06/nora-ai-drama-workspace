@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-167",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "图形怀旧",
+  "name": "Graphic Serigraph Nostalgia",
+  "prompt": "risograph print style, stippled grain texture, high contrast color fields, retro anime background, minimalist architectural composition, saturated graphic illustration, dramatic sunlight shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形怀旧__Graphic Serigraph Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/图形怀旧__Graphic Serigraph Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

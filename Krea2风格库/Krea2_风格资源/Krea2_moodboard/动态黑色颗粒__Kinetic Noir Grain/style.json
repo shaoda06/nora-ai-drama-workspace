@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2077",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "动态黑色颗粒",
+  "name": "Kinetic Noir Grain",
+  "prompt": "high-contrast monochrome, heavy film grain, chiaroscuro lighting, motion blur, shutter drag, candid cinematic portraiture, low-key moody atmosphere, tactile texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态黑色颗粒__Kinetic Noir Grain/preview.webp",
+  "folder": "Krea2_moodboard/动态黑色颗粒__Kinetic Noir Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+long exposure motion blur, low-key noir lighting, spectral light trails, cold desaturated palette, kinetic action photography, high contrast silhouettes, shutter drag effect. Subject:{prompt}

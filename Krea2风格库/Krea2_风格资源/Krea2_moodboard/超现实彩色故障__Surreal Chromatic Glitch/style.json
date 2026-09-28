@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2895",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "超现实彩色故障",
+  "name": "Surreal Chromatic Glitch",
+  "prompt": "double exposure, chromatic aberration, surreal digital collage, neon color split, glitch art, translucent layering, psychedelic dreamcore. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实彩色故障__Surreal Chromatic Glitch/preview.webp",
+  "folder": "Krea2_moodboard/超现实彩色故障__Surreal Chromatic Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

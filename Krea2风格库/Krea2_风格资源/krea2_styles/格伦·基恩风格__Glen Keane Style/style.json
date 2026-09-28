@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-275",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "格伦·基恩风格",
+  "name": "Glen Keane Style",
+  "prompt": "Style: Glen Keane Style: A fluid, expressive hand-drawn animation illustration style built on confident, sweeping linework that carries real weight and momentum through every gesture, richly modeled form built with sculptural, almost three-dimensional volume despite being fundamentally linear, exaggerated yet anatomically grounded proportion emphasizing emotional expressiveness over rigidity, a warm, painterly sense of light suggested through soft graphite-like shading beneath confident contour, and a masterful, deeply emotive hand-drawn intensity that feels alive, weighty, and effortlessly graceful. Influenced by: Glen Keane, golden-age Disney animation tradition, expressive hand-drawn character-animation technique, sculptural gesture-drawing practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/格伦·基恩风格__Glen Keane Style/preview.jpg",
+  "folder": "krea2_styles/格伦·基恩风格__Glen Keane Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

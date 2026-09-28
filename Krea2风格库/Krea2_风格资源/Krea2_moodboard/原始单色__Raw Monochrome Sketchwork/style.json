@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-836",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "原始单色",
+  "name": "Raw Monochrome Sketchwork",
+  "prompt": "monochrome ink illustration, expressive cross-hatching, hand-drawn aesthetic, high-contrast pen work, gestural line art, sketchbook style, textured graphite shading. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始单色__Raw Monochrome Sketchwork/preview.webp",
+  "folder": "Krea2_moodboard/原始单色__Raw Monochrome Sketchwork",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

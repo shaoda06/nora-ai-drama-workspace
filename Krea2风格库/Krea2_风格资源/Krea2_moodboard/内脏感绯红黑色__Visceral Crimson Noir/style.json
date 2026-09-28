@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2196",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "内脏感绯红黑色",
+  "name": "Visceral Crimson Noir",
+  "prompt": "monochromatic crimson lighting, dramatic chiaroscuro, high-contrast studio portraiture, glossy texture detail, deep black shadows, cinematic noir atmosphere, visceral sensory focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感绯红黑色__Visceral Crimson Noir/preview.webp",
+  "folder": "Krea2_moodboard/内脏感绯红黑色__Visceral Crimson Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

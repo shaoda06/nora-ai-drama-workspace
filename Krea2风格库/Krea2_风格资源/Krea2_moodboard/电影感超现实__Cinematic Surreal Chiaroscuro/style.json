@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2812",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "电影感超现实",
+  "name": "Cinematic Surreal Chiaroscuro",
+  "prompt": "chiaroscuro lighting, surreal fluid distortion, cinematic motion blur, warm amber tones, intimate close-up, deep shadows, liquid texture, long exposure light trails. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感超现实__Cinematic Surreal Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/电影感超现实__Cinematic Surreal Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

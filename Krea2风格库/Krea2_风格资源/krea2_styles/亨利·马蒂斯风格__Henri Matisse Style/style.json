@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-325",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "亨利·马蒂斯风格",
+  "name": "Henri Matisse Style",
+  "prompt": "Style: Henri Matisse Style: A bold, joyful painting style built on flat, confidently bounded color fields applied with expressive, almost naive simplicity, dynamic organic cut-shape composition favoring rhythmic decorative pattern over naturalistic modeling, a liberated, unmodulated brushwork that celebrates pure color relationship over blended tone, a lively, compositional energy carried through curving, simplified form, and a joyful, painterly intensity that feels free, vibrant, and unmistakably modernist. Influenced by: Henri Matisse, Fauvism painting tradition,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/亨利·马蒂斯风格__Henri Matisse Style/preview.jpg",
+  "folder": "krea2_styles/亨利·马蒂斯风格__Henri Matisse Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

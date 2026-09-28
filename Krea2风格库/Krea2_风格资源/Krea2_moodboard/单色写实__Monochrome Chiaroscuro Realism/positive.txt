@@ -1,0 +1,1 @@
+monochrome, chiaroscuro, high-contrast, charcoal and graphite, expressive portraiture, tactile texture, dramatic lighting. Subject:{prompt}

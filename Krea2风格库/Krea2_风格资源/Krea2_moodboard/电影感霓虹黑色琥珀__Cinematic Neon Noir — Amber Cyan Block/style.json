@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1863",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感霓虹黑色琥珀",
+  "name": "Cinematic Neon Noir — Amber Cyan Block",
+  "prompt": "dual-tone lighting, high-contrast studio photography, cyberpunk aesthetic, vibrant color blocking, sculptural silhouette, cinematic rim lighting, electric neon palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感霓虹黑色琥珀__Cinematic Neon Noir — Amber Cyan Block/preview.webp",
+  "folder": "Krea2_moodboard/电影感霓虹黑色琥珀__Cinematic Neon Noir — Amber Cyan Block",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

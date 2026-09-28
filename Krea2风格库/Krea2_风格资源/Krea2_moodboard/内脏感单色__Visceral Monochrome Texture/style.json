@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3206",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "内脏感单色",
+  "name": "Visceral Monochrome Texture",
+  "prompt": "high-contrast monochrome, extreme macro texture, stark studio lighting, anatomical detail, minimalist high-key background, surrealist confinement, specular highlights. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感单色__Visceral Monochrome Texture/preview.webp",
+  "folder": "Krea2_moodboard/内脏感单色__Visceral Monochrome Texture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

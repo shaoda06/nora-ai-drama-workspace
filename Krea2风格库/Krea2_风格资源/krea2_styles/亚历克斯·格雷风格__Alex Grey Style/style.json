@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-35",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "亚历克斯·格雷风格",
+  "name": "Alex Grey Style",
+  "prompt": "Style: Alex Grey Style: A visionary, anatomically luminous illustration style built on translucent layered rendering that reveals internal structure and energetic form simultaneously within a single figure, meticulous symmetrical composition radiating outward with mandala-like precision, an intense, glowing internal luminosity that seems to emanate from beneath the outermost extent, dense, interwoven detail merging scientific anatomical accuracy with spiritual, mystical iconography, and a mesmerizing, transcendent intensity that treats the body as both physical structure and radiant energy field. Influenced by: Alex Grey, visionary-art movement tradition, anatomical illustration technique, sacred-geometry digital-painting practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/亚历克斯·格雷风格__Alex Grey Style/preview.jpg",
+  "folder": "krea2_styles/亚历克斯·格雷风格__Alex Grey Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

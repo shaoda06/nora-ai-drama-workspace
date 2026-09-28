@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2837",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "光谱黑色",
+  "name": "Spectral Noir Abstraction",
+  "prompt": "chiaroscuro noir, heavy film grain, spectral abstraction, distorted portraiture, high-contrast monochrome, cinematic motion blur, ethereal shadow play. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色__Spectral Noir Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色__Spectral Noir Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

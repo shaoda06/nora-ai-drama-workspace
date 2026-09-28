@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2337",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感黑色",
+  "name": "Cinematic Tenebrism Noir",
+  "prompt": "chiaroscuro lighting, low-key cinematography, deep ink-black voids, amber rim light, heavy film grain, minimalist composition, stark silhouette, atmospheric noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色__Cinematic Tenebrism Noir/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色__Cinematic Tenebrism Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

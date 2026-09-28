@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-287",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "喷枪奇幻",
+  "name": "Airbrush Fantasy",
+  "prompt": "Style: Airbrush Fantasy: highly polished fantasy illustration featuring exceptionally smooth gradients, refined atmospheric rendering, soft transitions, luminous depth, meticulous surface treatment, commercial illustration sensibilities, elegant visual flow, and a perfected painterly finish that emphasizes clarity and visual appeal, reminiscent of Boris Vallejo and Chris Achilleos, inspired by Heavy Metal Magazine and classic fantasy paperback cover art.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/喷枪奇幻__Airbrush Fantasy/preview.jpg",
+  "folder": "krea2_styles/喷枪奇幻__Airbrush Fantasy",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3270",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "彩色",
+  "name": "Chromatic Thermal Dreamscape",
+  "prompt": "thermal imaging palette, soft-focus airbrush texture, chromatic gradient glow, heavy film grain, retro-futuristic heat map, diffuse light blooms, psychedelic aura. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色__Chromatic Thermal Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/彩色__Chromatic Thermal Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

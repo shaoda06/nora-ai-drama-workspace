@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2114",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "午夜黑色",
+  "name": "Midnight Cobalt Noir",
+  "prompt": "deep cobalt blue, high-contrast chiaroscuro, electric blue rim lighting, sleek minimalist curves, glossy metallic finish, moody cinematic atmosphere, volumetric blue glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/午夜黑色__Midnight Cobalt Noir/preview.webp",
+  "folder": "Krea2_moodboard/午夜黑色__Midnight Cobalt Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

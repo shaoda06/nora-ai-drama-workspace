@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1884",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "数字黑色",
+  "name": "Digital Blueprint Noir",
+  "prompt": "cyanotype blueprint aesthetic, CRT scanlines and digital noise, glowing thermal silhouette, machine vision HUD overlay, monochromatic cobalt and indigo, surveillance grain, retro-futuristic glitch art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字黑色__Digital Blueprint Noir/preview.webp",
+  "folder": "Krea2_moodboard/数字黑色__Digital Blueprint Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

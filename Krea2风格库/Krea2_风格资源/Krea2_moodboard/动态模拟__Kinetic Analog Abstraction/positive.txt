@@ -1,0 +1,1 @@
+intentional camera movement, heavy analog film grain, blurred silhouette, high-contrast lighting, painterly motion blur, experimental texture, chromatic degradation, atmospheric abstraction. Subject:{prompt}

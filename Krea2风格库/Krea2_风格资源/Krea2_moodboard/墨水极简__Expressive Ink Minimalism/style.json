@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-962",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "墨水极简",
+  "name": "Expressive Ink Minimalism",
+  "prompt": "expressive ink wash, sumi-e style, textured paper, gestural brushstrokes, minimalist composition, high contrast ink, negative space. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/墨水极简__Expressive Ink Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/墨水极简__Expressive Ink Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

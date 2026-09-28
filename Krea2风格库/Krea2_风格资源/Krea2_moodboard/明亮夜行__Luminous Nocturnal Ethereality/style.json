@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1580",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "明亮夜行",
+  "name": "Luminous Nocturnal Ethereality",
+  "prompt": "cinematic nocturnal atmosphere, bioluminescent glow, soft-focus depth, ethereal levitation, cosmic stardust bokeh, volumetric indigo light, surreal dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行__Luminous Nocturnal Ethereality/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行__Luminous Nocturnal Ethereality",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

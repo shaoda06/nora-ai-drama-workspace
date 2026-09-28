@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2021",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态单色黑色墨水深邃",
+  "name": "Kinetic Monochrome Noir — Ink-Deep Ghosting",
+  "prompt": "high-contrast monochrome, heavy motion blur, gritty film grain, ghostly silhouettes, analog noir, shutter drag, minimalist abstraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态单色黑色墨水深邃__Kinetic Monochrome Noir — Ink-Deep Ghosting/preview.webp",
+  "folder": "Krea2_moodboard/动态单色黑色墨水深邃__Kinetic Monochrome Noir — Ink-Deep Ghosting",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

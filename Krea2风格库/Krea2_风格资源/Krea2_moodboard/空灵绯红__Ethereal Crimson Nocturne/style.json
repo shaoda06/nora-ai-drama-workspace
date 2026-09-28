@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1480",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵绯红",
+  "name": "Ethereal Crimson Nocturne",
+  "prompt": "crimson red background, ethereal glow, analog film grain, motion blur, dreamcore, chiaroscuro lighting, soft focus, cinematic mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵绯红__Ethereal Crimson Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/空灵绯红__Ethereal Crimson Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

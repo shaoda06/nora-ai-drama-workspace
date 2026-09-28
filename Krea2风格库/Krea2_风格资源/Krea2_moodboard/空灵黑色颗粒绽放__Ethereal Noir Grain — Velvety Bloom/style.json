@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3504",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵黑色颗粒绽放",
+  "name": "Ethereal Noir Grain — Velvety Bloom",
+  "prompt": "heavy film grain, high-contrast monochrome, soft-focus blur, ethereal silhouettes, atmospheric noir, dreamlike haze, liminal photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色颗粒绽放__Ethereal Noir Grain — Velvety Bloom/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色颗粒绽放__Ethereal Noir Grain — Velvety Bloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

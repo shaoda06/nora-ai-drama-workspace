@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2056",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态复古",
+  "name": "Dynamic Retro Fisheye",
+  "prompt": "fisheye lens distortion, low-angle perspective, saturated retro colors, Y2K streetwear fashion, harsh direct sunlight, analog film grain, dynamic editorial composition, vibrant outdoor aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态复古__Dynamic Retro Fisheye/preview.webp",
+  "folder": "Krea2_moodboard/动态复古__Dynamic Retro Fisheye",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

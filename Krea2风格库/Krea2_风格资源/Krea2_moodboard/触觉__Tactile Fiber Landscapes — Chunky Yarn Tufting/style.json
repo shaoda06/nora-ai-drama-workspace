@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1244",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "触觉",
+  "name": "Tactile Fiber Landscapes — Chunky Yarn Tufting",
+  "prompt": "tactile textile landscape, 3D embroidery relief, needle felted fiber art, chunky yarn texture, handcrafted wool tapestry, whimsical pastoral scene, intricate stitch detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉__Tactile Fiber Landscapes — Chunky Yarn Tufting/preview.webp",
+  "folder": "Krea2_moodboard/触觉__Tactile Fiber Landscapes — Chunky Yarn Tufting",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

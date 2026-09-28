@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3090",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵极简",
+  "name": "Ethereal Sculptural Minimalism",
+  "prompt": "high-contrast silhouette, sculptural fabric drapery, minimalist studio portrait, sheer translucent texture, monochromatic cool palette, ethereal lighting, avant-garde editorial. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简__Ethereal Sculptural Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简__Ethereal Sculptural Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

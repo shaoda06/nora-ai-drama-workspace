@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-339",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "抓拍摄影",
+  "name": "Candid Photography",
+  "prompt": "Style: Candid Photography: A natural, unposed photographic style built on available or ambient light captured as it falls rather than controlled or arranged, spontaneous, in-motion framing that favors authentic gesture over composed stillness, a slightly imperfect, unrefined tonal balance that preserves the honesty of the captured moment, subtle grain and soft focus falloff typical of quick, reactive capture rather than deliberate setup, and an intimate, documentary-style authenticity that feels observed rather than performed. Influenced by: street photography tradition, photojournalism practice, documentary candid-capture technique, available-light shooting method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/抓拍摄影__Candid Photography/preview.jpg",
+  "folder": "krea2_styles/抓拍摄影__Candid Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

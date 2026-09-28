@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-479",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "怀旧模拟",
+  "name": "Nostalgic Analog Archive",
+  "prompt": "vintage film grain, offset lithography texture, mid-century aesthetic, soft focus, halftone patterns, faded analog colors, nostalgic tactile finish. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧模拟__Nostalgic Analog Archive/preview.webp",
+  "folder": "Krea2_moodboard/怀旧模拟__Nostalgic Analog Archive",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

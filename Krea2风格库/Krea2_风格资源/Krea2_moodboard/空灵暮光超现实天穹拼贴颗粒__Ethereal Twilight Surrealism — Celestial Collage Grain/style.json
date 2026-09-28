@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3189",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵暮光超现实天穹拼贴颗粒",
+  "name": "Ethereal Twilight Surrealism — Celestial Collage Grain",
+  "prompt": "twilight surrealism, ethereal dreamscape, vintage film grain, celestial collage, minimalist silhouette, gradient atmosphere, nostalgic mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵暮光超现实天穹拼贴颗粒__Ethereal Twilight Surrealism — Celestial Collage Grain/preview.webp",
+  "folder": "Krea2_moodboard/空灵暮光超现实天穹拼贴颗粒__Ethereal Twilight Surrealism — Celestial Collage Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

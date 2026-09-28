@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-622",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "大胆图形霓虹超现实",
+  "name": "Bold Graphic Neon Surrealism",
+  "prompt": "flat vector illustration, bold black outlines, saturated neon color palette, pop art surrealism, clean graphic design, high-contrast composition, modern character design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/大胆图形霓虹超现实__Bold Graphic Neon Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/大胆图形霓虹超现实__Bold Graphic Neon Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2007",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "绯红黑色故障",
+  "name": "Crimson Noir Glitch",
+  "prompt": "crimson and black monochrome, heavy analog film grain, high-contrast noir, lo-fi glitch art, soft-focus halation, experimental darkroom texture, atmospheric scanline distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色故障__Crimson Noir Glitch/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色故障__Crimson Noir Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

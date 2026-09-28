@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2461",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "哥特",
+  "name": "Monochromatic Biomorphic Gothic",
+  "prompt": "monochromatic gothic, biomorphic avant-garde, porcelain skin, high-fashion surrealism, intricate lace textures, skeletal sculptural elements, diffused atmospheric lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/哥特__Monochromatic Biomorphic Gothic/preview.webp",
+  "folder": "Krea2_moodboard/哥特__Monochromatic Biomorphic Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3132",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "极简空中超现实",
+  "name": "Minimalist Aerial Surrealism",
+  "prompt": "top-down aerial perspective, minimalist composition, stark negative space, high-key lighting, geometric architectural abstraction, crisp clean shadows, saturated turquoise accents. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简空中超现实__Minimalist Aerial Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/极简空中超现实__Minimalist Aerial Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

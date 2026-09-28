@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2153",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "建筑",
+  "name": "Architectural Cyanotype Abstraction",
+  "prompt": "Prussian blue cyanotype, fine line hatching, aged paper texture, minimalist blueprint aesthetic, technical line drawing, monochromatic indigo, distressed archival print. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/建筑__Architectural Cyanotype Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/建筑__Architectural Cyanotype Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1744",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "夜行剪影黑色",
+  "name": "Nocturnal Silhouette Noir",
+  "prompt": "backlit silhouette, heavy film grain, atmospheric halo glow, nocturnal teal and indigo palette, soft focus dreamscape, minimalist noir, textured paper aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行剪影黑色__Nocturnal Silhouette Noir/preview.webp",
+  "folder": "Krea2_moodboard/夜行剪影黑色__Nocturnal Silhouette Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+macro beauty portrait, prismatic light refraction, wet-look skin texture, iridescent glitter makeup, low-key dramatic lighting, high-contrast editorial, ethereal spectral flares. Subject:{prompt}

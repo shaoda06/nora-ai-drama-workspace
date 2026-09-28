@@ -1,0 +1,1 @@
+motion blur, high-contrast studio lighting, neon saturation, abstract distortion, shutter drag, tactile texture overlays, vibrant color palette. Subject:{prompt}

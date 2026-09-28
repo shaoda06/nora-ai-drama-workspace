@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2977",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱动态黑色墨水梦",
+  "name": "Spectral Kinetic Noir — Ink-Black Dream Streaks",
+  "prompt": "high contrast monochrome, extreme motion blur, heavy film grain, chiaroscuro lighting, ethereal silhouettes, shutter drag, noir aesthetic, abstract dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱动态黑色墨水梦__Spectral Kinetic Noir — Ink-Black Dream Streaks/preview.webp",
+  "folder": "Krea2_moodboard/光谱动态黑色墨水梦__Spectral Kinetic Noir — Ink-Black Dream Streaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

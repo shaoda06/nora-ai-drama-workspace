@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-225",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "恶魔城概念艺术",
+  "name": "Castlevania Concept Art",
+  "prompt": "Style: Castlevania Concept Art: A dark gothic fantasy concept-art style rendered with painterly digital linework and moody, desaturated color palettes, gothic vibes rendered in dramatic vertical perspective, richly textured surfaces, atmospheric fog and shadow pooling around sharply lit focal points, romantic horror atmosphere blending anime-influenced character design with Western dark-fantasy illustration. Influenced by: Castlevania (Netflix/Powerhouse Animation), Ayami Kojima, gothic horror illustration, dark fantasy concept art.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/恶魔城概念艺术__Castlevania Concept Art/preview.jpg",
+  "folder": "krea2_styles/恶魔城概念艺术__Castlevania Concept Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

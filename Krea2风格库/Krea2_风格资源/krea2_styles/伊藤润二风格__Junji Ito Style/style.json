@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-102",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "伊藤润二风格",
+  "name": "Junji Ito Style",
+  "prompt": "Style: Junji Ito Style: A meticulously detailed horror-manga illustration style built on dense, obsessive fine linework and cross-hatching that renders skin, hair, and texture with unsettling hyper-precision, ordinary human forms twisted into spiraling, biologically wrong distortions and body horror, stark black-and-white contrast with pools of inky shadow swallowing the edges of the frame, wide unblinking eyes carrying quiet dawning dread, and a slow-building, deeply unsettling atmosphere of cosmic horror seeping into mundane settings. Influenced by: Junji Ito, Tomie and Uzumaki manga art, body-horror illustration, ink cross-hatching technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/伊藤润二风格__Junji Ito Style/preview.jpg",
+  "folder": "krea2_styles/伊藤润二风格__Junji Ito Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

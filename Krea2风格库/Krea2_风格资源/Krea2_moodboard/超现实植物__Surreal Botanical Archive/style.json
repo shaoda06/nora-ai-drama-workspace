@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-565",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "超现实植物",
+  "name": "Surreal Botanical Archive",
+  "prompt": "vintage scientific illustration, botanical surrealism, cyanotype collage, muted pastel palette, tactile paper texture, whimsical narrative, minimalist graphic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实植物__Surreal Botanical Archive/preview.webp",
+  "folder": "Krea2_moodboard/超现实植物__Surreal Botanical Archive",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

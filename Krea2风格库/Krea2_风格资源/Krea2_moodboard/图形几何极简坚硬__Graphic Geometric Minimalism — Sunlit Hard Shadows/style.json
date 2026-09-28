@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-323",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "图形几何极简坚硬",
+  "name": "Graphic Geometric Minimalism — Sunlit Hard Shadows",
+  "prompt": "minimalist composition, sharp hard shadows, overhead perspective, geometric color blocking, high-contrast lighting, graphic abstraction, isolated subject. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形几何极简坚硬__Graphic Geometric Minimalism — Sunlit Hard Shadows/preview.webp",
+  "folder": "Krea2_moodboard/图形几何极简坚硬__Graphic Geometric Minimalism — Sunlit Hard Shadows",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

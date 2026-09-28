@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2769",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "复古",
+  "name": "Retro Cursor Glitchcore",
+  "prompt": "vintage mouse cursor patterns, Windows 95 blue interface, CRT monitor scanline texture, digital glitch art, aliased pixel geometry, early internet nostalgia, computational surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古__Retro Cursor Glitchcore/preview.webp",
+  "folder": "Krea2_moodboard/复古__Retro Cursor Glitchcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

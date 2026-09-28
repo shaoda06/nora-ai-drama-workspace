@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-958",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "永恒棕褐",
+  "name": "Timeless Sepia Allegory",
+  "prompt": "sepia and ochre palette, classical oil painting, ink wash influence, chiaroscuro lighting, ethereal atmosphere, painterly texture, academic realism, nostalgic golden hour. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/永恒棕褐__Timeless Sepia Allegory/preview.webp",
+  "folder": "Krea2_moodboard/永恒棕褐__Timeless Sepia Allegory",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

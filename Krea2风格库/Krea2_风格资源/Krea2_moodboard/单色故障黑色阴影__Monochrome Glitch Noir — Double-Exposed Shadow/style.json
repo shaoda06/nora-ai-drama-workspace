@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-458",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "单色故障黑色阴影",
+  "name": "Monochrome Glitch Noir — Double-Exposed Shadow",
+  "prompt": "high-contrast black and white, heavy film grain, analog glitch art, halftone texture, surreal double exposure, cinematic noir lighting, scanline distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障黑色阴影__Monochrome Glitch Noir — Double-Exposed Shadow/preview.webp",
+  "folder": "Krea2_moodboard/单色故障黑色阴影__Monochrome Glitch Noir — Double-Exposed Shadow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

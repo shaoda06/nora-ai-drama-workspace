@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1548",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵单色运动颗粒",
+  "name": "Ethereal Monochrome Motion — Grain-Softened Haze",
+  "prompt": "monochrome motion blur, ghostly silhouettes, heavy analog film grain, chiaroscuro lighting, ethereal dreamscape, high contrast photography, soft focus lens. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色运动颗粒__Ethereal Monochrome Motion — Grain-Softened Haze/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色运动颗粒__Ethereal Monochrome Motion — Grain-Softened Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

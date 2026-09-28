@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-755",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵夜行极简",
+  "name": "Ethereal Nocturnal Minimalism — Frosted Charcoal Halo",
+  "prompt": "high-contrast monochrome, heavy textured grain, diffused backlit silhouette, atmospheric noir, minimalist chiaroscuro, soft-focus halo, ethereal dark ambient. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行极简__Ethereal Nocturnal Minimalism — Frosted Charcoal Halo/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行极简__Ethereal Nocturnal Minimalism — Frosted Charcoal Halo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

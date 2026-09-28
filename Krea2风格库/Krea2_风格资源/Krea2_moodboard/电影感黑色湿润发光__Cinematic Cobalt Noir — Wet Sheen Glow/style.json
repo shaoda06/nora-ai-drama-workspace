@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2491",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "电影感黑色湿润发光",
+  "name": "Cinematic Cobalt Noir — Wet Sheen Glow",
+  "prompt": "monochromatic cobalt blue, chiaroscuro lighting, cinematic noir portrait, high-contrast shadows, glistening skin texture, ethereal soft-focus, mysterious mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色湿润发光__Cinematic Cobalt Noir — Wet Sheen Glow/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色湿润发光__Cinematic Cobalt Noir — Wet Sheen Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2796",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "超现实",
+  "name": "Lofi CRT Surrealism",
+  "prompt": "8-bit pixel art, CRT monitor texture, chromatic aberration, digital glitch, scan lines, retro computer interface, lo-fi surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Lofi CRT Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Lofi CRT Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

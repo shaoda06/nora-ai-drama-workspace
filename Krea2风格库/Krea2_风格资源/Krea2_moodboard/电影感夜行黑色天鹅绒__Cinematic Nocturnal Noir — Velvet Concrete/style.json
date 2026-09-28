@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-733",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "电影感夜行黑色天鹅绒",
+  "name": "Cinematic Nocturnal Noir — Velvet Concrete",
+  "prompt": "cinematic chiaroscuro, low-key moody lighting, desaturated teal and charcoal palette, dramatic volumetric shadows, high-ISO film grain, gothic noir atmosphere, symmetrical cinematic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色天鹅绒__Cinematic Nocturnal Noir — Velvet Concrete/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色天鹅绒__Cinematic Nocturnal Noir — Velvet Concrete",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

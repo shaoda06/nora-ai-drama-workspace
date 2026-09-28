@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-43",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "蒸汽朋克",
+  "name": "Steampunk",
+  "prompt": "Style: Steampunk: A richly ornamental Victorian-industrial illustration style built on intricate mechanical detail rendered with meticulous, gear-and-cog precision, dramatic directional lighting catching every riveted contour and polished brass-adjacent gleam, confident linework blending vintage engraving discipline with fantastical technical invention, a hushed, adventurous grandeur carried through richly layered ornamental complexity, and a nostalgic, retro-futurist intensity that feels handcrafted, inventive, and unmistakably era-blending. Influenced by: Jules Verne illustration tradition, Victorian engraving technique, retro-futurist mechanical-design practice, steampunk concept-art method.,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/蒸汽朋克__Steampunk/preview.jpg",
+  "folder": "krea2_styles/蒸汽朋克__Steampunk",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

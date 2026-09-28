@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-177",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "光影交织",
+  "name": "Interplay of Shadow and Light",
+  "prompt": "Style: Interplay of Shadow and Light: A dramatically balanced illustration style built entirely on the tension between two forces, with sharply divided planes of illumination and darkness meeting along crisp, deliberate boundaries rather than gradual transition, form constructed almost sculpturally through the push and pull of what is revealed versus what is withheld, a rhythmic alternation of exposed and concealed detail that guides the eye across the composition like a visual heartbeat, a quiet, contemplative gravity carried through the deliberate restraint of full illumination, and a masterful, chiaroscuro-driven intensity where absence carries as much weight as presence. Influenced by: Caravaggio, chiaroscuro painting tradition, dramatic studio-lighting technique, classical tenebrist illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/光影交织__Interplay of Shadow and Light/preview.jpg",
+  "folder": "krea2_styles/光影交织__Interplay of Shadow and Light",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

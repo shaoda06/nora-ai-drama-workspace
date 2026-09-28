@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1113",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "肌理明亮",
+  "name": "Textured Luminous Impressionism",
+  "prompt": "heavy impasto oil painting, visible tactile brushstrokes, sun-drenched atmosphere, expressive figurative realism, textured canvas, chiaroscuro lighting, impressionist influence. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理明亮__Textured Luminous Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/肌理明亮__Textured Luminous Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

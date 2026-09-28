@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-179",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "锐利几何复古",
+  "name": "Sharp Geometric Retro-Futurism",
+  "prompt": "sharp angular vector art, exaggerated heroic proportions, minimalist geometric character design, high-contrast solid background, retro-futuristic cartoon style, clean digital line work, bold flat colors. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/锐利几何复古__Sharp Geometric Retro-Futurism/preview.webp",
+  "folder": "Krea2_moodboard/锐利几何复古__Sharp Geometric Retro-Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

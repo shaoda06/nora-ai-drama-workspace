@@ -1,0 +1,1 @@
+isometric pixel art, dithered texture, 90s retro computing, low-poly 3D render, 16-bit aesthetic, high contrast digital palette, voxel diorama. Subject:{prompt}

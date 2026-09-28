@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3054",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "图形极简逆光发光",
+  "name": "Graphic Chiaroscuro Minimalism — Theatrical Backlit Glow",
+  "prompt": "high-contrast studio lighting, chiaroscuro portraiture, minimalist editorial aesthetic, graphic beauty photography, sharp silhouette, avant-garde makeup, ethereal backlit glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形极简逆光发光__Graphic Chiaroscuro Minimalism — Theatrical Backlit Glow/preview.webp",
+  "folder": "Krea2_moodboard/图形极简逆光发光__Graphic Chiaroscuro Minimalism — Theatrical Backlit Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

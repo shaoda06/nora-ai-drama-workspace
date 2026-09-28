@@ -1,0 +1,1 @@
+CRT scanline effect, dithered shading, low-poly aesthetic, pixelated texture, retro computer graphics, liminal atmosphere, 90s software render. Subject:{prompt}

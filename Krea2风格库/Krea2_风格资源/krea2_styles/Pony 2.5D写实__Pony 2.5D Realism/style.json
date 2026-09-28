@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-92",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "Pony 2.5D写实",
+  "name": "Pony 2.5D Realism",
+  "prompt": "Style: Pony 2.5D Realism: A hybrid illustration style built on flat anime-derived linework pushed toward volumetric, near-photographic shading, smooth gradient rendering that gives skin and hair a soft three-dimensional depth while retaining crisp graphic outline at the edges, meticulously blended highlight transitions that bridge cel-shading simplicity with painterly light behavior, confident anatomical grounding that leans semi-realistic without abandoning stylized facial proportion, and a polished, technically ambitious rendering intensity that sits deliberately between flat illustration and full photorealism. Influenced by: checkpoint-trained diffusion-model 2.5D aesthetic, semi-realistic anime rendering tradition, gacha-game character-art technique, hybrid cel-to-painterly shading practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Pony 2.5D写实__Pony 2.5D Realism/preview.jpg",
+  "folder": "krea2_styles/Pony 2.5D写实__Pony 2.5D Realism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

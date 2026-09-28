@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1326",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "内脏感机械写实",
+  "name": "Visceral Bio-Mechanical Realism",
+  "prompt": "hyper-realistic creature, cinematic key lighting, tactile organic textures, gritty sci-fi design, shallow depth of field, biopunk aesthetic, intense macro detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感机械写实__Visceral Bio-Mechanical Realism/preview.webp",
+  "folder": "Krea2_moodboard/内脏感机械写实__Visceral Bio-Mechanical Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

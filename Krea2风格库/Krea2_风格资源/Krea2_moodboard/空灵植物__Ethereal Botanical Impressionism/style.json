@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1734",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵植物",
+  "name": "Ethereal Botanical Impressionism",
+  "prompt": "ultra-soft focus, shallow depth of field, ethereal botanical macro, pastel and muted palette, diffused atmospheric lighting, dreamy impressionistic texture, minimalist organic forms. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵植物__Ethereal Botanical Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/空灵植物__Ethereal Botanical Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

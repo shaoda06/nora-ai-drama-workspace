@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1274",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "电影感黑色",
+  "name": "Cozy Cinematic Noir",
+  "prompt": "stylized digital illustration, dramatic chiaroscuro lighting, warm amber glow, deep cool blue shadows, cinematic atmospheric storytelling, angular geometric composition, cozy nocturnal mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色__Cozy Cinematic Noir/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色__Cozy Cinematic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

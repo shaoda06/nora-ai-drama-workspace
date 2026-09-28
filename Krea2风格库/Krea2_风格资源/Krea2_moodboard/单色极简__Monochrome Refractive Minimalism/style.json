@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2621",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "单色极简",
+  "name": "Monochrome Refractive Minimalism",
+  "prompt": "chiaroscuro lighting, glass refraction, high-contrast monochrome, rim lighting, minimalist still life, caustic light patterns, dark field illumination. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色极简__Monochrome Refractive Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/单色极简__Monochrome Refractive Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

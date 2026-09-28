@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-378",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "空灵颗粒",
+  "name": "Ethereal Grain Aura — Dusky Halo",
+  "prompt": "soft-focus silhouette, heavy analog grain, glowing atmospheric aura, risograph texture, diffuse airbrushed light, ethereal dreamscape, muted gradient background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒__Ethereal Grain Aura — Dusky Halo/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒__Ethereal Grain Aura — Dusky Halo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

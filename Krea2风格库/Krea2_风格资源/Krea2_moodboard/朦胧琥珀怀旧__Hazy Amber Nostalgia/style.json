@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1761",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "朦胧琥珀怀旧",
+  "name": "Hazy Amber Nostalgia",
+  "prompt": "35mm vintage film grain, golden hour amber glow, soft focus dreamlike haze, nostalgic analog aesthetic, minimalist coastal silhouettes, low-contrast sepia tones, ethereal atmospheric depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/朦胧琥珀怀旧__Hazy Amber Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/朦胧琥珀怀旧__Hazy Amber Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-923",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮植物",
+  "name": "Luminous Chiaroscuro Botanical",
+  "prompt": "chiaroscuro lighting, Dutch Golden Age still life, dramatic sunbeams, tactile organic textures, deep moody shadows, warm amber glow, painterly realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮植物__Luminous Chiaroscuro Botanical/preview.webp",
+  "folder": "Krea2_moodboard/明亮植物__Luminous Chiaroscuro Botanical",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

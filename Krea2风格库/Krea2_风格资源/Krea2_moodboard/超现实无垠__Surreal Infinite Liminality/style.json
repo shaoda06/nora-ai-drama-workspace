@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3460",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "超现实无垠",
+  "name": "Surreal Infinite Liminality",
+  "prompt": "surrealist digital landscape, infinite repetition, liminal space, dreamcore aesthetic, geometric grid pattern, vibrant saturated colors, sharp clinical lighting, uncanny dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实无垠__Surreal Infinite Liminality/preview.webp",
+  "folder": "Krea2_moodboard/超现实无垠__Surreal Infinite Liminality",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

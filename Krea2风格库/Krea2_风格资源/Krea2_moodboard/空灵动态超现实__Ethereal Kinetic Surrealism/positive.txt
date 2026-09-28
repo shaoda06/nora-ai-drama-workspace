@@ -1,0 +1,1 @@
+translucent drapery, cinematic backlighting, motion blur, volumetric light, surreal atmosphere, fluid silhouette, painterly texture. Subject:{prompt}

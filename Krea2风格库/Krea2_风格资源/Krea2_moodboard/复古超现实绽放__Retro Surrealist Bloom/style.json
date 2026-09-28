@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3501",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "复古超现实绽放",
+  "name": "Retro Surrealist Bloom",
+  "prompt": "vintage 35mm film grain, saturated technicolor palette, surrealist botanical juxtaposition, sharp dramatic shadows, retro editorial photography, liminal landscape, analog camera aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古超现实绽放__Retro Surrealist Bloom/preview.webp",
+  "folder": "Krea2_moodboard/复古超现实绽放__Retro Surrealist Bloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

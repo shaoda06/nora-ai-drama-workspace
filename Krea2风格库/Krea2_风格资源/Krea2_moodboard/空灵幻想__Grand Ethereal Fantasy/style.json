@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-568",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵幻想",
+  "name": "Grand Ethereal Fantasy",
+  "prompt": "monumental fantasy architecture, atmospheric perspective, painterly digital art, ethereal lighting, epic scale contrast, vibrant color palette, mystical landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵幻想__Grand Ethereal Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/空灵幻想__Grand Ethereal Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-98",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "海贼王风格",
+  "name": "One Piece Style",
+  "prompt": "Style: One Piece Style: A bold, expressive shōnen-manga illustration style built on confident, energetic linework carrying exaggerated, rubber-hose-adjacent proportion flexibility, dynamic, kinetic posing charged with over-the-top comedic and dramatic range in equal measure, simplified cel-based shading that prioritizes bold graphic readability over subtle gradation, richly imaginative silhouette design that pushes anatomy and costume into instantly iconic exaggeration, and an adventurous, larger-than-life shōnen energy that balances whimsical humor with genuine emotional weight. Influenced by: Eiichiro Oda, Weekly Shōnen Jump illustration tradition, cel-shaded anime-adaptation technique, adventure-shōnen character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/海贼王风格__One Piece Style/preview.jpg",
+  "folder": "krea2_styles/海贼王风格__One Piece Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

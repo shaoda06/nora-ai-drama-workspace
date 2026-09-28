@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1275",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "风格化幻想",
+  "name": "Cozy Stylized Fantasy",
+  "prompt": "stylized digital illustration, chunky exaggerated proportions, painterly textures, cozy fantasy atmosphere, soft ambient lighting, earthy muted color palette, expressive character design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/风格化幻想__Cozy Stylized Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/风格化幻想__Cozy Stylized Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

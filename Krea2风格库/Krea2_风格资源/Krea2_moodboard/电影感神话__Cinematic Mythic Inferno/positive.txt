@@ -1,0 +1,1 @@
+cinematic lighting, golden hour, volumetric rays, atmospheric haze, high contrast silhouettes, epic scale, glowing particles, mythic fantasy. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3046",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵",
+  "name": "Ethereal Thermal Dreamscape",
+  "prompt": "heavy film grain, chromatic aberration, thermal gradient glow, ethereal silhouette, analog double exposure, surreal dreamscape, tactile noise texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Thermal Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Thermal Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

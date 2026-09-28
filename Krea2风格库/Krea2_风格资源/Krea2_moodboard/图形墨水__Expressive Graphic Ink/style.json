@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-810",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "图形墨水",
+  "name": "Expressive Graphic Ink",
+  "prompt": "hand-drawn ink illustration, minimalist line art, high-contrast graphics, expressive character design, stark white background, clean vector style, playful graphic aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形墨水__Expressive Graphic Ink/preview.webp",
+  "folder": "Krea2_moodboard/图形墨水__Expressive Graphic Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

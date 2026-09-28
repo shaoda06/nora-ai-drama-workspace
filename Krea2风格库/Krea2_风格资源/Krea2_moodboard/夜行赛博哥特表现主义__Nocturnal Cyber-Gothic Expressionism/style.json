@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-999",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "夜行赛博哥特表现主义",
+  "name": "Nocturnal Cyber-Gothic Expressionism",
+  "prompt": "chiaroscuro lighting, high-contrast illustration, scratchy expressive texture, glowing amber and indigo, dark surrealism, analog horror, lo-fi digital noise. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行赛博哥特表现主义__Nocturnal Cyber-Gothic Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/夜行赛博哥特表现主义__Nocturnal Cyber-Gothic Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-132",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "经典迪士尼剧场动画",
+  "name": "Classic disney Feature Animation",
+  "prompt": "Style: Classic disney Feature Animation: A warm, hand-painted animation-illustration style built on rounded, appealing character proportions carrying expressive, exaggerated readability, smooth cel-shaded color application with gentle, naturalistic gradation, meticulous attention to fluid, principle-driven motion even within a single still frame, a nostalgic, wholesome sincerity carried through soft, inviting lighting logic, and a timeless, storybook grandeur rooted in decades of golden-age feature-animation craftsmanship. Influenced by: Disney and Walt Disney, golden-age American feature-animation tradition, classical cel-animation painting technique, expressive character-animation principles, mid-century studio illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/经典迪士尼剧场动画__Classic disney Feature Animation/preview.jpg",
+  "folder": "krea2_styles/经典迪士尼剧场动画__Classic disney Feature Animation",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

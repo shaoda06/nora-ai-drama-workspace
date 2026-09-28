@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-206",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "明亮极简",
+  "name": "Luminous Porcelain Minimalism",
+  "prompt": "stylized 3D render, porcelain skin texture, soft subsurface scattering, minimalist composition, airbrushed makeup, vibrant rim lighting, matte clay aesthetic, octane render. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮极简__Luminous Porcelain Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/明亮极简__Luminous Porcelain Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

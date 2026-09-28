@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-346",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "鱼眼摄影",
+  "name": "Fish-Eye Photography",
+  "prompt": "Style: Fish-Eye Photography: A real-life photograph of a real person, shot on a camera with an 8mm circular fisheye lens: the whole frame bends into a round, convex bubble, straight walls and ceiling lines curve outward, the center pushes toward the lens while the edges fall away into a dark circular vignette, natural skin texture, real fabric and room detail, available-light exposure and slight digital noise, candid and playful like a doorway or skate-video snapshot, photographic realism, not an illustration. Influenced by: fisheye-lens photography, ultra-wide-angle technique, skateboard and action-sports photography, peephole and doorbell-camera snapshots.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/鱼眼摄影__Fish-Eye Photography/preview.jpg",
+  "folder": "krea2_styles/鱼眼摄影__Fish-Eye Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

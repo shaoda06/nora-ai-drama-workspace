@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-913",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "有机",
+  "name": "Intricate Organic Tapestry",
+  "prompt": "intricate patterned illustration, dense organic textures, flat graphic composition, folk art inspired, pointillism and line work, botanical tapestry, muted earth and pastel tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/有机__Intricate Organic Tapestry/preview.webp",
+  "folder": "Krea2_moodboard/有机__Intricate Organic Tapestry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

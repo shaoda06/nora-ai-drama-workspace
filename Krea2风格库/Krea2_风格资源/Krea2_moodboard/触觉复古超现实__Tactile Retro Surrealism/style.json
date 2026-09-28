@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3246",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "触觉复古超现实",
+  "name": "Tactile Retro Surrealism",
+  "prompt": "tactile surrealism, cobalt blue and crimson red, retro-futuristic airbrush, dramatic chiaroscuro, vintage film grain, furry texture, extreme close-up. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉复古超现实__Tactile Retro Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/触觉复古超现实__Tactile Retro Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

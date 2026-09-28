@@ -1,0 +1,1 @@
+macro texture, weathered stone, moss-covered detail, diffused natural light, earthy desaturated palette, rugged geological patterns, organic forest floor. Subject:{prompt}

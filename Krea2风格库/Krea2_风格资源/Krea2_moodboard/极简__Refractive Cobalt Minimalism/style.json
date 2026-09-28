@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-230",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "极简",
+  "name": "Refractive Cobalt Minimalism",
+  "prompt": "3D digital render, translucent glass and matte clay textures, minimalist studio lighting, cobalt blue color palette, smooth rounded contours, soft refractive gradients, clean neutral background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Refractive Cobalt Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Refractive Cobalt Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

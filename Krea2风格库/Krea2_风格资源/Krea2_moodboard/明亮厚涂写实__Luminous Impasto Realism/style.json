@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1058",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "明亮厚涂写实",
+  "name": "Luminous Impasto Realism",
+  "prompt": "thick impasto oil painting, dramatic chiaroscuro lighting, classical realism, dreamy atmospheric haze, visible painterly brushstrokes, luminous gold accents, sfumato. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮厚涂写实__Luminous Impasto Realism/preview.webp",
+  "folder": "Krea2_moodboard/明亮厚涂写实__Luminous Impasto Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2731",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "电影感",
+  "name": "Cinematic Luminescent Nocturne",
+  "prompt": "starburst lens flare, bioluminescent glow, cinematic film grain, deep teal and red contrast, atmospheric moody lighting, ethereal dreamcore, shimmering reflective textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感__Cinematic Luminescent Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/电影感__Cinematic Luminescent Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

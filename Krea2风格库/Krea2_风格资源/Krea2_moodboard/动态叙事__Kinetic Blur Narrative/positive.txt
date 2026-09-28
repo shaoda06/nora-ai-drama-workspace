@@ -1,0 +1,1 @@
+intentional camera movement, motion blur, shutter drag, painterly texture, analog film grain, cinematic light streaks, kinetic energy. Subject:{prompt}

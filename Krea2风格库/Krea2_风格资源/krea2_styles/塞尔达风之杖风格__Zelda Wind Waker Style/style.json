@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-15",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "塞尔达风之杖风格",
+  "name": "Zelda Wind Waker Style",
+  "prompt": "Style: Zelda Wind Waker Style: A vibrant, toon-shaded illustration style built on crisp, hard-edged cel shading with minimal tonal gradation, confident, thick outline holding clean, geometric silhouette design, warm painterly sky and terrain rendered with soft matte-painted texture, expressive, rounded character proportions carrying whimsical charm, and a bright, adventurous storybook vibrancy that feels playful, timeless, and quietly heroic.Influenced by: Nintendo character-art direction, cel-shaded toon-rendering technique, painterly matte-background practice, whimsical adventure-game illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/塞尔达风之杖风格__Zelda Wind Waker Style/preview.jpg",
+  "folder": "krea2_styles/塞尔达风之杖风格__Zelda Wind Waker Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

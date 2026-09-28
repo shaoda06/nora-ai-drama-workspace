@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1317",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "触觉",
+  "name": "Moody Tactile Intimacy",
+  "prompt": "chiaroscuro lighting, tactile textures, shallow depth of field, moody cinematic atmosphere, intimate close-up portraiture, earthy and jewel-toned palette, low-key dramatic shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉__Moody Tactile Intimacy/preview.webp",
+  "folder": "Krea2_moodboard/触觉__Moody Tactile Intimacy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

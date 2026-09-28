@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3288",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "单色审美",
+  "name": "Monochrome Fragmentation Aesthetic",
+  "prompt": "high-contrast monochrome photography, tactile paper collage, geometric fragmentation, shattered glass overlay, slit-scan distortion, chiaroscuro lighting, surreal photomontage. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色审美__Monochrome Fragmentation Aesthetic/preview.webp",
+  "folder": "Krea2_moodboard/单色审美__Monochrome Fragmentation Aesthetic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

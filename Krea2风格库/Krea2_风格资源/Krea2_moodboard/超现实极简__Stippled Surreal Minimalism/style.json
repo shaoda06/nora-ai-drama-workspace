@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-505",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实极简",
+  "name": "Stippled Surreal Minimalism",
+  "prompt": "stippled texture, minimalist surrealism, flat graphic composition, high contrast color blocking, winding path narrative, biomorphic abstraction, vintage screen print style, dramatic elongated shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实极简__Stippled Surreal Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/超现实极简__Stippled Surreal Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

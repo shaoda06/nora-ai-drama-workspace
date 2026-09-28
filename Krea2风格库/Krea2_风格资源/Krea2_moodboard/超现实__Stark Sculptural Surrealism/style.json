@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3200",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "超现实",
+  "name": "Stark Sculptural Surrealism",
+  "prompt": "high-contrast studio photography, stark white seamless background, sculptural avant-garde silhouettes, minimalist monochromatic palette, crimson red accents, graphic fashion editorial, hard lighting, sharp geometric tailoring. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Stark Sculptural Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Stark Sculptural Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

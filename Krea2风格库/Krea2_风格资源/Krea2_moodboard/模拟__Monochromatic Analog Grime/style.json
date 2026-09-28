@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-449",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "模拟",
+  "name": "Monochromatic Analog Grime",
+  "prompt": "high-contrast black and white, coarse halftone pattern, distressed analog print texture, CRT scanlines, gritty lo-fi noise, stipple and grain, atmospheric dark noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟__Monochromatic Analog Grime/preview.webp",
+  "folder": "Krea2_moodboard/模拟__Monochromatic Analog Grime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

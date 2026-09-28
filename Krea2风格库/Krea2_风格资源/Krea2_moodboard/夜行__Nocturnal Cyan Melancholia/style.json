@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3482",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "夜行",
+  "name": "Nocturnal Cyan Melancholia",
+  "prompt": "cinematic twilight, cyan monochrome, backlit silhouette, nocturnal atmospheric, grainy film texture, liminal space, moody minimalism, moonlit melancholy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行__Nocturnal Cyan Melancholia/preview.webp",
+  "folder": "Krea2_moodboard/夜行__Nocturnal Cyan Melancholia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

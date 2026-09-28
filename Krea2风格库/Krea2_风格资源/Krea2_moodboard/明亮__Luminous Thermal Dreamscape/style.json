@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1523",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "明亮",
+  "name": "Luminous Thermal Dreamscape",
+  "prompt": "thermal infrared aesthetic, glowing amber and tangerine hues, soft focus dreamscape, macro photography, ethereal motion blur, tactile texture, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Thermal Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Thermal Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

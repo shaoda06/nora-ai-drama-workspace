@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-364",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "数字",
+  "name": "Distressed Digital Brutalism",
+  "prompt": "halftone dot pattern, mixed media collage, distressed print texture, retro-digital glitch, high contrast composition, brutalist graphic design, duotone color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字__Distressed Digital Brutalism/preview.webp",
+  "folder": "Krea2_moodboard/数字__Distressed Digital Brutalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

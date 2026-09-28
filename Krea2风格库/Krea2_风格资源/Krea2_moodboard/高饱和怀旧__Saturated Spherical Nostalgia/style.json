@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2242",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "高饱和怀旧",
+  "name": "Saturated Spherical Nostalgia",
+  "prompt": "extreme fisheye lens, spherical distortion, circular vignette, vintage film aesthetic, saturated color palette, sun-drenched, analog light leaks. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高饱和怀旧__Saturated Spherical Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/高饱和怀旧__Saturated Spherical Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

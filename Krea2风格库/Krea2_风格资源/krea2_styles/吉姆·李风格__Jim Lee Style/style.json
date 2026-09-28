@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-172",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "吉姆·李风格",
+  "name": "Jim Lee Style",
+  "prompt": "Style: Jim Lee Style: A dynamic, high-detail mainstream comic-illustration style built on confident, powerful anatomy rendered with meticulous cross-hatched inking, dramatic musculature and dense linework carrying real sculptural weight, sharp, dynamic foreshortening charged with kinetic action-movie energy, richly detailed costume and texture rewarding close inspection, and a bold, blockbuster comic-cover intensity that feels polished, powerful, and instantly iconic. Influenced by: Jim Lee, WildStorm/DC/Marvel mainstream comic-illustration tradition, dynamic cross-hatched inking technique, action-driven cover-illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/吉姆·李风格__Jim Lee Style/preview.jpg",
+  "folder": "krea2_styles/吉姆·李风格__Jim Lee Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

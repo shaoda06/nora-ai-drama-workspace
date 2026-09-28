@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2226",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "夜行模拟",
+  "name": "Nocturnal Analog Botanicals",
+  "prompt": "direct flash photography, analog film grain, stark black background, chiaroscuro lighting, vintage snapshot aesthetic, saturated warm tones, moody botanical. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行模拟__Nocturnal Analog Botanicals/preview.webp",
+  "folder": "Krea2_moodboard/夜行模拟__Nocturnal Analog Botanicals",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

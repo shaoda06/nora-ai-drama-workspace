@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-779",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "单色写实",
+  "name": "Monochrome Academic Realism",
+  "prompt": "monochrome charcoal portrait, chiaroscuro lighting, hyper-detailed graphite drawing, cross-hatching texture, academic realism, high-contrast black and white, expressive facial details, stark white background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色写实__Monochrome Academic Realism/preview.webp",
+  "folder": "Krea2_moodboard/单色写实__Monochrome Academic Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

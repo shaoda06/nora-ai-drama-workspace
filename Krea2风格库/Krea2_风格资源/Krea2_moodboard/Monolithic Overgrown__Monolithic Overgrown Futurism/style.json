@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1576",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "Monolithic Overgrown",
+  "name": "Monolithic Overgrown Futurism",
+  "prompt": "monolithic industrial ruins, overgrown solarpunk, cinematic atmospheric scale, misty mountain megastructures, decaying futuristic architecture, high-angle vertical perspective, lush jungle reclamation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Monolithic Overgrown__Monolithic Overgrown Futurism/preview.webp",
+  "folder": "Krea2_moodboard/Monolithic Overgrown__Monolithic Overgrown Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

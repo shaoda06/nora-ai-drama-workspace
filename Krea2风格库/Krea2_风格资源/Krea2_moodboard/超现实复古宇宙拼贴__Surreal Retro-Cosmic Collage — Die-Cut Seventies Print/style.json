@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-946",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "超现实复古宇宙拼贴",
+  "name": "Surreal Retro-Cosmic Collage — Die-Cut Seventies Print",
+  "prompt": "retro-futuristic surrealism, cosmic void portals, vintage die-cut collage, metaphysical landscape, saturated mid-century print, airbrush gradient, cracked oil painting texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实复古宇宙拼贴__Surreal Retro-Cosmic Collage — Die-Cut Seventies Print/preview.webp",
+  "folder": "Krea2_moodboard/超现实复古宇宙拼贴__Surreal Retro-Cosmic Collage — Die-Cut Seventies Print",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

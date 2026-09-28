@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-714",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵超现实",
+  "name": "Ethereal Topographic Surrealism",
+  "prompt": "topographic contour lines, surrealist linocut texture, glowing energy aura, high-contrast duotone, psychedelic wave patterns, mythic silhouette, vintage print grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵超现实__Ethereal Topographic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/空灵超现实__Ethereal Topographic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

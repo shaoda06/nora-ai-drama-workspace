@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3139",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "超现实翠绿极简",
+  "name": "Surreal Verdant Minimalism — Storybook Raking Shadows",
+  "prompt": "stylized verdant landscape, minimalist composition, dramatic long shadows, magic realism, rhythmic organic textures, high-angle perspective, vibrant emerald palette, serene atmospheric mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实翠绿极简__Surreal Verdant Minimalism — Storybook Raking Shadows/preview.webp",
+  "folder": "Krea2_moodboard/超现实翠绿极简__Surreal Verdant Minimalism — Storybook Raking Shadows",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

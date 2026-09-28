@@ -1,0 +1,1 @@
+macro botanical photography, chiaroscuro lighting, stark black background, low-key atmosphere, high-contrast floral textures, moody nocturnal aesthetic, shallow depth of field. Subject:{prompt}

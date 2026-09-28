@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2078",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "动态忧郁模拟",
+  "name": "Kinetic Melancholic Analog",
+  "prompt": "cinematic analog film grain, motion blur, muted earth tones, intimate candid portraiture, soft natural light, shutter drag, minimalist composition, nostalgic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态忧郁模拟__Kinetic Melancholic Analog/preview.webp",
+  "folder": "Krea2_moodboard/动态忧郁模拟__Kinetic Melancholic Analog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

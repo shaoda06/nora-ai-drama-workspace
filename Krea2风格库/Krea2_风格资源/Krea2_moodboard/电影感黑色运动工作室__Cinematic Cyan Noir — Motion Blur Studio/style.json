@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1915",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感黑色运动工作室",
+  "name": "Cinematic Cyan Noir — Motion Blur Studio",
+  "prompt": "cinematic noir portrait, chiaroscuro lighting, deep cyan and teal palette, minimalist avant-garde fashion, high-contrast studio photography, sharp silhouette, moody atmospheric lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色运动工作室__Cinematic Cyan Noir — Motion Blur Studio/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色运动工作室__Cinematic Cyan Noir — Motion Blur Studio",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

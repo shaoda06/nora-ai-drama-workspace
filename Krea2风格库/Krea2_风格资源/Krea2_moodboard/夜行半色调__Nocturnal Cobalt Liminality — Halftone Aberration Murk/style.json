@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-477",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "夜行半色调",
+  "name": "Nocturnal Cobalt Liminality — Halftone Aberration Murk",
+  "prompt": "monochromatic cobalt blue, halftone grain texture, liminal space, high-contrast chiaroscuro, lo-fi digital noise, chromatic aberration, minimalist atmospheric void. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行半色调__Nocturnal Cobalt Liminality — Halftone Aberration Murk/preview.webp",
+  "folder": "Krea2_moodboard/夜行半色调__Nocturnal Cobalt Liminality — Halftone Aberration Murk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

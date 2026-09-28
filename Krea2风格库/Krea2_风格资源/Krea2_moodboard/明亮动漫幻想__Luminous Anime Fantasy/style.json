@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-44",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "明亮动漫幻想",
+  "name": "Luminous Anime Fantasy",
+  "prompt": "vibrant anime style, sun-drenched lighting, ethereal lens flare, sky blue and white palette, wind-blown hair, whimsical fantasy elements, dreamy high-key aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮动漫幻想__Luminous Anime Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/明亮动漫幻想__Luminous Anime Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

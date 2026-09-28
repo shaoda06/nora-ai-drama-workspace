@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-159",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "漫威漫画风格",
+  "name": "Marvel Comics Style",
+  "prompt": "Style: Marvel Comics Style: A bold, dynamic mainstream superhero comic illustration style built on confident heavy inking over energetic, muscular figure work, punchy primary color palettes laid in flat-to-cel-shaded color with sharp graphic contrast, dramatic action-driven poses and foreshortening designed for kinetic panel-to-panel storytelling, crisp halftone-inspired texture and bold speed lines heightening momentum, and an iconic, larger-than-life heroic energy instantly recognizable as classic American superhero art. Influenced by: Jack Kirby, John Romita Jr., Marvel Comics house style, Silver Age comic inking technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/漫威漫画风格__Marvel Comics Style/preview.jpg",
+  "folder": "krea2_styles/漫威漫画风格__Marvel Comics Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

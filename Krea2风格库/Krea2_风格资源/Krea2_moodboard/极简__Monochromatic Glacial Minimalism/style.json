@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3532",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "极简",
+  "name": "Monochromatic Glacial Minimalism",
+  "prompt": "minimalist surrealism, monochromatic blue palette, futuristic monolithic architecture, desolate glacial landscape, cinematic wide shot, liminal space, sharp geometric shadows, reflective metallic surfaces. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Monochromatic Glacial Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Monochromatic Glacial Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

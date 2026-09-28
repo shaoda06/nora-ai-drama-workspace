@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1418",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "私密琥珀",
+  "name": "Intimate Amber Chiaroscuro",
+  "prompt": "chiaroscuro lighting, golden amber glow, extreme macro detail, shallow depth of field, warm bokeh, dramatic rim lighting, intimate portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/私密琥珀__Intimate Amber Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/私密琥珀__Intimate Amber Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

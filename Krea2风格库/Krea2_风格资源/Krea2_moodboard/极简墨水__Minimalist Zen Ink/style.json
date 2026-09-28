@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1145",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "极简墨水",
+  "name": "Minimalist Zen Ink",
+  "prompt": "sumi-e ink wash, minimalist composition, gestural brushstrokes, negative space, textured rice paper, monochrome zen art, calligraphic linework. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简墨水__Minimalist Zen Ink/preview.webp",
+  "folder": "Krea2_moodboard/极简墨水__Minimalist Zen Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

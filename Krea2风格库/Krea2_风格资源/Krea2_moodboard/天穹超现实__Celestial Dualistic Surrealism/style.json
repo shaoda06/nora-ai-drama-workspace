@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1028",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "天穹超现实",
+  "name": "Celestial Dualistic Surrealism",
+  "prompt": "classical oil painting texture, cosmic surrealism, chiaroscuro lighting, day and night split composition, starry nocturnal void, magical realism, voluminous cumulus clouds. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹超现实__Celestial Dualistic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/天穹超现实__Celestial Dualistic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

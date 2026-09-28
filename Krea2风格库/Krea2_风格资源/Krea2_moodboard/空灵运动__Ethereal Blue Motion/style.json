@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2933",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵运动",
+  "name": "Ethereal Blue Motion",
+  "prompt": "intentional camera movement, ethereal motion blur, monochromatic cyanotype blue, long exposure, ghostly silhouette, scratched film texture, atmospheric abstraction, pictorialism photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵运动__Ethereal Blue Motion/preview.webp",
+  "folder": "Krea2_moodboard/空灵运动__Ethereal Blue Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

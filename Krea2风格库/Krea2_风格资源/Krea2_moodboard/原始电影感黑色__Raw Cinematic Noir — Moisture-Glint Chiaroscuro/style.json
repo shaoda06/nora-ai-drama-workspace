@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1853",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "原始电影感黑色",
+  "name": "Raw Cinematic Noir — Moisture-Glint Chiaroscuro",
+  "prompt": "high-contrast black and white, chiaroscuro lighting, extreme close-up portrait, desaturated cool tones, gritty film grain, hyper-realistic skin texture, cinematic realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始电影感黑色__Raw Cinematic Noir — Moisture-Glint Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/原始电影感黑色__Raw Cinematic Noir — Moisture-Glint Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

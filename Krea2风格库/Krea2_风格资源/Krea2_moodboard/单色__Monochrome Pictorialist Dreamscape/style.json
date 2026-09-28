@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1815",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "单色",
+  "name": "Monochrome Pictorialist Dreamscape",
+  "prompt": "pictorialism, soft focus blur, monochrome film grain, daguerreotype aesthetic, hazy atmospheric light, heavily textured surface, vintage melancholic mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色__Monochrome Pictorialist Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/单色__Monochrome Pictorialist Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

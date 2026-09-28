@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3016",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱黑色",
+  "name": "Luminescent Spectral Noir — Electric Cobalt Bleed",
+  "prompt": "electric cobalt glow, high contrast chiaroscuro, heavy analog film grain, ethereal motion blur, spectral distortion, nocturnal noir atmosphere, liquid light texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色__Luminescent Spectral Noir — Electric Cobalt Bleed/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色__Luminescent Spectral Noir — Electric Cobalt Bleed",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1050",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "厚涂",
+  "name": "Gilded Chiaroscuro Impasto",
+  "prompt": "chiaroscuro lighting, liquid gold body paint, impasto texture, dramatic high-contrast portrait, metallic sheen, dark atmospheric background, sculptural makeup. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/厚涂__Gilded Chiaroscuro Impasto/preview.webp",
+  "folder": "Krea2_moodboard/厚涂__Gilded Chiaroscuro Impasto",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

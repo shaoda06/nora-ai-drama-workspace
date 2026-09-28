@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2052",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "都市能量",
+  "name": "Distorted Urban Energy",
+  "prompt": "fisheye lens distortion, exaggerated forced perspective, vibrant saturated colors, dynamic streetwear photography, bright sunlight, Y2K aesthetic, wide-angle urban portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/都市能量__Distorted Urban Energy/preview.webp",
+  "folder": "Krea2_moodboard/都市能量__Distorted Urban Energy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

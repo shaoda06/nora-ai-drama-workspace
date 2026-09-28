@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2656",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "半透明赛博集合",
+  "name": "Translucent Bio-Cyber Assemblage",
+  "prompt": "translucent resin shell, exposed circuit board anatomy, biomorphic cybernetic sculpture, soft pastel and metallic color palette, stark black background, intricate fiber optic wiring, macro studio photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/半透明赛博集合__Translucent Bio-Cyber Assemblage/preview.webp",
+  "folder": "Krea2_moodboard/半透明赛博集合__Translucent Bio-Cyber Assemblage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2546",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "空灵夜行极简颗粒",
+  "name": "Ethereal Nocturnal Minimalism — Starlit Grain",
+  "prompt": "heavy film grain, low-key lighting, soft-focus atmosphere, mysterious abstract forms, minimalist dark ambient, tactile texture, diffused glowing light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行极简颗粒__Ethereal Nocturnal Minimalism — Starlit Grain/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行极简颗粒__Ethereal Nocturnal Minimalism — Starlit Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1722",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "天鹅绒翠绿超现实翠绿",
+  "name": "Velvet Verdant Surrealism — Misty Emerald Sweep",
+  "prompt": "undulating mossy hills, velvety grass texture, dramatic chiaroscuro lighting, minimalist surrealism, deep emerald green palette, solitary focal point, dreamlike atmospheric solitude. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天鹅绒翠绿超现实翠绿__Velvet Verdant Surrealism — Misty Emerald Sweep/preview.webp",
+  "folder": "Krea2_moodboard/天鹅绒翠绿超现实翠绿__Velvet Verdant Surrealism — Misty Emerald Sweep",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

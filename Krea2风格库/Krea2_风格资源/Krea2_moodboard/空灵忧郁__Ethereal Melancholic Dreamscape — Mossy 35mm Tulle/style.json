@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1599",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵忧郁",
+  "name": "Ethereal Melancholic Dreamscape — Mossy 35mm Tulle",
+  "prompt": "35mm film photography, soft-focus ethereal portrait, desaturated cinematic color grading, vintage lace and tulle, muted earth tones, hazy diffused lighting, nostalgic whimsical atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵忧郁__Ethereal Melancholic Dreamscape — Mossy 35mm Tulle/preview.webp",
+  "folder": "Krea2_moodboard/空灵忧郁__Ethereal Melancholic Dreamscape — Mossy 35mm Tulle",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

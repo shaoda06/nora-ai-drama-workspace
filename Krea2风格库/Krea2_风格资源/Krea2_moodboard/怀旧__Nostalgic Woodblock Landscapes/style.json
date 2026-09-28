@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-878",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "怀旧",
+  "name": "Nostalgic Woodblock Landscapes",
+  "prompt": "Shin-Hanga woodblock print, WPA poster aesthetic, bold graphic ink outlines, visible woodgrain texture, atmospheric vintage landscape, saturated earth-toned palette, stylized nature illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧__Nostalgic Woodblock Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/怀旧__Nostalgic Woodblock Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

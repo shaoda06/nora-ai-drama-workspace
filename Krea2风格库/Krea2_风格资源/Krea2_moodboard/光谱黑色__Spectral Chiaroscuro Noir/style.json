@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-790",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "光谱黑色",
+  "name": "Spectral Chiaroscuro Noir",
+  "prompt": "chiaroscuro, monochromatic noir, ethereal soft-focus, heavy film grain, spectral silhouettes, atmospheric dark art, textured charcoal effect. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色__Spectral Chiaroscuro Noir/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色__Spectral Chiaroscuro Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

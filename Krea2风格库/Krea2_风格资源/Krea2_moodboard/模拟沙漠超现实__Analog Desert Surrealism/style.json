@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3187",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "模拟沙漠超现实",
+  "name": "Analog Desert Surrealism",
+  "prompt": "vintage 35mm film photography, desert surrealism, saturated primary colors, harsh sunlight and sharp shadows, Kodachrome aesthetic, impossible juxtaposition, minimalist landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟沙漠超现实__Analog Desert Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/模拟沙漠超现实__Analog Desert Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

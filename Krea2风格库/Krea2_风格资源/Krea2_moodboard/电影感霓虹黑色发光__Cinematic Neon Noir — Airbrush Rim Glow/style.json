@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2551",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "电影感霓虹黑色发光",
+  "name": "Cinematic Neon Noir — Airbrush Rim Glow",
+  "prompt": "high-contrast silhouette, retro-futuristic airbrush, vibrant rim lighting, fine film grain, noir cinematic mood, minimalist graphic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感霓虹黑色发光__Cinematic Neon Noir — Airbrush Rim Glow/preview.webp",
+  "folder": "Krea2_moodboard/电影感霓虹黑色发光__Cinematic Neon Noir — Airbrush Rim Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

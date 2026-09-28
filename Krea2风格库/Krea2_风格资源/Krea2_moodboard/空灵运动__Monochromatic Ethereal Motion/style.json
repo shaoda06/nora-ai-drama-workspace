@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2761",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵运动",
+  "name": "Monochromatic Ethereal Motion",
+  "prompt": "intentional camera movement, long exposure motion blur, monochromatic deep blue palette, ghostly silhouettes, atmospheric haze, cyanotype aesthetic, fluid motion trails. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵运动__Monochromatic Ethereal Motion/preview.webp",
+  "folder": "Krea2_moodboard/空灵运动__Monochromatic Ethereal Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2097",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "鲜活",
+  "name": "Vibrant Candid Youth",
+  "prompt": "candid action photography, wide-angle lens, bright direct sunlight, saturated color palette, motion blur, retro film aesthetic, low angle perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活__Vibrant Candid Youth/preview.webp",
+  "folder": "Krea2_moodboard/鲜活__Vibrant Candid Youth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

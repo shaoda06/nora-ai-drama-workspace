@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-119",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "卡通风格",
+  "name": "Cartoon Style",
+  "prompt": "Style: Cartoon Style: A simplified, graphic illustration style built on confident, evenly weighted outline defining exaggerated, readable proportions, flat color fill with minimal shading complexity, an appealing, elastic sense of form that favors expressive readability over anatomical accuracy, cheerful, uncomplicated composition prioritizing instant visual clarity, and a lighthearted, accessible illustrative charm rooted in broad, universal animation tradition. Influenced by: classic American cel-animation tradition, flat-color character-design technique, squash-and-stretch animation practice, newspaper-syndicate cartoon method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/卡通风格__Cartoon Style/preview.jpg",
+  "folder": "krea2_styles/卡通风格__Cartoon Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

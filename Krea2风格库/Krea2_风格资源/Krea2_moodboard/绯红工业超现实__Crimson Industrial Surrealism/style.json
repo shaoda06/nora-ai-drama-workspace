@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2443",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "绯红工业超现实",
+  "name": "Crimson Industrial Surrealism",
+  "prompt": "biomorphic surrealism, gothic noir atmosphere, distressed industrial textures, high contrast duotone, weathered brick and concrete, sinister organic fusion, vibrant crimson and teal. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红工业超现实__Crimson Industrial Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/绯红工业超现实__Crimson Industrial Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

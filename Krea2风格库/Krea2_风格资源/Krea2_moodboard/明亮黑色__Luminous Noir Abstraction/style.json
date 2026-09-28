@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3216",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "明亮黑色",
+  "name": "Luminous Noir Abstraction",
+  "prompt": "high-contrast black and white, chiaroscuro lighting, heavy film grain, ethereal glowing halo, visceral organic texture, minimalist noir composition, deep pitch-black shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色__Luminous Noir Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色__Luminous Noir Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

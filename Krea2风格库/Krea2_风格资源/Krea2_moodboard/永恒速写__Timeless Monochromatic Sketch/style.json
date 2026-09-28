@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-800",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "永恒速写",
+  "name": "Timeless Monochromatic Sketch",
+  "prompt": "analog sketch aesthetic, aged parchment texture, charcoal and ink wash, minimalist gestural linework, sepia and graphite palette, vintage artist study, raw hand-drawn texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/永恒速写__Timeless Monochromatic Sketch/preview.webp",
+  "folder": "Krea2_moodboard/永恒速写__Timeless Monochromatic Sketch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-106",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "细线浪漫动漫摄影混合",
+  "name": "Thin Delicate Outline Romantic Anime-Photographic Hybrid",
+  "prompt": "Style: Thin Delicate Outline Romantic Anime-Photographic Hybrid: A tenderly rendered illustration style built on impossibly fine, barely-there contour linework that whispers rather than defines, seamlessly merged with photographically convincing tonal depth and light behavior, a gentle, wistful softness carried through delicate gradient transition rather than any hard graphic edge, meticulous realism in structural modeling coexisting quietly with idealized anime-adjacent proportion, a hushed, sentimental intimacy pervading every composition, and a quietly luminous, emotionally tender finish that feels equally drawn and photographed. Influenced by: Ilya Kuvshinov, semi-realistic anime-illustration technique, photobashing rendering practice, contemporary romantic-portrait illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/细线浪漫动漫摄影混合__Thin Delicate Outline Romantic Anime-Photographic Hybrid/preview.jpg",
+  "folder": "krea2_styles/细线浪漫动漫摄影混合__Thin Delicate Outline Romantic Anime-Photographic Hybrid",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

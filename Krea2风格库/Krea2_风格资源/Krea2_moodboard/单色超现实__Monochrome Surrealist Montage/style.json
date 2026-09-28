@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-463",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "单色超现实",
+  "name": "Monochrome Surrealist Montage",
+  "prompt": "monochrome photomontage, surrealist collage, vintage silver gelatin texture, geometric fragmentation, chiaroscuro lighting, analog halftone aesthetic, dreamlike spatial distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色超现实__Monochrome Surrealist Montage/preview.webp",
+  "folder": "Krea2_moodboard/单色超现实__Monochrome Surrealist Montage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

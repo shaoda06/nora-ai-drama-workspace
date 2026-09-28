@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-843",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "图形波普拼贴",
+  "name": "Graphic Pop Collage",
+  "prompt": "mixed media collage, saturated pop art, graphic doodle overlay, high-key studio photography, vibrant neon accents, bold geometric patterns, playful surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形波普拼贴__Graphic Pop Collage/preview.webp",
+  "folder": "Krea2_moodboard/图形波普拼贴__Graphic Pop Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3343",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "怀旧超现实",
+  "name": "Nostalgic Surrealist Poetics",
+  "prompt": "vintage film aesthetic, muted pastel color palette, surreal dreamlike atmosphere, soft diffused lighting, grainy film texture, poetic editorial composition, neoclassical elegance. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实__Nostalgic Surrealist Poetics/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实__Nostalgic Surrealist Poetics",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+underwater perspective, volumetric lighting, low-angle composition, cinematic realism, teal and slate palette, surface refraction, surreal atmosphere. Subject:{prompt}

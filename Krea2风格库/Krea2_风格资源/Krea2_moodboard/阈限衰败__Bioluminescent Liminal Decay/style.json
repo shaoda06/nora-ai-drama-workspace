@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3468",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "阈限衰败",
+  "name": "Bioluminescent Liminal Decay",
+  "prompt": "crepuscular rays, toxic green glow, low-angle perspective, wet reflective surfaces, atmospheric haze, backlit silhouettes, biohazardous murky depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/阈限衰败__Bioluminescent Liminal Decay/preview.webp",
+  "folder": "Krea2_moodboard/阈限衰败__Bioluminescent Liminal Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

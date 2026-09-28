@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-380",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "黄金时刻摄影",
+  "name": "Golden Hour Photography",
+  "prompt": "Style: Golden Hour Photography: A softly directional photographic style built on a low, raking angle of natural illumination that stretches long, gentle shadows across the frame, a diffused, glowing quality softened by increased atmospheric scattering at that time of day, a flattering, low-contrast luminosity that wraps gently around form rather than casting harsh definition, an unhurried, fleeting stillness carried through the brief window of ideal light, and a nostalgic, cinematic tenderness that feels naturally soft and effortlessly atmospheric. Influenced by: natural available-light photography tradition, magic-hour cinematography technique, outdoor portrait-lighting practice, documentary golden-hour shooting method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/黄金时刻摄影__Golden Hour Photography/preview.jpg",
+  "folder": "krea2_styles/黄金时刻摄影__Golden Hour Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

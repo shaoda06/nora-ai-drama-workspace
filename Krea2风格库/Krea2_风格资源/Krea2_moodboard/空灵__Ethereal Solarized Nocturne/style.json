@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3004",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵",
+  "name": "Ethereal Solarized Nocturne",
+  "prompt": "pictorialism, chromatic aberration, heavy film grain, soft-focus silhouette, auratic glow, solarized photography, dreamlike surrealism, gradient atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Solarized Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Solarized Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

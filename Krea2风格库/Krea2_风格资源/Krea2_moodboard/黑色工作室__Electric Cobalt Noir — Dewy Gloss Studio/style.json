@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2108",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "黑色工作室",
+  "name": "Electric Cobalt Noir — Dewy Gloss Studio",
+  "prompt": "electric cobalt blue, high-contrast editorial portrait, avant-garde beauty, glossy skin texture, stark minimalist composition, sharp studio lighting, cybernetic noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色工作室__Electric Cobalt Noir — Dewy Gloss Studio/preview.webp",
+  "folder": "Krea2_moodboard/黑色工作室__Electric Cobalt Noir — Dewy Gloss Studio",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-138",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "怪诞小镇风格",
+  "name": "Gravity Falls Style",
+  "prompt": "Style: Gravity Falls Style: A bold, flat cartoon illustration style built on confident, evenly weighted outline holding simplified, slightly angular proportions, bright, evenly applied flat color with minimal shading beyond basic form-defining contact shadow, a quirky, endearing character-design language balancing comedic exaggeration with grounded charm, cheerful yet mysterious compositional tone favoring instant readability, and a nostalgic, small-town animated warmth that feels playful, whimsical, and quietly adventurous. Influenced by: Alex Hirsch, Disney Television Animation tradition, flat-color cartoon technique, contemporary mystery-adventure cartoon practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/怪诞小镇风格__Gravity Falls Style/preview.jpg",
+  "folder": "krea2_styles/怪诞小镇风格__Gravity Falls Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1661",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "萦绕单色雾",
+  "name": "Haunting Monochrome Pictorialism — Wintry Fog White",
+  "prompt": "monochrome pictorialism, heavy film grain, soft-focus blur, misty winter landscape, stark silhouette, vintage daguerreotype texture, chiaroscuro noir, melancholic haunting atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/萦绕单色雾__Haunting Monochrome Pictorialism — Wintry Fog White/preview.webp",
+  "folder": "Krea2_moodboard/萦绕单色雾__Haunting Monochrome Pictorialism — Wintry Fog White",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

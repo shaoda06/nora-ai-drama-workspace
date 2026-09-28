@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2238",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "天穹",
+  "name": "Celestial Gilded Symbolism",
+  "prompt": "Art Nouveau, gold leaf accents, pointillism, nocturnal dreamscape, intricate filigree, celestial symbolism, swirling texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹__Celestial Gilded Symbolism/preview.webp",
+  "folder": "Krea2_moodboard/天穹__Celestial Gilded Symbolism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

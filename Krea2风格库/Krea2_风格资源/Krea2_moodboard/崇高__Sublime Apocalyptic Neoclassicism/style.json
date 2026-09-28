@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1098",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "崇高",
+  "name": "Sublime Apocalyptic Neoclassicism",
+  "prompt": "neoclassical architecture, dramatic chiaroscuro, fiery apocalyptic inferno, silhouetted human figures, sublime scale, expressive oil painting, thick impasto texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/崇高__Sublime Apocalyptic Neoclassicism/preview.webp",
+  "folder": "Krea2_moodboard/崇高__Sublime Apocalyptic Neoclassicism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

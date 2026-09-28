@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-488",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "原始模拟",
+  "name": "Raw Punk Analog",
+  "prompt": "halftone print texture, photocopy grunge, high-contrast black and white, vivid red accents, distressed screenprint, punk zine aesthetic, dithered graphics. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始模拟__Raw Punk Analog/preview.webp",
+  "folder": "Krea2_moodboard/原始模拟__Raw Punk Analog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

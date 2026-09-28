@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3463",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "超现实触觉",
+  "name": "Surrealist Tactile Theater",
+  "prompt": "surrealist diorama, theatrical set design, tactile craft textures, sculptural fabric installations, whimsical sky motifs, liminal studio space, vibrant high-contrast palettes, staged artificial landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实触觉__Surrealist Tactile Theater/preview.webp",
+  "folder": "Krea2_moodboard/超现实触觉__Surrealist Tactile Theater",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-166",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "动态复古波普",
+  "name": "Dynamic Retro Pop",
+  "prompt": "bold graphic illustration, risograph texture, dynamic low-angle perspective, saturated color blocking, stylized cartoon character, 90s anime influence, clean thick linework, playful whimsical mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态复古波普__Dynamic Retro Pop/preview.webp",
+  "folder": "Krea2_moodboard/动态复古波普__Dynamic Retro Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

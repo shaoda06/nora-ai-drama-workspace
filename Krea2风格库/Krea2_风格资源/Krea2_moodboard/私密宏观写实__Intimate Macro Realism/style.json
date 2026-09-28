@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1806",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "私密宏观写实",
+  "name": "Intimate Macro Realism",
+  "prompt": "extreme macro portrait, raw skin texture, unretouched, shallow depth of field, hyper-realistic, natural soft lighting, intimate composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/私密宏观写实__Intimate Macro Realism/preview.webp",
+  "folder": "Krea2_moodboard/私密宏观写实__Intimate Macro Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

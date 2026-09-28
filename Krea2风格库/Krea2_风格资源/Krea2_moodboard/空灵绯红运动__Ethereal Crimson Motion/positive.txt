@@ -1,0 +1,1 @@
+motion blur, soft focus, cinematic lighting, crimson red accents, shallow depth of field, dreamlike atmosphere, editorial photography. Subject:{prompt}

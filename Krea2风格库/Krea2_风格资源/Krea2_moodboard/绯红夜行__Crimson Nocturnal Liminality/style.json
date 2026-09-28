@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2499",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "绯红夜行",
+  "name": "Crimson Nocturnal Liminality",
+  "prompt": "cinematic chiaroscuro, analog film grain, deep twilight blue, saturated red lighting, liminal space, suburban gothic, high contrast shadows, atmospheric fog. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红夜行__Crimson Nocturnal Liminality/preview.webp",
+  "folder": "Krea2_moodboard/绯红夜行__Crimson Nocturnal Liminality",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

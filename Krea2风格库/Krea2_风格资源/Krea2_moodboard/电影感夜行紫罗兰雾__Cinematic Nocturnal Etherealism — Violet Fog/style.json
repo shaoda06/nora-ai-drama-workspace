@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1610",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "电影感夜行紫罗兰雾",
+  "name": "Cinematic Nocturnal Etherealism — Violet Fog",
+  "prompt": "cinematic noir photography, deep indigo and violet palette, atmospheric fog and haze, backlit silhouette, analog film grain, soft focus diffusion, volumetric lighting, nocturnal solitude. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行紫罗兰雾__Cinematic Nocturnal Etherealism — Violet Fog/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行紫罗兰雾__Cinematic Nocturnal Etherealism — Violet Fog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

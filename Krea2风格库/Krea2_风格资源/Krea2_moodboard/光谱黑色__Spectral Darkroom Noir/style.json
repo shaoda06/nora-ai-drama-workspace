@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2975",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱黑色",
+  "name": "Spectral Darkroom Noir",
+  "prompt": "monochromatic pictorialism, grungy darkroom texture, ethereal motion blur, high-contrast noir, vintage film grain, haunting vignette, distressed analog process. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色__Spectral Darkroom Noir/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色__Spectral Darkroom Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

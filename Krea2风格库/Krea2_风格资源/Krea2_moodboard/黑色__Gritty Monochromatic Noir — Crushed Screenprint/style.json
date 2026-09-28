@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-420",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "黑色",
+  "name": "Gritty Monochromatic Noir — Crushed Screenprint",
+  "prompt": "high-contrast black and white, heavy film grain, halftone and stippled texture, stark chiaroscuro lighting, gritty xerox aesthetic, graphic screenprint style, raw punk zine photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Gritty Monochromatic Noir — Crushed Screenprint/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Gritty Monochromatic Noir — Crushed Screenprint",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

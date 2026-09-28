@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3159",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "超现实植物极简",
+  "name": "Surreal Botanical Minimalism",
+  "prompt": "velvety moss hills, high-angle aerial perspective, manicured topiary maze, minimalist white structure, concentric geometric landscaping, surreal dreamlike atmosphere, soft directional sunlight. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实植物极简__Surreal Botanical Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/超现实植物极简__Surreal Botanical Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

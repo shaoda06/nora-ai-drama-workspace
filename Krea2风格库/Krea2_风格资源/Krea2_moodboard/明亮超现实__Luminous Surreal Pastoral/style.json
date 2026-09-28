@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-146",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "明亮超现实",
+  "name": "Luminous Surreal Pastoral",
+  "prompt": "studio ghibli style, painterly landscape, vibrant green hills, atmospheric depth, surreal pastoral, dappled sunlight, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮超现实__Luminous Surreal Pastoral/preview.webp",
+  "folder": "Krea2_moodboard/明亮超现实__Luminous Surreal Pastoral",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

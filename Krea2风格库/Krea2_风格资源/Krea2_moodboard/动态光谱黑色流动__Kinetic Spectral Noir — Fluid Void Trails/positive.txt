@@ -1,0 +1,1 @@
+motion blur, high-contrast black and white, heavy film grain, long exposure, spectral photography, chiaroscuro, ghostly silhouettes. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3317",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "古典超现实",
+  "name": "Deconstructed Classical Surrealism",
+  "prompt": "classical renaissance painting, botanical detail, geometric fragmentation, surrealist collage, high contrast composition, tactile paper texture, vibrant saturated palettes, modular grid structure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/古典超现实__Deconstructed Classical Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/古典超现实__Deconstructed Classical Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

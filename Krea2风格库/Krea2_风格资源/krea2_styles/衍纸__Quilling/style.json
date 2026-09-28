@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-24",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "衍纸",
+  "name": "Quilling",
+  "prompt": "Style: Quilling: A delicately dimensional illustration style built on tightly coiled and shaped strips assembled into intricate, raised compositions, confident looping and scrolling forms constructing pattern through repeated coiled units rather than drawn line, a rhythmic, handcrafted precision carried through the deliberate arrangement of each individual coil, subtle raised depth and shadow where coiled edges catch light against the recessed ground, and a delicate, meticulous craft intensity rooted in centuries of paper-coiling tradition. Influenced by: traditional paper-quilling craft, filigree decorative-art technique, handcrafted coil-assembly practice, ornamental paper-art method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/衍纸__Quilling/preview.jpg",
+  "folder": "krea2_styles/衍纸__Quilling",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

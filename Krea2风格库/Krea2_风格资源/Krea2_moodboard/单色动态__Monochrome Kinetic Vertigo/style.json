@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1926",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "单色动态",
+  "name": "Monochrome Kinetic Vertigo",
+  "prompt": "high-contrast monochrome, intentional motion blur, cinematic film grain, radial vortex distortion, long-exposure noir, disorienting perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色动态__Monochrome Kinetic Vertigo/preview.webp",
+  "folder": "Krea2_moodboard/单色动态__Monochrome Kinetic Vertigo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

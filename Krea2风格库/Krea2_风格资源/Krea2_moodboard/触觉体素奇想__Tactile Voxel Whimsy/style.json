@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-225",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "触觉体素奇想",
+  "name": "Tactile Voxel Whimsy",
+  "prompt": "tactile 3D render, voxel geometry, felt and clay textures, vibrant studio lighting, miniature diorama style, high-fidelity surface detail, playful toy aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉体素奇想__Tactile Voxel Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/触觉体素奇想__Tactile Voxel Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1292",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "几何超现实",
+  "name": "Oneiric Geometric Surrealism",
+  "prompt": "Magrittean surrealism, geometric botanical forms, liminal dreamscapes, floating architectural objects, golden hour lighting, vast expansive landscapes, crisp digital illustration, absurdist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何超现实__Oneiric Geometric Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/几何超现实__Oneiric Geometric Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

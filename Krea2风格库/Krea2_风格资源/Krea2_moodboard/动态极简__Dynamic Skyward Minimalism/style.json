@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1837",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "动态极简",
+  "name": "Dynamic Skyward Minimalism",
+  "prompt": "worm's eye view, vibrant blue sky, forced perspective, striking primary colors, mid-air suspension, hard direct sunlight, dynamic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态极简__Dynamic Skyward Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/动态极简__Dynamic Skyward Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

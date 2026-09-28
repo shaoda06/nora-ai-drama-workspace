@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-28",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "Kurzgesagt风格",
+  "name": "Kurzgesagt Style",
+  "prompt": "Style: Kurzgesagt Style: A clean, flat vector-illustration style built on confident geometric simplification of every form into smooth, rounded shapes, minimal shading limited to subtle gradient or soft contact shadow, a friendly, approachable clarity that favors instant conceptual readability over naturalistic rendering, meticulous compositional organization guiding the eye through dense informational content with playful ease, and a bright, whimsical educational charm that feels scientific, cheerful, and effortlessly digestible. Influenced by: Kurzgesagt studio house style, flat-vector explainer-illustration tradition, minimalist infographic-design technique, contemporary educational-animation practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Kurzgesagt风格__Kurzgesagt Style/preview.jpg",
+  "folder": "krea2_styles/Kurzgesagt风格__Kurzgesagt Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

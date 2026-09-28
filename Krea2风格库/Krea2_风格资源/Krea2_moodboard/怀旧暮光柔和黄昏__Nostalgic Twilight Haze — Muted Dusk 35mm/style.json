@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1400",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "怀旧暮光柔和黄昏",
+  "name": "Nostalgic Twilight Haze — Muted Dusk 35mm",
+  "prompt": "35mm film grain, golden hour haze, soft focus silhouette, dusk gradient sky, nostalgic analog aesthetic, muted vintage tones, cinematic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧暮光柔和黄昏__Nostalgic Twilight Haze — Muted Dusk 35mm/preview.webp",
+  "folder": "Krea2_moodboard/怀旧暮光柔和黄昏__Nostalgic Twilight Haze — Muted Dusk 35mm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

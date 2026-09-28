@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2247",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "电影感黑色",
+  "name": "Cinematic Chiaroscuro Noir — Mid-Century Halation",
+  "prompt": "chiaroscuro lighting, high-contrast monochrome, heavy film grain, cinematic noir, introspective portrait, analog texture, dramatic shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色__Cinematic Chiaroscuro Noir — Mid-Century Halation/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色__Cinematic Chiaroscuro Noir — Mid-Century Halation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

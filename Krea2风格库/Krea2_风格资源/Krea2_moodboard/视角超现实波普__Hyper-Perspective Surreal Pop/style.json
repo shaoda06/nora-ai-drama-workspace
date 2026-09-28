@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2876",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "视角超现实波普",
+  "name": "Hyper-Perspective Surreal Pop",
+  "prompt": "extreme low-angle fisheye, forced perspective, hyper-saturated pop colors, giant scale subjects, bright clear blue sky, vibrant urban street style, wide-angle lens distortion, surreal whimsical realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/视角超现实波普__Hyper-Perspective Surreal Pop/preview.webp",
+  "folder": "Krea2_moodboard/视角超现实波普__Hyper-Perspective Surreal Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-309",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "剥削电影海报插画",
+  "name": "Grindhouse Poster Illustration",
+  "prompt": "Style: Grindhouse Poster Illustration: A lurid, exploitation-cinema illustration style built on bold, high-saturation graphic composition anchored by a dramatic, central figure, painterly airbrushed rendering charged with sensationalist, over-the-top intensity, sharp, angular shadow shapes suggesting danger and spectacle in equal measure, a deliberate tension between garish showmanship and gritty pulp menace, and a brash, unapologetically sleazy theatrical energy built for maximum newsstand shock value. Influenced by: 1970s grindhouse film-poster tradition, exploitation-cinema illustration technique, pulp-thriller poster design, airbrush cinematic-poster practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/剥削电影海报插画__Grindhouse Poster Illustration/preview.jpg",
+  "folder": "krea2_styles/剥削电影海报插画__Grindhouse Poster Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

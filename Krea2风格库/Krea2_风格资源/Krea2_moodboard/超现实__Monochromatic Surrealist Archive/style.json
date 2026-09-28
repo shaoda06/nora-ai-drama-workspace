@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-453",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实",
+  "name": "Monochromatic Surrealist Archive",
+  "prompt": "monochromatic high contrast, surrealist collage, tactile film grain, vintage halftone texture, stark noir lighting, fragmented perspective, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Monochromatic Surrealist Archive/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Monochromatic Surrealist Archive",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

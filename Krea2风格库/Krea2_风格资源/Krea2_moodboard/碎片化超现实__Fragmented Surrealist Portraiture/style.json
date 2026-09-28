@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2764",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "碎片化超现实",
+  "name": "Fragmented Surrealist Portraiture",
+  "prompt": "conceptual portraiture, glitch art, geometric fragmentation, muted minimalist color palette, surrealist undertones, stucco texture, digital artifacting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化超现实__Fragmented Surrealist Portraiture/preview.webp",
+  "folder": "Krea2_moodboard/碎片化超现实__Fragmented Surrealist Portraiture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

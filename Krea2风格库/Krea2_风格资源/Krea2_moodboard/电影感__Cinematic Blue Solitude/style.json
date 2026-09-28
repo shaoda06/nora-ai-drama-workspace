@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1351",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感",
+  "name": "Cinematic Blue Solitude",
+  "prompt": "blue hour photography, cinematic lighting, amber light contrast, atmospheric fog, melancholic solitude, silhouette, urban introspection. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感__Cinematic Blue Solitude/preview.webp",
+  "folder": "Krea2_moodboard/电影感__Cinematic Blue Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

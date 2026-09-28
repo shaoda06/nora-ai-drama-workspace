@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-646",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "肌理奇想",
+  "name": "Textured Whimsical Print",
+  "prompt": "flat vector illustration, stippled texture overlay, risograph print style, mid-century modern graphic, bold color blocking, whimsical folk art, grainy screenprint effect. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理奇想__Textured Whimsical Print/preview.webp",
+  "folder": "Krea2_moodboard/肌理奇想__Textured Whimsical Print",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3169",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "天鹅绒翠绿超现实黄金韵律",
+  "name": "Velvet Verdant Surrealism — Golden Fiber Rhythm",
+  "prompt": "tactile velvet moss texture, undulating verdant hills, chiaroscuro golden lighting, surreal organic landscape, rhythmic grass fibers, minimalist atmospheric composition, deep earthy shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天鹅绒翠绿超现实黄金韵律__Velvet Verdant Surrealism — Golden Fiber Rhythm/preview.webp",
+  "folder": "Krea2_moodboard/天鹅绒翠绿超现实黄金韵律__Velvet Verdant Surrealism — Golden Fiber Rhythm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

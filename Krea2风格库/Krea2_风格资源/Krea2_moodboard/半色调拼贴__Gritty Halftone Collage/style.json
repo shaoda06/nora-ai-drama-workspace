@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-410",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "半色调拼贴",
+  "name": "Gritty Halftone Collage",
+  "prompt": "halftone pattern, analog collage, high contrast, distressed paper texture, screenprint aesthetic, mixed media, pop art influence. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/半色调拼贴__Gritty Halftone Collage/preview.webp",
+  "folder": "Krea2_moodboard/半色调拼贴__Gritty Halftone Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

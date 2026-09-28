@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2532",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "明亮宇宙发光",
+  "name": "Luminous Cosmic Dreamscape — Nebular Vortex Glow",
+  "prompt": "bioluminescent neon glow, swirling fluid patterns, surreal dreamscape, cosmic high-contrast lighting, ethereal nebula textures, mystical vortex depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮宇宙发光__Luminous Cosmic Dreamscape — Nebular Vortex Glow/preview.webp",
+  "folder": "Krea2_moodboard/明亮宇宙发光__Luminous Cosmic Dreamscape — Nebular Vortex Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

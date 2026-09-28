@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1625",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "明亮有机超现实粉彩发光",
+  "name": "Luminous Organic Surrealism — Pastel Fractal Glow",
+  "prompt": "translucent organic textures, bioluminescent macro photography, ethereal diffused lighting, fractal nature, soft pastel palette, dreamlike shallow depth of field, biomorphic skeletal patterns. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮有机超现实粉彩发光__Luminous Organic Surrealism — Pastel Fractal Glow/preview.webp",
+  "folder": "Krea2_moodboard/明亮有机超现实粉彩发光__Luminous Organic Surrealism — Pastel Fractal Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

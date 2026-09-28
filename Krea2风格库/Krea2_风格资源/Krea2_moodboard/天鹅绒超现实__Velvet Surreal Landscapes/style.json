@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3089",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "天鹅绒超现实",
+  "name": "Velvet Surreal Landscapes",
+  "prompt": "surrealist landscape, velvety moss terrain, minimalist composition, dramatic long shadows, moody forest greens, solitary figure, ethereal atmospheric lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天鹅绒超现实__Velvet Surreal Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/天鹅绒超现实__Velvet Surreal Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

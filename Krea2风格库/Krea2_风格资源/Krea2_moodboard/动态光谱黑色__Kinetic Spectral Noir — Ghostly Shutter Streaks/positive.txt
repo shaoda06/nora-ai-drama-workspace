@@ -1,0 +1,1 @@
+high-contrast black and white, heavy film grain, motion blur, shutter drag, chiaroscuro, spectral silhouette, distressed film texture. Subject:{prompt}

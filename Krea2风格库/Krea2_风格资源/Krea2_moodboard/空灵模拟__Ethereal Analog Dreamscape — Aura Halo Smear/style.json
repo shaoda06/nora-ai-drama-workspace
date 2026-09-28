@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1509",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵模拟",
+  "name": "Ethereal Analog Dreamscape — Aura Halo Smear",
+  "prompt": "ethereal dreamcore, soft focus haze, analog film grain, motion blur silhouette, chromatic gradient, glowing aura effect, teal and orange contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟__Ethereal Analog Dreamscape — Aura Halo Smear/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟__Ethereal Analog Dreamscape — Aura Halo Smear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

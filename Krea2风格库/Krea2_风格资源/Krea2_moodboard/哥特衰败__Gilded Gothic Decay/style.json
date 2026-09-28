@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2444",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "哥特衰败",
+  "name": "Gilded Gothic Decay",
+  "prompt": "chiaroscuro lighting, gilded gold leaf, melancholic gothic portraiture, cracked plaster texture, high-contrast noir, metallic organic decay, surreal fragmentation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/哥特衰败__Gilded Gothic Decay/preview.webp",
+  "folder": "Krea2_moodboard/哥特衰败__Gilded Gothic Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

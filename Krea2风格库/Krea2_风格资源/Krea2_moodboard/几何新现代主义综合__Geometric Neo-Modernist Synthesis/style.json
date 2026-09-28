@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-692",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "几何新现代主义综合",
+  "name": "Geometric Neo-Modernist Synthesis",
+  "prompt": "flat vector illustration, geometric minimalism, stylized symmetry, warm earth and electric contrasts, modern folk art, clean line work, minimalist graphic design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何新现代主义综合__Geometric Neo-Modernist Synthesis/preview.webp",
+  "folder": "Krea2_moodboard/几何新现代主义综合__Geometric Neo-Modernist Synthesis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

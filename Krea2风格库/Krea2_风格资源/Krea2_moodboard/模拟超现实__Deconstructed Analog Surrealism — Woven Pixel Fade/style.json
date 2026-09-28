@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2776",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "模拟超现实",
+  "name": "Deconstructed Analog Surrealism — Woven Pixel Fade",
+  "prompt": "tactile paper weaving, analog glitch art, fragmented grid collage, muted earth tone palette, deconstructed landscape, vintage photographic texture, pixelated geometric overlay, handcrafted mixed media. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟超现实__Deconstructed Analog Surrealism — Woven Pixel Fade/preview.webp",
+  "folder": "Krea2_moodboard/模拟超现实__Deconstructed Analog Surrealism — Woven Pixel Fade",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

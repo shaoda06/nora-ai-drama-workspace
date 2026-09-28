@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-577",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵",
+  "name": "Tenebrous Ethereal Classicism",
+  "prompt": "chiaroscuro, tenebrism, painterly realism, ethereal lighting, sfumato, celestial glow, classical portraiture, high contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Tenebrous Ethereal Classicism/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Tenebrous Ethereal Classicism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1732",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "极简",
+  "name": "Radioactive Minimalist Blur",
+  "prompt": "blurred silhouette, acid green neon aura, heavy film grain, stark white background, airbrush spray paint effect, minimalist surrealism, high contrast composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Radioactive Minimalist Blur/preview.webp",
+  "folder": "Krea2_moodboard/极简__Radioactive Minimalist Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

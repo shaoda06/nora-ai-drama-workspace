@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2783",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "超现实数字",
+  "name": "Surreal Digital Erosion",
+  "prompt": "pixel sorting, glitch art, digital decay, vertical datamoshing, surreal landscape, generative error, linear distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实数字__Surreal Digital Erosion/preview.webp",
+  "folder": "Krea2_moodboard/超现实数字__Surreal Digital Erosion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

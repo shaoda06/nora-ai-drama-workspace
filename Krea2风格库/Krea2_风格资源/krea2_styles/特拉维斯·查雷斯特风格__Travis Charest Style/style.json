@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-166",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "特拉维斯·查雷斯特风格",
+  "name": "Travis Charest Style",
+  "prompt": "Style: Travis Charest Style: A hyper-clean, glossy comic-illustration style built on immaculately smooth gradient rendering that eliminates visible brushwork in favor of glassy precision, confident directional lighting carving sharp, polished highlight across every contour, meticulously controlled reflective sheen giving every form a slick, high-production finish, dynamic yet effortlessly composed posing charged with athletic grace, and a sleek, technically masterful comic-illustration intensity built for instantly striking visual impact. Influenced by: Travis Charest, painted comic-cover illustration tradition, hyper-glossy digital-rendering technique, athletic character-illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/特拉维斯·查雷斯特风格__Travis Charest Style/preview.jpg",
+  "folder": "krea2_styles/特拉维斯·查雷斯特风格__Travis Charest Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

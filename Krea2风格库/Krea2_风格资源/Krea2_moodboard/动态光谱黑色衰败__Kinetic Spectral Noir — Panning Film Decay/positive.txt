@@ -1,0 +1,1 @@
+high-contrast black and white, kinetic motion blur, gritty analog film grain, shutter drag, ghostly silhouettes, dark atmospheric noir, directional panning. Subject:{prompt}

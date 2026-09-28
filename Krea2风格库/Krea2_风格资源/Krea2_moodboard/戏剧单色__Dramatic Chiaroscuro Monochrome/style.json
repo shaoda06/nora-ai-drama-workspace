@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-859",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "戏剧单色",
+  "name": "Dramatic Chiaroscuro Monochrome",
+  "prompt": "chiaroscuro lighting, high-contrast monochrome, low-key photography, pitch-black background, sharp tactile texture, dramatic rim lighting, fine art etching style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/戏剧单色__Dramatic Chiaroscuro Monochrome/preview.webp",
+  "folder": "Krea2_moodboard/戏剧单色__Dramatic Chiaroscuro Monochrome",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

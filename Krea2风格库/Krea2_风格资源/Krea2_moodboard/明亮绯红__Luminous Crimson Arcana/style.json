@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-54",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "明亮绯红",
+  "name": "Luminous Crimson Arcana",
+  "prompt": "high-contrast dark fantasy, volumetric lighting, crimson and bioluminescent palette, cinematic anime illustration, intricate architectural detail, magical atmosphere, dramatic chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮绯红__Luminous Crimson Arcana/preview.webp",
+  "folder": "Krea2_moodboard/明亮绯红__Luminous Crimson Arcana",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

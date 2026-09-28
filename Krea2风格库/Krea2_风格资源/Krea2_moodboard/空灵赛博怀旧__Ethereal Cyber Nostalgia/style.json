@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3503",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵赛博怀旧",
+  "name": "Ethereal Cyber Nostalgia",
+  "prompt": "cobalt blue color palette, ethereal glowing bloom, vintage film grain, retro-futuristic atmosphere, high-contrast lighting, liminal dreamcore, surreal lens flare. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵赛博怀旧__Ethereal Cyber Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/空灵赛博怀旧__Ethereal Cyber Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

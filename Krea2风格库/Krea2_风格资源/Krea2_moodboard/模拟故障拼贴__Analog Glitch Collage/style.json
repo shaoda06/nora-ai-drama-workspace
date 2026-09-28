@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-547",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "模拟故障拼贴",
+  "name": "Analog Glitch Collage",
+  "prompt": "mixed media collage, analog film grain, digital glitch distortion, hand-drawn scribbles, flash photography, scrapbook aesthetic, chromatic aberration, retro indie zine. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟故障拼贴__Analog Glitch Collage/preview.webp",
+  "folder": "Krea2_moodboard/模拟故障拼贴__Analog Glitch Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

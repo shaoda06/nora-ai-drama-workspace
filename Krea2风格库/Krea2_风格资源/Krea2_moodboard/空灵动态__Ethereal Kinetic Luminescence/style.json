@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2840",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵动态",
+  "name": "Ethereal Kinetic Luminescence",
+  "prompt": "long exposure motion blur, golden amber rim lighting, cool blue cinematic background, ethereal ghosting effect, analog film grain, intentional camera movement, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态__Ethereal Kinetic Luminescence/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态__Ethereal Kinetic Luminescence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

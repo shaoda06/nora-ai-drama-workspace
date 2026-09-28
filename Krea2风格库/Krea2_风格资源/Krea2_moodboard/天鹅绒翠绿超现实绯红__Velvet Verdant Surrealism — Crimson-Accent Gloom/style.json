@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3534",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "天鹅绒翠绿超现实绯红",
+  "name": "Velvet Verdant Surrealism — Crimson-Accent Gloom",
+  "prompt": "undulating velvet moss landscape, biomorphic surrealism, deep emerald and crimson palette, moody low-key lighting, fur-like grassy texture, minimalist cinematic composition, dreamlike liminal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天鹅绒翠绿超现实绯红__Velvet Verdant Surrealism — Crimson-Accent Gloom/preview.webp",
+  "folder": "Krea2_moodboard/天鹅绒翠绿超现实绯红__Velvet Verdant Surrealism — Crimson-Accent Gloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

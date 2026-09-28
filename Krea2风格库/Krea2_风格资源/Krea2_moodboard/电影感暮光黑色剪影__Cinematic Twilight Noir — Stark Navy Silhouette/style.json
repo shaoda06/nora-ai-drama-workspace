@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1861",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感暮光黑色剪影",
+  "name": "Cinematic Twilight Noir — Stark Navy Silhouette",
+  "prompt": "cinematic blue hour, stark black silhouette, moody atmospheric grain, deep indigo palette, vintage noir aesthetic, low-key lighting, melancholic isolation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感暮光黑色剪影__Cinematic Twilight Noir — Stark Navy Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/电影感暮光黑色剪影__Cinematic Twilight Noir — Stark Navy Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

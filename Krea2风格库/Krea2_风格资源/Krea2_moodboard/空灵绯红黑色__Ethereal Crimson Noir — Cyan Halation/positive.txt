@@ -1,0 +1,1 @@
+analog film grain, saturated crimson and cyan, soft focus blur, dramatic silhouette, halation effect, low-fidelity texture, chromatic aberration, noir atmosphere. Subject:{prompt}

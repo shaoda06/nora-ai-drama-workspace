@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3478",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "怀旧超现实",
+  "name": "Nostalgic Pastoral Surrealism",
+  "prompt": "retro-futuristic surrealism, pastel dreamcore, nostalgic liminal space, uncanny pastoral, vintage film aesthetic, soft cinematic lighting, bizarre juxtaposition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实__Nostalgic Pastoral Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实__Nostalgic Pastoral Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1865",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感黑色琥珀青蓝",
+  "name": "Cinematic Chiaroscuro Noir — Amber Teal Film",
+  "prompt": "cinematic chiaroscuro, high-contrast lighting, warm amber rim light, moody teal shadows, analog film grain, dramatic silhouette, intimate portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色琥珀青蓝__Cinematic Chiaroscuro Noir — Amber Teal Film/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色琥珀青蓝__Cinematic Chiaroscuro Noir — Amber Teal Film",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2139",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "电影感黑色平静",
+  "name": "Cinematic Cobalt Noir — Frosted Calm",
+  "prompt": "chiaroscuro lighting, cobalt blue color palette, low-key studio portrait, high-contrast shadows, cinematic noir lighting, minimalist composition, dual-tone neon accent, contemplative mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色平静__Cinematic Cobalt Noir — Frosted Calm/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色平静__Cinematic Cobalt Noir — Frosted Calm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

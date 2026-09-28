@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-94",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "天野喜孝风格",
+  "name": "Yoshitaka Amano Style",
+  "prompt": "Style: Yoshitaka Amano Style: An ethereal, elongated illustration style built on delicate, flowing linework that stretches anatomy into graceful, almost weightless proportion, translucent layered washes that let ink and pigment bleed softly into one another rather than sit as flat color, a dreamlike fragility carried through sparse, deliberate mark-making surrounded by generous negative space, ornamental fine detail concentrated in hair and fabric while the broader form stays airy and unresolved, and a haunting, otherworldly elegance that feels simultaneously fragile and mythic. Influenced by: Yoshitaka Amano, Final Fantasy character-art tradition, ink-wash illustration technique, Vampire Hunter D illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/天野喜孝风格__Yoshitaka Amano Style/preview.jpg",
+  "folder": "krea2_styles/天野喜孝风格__Yoshitaka Amano Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

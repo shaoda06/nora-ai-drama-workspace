@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3193",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "极简超现实",
+  "name": "Minimalist Surrealist Couture",
+  "prompt": "minimalist studio photography, high-fashion editorial, surrealist concept, soft diffused lighting, anthropomorphic elegance, clean neutral background, avant-garde composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简超现实__Minimalist Surrealist Couture/preview.webp",
+  "folder": "Krea2_moodboard/极简超现实__Minimalist Surrealist Couture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

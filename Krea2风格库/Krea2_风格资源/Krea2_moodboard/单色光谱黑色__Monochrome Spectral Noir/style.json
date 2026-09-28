@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3403",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "单色光谱黑色",
+  "name": "Monochrome Spectral Noir",
+  "prompt": "high-contrast monochrome, heavy film grain, motion blur, spectral atmosphere, liminal space, soft-focus distortion, analog film degradation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色光谱黑色__Monochrome Spectral Noir/preview.webp",
+  "folder": "Krea2_moodboard/单色光谱黑色__Monochrome Spectral Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

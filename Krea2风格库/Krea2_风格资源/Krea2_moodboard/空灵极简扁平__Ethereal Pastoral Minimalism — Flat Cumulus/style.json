@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-155",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "空灵极简扁平",
+  "name": "Ethereal Pastoral Minimalism — Flat Cumulus",
+  "prompt": "minimalist anime background, vast horizon line, painterly cumulus clouds, serene solitude, retro-futuristic geometry, vibrant pastel palette, dreamcore atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简扁平__Ethereal Pastoral Minimalism — Flat Cumulus/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简扁平__Ethereal Pastoral Minimalism — Flat Cumulus",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

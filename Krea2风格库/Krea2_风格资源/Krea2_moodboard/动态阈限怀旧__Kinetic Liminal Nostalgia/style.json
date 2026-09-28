@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3372",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "动态阈限怀旧",
+  "name": "Kinetic Liminal Nostalgia",
+  "prompt": "heavy motion blur, cinematic film grain, muted desaturated palette, liminal space, shutter drag, dreamlike atmosphere, nostalgic analog texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态阈限怀旧__Kinetic Liminal Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/动态阈限怀旧__Kinetic Liminal Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+cinematic chiaroscuro, desaturated cyan palette, dramatic silhouette, atmospheric haze, heavy film grain, low-key lighting, soft-focus diffusion. Subject:{prompt}

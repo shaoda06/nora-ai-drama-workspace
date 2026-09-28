@@ -1,0 +1,1 @@
+chiaroscuro, low-key lighting, cinematic noir, extreme close-up, monochromatic palette, high-contrast, clinical cool tones, shallow depth of field. Subject:{prompt}

@@ -1,0 +1,1 @@
+tactile 3D render, voxel geometry, felt and clay textures, vibrant studio lighting, miniature diorama style, high-fidelity surface detail, playful toy aesthetic. Subject:{prompt}

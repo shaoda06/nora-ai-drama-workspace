@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1123",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "彩色极简表现主义",
+  "name": "Chromatic Minimalist Expressionism",
+  "prompt": "amber and indigo contrast, minimalist papercut aesthetics, saturated chromatic gradients, painterly watercolor textures, high-contrast graphic composition, atmospheric color field, fine art paper grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色极简表现主义__Chromatic Minimalist Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/彩色极简表现主义__Chromatic Minimalist Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

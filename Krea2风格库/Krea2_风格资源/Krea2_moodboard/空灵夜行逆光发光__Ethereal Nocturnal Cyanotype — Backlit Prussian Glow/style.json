@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1586",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵夜行逆光发光",
+  "name": "Ethereal Nocturnal Cyanotype — Backlit Prussian Glow",
+  "prompt": "nocturnal cyanotype, deep blue monochrome, cinematic backlit silhouette, heavy film grain, hazy atmospheric glow, liminal space, dreamy soft focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行逆光发光__Ethereal Nocturnal Cyanotype — Backlit Prussian Glow/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行逆光发光__Ethereal Nocturnal Cyanotype — Backlit Prussian Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

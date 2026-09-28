@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-975",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "空灵粉彩厚涂",
+  "name": "Ethereal Pastel Impressionism — Pointillist Impasto",
+  "prompt": "ethereal pastel palette, soft-focus atmosphere, dreamy impressionism, textured painterly layers, dappled light, magical realism, stippled and impasto techniques. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩厚涂__Ethereal Pastel Impressionism — Pointillist Impasto/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩厚涂__Ethereal Pastel Impressionism — Pointillist Impasto",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

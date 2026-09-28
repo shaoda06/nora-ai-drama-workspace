@@ -1,0 +1,1 @@
+chiaroscuro lighting, stark black background, minimalist composition, dramatic atmospheric haze, volumetric spotlight, high-contrast noir, crimson and cobalt accents. Subject:{prompt}

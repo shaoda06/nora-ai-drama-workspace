@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3017",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "明亮夜行剪影",
+  "name": "Luminous Nocturnal Silhouette — Glowing Rim Aberration",
+  "prompt": "glowing rim light, high-contrast silhouette, amber and blue color palette, ethereal light bloom, analog film grain, chromatic aberration, nocturnal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行剪影__Luminous Nocturnal Silhouette — Glowing Rim Aberration/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行剪影__Luminous Nocturnal Silhouette — Glowing Rim Aberration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

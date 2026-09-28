@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2589",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "柔软有机极简",
+  "name": "Soft Organic Minimalism",
+  "prompt": "minimalist biomorphic, soft tactile texture, monochromatic palette, diffused studio lighting, organic sculptural form, matte finish, serene depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/柔软有机极简__Soft Organic Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/柔软有机极简__Soft Organic Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

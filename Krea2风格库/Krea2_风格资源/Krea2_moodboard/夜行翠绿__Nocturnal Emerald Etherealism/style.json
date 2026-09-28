@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1078",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "夜行翠绿",
+  "name": "Nocturnal Emerald Etherealism",
+  "prompt": "impasto oil painting, nocturnal teal and emerald, soft-focus chiaroscuro, mystical aquatic atmosphere, thick textured brushstrokes, ethereal light diffusion, dreamy expressionist landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行翠绿__Nocturnal Emerald Etherealism/preview.webp",
+  "folder": "Krea2_moodboard/夜行翠绿__Nocturnal Emerald Etherealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3253",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "高对比空灵黑色",
+  "name": "High-Contrast Ethereal Noir",
+  "prompt": "high-contrast monochrome, heavy film grain, stark chiaroscuro, blown-out highlight bloom, nocturnal noir, eerie ethereal glow, vintage cinematic texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高对比空灵黑色__High-Contrast Ethereal Noir/preview.webp",
+  "folder": "Krea2_moodboard/高对比空灵黑色__High-Contrast Ethereal Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

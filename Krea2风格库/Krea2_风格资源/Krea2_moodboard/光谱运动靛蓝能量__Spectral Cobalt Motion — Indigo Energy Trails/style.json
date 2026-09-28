@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3030",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱运动靛蓝能量",
+  "name": "Spectral Cobalt Motion — Indigo Energy Trails",
+  "prompt": "long exposure motion blur, bioluminescent electric blue, cobalt and indigo palette, ethereal ghosting effect, heavy film grain, low-key chiaroscuro lighting, spectral energy trails. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱运动靛蓝能量__Spectral Cobalt Motion — Indigo Energy Trails/preview.webp",
+  "folder": "Krea2_moodboard/光谱运动靛蓝能量__Spectral Cobalt Motion — Indigo Energy Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

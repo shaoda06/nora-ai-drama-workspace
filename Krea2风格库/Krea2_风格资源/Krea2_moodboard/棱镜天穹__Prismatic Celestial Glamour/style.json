@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1452",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "棱镜天穹",
+  "name": "Prismatic Celestial Glamour",
+  "prompt": "iridescent holographic texture, prismatic rainbow lens flare, macro glitter detail, ethereal stardust particles, high-contrast cinematic lighting, dreamy soft-focus bokeh, surreal crystalline opulence. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜天穹__Prismatic Celestial Glamour/preview.webp",
+  "folder": "Krea2_moodboard/棱镜天穹__Prismatic Celestial Glamour",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

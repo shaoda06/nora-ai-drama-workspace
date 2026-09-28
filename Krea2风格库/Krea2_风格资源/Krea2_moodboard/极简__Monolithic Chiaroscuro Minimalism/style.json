@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3466",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "极简",
+  "name": "Monolithic Chiaroscuro Minimalism",
+  "prompt": "brutalist minimalism, dramatic chiaroscuro, volumetric lighting, monochromatic void, geometric scale, liminal architectural space, solitary silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Monolithic Chiaroscuro Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Monolithic Chiaroscuro Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1343",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "触觉单色黑色",
+  "name": "Tactile Monochrome Noir",
+  "prompt": "heavy film grain, high-contrast monochrome, cinematic lighting, tactile texture, shallow depth of field, intimate composition, moody atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉单色黑色__Tactile Monochrome Noir/preview.webp",
+  "folder": "Krea2_moodboard/触觉单色黑色__Tactile Monochrome Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

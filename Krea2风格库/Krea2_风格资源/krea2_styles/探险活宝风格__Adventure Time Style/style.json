@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-126",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "探险活宝风格",
+  "name": "Adventure Time Style",
+  "prompt": "Style: Adventure Time Style: A playful, flat cartoon illustration style built on bold, simplified outline with minimal internal detail, rubber-hose-adjacent proportions that stretch and simplify anatomy into loose, expressive shapes, even flat cel shading with almost no gradient or rendering complexity, a cheerful, whimsical simplicity that favors charm and readability over realism, and a lighthearted, surreal storybook energy that feels effortlessly hand-drawn. Influenced by: Pendleton Ward, modern American cartoon illustration, flat cel-shading technique, indie animation character design.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/探险活宝风格__Adventure Time Style/preview.jpg",
+  "folder": "krea2_styles/探险活宝风格__Adventure Time Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

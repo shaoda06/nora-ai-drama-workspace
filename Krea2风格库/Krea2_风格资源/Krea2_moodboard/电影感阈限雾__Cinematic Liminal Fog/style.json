@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-729",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "电影感阈限雾",
+  "name": "Cinematic Liminal Fog",
+  "prompt": "heavy atmospheric fog, desaturated teal and charcoal, cinematic liminal space, diffused glowing light, grainy film texture, moody silhouette, high contrast shadows, wet reflective surfaces. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感阈限雾__Cinematic Liminal Fog/preview.webp",
+  "folder": "Krea2_moodboard/电影感阈限雾__Cinematic Liminal Fog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

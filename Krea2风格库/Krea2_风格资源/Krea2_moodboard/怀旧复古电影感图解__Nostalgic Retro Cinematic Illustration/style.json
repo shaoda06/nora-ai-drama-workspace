@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-110",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧复古电影感图解",
+  "name": "Nostalgic Retro Cinematic Illustration",
+  "prompt": "hand-drawn cel animation, retro 90s anime style, muted earth tones, detailed background art, vintage graphic novel aesthetic, soft natural lighting, melancholic slice of life. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧复古电影感图解__Nostalgic Retro Cinematic Illustration/preview.webp",
+  "folder": "Krea2_moodboard/怀旧复古电影感图解__Nostalgic Retro Cinematic Illustration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

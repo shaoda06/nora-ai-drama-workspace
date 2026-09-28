@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1407",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感写实",
+  "name": "Cinematic Chiaroscuro Realism",
+  "prompt": "chiaroscuro lighting, rim lighting, high contrast, tactile textures, cinematic film look, golden hour, shallow depth of field, moody atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感写实__Cinematic Chiaroscuro Realism/preview.webp",
+  "folder": "Krea2_moodboard/电影感写实__Cinematic Chiaroscuro Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

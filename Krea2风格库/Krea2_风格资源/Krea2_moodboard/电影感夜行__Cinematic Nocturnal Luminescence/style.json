@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1272",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "电影感夜行",
+  "name": "Cinematic Nocturnal Luminescence",
+  "prompt": "high-contrast lighting, saturated color palette, nocturnal atmosphere, cinematic composition, glowing bioluminescence, silhouette framing, surreal digital illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Luminescence/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Luminescence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

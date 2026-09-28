@@ -1,0 +1,1 @@
+analog film grain, cinematic light leak, soft focus motion blur, lo-fi aesthetic, chromatic aberration, dreamy silhouette, muted desaturated tones. Subject:{prompt}

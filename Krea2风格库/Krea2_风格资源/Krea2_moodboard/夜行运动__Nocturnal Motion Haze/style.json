@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3381",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "夜行运动",
+  "name": "Nocturnal Motion Haze",
+  "prompt": "intentional motion blur, nocturnal long exposure, cinematic light bloom, lo-fi film grain, high contrast chiaroscuro, liminal night photography, warm golden glow, ethereal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行运动__Nocturnal Motion Haze/preview.webp",
+  "folder": "Krea2_moodboard/夜行运动__Nocturnal Motion Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

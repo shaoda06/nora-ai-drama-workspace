@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1232",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "半透明赛博有机集合鲜明发光",
+  "name": "Translucent Cyber-Organic Assemblage — Vivid Circuit Glow",
+  "prompt": "translucent cybernetic anatomy, circuit board integration, glossy resin and glass, stark black background, biomechanical sculpture, retro-futuristic hardware, macro studio lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/半透明赛博有机集合鲜明发光__Translucent Cyber-Organic Assemblage — Vivid Circuit Glow/preview.webp",
+  "folder": "Krea2_moodboard/半透明赛博有机集合鲜明发光__Translucent Cyber-Organic Assemblage — Vivid Circuit Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

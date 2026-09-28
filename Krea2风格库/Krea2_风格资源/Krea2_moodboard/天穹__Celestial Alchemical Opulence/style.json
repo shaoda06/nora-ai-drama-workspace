@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2405",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "天穹",
+  "name": "Celestial Alchemical Opulence",
+  "prompt": "cosmic afrofuturism, emerald and gold palette, intricate filigree, mystical realism, starry background, high-gloss metallic sheen, dramatic chiaroscuro lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹__Celestial Alchemical Opulence/preview.webp",
+  "folder": "Krea2_moodboard/天穹__Celestial Alchemical Opulence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3126",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "超现实",
+  "name": "Surreal Citron Maximalism",
+  "prompt": "vibrant yellow palette, surreal floral fusion, tactile organic texture, high-contrast studio lighting, pop surrealism, minimalist graphic composition, whimsical editorial style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Surreal Citron Maximalism/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Surreal Citron Maximalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

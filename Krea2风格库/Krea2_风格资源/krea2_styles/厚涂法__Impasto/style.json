@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-327",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "厚涂法",
+  "name": "Impasto",
+  "prompt": "Style: Impasto: A richly physical painting style built on thickly applied pigment that stands proud from the working surface, ridges and peaks of dried medium catching real directional light with sculptural dimensionality, confident, decisive strokes carrying visible weight and texture across the entire composition, dramatic tactile depth replacing smooth blending or flat coverage entirely, and a raw, sculptural painterly intensity that celebrates the physical presence of pigment itself. Influenced by: Vincent van Gogh, Lucian Freud, impasto oil-painting technique, expressive thick-pigment method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/厚涂法__Impasto/preview.jpg",
+  "folder": "krea2_styles/厚涂法__Impasto",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

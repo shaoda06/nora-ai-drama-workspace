@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1393",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "黑色颗粒",
+  "name": "Stippled Noir Grain",
+  "prompt": "heavy stippling, intense film grain, monochrome noir, chiaroscuro lighting, soft focus blur, high contrast black and white, tactile noise. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色颗粒__Stippled Noir Grain/preview.webp",
+  "folder": "Krea2_moodboard/黑色颗粒__Stippled Noir Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

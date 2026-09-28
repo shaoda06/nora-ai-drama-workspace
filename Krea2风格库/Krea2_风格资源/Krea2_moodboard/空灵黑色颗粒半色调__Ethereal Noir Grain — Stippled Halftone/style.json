@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-382",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "空灵黑色颗粒半色调",
+  "name": "Ethereal Noir Grain — Stippled Halftone",
+  "prompt": "heavy film grain, high-contrast monochrome, ethereal motion blur, chiaroscuro lighting, ghostly silhouettes, stippled halftone texture, dark atmospheric noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色颗粒半色调__Ethereal Noir Grain — Stippled Halftone/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色颗粒半色调__Ethereal Noir Grain — Stippled Halftone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

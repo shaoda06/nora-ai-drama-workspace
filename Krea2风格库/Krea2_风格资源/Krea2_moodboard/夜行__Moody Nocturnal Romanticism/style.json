@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-956",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "夜行",
+  "name": "Moody Nocturnal Romanticism",
+  "prompt": "nocturnal tonalist oil painting, chiaroscuro lighting, atmospheric fog, romanticism style, painterly craquelure texture, deep teal and emerald palette, haunting moonlight glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行__Moody Nocturnal Romanticism/preview.webp",
+  "folder": "Krea2_moodboard/夜行__Moody Nocturnal Romanticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

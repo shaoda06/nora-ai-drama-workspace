@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1266",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "明亮森林",
+  "name": "Luminous Forest Mystery",
+  "prompt": "stylized digital illustration, chiaroscuro lighting, enchanted forest, glowing focal point, lush botanical foliage, dramatic god rays, whimsical fantasy atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮森林__Luminous Forest Mystery/preview.webp",
+  "folder": "Krea2_moodboard/明亮森林__Luminous Forest Mystery",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3088",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "超现实天穹",
+  "name": "Surreal Celestial Dreamscapes",
+  "prompt": "surrealist dreamscape, vibrant cerulean sky, levitating objects, minimalist composition, retro-futuristic collage, ethereal clouds, high-contrast saturation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实天穹__Surreal Celestial Dreamscapes/preview.webp",
+  "folder": "Krea2_moodboard/超现实天穹__Surreal Celestial Dreamscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

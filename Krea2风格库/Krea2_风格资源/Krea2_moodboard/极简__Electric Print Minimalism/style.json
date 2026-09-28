@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-372",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "极简",
+  "name": "Electric Print Minimalism",
+  "prompt": "risograph print, duotone color palette, halftone dithering, grainy texture, high-contrast graphic, retro-digital aesthetic, stipple shading, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Electric Print Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Electric Print Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

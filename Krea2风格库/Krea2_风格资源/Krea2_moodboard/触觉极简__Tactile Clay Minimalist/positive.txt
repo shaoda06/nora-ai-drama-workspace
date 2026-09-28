@@ -1,0 +1,1 @@
+3D clay render, matte texture, minimalist rounded geometry, soft studio lighting, playful design, clean solid background, tactile digital sculpture. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-57",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "明亮夜行宇宙靛蓝动漫",
+  "name": "Luminous Nocturnal Dreamscapes — Cosmic Indigo Anime",
+  "prompt": "deep indigo and cobalt palette, ethereal celestial light, painterly brushstrokes, cinematic anime aesthetic, starlit nocturnal dreamscape, surreal cosmic scale, high contrast silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行宇宙靛蓝动漫__Luminous Nocturnal Dreamscapes — Cosmic Indigo Anime/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行宇宙靛蓝动漫__Luminous Nocturnal Dreamscapes — Cosmic Indigo Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

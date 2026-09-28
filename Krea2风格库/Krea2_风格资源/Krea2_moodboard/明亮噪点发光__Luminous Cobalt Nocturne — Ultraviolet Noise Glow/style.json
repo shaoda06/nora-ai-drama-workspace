@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2177",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "明亮噪点发光",
+  "name": "Luminous Cobalt Nocturne — Ultraviolet Noise Glow",
+  "prompt": "monochromatic electric blue, ultraviolet luminescence, heavy film grain, high contrast black background, spectral digital noise, phosphorescent glow, retro-futuristic telemetry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮噪点发光__Luminous Cobalt Nocturne — Ultraviolet Noise Glow/preview.webp",
+  "folder": "Krea2_moodboard/明亮噪点发光__Luminous Cobalt Nocturne — Ultraviolet Noise Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

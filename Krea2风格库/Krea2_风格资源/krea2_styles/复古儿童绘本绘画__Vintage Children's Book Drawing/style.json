@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-252",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "复古儿童绘本绘画",
+  "name": "Vintage Children's Book Drawing",
+  "prompt": "Style: Vintage Children's Book Drawing: A gentle, nostalgic illustration style built on soft, hand-inked linework carrying old-world sincerity and charm, delicate watercolor-adjacent washes applied with unhurried, muted restraint, rounded, endearing proportions favoring warmth and whimsy over anatomical precision, a hushed, timeworn tenderness carried through generous, uncluttered composition, and a wistful, storybook nostalgia that feels handmade, cherished, and quietly magical. Influenced by: mid-century golden-age children's-book illustration tradition, gouache-and-watercolor storybook technique, classic picture-book character-design practice, vintage print-illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/复古儿童绘本绘画__Vintage Children's Book Drawing/preview.jpg",
+  "folder": "krea2_styles/复古儿童绘本绘画__Vintage Children's Book Drawing",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

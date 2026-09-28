@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2132",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "电影感黑色极简",
+  "name": "Cinematic Noir Minimalism — Cyan Technical",
+  "prompt": "low-key cinematic lighting, cool cyan and blue color grading, high-contrast silhouette, minimalist technical composition, atmospheric shadow, sharp profile portraiture, desaturated futuristic noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色极简__Cinematic Noir Minimalism — Cyan Technical/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色极简__Cinematic Noir Minimalism — Cyan Technical",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

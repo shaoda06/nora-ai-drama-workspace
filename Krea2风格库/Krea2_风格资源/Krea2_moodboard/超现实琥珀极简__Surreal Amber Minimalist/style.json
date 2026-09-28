@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3201",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "超现实琥珀极简",
+  "name": "Surreal Amber Minimalist",
+  "prompt": "minimalist surrealism, dramatic chiaroscuro lighting, amber gradient background, tactile material contrast, gravity-defying composition, high-end studio photography, geometric balance. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实琥珀极简__Surreal Amber Minimalist/preview.webp",
+  "folder": "Krea2_moodboard/超现实琥珀极简__Surreal Amber Minimalist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

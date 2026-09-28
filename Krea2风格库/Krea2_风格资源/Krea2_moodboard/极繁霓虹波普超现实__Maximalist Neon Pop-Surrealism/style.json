@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-845",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "极繁霓虹波普超现实",
+  "name": "Maximalist Neon Pop-Surrealism",
+  "prompt": "maximalist pop surrealism, neon saturated palette, mixed media collage, vibrant street art elements, hand-drawn doodle overlays, high-contrast digital art, expressive paint splatters. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极繁霓虹波普超现实__Maximalist Neon Pop-Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/极繁霓虹波普超现实__Maximalist Neon Pop-Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

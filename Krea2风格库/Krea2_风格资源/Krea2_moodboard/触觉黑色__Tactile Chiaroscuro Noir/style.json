@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2628",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "触觉黑色",
+  "name": "Tactile Chiaroscuro Noir",
+  "prompt": "high-contrast monochrome, chiaroscuro lighting, heavy film grain, analog noir, minimalist composition, velvety shadows, introspective mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉黑色__Tactile Chiaroscuro Noir/preview.webp",
+  "folder": "Krea2_moodboard/触觉黑色__Tactile Chiaroscuro Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

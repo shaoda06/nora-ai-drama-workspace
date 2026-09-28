@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-660",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "黑色",
+  "name": "Gritty Monochromatic Punk Noir",
+  "prompt": "stark high-contrast black and white, vintage photocopy zine aesthetic, gritty halftone texture, chiaroscuro noir lighting, distressed screenprint effect, surrealist ink illustration, raw DIY graphic art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Gritty Monochromatic Punk Noir/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Gritty Monochromatic Punk Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

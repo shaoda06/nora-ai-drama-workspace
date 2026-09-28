@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-527",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "黑色超现实",
+  "name": "Thermal Noir Surrealism",
+  "prompt": "thermal imaging style, deep teal and vibrant orange, risograph and film grain texture, surreal silhouette, solarized portraiture, glowing aura, minimalist negative space. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色超现实__Thermal Noir Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/黑色超现实__Thermal Noir Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

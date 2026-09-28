@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1365",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感夜行写实",
+  "name": "Cinematic Nocturnal Realism",
+  "prompt": "35mm film grain, cinematic blue hour lighting, teal and amber color grading, shallow depth of field, voyeuristic framing, introspective mood, gritty film texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行写实__Cinematic Nocturnal Realism/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行写实__Cinematic Nocturnal Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-654",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "图形奇想",
+  "name": "Graphic Mid-Century Whimsy",
+  "prompt": "mid-century graphic illustration, bold red black and cream palette, minimalist ink linework, flat 2D vector style, risograph and linocut texture, retro editorial aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形奇想__Graphic Mid-Century Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/图形奇想__Graphic Mid-Century Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

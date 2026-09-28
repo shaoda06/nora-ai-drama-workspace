@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-38",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "图标/表情晕影",
+  "name": "Icon/Emoticon Vignette",
+  "prompt": "Style: Icon/Emoticon Vignette: A compact, simplified illustration style built on a distinct central cluster containing the subject reduced to its most essential recognizable shapes, generous negative space surrounding that cluster rather than a full-frame scene, bold, confidently bounded flat color fields separated by clean, uniform outline, minimal internal detail favoring instant small-scale readability over rendering complexity, and a cheerful, graphic economy that treats the whole composition as a single, immediately legible symbol. Influenced by: emoji/icon-design tradition, flat-vector illustration technique, minimalist symbol-design practice, negative-space compositional design.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/图标_表情晕影__Icon_Emoticon Vignette/preview.jpg",
+  "folder": "krea2_styles/图标_表情晕影__Icon_Emoticon Vignette",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

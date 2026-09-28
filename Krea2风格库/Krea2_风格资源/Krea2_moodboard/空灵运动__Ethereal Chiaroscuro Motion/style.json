@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1204",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵运动",
+  "name": "Ethereal Chiaroscuro Motion",
+  "prompt": "intentional motion blur, chiaroscuro lighting, minimalist studio background, ghostly silhouette, painterly texture, high-contrast monochrome, sepia tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵运动__Ethereal Chiaroscuro Motion/preview.webp",
+  "folder": "Krea2_moodboard/空灵运动__Ethereal Chiaroscuro Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

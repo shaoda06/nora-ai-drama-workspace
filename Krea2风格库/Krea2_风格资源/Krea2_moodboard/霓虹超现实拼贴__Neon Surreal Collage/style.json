@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-537",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "霓虹超现实拼贴",
+  "name": "Neon Surreal Collage",
+  "prompt": "vintage monochrome photography, analog collage, neon graphic intervention, high-contrast surrealism, distressed paper texture, pop art silhouette, mixed media juxtaposition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹超现实拼贴__Neon Surreal Collage/preview.webp",
+  "folder": "Krea2_moodboard/霓虹超现实拼贴__Neon Surreal Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

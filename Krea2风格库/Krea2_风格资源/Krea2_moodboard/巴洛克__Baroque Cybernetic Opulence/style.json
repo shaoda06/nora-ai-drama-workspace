@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1025",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "巴洛克",
+  "name": "Baroque Cybernetic Opulence",
+  "prompt": "baroque futurism, gilded biomechanical filigree, porcelain skin texture, avant-garde high fashion, studio portrait lighting, opulent metallic embellishments, surreal cybernetic anatomy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/巴洛克__Baroque Cybernetic Opulence/preview.webp",
+  "folder": "Krea2_moodboard/巴洛克__Baroque Cybernetic Opulence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

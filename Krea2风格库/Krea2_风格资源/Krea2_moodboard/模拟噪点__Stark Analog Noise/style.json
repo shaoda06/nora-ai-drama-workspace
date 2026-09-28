@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-499",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "模拟噪点",
+  "name": "Stark Analog Noise",
+  "prompt": "high-contrast monochrome, heavy analog grain, halftone texture, brutalist collage, chiaroscuro lighting, industrial noise, risograph aesthetics. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟噪点__Stark Analog Noise/preview.webp",
+  "folder": "Krea2_moodboard/模拟噪点__Stark Analog Noise",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-587",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵极简",
+  "name": "Ethereal Blue Minimalism — Pointillist Cobalt",
+  "prompt": "monochromatic blue palette, soft-focus silhouettes, tactile paper and painterly textures, hazy atmospheric lighting, minimalist composition, dreamy and ethereal mood, grainy pointillist details. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简__Ethereal Blue Minimalism — Pointillist Cobalt/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简__Ethereal Blue Minimalism — Pointillist Cobalt",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

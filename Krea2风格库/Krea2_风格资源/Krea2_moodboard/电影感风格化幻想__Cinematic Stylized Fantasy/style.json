@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-203",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "电影感风格化幻想",
+  "name": "Cinematic Stylized Fantasy",
+  "prompt": "stylized 3D character, cinematic lighting, octane render, subsurface scattering, rich tactile textures, expressive character design, fantasy atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感风格化幻想__Cinematic Stylized Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/电影感风格化幻想__Cinematic Stylized Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

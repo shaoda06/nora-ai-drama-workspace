@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-83",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "欧式漫画风格",
+  "name": "Euromanga Style",
+  "prompt": "Style: Euromanga Style: A hybrid illustration style built on Japanese manga-derived clean linework merged with European bande-dessinée compositional discipline, cel-based shading softened by more naturalistic tonal transition than typical manga convention, anatomically grounded proportions carrying a slightly more realistic weight than mainstream shōnen or shōjo tradition, meticulous, patient rendering of environment and costume detail rewarding close inspection, and a polished, cross-cultural illustration sensibility that bridges Eastern character-design fluency with Western graphic-novel craftsmanship. Influenced by: Franco-Belgian manga-influenced illustration movement, European graphic-novel tradition, hybrid manga-bande-dessinée technique, contemporary Euromanga publishing practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/欧式漫画风格__Euromanga Style/preview.jpg",
+  "folder": "krea2_styles/欧式漫画风格__Euromanga Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3439",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "明亮宇宙",
+  "name": "Luminous Cosmic Ether",
+  "prompt": "glowing granular light particles, deep indigo and pitch black void, ethereal spectral pointillism, bioluminescent crystalline shimmer, high-contrast chiaroscuro lighting, celestial golden ember accents, dreamy soft-focus atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮宇宙__Luminous Cosmic Ether/preview.webp",
+  "folder": "Krea2_moodboard/明亮宇宙__Luminous Cosmic Ether",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

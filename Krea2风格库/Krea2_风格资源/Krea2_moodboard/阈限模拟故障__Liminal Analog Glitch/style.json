@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-259",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "阈限模拟故障",
+  "name": "Liminal Analog Glitch",
+  "prompt": "analog VHS glitch, liminal space, retro-futuristic neon, chromatic aberration, dreamcore aesthetic, low-fidelity 3D render, pixelated scanlines. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/阈限模拟故障__Liminal Analog Glitch/preview.webp",
+  "folder": "Krea2_moodboard/阈限模拟故障__Liminal Analog Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

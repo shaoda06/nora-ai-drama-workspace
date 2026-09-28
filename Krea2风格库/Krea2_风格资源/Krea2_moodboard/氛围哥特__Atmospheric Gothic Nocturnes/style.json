@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-953",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "氛围哥特",
+  "name": "Atmospheric Gothic Nocturnes",
+  "prompt": "atmospheric oil painting, chiaroscuro lighting, impasto brushstrokes, nocturnal landscape, gothic architecture, warm amber glow, painterly texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围哥特__Atmospheric Gothic Nocturnes/preview.webp",
+  "folder": "Krea2_moodboard/氛围哥特__Atmospheric Gothic Nocturnes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-147",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "怀旧蔚蓝",
+  "name": "Nostalgic Ghibli Pastoral — Azure Storybook Warmth",
+  "prompt": "Ghibli-inspired, vibrant painterly landscape, nostalgic summer atmosphere, soft atmospheric lighting, lush green meadows, dreamy digital illustration, whimsical storybook aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧蔚蓝__Nostalgic Ghibli Pastoral — Azure Storybook Warmth/preview.webp",
+  "folder": "Krea2_moodboard/怀旧蔚蓝__Nostalgic Ghibli Pastoral — Azure Storybook Warmth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-204",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "动作电影海报（对角线速度笔触）",
+  "name": "Action Movie Poster with Diagonal Speed Strokes",
+  "prompt": "Style: Action Movie Poster with Diagonal Speed Strokes: A composition built on aggressive diagonal motion streaks slashing behind the subject,  the strokes applied with a dry, fractured drag that skips across the canvas creating an explosive backlit burst of velocity and impact, the subject rendered with razor-sharp clarity and cinematic rim lighting while the surrounding strokes dissolve into raw kinetic abstraction, the atmosphere charged with high-stakes intensity, the contrast between the hyper-detailed subject and the chaotic streaked background amplifying the sense of motion, power, and larger-than-life heroism. Influenced by: Drew Struzan's illustrated movie poster compositions, the fractured-speed aesthetic of Marvel Studios key art, Saul Bass's dynamic diagonal poster design, Hollywood blockbuster marketing,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/动作电影海报（对角线速度笔触）__Action Movie Poster with Diagonal Speed Strokes/preview.jpg",
+  "folder": "krea2_styles/动作电影海报（对角线速度笔触）__Action Movie Poster with Diagonal Speed Strokes",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

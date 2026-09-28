@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-2",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "皮克斯动画",
+  "name": "Pixar  Animation",
+  "prompt": "Style: Pixar  Animation: A richly rendered 3D-illustration style built on soft, warm subsurface-scattered lighting that gives skin a believable inner glow, meticulously smooth volumetric modeling balancing appealing, rounded proportion with convincing dimensional weight, gentle, cinematic three-point lighting establishing wholesome, inviting mood within every frame, confident ambient occlusion and soft shadow settling naturally into every contour, and a polished, heartwarming studio-grade animation intensity built for broad, emotionally resonant appeal. Influenced by: Pixar, contemporary 3D-animation rendering technique, subsurface-scattering character-design practice, cinematic three-point lighting method, mainstream feature-animation studio pipeline.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/皮克斯动画__Pixar  Animation/preview.jpg",
+  "folder": "krea2_styles/皮克斯动画__Pixar  Animation",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

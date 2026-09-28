@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2989",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "动态超现实",
+  "name": "Dynamic Fisheye Surrealism",
+  "prompt": "extreme fisheye lens distortion, ultra-wide angle perspective, analog film grain, vibrant saturated colors, harsh midday sunlight, low angle dynamic composition, Y2K street-style aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态超现实__Dynamic Fisheye Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/动态超现实__Dynamic Fisheye Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

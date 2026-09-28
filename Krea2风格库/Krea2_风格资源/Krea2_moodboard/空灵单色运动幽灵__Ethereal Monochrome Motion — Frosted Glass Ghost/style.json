@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2826",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵单色运动幽灵",
+  "name": "Ethereal Monochrome Motion — Frosted Glass Ghost",
+  "prompt": "high contrast monochrome, intentional motion blur, shutter drag, cinematic film grain, chiaroscuro lighting, frosted glass texture, ghostly double exposure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色运动幽灵__Ethereal Monochrome Motion — Frosted Glass Ghost/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色运动幽灵__Ethereal Monochrome Motion — Frosted Glass Ghost",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "触觉奇想世界",
+  "name": "Tactile Whimsy World",
+  "prompt": "3D claymation style, tactile toy aesthetic, soft pastel palette, matte and plush textures, chibi proportion, vibrant whimsical render, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉奇想世界__Tactile Whimsy World/preview.webp",
+  "folder": "Krea2_moodboard/触觉奇想世界__Tactile Whimsy World",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

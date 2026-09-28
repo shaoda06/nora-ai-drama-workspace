@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-794",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "光谱单色黑色轻盈绘制",
+  "name": "Spectral Monochrome Noir — Light-Painted Voids",
+  "prompt": "high-contrast monochrome, ethereal motion blur, heavy film grain, chiaroscuro lighting, spectral glow, charcoal texture, long exposure noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱单色黑色轻盈绘制__Spectral Monochrome Noir — Light-Painted Voids/preview.webp",
+  "folder": "Krea2_moodboard/光谱单色黑色轻盈绘制__Spectral Monochrome Noir — Light-Painted Voids",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

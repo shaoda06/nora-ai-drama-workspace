@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1841",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "动态低角度视角",
+  "name": "Dynamic Low-Angle Perspective",
+  "prompt": "low-angle shot, worm's-eye view, wide-angle lens, clear blue sky, dynamic composition, natural daylight, vibrant urban and natural scenes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态低角度视角__Dynamic Low-Angle Perspective/preview.webp",
+  "folder": "Krea2_moodboard/动态低角度视角__Dynamic Low-Angle Perspective",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

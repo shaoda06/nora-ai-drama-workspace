@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-963",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "图形",
+  "name": "Graphic Gouache Illustrative",
+  "prompt": "digital gouache painting, simplified geometric shapes, flat color blocking, soft atmospheric lighting, painterly brushstrokes, urban illustrative style, matte texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形__Graphic Gouache Illustrative/preview.webp",
+  "folder": "Krea2_moodboard/图形__Graphic Gouache Illustrative",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

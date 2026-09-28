@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1067",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "明亮夜行厚涂青蓝",
+  "name": "Luminous Nocturnal Impasto — Teal Knife Ridges",
+  "prompt": "thick impasto oil painting, nocturnal atmospheric scene, bioluminescent golden glow, chiaroscuro lighting, heavy palette knife texture, deep teal and navy palette, magical realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行厚涂青蓝__Luminous Nocturnal Impasto — Teal Knife Ridges/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行厚涂青蓝__Luminous Nocturnal Impasto — Teal Knife Ridges",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

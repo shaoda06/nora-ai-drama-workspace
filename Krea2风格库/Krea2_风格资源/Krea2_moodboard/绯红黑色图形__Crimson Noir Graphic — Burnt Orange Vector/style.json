@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-623",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "绯红黑色图形",
+  "name": "Crimson Noir Graphic — Burnt Orange Vector",
+  "prompt": "high-contrast graphic illustration, crimson and black palette, bold silhouette, minimalist vector art, woodcut print aesthetic, dramatic noir lighting, stark graphic shapes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色图形__Crimson Noir Graphic — Burnt Orange Vector/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色图形__Crimson Noir Graphic — Burnt Orange Vector",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

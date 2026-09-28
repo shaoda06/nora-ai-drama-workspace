@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1871",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "氛围霓虹",
+  "name": "Atmospheric Neon Dystopia",
+  "prompt": "cyberpunk megacity, volumetric atmospheric haze, high-contrast neon lighting, rain-slicked urban canyons, dramatic vertical perspective, futuristic industrial decay, magenta and cyan color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围霓虹__Atmospheric Neon Dystopia/preview.webp",
+  "folder": "Krea2_moodboard/氛围霓虹__Atmospheric Neon Dystopia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

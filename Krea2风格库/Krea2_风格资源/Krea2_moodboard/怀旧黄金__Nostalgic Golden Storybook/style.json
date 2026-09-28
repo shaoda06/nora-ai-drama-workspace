@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1291",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "怀旧黄金",
+  "name": "Nostalgic Golden Storybook",
+  "prompt": "textured digital illustration, golden hour sunset, chalk pastel aesthetic, whimsical silhouettes, storybook art style, warm orange and deep purple palette, nostalgic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧黄金__Nostalgic Golden Storybook/preview.webp",
+  "folder": "Krea2_moodboard/怀旧黄金__Nostalgic Golden Storybook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

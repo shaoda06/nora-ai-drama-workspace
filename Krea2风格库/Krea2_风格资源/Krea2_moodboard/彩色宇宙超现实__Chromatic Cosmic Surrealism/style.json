@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2873",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "彩色宇宙超现实",
+  "name": "Chromatic Cosmic Surrealism",
+  "prompt": "prismatic light effect, grainy analog texture, minimalist surrealism, high-contrast chiaroscuro, vintage airbrush style, chromatic gradient, stark black backdrop. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色宇宙超现实__Chromatic Cosmic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/彩色宇宙超现实__Chromatic Cosmic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-650",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "奇想梦幻极简",
+  "name": "Whimsical Dreamy Minimalism",
+  "prompt": "minimalist vector illustration, dreamy pastel palette, grainy texture, whimsical character design, risograph print aesthetic, soft rounded shapes, high-contrast color blocking. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想梦幻极简__Whimsical Dreamy Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/奇想梦幻极简__Whimsical Dreamy Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

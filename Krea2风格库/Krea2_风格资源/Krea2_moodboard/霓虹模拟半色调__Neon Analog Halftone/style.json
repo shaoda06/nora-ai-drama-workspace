@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-467",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "霓虹模拟半色调",
+  "name": "Neon Analog Halftone",
+  "prompt": "acidic neon palette, heavy film grain, halftone print texture, chromatic aberration, soft-focus dreamcore, duotone risograph aesthetic, lo-fi analog noise. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹模拟半色调__Neon Analog Halftone/preview.webp",
+  "folder": "Krea2_moodboard/霓虹模拟半色调__Neon Analog Halftone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

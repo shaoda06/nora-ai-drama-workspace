@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2441",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "明亮夜行神秘主义",
+  "name": "Luminous Nocturnal Mysticism",
+  "prompt": "magical realism, ethereal bioluminescence, nocturnal landscape, deep indigo and teal, atmospheric fog, high-contrast backlighting, solitary mystical figure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行神秘主义__Luminous Nocturnal Mysticism/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行神秘主义__Luminous Nocturnal Mysticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

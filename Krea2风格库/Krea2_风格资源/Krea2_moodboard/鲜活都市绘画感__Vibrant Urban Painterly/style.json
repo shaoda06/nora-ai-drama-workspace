@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1297",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "鲜活都市绘画感",
+  "name": "Vibrant Urban Painterly",
+  "prompt": "painterly digital illustration, bold gestural brushstrokes, high-contrast dramatic lighting, saturated color palette, stylized urban landscape, sharp-edged geometric shadows, atmospheric city vignette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活都市绘画感__Vibrant Urban Painterly/preview.webp",
+  "folder": "Krea2_moodboard/鲜活都市绘画感__Vibrant Urban Painterly",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-767",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "动态琥珀黑色",
+  "name": "Kinetic Amber Noir",
+  "prompt": "amber and charcoal palette, dynamic motion blur, gritty analog film grain, high-contrast backlighting, liquid distortion effects, fiery atmospheric glow, graphic silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态琥珀黑色__Kinetic Amber Noir/preview.webp",
+  "folder": "Krea2_moodboard/动态琥珀黑色__Kinetic Amber Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1680",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵颗粒奇想",
+  "name": "Ethereal Grainy Whimsy",
+  "prompt": "heavy grain noise, soft airbrush texture, ethereal glow, dreamy pastel palette, minimalist silhouettes, luminous hazy atmosphere, fuzzy nostalgic aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒奇想__Ethereal Grainy Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒奇想__Ethereal Grainy Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

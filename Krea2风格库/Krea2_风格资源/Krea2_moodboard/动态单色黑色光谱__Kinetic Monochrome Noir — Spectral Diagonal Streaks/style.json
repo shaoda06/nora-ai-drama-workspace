@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2022",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态单色黑色光谱",
+  "name": "Kinetic Monochrome Noir — Spectral Diagonal Streaks",
+  "prompt": "motion blur photography, high-contrast black and white, ghostly silhouette, grainy analog film, chiaroscuro lighting, kinetic energy, shutter drag effect. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态单色黑色光谱__Kinetic Monochrome Noir — Spectral Diagonal Streaks/preview.webp",
+  "folder": "Krea2_moodboard/动态单色黑色光谱__Kinetic Monochrome Noir — Spectral Diagonal Streaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

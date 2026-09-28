@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-387",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "半透明聚焦摄影",
+  "name": "Translucency-Focused Photography",
+  "prompt": "Style: Translucency-Focused Photography: A delicately luminous photographic technique built on soft, diffused illumination that seems to pass through rather than bounce off the subject, gentle internal glow settling just beneath the outermost extent, a hazy, ethereal softness replacing sharp, hard-edged contrast, meticulous attention to how light bends and scatters through varying depths, and a quiet, dreamlike intensity that treats the passage of light itself as the compositional subject. Influenced by: translucency-focused studio-lighting technique, backlit portrait-photography practice, soft-diffusion glow method, macro light-transport photographic tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/半透明聚焦摄影__Translucency-Focused Photography/preview.jpg",
+  "folder": "krea2_styles/半透明聚焦摄影__Translucency-Focused Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

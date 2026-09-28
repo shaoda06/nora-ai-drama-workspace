@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-43",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "复古",
+  "name": "Iridescent Retro Futurist",
+  "prompt": "retro-futuristic airbrush art, iridescent holographic sheen, neon synthwave palette, starburst lens flares, chrome and metallic reflections, nostalgic 80s anime style, high-gloss cosmic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古__Iridescent Retro Futurist/preview.webp",
+  "folder": "Krea2_moodboard/复古__Iridescent Retro Futurist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

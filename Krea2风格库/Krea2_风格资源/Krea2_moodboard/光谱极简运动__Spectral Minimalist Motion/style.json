@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-791",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "光谱极简运动",
+  "name": "Spectral Minimalist Motion",
+  "prompt": "high-contrast monochrome, intentional motion blur, spectral silhouettes, grainy analog texture, ethereal soft focus, overexposed minimalist background, charcoal smudge effect. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱极简运动__Spectral Minimalist Motion/preview.webp",
+  "folder": "Krea2_moodboard/光谱极简运动__Spectral Minimalist Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

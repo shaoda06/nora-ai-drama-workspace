@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-745",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵单色",
+  "name": "Ethereal Monochrome Abstraction",
+  "prompt": "monochromatic, heavy film grain, extreme motion blur, atmospheric mist, charcoal texture, ghostly silhouettes, soft-focus pictorialism, high-contrast minimalism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色__Ethereal Monochrome Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色__Ethereal Monochrome Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

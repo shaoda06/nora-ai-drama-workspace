@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-377",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "伦勃朗启发摄影",
+  "name": "Rembrandt-Inspired Photography",
+  "prompt": "Style: Rembrandt-Inspired Photography: A masterfully lit classical portrait-photography style built on single-source \"Rembrandt lighting\" that carves a small triangular highlight beneath one eye against an otherwise shadowed face emphasizing beauty, deep warm chiaroscuro tones bathing the frame in umber, gold, and near-black, richly textured skin and fabric rendered with painterly tonal depth rather than flat exposure, minimal dark backgrounds that isolate the subject in contemplative stillness, and a quiet gravitas translated into modern photographic technique. Influenced by: Rembrandt van Rijn, chiaroscuro lighting technique, classical portrait painting, fine-art studio photography.,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/伦勃朗启发摄影__Rembrandt-Inspired Photography/preview.jpg",
+  "folder": "krea2_styles/伦勃朗启发摄影__Rembrandt-Inspired Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

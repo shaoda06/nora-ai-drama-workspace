@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-550",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "消极空间",
+  "name": "Monochromatic Negative Space",
+  "prompt": "negative space silhouette, ultramarine blue ink, textured cream paper, stippled and cross-hatched, minimalist monochromatic, hand-drawn tactile aesthetic, cyanotype inspired. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/消极空间__Monochromatic Negative Space/preview.webp",
+  "folder": "Krea2_moodboard/消极空间__Monochromatic Negative Space",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2026",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态黑色",
+  "name": "Kinetic Noir Spectralism",
+  "prompt": "high-contrast black and white photography, heavy film grain, kinetic motion blur, chiaroscuro lighting, ghostly portraiture, analog texture, low-key noir, shutter drag effect. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态黑色__Kinetic Noir Spectralism/preview.webp",
+  "folder": "Krea2_moodboard/动态黑色__Kinetic Noir Spectralism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3076",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "明亮空灵运动",
+  "name": "Luminous Ethereal Motion",
+  "prompt": "soft-focus blur, high-key minimalist, ethereal motion distortion, vibrant chromatic gradients, translucent abstract forms, dreamy infrared aesthetic, bleeding color fields. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮空灵运动__Luminous Ethereal Motion/preview.webp",
+  "folder": "Krea2_moodboard/明亮空灵运动__Luminous Ethereal Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

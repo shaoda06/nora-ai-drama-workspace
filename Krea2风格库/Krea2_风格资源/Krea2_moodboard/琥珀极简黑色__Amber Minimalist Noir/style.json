@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-857",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "琥珀极简黑色",
+  "name": "Amber Minimalist Noir",
+  "prompt": "minimalist silhouette, warm amber glow, chiaroscuro lighting, atmospheric haze, sheer veil, rim lighting, surreal monochrome, soft diffused contours. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀极简黑色__Amber Minimalist Noir/preview.webp",
+  "folder": "Krea2_moodboard/琥珀极简黑色__Amber Minimalist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

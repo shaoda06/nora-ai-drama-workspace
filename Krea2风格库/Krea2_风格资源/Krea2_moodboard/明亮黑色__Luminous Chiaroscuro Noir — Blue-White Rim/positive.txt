@@ -1,0 +1,1 @@
+chiaroscuro, extreme backlighting, rim lighting, pitch black background, high-contrast noir, ethereal glow, dramatic silhouette. Subject:{prompt}

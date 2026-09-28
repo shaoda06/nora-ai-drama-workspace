@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-390",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "黄金复古",
+  "name": "Golden Retro Illustrative",
+  "prompt": "golden hour lighting, warm amber and ochre palette, tactile grain and halftone texture, shallow depth of field, retro screenprint aesthetic, organic and architectural harmony. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黄金复古__Golden Retro Illustrative/preview.webp",
+  "folder": "Krea2_moodboard/黄金复古__Golden Retro Illustrative",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

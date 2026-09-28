@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1474",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "电影感暮光",
+  "name": "Cinematic Twilight Impressionism",
+  "prompt": "cinematic film grain, heavy bokeh blur, twilight blue hour, soft focus photography, warm amber light leaks, dreamlike atmosphere, urban melancholy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感暮光__Cinematic Twilight Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/电影感暮光__Cinematic Twilight Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

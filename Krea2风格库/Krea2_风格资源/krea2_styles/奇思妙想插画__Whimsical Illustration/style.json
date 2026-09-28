@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-268",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "奇思妙想插画",
+  "name": "Whimsical Illustration",
+  "prompt": "Style: Whimsical Illustration: A lighthearted, charming illustration style built on soft, bouncy proportion that stretches form into playful, exaggerated shapes, gentle, evenly balanced shading applied with cheerful simplicity rather than dramatic contrast, a storybook sincerity carried through rounded, approachable linework, delicate small details scattered throughout the composition to reward closer looking, and a joyful, effortless charm that feels handmade, tender, and universally endearing. Influenced by: contemporary children's-book illustration tradition, gouache-and-ink whimsical technique, gentle character-design practice, storybook illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/奇思妙想插画__Whimsical Illustration/preview.jpg",
+  "folder": "krea2_styles/奇思妙想插画__Whimsical Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

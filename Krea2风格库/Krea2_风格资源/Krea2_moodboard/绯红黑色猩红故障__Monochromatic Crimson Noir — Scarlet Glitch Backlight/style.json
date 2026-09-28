@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1914",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "绯红黑色猩红故障",
+  "name": "Monochromatic Crimson Noir — Scarlet Glitch Backlight",
+  "prompt": "monochromatic deep red, high-contrast silhouette, cinematic noir lighting, analog glitch artifact, glowing scarlet atmosphere, chiaroscuro, minimalist dark aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色猩红故障__Monochromatic Crimson Noir — Scarlet Glitch Backlight/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色猩红故障__Monochromatic Crimson Noir — Scarlet Glitch Backlight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3149",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "明亮",
+  "name": "Luminous Thermal Fluidity",
+  "prompt": "thermographic glow, liquid chrome, chromatic dispersion, translucent glass, high-contrast heat map, spectral refraction, minimalist surrealism, fluid dynamics. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Thermal Fluidity/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Thermal Fluidity",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1771",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感泥土怀旧",
+  "name": "Cinematic Earthy Nostalgia",
+  "prompt": "cinematic realism, muted earthy tones, atmospheric fog, 35mm film grain, shallow depth of field, diffused natural lighting, overgrown wilderness. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感泥土怀旧__Cinematic Earthy Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/电影感泥土怀旧__Cinematic Earthy Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

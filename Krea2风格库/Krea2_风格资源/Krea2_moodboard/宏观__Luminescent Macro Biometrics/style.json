@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1568",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "宏观",
+  "name": "Luminescent Macro Biometrics",
+  "prompt": "extreme macro photography, bioluminescent color palette, thermal imaging influence, high-grain texture, shallow depth of field, neon chromatic aberration, surreal organic detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宏观__Luminescent Macro Biometrics/preview.webp",
+  "folder": "Krea2_moodboard/宏观__Luminescent Macro Biometrics",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

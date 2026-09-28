@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2743",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "夜行流质剪影",
+  "name": "Nocturnal Liquid Silhouette",
+  "prompt": "high-contrast silhouette, liquid light distortion, monochromatic cobalt and teal, vintage film grain, ethereal glowing aura, nocturnal surrealism, retro-futuristic portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行流质剪影__Nocturnal Liquid Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/夜行流质剪影__Nocturnal Liquid Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

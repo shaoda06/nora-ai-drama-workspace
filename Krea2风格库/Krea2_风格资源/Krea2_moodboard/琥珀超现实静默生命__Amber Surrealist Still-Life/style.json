@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3142",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "琥珀超现实静默生命",
+  "name": "Amber Surrealist Still-Life",
+  "prompt": "surrealist still life, warm amber and terracotta palette, glass refraction and liquid distortion, organic and synthetic contrast, hard direct studio lighting, minimalist editorial composition, tactile natural elements. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀超现实静默生命__Amber Surrealist Still-Life/preview.webp",
+  "folder": "Krea2_moodboard/琥珀超现实静默生命__Amber Surrealist Still-Life",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

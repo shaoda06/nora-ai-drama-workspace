@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1478",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵模拟怀旧琥珀双色调",
+  "name": "Ethereal Analog Nostalgia — Cyan Amber Duotone",
+  "prompt": "motion blur, analog film grain, soft focus pictorialism, cyan and amber color palette, chromatic aberration, lo-fi dreamcore, cinematic melancholia. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟怀旧琥珀双色调__Ethereal Analog Nostalgia — Cyan Amber Duotone/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟怀旧琥珀双色调__Ethereal Analog Nostalgia — Cyan Amber Duotone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

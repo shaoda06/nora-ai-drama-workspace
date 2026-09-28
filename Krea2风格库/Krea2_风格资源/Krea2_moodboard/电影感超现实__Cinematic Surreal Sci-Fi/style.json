@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3237",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "电影感超现实",
+  "name": "Cinematic Surreal Sci-Fi",
+  "prompt": "cinematic lighting, desaturated color palette, glowing neon highlights, uncanny surrealism, 35mm film grain, urban fantasy, high-contrast reflections. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感超现实__Cinematic Surreal Sci-Fi/preview.webp",
+  "folder": "Krea2_moodboard/电影感超现实__Cinematic Surreal Sci-Fi",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

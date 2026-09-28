@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-957",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "夜行哥特",
+  "name": "Nocturnal Gothic Tonalism",
+  "prompt": "nocturnal tonalism, chiaroscuro oil painting, gothic architectural silhouettes, impasto texture, atmospheric sfumato, melancholic dark romanticism, luminous amber and emerald glows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行哥特__Nocturnal Gothic Tonalism/preview.webp",
+  "folder": "Krea2_moodboard/夜行哥特__Nocturnal Gothic Tonalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

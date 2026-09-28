@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-9",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "剪纸",
+  "name": "Paper Cutout",
+  "prompt": "Style: Paper Cutout: A layered, tactile illustration style built on flat, distinctly bounded shapes stacked with slight offset to suggest physical depth, crisp, clean-edged silhouette construction replacing any drawn linework, subtle drop-shadow separation between overlapping layers giving the composition a handcrafted dimensionality, a confident, graphic simplicity that favors bold shape over rendered detail, and a charming, tangible craft-quality that feels playful, dimensional, and unmistakably paper-built. Influenced by: paper-cutout collage tradition, stop-motion cutout-animation technique, layered-paper illustration practice, handcrafted collage-art method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/剪纸__Paper Cutout/preview.jpg",
+  "folder": "krea2_styles/剪纸__Paper Cutout",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

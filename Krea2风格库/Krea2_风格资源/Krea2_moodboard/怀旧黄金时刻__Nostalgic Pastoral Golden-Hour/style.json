@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1415",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "怀旧黄金时刻",
+  "name": "Nostalgic Pastoral Golden-Hour",
+  "prompt": "35mm film photography, golden hour lighting, nostalgic cinematic atmosphere, soft vintage grain, shallow depth of field, hazy pastoral landscape, warm amber color grading. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧黄金时刻__Nostalgic Pastoral Golden-Hour/preview.webp",
+  "folder": "Krea2_moodboard/怀旧黄金时刻__Nostalgic Pastoral Golden-Hour",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

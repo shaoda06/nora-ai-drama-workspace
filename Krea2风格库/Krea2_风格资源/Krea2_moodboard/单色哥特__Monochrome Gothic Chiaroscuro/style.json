@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2521",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "单色哥特",
+  "name": "Monochrome Gothic Chiaroscuro",
+  "prompt": "high-contrast monochrome, chiaroscuro lighting, dark gothic atmosphere, heavy film grain, dramatic rim light, mysterious, somber tone, tactile textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色哥特__Monochrome Gothic Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/单色哥特__Monochrome Gothic Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

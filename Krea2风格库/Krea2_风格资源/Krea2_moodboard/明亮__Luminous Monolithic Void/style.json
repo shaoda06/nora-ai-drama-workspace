@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3094",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "明亮",
+  "name": "Luminous Monolithic Void",
+  "prompt": "monolithic surrealism, glowing cyan portal, deep indigo atmosphere, lone silhouette, cinematic backlighting, minimalist composition, atmospheric grain, vast scale. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Monolithic Void/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Monolithic Void",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

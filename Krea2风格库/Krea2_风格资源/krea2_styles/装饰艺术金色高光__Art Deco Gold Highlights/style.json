@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-294",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "装饰艺术金色高光",
+  "name": "Art Deco Gold Highlights",
+  "prompt": "Style: Art Deco Gold Highlights: An elegant geometric-illustration style built on crisp, confidently bounded shape divisions arranged with rhythmic, symmetrical precision, sharp radiant linework tracing sunburst and stepped-motif patterning with meticulous graphic discipline, a luminous, reflective sheen concentrated along every decorative edge and contour, a poised, glamorous formality carried through balanced, deliberate composition, and a chic, opulent sophistication that feels streamlined, luxurious, and unmistakably interwar in spirit. Influenced by: Tamara de Lempicka, Art Deco decorative-design tradition, geometric ornamental-illustration technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/装饰艺术金色高光__Art Deco Gold Highlights/preview.jpg",
+  "folder": "krea2_styles/装饰艺术金色高光__Art Deco Gold Highlights",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

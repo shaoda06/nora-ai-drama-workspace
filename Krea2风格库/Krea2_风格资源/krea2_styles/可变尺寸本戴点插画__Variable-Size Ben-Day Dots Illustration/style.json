@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-19",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "可变尺寸本戴点插画",
+  "name": "Variable-Size Ben-Day Dots Illustration",
+  "prompt": "Style: Variable-Size Ben-Day Dots Illustration: A bold pop-art printing style built on dot patterning that varies deliberately in scale across the composition, larger dots concentrated where tone deepens and smaller dots thinning out toward lighter passages, constructing gradation entirely through dot-size modulation rather than blended shading, crisp confident outline holding each region with graphic precision, a mechanical, offset-print authenticity carried through deliberate registration texture, and a bold, retro commercial-print energy that feels instantly graphic and unmistakably mid-century. Influenced by: Roy Lichtenstein, variable Ben-Day dot printing technique, silver-age comic printing process, pop-art illustration tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/可变尺寸本戴点插画__Variable-Size Ben-Day Dots Illustration/preview.jpg",
+  "folder": "krea2_styles/可变尺寸本戴点插画__Variable-Size Ben-Day Dots Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

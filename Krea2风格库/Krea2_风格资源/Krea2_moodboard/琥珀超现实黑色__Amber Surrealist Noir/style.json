@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3125",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "琥珀超现实黑色",
+  "name": "Amber Surrealist Noir",
+  "prompt": "saturated yellow background, high-contrast chiaroscuro, sharp directional shadows, avant-garde portraiture, whimsical surrealism, monochromatic amber palette, minimalist graphic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀超现实黑色__Amber Surrealist Noir/preview.webp",
+  "folder": "Krea2_moodboard/琥珀超现实黑色__Amber Surrealist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1181",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "复古宇宙",
+  "name": "Retro Cosmic Airbrush",
+  "prompt": "1980s airbrush illustration, retro-futuristic cosmic art, starburst lens flare, chrome iridescence, nebula gradient background, vintage sci-fi aesthetic, soft focus glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古宇宙__Retro Cosmic Airbrush/preview.webp",
+  "folder": "Krea2_moodboard/复古宇宙__Retro Cosmic Airbrush",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

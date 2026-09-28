@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3098",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "超现实天鹅绒柔软翠绿",
+  "name": "Surreal Velvet Landscapes — Soft-Lit Emerald",
+  "prompt": "velvet moss landscape, undulating green hills, minimalist surrealism, atmospheric solitude, soft directional lighting, deep emerald palette, cinematic scale. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实天鹅绒柔软翠绿__Surreal Velvet Landscapes — Soft-Lit Emerald/preview.webp",
+  "folder": "Krea2_moodboard/超现实天鹅绒柔软翠绿__Surreal Velvet Landscapes — Soft-Lit Emerald",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

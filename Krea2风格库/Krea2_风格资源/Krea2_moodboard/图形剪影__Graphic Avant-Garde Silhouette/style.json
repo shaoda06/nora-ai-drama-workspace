@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2109",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "图形剪影",
+  "name": "Graphic Avant-Garde Silhouette",
+  "prompt": "backlit silhouette, stark high contrast, avant-garde fashion photography, pure white background, low-angle shot, minimalist monochromatic, dramatic studio lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形剪影__Graphic Avant-Garde Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/图形剪影__Graphic Avant-Garde Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

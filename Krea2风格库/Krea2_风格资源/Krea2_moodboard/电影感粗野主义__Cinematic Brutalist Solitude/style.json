@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3484",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "电影感粗野主义",
+  "name": "Cinematic Brutalist Solitude",
+  "prompt": "cinematic lighting, golden hour, brutalist architecture, sharp geometric shadows, high contrast, urban minimalism, warm amber glow, liminal space. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感粗野主义__Cinematic Brutalist Solitude/preview.webp",
+  "folder": "Krea2_moodboard/电影感粗野主义__Cinematic Brutalist Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3203",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "超现实",
+  "name": "Surrealist Pastoral Dreamscape",
+  "prompt": "surrealist editorial photography, sculptural fashion, vast pastoral landscape, whimsical oversized forms, vintage film grain, clean minimalist composition, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Surrealist Pastoral Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Surrealist Pastoral Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-948",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮天穹",
+  "name": "Luminous Celestial Dreamscape",
+  "prompt": "deep cobalt and ultramarine palette, glowing warm golden accents, dreamy painterly illustration, ethereal starlight flares, magical realism, bioluminescent textures, soft fluid brushstrokes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮天穹__Luminous Celestial Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/明亮天穹__Luminous Celestial Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1269",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "触觉幻想",
+  "name": "Tactile Fantasy Conceptism",
+  "prompt": "character concept art, tactile textures, cinematic studio lighting, stylized digital painting, full-body portrait, grounded fantasy aesthetics, intricate material detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉幻想__Tactile Fantasy Conceptism/preview.webp",
+  "folder": "Krea2_moodboard/触觉幻想__Tactile Fantasy Conceptism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

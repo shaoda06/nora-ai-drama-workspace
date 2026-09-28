@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2208",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "都市",
+  "name": "Monolithic Urban Vertigo",
+  "prompt": "worm's-eye view, symmetrical architectural framing, towering urban scale, golden hour atmosphere, brutalist density, nostalgic cinematic lighting, dreamlike vertical perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/都市__Monolithic Urban Vertigo/preview.webp",
+  "folder": "Krea2_moodboard/都市__Monolithic Urban Vertigo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2518",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "空灵单色黑色",
+  "name": "Ethereal Monochrome Noir — Frosted Veil",
+  "prompt": "high-contrast monochrome, soft-focus diffusion, heavy film grain, mysterious silhouette, dense fog landscape, pictorialist aesthetic, liminal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色黑色__Ethereal Monochrome Noir — Frosted Veil/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色黑色__Ethereal Monochrome Noir — Frosted Veil",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

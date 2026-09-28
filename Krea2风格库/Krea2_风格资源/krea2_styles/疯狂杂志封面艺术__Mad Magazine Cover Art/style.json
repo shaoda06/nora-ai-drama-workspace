@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-279",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "疯狂杂志封面艺术",
+  "name": "Mad Magazine Cover Art",
+  "prompt": "Style: Mad Magazine Cover Art: satirical caricature composition anchored by a central caricatured subject rendered with exaggerated proportions, grotesque distorted vibes, meticulously crosshatched shading and stippled textures building a grotesque yet highly detailed surface,overly-exaggerated grimacing subject, the linework loose but masterfully controlled with varying pen weights, the atmosphere relentlessly irreverent, mischievous, and subversive, parody. Influenced by: Mort Drucker's cinematic caricature mastery, Jack Davis's frantic crosshatched scene, Don Martin's rubbery distortions, classic EC Comics, propaganda-poster parody of early Mad magazine,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/疯狂杂志封面艺术__Mad Magazine Cover Art/preview.jpg",
+  "folder": "krea2_styles/疯狂杂志封面艺术__Mad Magazine Cover Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

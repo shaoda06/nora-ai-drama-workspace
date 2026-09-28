@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-153",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "弗兰克·赵风格",
+  "name": "Frank Cho Style",
+  "prompt": "Style: Frank Cho Style: A confident, curvaceous comic-illustration style built on smooth, fluid linework that traces form with athletic, idealized grace, clean cel-based shading applied with bold, uncomplicated clarity, a bouncy, dynamic sense of proportion charged with lighthearted charisma, dynamic action-driven posing balanced against playful, appealing character design, and a polished, mainstream comic-illustration vibrancy that feels equal parts adventurous and effortlessly charming. Influenced byy: Frank Cho, mainstream American comic-illustration tradition, cel-shaded character-illustration technique, dynamic adventure-comic practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/弗兰克·赵风格__Frank Cho Style/preview.jpg",
+  "folder": "krea2_styles/弗兰克·赵风格__Frank Cho Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

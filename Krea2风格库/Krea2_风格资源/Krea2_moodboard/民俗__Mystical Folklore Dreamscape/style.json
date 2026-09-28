@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2528",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "民俗",
+  "name": "Mystical Folklore Dreamscape",
+  "prompt": "ethereal soft focus, vintage film grain, misty forest atmosphere, muted earth tones, dreamy backlighting, folklore aesthetic, golden hour haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/民俗__Mystical Folklore Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/民俗__Mystical Folklore Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

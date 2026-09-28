@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3164",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "超现实翠绿极简柔软",
+  "name": "Surreal Verdant Minimalism — Wave-Soft Diffusion",
+  "prompt": "undulating green hills, velvety moss texture, surreal minimalist composition, monochromatic green palette, extreme scale contrast, soft diffused lighting, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实翠绿极简柔软__Surreal Verdant Minimalism — Wave-Soft Diffusion/preview.webp",
+  "folder": "Krea2_moodboard/超现实翠绿极简柔软__Surreal Verdant Minimalism — Wave-Soft Diffusion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

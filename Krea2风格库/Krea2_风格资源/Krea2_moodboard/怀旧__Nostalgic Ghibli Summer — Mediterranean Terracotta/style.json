@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-98",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧",
+  "name": "Nostalgic Ghibli Summer — Mediterranean Terracotta",
+  "prompt": "Studio Ghibli style, hand-painted anime background, vibrant Mediterranean summer, sun-drenched coastal town, dappled sunlight and shadows, saturated color palette, nostalgic whimsical atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧__Nostalgic Ghibli Summer — Mediterranean Terracotta/preview.webp",
+  "folder": "Krea2_moodboard/怀旧__Nostalgic Ghibli Summer — Mediterranean Terracotta",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

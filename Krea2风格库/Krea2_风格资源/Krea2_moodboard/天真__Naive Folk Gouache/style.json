@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-966",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "天真",
+  "name": "Naive Folk Gouache",
+  "prompt": "naive gouache illustration, hand-painted texture, flat color fields, whimsical folk art, bold ink outlines, stippled texture, pastel and vibrant color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天真__Naive Folk Gouache/preview.webp",
+  "folder": "Krea2_moodboard/天真__Naive Folk Gouache",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

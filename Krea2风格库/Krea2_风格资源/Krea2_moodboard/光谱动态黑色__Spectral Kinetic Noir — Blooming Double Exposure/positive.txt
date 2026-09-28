@@ -1,0 +1,1 @@
+high-contrast monochrome, ethereal motion blur, spectral chiaroscuro, heavy film grain, ghostly double exposure, cinematic noir lighting, abstract silhouette. Subject:{prompt}

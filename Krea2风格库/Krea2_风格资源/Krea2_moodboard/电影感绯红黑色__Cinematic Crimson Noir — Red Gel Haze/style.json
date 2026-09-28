@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2371",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感绯红黑色",
+  "name": "Cinematic Crimson Noir — Red Gel Haze",
+  "prompt": "cinematic crimson noir, heavy analog film grain, chiaroscuro lighting, saturated red gel lighting, stark black silhouettes, darkly romantic atmosphere, vintage 35mm aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红黑色__Cinematic Crimson Noir — Red Gel Haze/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红黑色__Cinematic Crimson Noir — Red Gel Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

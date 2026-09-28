@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3259",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "明亮宇宙怀旧",
+  "name": "Luminous Cosmic Nostalgia",
+  "prompt": "bioluminescent glow, cosmic pointillism, shimmering stardust, vintage film grain, dreamy twilight atmosphere, retro-surrealist fantasy, high-contrast chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮宇宙怀旧__Luminous Cosmic Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/明亮宇宙怀旧__Luminous Cosmic Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

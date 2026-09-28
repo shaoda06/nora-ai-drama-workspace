@@ -1,0 +1,1 @@
+chiaroscuro lighting, high-contrast monochrome, heavy film grain, cinematic noir, introspective portrait, analog texture, dramatic shadows. Subject:{prompt}

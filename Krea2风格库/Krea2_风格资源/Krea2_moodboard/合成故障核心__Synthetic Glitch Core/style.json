@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1988",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "合成故障核心",
+  "name": "Synthetic Glitch Core",
+  "prompt": "chromatic aberration, pixel sorting, digital glitch art, high-contrast neon, scanlines, data bending, textural distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/合成故障核心__Synthetic Glitch Core/preview.webp",
+  "folder": "Krea2_moodboard/合成故障核心__Synthetic Glitch Core",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

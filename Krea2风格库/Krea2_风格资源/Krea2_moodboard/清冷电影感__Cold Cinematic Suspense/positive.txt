@@ -1,0 +1,1 @@
+cinematic lighting, low-key atmosphere, desaturated teal and blue, intense gaze, heavy film grain, shallow depth of field, moody noir. Subject:{prompt}

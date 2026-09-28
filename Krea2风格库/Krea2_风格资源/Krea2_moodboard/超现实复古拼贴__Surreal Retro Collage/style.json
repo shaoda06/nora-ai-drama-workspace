@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-510",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实复古拼贴",
+  "name": "Surreal Retro Collage",
+  "prompt": "vintage paper collage, surrealist photomontage, halftone print texture, mid-century aesthetic, saturated retro colors, analog cut-out style, whimsical juxtaposition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实复古拼贴__Surreal Retro Collage/preview.webp",
+  "folder": "Krea2_moodboard/超现实复古拼贴__Surreal Retro Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

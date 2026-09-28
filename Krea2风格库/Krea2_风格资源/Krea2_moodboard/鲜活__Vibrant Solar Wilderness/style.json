@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1296",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "鲜活",
+  "name": "Vibrant Solar Wilderness",
+  "prompt": "stylized digital painting, solarpunk aesthetic, vibrant color palette, lush overgrown nature, high-contrast lighting, painterly textures, atmospheric depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活__Vibrant Solar Wilderness/preview.webp",
+  "folder": "Krea2_moodboard/鲜活__Vibrant Solar Wilderness",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1803",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "怀旧暮光",
+  "name": "Nostalgic Twilight Cinema",
+  "prompt": "analog film grain, 90s cinema aesthetic, twilight color palette, soft focus, lo-fi texture, hazy atmospheric lighting, nostalgic melancholy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧暮光__Nostalgic Twilight Cinema/preview.webp",
+  "folder": "Krea2_moodboard/怀旧暮光__Nostalgic Twilight Cinema",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

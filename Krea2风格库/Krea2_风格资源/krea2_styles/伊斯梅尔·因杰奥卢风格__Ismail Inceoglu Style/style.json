@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-192",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "伊斯梅尔·因杰奥卢风格",
+  "name": "Ismail Inceoglu Style",
+  "prompt": "Style: Ismail Inceoglu Style: A moody, luminous digital-painting style built on soft glowing directional light that carves powerful, sculptural dimensionality against enveloping darkness, richly layered painterly brushwork blending into smooth atmospheric transition, dramatic anatomical grounding rendered with confident, almost hyperreal muscular tension, a hushed, cinematic intensity carried through restrained, dramatic contrast, and a technically masterful, contemporary painterly gravitas that feels both epic and intimately grounded. Influenced by: Ismail Inceoglu, contemporary digital-painting technique, cinematic figurative-illustration practice, dramatic chiaroscuro rendering method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/伊斯梅尔·因杰奥卢风格__Ismail Inceoglu Style/preview.jpg",
+  "folder": "krea2_styles/伊斯梅尔·因杰奥卢风格__Ismail Inceoglu Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

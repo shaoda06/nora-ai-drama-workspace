@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1956",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态动作太阳",
+  "name": "Dynamic Fisheye Action — Y2K Sun Glare",
+  "prompt": "fisheye lens, extreme low-angle, vivid sunlight, forced perspective, urban action, dynamic foreshortening, saturated blue sky, Y2K streetwear. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态动作太阳__Dynamic Fisheye Action — Y2K Sun Glare/preview.webp",
+  "folder": "Krea2_moodboard/动态动作太阳__Dynamic Fisheye Action — Y2K Sun Glare",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

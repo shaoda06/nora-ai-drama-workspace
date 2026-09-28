@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-835",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "俏皮极简墨水",
+  "name": "Playful Minimalist Ink",
+  "prompt": "black and white ink drawing, minimalist character design, whimsical line art, quirky doodle style, clean bold outlines, naive hand-drawn aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/俏皮极简墨水__Playful Minimalist Ink/preview.webp",
+  "folder": "Krea2_moodboard/俏皮极简墨水__Playful Minimalist Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

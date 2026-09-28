@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-849",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "鲜活棱镜",
+  "name": "Vibrant Prismatic Sketchbook",
+  "prompt": "colored pencil illustration, dense crosshatching, vibrant prismatic palette, textured paper grain, expressive hand-drawn linework, saturated color blocking, tactile sketchbook style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活棱镜__Vibrant Prismatic Sketchbook/preview.webp",
+  "folder": "Krea2_moodboard/鲜活棱镜__Vibrant Prismatic Sketchbook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

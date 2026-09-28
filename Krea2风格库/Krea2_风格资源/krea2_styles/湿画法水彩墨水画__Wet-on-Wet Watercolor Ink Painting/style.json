@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-290",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "湿画法水彩墨水画",
+  "name": "Wet-on-Wet Watercolor Ink Painting",
+  "prompt": "Style: Wet-on-Wet Watercolor Ink Painting: A fluid, unpredictable painting style built on pigment applied directly into an already-saturated wet layer, allowing color and tone to bloom, bleed, and diffuse with organic unpredictability rather than controlled placement, soft, feathered edges replacing any crisp boundary as washes merge and blend spontaneously, a delicate, translucent layering that builds depth through repeated wet passes rather than opaque coverage, an unhurried, meditative looseness carried through the medium's inherent unpredictability, and a poetic, ephemeral fluidity that captures the beauty of controlled chance. Influenced by: traditional wet-on-wet watercolor technique, ink-wash painting tradition, expressive fluid-media practice, spontaneous wash-blending method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/湿画法水彩墨水画__Wet-on-Wet Watercolor Ink Painting/preview.jpg",
+  "folder": "krea2_styles/湿画法水彩墨水画__Wet-on-Wet Watercolor Ink Painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

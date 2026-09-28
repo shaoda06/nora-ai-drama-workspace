@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-123",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "复古波普动漫",
+  "name": "Retro Pop Anime",
+  "prompt": "90s anime style, bold cel-shading, graphic ink outlines, saturated pop palette, retro city pop aesthetic, high-contrast shadows, vintage hand-drawn look. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古波普动漫__Retro Pop Anime/preview.webp",
+  "folder": "Krea2_moodboard/复古波普动漫__Retro Pop Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

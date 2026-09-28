@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3502",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "工业",
+  "name": "Clinical Industrial Liminality",
+  "prompt": "clinical minimalism, stark industrial architecture, liminal space, fluorescent lighting, monochrome palette, high-contrast geometry, polished concrete, sterile gallery aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/工业__Clinical Industrial Liminality/preview.webp",
+  "folder": "Krea2_moodboard/工业__Clinical Industrial Liminality",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

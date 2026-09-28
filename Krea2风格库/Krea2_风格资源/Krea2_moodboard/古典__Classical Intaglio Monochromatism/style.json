@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-720",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "古典",
+  "name": "Classical Intaglio Monochromatism",
+  "prompt": "intaglio engraving, cross-hatching, chiaroscuro ink illustration, aged parchment, monochrome etching, stipple texture, vintage printmaking style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/古典__Classical Intaglio Monochromatism/preview.webp",
+  "folder": "Krea2_moodboard/古典__Classical Intaglio Monochromatism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

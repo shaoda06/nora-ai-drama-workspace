@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3493",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "电影感霓虹",
+  "name": "Cinematic Neon Liminality",
+  "prompt": "cinematic twilight, neon illumination, liminal space, nostalgic americana, deep indigo gradients, isolated roadside structure, atmospheric solitude, medium format film texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感霓虹__Cinematic Neon Liminality/preview.webp",
+  "folder": "Krea2_moodboard/电影感霓虹__Cinematic Neon Liminality",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

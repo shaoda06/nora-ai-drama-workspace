@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-601",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "电影感暮光超现实",
+  "name": "Cinematic Twilight Surrealism — Jewel Diorama",
+  "prompt": "cinematic blue hour, stark silhouette, heavy film grain, surreal natural history, atmospheric twilight mist, vintage analog aesthetic, painterly jewel tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感暮光超现实__Cinematic Twilight Surrealism — Jewel Diorama/preview.webp",
+  "folder": "Krea2_moodboard/电影感暮光超现实__Cinematic Twilight Surrealism — Jewel Diorama",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

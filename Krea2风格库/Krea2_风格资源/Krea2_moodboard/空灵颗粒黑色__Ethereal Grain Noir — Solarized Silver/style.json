@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2936",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵颗粒黑色",
+  "name": "Ethereal Grain Noir — Solarized Silver",
+  "prompt": "high-contrast monochrome, stark chiaroscuro, heavy film grain, ethereal motion blur, solarized texture, ghostly silhouettes, vintage gelatin silver print. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒黑色__Ethereal Grain Noir — Solarized Silver/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒黑色__Ethereal Grain Noir — Solarized Silver",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

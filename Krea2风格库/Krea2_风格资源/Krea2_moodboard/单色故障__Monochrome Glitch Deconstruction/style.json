@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2965",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "单色故障",
+  "name": "Monochrome Glitch Deconstruction",
+  "prompt": "monochromatic glitch art, fragmented portraiture, pixel sorting, high-contrast studio lighting, surreal deconstruction, minimalist digital distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障__Monochrome Glitch Deconstruction/preview.webp",
+  "folder": "Krea2_moodboard/单色故障__Monochrome Glitch Deconstruction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

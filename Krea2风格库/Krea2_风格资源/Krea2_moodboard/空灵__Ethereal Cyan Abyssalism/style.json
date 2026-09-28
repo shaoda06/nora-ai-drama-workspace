@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2505",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "空灵",
+  "name": "Ethereal Cyan Abyssalism",
+  "prompt": "deep blue and cyan palette, backlit silhouette, ethereal atmospheric depth, cinematic soft focus, suspended particulate matter, dreamlike light refraction, mysterious moody composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Cyan Abyssalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Cyan Abyssalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

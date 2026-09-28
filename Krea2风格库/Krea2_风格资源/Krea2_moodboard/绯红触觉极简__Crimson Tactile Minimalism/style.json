@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2352",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "绯红触觉极简",
+  "name": "Crimson Tactile Minimalism",
+  "prompt": "crimson red accents, textured off-white paper, minimalist collage, analog film grain, tactile organic shapes, high contrast editorial, vintage print aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红触觉极简__Crimson Tactile Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/绯红触觉极简__Crimson Tactile Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1024",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "巴洛克神秘主义",
+  "name": "Baroque Chiaroscuro Mysticism",
+  "prompt": "chiaroscuro lighting, stark black background, high-contrast photography, tactile textures, mystical symbolism, dramatic side-lighting, muted pastel accents. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/巴洛克神秘主义__Baroque Chiaroscuro Mysticism/preview.webp",
+  "folder": "Krea2_moodboard/巴洛克神秘主义__Baroque Chiaroscuro Mysticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

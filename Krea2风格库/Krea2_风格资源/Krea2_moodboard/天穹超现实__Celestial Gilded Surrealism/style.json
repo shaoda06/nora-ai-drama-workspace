@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-931",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "天穹超现实",
+  "name": "Celestial Gilded Surrealism",
+  "prompt": "gilded surrealism, cosmic anatomy, kintsugi gold leaf, luminous gouache texture, ethereal celestial motifs, intricate fine linework, deep blue and gold palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹超现实__Celestial Gilded Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/天穹超现实__Celestial Gilded Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

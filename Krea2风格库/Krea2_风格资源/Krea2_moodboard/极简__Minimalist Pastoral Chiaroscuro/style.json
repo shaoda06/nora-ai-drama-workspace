@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2362",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "极简",
+  "name": "Minimalist Pastoral Chiaroscuro",
+  "prompt": "minimalist landscape photography, chiaroscuro lighting, rolling green hills, dramatic shadows, geometric natural composition, golden hour light, aerial perspective, serene pastoral atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Minimalist Pastoral Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/极简__Minimalist Pastoral Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

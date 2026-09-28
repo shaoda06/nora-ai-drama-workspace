@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3393",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵模拟",
+  "name": "Ethereal Analog Dread",
+  "prompt": "motion blur, heavy analog grain, liminal atmosphere, high-contrast monochrome, spectral distortion, surreal nightmare, low-fidelity aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟__Ethereal Analog Dread/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟__Ethereal Analog Dread",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

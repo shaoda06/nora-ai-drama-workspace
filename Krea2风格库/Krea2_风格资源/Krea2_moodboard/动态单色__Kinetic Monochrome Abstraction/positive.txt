@@ -1,0 +1,1 @@
+high-contrast monochrome, intentional motion blur, stark silhouette, heavy film grain, minimalist abstraction, shutter drag, charcoal texture. Subject:{prompt}

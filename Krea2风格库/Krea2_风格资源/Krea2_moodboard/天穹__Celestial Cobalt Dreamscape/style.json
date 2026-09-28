@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-174",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "天穹",
+  "name": "Celestial Cobalt Dreamscape",
+  "prompt": "anime art style, monochromatic blue palette, surreal dreamscape, cinematic lighting, ethereal glow, melancholic atmosphere, vast scale, high contrast composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹__Celestial Cobalt Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/天穹__Celestial Cobalt Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

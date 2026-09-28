@@ -1,0 +1,1 @@
+high-contrast monochrome, spectral glow, ethereal silhouette, photogram aesthetic, fine grain texture, chiaroscuro lighting, soft-focus diffusion. Subject:{prompt}

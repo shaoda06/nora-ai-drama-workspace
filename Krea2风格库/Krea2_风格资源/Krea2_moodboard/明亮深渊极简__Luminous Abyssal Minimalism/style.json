@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2536",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "明亮深渊极简",
+  "name": "Luminous Abyssal Minimalism",
+  "prompt": "low-key lighting, minimalist composition, ethereal light beams, deep teal and midnight blue palette, surreal atmosphere, chiaroscuro, cosmic isolation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮深渊极简__Luminous Abyssal Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/明亮深渊极简__Luminous Abyssal Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

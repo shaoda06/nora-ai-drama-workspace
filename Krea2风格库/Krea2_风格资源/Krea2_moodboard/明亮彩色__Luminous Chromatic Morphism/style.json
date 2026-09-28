@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2145",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "明亮彩色",
+  "name": "Luminous Chromatic Morphism",
+  "prompt": "fluid chromatic gradients, frosted glass texture, soft-focus ambient lighting, 3D neomorphic geometry, spectral color refraction, tactile velvet grain, high-contrast minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮彩色__Luminous Chromatic Morphism/preview.webp",
+  "folder": "Krea2_moodboard/明亮彩色__Luminous Chromatic Morphism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

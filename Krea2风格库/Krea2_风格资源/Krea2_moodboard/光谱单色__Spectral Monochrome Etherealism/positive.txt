@@ -1,0 +1,1 @@
+monochrome, heavy motion blur, ghostly silhouette, charcoal texture, soft-focus mist, liminal space, high-contrast black and white, surrealist photography. Subject:{prompt}

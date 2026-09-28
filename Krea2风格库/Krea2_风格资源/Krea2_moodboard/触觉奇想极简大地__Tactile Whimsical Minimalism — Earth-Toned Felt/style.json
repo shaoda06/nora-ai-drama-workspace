@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3167",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "触觉奇想极简大地",
+  "name": "Tactile Whimsical Minimalism — Earth-Toned Felt",
+  "prompt": "soft surrealism, tactile texture, minimalist studio lighting, muted earth tones, whimsical hybrid, levitating objects, plush and clay materials. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉奇想极简大地__Tactile Whimsical Minimalism — Earth-Toned Felt/preview.webp",
+  "folder": "Krea2_moodboard/触觉奇想极简大地__Tactile Whimsical Minimalism — Earth-Toned Felt",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

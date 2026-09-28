@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1253",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "明亮",
+  "name": "Luminous Dollhouse Animation",
+  "prompt": "stylized digital portrait, soft-focus glow, porcelain skin texture, glossy highlights, warm radiant lighting, expressive oversized eyes, airbrushed digital painting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Dollhouse Animation/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Dollhouse Animation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

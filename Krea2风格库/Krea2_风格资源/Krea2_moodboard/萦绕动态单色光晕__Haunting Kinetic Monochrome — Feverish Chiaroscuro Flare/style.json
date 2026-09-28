@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2952",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "萦绕动态单色光晕",
+  "name": "Haunting Kinetic Monochrome — Feverish Chiaroscuro Flare",
+  "prompt": "high-contrast monochrome, heavy film grain, shutter drag motion blur, chiaroscuro lighting, ethereal portraiture, haunting dreamcore, kinetic photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/萦绕动态单色光晕__Haunting Kinetic Monochrome — Feverish Chiaroscuro Flare/preview.webp",
+  "folder": "Krea2_moodboard/萦绕动态单色光晕__Haunting Kinetic Monochrome — Feverish Chiaroscuro Flare",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

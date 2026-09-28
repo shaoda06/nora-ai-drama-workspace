@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-137",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "赛博哥特黑色漫画",
+  "name": "Cyber-Gothic Noir Manga",
+  "prompt": "high contrast manga illustration, sharp ink linework, chiaroscuro lighting, gothic cyberpunk fusion, screentone and halftone textures, moody atmospheric composition, edgy character design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/赛博哥特黑色漫画__Cyber-Gothic Noir Manga/preview.webp",
+  "folder": "Krea2_moodboard/赛博哥特黑色漫画__Cyber-Gothic Noir Manga",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

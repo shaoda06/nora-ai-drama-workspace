@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2847",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "黑色绽放",
+  "name": "Electric Cobalt Noir — Halation Bloom",
+  "prompt": "electric cobalt blue lighting, heavy film grain, bioluminescent cyan glow, cinematic halation bloom, high-contrast chiaroscuro, ethereal spectral atmosphere, soft-focus texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色绽放__Electric Cobalt Noir — Halation Bloom/preview.webp",
+  "folder": "Krea2_moodboard/黑色绽放__Electric Cobalt Noir — Halation Bloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

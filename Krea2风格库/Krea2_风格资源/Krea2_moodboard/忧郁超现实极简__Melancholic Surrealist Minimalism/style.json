@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-570",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "忧郁超现实极简",
+  "name": "Melancholic Surrealist Minimalism",
+  "prompt": "surrealist illustration, muted blue color palette, isometric perspective, melancholic mood, tactile grainy texture, liminal space, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁超现实极简__Melancholic Surrealist Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/忧郁超现实极简__Melancholic Surrealist Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+dreamy soft focus, volumetric backlighting, muted teal and blue palette, cinematic film grain, ethereal atmospheric mist, diffused light, motion blur. Subject:{prompt}

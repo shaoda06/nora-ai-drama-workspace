@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1302",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "暮光表现主义",
+  "name": "Fiery Twilight Expressionism",
+  "prompt": "expressive digital painting, high-contrast twilight palette, fiery atmospheric sky, dramatic silhouette, textured impasto brushstrokes, melancholic landscape, glowing gradient lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/暮光表现主义__Fiery Twilight Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/暮光表现主义__Fiery Twilight Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

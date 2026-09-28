@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2414",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "数字哥特",
+  "name": "Corrupted Digital Gothic",
+  "prompt": "pixel sorting, glitch art, digital decay, high contrast, gothic surrealism, data corruption, fragmented silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字哥特__Corrupted Digital Gothic/preview.webp",
+  "folder": "Krea2_moodboard/数字哥特__Corrupted Digital Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

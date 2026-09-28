@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-828",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "极简奇想墨水",
+  "name": "Minimalist Whimsical Ink",
+  "prompt": "minimalist ink illustration, watercolor and gouache wash, expressive fine line art, negative space composition, muted and vibrant color blocking, stylized graphic silhouettes, tactile paint texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简奇想墨水__Minimalist Whimsical Ink/preview.webp",
+  "folder": "Krea2_moodboard/极简奇想墨水__Minimalist Whimsical Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

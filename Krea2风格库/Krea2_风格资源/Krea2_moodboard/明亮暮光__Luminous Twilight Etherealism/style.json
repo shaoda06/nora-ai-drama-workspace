@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1652",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "明亮暮光",
+  "name": "Luminous Twilight Etherealism",
+  "prompt": "bioluminescent glow, twilight blue hour, ethereal soft focus, golden hour bloom, surreal dreamscape, stardust particles, silhouette photography, misty atmospheric depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮暮光__Luminous Twilight Etherealism/preview.webp",
+  "folder": "Krea2_moodboard/明亮暮光__Luminous Twilight Etherealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

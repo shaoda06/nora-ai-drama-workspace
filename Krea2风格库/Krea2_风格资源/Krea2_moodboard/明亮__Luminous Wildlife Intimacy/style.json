@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1816",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "明亮",
+  "name": "Luminous Wildlife Intimacy",
+  "prompt": "intimate wildlife photography, shallow depth of field, creamy bokeh background, soft natural rim lighting, highly detailed fur texture, warm earthy color palette, candid animal expression. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Wildlife Intimacy/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Wildlife Intimacy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

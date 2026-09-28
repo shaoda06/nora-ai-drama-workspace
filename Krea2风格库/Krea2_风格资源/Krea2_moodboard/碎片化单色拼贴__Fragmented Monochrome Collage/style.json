@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2913",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "碎片化单色拼贴",
+  "name": "Fragmented Monochrome Collage",
+  "prompt": "torn paper collage, high-contrast monochrome, analog glitch distortion, distressed film texture, fragmented portraiture, xerox grain, surreal photomontage. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化单色拼贴__Fragmented Monochrome Collage/preview.webp",
+  "folder": "Krea2_moodboard/碎片化单色拼贴__Fragmented Monochrome Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

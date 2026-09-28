@@ -1,0 +1,1 @@
+cinematic cyan lighting, volumetric light, heavy fog and mist, stark silhouette, neo-noir atmosphere, deep indigo shadows, liminal space, high-contrast chiaroscuro. Subject:{prompt}

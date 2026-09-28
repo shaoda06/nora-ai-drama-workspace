@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3080",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵颗粒极简",
+  "name": "Ethereal Grain Minimalism",
+  "prompt": "heavy grain texture, soft-focus gradient, monochromatic atmosphere, ethereal silhouettes, diffused atmospheric light, tactile paper aesthetic, minimalist dreamscape, lo-fi retro print. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒极简__Ethereal Grain Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒极简__Ethereal Grain Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

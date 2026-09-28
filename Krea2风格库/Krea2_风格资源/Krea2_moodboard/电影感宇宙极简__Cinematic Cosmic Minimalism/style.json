@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-276",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感宇宙极简",
+  "name": "Cinematic Cosmic Minimalism",
+  "prompt": "stark chiaroscuro, cosmic minimalism, high contrast void, singular light beam, monolithic silhouette, cinematic atmospheric haze, extreme scale contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感宇宙极简__Cinematic Cosmic Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/电影感宇宙极简__Cinematic Cosmic Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

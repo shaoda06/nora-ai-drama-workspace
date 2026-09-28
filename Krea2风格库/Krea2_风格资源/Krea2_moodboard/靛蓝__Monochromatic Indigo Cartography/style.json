@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-829",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "靛蓝",
+  "name": "Monochromatic Indigo Cartography",
+  "prompt": "monochromatic indigo ink, vintage engraving style, topographic contour lines, warm cream paper texture, cross-hatching and stippling, minimalist graphic composition, surreal atmospheric linework. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/靛蓝__Monochromatic Indigo Cartography/preview.webp",
+  "folder": "Krea2_moodboard/靛蓝__Monochromatic Indigo Cartography",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

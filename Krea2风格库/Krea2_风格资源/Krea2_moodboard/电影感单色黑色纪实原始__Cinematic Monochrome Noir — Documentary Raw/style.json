@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2633",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "电影感单色黑色纪实原始",
+  "name": "Cinematic Monochrome Noir — Documentary Raw",
+  "prompt": "high-contrast black and white, chiaroscuro lighting, heavy film grain, minimalist cinematic portraiture, raw skin texture, dramatic shadow play, monochrome fine art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感单色黑色纪实原始__Cinematic Monochrome Noir — Documentary Raw/preview.webp",
+  "folder": "Krea2_moodboard/电影感单色黑色纪实原始__Cinematic Monochrome Noir — Documentary Raw",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

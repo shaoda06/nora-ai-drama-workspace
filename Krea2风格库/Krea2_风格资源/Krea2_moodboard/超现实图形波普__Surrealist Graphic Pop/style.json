@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-539",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实图形波普",
+  "name": "Surrealist Graphic Pop",
+  "prompt": "surrealist pop collage, high-fashion editorial, bold color blocking, geometric graphic design, vibrant primary colors, sharp studio lighting, avant-garde portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实图形波普__Surrealist Graphic Pop/preview.webp",
+  "folder": "Krea2_moodboard/超现实图形波普__Surrealist Graphic Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

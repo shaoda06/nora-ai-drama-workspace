@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1008",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "触觉翠绿超现实",
+  "name": "Tactile Verdant Surrealism",
+  "prompt": "monochromatic green palette, tactile impasto texture, surreal organic landscape, sculptural brushstrokes, minimalist figure isolation, undulating velvet moss, soft directional lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉翠绿超现实__Tactile Verdant Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/触觉翠绿超现实__Tactile Verdant Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

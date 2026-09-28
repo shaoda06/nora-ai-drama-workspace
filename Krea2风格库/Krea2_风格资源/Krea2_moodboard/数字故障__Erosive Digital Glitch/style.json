@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1900",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "数字故障",
+  "name": "Erosive Digital Glitch",
+  "prompt": "pixel sorted glitch, vertical displacement, generative digital decay, high-contrast texture, organic erosion, synthetic artifacts, motion blur glitch. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字故障__Erosive Digital Glitch/preview.webp",
+  "folder": "Krea2_moodboard/数字故障__Erosive Digital Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

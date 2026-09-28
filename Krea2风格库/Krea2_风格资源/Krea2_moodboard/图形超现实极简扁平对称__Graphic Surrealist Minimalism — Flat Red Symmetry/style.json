@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2714",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "图形超现实极简扁平对称",
+  "name": "Graphic Surrealist Minimalism — Flat Red Symmetry",
+  "prompt": "high-contrast minimalism, vibrant crimson and primary red, avant-garde fashion photography, geometric surrealism, graphic color blocking, studio lighting, symmetrical composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形超现实极简扁平对称__Graphic Surrealist Minimalism — Flat Red Symmetry/preview.webp",
+  "folder": "Krea2_moodboard/图形超现实极简扁平对称__Graphic Surrealist Minimalism — Flat Red Symmetry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

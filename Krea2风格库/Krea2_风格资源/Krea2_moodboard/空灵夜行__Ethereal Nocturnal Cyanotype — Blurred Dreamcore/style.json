@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1634",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵夜行",
+  "name": "Ethereal Nocturnal Cyanotype — Blurred Dreamcore",
+  "prompt": "cyanotype blue, monochromatic film photography, ethereal soft focus, lo-fi analog grain, high-contrast silhouettes, nocturnal haze, dreamcore aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行__Ethereal Nocturnal Cyanotype — Blurred Dreamcore/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行__Ethereal Nocturnal Cyanotype — Blurred Dreamcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

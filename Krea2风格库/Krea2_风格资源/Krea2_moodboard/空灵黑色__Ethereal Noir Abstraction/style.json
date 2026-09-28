@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1550",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵黑色",
+  "name": "Ethereal Noir Abstraction",
+  "prompt": "high-contrast monochrome, heavy film grain, extreme motion blur, ethereal bokeh, stark chiaroscuro, dreamlike silhouette, experimental photogram. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色__Ethereal Noir Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色__Ethereal Noir Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

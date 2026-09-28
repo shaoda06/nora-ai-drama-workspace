@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1844",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感绯红黑色光泽",
+  "name": "Cinematic Crimson Noir — Glossy Blue Accent",
+  "prompt": "crimson and obsidian palette, chiaroscuro lighting, macro beauty photography, high-gloss textures, cinematic noir atmosphere, extreme close-up, saturated red light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红黑色光泽__Cinematic Crimson Noir — Glossy Blue Accent/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红黑色光泽__Cinematic Crimson Noir — Glossy Blue Accent",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

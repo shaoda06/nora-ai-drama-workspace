@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2614",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "极简植物",
+  "name": "Minimalist Botanical Chiaroscuro",
+  "prompt": "macro floral photography, chiaroscuro lighting, minimalist botanical composition, high-contrast floral portrait, pristine white petals, sharp focus, sculptural organic geometry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简植物__Minimalist Botanical Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/极简植物__Minimalist Botanical Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

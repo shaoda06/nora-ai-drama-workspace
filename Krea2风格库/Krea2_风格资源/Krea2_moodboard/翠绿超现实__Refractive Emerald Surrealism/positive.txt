@@ -1,0 +1,1 @@
+glass block distortion, refractive liquid texture, monochromatic emerald palette, warm amber backlighting, surreal warped perspective, volumetric light rays, translucent glossy finish, dreamy soft focus. Subject:{prompt}

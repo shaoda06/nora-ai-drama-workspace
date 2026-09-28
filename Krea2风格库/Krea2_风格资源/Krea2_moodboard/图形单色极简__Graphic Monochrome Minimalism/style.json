@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2612",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "图形单色极简",
+  "name": "Graphic Monochrome Minimalism",
+  "prompt": "high-contrast monochrome, stark graphic silhouette, minimalist studio photography, sharp deep shadows, dynamic editorial pose, clean directional lighting, pure white background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形单色极简__Graphic Monochrome Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/图形单色极简__Graphic Monochrome Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

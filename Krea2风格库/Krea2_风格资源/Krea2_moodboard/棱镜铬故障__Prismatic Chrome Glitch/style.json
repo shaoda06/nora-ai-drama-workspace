@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1891",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "棱镜铬故障",
+  "name": "Prismatic Chrome Glitch",
+  "prompt": "chromatic aberration, ultramarine blue background, liquid chrome texture, analog glitch art, spectral light refraction, 1980s retro-futurism, high-contrast digital noise. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜铬故障__Prismatic Chrome Glitch/preview.webp",
+  "folder": "Krea2_moodboard/棱镜铬故障__Prismatic Chrome Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

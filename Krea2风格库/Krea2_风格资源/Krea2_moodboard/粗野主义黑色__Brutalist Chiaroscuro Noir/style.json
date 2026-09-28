@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-320",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "粗野主义黑色",
+  "name": "Brutalist Chiaroscuro Noir",
+  "prompt": "brutalist architecture, chiaroscuro lighting, raw concrete texture, vivid crimson accents, liminal space, cinematic high contrast, geometric minimalism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粗野主义黑色__Brutalist Chiaroscuro Noir/preview.webp",
+  "folder": "Krea2_moodboard/粗野主义黑色__Brutalist Chiaroscuro Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

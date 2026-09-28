@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "超现实",
+  "name": "Surreal Pastoral Dreamscapes",
+  "prompt": "floating grassy island, vibrant blue sky, surreal dreamscape, painterly cumulus clouds, nostalgic summer atmosphere, minimalist surrealism, voxel-inspired geometry, anime-influenced serenity. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Surreal Pastoral Dreamscapes/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Surreal Pastoral Dreamscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

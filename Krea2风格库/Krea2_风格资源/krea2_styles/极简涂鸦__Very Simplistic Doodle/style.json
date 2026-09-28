@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-270",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "极简涂鸦",
+  "name": "Very Simplistic Doodle",
+  "prompt": "Style: Very Simplistic Doodle: A radically minimal illustration style built on the barest possible linework needed to suggest form, no shading whatsoever beyond an occasional flat scribble, a childlike, unpracticed economy of gesture that favors instant recognizability over any accuracy, loose, wobbly strokes drawn with no correction or refinement, and a charmingly crude, effortless simplicity that feels spontaneous, playful, and completely unpolished. Influenced by: margin-doodle sketching tradition, casual ballpoint-pen technique, unstructured gesture-drawing practice, minimalist notebook-sketch method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/极简涂鸦__Very Simplistic Doodle/preview.jpg",
+  "folder": "krea2_styles/极简涂鸦__Very Simplistic Doodle",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

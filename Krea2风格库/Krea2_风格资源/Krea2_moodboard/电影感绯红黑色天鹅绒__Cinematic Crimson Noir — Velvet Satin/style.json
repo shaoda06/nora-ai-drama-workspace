@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2679",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "电影感绯红黑色天鹅绒",
+  "name": "Cinematic Crimson Noir — Velvet Satin",
+  "prompt": "chiaroscuro lighting, deep crimson and black, theatrical noir, avant-garde portraiture, dramatic shadows, surrealist minimalism, rich velvet texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红黑色天鹅绒__Cinematic Crimson Noir — Velvet Satin/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红黑色天鹅绒__Cinematic Crimson Noir — Velvet Satin",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

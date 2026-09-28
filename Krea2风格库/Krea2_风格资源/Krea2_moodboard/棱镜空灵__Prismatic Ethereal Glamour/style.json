@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2991",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "棱镜空灵",
+  "name": "Prismatic Ethereal Glamour",
+  "prompt": "prismatic light refraction, hyper-glossy skin texture, ethereal beauty portrait, macro editorial photography, rainbow lens flare, high-contrast chiaroscuro, glitter makeup, vibrant light projection. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜空灵__Prismatic Ethereal Glamour/preview.webp",
+  "folder": "Krea2_moodboard/棱镜空灵__Prismatic Ethereal Glamour",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

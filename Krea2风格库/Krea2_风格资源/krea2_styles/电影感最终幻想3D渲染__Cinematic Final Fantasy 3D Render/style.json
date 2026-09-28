@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-3",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "电影感最终幻想3D渲染",
+  "name": "Cinematic Final Fantasy 3D Render",
+  "prompt": "Style: Cinematic Final Fantasy 3D Render: A richly cinematic 3D-illustration style built on meticulously detailed volumetric modeling rendered with near-photographic dimensional conviction, dramatic film-grade lighting establishing epic, emotionally charged mood within every frame, soft subsurface-scattered rendering giving skin a convincing, luminous depth, confident ambient occlusion and reflective response settling naturally into every contour, and a polished, blockbuster-grade rendering intensity built for sweeping, story-driven visual spectacle. Influenced by: Square Enix cinematic-rendering direction, real-time 3D-animation technique, subsurface-scattering character-design practice, cinematic three-point lighting method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/电影感最终幻想3D渲染__Cinematic Final Fantasy 3D Render/preview.jpg",
+  "folder": "krea2_styles/电影感最终幻想3D渲染__Cinematic Final Fantasy 3D Render",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

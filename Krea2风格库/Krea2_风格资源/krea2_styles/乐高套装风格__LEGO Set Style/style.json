@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-8",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "乐高套装风格",
+  "name": "LEGO Set Style",
+  "prompt": "Style: LEGO Set Style: A blocky, modular illustration style built on cylindrical stud-and-brick construction logic standing in for all organic and structural form, glossy, uniformly smooth plastic-like surface finish applied consistently across every element, a deliberately simplified, interlocking geometric silhouette replacing naturalistic anatomy or structure, clean, confident graphic separation between individually distinguishable component pieces, and a cheerful, systematized toy-design precision rooted in decades of modular construction-set tradition. Influenced by: LEGO Group product-design tradition, modular construction-toy aesthetic, plastic-injection product-visualization practice, procedural brick-based 3D-rendering method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/乐高套装风格__LEGO Set Style/preview.jpg",
+  "folder": "krea2_styles/乐高套装风格__LEGO Set Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

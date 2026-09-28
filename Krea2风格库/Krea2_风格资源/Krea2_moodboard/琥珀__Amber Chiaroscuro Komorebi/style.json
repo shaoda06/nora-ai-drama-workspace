@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1405",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "琥珀",
+  "name": "Amber Chiaroscuro Komorebi",
+  "prompt": "golden hour lighting, dappled leaf shadows, analog film grain, chiaroscuro portraiture, shallow depth of field, warm earthy tones, cinematic intimacy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀__Amber Chiaroscuro Komorebi/preview.webp",
+  "folder": "Krea2_moodboard/琥珀__Amber Chiaroscuro Komorebi",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

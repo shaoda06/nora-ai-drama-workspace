@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-677",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "触觉",
+  "name": "Tactile Storybook Folk",
+  "prompt": "risograph print, wax crayon texture, naive folk illustration, mid-century storybook aesthetic, flat graphic shapes, tactile ink texture, vibrant limited palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉__Tactile Storybook Folk/preview.webp",
+  "folder": "Krea2_moodboard/触觉__Tactile Storybook Folk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

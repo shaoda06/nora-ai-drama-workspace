@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-59",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "霓虹灯招牌设计",
+  "name": "Neon Sign Design",
+  "prompt": "Style: Neon Sign Design: A luminous graphic illustration style built on crisp, continuous linework that appears to glow rather than sit flat, an electric brightness concentrated along every contour with soft radiating bloom bleeding into the surrounding darkness, confident single-stroke construction mimicking the unbroken tubing of illuminated signage, minimal internal detail letting the glowing outline carry the entire composition, and a vibrant, nightlife-adjacent intensity that feels electric, retro-commercial, and unmistakably illuminated. Influenced by: neon-sign fabrication tradition, glow-line digital-rendering technique, mid-century commercial-signage design, contemporary vector-glow illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/霓虹灯招牌设计__Neon Sign Design/preview.jpg",
+  "folder": "krea2_styles/霓虹灯招牌设计__Neon Sign Design",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

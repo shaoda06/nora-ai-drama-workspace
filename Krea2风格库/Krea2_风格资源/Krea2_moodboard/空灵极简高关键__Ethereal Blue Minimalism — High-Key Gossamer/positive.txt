@@ -1,0 +1,1 @@
+macro photography, ethereal blue palette, translucent textures, shallow depth of field, soft-focus background, high-key lighting, minimalist botanical. Subject:{prompt}

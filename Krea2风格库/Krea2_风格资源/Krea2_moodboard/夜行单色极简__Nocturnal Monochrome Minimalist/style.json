@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1757",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "夜行单色极简",
+  "name": "Nocturnal Monochrome Minimalist",
+  "prompt": "high-contrast black and white, stark silhouette, heavy film grain, soft-focus bokeh, atmospheric fog, lo-fi noir, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行单色极简__Nocturnal Monochrome Minimalist/preview.webp",
+  "folder": "Krea2_moodboard/夜行单色极简__Nocturnal Monochrome Minimalist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1468",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "电影感琥珀朦胧雾",
+  "name": "Cinematic Amber Nocturne — Hazy Blue Fog",
+  "prompt": "cinematic night photography, warm amber glow, motion blur, wet asphalt reflections, lo-fi film grain, soft focus atmosphere, urban solitude, high contrast shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感琥珀朦胧雾__Cinematic Amber Nocturne — Hazy Blue Fog/preview.webp",
+  "folder": "Krea2_moodboard/电影感琥珀朦胧雾__Cinematic Amber Nocturne — Hazy Blue Fog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

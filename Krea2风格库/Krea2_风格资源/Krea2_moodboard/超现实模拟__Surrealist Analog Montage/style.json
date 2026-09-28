@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-512",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实模拟",
+  "name": "Surrealist Analog Montage",
+  "prompt": "analog photomontage, vintage paper collage, halftone print texture, surrealist cutout art, torn paper edges, psychedelic color contrast, retro magazine aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实模拟__Surrealist Analog Montage/preview.webp",
+  "folder": "Krea2_moodboard/超现实模拟__Surrealist Analog Montage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

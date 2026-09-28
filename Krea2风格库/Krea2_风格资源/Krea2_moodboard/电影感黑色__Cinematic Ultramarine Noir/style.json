@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1698",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感黑色",
+  "name": "Cinematic Ultramarine Noir",
+  "prompt": "cinematic silhouette, monochromatic blue palette, high-contrast chiaroscuro, minimalist composition, atmospheric fog, volumetric lighting, deep indigo shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色__Cinematic Ultramarine Noir/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色__Cinematic Ultramarine Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

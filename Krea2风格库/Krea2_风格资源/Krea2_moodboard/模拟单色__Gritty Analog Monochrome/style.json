@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2012",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "模拟单色",
+  "name": "Gritty Analog Monochrome",
+  "prompt": "high-contrast monochrome, heavy film grain, analog horror, stark flash photography, glitch art, xerox texture, chiaroscuro, lo-fi aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟单色__Gritty Analog Monochrome/preview.webp",
+  "folder": "Krea2_moodboard/模拟单色__Gritty Analog Monochrome",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

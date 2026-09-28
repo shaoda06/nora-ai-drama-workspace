@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2809",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵动态极简半透明",
+  "name": "Ethereal Kinetic Minimalism — Translucent Overlap",
+  "prompt": "long exposure, motion blur, ghostly silhouette, minimalist fine art, multiple exposure, desaturated tones, ethereal atmosphere, cinematic shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态极简半透明__Ethereal Kinetic Minimalism — Translucent Overlap/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态极简半透明__Ethereal Kinetic Minimalism — Translucent Overlap",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

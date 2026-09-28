@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-877",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "夜行氛围奇想",
+  "name": "Nocturnal Atmospheric Whimsy",
+  "prompt": "painterly nocturnal landscape, deep indigo and amber contrast, cozy glowing windows, atmospheric twilight mood, hand-drawn storybook texture, misty night environment. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行氛围奇想__Nocturnal Atmospheric Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/夜行氛围奇想__Nocturnal Atmospheric Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

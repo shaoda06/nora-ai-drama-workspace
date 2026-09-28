@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3376",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "电影感夜行",
+  "name": "Cinematic Nocturnal Blur — Streetlamp Glimmer",
+  "prompt": "motion blur, analog film grain, nocturnal long exposure, cinematic haze, light trails, liminal space, neon glow, lo-fi aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Blur — Streetlamp Glimmer/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Blur — Streetlamp Glimmer",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

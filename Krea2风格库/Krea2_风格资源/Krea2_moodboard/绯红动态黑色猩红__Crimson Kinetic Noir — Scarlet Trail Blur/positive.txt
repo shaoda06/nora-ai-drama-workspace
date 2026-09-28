@@ -1,0 +1,1 @@
+long exposure, motion blur, monochromatic crimson lighting, high-contrast silhouette, heavy film grain, cinematic haze, intentional camera movement. Subject:{prompt}

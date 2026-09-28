@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-86",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "寺田克也风格",
+  "name": "Katsuya Terada Style",
+  "prompt": "Style: Katsuya Terada Style: A ferociously energetic illustration style built on wild, gestural linework that captures raw movement and muscular dynamism in every stroke, loose ink-driven cross-hatching layered with confident painterly color, chaotic yet controlled compositions bursting with kinetic tension, richly textured surface detail giving textures a visceral, almost sculptural intensity, and a bold, untamed painterly ferocity that feels equally at home in fine art and manga tradition. Influenced by: Katsuya Terada, Japanese gekiga illustration, ink-and-color technique, fantasy creature illustration.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/寺田克也风格__Katsuya Terada Style/preview.jpg",
+  "folder": "krea2_styles/寺田克也风格__Katsuya Terada Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

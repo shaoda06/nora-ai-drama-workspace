@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3366",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "空灵夜行电影感",
+  "name": "Ethereal Nocturnal Cinematic",
+  "prompt": "analog film grain, starburst lens flare, nocturnal atmosphere, cinematic lighting, chromatic aberration, vibrant light leaks, liminal solitude, evocative color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行电影感__Ethereal Nocturnal Cinematic/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行电影感__Ethereal Nocturnal Cinematic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

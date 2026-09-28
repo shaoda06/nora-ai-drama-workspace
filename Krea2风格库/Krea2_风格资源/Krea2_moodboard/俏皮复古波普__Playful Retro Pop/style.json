@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-184",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "俏皮复古波普",
+  "name": "Playful Retro Pop",
+  "prompt": "rubberhose animation style, bold black ink outlines, minimalist vector illustration, vibrant pastel and saturated palette, whimsical anthropomorphic character, flat graphic design, retro 1930s cartoon aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/俏皮复古波普__Playful Retro Pop/preview.webp",
+  "folder": "Krea2_moodboard/俏皮复古波普__Playful Retro Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

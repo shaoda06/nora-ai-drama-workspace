@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3489",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "电影感阈限黑色",
+  "name": "Cinematic Liminal Noir — Frosted Glass Veil",
+  "prompt": "cinematic noir, frosted glass silhouette, desaturated teal and gray, liminal space, chiaroscuro lighting, voyeuristic framing, moody film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感阈限黑色__Cinematic Liminal Noir — Frosted Glass Veil/preview.webp",
+  "folder": "Krea2_moodboard/电影感阈限黑色__Cinematic Liminal Noir — Frosted Glass Veil",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3524",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "超现实阈限",
+  "name": "Surrealist Liminal Pastoralism — Floating Daylight Dislocation",
+  "prompt": "surrealist landscape, liminal space, minimalist architecture, dreamcore, bright daylight, magical realism, floating structures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实阈限__Surrealist Liminal Pastoralism — Floating Daylight Dislocation/preview.webp",
+  "folder": "Krea2_moodboard/超现实阈限__Surrealist Liminal Pastoralism — Floating Daylight Dislocation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

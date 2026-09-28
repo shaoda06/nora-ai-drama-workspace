@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3037",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "超现实数字",
+  "name": "Surreal Digital Pastoral",
+  "prompt": "pixel sorted landscape, glitch art, surreal pastoral, muted earth tones, digital decay, ethereal atmosphere, datamoshing, vintage film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实数字__Surreal Digital Pastoral/preview.webp",
+  "folder": "Krea2_moodboard/超现实数字__Surreal Digital Pastoral",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

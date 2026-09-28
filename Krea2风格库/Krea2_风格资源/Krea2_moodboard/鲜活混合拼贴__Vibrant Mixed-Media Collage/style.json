@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-846",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "鲜活混合拼贴",
+  "name": "Vibrant Mixed-Media Collage",
+  "prompt": "mixed-media collage, high-contrast photography, impasto texture, hand-drawn doodle overlay, vibrant color blocking, punk zine aesthetic, paper cutout style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活混合拼贴__Vibrant Mixed-Media Collage/preview.webp",
+  "folder": "Krea2_moodboard/鲜活混合拼贴__Vibrant Mixed-Media Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

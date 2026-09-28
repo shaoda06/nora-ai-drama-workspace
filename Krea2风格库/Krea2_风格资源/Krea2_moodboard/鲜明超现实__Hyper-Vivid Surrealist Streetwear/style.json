@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2915",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "鲜明超现实",
+  "name": "Hyper-Vivid Surrealist Streetwear",
+  "prompt": "hyper-saturated primary colors, low-angle fisheye perspective, surrealist fashion editorial, tactile textures, bright clear blue sky, analog film grain, maximalist streetwear. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜明超现实__Hyper-Vivid Surrealist Streetwear/preview.webp",
+  "folder": "Krea2_moodboard/鲜明超现实__Hyper-Vivid Surrealist Streetwear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

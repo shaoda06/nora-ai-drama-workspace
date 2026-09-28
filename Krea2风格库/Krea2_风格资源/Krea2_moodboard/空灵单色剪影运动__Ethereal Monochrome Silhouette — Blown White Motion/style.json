@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2941",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵单色剪影运动",
+  "name": "Ethereal Monochrome Silhouette — Blown White Motion",
+  "prompt": "high-contrast black and white, minimalist silhouette, stark white background, motion blur, sculptural form, ethereal lighting, avant-garde composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色剪影运动__Ethereal Monochrome Silhouette — Blown White Motion/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色剪影运动__Ethereal Monochrome Silhouette — Blown White Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

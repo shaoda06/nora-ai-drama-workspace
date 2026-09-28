@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-693",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "图形复古",
+  "name": "Graphic Retro Printmaker",
+  "prompt": "bold black outlines, risograph print aesthetic, saturated color blocking, linocut texture, mid-century graphic design, stipple shading, minimalist editorial illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形复古__Graphic Retro Printmaker/preview.webp",
+  "folder": "Krea2_moodboard/图形复古__Graphic Retro Printmaker",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

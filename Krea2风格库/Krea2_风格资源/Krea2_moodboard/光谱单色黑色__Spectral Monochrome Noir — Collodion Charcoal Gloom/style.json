@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-793",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "光谱单色黑色",
+  "name": "Spectral Monochrome Noir — Collodion Charcoal Gloom",
+  "prompt": "monochrome high-contrast, wet plate collodion, charcoal grain texture, ethereal motion blur, double exposure, chiaroscuro lighting, ghostly silhouette, atmospheric gloom. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱单色黑色__Spectral Monochrome Noir — Collodion Charcoal Gloom/preview.webp",
+  "folder": "Krea2_moodboard/光谱单色黑色__Spectral Monochrome Noir — Collodion Charcoal Gloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

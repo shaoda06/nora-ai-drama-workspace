@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3265",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "光谱夜行发光",
+  "name": "Spectral Nocturnal Glow",
+  "prompt": "ethereal bloom, harsh flash photography, overexposed white glow, nocturnal surrealism, lo-fi film grain, spectral light, high contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱夜行发光__Spectral Nocturnal Glow/preview.webp",
+  "folder": "Krea2_moodboard/光谱夜行发光__Spectral Nocturnal Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

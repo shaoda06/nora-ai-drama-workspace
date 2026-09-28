@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1515",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵靛蓝",
+  "name": "Ethereal Pictorialist Haze — Vaporous Pink Indigo",
+  "prompt": "soft focus diffusion, heavy analog film grain, ethereal misty atmosphere, pastel gradient glow, pictorialist aesthetic, dreamy light leaks, hazy silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵靛蓝__Ethereal Pictorialist Haze — Vaporous Pink Indigo/preview.webp",
+  "folder": "Krea2_moodboard/空灵靛蓝__Ethereal Pictorialist Haze — Vaporous Pink Indigo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

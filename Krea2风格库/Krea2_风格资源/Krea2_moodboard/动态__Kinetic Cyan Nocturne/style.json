@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3368",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "动态",
+  "name": "Kinetic Cyan Nocturne",
+  "prompt": "long exposure motion blur, cyan and indigo color grading, nocturnal urban atmosphere, cinematic light streaks, spectral silhouettes, dreamlike liminal space, analog film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态__Kinetic Cyan Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/动态__Kinetic Cyan Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

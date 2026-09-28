@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2683",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "电影感森林",
+  "name": "Cinematic Forest Chiaroscuro",
+  "prompt": "chiaroscuro lighting, dramatic sun shafts, deep forest shadows, cinematic moody atmosphere, ethereal light beams, lush organic textures, high contrast composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感森林__Cinematic Forest Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/电影感森林__Cinematic Forest Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

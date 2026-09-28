@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1636",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵夜行青蓝漏光",
+  "name": "Ethereal Nocturnal Pictorialism — Fiery Teal Leak",
+  "prompt": "pictorialism, intentional camera movement, heavy analog film grain, soft focus blur, teal and amber color grade, dreamlike ethereal haze, nocturnal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行青蓝漏光__Ethereal Nocturnal Pictorialism — Fiery Teal Leak/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行青蓝漏光__Ethereal Nocturnal Pictorialism — Fiery Teal Leak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

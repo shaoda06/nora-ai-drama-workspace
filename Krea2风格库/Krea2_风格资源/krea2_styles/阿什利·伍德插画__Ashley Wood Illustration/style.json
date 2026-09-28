@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-295",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "阿什利·伍德插画",
+  "name": "Ashley Wood Illustration",
+  "prompt": "Style: Ashley Wood Illustration: expressive mixed-media aesthetics combining energetic brushwork, sketch-like spontaneity, painterly abstraction, layered textures, and graphic novel sensibilities, blending raw artistic gesture with sophisticated visual design through atmospheric rendering, controlled chaos, and a distinctly handcrafted appearance that prioritizes mood, emotion, and visual impact over strict realism, reminiscent of Ashley Wood and Bill Sienkiewicz, inspired by World War Robot and Metal Gear Solid concept artwork.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/阿什利·伍德插画__Ashley Wood Illustration/preview.jpg",
+  "folder": "krea2_styles/阿什利·伍德插画__Ashley Wood Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

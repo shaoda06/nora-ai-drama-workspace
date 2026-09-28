@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-686",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "鲜活",
+  "name": "Vibrant Risograph Flux",
+  "prompt": "risograph print texture, cobalt blue and pink palette, grainy airbrush gradient, duotone graphic illustration, stipple shading, retro-modern vector design, minimalist pop art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活__Vibrant Risograph Flux/preview.webp",
+  "folder": "Krea2_moodboard/鲜活__Vibrant Risograph Flux",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1560",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "梦幻琥珀复古",
+  "name": "Dreamy Amber Retro",
+  "prompt": "vintage 35mm film, warm amber color cast, heavy analog grain, soft focus haze, golden hour lighting, retro light leaks, faded polaroid aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/梦幻琥珀复古__Dreamy Amber Retro/preview.webp",
+  "folder": "Krea2_moodboard/梦幻琥珀复古__Dreamy Amber Retro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

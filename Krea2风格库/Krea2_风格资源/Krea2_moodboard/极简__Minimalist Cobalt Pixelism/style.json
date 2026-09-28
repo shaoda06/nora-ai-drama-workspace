@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2148",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "极简",
+  "name": "Minimalist Cobalt Pixelism",
+  "prompt": "1-bit pixel art, cobalt blue and white, dithered textures, retro computer UI, minimalist digital graphics, aliased edges, high contrast composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Minimalist Cobalt Pixelism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Minimalist Cobalt Pixelism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

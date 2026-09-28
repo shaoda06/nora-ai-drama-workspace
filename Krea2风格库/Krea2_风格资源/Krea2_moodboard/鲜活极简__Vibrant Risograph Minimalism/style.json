@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-649",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "鲜活极简",
+  "name": "Vibrant Risograph Minimalism",
+  "prompt": "flat vector illustration, grainy risograph texture, bold color blocking, modern folk art, high-contrast saturated palette, surreal organic motifs, airbrushed gradient shading. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活极简__Vibrant Risograph Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/鲜活极简__Vibrant Risograph Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3475",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "怀旧复古极简",
+  "name": "Nostalgic Retro-Futurist Minimalism",
+  "prompt": "symmetrical composition, mid-century modern, retro-futurism, soft cinematic lighting, liminal space, analog film grain, muted pastel palette, vintage corporate aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧复古极简__Nostalgic Retro-Futurist Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/怀旧复古极简__Nostalgic Retro-Futurist Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

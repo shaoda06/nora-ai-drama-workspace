@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1307",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "绯红天鹅绒超现实颗粒",
+  "name": "Crimson Velvet Surrealism — Grainy Biomorphic",
+  "prompt": "surrealist digital painting, crimson and charcoal contrast, velvety organic textures, minimalist scale juxtaposition, grainy illustration style, dreamlike liminal space. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红天鹅绒超现实颗粒__Crimson Velvet Surrealism — Grainy Biomorphic/preview.webp",
+  "folder": "Krea2_moodboard/绯红天鹅绒超现实颗粒__Crimson Velvet Surrealism — Grainy Biomorphic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

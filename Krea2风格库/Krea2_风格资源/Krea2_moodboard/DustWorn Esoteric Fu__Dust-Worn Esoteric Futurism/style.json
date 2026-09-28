@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1261",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "DustWorn Esoteric Fu",
+  "name": "Dust-Worn Esoteric Futurism",
+  "prompt": "dusty desert wasteland, monolithic brutalist architecture, retro-futuristic concept art, esoteric ritual ceremony, muted earth tones, atmospheric hazy lighting, textured digital illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/DustWorn Esoteric Fu__Dust-Worn Esoteric Futurism/preview.webp",
+  "folder": "Krea2_moodboard/DustWorn Esoteric Fu__Dust-Worn Esoteric Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

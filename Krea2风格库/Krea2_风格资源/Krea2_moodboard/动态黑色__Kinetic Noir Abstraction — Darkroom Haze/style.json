@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2023",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态黑色",
+  "name": "Kinetic Noir Abstraction — Darkroom Haze",
+  "prompt": "heavy analog film grain, extreme motion blur, high-contrast monochrome, chiaroscuro lighting, abstracted silhouettes, lo-fi darkroom texture, nocturnal atmospheric blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态黑色__Kinetic Noir Abstraction — Darkroom Haze/preview.webp",
+  "folder": "Krea2_moodboard/动态黑色__Kinetic Noir Abstraction — Darkroom Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

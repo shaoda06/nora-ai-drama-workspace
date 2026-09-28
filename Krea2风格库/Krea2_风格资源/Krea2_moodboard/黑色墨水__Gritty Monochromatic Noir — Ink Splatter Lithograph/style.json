@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-423",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "黑色墨水",
+  "name": "Gritty Monochromatic Noir — Ink Splatter Lithograph",
+  "prompt": "stark monochrome, high-contrast lithograph, halftone patterns, distressed paper texture, ink splatters, analog noir photography, industrial xerox aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色墨水__Gritty Monochromatic Noir — Ink Splatter Lithograph/preview.webp",
+  "folder": "Krea2_moodboard/黑色墨水__Gritty Monochromatic Noir — Ink Splatter Lithograph",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

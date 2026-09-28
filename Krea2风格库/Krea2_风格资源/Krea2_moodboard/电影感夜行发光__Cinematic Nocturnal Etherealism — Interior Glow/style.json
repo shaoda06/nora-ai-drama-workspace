@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1609",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "电影感夜行发光",
+  "name": "Cinematic Nocturnal Etherealism — Interior Glow",
+  "prompt": "cinematic film grain, atmospheric haze, nocturnal silhouette, glowing neon light, soft focus dreamscape, noir color palette, vintage analog texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行发光__Cinematic Nocturnal Etherealism — Interior Glow/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行发光__Cinematic Nocturnal Etherealism — Interior Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

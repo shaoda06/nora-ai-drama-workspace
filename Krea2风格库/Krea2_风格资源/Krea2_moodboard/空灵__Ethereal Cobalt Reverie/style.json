@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-868",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "空灵",
+  "name": "Ethereal Cobalt Reverie",
+  "prompt": "monochromatic blue palette, colored pencil texture, ethereal dreamlike atmosphere, soft diffused lighting, grainy paper texture, hazy stippling, translucent layers. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Cobalt Reverie/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Cobalt Reverie",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

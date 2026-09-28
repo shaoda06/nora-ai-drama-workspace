@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-544",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "单色黑色",
+  "name": "Monochrome Avant-Garde Noir",
+  "prompt": "high contrast monochrome, chiaroscuro noir, stippled airbrush gradients, geometric surrealism, avant-garde photomontage, mid-century graphic design, sharp silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色黑色__Monochrome Avant-Garde Noir/preview.webp",
+  "folder": "Krea2_moodboard/单色黑色__Monochrome Avant-Garde Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

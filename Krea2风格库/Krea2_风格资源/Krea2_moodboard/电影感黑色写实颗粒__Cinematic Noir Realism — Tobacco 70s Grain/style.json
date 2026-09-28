@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1368",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感黑色写实颗粒",
+  "name": "Cinematic Noir Realism — Tobacco 70s Grain",
+  "prompt": "chiaroscuro lighting, low-key cinematic noir, heavy film grain, tactile realism, shallow depth of field, muted desaturated tones, intimate close-up. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色写实颗粒__Cinematic Noir Realism — Tobacco 70s Grain/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色写实颗粒__Cinematic Noir Realism — Tobacco 70s Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

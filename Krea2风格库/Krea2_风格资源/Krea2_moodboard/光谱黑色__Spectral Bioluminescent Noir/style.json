@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2762",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "光谱黑色",
+  "name": "Spectral Bioluminescent Noir",
+  "prompt": "long exposure motion blur, bioluminescent cyan glow, chiaroscuro lighting, spectral silhouette, grainy film texture, stark black background, blown-out highlights, ethereal fluid motion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色__Spectral Bioluminescent Noir/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色__Spectral Bioluminescent Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

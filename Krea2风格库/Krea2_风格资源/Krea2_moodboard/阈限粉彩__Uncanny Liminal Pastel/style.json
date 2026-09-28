@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1116",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "阈限粉彩",
+  "name": "Uncanny Liminal Pastel",
+  "prompt": "liminal space, uncanny surrealism, pastel color palette, symmetrical composition, cinematic dreamcore, atmospheric lighting, retro-institutional, ornate baroque detailing. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/阈限粉彩__Uncanny Liminal Pastel/preview.webp",
+  "folder": "Krea2_moodboard/阈限粉彩__Uncanny Liminal Pastel",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

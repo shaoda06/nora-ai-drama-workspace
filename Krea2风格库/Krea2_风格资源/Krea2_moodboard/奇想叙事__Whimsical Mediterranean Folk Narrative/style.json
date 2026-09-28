@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-651",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "奇想叙事",
+  "name": "Whimsical Mediterranean Folk Narrative",
+  "prompt": "stylized vector illustration, naive folk art style, warm sun-drenched palette, risograph and marker texture, whimsical architectural landscape, flat perspective, fine decorative linework. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想叙事__Whimsical Mediterranean Folk Narrative/preview.webp",
+  "folder": "Krea2_moodboard/奇想叙事__Whimsical Mediterranean Folk Narrative",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

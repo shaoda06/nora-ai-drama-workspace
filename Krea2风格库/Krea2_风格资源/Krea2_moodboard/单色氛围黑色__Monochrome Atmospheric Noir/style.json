@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2619",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "单色氛围黑色",
+  "name": "Monochrome Atmospheric Noir",
+  "prompt": "high contrast monochrome, heavy film grain, low-key atmospheric lighting, minimalist silhouette, intricate organic texture, nocturnal noir, analog photography aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色氛围黑色__Monochrome Atmospheric Noir/preview.webp",
+  "folder": "Krea2_moodboard/单色氛围黑色__Monochrome Atmospheric Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

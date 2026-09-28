@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-346",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "彩色颗粒极简",
+  "name": "Chromatic Grain Minimalism",
+  "prompt": "grainy gradient texture, vibrant chromatic abstraction, minimalist organic silhouette, risograph inspired, soft noise, thermal color palette, tactile digital art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色颗粒极简__Chromatic Grain Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/彩色颗粒极简__Chromatic Grain Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

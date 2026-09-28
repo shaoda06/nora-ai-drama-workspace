@@ -1,0 +1,1 @@
+1-bit pixel art, cobalt blue duotone, retro computer terminal, dithered textures, minimalist digital interface, scanline CRT effect. Subject:{prompt}

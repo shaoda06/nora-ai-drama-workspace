@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1408",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感黄金",
+  "name": "Cinematic Chiaroscuro Solitude — Golden Shaft 35mm",
+  "prompt": "chiaroscuro lighting, dramatic shadows, analog film grain, muted earth tones, golden hour shafts, cinematic solitude, soft focus, introspective atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黄金__Cinematic Chiaroscuro Solitude — Golden Shaft 35mm/preview.webp",
+  "folder": "Krea2_moodboard/电影感黄金__Cinematic Chiaroscuro Solitude — Golden Shaft 35mm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

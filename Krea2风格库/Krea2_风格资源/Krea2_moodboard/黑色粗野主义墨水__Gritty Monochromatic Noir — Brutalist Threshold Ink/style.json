@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-545",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "黑色粗野主义墨水",
+  "name": "Gritty Monochromatic Noir — Brutalist Threshold Ink",
+  "prompt": "extreme high contrast, stark black and white, photocopy texture, heavy film grain, noir lighting, brutalist graphic design, dithered ink aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色粗野主义墨水__Gritty Monochromatic Noir — Brutalist Threshold Ink/preview.webp",
+  "folder": "Krea2_moodboard/黑色粗野主义墨水__Gritty Monochromatic Noir — Brutalist Threshold Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2706",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "夜行绯红颗粒",
+  "name": "Nocturnal Crimson Grain",
+  "prompt": "stark silhouette, rich crimson and amber palette, heavy analog film grain, ethereal light wisps, chiaroscuro lighting, surreal nocturnal atmosphere, vintage experimental texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行绯红颗粒__Nocturnal Crimson Grain/preview.webp",
+  "folder": "Krea2_moodboard/夜行绯红颗粒__Nocturnal Crimson Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

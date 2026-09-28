@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2376",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "肌理单色黑色湿润",
+  "name": "Textured Monochrome Noir — Wet-Plate Chiaroscuro",
+  "prompt": "high-contrast monochrome, heavy film grain, dramatic chiaroscuro lighting, stippled dot texture, vintage wet plate aesthetic, somber atmospheric portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理单色黑色湿润__Textured Monochrome Noir — Wet-Plate Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/肌理单色黑色湿润__Textured Monochrome Noir — Wet-Plate Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1826",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "未来黑色",
+  "name": "Futuristic Noir Precision",
+  "prompt": "cyber noir, futuristic tailoring, cool blue cinematic lighting, sharp silhouettes, high-contrast minimalism, tactical techwear, low-angle editorial. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/未来黑色__Futuristic Noir Precision/preview.webp",
+  "folder": "Krea2_moodboard/未来黑色__Futuristic Noir Precision",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

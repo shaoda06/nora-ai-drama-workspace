@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3260",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "明亮黑色超现实",
+  "name": "Luminous Noir Surrealism",
+  "prompt": "high-contrast black and white, chiaroscuro, blown-out highlights, heavy film grain, ethereal bloom, surreal silhouette, nocturnal mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色超现实__Luminous Noir Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色超现实__Luminous Noir Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2385",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "天穹神秘主义",
+  "name": "Celestial Gilded Mysticism",
+  "prompt": "emerald and gold palette, opulent jeweled textures, chiaroscuro cinematic lighting, cosmic starry background, intricate gilded filigree, bioluminescent energy effects, mythological sci-fi, volumetric light rays. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹神秘主义__Celestial Gilded Mysticism/preview.webp",
+  "folder": "Krea2_moodboard/天穹神秘主义__Celestial Gilded Mysticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

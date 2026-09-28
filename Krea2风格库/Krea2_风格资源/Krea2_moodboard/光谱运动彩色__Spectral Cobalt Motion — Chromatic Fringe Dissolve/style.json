@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2833",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "光谱运动彩色",
+  "name": "Spectral Cobalt Motion — Chromatic Fringe Dissolve",
+  "prompt": "cobalt blue and cyan palette, cinematic motion blur, low-key lighting, chromatic aberration, shutter drag, ethereal spectral atmosphere, high-contrast moody photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱运动彩色__Spectral Cobalt Motion — Chromatic Fringe Dissolve/preview.webp",
+  "folder": "Krea2_moodboard/光谱运动彩色__Spectral Cobalt Motion — Chromatic Fringe Dissolve",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2249",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "动态单色剪影",
+  "name": "Kinetic Monochrome Silhouette",
+  "prompt": "high contrast black and white, motion blur, long exposure photography, minimalist silhouette, stark white background, ghostly motion trail, cinematic noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态单色剪影__Kinetic Monochrome Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/动态单色剪影__Kinetic Monochrome Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

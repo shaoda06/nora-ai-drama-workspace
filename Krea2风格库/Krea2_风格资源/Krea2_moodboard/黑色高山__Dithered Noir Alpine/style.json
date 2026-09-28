@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-367",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "黑色高山",
+  "name": "Dithered Noir Alpine",
+  "prompt": "coarse halftone pattern, dithered texture, vintage screenprint aesthetic, high contrast noir, limited indigo palette, retro print distortion, lo-fi graphic rendering. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色高山__Dithered Noir Alpine/preview.webp",
+  "folder": "Krea2_moodboard/黑色高山__Dithered Noir Alpine",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

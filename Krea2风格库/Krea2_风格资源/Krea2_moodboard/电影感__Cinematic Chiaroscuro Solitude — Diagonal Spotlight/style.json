@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3530",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "电影感",
+  "name": "Cinematic Chiaroscuro Solitude — Diagonal Spotlight",
+  "prompt": "chiaroscuro lighting, dramatic spotlight, minimalist landscape photography, atmospheric negative space, solitary focal point, surreal liminality, high contrast composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感__Cinematic Chiaroscuro Solitude — Diagonal Spotlight/preview.webp",
+  "folder": "Krea2_moodboard/电影感__Cinematic Chiaroscuro Solitude — Diagonal Spotlight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-642",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "肌理极简波普",
+  "name": "Textured Minimalist Pop — Mid-Century Stipple",
+  "prompt": "flat vector illustration, stippled texture shading, minimalist graphic design, grainy gradient, mid-century modern influence, bold color blocking, high-contrast silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理极简波普__Textured Minimalist Pop — Mid-Century Stipple/preview.webp",
+  "folder": "Krea2_moodboard/肌理极简波普__Textured Minimalist Pop — Mid-Century Stipple",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

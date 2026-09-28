@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3060",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "图形极简光泽主要",
+  "name": "Graphic Avant-Garde Minimalism — Glossy Primary Blocking",
+  "prompt": "editorial beauty photography, saturated primary colors, graphic makeup art, stark studio lighting, minimalist composition, high-contrast color blocking, wet-look hair, surreal fashion portrait. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形极简光泽主要__Graphic Avant-Garde Minimalism — Glossy Primary Blocking/preview.webp",
+  "folder": "Krea2_moodboard/图形极简光泽主要__Graphic Avant-Garde Minimalism — Glossy Primary Blocking",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

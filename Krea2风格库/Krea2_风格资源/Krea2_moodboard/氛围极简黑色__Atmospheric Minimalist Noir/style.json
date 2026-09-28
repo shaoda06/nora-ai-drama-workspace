@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1709",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "氛围极简黑色",
+  "name": "Atmospheric Minimalist Noir",
+  "prompt": "high contrast silhouette, atmospheric fog, cool blue color palette, minimalist composition, rim lighting, 35mm film grain, cinematic mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围极简黑色__Atmospheric Minimalist Noir/preview.webp",
+  "folder": "Krea2_moodboard/氛围极简黑色__Atmospheric Minimalist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1910",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "故障",
+  "name": "Archival Cyanotype Glitch",
+  "prompt": "Prussian blue cyanotype, distressed paper texture, vintage photographic archive, minimalist glitch abstraction, soft diffused lighting, folded paper creases, monochromatic indigo palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/故障__Archival Cyanotype Glitch/preview.webp",
+  "folder": "Krea2_moodboard/故障__Archival Cyanotype Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-238",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "霓虹暮光",
+  "name": "Neon Twilight Metropolis",
+  "prompt": "stylized urban cityscape, neon and amber lighting, twilight atmospheric gradient, retro-CGI aesthetic, geometric architectural forms, vibrant color contrast, digital art synthesis. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹暮光__Neon Twilight Metropolis/preview.webp",
+  "folder": "Krea2_moodboard/霓虹暮光__Neon Twilight Metropolis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-874",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "绯红神秘",
+  "name": "Crimson Occult Nouveau",
+  "prompt": "woodcut printmaking style, Art Nouveau linework, high-contrast graphic illustration, surreal occult fantasy, vintage paper texture, bold black ink outlines, crimson and cream palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红神秘__Crimson Occult Nouveau/preview.webp",
+  "folder": "Krea2_moodboard/绯红神秘__Crimson Occult Nouveau",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

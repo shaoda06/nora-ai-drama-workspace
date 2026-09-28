@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3134",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "图形绯红极简猩红黑色",
+  "name": "Graphic Crimson Minimalism — Scarlet Noir Chiaroscuro",
+  "prompt": "high-contrast noir, saturated crimson palette, graphic surrealism, sharp studio lighting, minimalist composition, macro organic textures, theatrical chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形绯红极简猩红黑色__Graphic Crimson Minimalism — Scarlet Noir Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/图形绯红极简猩红黑色__Graphic Crimson Minimalism — Scarlet Noir Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

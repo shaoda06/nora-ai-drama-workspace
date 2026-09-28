@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-60",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "明亮棱镜",
+  "name": "Luminous Prismatic Dreamscape — Iridescent Caustic Bokeh",
+  "prompt": "prismatic light leaks, chromatic aberration, iridescent glass caustics, dreamlike ethereal atmosphere, vibrant saturated palette, soft-focus bokeh, digital anime aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮棱镜__Luminous Prismatic Dreamscape — Iridescent Caustic Bokeh/preview.webp",
+  "folder": "Krea2_moodboard/明亮棱镜__Luminous Prismatic Dreamscape — Iridescent Caustic Bokeh",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

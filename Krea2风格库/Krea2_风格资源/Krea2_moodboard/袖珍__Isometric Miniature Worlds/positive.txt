@@ -1,0 +1,1 @@
+voxel art, isometric diorama, tilt-shift photography, shallow depth of field, miniature model, soft global illumination, blocky 3D render. Subject:{prompt}

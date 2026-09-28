@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2534",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "绯红黑色",
+  "name": "Avant-Garde Crimson Noir",
+  "prompt": "high-fashion editorial, stark chiaroscuro lighting, deep crimson and black palette, avant-garde portraiture, glossy latex and matte textures, minimalist graphic composition, surreal gothic elements. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色__Avant-Garde Crimson Noir/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色__Avant-Garde Crimson Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2803",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "光谱故障",
+  "name": "Luminescent Spectral Glitch",
+  "prompt": "spectral blue glow, digital glitch distortion, high-contrast chiaroscuro, motion blur smear, deep black background, ethereal cyanotype texture, grainy film aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱故障__Luminescent Spectral Glitch/preview.webp",
+  "folder": "Krea2_moodboard/光谱故障__Luminescent Spectral Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

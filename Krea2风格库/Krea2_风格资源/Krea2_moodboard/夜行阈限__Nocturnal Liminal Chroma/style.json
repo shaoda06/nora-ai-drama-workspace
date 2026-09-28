@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1601",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "夜行阈限",
+  "name": "Nocturnal Liminal Chroma",
+  "prompt": "deep indigo night, glowing crimson highlights, cinematic chiaroscuro, liminal atmosphere, high-contrast lighting, atmospheric fog, surreal nocturnal landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行阈限__Nocturnal Liminal Chroma/preview.webp",
+  "folder": "Krea2_moodboard/夜行阈限__Nocturnal Liminal Chroma",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

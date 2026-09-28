@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-569",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "赛博粗野主义",
+  "name": "Monolithic Cyber-Brutalist Horizon",
+  "prompt": "monolithic sci-fi megastructures, dystopian vertical cityscape, atmospheric twilight haze, high-contrast industrial lighting, painterly digital art style, retro-futuristic cyberpunk architecture, extreme scale perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/赛博粗野主义__Monolithic Cyber-Brutalist Horizon/preview.webp",
+  "folder": "Krea2_moodboard/赛博粗野主义__Monolithic Cyber-Brutalist Horizon",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

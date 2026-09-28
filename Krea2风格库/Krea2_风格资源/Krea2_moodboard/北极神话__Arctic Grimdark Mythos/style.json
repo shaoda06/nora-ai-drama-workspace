@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1850",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "北极神话",
+  "name": "Arctic Grimdark Mythos",
+  "prompt": "cinematic dark fantasy, arctic grimdark, colossal scale, desaturated icy palette, monumental winter landscape, high-contrast atmospheric lighting, intricate frostbitten textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/北极神话__Arctic Grimdark Mythos/preview.webp",
+  "folder": "Krea2_moodboard/北极神话__Arctic Grimdark Mythos",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

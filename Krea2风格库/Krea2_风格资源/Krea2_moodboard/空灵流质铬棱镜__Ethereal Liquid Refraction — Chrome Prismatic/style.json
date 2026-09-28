@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-245",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "空灵流质铬棱镜",
+  "name": "Ethereal Liquid Refraction — Chrome Prismatic",
+  "prompt": "liquid chrome, refractive glass, chromatic dispersion, specular highlights, starburst lens flare, minimalist blue sky, fluid dynamics, high-gloss 3D render. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵流质铬棱镜__Ethereal Liquid Refraction — Chrome Prismatic/preview.webp",
+  "folder": "Krea2_moodboard/空灵流质铬棱镜__Ethereal Liquid Refraction — Chrome Prismatic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

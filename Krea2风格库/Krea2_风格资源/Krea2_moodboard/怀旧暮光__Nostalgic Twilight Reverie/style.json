@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2704",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "怀旧暮光",
+  "name": "Nostalgic Twilight Reverie",
+  "prompt": "35mm analog film grain, golden hour twilight, soft-focus dreamy aesthetic, muted nostalgic color palette, silhouette in sunset, cinematic atmospheric lighting, vintage film photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧暮光__Nostalgic Twilight Reverie/preview.webp",
+  "folder": "Krea2_moodboard/怀旧暮光__Nostalgic Twilight Reverie",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

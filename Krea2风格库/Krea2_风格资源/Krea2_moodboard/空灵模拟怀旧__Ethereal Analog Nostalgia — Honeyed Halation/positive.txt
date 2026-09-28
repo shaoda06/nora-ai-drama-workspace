@@ -1,0 +1,1 @@
+analog film grain, soft focus bloom, diffused natural light, warm amber color palette, dreamy hazy atmosphere, shallow depth of field, introspective mood. Subject:{prompt}

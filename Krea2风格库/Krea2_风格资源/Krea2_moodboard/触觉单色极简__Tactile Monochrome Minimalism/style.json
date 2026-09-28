@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2166",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "触觉单色极简",
+  "name": "Tactile Monochrome Minimalism",
+  "prompt": "3D minimalist render, tactile matte texture, cobalt and violet palette, soft studio lighting, rounded organic forms, sub-surface scattering, clean white background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉单色极简__Tactile Monochrome Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/触觉单色极简__Tactile Monochrome Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

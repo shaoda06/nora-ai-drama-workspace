@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1930",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感暮光忧郁靛蓝运动",
+  "name": "Cinematic Twilight Melancholy — Indigo Motion Blur",
+  "prompt": "twilight blue hour, cinematic silhouette, minimalist composition, motion blur, melancholic atmosphere, deep indigo tones, solitary figure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感暮光忧郁靛蓝运动__Cinematic Twilight Melancholy — Indigo Motion Blur/preview.webp",
+  "folder": "Krea2_moodboard/电影感暮光忧郁靛蓝运动__Cinematic Twilight Melancholy — Indigo Motion Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

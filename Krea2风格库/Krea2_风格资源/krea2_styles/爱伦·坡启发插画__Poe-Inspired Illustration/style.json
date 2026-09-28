@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-265",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "爱伦·坡启发插画",
+  "name": "Poe-Inspired Illustration",
+  "prompt": "Style: Poe-Inspired Illustration: A haunting gothic-macabre illustration style steeped in melancholy and dread, rendered in desaturated colors, ash-gray, and deep black tones pierced by isolated light, decaying Victorian vibes, symbolic motifs woven through the composition, delicately cross-hatched or ink-washed texture recalling antique engraving, and a brooding, poetic atmosphere of obsession, grief, and quiet horror. Influenced by: Harry Clarke, gothic engraving illustration, Victorian mourning art, Gustave Doré.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/爱伦·坡启发插画__Poe-Inspired Illustration/preview.jpg",
+  "folder": "krea2_styles/爱伦·坡启发插画__Poe-Inspired Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1382",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感夜行黑色",
+  "name": "Cinematic Nocturnal Noir — Green Celluloid",
+  "prompt": "cinematic film grain, low-key chiaroscuro lighting, moody monochromatic teal and emerald palette, shallow depth of field, melancholic atmospheric noir, intimate voyeuristic perspective, soft focus texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色__Cinematic Nocturnal Noir — Green Celluloid/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色__Cinematic Nocturnal Noir — Green Celluloid",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

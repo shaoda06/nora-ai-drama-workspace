@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1723",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "氛围极简靛蓝",
+  "name": "Atmospheric Monochromatic Minimalism — Misty Indigo",
+  "prompt": "minimalist silhouette, atmospheric blue palette, misty fog, clean graphic lines, introspective mood, monochromatic gradient, solitary landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围极简靛蓝__Atmospheric Monochromatic Minimalism — Misty Indigo/preview.webp",
+  "folder": "Krea2_moodboard/氛围极简靛蓝__Atmospheric Monochromatic Minimalism — Misty Indigo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

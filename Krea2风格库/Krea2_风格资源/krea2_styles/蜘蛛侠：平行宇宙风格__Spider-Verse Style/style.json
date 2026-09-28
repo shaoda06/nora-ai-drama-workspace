@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-42",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "蜘蛛侠：平行宇宙风格",
+  "name": "Spider-Verse Style",
+  "prompt": "Style: Spider-Verse Style: A kinetic mixed-media animation-illustration style built on visible halftone dot patterning and offset-print texture layered directly into character rendering, deliberate chromatic-fringe misregistration echoing vintage comic-printing imperfection, bold graphic linework,  animation intensity that feels handmade, glitchy, and alive. Influenced by: Sony Pictures Animation, Kris Anka, halftone comic-printing technique, mixed-media collage-animation practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/蜘蛛侠：平行宇宙风格__Spider-Verse Style/preview.jpg",
+  "folder": "krea2_styles/蜘蛛侠：平行宇宙风格__Spider-Verse Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

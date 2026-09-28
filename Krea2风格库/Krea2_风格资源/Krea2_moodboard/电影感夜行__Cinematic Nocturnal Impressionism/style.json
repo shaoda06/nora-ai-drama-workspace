@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1788",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感夜行",
+  "name": "Cinematic Nocturnal Impressionism",
+  "prompt": "cinematic street photography, shallow depth of field, wet asphalt reflections, glowing neon bokeh, muted urban palette, atmospheric night mood, dreamy soft focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

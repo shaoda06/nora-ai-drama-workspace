@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2300",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "明亮黑色剪影",
+  "name": "Luminous Noir Silhouette",
+  "prompt": "heavy analog film grain, stark silhouette, glowing amber and crimson backlight, soft-focus halation, nocturnal noir atmosphere, high-contrast chiaroscuro, dreamlike diffusion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色剪影__Luminous Noir Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色剪影__Luminous Noir Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

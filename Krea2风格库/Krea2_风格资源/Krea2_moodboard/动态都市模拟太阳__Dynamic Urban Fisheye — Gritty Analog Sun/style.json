@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2092",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "动态都市模拟太阳",
+  "name": "Dynamic Urban Fisheye — Gritty Analog Sun",
+  "prompt": "fisheye lens, extreme low-angle shot, urban street photography, dynamic perspective, vibrant blue sky, gritty film grain, streetwear aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态都市模拟太阳__Dynamic Urban Fisheye — Gritty Analog Sun/preview.webp",
+  "folder": "Krea2_moodboard/动态都市模拟太阳__Dynamic Urban Fisheye — Gritty Analog Sun",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

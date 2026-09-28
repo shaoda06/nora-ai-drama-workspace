@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-785",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "单色超现实写实",
+  "name": "Monochrome Surrealist Realism",
+  "prompt": "hyper-realistic graphite drawing, surrealist anatomical distortion, high-contrast chiaroscuro, stark white background, monochrome fine art, uncanny realism, micro-texture detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色超现实写实__Monochrome Surrealist Realism/preview.webp",
+  "folder": "Krea2_moodboard/单色超现实写实__Monochrome Surrealist Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

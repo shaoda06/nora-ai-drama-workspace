@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1676",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵怀旧逆光",
+  "name": "Ethereal Pastoral Nostalgia — Sheer Backlit Blush",
+  "prompt": "ethereal natural light, dreamy soft focus, wind-swept sheer fabric, low angle perspective, muted pastel palette, golden hour glow, shallow depth of field, nostalgic analog aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵怀旧逆光__Ethereal Pastoral Nostalgia — Sheer Backlit Blush/preview.webp",
+  "folder": "Krea2_moodboard/空灵怀旧逆光__Ethereal Pastoral Nostalgia — Sheer Backlit Blush",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

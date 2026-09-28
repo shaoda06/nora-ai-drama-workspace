@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3117",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "电影感翠绿天鹅绒发光",
+  "name": "Cinematic Chiaroscuro Solitude — Verdant Velvet Glow",
+  "prompt": "chiaroscuro landscape, rolling green hills, dramatic spotlighting, minimalist composition, cinematic shadow, surreal solitude, golden hour highlights, moody atmospheric depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感翠绿天鹅绒发光__Cinematic Chiaroscuro Solitude — Verdant Velvet Glow/preview.webp",
+  "folder": "Krea2_moodboard/电影感翠绿天鹅绒发光__Cinematic Chiaroscuro Solitude — Verdant Velvet Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

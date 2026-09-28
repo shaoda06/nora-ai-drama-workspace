@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2293",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "光谱运动黑色发光",
+  "name": "Spectral Motion Noir — Void-Black Edge Glow",
+  "prompt": "high-contrast black and white, motion blur, spectral light trails, chiaroscuro, grainy film texture, long exposure, glowing silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱运动黑色发光__Spectral Motion Noir — Void-Black Edge Glow/preview.webp",
+  "folder": "Krea2_moodboard/光谱运动黑色发光__Spectral Motion Noir — Void-Black Edge Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles:Breath of the Wild Style",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "Breath of the Wild Style",
+  "name": "Breath of the Wild Style",
+  "prompt": "Style: Breath of the Wild Style: An in-game 3D screenshot in the art style of The Legend of Zelda: Breath of the Wild: a toon-shaded three-dimensional character model with soft painterly cel shading and gentle rim light, a muted, airy pastel palette, hand-painted watercolor-like textures on every surface, soft hazy atmospheric perspective with bloom and drifting light, stylized chunky 3D props and furniture, warm golden light spilling through the window, and the calm, wistful, painterly-3D look of Nintendo's open-world adventure. Influenced by: Breath of the Wild and Tears of the Kingdom art direction, painterly toon-shaded 3D rendering, Nintendo EPD, impressionist-inspired game environments.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Breath of the Wild Style__Breath of the Wild Style/preview.jpg",
+  "folder": "krea2_styles/Breath of the Wild Style__Breath of the Wild Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

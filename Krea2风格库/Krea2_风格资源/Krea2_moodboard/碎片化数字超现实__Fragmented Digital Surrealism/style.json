@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2778",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "碎片化数字超现实",
+  "name": "Fragmented Digital Surrealism",
+  "prompt": "digital glitch art, pixel sorting, fragmented portraiture, minimalist studio lighting, surreal motion blur, high contrast composition, data corruption aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化数字超现实__Fragmented Digital Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/碎片化数字超现实__Fragmented Digital Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

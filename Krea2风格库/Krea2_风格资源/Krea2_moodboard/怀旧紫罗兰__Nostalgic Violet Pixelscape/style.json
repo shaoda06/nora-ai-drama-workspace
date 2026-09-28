@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-199",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "怀旧紫罗兰",
+  "name": "Nostalgic Violet Pixelscape",
+  "prompt": "pixel art, 8-bit retro aesthetic, violet and indigo palette, dithering texture, nostalgic game art, kawaii motifs, PC-98 style, atmospheric pixel landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧紫罗兰__Nostalgic Violet Pixelscape/preview.webp",
+  "folder": "Krea2_moodboard/怀旧紫罗兰__Nostalgic Violet Pixelscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

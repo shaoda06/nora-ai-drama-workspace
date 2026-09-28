@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1983",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "夜行单色黑色",
+  "name": "Nocturnal Monochrome Noir",
+  "prompt": "monochrome, heavy film grain, high contrast, chiaroscuro, motion blur, nocturnal atmosphere, stippled texture, lo-fi mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行单色黑色__Nocturnal Monochrome Noir/preview.webp",
+  "folder": "Krea2_moodboard/夜行单色黑色__Nocturnal Monochrome Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2799",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "超现实粉彩故障",
+  "name": "Surrealist Pastel Glitch",
+  "prompt": "surrealist studio portrait, minimalist pastel aesthetic, pixel sorting distortion, geometric crystal face, sharp focus, avant-garde fashion, uncanny visual glitch, solid colored background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实粉彩故障__Surrealist Pastel Glitch/preview.webp",
+  "folder": "Krea2_moodboard/超现实粉彩故障__Surrealist Pastel Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

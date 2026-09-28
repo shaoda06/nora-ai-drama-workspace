@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-41",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "图形超现实波普动漫",
+  "name": "Graphic Surreal Pop — Cherry Mint Anime",
+  "prompt": "bold graphic illustration, saturated pop art palette, clean vector outlines, halftone and spiral textures, 90s retro anime influence, high-contrast color blocking, whimsical surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形超现实波普动漫__Graphic Surreal Pop — Cherry Mint Anime/preview.webp",
+  "folder": "Krea2_moodboard/图形超现实波普动漫__Graphic Surreal Pop — Cherry Mint Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

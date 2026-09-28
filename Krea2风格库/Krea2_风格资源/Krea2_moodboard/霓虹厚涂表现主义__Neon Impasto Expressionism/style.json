@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1076",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "霓虹厚涂表现主义",
+  "name": "Neon Impasto Expressionism",
+  "prompt": "heavy impasto texture, fluorescent neon accents, muted earthy base, palette knife technique, expressive gestural brushwork, contemporary abstract oil painting, distressed industrial finish. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹厚涂表现主义__Neon Impasto Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/霓虹厚涂表现主义__Neon Impasto Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2230",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "怀旧暮光",
+  "name": "Nostalgic Twilight Pixelscapes",
+  "prompt": "pixel art, atmospheric lighting, nostalgic retro style, dramatic chiaroscuro, golden hour gradient, cozy lofi vibe, high-contrast color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧暮光__Nostalgic Twilight Pixelscapes/preview.webp",
+  "folder": "Krea2_moodboard/怀旧暮光__Nostalgic Twilight Pixelscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

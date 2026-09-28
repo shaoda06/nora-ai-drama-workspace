@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-735",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "拼贴",
+  "name": "Deconstructed Archival Collage",
+  "prompt": "torn paper collage, distressed vintage photography, tactile paper texture, archival decay, fragmented portrait, sepia and charcoal palette, singed edges, analog mixed media. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/拼贴__Deconstructed Archival Collage/preview.webp",
+  "folder": "Krea2_moodboard/拼贴__Deconstructed Archival Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

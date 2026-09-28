@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-553",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵丰碑",
+  "name": "Ethereal Monumental Dreamscapes",
+  "prompt": "colossal scale, mystical violet forest, atmospheric perspective, monolithic ruins, ethereal glowing mist, painterly textures, melancholic mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵丰碑__Ethereal Monumental Dreamscapes/preview.webp",
+  "folder": "Krea2_moodboard/空灵丰碑__Ethereal Monumental Dreamscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-127",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "鲜活动漫",
+  "name": "Vibrant Anime Dreamscapes",
+  "prompt": "vibrant anime aesthetic, saturated color palette, painterly fantasy environment, dynamic lighting, whimsical surrealism, high-contrast highlights, cinematic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活动漫__Vibrant Anime Dreamscapes/preview.webp",
+  "folder": "Krea2_moodboard/鲜活动漫__Vibrant Anime Dreamscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

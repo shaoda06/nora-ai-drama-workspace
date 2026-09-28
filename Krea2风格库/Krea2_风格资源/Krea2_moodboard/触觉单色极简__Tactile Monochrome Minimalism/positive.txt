@@ -1,0 +1,1 @@
+3D minimalist render, tactile matte texture, cobalt and violet palette, soft studio lighting, rounded organic forms, sub-surface scattering, clean white background. Subject:{prompt}

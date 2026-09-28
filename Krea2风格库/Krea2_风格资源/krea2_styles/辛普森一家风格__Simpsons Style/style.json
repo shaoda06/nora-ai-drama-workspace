@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-123",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "辛普森一家风格",
+  "name": "Simpsons Style",
+  "prompt": "Style: Simpsons Style: A bold, flat cartoon illustration style built on thick confident outline holding simplified exaggerated proportions, bright even flat fill with minimal shading or gradient, an overbite-heavy, wide-eyed character-design language prioritizing instant graphic readability, loose, bouncy proportion distortion for comedic expressiveness, and a cheerful, satirical, unmistakably mass-market animated-sitcom energy. Influenced by: Matt Groening, classic American cel-animation technique, flat-color sitcom cartoon tradition, satirical animated character design.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/辛普森一家风格__Simpsons Style/preview.jpg",
+  "folder": "krea2_styles/辛普森一家风格__Simpsons Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

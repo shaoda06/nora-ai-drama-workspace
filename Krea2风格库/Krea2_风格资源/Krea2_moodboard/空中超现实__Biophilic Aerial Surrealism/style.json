@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3207",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空中超现实",
+  "name": "Biophilic Aerial Surrealism",
+  "prompt": "top-down drone perspective, biophilic surrealism, vibrant botanical abundance, golden hour lighting, dramatic long shadows, minimalist geometric composition, lush organic textures, futuristic nature integration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空中超现实__Biophilic Aerial Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/空中超现实__Biophilic Aerial Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1849",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "粗野主义",
+  "name": "Volcanic Brutalist Abyss",
+  "prompt": "monumental brutalist architecture, volcanic subterranean landscape, fiery orange and teal contrast, cinematic atmospheric haze, industrial greeble textures, dystopian sci-fi scale, dramatic low-key lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粗野主义__Volcanic Brutalist Abyss/preview.webp",
+  "folder": "Krea2_moodboard/粗野主义__Volcanic Brutalist Abyss",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

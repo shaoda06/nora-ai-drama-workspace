@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3322",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "天穹夜行崇高",
+  "name": "Celestial Nocturnal Sublime",
+  "prompt": "high contrast silhouette, volumetric golden glow, deep indigo night sky, celestial scale, cosmic surrealism, dramatic atmospheric lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹夜行崇高__Celestial Nocturnal Sublime/preview.webp",
+  "folder": "Krea2_moodboard/天穹夜行崇高__Celestial Nocturnal Sublime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

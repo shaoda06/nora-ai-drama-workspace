@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-514",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实复古拼贴半色调",
+  "name": "Surrealist Retro Collage — Red Halftone Americana",
+  "prompt": "vintage paper collage, halftone print texture, mid-century surrealism, retro color blocking, dreamlike juxtaposition, cut-out technique, saturated primary colors, archival photomontage. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实复古拼贴半色调__Surrealist Retro Collage — Red Halftone Americana/preview.webp",
+  "folder": "Krea2_moodboard/超现实复古拼贴半色调__Surrealist Retro Collage — Red Halftone Americana",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

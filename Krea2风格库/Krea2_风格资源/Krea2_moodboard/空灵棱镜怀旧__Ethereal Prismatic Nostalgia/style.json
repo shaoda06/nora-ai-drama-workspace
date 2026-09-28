@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1558",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵棱镜怀旧",
+  "name": "Ethereal Prismatic Nostalgia",
+  "prompt": "prismatic light leaks, vintage film grain, soft-focus haze, ethereal glitter overlay, chromatic aberration, dreamy bokeh, silhouetted figure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵棱镜怀旧__Ethereal Prismatic Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/空灵棱镜怀旧__Ethereal Prismatic Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

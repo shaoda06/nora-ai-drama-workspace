@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2566",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "电影感黑色极简低关键颗粒",
+  "name": "Cinematic Noir Minimalism — Low-Key Grain",
+  "prompt": "extreme chiaroscuro, heavy film grain, high contrast monochrome, minimalist composition, dramatic low-key lighting, gritty analog texture, sculptural shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色极简低关键颗粒__Cinematic Noir Minimalism — Low-Key Grain/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色极简低关键颗粒__Cinematic Noir Minimalism — Low-Key Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

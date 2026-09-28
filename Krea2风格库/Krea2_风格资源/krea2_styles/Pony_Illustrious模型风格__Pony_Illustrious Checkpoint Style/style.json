@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-93",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "Pony/Illustrious模型风格",
+  "name": "Pony/Illustrious Checkpoint Style",
+  "prompt": "Style: Pony/Illustrious Checkpoint Style: A vibrant, high-saturation anime-illustration style built on crisp, confidently defined linework paired with smooth cel-to-airbrush hybrid shading, glossy specular highlights concentrated on eyes, lips, and skin for an immediately eye-catching finish, exaggerated yet anatomically coherent proportions calibrated for instant visual appeal, densely rendered hair and costume detail balanced against relatively simplified background treatment, and a polished, community-model illustration intensity optimized for striking, shareable single-character compositions. Influenced by: Danbooru-tagged anime illustration convention, checkpoint-trained diffusion-model aesthetic, gacha/booru community art style, semi-realistic anime rendering practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Pony_Illustrious模型风格__Pony_Illustrious Checkpoint Style/preview.jpg",
+  "folder": "krea2_styles/Pony_Illustrious模型风格__Pony_Illustrious Checkpoint Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

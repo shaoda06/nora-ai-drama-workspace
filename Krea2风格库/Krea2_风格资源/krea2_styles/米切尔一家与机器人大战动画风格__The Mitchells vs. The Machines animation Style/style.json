@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-41",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "米切尔一家与机器人大战动画风格",
+  "name": "The Mitchells vs. The Machines animation Style",
+  "prompt": "Style: The Mitchells vs. The Machines animation Style: A vibrant, hybrid animation-illustration style built on smooth 3D-rendered character forms overlaid with wet fluid brushstrokes and painterly-like accents layered as texture directly into the frame, exaggerated, elastic proportion balancing 3D dimensionality with 2D cartoon energy, bold, expressive shading that mixes painterly gradient with graphic flat-color punch, meticulous attention to chaotic, personality-driven posing charged with comedic warmth, and a distinctive, boundary-breaking animation intensity that feels handmade, playful, and unmistakably contemporary. Influenced by: Sony Pictures Animation, mixed 2D/3D hybrid-animation technique, paint-overlay practice, contemporary indie-animation character-design method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/米切尔一家与机器人大战动画风格__The Mitchells vs. The Machines animation Style/preview.jpg",
+  "folder": "krea2_styles/米切尔一家与机器人大战动画风格__The Mitchells vs. The Machines animation Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

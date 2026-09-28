@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1577",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "电影感黑色",
+  "name": "Cinematic Cyan Noir — Electric Beam Haze",
+  "prompt": "cinematic cyan lighting, volumetric light, heavy fog and mist, stark silhouette, neo-noir atmosphere, deep indigo shadows, liminal space, high-contrast chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色__Cinematic Cyan Noir — Electric Beam Haze/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色__Cinematic Cyan Noir — Electric Beam Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

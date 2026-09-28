@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2575",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "黑色",
+  "name": "Monochromatic Sculptural Noir",
+  "prompt": "high-contrast silhouette, minimalist editorial fashion, dramatic studio backlighting, cool desaturated palette, sculptural form, tactile texture, avant-garde noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Monochromatic Sculptural Noir/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Monochromatic Sculptural Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

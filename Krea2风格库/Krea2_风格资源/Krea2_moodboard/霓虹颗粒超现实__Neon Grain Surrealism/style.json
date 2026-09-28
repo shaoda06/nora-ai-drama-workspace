@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-472",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "霓虹颗粒超现实",
+  "name": "Neon Grain Surrealism",
+  "prompt": "risograph print style, acid neon gradients, stipple grain texture, surreal dreamscape, halftone pointillism, vibrant high-contrast saturation, retro-futuristic silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹颗粒超现实__Neon Grain Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/霓虹颗粒超现实__Neon Grain Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

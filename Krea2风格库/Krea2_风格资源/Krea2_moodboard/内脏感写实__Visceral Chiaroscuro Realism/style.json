@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2193",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "内脏感写实",
+  "name": "Visceral Chiaroscuro Realism",
+  "prompt": "chiaroscuro lighting, gritty realism, extreme macro texture, low-key portraiture, weathered skin, cinematic shadows, desaturated earthy tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感写实__Visceral Chiaroscuro Realism/preview.webp",
+  "folder": "Krea2_moodboard/内脏感写实__Visceral Chiaroscuro Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

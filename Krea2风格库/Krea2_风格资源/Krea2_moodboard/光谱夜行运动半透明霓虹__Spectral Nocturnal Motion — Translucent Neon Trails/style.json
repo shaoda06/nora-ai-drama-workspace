@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1529",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "光谱夜行运动半透明霓虹",
+  "name": "Spectral Nocturnal Motion — Translucent Neon Trails",
+  "prompt": "long exposure motion blur, spectral light trails, deep indigo and neon contrast, ghostly translucent forms, chiaroscuro lighting, ethereal soft focus glow, nocturnal atmospheric mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱夜行运动半透明霓虹__Spectral Nocturnal Motion — Translucent Neon Trails/preview.webp",
+  "folder": "Krea2_moodboard/光谱夜行运动半透明霓虹__Spectral Nocturnal Motion — Translucent Neon Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

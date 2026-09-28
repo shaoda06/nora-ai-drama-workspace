@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2887",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "明亮光谱剪影",
+  "name": "Luminous Spectral Silhouette",
+  "prompt": "luminous orange aura, minimalist dark silhouette, analog film grain, soft-focus airbrush texture, chromatic aberration, dreamlike surrealism, high contrast chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮光谱剪影__Luminous Spectral Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/明亮光谱剪影__Luminous Spectral Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3078",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "图形都市超现实",
+  "name": "Graphic Urban Surrealism",
+  "prompt": "high contrast composition, urban intervention, vector graphic overlay, surreal lighting effects, minimalist iconography, gritty industrial textures, ethereal light painting, architectural integration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形都市超现实__Graphic Urban Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/图形都市超现实__Graphic Urban Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

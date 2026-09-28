@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-160",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "漫威封面艺术",
+  "name": "Marvel Cover Art",
+  "prompt": "Style: Marvel Cover Art: A striking, poster-worthy superhero illustration style built for maximum newsstand impact, dramatic hero-forward composition with bold dynamic posing thrust toward the viewer, richly rendered digital painting or ink-and-color hybrid technique giving weight and polish beyond interior panel art, saturated high-contrast color palettes anchored by an iconic focal color, dramatic rim lighting and glowing effects framing the central figure against a moody or explosive backdrop, and a bold, hyper-marketable heroic grandeur designed to sell a single unforgettable image. Influenced by: Alex Ross, J. Scott Campbell, Marvel Comics cover art direction, comic-cover painting technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/漫威封面艺术__Marvel Cover Art/preview.jpg",
+  "folder": "krea2_styles/漫威封面艺术__Marvel Cover Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

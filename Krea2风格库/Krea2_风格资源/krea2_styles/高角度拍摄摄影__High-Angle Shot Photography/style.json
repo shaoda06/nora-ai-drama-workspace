@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-386",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "高角度拍摄摄影",
+  "name": "High-Angle Shot Photography",
+  "prompt": "Style: High-Angle Shot Photography: A dramatically elevated photographic technique built on a steep, downward vantage that foreshortens and compresses the subject from above, an altered sense of scale that renders the subject smaller and more vulnerable within the frame, a wide, encompassing view of surrounding context made possible by the elevated position, deliberate, considered framing that shifts psychological weight through perspective alone, and a distinctive, compositionally assertive intensity that treats camera position itself as the primary storytelling tool. Influenced by: elevated-perspective cinematography tradition, dramatic camera-angle technique, psychological framing practice, classic high-angle photographic method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/高角度拍摄摄影__High-Angle Shot Photography/preview.jpg",
+  "folder": "krea2_styles/高角度拍摄摄影__High-Angle Shot Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

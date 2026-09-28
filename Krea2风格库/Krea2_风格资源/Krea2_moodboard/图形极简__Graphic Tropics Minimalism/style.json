@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-629",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "图形极简",
+  "name": "Graphic Tropics Minimalism",
+  "prompt": "flat vector illustration, bold geometric minimalism, high contrast color blocking, sharp graphic shadows, saturated warm palette, mid-century modern graphic design, stylized tropical elements. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形极简__Graphic Tropics Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/图形极简__Graphic Tropics Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

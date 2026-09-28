@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-991",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮翠绿",
+  "name": "Luminous Emerald Chiaroscuro",
+  "prompt": "painterly digital art, high-contrast chiaroscuro, emerald and teal palette, expressive brushstrokes, ethereal light shafts, bioluminescent forest atmosphere, dramatic vertical perspective, textured oil pastel style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮翠绿__Luminous Emerald Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/明亮翠绿__Luminous Emerald Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

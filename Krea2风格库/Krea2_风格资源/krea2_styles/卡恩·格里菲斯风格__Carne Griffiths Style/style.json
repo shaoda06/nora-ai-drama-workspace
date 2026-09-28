@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-311",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "卡恩·格里菲斯风格",
+  "name": "Carne Griffiths Style",
+  "prompt": "Style: Carne Griffiths Style: A delicately fluid mixed-media illustration style built on flowing, ink-and-wash linework that bleeds and drips with organic unpredictability, translucent layered washes that let forms dissolve into loose atmospheric bloom at the edges, fine calligraphic detail threading through the figure like living linework, a hushed, ethereal fragility carried through delicate transparency, and a poetic, painterly looseness where control and chance blend into something dreamlike and organic. Influenced by: Carne Griffiths, ink and tea-wash illustration technique, mixed-media fine art, botanical linework technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/卡恩·格里菲斯风格__Carne Griffiths Style/preview.jpg",
+  "folder": "krea2_styles/卡恩·格里菲斯风格__Carne Griffiths Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

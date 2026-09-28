@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2303",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "光谱运动黑色黑曜",
+  "name": "Spectral Motion Noir — Thermal Orange Obsidian",
+  "prompt": "motion blur, heavy film grain, high-contrast noir, spectral glowing silhouette, thermal imaging palette, analog texture, long exposure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱运动黑色黑曜__Spectral Motion Noir — Thermal Orange Obsidian/preview.webp",
+  "folder": "Krea2_moodboard/光谱运动黑色黑曜__Spectral Motion Noir — Thermal Orange Obsidian",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-830",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "单色算法",
+  "name": "Monochrome Algorithmic Precision",
+  "prompt": "generative minimalism, high-contrast monochrome, vector line art, geometric abstraction, mathematical grid, topographic wireframe, optical illusion, technical ink drafting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色算法__Monochrome Algorithmic Precision/preview.webp",
+  "folder": "Krea2_moodboard/单色算法__Monochrome Algorithmic Precision",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

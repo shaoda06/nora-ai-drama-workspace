@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3186",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "天鹅绒超现实对比",
+  "name": "Velvet Surrealist Contrast",
+  "prompt": "cobalt blue background, tactile velvet texture, high-contrast surrealism, golden hour lighting, minimalist composition, vibrant primary palette, sharp dramatic shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天鹅绒超现实对比__Velvet Surrealist Contrast/preview.webp",
+  "folder": "Krea2_moodboard/天鹅绒超现实对比__Velvet Surrealist Contrast",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

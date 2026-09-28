@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-574",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵",
+  "name": "Ethereal Pointillist Storybook",
+  "prompt": "pointillism, stippled texture, muted pastel palette, Art Nouveau influence, soft dappled light, folkloric aesthetic, dreamy atmosphere, fine-line illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Pointillist Storybook/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Pointillist Storybook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

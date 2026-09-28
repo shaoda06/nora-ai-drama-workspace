@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3328",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "鲜活超现实",
+  "name": "Hyper-Vibrant Surreal Dreamscapes",
+  "prompt": "surreal landscape, hyper-saturated color palette, dreamlike atmosphere, vibrant lighting, tactile textures, whimsical fantasy, high-contrast digital art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活超现实__Hyper-Vibrant Surreal Dreamscapes/preview.webp",
+  "folder": "Krea2_moodboard/鲜活超现实__Hyper-Vibrant Surreal Dreamscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

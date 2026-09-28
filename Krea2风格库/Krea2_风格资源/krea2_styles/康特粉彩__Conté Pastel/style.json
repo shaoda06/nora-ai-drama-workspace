@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-261",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "康特粉彩",
+  "name": "Conté Pastel",
+  "prompt": "Style: Conté Pastel: A rich, tactile drawing style built on dense, velvety pigment applied with confident, blendable pressure, a soft, smudgeable quality allowing form to be built through both layered mark-making and controlled blending, a warm, granular texture distinct from smoother chalk or charcoal media, deliberate tonal transition achieved through pressure variation rather than wet blending, and a timeless, painterly-adjacent intensity rooted in classical academic drawing tradition. Influenced by: Conté crayon drawing tradition, classical academic tonal-drawing practice, life-drawing atelier technique, fine-art pastel-and-chalk method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/康特粉彩__Conté Pastel/preview.jpg",
+  "folder": "krea2_styles/康特粉彩__Conté Pastel",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

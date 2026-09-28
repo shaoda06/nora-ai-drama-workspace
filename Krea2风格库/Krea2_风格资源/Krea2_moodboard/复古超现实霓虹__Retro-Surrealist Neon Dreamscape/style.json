@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-494",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "复古超现实霓虹",
+  "name": "Retro-Surrealist Neon Dreamscape",
+  "prompt": "1980s sci-fi airbrush, nocturnal neon glow, retro-surrealist dreamscape, grainy analog texture, geometric cosmic composition, low-angle perspective, risograph halftone effect. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古超现实霓虹__Retro-Surrealist Neon Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/复古超现实霓虹__Retro-Surrealist Neon Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3179",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵颗粒",
+  "name": "Ethereal Cobalt Grain",
+  "prompt": "monochromatic cobalt blue, soft-focus ethereal silhouette, heavy film grain texture, cyanotype print aesthetic, diffused halo lighting, stippled airbrush effect, minimalist dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒__Ethereal Cobalt Grain/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒__Ethereal Cobalt Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1643",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "怀旧",
+  "name": "Nostalgic Pastoral Dreamscape",
+  "prompt": "vintage analog film, soft focus, sun-drenched, dreamy atmosphere, muted pastel palette, natural grain, pastoral aesthetic, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧__Nostalgic Pastoral Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/怀旧__Nostalgic Pastoral Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

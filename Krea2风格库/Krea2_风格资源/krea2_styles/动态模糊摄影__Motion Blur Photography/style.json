@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-361",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "动态模糊摄影",
+  "name": "Motion Blur Photography",
+  "prompt": "Style: Motion Blur Photography: A dynamic, energy-charged photographic style built on deliberate exposure duration that lets movement smear and streak across the frame, sharp, frozen focal elements contrasted against surrounding blurred trails of motion, a kinetic, directional smearing that visually encodes speed and momentum into the still image, unpredictable, organic streaking that varies with the pace and path of movement, and a visceral, immersive sense of velocity that makes stillness itself feel alive with implied motion. Influenced by: long-exposure motion-photography technique, panning-shot photographic practice, kinetic sports-photography method, experimental shutter-speed technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/动态模糊摄影__Motion Blur Photography/preview.jpg",
+  "folder": "krea2_styles/动态模糊摄影__Motion Blur Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

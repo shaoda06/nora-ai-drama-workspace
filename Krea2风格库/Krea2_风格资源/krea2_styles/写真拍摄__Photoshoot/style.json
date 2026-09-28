@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-367",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "写真拍摄",
+  "name": "Photoshoot",
+  "prompt": "Style: Photoshoot: A polished, professionally composed photography style built on deliberate, controlled lighting calibrated to flatter and define form with confident clarity, considered, purposeful posing framed for maximum visual intention rather than candid spontaneity, a refined, consistent exposure balance that keeps every plane clearly and evenly rendered, a composed, unhurried stillness carried through careful, methodical setup, and a polished, commercial-grade photographic intensity built for deliberate, high-impact visual presentation. Influenced by: professional studio-photography tradition, commercial portrait-lighting technique, editorial photoshoot production practice, controlled-environment photographic method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/写真拍摄__Photoshoot/preview.jpg",
+  "folder": "krea2_styles/写真拍摄__Photoshoot",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

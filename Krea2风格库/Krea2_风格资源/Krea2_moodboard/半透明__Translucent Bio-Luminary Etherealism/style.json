@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3470",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "半透明",
+  "name": "Translucent Bio-Luminary Etherealism",
+  "prompt": "translucent textures, icy blue and pearlescent palette, soft diffused backlighting, biomorphic minimalism, ethereal high-fashion, rim-lit silhouettes, sculptural elegance. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/半透明__Translucent Bio-Luminary Etherealism/preview.webp",
+  "folder": "Krea2_moodboard/半透明__Translucent Bio-Luminary Etherealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

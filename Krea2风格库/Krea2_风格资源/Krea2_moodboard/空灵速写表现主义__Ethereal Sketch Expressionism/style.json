@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-761",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵速写表现主义",
+  "name": "Ethereal Sketch Expressionism",
+  "prompt": "colored pencil sketch, translucent risograph texture, expressive scribbled linework, glowing pastel highlights, double exposure, cerulean and cobalt palette, hand-drawn graphite texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵速写表现主义__Ethereal Sketch Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/空灵速写表现主义__Ethereal Sketch Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

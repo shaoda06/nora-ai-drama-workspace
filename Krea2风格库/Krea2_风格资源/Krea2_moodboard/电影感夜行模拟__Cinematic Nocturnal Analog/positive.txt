@@ -1,0 +1,1 @@
+analog film grain, stark silhouette, high contrast lighting, cinematic light leak, atmospheric fog, surreal color palette, lo-fi vintage texture. Subject:{prompt}

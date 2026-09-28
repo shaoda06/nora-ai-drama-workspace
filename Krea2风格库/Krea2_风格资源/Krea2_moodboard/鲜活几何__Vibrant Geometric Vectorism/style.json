@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-695",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "鲜活几何",
+  "name": "Vibrant Geometric Vectorism",
+  "prompt": "flat vector illustration, geometric abstraction, high-contrast neon palette, minimalist graphic design, bold color blocking, smooth gradient accents, stylized silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活几何__Vibrant Geometric Vectorism/preview.webp",
+  "folder": "Krea2_moodboard/鲜活几何__Vibrant Geometric Vectorism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

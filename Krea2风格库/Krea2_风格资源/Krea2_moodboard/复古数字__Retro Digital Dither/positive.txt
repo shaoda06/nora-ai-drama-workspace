@@ -1,0 +1,1 @@
+1-bit dithered art, CRT scanlines, pixel grid aesthetic, monochrome green phosphor, halftone stippling, retro computer interface, lo-fi digital glitch. Subject:{prompt}

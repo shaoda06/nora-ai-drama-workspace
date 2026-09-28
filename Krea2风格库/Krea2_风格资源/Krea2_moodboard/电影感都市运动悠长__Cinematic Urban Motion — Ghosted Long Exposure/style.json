@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2843",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "电影感都市运动悠长",
+  "name": "Cinematic Urban Motion — Ghosted Long Exposure",
+  "prompt": "long exposure photography, motion blur, urban isolation, sharp central subject, cinematic film grain, surreal juxtaposition, high-angle perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市运动悠长__Cinematic Urban Motion — Ghosted Long Exposure/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市运动悠长__Cinematic Urban Motion — Ghosted Long Exposure",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

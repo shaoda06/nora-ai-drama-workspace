@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-409",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "图形",
+  "name": "Gritty Graphic Underground",
+  "prompt": "high-contrast screenprint, gritty halftone texture, duotone posterization, xerox grain, distressed underground aesthetic, graphic shadow work, retro zine style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形__Gritty Graphic Underground/preview.webp",
+  "folder": "Krea2_moodboard/图形__Gritty Graphic Underground",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

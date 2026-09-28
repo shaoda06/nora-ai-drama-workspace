@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3321",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "触觉超现实",
+  "name": "Tactile Surrealist Dreamscape",
+  "prompt": "tactile felt and glossy textures, saturated primary color palette, surrealist whimsical composition, oversized organic elements, vibrant blue sky background, high-contrast lighting, 3d sculptural aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉超现实__Tactile Surrealist Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/触觉超现实__Tactile Surrealist Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

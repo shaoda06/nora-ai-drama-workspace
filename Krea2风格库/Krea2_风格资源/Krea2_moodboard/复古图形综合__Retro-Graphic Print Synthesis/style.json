@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-493",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "复古图形综合",
+  "name": "Retro-Graphic Print Synthesis",
+  "prompt": "risograph print style, high-contrast silhouette, halftone dot pattern, flat neon background, stippled texture, vintage screenprint, 1-bit dithering, retro zine aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古图形综合__Retro-Graphic Print Synthesis/preview.webp",
+  "folder": "Krea2_moodboard/复古图形综合__Retro-Graphic Print Synthesis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

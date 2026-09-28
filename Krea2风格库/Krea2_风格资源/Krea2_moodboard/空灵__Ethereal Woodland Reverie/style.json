@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-612",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵",
+  "name": "Ethereal Woodland Reverie",
+  "prompt": "ethereal forest atmosphere, volumetric sunbeams, misty soft-focus, painterly woodland landscape, glowing emerald and sage palette, mystical pastoral surrealism, cinematic diffused light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Woodland Reverie/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Woodland Reverie",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

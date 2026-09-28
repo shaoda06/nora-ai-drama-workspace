@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-115",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "贞本义行风格",
+  "name": "Yoshiyuki Sadamoto Style",
+  "prompt": "Style: Yoshiyuki Sadamoto Style: A refined, elegant anime-illustration style built on confident, restrained linework carrying a subtly stylized proportion, muted cel-based shading with delicate gradation rather than sharp contrast, and a sophisticated. Influenced by: Yoshiyuki Sadamoto, Studio Gainax animation-adaptation tradition, cel-shaded design technique, Neon Genesis Evangelion illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/贞本义行风格__Yoshiyuki Sadamoto Style/preview.jpg",
+  "folder": "krea2_styles/贞本义行风格__Yoshiyuki Sadamoto Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

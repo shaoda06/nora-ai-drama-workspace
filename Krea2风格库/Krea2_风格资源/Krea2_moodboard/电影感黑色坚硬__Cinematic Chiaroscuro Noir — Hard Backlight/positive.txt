@@ -1,0 +1,1 @@
+chiaroscuro lighting, high contrast portraiture, pitch black background, dramatic shadows, cinematic noir atmosphere, hard direct flash, luminous skin texture, monochromatic palette. Subject:{prompt}

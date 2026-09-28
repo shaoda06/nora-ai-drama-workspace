@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1139",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "奇想",
+  "name": "Whimsical Storybook Geometry",
+  "prompt": "whimsical storybook illustration, scratchy ink outlines, textured watercolor wash, crooked asymmetrical architecture, earthy ochre and terracotta palette, stylized angular character design, fairytale atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想__Whimsical Storybook Geometry/preview.webp",
+  "folder": "Krea2_moodboard/奇想__Whimsical Storybook Geometry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

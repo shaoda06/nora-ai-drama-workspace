@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3351",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "超现实翠绿",
+  "name": "Surreal Verdant Reflections",
+  "prompt": "lush botanical landscape, still water reflection, emerald green palette, surreal nature, geometric portals, organic textures, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实翠绿__Surreal Verdant Reflections/preview.webp",
+  "folder": "Krea2_moodboard/超现实翠绿__Surreal Verdant Reflections",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

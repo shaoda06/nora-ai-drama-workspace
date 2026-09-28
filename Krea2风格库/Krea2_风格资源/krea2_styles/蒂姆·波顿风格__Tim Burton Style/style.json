@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-254",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "蒂姆·波顿风格",
+  "name": "Tim Burton Style",
+  "prompt": "Style: Tim Burton Style: A whimsically macabre illustration style built on elongated, spindly proportions and exaggerated angular gauntness, high-contrast graphic shading that carves gothic drama from stark light-and-dark simplicity, swirling, hand-drawn linework carrying a nervous, sketchy energy, wide hollow eyes rendered with melancholic, storybook expressiveness, and a darkly whimsical, gothic-fairytale charm that feels equal parts eerie and endearing. Influenced by: Tim Burton, gothic stop-motion animation design, whimsical macabre illustration, hand-drawn concept-art sketch technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/蒂姆·波顿风格__Tim Burton Style/preview.jpg",
+  "folder": "krea2_styles/蒂姆·波顿风格__Tim Burton Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

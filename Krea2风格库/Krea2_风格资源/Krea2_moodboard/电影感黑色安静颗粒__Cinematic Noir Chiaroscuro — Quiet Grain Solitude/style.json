@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2367",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感黑色安静颗粒",
+  "name": "Cinematic Noir Chiaroscuro — Quiet Grain Solitude",
+  "prompt": "chiaroscuro lighting, high-contrast black and white, dramatic silhouette, heavy film grain, cinematic noir, stark minimalism, textured noise. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色安静颗粒__Cinematic Noir Chiaroscuro — Quiet Grain Solitude/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色安静颗粒__Cinematic Noir Chiaroscuro — Quiet Grain Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

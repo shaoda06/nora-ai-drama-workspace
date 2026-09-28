@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-211",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "我的世界风格",
+  "name": "Minecraft Style",
+  "prompt": "Style: Minecraft Style: A blocky, voxel-constrained illustration style built on hard-edged cubic geometry standing in for all organic and structural form, a deliberately low-resolution texture logic that reduces surface detail to flat, pixelated approximation, rigid right-angle construction replacing curved or naturalistic silhouette entirely, a charmingly crude, procedurally consistent simplicity carried through uniform block-unit scale, and a nostalgic, technically constrained charm rooted in early sandbox-game visual limitation. Influenced by: voxel-based game-design tradition, Markus Persson procedural-generation practice, low-poly/blocky 3D-rendering technique, sandbox-game visual-design method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/我的世界风格__Minecraft Style/preview.jpg",
+  "folder": "krea2_styles/我的世界风格__Minecraft Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-274",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "粉彩可爱插画（西韩混合）",
+  "name": "Pastel-Toned Cute Illustration (Western-Korean Hybrid)",
+  "prompt": "Style: Pastel-Toned Cute Illustration (Western-Korean Hybrid): A gentle, softly rounded illustration style built on smooth, evenly diffused shading applied with cheerful, uncomplicated clarity, delicate blush-and-glow accents settling softly across rendered features, a hushed, sweet stillness carried through clean, uncluttered composition, an appealing blend of Western cartoon roundness and Korean kawaii-adjacent daintiness in proportion and expression, and a wholesome, gently affectionate charm that feels bright, sincere, and effortlessly endearing. Influenced by: contemporary Korean kawaii-illustration tradition, Western flat-cartoon character-design technique, cute-culture digital-illustration practice, pastel-focused character-art method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/粉彩可爱插画（西韩混合）__Pastel-Toned Cute Illustration (Western-Korean Hybrid)/preview.jpg",
+  "folder": "krea2_styles/粉彩可爱插画（西韩混合）__Pastel-Toned Cute Illustration (Western-Korean Hybrid)",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

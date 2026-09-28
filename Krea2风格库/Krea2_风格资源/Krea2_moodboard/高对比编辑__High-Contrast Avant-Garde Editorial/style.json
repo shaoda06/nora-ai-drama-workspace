@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2675",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "高对比编辑",
+  "name": "High-Contrast Avant-Garde Editorial",
+  "prompt": "high-fashion portraiture, chiaroscuro lighting, vibrant color blocking, surrealist collage elements, sharp skin texture, cinematic high contrast, geometric fragmentation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高对比编辑__High-Contrast Avant-Garde Editorial/preview.webp",
+  "folder": "Krea2_moodboard/高对比编辑__High-Contrast Avant-Garde Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

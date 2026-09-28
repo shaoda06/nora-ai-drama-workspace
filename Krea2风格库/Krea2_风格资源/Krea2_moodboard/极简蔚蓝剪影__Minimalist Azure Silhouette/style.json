@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2160",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "极简蔚蓝剪影",
+  "name": "Minimalist Azure Silhouette",
+  "prompt": "high-contrast silhouette, cool blue studio lighting, minimalist graphic portrait, translucent technical fabrics, sharp rim lighting, futuristic athletic aesthetic, cobalt and cyan monochrome. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简蔚蓝剪影__Minimalist Azure Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/极简蔚蓝剪影__Minimalist Azure Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3241",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "电影感复古超现实",
+  "name": "Cinematic Retro Surrealism — Technicolor Mirror",
+  "prompt": "cinematic noir, vintage film grain, surreal fragmentation, chiaroscuro lighting, saturated technicolor, recursive composition, mid-century glamour. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感复古超现实__Cinematic Retro Surrealism — Technicolor Mirror/preview.webp",
+  "folder": "Krea2_moodboard/电影感复古超现实__Cinematic Retro Surrealism — Technicolor Mirror",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

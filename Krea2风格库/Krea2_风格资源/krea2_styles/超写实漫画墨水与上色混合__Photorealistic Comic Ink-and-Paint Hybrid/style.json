@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-175",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "超写实漫画墨水与上色混合",
+  "name": "Photorealistic Comic Ink-and-Paint Hybrid",
+  "prompt": "Style: Photorealistic Comic Ink-and-Paint Hybrid: A meticulously detailed comic-illustration style built on crisp, confident inked structure providing the underlying graphic clarity, layered painterly rendering fills that structure with convincing photoreal depth and tonal nuance, dramatic directional lighting reinforcing form through both linework and rendered shadow simultaneously, a technically disciplined balance between graphic boldness and painterly subtlety, and a polished, high-production comic-illustration intensity that bridges traditional inking craft with photoreal rendering ambition. Influenced by: photorealistic comic-illustration tradition, ink-and-paint hybrid rendering technique, contemporary graphic-novel practice, painted-cover comic-art method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/超写实漫画墨水与上色混合__Photorealistic Comic Ink-and-Paint Hybrid/preview.jpg",
+  "folder": "krea2_styles/超写实漫画墨水与上色混合__Photorealistic Comic Ink-and-Paint Hybrid",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

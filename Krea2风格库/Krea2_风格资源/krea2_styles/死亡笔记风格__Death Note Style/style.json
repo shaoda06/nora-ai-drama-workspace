@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-96",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "死亡笔记风格",
+  "name": "Death Note Style",
+  "prompt": "Style: Death Note Style: A dark, meticulously detailed manga-illustration style built on dense, precise linework rendering both anatomy and psychological tension with obsessive control, dramatic high-contrast shading that carves stark, engulfing shadow across brooding, angular composition, a restrained, cerebral intensity conveyed through sharp facial modeling and calculated posing, richly rendered fine detail balanced against vast negative space charged with unspoken menace, and a somber, suspenseful gravitas that feels equal parts psychological thriller and gothic elegance. Influenced by: Takeshi Obata, dark shōnen-manga illustration tradition, high-contrast cel-shaded technique, psychological-thriller manga practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/死亡笔记风格__Death Note Style/preview.jpg",
+  "folder": "krea2_styles/死亡笔记风格__Death Note Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

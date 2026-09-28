@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2068",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "霓虹",
+  "name": "Corrupted Neon Dreamcore",
+  "prompt": "pixel sorting, chromatic aberration, digital glitch, neon saturation, analog grain, distorted silhouette, synthwave aesthetic, data corruption. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹__Corrupted Neon Dreamcore/preview.webp",
+  "folder": "Krea2_moodboard/霓虹__Corrupted Neon Dreamcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

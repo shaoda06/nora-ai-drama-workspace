@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1371",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感夜行黑色发光",
+  "name": "Cinematic Nocturnal Noir — Bokeh Orb Glow",
+  "prompt": "cinematic night photography, heavy 35mm film grain, deep blue and cyan color grading, soft bokeh city lights, moody urban isolation, low light film noir, tactile analog texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色发光__Cinematic Nocturnal Noir — Bokeh Orb Glow/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色发光__Cinematic Nocturnal Noir — Bokeh Orb Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1952",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "电影感夜行棱镜",
+  "name": "Cinematic Nocturnal Solitude — Prismatic Accents",
+  "prompt": "cinematic night photography, chiaroscuro lighting, warm window glow, film grain, urban isolation, high contrast composition, twilight blue hour. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行棱镜__Cinematic Nocturnal Solitude — Prismatic Accents/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行棱镜__Cinematic Nocturnal Solitude — Prismatic Accents",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

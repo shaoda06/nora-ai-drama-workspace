@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-217",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "矢量艺术",
+  "name": "Vector Art",
+  "prompt": "Style: Vector Art: A crisp, scalable illustration style built on clean, mathematically precise linework and evenly bounded color regions, smooth gradient or flat-fill logic replacing any textural or painterly noise entirely, confident geometric simplification of form favoring graphic clarity over naturalistic nuance, razor-sharp edges that hold their precision at any size, and a polished, contemporary graphic-design sleekness rooted in digital illustration practice. Influenced by: contemporary vector-illustration tradition, Adobe Illustrator technique, flat-design graphic practice, digital scalable-artwork method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/矢量艺术__Vector Art/preview.jpg",
+  "folder": "krea2_styles/矢量艺术__Vector Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

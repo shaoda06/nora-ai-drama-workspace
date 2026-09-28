@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2956",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "动态光谱单色精细颗粒",
+  "name": "Kinetic Spectral Monochrome — Fine-Grain Stillness",
+  "prompt": "high-contrast black and white photography, motion blur portraiture, long exposure light trails, chiaroscuro lighting, fine-grain film aesthetic, ethereal ghostly movement, minimalist dark composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态光谱单色精细颗粒__Kinetic Spectral Monochrome — Fine-Grain Stillness/preview.webp",
+  "folder": "Krea2_moodboard/动态光谱单色精细颗粒__Kinetic Spectral Monochrome — Fine-Grain Stillness",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

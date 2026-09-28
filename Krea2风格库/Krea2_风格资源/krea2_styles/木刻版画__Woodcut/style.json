@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-17",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "木刻版画",
+  "name": "Woodcut",
+  "prompt": "Style: Woodcut: A bold, high-contrast printmaking style built on confident, gouged linework that constructs form through carved negative space rather than drawn detail, stark black-and-white division with minimal transitional tone, rough, deliberate edge-texture inherent to the carving process, a rhythmic, hand-pressed graphic clarity favoring bold shape over subtle nuance, and a rustic, timeworn print-craft gravitas rooted in centuries of relief-printing tradition. Influenced by: Albrecht Dürer, Käthe Kollwitz, woodblock relief-printing technique, expressionist print tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/木刻版画__Woodcut/preview.jpg",
+  "folder": "krea2_styles/木刻版画__Woodcut",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

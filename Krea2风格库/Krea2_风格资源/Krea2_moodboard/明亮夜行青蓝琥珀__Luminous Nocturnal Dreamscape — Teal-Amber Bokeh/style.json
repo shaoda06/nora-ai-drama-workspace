@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1594",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "明亮夜行青蓝琥珀",
+  "name": "Luminous Nocturnal Dreamscape — Teal-Amber Bokeh",
+  "prompt": "cinematic lighting, shallow depth of field, teal and amber palette, ethereal bokeh, dramatic rim light, atmospheric particulates, soft focus, high contrast chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行青蓝琥珀__Luminous Nocturnal Dreamscape — Teal-Amber Bokeh/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行青蓝琥珀__Luminous Nocturnal Dreamscape — Teal-Amber Bokeh",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

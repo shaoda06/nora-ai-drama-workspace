@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1316",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感夜行",
+  "name": "Cinematic Nocturnal Portraits",
+  "prompt": "extreme macro photography, chiaroscuro lighting, intimate animal gaze, shallow depth of field, high contrast, detailed fur texture, reflective iris. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Portraits/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行__Cinematic Nocturnal Portraits",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2818",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "动态霓虹超现实",
+  "name": "Kinetic Neon Surrealism",
+  "prompt": "long exposure light trails, neon motion blur, urban surrealism, high contrast night photography, hyper-saturated rainbow light, architectural kinetic energy, cinematic nighttime perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态霓虹超现实__Kinetic Neon Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/动态霓虹超现实__Kinetic Neon Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

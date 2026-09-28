@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2326",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感琥珀剪影",
+  "name": "Cinematic Amber Silhouette",
+  "prompt": "high-contrast silhouette, saturated amber backdrop, chiaroscuro lighting, minimalist graphic composition, golden rim lighting, cinematic noir atmosphere, sharp edge definition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感琥珀剪影__Cinematic Amber Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/电影感琥珀剪影__Cinematic Amber Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

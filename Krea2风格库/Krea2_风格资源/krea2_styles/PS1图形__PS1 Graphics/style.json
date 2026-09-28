@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-16",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "PS1图形",
+  "name": "PS1 Graphics",
+  "prompt": "Style: PS1 Graphics: A low-poly, texture-warped 3D-illustration style built on blocky, vertex-snapped geometry that jitters slightly with characteristic early-3D imprecision, low-resolution textures stretched and distorted across simplified polygonal surfaces, harsh, unfiltered pixelated edges replacing any smooth anti-aliasing, a flat, limited lighting model with minimal gradation or dynamic shadow, and a nostalgic, technically constrained charm rooted in early console-era 3D rendering limitation. Influenced by: mid-1990s PlayStation 3D-rendering technique, early polygonal-game aesthetic, retro survival-horror visual tradition, low-fidelity vertex-jitter rendering method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/PS1图形__PS1 Graphics/preview.jpg",
+  "folder": "krea2_styles/PS1图形__PS1 Graphics",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

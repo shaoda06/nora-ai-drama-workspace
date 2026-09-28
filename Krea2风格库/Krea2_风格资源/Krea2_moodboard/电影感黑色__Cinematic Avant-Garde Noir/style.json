@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2558",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "电影感黑色",
+  "name": "Cinematic Avant-Garde Noir",
+  "prompt": "chiaroscuro lighting, minimalist editorial, high-contrast silhouette, analog film grain, avant-garde tailoring, dramatic shadows, muted earth tones, cinematic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色__Cinematic Avant-Garde Noir/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色__Cinematic Avant-Garde Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1534",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "内脏感棱镜宏观",
+  "name": "Visceral Prismatic Macro",
+  "prompt": "extreme macro photography, chromatic aberration, prismatic light leaks, tactile skin texture, dreamy soft focus, analog film grain, iridescent spectral glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感棱镜宏观__Visceral Prismatic Macro/preview.webp",
+  "folder": "Krea2_moodboard/内脏感棱镜宏观__Visceral Prismatic Macro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

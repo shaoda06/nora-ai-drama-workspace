@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1238",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "几何都市极简",
+  "name": "Geometric Urban Minimalism",
+  "prompt": "architectural minimalism, geometric grid facade, symmetrical urban composition, high contrast, brutalist influence, color blocking, repetitive patterns. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何都市极简__Geometric Urban Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/几何都市极简__Geometric Urban Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

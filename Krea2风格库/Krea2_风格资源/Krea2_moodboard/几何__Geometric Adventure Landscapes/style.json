@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-884",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "几何",
+  "name": "Geometric Adventure Landscapes",
+  "prompt": "stylized digital landscape, geometric vector illustration, vibrant saturated palette, cobalt blue and golden yellow, hard-edged shadows, minimalist graphic composition, whimsical adventure scale. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何__Geometric Adventure Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/几何__Geometric Adventure Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

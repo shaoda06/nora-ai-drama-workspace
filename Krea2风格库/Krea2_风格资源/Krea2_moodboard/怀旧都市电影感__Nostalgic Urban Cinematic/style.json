@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2313",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "怀旧都市电影感",
+  "name": "Nostalgic Urban Cinematic",
+  "prompt": "cinematic 35mm film grain, fisheye lens distortion, low-angle street perspective, golden hour lighting, vintage retro color palette, sharp geometric shadows, urban concrete aesthetic, candid narrative realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧都市电影感__Nostalgic Urban Cinematic/preview.webp",
+  "folder": "Krea2_moodboard/怀旧都市电影感__Nostalgic Urban Cinematic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

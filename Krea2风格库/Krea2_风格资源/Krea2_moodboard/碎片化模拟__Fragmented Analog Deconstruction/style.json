@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2207",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "碎片化模拟",
+  "name": "Fragmented Analog Deconstruction",
+  "prompt": "deconstructed analog collage, fragmented mosaic composition, tactile paper texture, vintage analog film grain, grid-based photo montage, warm cinematic lighting, layered physical media. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化模拟__Fragmented Analog Deconstruction/preview.webp",
+  "folder": "Krea2_moodboard/碎片化模拟__Fragmented Analog Deconstruction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1087",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "棱镜夜行故障",
+  "name": "Prismatic Nocturnal Glitch",
+  "prompt": "chromatic aberration, iridescent light leaks, digital glitch art, nocturnal dreamscape, prismatic lens flare, textured digital oil painting, high-contrast spectral distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜夜行故障__Prismatic Nocturnal Glitch/preview.webp",
+  "folder": "Krea2_moodboard/棱镜夜行故障__Prismatic Nocturnal Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-122",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "瑞克和莫蒂风格",
+  "name": "Rick and Morty Style",
+  "prompt": "Style: Rick and Morty Style: A loose, deliberately imperfect cartoon illustration style built on wobbly, slightly rubbery linework that embraces visible inconsistency over polished precision, flat, simple fill with minimal rendering complexity, exaggerated elastic proportions carrying manic, unpredictable expressiveness, a scrappy, DIY animation looseness that favors comedic energy over visual refinement, and an irreverent, chaotic indie-animation charm that feels intentionally rough around the edges. Influenced by: Justin Roiland, adult-swim animation tradition, flat cel-shading technique, indie sitcom-cartoon character design.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/瑞克和莫蒂风格__Rick and Morty Style/preview.jpg",
+  "folder": "krea2_styles/瑞克和莫蒂风格__Rick and Morty Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

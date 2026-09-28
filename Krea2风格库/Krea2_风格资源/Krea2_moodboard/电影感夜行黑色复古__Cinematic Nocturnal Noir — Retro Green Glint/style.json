@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1334",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感夜行黑色复古",
+  "name": "Cinematic Nocturnal Noir — Retro Green Glint",
+  "prompt": "cinematic noir, low-key chiaroscuro lighting, moody green and amber palette, shallow depth of field, tactile textures, gritty retro-futurism, intimate filmic portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色复古__Cinematic Nocturnal Noir — Retro Green Glint/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色复古__Cinematic Nocturnal Noir — Retro Green Glint",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

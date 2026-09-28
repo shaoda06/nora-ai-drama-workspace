@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-787",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "原始绯红表现主义",
+  "name": "Raw Crimson Expressionism",
+  "prompt": "neo-expressionist, gestural charcoal strokes, blood red ink drips, visceral texture, high-contrast monochrome, frenetic scribbles, psychological art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始绯红表现主义__Raw Crimson Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/原始绯红表现主义__Raw Crimson Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

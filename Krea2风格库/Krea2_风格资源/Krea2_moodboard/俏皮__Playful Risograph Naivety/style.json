@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-670",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "俏皮",
+  "name": "Playful Risograph Naivety",
+  "prompt": "risograph print texture, naive illustration style, bold flat color blocking, grainy hand-drawn texture, color registration offset, playful graphic design, vibrant saturated palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/俏皮__Playful Risograph Naivety/preview.webp",
+  "folder": "Krea2_moodboard/俏皮__Playful Risograph Naivety",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

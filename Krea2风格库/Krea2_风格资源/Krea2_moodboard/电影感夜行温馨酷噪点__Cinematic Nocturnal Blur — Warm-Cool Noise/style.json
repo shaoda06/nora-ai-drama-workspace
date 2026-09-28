@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1471",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "电影感夜行温馨酷噪点",
+  "name": "Cinematic Nocturnal Blur — Warm-Cool Noise",
+  "prompt": "analog film grain, long exposure motion blur, cinematic nocturnal atmosphere, neon light trails, anamorphic lens flare, dreamy soft focus, chromatic aberration, moody urban night. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行温馨酷噪点__Cinematic Nocturnal Blur — Warm-Cool Noise/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行温馨酷噪点__Cinematic Nocturnal Blur — Warm-Cool Noise",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

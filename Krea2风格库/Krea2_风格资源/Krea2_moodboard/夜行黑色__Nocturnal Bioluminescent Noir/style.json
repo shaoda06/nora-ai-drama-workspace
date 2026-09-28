@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1823",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "夜行黑色",
+  "name": "Nocturnal Bioluminescent Noir",
+  "prompt": "extreme close-up portrait, low-key chiaroscuro lighting, bioluminescent glowing eyes, monochromatic cobalt blue, glistening wet skin texture, cinematic noir atmosphere, high-contrast shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行黑色__Nocturnal Bioluminescent Noir/preview.webp",
+  "folder": "Krea2_moodboard/夜行黑色__Nocturnal Bioluminescent Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

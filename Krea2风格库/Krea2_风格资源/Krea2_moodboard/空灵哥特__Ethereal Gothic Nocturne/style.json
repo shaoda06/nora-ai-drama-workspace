@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1252",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "空灵哥特",
+  "name": "Ethereal Gothic Nocturne",
+  "prompt": "gothic fantasy, chiaroscuro lighting, moonlit atmosphere, warm lantern glow, misty landscape, dark romanticism, stylized digital illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵哥特__Ethereal Gothic Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/空灵哥特__Ethereal Gothic Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-18",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "经典",
+  "name": "Classic Cel Animation",
+  "prompt": "1990s anime style, hand-drawn line art, cel animation, painterly gouache background, soft natural daylight, retro anime aesthetic, expressive character design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/经典__Classic Cel Animation/preview.webp",
+  "folder": "Krea2_moodboard/经典__Classic Cel Animation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

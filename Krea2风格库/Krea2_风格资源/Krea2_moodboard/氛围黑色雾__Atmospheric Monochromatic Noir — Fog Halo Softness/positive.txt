@@ -1,0 +1,1 @@
+monochromatic, heavy film grain, soft focus blur, haunting silhouettes, dense fog, high contrast noir, pictorialist texture. Subject:{prompt}

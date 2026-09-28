@@ -1,0 +1,1 @@
+heavy stippling, intense film grain, monochrome noir, chiaroscuro lighting, soft focus blur, high contrast black and white, tactile noise. Subject:{prompt}

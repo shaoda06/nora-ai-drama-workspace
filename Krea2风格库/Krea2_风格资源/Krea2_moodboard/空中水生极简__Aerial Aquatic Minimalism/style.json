@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2604",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "空中水生极简",
+  "name": "Aerial Aquatic Minimalism",
+  "prompt": "top-down aerial perspective, turquoise water, minimalist composition, drone photography, water caustics, geometric symmetry, vibrant light reflections. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空中水生极简__Aerial Aquatic Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空中水生极简__Aerial Aquatic Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

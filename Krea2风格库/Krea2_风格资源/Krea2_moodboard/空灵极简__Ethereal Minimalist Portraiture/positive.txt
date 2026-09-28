@@ -1,0 +1,1 @@
+ethereal portrait, soft diffused lighting, shallow depth of field, natural skin texture, dreamy atmosphere, neutral color palette, intimate close-up. Subject:{prompt}

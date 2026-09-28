@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1013",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "鲜活",
+  "name": "Vibrant Expressive Fauvism",
+  "prompt": "expressive gestural brushwork, vibrant color blocking, impasto texture, stark white background, chromatic fauvism, bold black ink outlines, saturated digital gouache. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活__Vibrant Expressive Fauvism/preview.webp",
+  "folder": "Krea2_moodboard/鲜活__Vibrant Expressive Fauvism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

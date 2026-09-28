@@ -1,0 +1,16 @@
+{
+  "id": "Krea2_moodboard-2946",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵黑色运动光谱",
+  "name": "Ethereal Noir Motion — Spectral Smear",
+  "prompt": "high-contrast black and white photography, extreme motion blur, ethereal spectral silhouette, dramatic chiaroscuro lighting, heavy tactile film grain, surreal long exposure, soft glow diffusion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色运动光谱__Ethereal Noir Motion — Spectral Smear/preview.png",
+  "folder": "Krea2_moodboard/空灵黑色运动光谱__Ethereal Noir Motion — Spectral Smear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400",
+  "image_source": "https://gen.krea.ai/images/b0934a96-c97f-49c1-aa8a-ba3f4d254414.png",
+  "image_note": "当前上游包缺图，保留此前本地图片。"
+}

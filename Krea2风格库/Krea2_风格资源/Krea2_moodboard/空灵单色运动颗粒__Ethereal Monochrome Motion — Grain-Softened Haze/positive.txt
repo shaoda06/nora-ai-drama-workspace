@@ -1,0 +1,1 @@
+monochrome motion blur, ghostly silhouettes, heavy analog film grain, chiaroscuro lighting, ethereal dreamscape, high contrast photography, soft focus lens. Subject:{prompt}

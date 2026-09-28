@@ -1,0 +1,1 @@
+motion blur, ethereal glow, heavy film grain, soft focus photography, cyan and indigo palette, ghostly silhouette, analog distortion, dreamy impressionism. Subject:{prompt}

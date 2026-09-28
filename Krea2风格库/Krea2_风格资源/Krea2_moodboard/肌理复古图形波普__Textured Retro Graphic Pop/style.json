@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-645",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "肌理复古图形波普",
+  "name": "Textured Retro Graphic Pop",
+  "prompt": "risograph print texture, halftone dot pattern, high-contrast screenprint, vintage graphic illustration, distressed ink grain, bold flat vector, retro zine aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理复古图形波普__Textured Retro Graphic Pop/preview.webp",
+  "folder": "Krea2_moodboard/肌理复古图形波普__Textured Retro Graphic Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3053",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "彩色超现实",
+  "name": "Chromatic Gorpcore Surrealism",
+  "prompt": "gorpcore fashion, saturated color blocking, overcast natural lighting, moody wilderness, editorial fashion photography, dynamic motion blur, surrealist outdoor setting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色超现实__Chromatic Gorpcore Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/彩色超现实__Chromatic Gorpcore Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3245",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "绯红宇宙黑色",
+  "name": "Crimson Cosmic Noir",
+  "prompt": "cinematic noir, glowing crimson light, heavy film grain, surreal cosmic atmosphere, stark silhouettes, melancholic mystery, vintage textured print. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红宇宙黑色__Crimson Cosmic Noir/preview.webp",
+  "folder": "Krea2_moodboard/绯红宇宙黑色__Crimson Cosmic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

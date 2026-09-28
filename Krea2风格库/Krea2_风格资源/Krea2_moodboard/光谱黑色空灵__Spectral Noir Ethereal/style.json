@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3035",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "光谱黑色空灵",
+  "name": "Spectral Noir Ethereal",
+  "prompt": "long exposure, heavy film grain, ethereal glow, silhouette portrait, cyan and orange contrast, smoky atmosphere, surreal double exposure, moody noir lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色空灵__Spectral Noir Ethereal/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色空灵__Spectral Noir Ethereal",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

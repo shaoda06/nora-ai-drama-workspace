@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3325",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "奇想蔚蓝超现实",
+  "name": "Whimsical Azure Surrealism",
+  "prompt": "surreal levitation, vibrant blue sky, whimsical dreamscape, magical realism, soft natural light, saturated color palette, low angle perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想蔚蓝超现实__Whimsical Azure Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/奇想蔚蓝超现实__Whimsical Azure Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

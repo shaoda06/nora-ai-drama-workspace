@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-136",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "电影感单色黑色漫画墨水",
+  "name": "Cinematic Monochrome Noir — Manga Ink Hatch",
+  "prompt": "high-contrast manga ink, dramatic noir shadows, sharp cross-hatching, monochrome graphic novel, expressive brushwork, chiaroscuro lighting, seinen aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感单色黑色漫画墨水__Cinematic Monochrome Noir — Manga Ink Hatch/preview.webp",
+  "folder": "Krea2_moodboard/电影感单色黑色漫画墨水__Cinematic Monochrome Noir — Manga Ink Hatch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

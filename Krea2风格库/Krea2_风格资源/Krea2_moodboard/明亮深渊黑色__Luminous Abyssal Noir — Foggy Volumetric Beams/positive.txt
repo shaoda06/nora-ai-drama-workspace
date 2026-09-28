@@ -1,0 +1,1 @@
+bioluminescent glow, volumetric lighting, deep cyan and charcoal palette, cinematic high contrast, heavy film grain, ethereal silhouettes, atmospheric fog. Subject:{prompt}

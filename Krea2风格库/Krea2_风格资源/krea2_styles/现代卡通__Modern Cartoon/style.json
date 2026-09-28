@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-129",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "现代卡通",
+  "name": "Modern Cartoon",
+  "prompt": "Style: Modern Cartoon: A clean, flat illustration style built on confident, simplified outline holding contemporary, streamlined proportions, bright flat-color fill with minimal shading beyond basic form-defining contact shadow, an appealing, geometrically simplified sense of form balancing charm with graphic efficiency, cheerful, uncomplicated composition favoring instant digital-platform readability, and a versatile, contemporary animated charm rooted in current streaming-era cartoon convention. Influenced by: contemporary streaming-animation tradition, flat-color character-design technique, digital-native cartoon practice, modern indie-animation method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/现代卡通__Modern Cartoon/preview.jpg",
+  "folder": "krea2_styles/现代卡通__Modern Cartoon",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

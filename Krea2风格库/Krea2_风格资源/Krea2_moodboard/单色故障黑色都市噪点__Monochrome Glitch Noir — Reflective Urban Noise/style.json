@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3390",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "单色故障黑色都市噪点",
+  "name": "Monochrome Glitch Noir — Reflective Urban Noise",
+  "prompt": "high-contrast monochrome, heavy film grain, analog signal degradation, dramatic chiaroscuro, liminal atmosphere, distorted silhouettes, urban noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障黑色都市噪点__Monochrome Glitch Noir — Reflective Urban Noise/preview.webp",
+  "folder": "Krea2_moodboard/单色故障黑色都市噪点__Monochrome Glitch Noir — Reflective Urban Noise",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

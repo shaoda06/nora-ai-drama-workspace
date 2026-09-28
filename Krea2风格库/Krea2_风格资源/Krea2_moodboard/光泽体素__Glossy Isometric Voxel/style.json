@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-217",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "光泽体素",
+  "name": "Glossy Isometric Voxel",
+  "prompt": "voxel art, isometric 3D render, minimalist blocky design, soft studio lighting, low-poly cubic aesthetic, toy-like glossy texture, clean solid background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光泽体素__Glossy Isometric Voxel/preview.webp",
+  "folder": "Krea2_moodboard/光泽体素__Glossy Isometric Voxel",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-330",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "Adobe Lightroom杰作",
+  "name": "Adobe Lightroom Masterpiece",
+  "prompt": "Style: Adobe Lightroom Masterpiece: A meticulously graded photographic finishing style built on precise tonal curve control that balances highlight roll-off and shadow depth with editorial exactness, subtle clarity and texture enhancement that sharpens fine detail without tipping into artificiality, carefully calibrated dynamic range that preserves nuance across the full tonal spectrum, refined selective dodging and burning that guides the eye with quiet confidence, and a polished, professional-grade finishing intensity that elevates a raw capture into a considered, gallery-ready photographic statement. Influenced by: professional photo-retouching workflow, Adobe Lightroom color-grading technique, editorial photography post-production, fine-art print finishing.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Adobe Lightroom杰作__Adobe Lightroom Masterpiece/preview.jpg",
+  "folder": "krea2_styles/Adobe Lightroom杰作__Adobe Lightroom Masterpiece",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,1 @@
+motion blur, heavy film grain, thermal glow, cyan and amber contrast, double exposure, low-key lighting, ethereal silhouettes, analog texture. Subject:{prompt}

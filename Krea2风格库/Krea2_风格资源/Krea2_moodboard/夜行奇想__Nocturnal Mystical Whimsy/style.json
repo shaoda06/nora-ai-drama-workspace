@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-918",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "夜行奇想",
+  "name": "Nocturnal Mystical Whimsy",
+  "prompt": "nocturnal atmospheric, deep teal and indigo palette, painterly grain texture, magical realism, solitary silhouette, starlit night sky, whimsical storybook style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行奇想__Nocturnal Mystical Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/夜行奇想__Nocturnal Mystical Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

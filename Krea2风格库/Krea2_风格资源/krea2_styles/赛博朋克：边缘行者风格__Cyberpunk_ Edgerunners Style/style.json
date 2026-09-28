@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-133",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "赛博朋克：边缘行者风格",
+  "name": "Cyberpunk: Edgerunners Style",
+  "prompt": "Style: Cyberpunk: Edgerunners Style: A frenetic, high-contrast animation illustration style built on jagged, aggressive linework that fractures form into sharp angular fragments during moments of intensity, saturated glow-drenched lighting that bleeds and blooms aggressively around every luminous edge, gritty textural noise layered beneath clean cel-shaded color to keep the surface feeling raw and lived-in, dynamic, chaotic framing charged with kinetic violence and manic energy, and a visceral, dystopian animation intensity that feels equal parts stylish and feral. Influenced by: Studio Trigger animation technique, cyberpunk anime tradition, glow-bloom digital compositing practice, gritty dystopian character-design method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/赛博朋克：边缘行者风格__Cyberpunk_ Edgerunners Style/preview.jpg",
+  "folder": "krea2_styles/赛博朋克：边缘行者风格__Cyberpunk_ Edgerunners Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

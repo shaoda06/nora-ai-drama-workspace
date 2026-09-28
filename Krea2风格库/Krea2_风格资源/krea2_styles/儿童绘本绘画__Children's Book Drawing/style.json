@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-251",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "儿童绘本绘画",
+  "name": "Children's Book Drawing",
+  "prompt": "Style: Children's Book Drawing: A warm, gentle illustration style built on soft, simplified linework carrying a sincere, approachable charm, delicate flat-to-lightly-shaded color application applied with cheerful, unhurried restraint, rounded, endearing proportions favoring emotional warmth over anatomical precision, generous, uncluttered composition that gives each small detail room to breathe, and a tender, timeless storybook sincerity that feels handmade, comforting, and quietly imaginative. Influenced by: golden-age children's-book illustration tradition, gouache-and-ink storybook technique, gentle character-design practice, whimsical picture-book method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/儿童绘本绘画__Children's Book Drawing/preview.jpg",
+  "folder": "krea2_styles/儿童绘本绘画__Children's Book Drawing",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

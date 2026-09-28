@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-188",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "电影数字艺术",
+  "name": "Movie Digital art",
+  "prompt": "Style: Movie Digital art: A bold, high-octane action-movie poster illustration style built on dramatic low-angle framing that conveys raw power and momentum, intensely saturated directional lighting carving sharp, aggressive contrast across confident, larger-than-life composition, dynamic diagonal energy suggesting explosive forward motion even in stillness, meticulous photoreal rendering blended with graphic poster-ready boldness, and a bold, adrenaline-charged blockbuster intensity built for instant, high-impact visual spectacle. Influenced by: contemporary action-movie poster-illustration tradition, cinematic key-art rendering technique, high-octane blockbuster marketing practice, dynamic photoreal-composite illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/电影数字艺术__Movie Digital art/preview.jpg",
+  "folder": "krea2_styles/电影数字艺术__Movie Digital art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

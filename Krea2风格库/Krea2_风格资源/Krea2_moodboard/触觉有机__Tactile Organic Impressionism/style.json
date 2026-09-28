@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1152",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "触觉有机",
+  "name": "Tactile Organic Impressionism",
+  "prompt": "tactile organic texture, impressionistic motion blur, macro nature photography, warm earth tones, soft golden lighting, dreamy painterly atmosphere, fibrous botanical detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉有机__Tactile Organic Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/触觉有机__Tactile Organic Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

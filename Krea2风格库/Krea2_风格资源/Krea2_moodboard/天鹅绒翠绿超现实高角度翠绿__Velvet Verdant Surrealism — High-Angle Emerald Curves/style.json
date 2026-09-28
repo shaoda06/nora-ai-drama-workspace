@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3297",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "天鹅绒翠绿超现实高角度翠绿",
+  "name": "Velvet Verdant Surrealism — High-Angle Emerald Curves",
+  "prompt": "rolling velvet hills, chiaroscuro lighting, undulating emerald landscape, surreal minimalism, high-angle nature photography, dramatic shadows, verdant dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天鹅绒翠绿超现实高角度翠绿__Velvet Verdant Surrealism — High-Angle Emerald Curves/preview.webp",
+  "folder": "Krea2_moodboard/天鹅绒翠绿超现实高角度翠绿__Velvet Verdant Surrealism — High-Angle Emerald Curves",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-662",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "触觉",
+  "name": "Midcentury Tactile Print",
+  "prompt": "mid-century print aesthetic, halftone dot texture, vintage lithograph style, tactile yarn embroidery, distressed paper patina, saturated retro palette, graphic screenprint illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉__Midcentury Tactile Print/preview.webp",
+  "folder": "Krea2_moodboard/触觉__Midcentury Tactile Print",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

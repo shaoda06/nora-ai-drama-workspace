@@ -1,0 +1,1 @@
+dual-tone lighting, chiaroscuro, saturated red and blue, high-contrast studio lighting, cinematic noir, dramatic silhouette, minimalist composition. Subject:{prompt}

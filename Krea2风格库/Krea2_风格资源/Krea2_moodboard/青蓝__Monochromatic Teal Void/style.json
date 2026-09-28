@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1692",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "青蓝",
+  "name": "Monochromatic Teal Void",
+  "prompt": "monochromatic teal, dense atmospheric fog, surreal solitude, minimalist composition, low-key lighting, cinematic wide shot, desolate landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/青蓝__Monochromatic Teal Void/preview.webp",
+  "folder": "Krea2_moodboard/青蓝__Monochromatic Teal Void",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

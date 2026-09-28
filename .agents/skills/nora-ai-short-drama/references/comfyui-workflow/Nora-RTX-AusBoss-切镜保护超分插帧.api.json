@@ -1,0 +1,88 @@
+{
+  "6": {
+    "class_type": "LoadVideo",
+    "inputs": {
+      "file": "__待替换_输入素材_6__.mp4"
+    },
+    "_meta": {
+      "title": "01 输入｜获批二采分段（示例须替换）"
+    }
+  },
+  "7": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "6",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "02 分离画面、原音轨和帧率"
+    }
+  },
+  "1": {
+    "class_type": "RTXVideoSuperResolution",
+    "inputs": {
+      "resize_type": "target dimensions",
+      "resize_type.width": 1800,
+      "resize_type.height": 1040,
+      "quality": "ULTRA",
+      "images": [
+        "7",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "03 RTX 超分｜1800×1040 · ULTRA"
+    }
+  },
+  "12": {
+    "class_type": "AUSBOSS_NODES_FrameInterpolate",
+    "inputs": {
+      "source_fps": [
+        "7",
+        2
+      ],
+      "target_fps": 60,
+      "method": "optical flow (requires cached RAFT weights)",
+      "scene_cut_threshold": 0.15,
+      "batch_size": 1,
+      "frames": [
+        "1",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "04 AusBoss 切镜保护｜光流 · 24→60"
+    }
+  },
+  "16": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "frame_rate": [
+        "12",
+        1
+      ],
+      "loop_count": 0,
+      "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 19,
+      "save_metadata": true,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true,
+      "images": [
+        "12",
+        0
+      ],
+      "audio": [
+        "7",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "05 正式输出｜插帧实际 FPS＋原音轨"
+    }
+  }
+}

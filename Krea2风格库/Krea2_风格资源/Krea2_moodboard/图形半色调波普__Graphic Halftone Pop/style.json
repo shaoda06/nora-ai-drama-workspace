@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-192",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "图形半色调波普",
+  "name": "Graphic Halftone Pop",
+  "prompt": "halftone dot pattern, screen print texture, high contrast pop art, retro comic book style, CMYK color separation, distressed ink texture, vibrant saturated colors, graphic silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形半色调波普__Graphic Halftone Pop/preview.webp",
+  "folder": "Krea2_moodboard/图形半色调波普__Graphic Halftone Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

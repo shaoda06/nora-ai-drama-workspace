@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-717",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "霓虹故障",
+  "name": "Neon Glitch Engraving",
+  "prompt": "vintage woodcut engraving, chromatic aberration, risograph halftone texture, anaglyph 3D effect, high-contrast cross-hatching, neon cyan and magenta, misaligned color registration, stark white background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹故障__Neon Glitch Engraving/preview.webp",
+  "folder": "Krea2_moodboard/霓虹故障__Neon Glitch Engraving",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

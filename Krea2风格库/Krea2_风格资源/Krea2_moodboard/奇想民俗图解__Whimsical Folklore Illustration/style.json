@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1298",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "奇想民俗图解",
+  "name": "Whimsical Folklore Illustration",
+  "prompt": "whimsical digital illustration, childrens book art style, painterly texture, dappled sunlight, magical glow, charming anthropomorphic characters, lush botanical background, soft grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想民俗图解__Whimsical Folklore Illustration/preview.webp",
+  "folder": "Krea2_moodboard/奇想民俗图解__Whimsical Folklore Illustration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-979",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "Expressive NeoFauvis",
+  "name": "Expressive Neo-Fauvist Textures",
+  "prompt": "Neo-Fauvism, thick impasto texture, expressive hatchwork, saturated non-naturalistic color, creamy neutral background, gestural brushstrokes, mixed media aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Expressive NeoFauvis__Expressive Neo-Fauvist Textures/preview.webp",
+  "folder": "Krea2_moodboard/Expressive NeoFauvis__Expressive Neo-Fauvist Textures",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

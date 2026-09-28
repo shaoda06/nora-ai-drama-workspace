@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3150",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "极简写实",
+  "name": "Minimalist Absurdist Realism",
+  "prompt": "minimalist surrealism, soft diffused lighting, photorealistic absurdism, clean architectural background, scale distortion, tactile textures, uncanny valley. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简写实__Minimalist Absurdist Realism/preview.webp",
+  "folder": "Krea2_moodboard/极简写实__Minimalist Absurdist Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

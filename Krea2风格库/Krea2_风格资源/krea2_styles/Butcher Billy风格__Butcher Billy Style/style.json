@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-206",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "Butcher Billy风格",
+  "name": "Butcher Billy Style",
+  "prompt": "Style: Butcher Billy Style: A bold, graphic retro-pop illustration style built on flat, punchy color-block construction separated by crisp confident outline, a deliberate mash-up sensibility blending mid-century advertising polish with pop-culture iconography, sharp geometric simplification replacing painterly nuance entirely, confident, graphic silhouette design calibrated for instant recognizability, and a witty, nostalgic commercial-art punch that feels both retro and unmistakably contemporary. Influenced by: Butcher Billy, retro-pop graphic-design tradition, mid-century advertising illustration technique, pop-culture mash-up illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Butcher Billy风格__Butcher Billy Style/preview.jpg",
+  "folder": "krea2_styles/Butcher Billy风格__Butcher Billy Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

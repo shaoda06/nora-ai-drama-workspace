@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-992",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮",
+  "name": "Luminous Fauvist Nocturnes",
+  "prompt": "minimalist fauvism, cobalt and orange contrast, thick impasto texture, nocturnal atmospheric landscape, graphic silhouettes, high-contrast chiaroscuro, modernist brushwork. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Fauvist Nocturnes/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Fauvist Nocturnes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

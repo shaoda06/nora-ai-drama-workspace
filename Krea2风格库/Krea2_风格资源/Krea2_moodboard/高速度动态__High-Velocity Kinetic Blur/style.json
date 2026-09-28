@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2275",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "高速度动态",
+  "name": "High-Velocity Kinetic Blur",
+  "prompt": "motion blur, panning shot, long exposure, kinetic energy, high-speed action, abstract velocity, dynamic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高速度动态__High-Velocity Kinetic Blur/preview.webp",
+  "folder": "Krea2_moodboard/高速度动态__High-Velocity Kinetic Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

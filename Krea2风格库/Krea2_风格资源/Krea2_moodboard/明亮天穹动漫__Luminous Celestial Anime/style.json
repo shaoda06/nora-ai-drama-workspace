@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-50",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "明亮天穹动漫",
+  "name": "Luminous Celestial Anime",
+  "prompt": "celestial anime fantasy, ethereal glowing highlights, deep space background, soft digital bloom, bioluminescent magical elements, vibrant neon rim light, clean digital line art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮天穹动漫__Luminous Celestial Anime/preview.webp",
+  "folder": "Krea2_moodboard/明亮天穹动漫__Luminous Celestial Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

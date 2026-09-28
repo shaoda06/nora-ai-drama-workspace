@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-356",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "模拟超现实",
+  "name": "Deconstructed Analog Surrealism — Sliced Paper Strips",
+  "prompt": "analog paper collage, sliced vintage photograph, fragmented composition, halftone print texture, hand-cut paper edges, surreal juxtaposition, retro color palette, tactile matte ephemera. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟超现实__Deconstructed Analog Surrealism — Sliced Paper Strips/preview.webp",
+  "folder": "Krea2_moodboard/模拟超现实__Deconstructed Analog Surrealism — Sliced Paper Strips",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

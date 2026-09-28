@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2335",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感琥珀黄金剪影",
+  "name": "Cinematic Amber Chiaroscuro — Golden Silhouette",
+  "prompt": "cinematic chiaroscuro, dramatic rim lighting, low-key silhouette, warm amber glow, minimalist portraiture, high-contrast shadows, film grain texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感琥珀黄金剪影__Cinematic Amber Chiaroscuro — Golden Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/电影感琥珀黄金剪影__Cinematic Amber Chiaroscuro — Golden Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

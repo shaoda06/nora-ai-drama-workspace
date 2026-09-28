@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1996",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态速度",
+  "name": "Kinetic Velocity Blur",
+  "prompt": "motion blur, panning photography, shutter drag, kinetic energy, vibrant saturation, high-speed action, abstract velocity. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态速度__Kinetic Velocity Blur/preview.webp",
+  "folder": "Krea2_moodboard/动态速度__Kinetic Velocity Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

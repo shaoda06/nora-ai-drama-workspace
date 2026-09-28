@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2741",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵黑色",
+  "name": "Ethereal Bioluminescent Noir",
+  "prompt": "bioluminescent cyan glow, high-contrast noir, analog film grain, ethereal bloom effect, chiaroscuro, lo-fi aesthetic, surreal nocturnal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色__Ethereal Bioluminescent Noir/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色__Ethereal Bioluminescent Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

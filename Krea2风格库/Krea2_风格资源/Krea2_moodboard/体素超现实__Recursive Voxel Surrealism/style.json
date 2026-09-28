@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-222",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "体素超现实",
+  "name": "Recursive Voxel Surrealism",
+  "prompt": "voxelized extrusion, recursive droste spiral, digital glitch surrealism, pixelated mosaic landscape, atmospheric pastel gradients, chromatic aberration, parametric geometric fragmentation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/体素超现实__Recursive Voxel Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/体素超现实__Recursive Voxel Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

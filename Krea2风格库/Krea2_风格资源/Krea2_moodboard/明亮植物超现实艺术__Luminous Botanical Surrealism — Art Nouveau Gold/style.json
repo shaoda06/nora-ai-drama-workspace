@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3330",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "明亮植物超现实艺术",
+  "name": "Luminous Botanical Surrealism — Art Nouveau Gold",
+  "prompt": "maximalist botanical tapestry, chiaroscuro lighting, Art Nouveau influence, glowing golden backlighting, stylized digital diorama, rich autumnal color palette, intricate layered composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮植物超现实艺术__Luminous Botanical Surrealism — Art Nouveau Gold/preview.webp",
+  "folder": "Krea2_moodboard/明亮植物超现实艺术__Luminous Botanical Surrealism — Art Nouveau Gold",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

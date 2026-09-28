@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1075",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "叙事超现实综合",
+  "name": "Narrative Surrealist Synthesis",
+  "prompt": "magical realism, surrealist oil painting, uncanny narrative, dreamlike juxtaposition, vintage texture, whimsical absurdity, cinematic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/叙事超现实综合__Narrative Surrealist Synthesis/preview.webp",
+  "folder": "Krea2_moodboard/叙事超现实综合__Narrative Surrealist Synthesis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

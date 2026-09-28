@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2357",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "有构极简编辑",
+  "name": "Structured Minimalist Editorial",
+  "prompt": "studio lookbook photography, high-key white background, minimalist fashion editorial, structured silhouettes, tactile fabric textures, bold color blocking, contemporary neutral palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/有构极简编辑__Structured Minimalist Editorial/preview.webp",
+  "folder": "Krea2_moodboard/有构极简编辑__Structured Minimalist Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

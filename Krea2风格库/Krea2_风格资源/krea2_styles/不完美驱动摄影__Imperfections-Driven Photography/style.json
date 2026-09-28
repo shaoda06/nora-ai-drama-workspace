@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-392",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "不完美驱动摄影",
+  "name": "Imperfections-Driven Photography",
+  "prompt": "Style: Imperfections-Driven Photography: A candid, photographic style built on visible textural flaws — grain, soft focus, uneven exposure, subtle asymmetry  composition carrying genuine,  visible VHS film grain, natural noise artifacts, motion blur presence, imperfect focus, raw unpolished framing, uneven lighting conditions, faint hairline scratches and dust marks scattered across the frame, Influenced by: old photo, documentary snapshot-photography tradition, imperfection-embracing wabi-sabi photographic practice, unretouched candid-capture technique, analog authenticity method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/不完美驱动摄影__Imperfections-Driven Photography/preview.jpg",
+  "folder": "krea2_styles/不完美驱动摄影__Imperfections-Driven Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,1 @@
+chromatic aberration, analog glitch, spectral gradients, linear light distortion, neon glow, scanline texture, minimalist geometry. Subject:{prompt}

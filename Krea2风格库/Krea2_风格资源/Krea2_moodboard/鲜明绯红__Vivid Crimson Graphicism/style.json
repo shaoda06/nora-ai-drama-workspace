@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-165",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "鲜明绯红",
+  "name": "Vivid Crimson Graphicism",
+  "prompt": "saturated crimson and gold palette, bold ink outlines, dynamic anime-inspired character design, painterly digital textures, high-contrast dramatic lighting, expressive emotive features, stylized graphic novel aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜明绯红__Vivid Crimson Graphicism/preview.webp",
+  "folder": "Krea2_moodboard/鲜明绯红__Vivid Crimson Graphicism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

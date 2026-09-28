@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-131",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "迪士尼超精细插画",
+  "name": "Disney Ultradetailed Illustration",
+  "prompt": "Style: Disney Ultradetailed Illustration: premium feature-animation aesthetics characterized by exceptionally refined draftsmanship, expressive form design, sophisticated visual appeal, advanced material rendering, cinematic staging, and meticulous attention to every surface and design element. The style emphasizes clarity, emotional readability, graceful shape language, polished visual storytelling, and a remarkable balance between realism and stylization, combining the charm of classical animation with the fidelity of contemporary digital illustration. Rather than relying on simplified cartoon conventions, it pursues richness, precision, and production-level craftsmanship through nuanced lighting, intricate textures, elegant composition, and highly controlled rendering. The resulting imagery feels aspirational, immersive, and masterfully produced, with every element contributing to a cohesive sense of wonder, artistry, and visual sophistication, reminiscent of Glen Keane and James Baxter, Inspired by Walt Disney.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/迪士尼超精细插画__Disney Ultradetailed Illustration/preview.jpg",
+  "folder": "krea2_styles/迪士尼超精细插画__Disney Ultradetailed Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

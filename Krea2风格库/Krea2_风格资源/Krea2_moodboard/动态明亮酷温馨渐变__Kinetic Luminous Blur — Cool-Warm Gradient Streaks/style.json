@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2246",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "动态明亮酷温馨渐变",
+  "name": "Kinetic Luminous Blur — Cool-Warm Gradient Streaks",
+  "prompt": "long exposure motion blur, vibrant chromatic gradients, high-speed kinetic energy, abstract light streaks, cool and warm contrast, cinematic urban atmosphere, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态明亮酷温馨渐变__Kinetic Luminous Blur — Cool-Warm Gradient Streaks/preview.webp",
+  "folder": "Krea2_moodboard/动态明亮酷温馨渐变__Kinetic Luminous Blur — Cool-Warm Gradient Streaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1386",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "忧郁森林",
+  "name": "Melancholic Forest Solitude",
+  "prompt": "cinematic forest silhouette, atmospheric morning fog, muted earthy and cool tones, low angle perspective, soft diffused backlighting, shallow depth of field, introspective melancholic mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁森林__Melancholic Forest Solitude/preview.webp",
+  "folder": "Krea2_moodboard/忧郁森林__Melancholic Forest Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-426",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "黑色光谱",
+  "name": "Gritty Monochromatic Noir — Spectral Zine Murk",
+  "prompt": "high-contrast monochrome, heavy film grain, stipple texture, halftone patterns, chiaroscuro lighting, distressed xerox aesthetic, nocturnal noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色光谱__Gritty Monochromatic Noir — Spectral Zine Murk/preview.webp",
+  "folder": "Krea2_moodboard/黑色光谱__Gritty Monochromatic Noir — Spectral Zine Murk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

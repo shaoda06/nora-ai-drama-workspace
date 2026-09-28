@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2552",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "电影感霓虹剪影",
+  "name": "Cinematic Neon Silhouette",
+  "prompt": "cinematic side-profile portrait, sharp rim lighting, high-contrast silhouette, neo-noir aesthetic, vibrant neon backlighting, dramatic chiaroscuro, minimalist graphic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感霓虹剪影__Cinematic Neon Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/电影感霓虹剪影__Cinematic Neon Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

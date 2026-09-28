@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2324",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "复古沙漠黑色",
+  "name": "Retro Desert Noir",
+  "prompt": "ligne claire, stark ink outlines, warm desert palette, retro-futuristic, high-contrast shadows, vintage comic style, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古沙漠黑色__Retro Desert Noir/preview.webp",
+  "folder": "Krea2_moodboard/复古沙漠黑色__Retro Desert Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

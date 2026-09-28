@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2691",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "超现实沙漠",
+  "name": "Monolithic Surreal Desert",
+  "prompt": "surreal desert landscape, monolithic ancient architecture, golden hour lighting, scale contrast, retro-futuristic sci-fi, atmospheric haze, otherworldly atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实沙漠__Monolithic Surreal Desert/preview.webp",
+  "folder": "Krea2_moodboard/超现实沙漠__Monolithic Surreal Desert",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

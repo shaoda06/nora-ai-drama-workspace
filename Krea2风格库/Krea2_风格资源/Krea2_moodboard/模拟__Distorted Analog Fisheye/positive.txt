@@ -1,0 +1,1 @@
+fisheye lens, extreme wide-angle distortion, circular vignette, analog film grain, dynamic low-angle perspective, retro color grading, chromatic aberration. Subject:{prompt}

@@ -1,0 +1,1 @@
+motion blur, heavy film grain, atmospheric haze, desaturated cool tones, dreamlike, liminal space, soft diffused lighting, minimalist composition. Subject:{prompt}

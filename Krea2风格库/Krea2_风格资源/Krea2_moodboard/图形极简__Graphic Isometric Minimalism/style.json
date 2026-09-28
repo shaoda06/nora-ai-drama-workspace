@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3135",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "图形极简",
+  "name": "Graphic Isometric Minimalism",
+  "prompt": "aerial orthographic view, minimalist geometric composition, sharp long shadows, lush green landscape, surreal miniature aesthetic, clean architectural lines, vibrant color contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形极简__Graphic Isometric Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/图形极简__Graphic Isometric Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

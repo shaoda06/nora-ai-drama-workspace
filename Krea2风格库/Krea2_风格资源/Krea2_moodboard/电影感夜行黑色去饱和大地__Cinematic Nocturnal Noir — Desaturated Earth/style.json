@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3481",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "电影感夜行黑色去饱和大地",
+  "name": "Cinematic Nocturnal Noir — Desaturated Earth",
+  "prompt": "cinematic film noir, high-contrast chiaroscuro, harsh artificial lighting, gritty urban textures, 35mm film grain, desaturated moody palette, nocturnal liminal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色去饱和大地__Cinematic Nocturnal Noir — Desaturated Earth/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色去饱和大地__Cinematic Nocturnal Noir — Desaturated Earth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

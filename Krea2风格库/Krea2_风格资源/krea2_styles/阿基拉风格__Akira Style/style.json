@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-70",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "阿基拉风格",
+  "name": "Akira Style",
+  "prompt": "Style: Akira Style: A meticulously detailed retro-futurist anime illustration style built on dense, precise linework rendering technology and urban decay with obsessive mechanical accuracy, flat cel-shaded color fields laid beneath sharp confident outline, dramatic neon and shadow contrast that carves gritty cyberpunk atmosphere across every surface, kinetic motion conveyed through bold speed-line dynamism, and a gritty, dystopian animation gravitas that feels both hand-crafted and technologically obsessive. Influenced by: Katsuhiro Otomo, 1980s cel-animation technique, cyberpunk anime tradition, retro-futurist manga illustration.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/阿基拉风格__Akira Style/preview.jpg",
+  "folder": "krea2_styles/阿基拉风格__Akira Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

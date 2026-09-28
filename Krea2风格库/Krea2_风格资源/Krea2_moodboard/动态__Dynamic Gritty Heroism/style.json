@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-20",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "动态",
+  "name": "Dynamic Gritty Heroism",
+  "prompt": "character concept sheet, bold ink outlines, stylized digital illustration, dynamic heroic pose, high contrast lighting, cel-shaded textures, geometric anatomy, vibrant glowing accents. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态__Dynamic Gritty Heroism/preview.webp",
+  "folder": "Krea2_moodboard/动态__Dynamic Gritty Heroism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

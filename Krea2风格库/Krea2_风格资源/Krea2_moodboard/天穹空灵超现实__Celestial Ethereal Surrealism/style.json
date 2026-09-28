@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1667",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "天穹空灵超现实",
+  "name": "Celestial Ethereal Surrealism",
+  "prompt": "celestial surrealism, golden hour lighting, ethereal dreamscape, levitating elements, iridescent energy trails, soft focus, divine atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹空灵超现实__Celestial Ethereal Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/天穹空灵超现实__Celestial Ethereal Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

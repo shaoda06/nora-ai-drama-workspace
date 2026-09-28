@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-393",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "图形故障",
+  "name": "Graphic Glitch Modernism",
+  "prompt": "high-contrast graphic design, digital glitch distortion, vintage halftone texture, geometric abstraction, minimalist vector composition, retro-futurist, sharp serrated edges. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形故障__Graphic Glitch Modernism/preview.webp",
+  "folder": "Krea2_moodboard/图形故障__Graphic Glitch Modernism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

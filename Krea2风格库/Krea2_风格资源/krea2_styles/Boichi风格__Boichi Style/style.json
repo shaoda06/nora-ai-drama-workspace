@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-80",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "Boichi风格",
+  "name": "Boichi Style",
+  "prompt": "Style: Boichi Style: A meticulously rendered manga-illustration style built on dense, hyper-precise linework that treats anatomy and mechanical detail with equal obsessive accuracy, dramatic high-contrast shading that carves powerful, sculptural form through confident cross-hatched shadow, a technically disciplined realism balancing muscular anatomical grounding with dynamic, kinetic posing, meticulous attention to material and structural logic rewarding close inspection, and a bold, technically virtuosic manga intensity that feels equal parts scientific precision and explosive physicality. Influenced by: Boichi, Dr. Stone manga art tradition, hyper-detailed manga illustration technique, technical-precision character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Boichi风格__Boichi Style/preview.jpg",
+  "folder": "krea2_styles/Boichi风格__Boichi Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

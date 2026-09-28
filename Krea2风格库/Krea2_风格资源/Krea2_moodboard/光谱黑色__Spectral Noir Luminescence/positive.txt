@@ -1,0 +1,1 @@
+cinematic noir, volumetric lighting, high contrast, ethereal silhouettes, cold color palette, mysterious haze, long exposure motion. Subject:{prompt}

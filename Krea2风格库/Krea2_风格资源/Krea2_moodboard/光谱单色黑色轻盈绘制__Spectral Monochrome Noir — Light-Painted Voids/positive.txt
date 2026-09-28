@@ -1,0 +1,1 @@
+high-contrast monochrome, ethereal motion blur, heavy film grain, chiaroscuro lighting, spectral glow, charcoal texture, long exposure noir. Subject:{prompt}

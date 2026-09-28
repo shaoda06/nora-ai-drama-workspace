@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1007",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "触觉超现实极简厚涂",
+  "name": "Tactile Surrealist Minimalism — Impasto White Disruption",
+  "prompt": "tactile impasto texture, conceptual surrealist portraiture, minimalist studio lighting, vibrant neon paint overlay, high-fidelity skin detail, physical medium intervention, stark white background, avant-garde composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉超现实极简厚涂__Tactile Surrealist Minimalism — Impasto White Disruption/preview.webp",
+  "folder": "Krea2_moodboard/触觉超现实极简厚涂__Tactile Surrealist Minimalism — Impasto White Disruption",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

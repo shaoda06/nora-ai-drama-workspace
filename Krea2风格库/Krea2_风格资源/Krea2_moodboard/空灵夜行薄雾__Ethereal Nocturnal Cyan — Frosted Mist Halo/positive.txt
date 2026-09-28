@@ -1,0 +1,1 @@
+monochromatic cyan, spectral silhouette, frosted glass texture, atmospheric haze, deep cobalt indigo, grainy film photography, ethereal backlighting. Subject:{prompt}

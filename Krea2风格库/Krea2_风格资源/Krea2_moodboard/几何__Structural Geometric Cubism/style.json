@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-316",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "几何",
+  "name": "Structural Geometric Cubism",
+  "prompt": "geometric cubism, faceted vector art, sharp angular planes, graphic halftone textures, interlocking polygon shapes, modernist abstraction, precisionist line work. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何__Structural Geometric Cubism/preview.webp",
+  "folder": "Krea2_moodboard/几何__Structural Geometric Cubism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

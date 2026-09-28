@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2228",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "琥珀宏观",
+  "name": "Molten Amber Macro",
+  "prompt": "extreme close-up, amber lighting, tactile skin texture, chiaroscuro, analog film grain, glistening highlights, macro portrait. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀宏观__Molten Amber Macro/preview.webp",
+  "folder": "Krea2_moodboard/琥珀宏观__Molten Amber Macro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

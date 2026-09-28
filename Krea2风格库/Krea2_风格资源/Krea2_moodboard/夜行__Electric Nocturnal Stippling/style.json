@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-369",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "夜行",
+  "name": "Electric Nocturnal Stippling",
+  "prompt": "electric blue and indigo palette, heavy stipple and halftone texture, dramatic chiaroscuro lighting, high-contrast silhouette, nocturnal bioluminescent glow, analog film grain, gritty retro-digital print. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行__Electric Nocturnal Stippling/preview.webp",
+  "folder": "Krea2_moodboard/夜行__Electric Nocturnal Stippling",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

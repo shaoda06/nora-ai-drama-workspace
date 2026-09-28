@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-71",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "丰碑暮光",
+  "name": "Monumental Twilight Cloudscapes",
+  "prompt": "towering cumulus clouds, golden hour lighting, painterly anime style, deep indigo sky, surreal monumental scale, cinematic atmosphere, vibrant warm glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/丰碑暮光__Monumental Twilight Cloudscapes/preview.webp",
+  "folder": "Krea2_moodboard/丰碑暮光__Monumental Twilight Cloudscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1194",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "明亮数字",
+  "name": "Luminous Digital Archeology",
+  "prompt": "glowing ASCII overlay, painterly analog texture, surreal digital glitch, hazy atmospheric lighting, nostalgic film grain, luminous symbolic geometry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮数字__Luminous Digital Archeology/preview.webp",
+  "folder": "Krea2_moodboard/明亮数字__Luminous Digital Archeology",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

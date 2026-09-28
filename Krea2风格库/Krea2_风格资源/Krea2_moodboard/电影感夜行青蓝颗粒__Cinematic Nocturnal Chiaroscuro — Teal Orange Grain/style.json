@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2394",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "电影感夜行青蓝颗粒",
+  "name": "Cinematic Nocturnal Chiaroscuro — Teal Orange Grain",
+  "prompt": "cinematic chiaroscuro, volumetric lighting, high contrast silhouettes, analog film grain, mystical amber glow, nocturnal atmosphere, deep teal and orange palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行青蓝颗粒__Cinematic Nocturnal Chiaroscuro — Teal Orange Grain/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行青蓝颗粒__Cinematic Nocturnal Chiaroscuro — Teal Orange Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

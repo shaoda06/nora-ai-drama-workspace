@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-595",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "明亮叙事写实",
+  "name": "Luminous Narrative Realism",
+  "prompt": "dramatic chiaroscuro lighting, rich jewel tone palette, cinematic warm illumination, painterly digital rendering, atmospheric narrative composition, stylized high-fidelity textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮叙事写实__Luminous Narrative Realism/preview.webp",
+  "folder": "Krea2_moodboard/明亮叙事写实__Luminous Narrative Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

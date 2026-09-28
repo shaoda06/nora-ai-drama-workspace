@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-305",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "极致写实",
+  "name": "Ultrarealism",
+  "prompt": "Style: Ultrarealism: A meticulously rendered painting style built on hyper-precise attention to minute detail that surpasses ordinary photographic fidelity, dramatic, controlled lighting establishing an almost tangible dimensionality throughout the composition, obsessive layering that builds convincing depth, translucency, and subtle tonal variation, a disciplined, painstaking rendering approach that treats absolute technical mastery as the primary goal, and an uncanny, almost hyper-vivid intensity that pushes representational accuracy beyond what unaided vision typically perceives. Influenced by: hyperrealist and ultrarealist oil-painting tradition, contemporary photorealism technique, meticulous layered-glazing practice, technically obsessive figurative-painting method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/极致写实__Ultrarealism/preview.jpg",
+  "folder": "krea2_styles/极致写实__Ultrarealism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

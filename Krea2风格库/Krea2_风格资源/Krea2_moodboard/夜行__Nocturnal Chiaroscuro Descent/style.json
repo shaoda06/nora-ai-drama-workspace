@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-593",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "夜行",
+  "name": "Nocturnal Chiaroscuro Descent",
+  "prompt": "chiaroscuro lighting, deep nocturnal shadows, bioluminescent cyan glow, painterly digital art, grimdark fantasy, cinematic atmosphere, high contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行__Nocturnal Chiaroscuro Descent/preview.webp",
+  "folder": "Krea2_moodboard/夜行__Nocturnal Chiaroscuro Descent",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

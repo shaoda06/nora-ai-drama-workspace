@@ -1,0 +1,1 @@
+chiaroscuro lighting, high-contrast black and white, dramatic silhouette, heavy film grain, cinematic noir, stark minimalism, textured noise. Subject:{prompt}

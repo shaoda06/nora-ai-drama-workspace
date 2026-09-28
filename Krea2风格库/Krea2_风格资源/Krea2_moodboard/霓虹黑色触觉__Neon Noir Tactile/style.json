@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-668",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "霓虹黑色触觉",
+  "name": "Neon Noir Tactile",
+  "prompt": "neon noir, high-contrast chiaroscuro, electric blue and hot pink palette, heavy impasto texture, halftone screenprint effects, synthwave atmospheric lighting, gritty retro-futuristic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹黑色触觉__Neon Noir Tactile/preview.webp",
+  "folder": "Krea2_moodboard/霓虹黑色触觉__Neon Noir Tactile",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-826",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "极简墨水奇想",
+  "name": "Minimalist Red Ink Whimsy",
+  "prompt": "minimalist line art, vibrant red and black ink, risograph texture, whimsical hand-drawn style, high-contrast graphic illustration, naive art influence, off-white background, expressive brushstrokes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简墨水奇想__Minimalist Red Ink Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/极简墨水奇想__Minimalist Red Ink Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

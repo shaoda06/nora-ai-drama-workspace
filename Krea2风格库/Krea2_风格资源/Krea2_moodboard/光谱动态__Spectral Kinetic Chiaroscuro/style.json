@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1195",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "光谱动态",
+  "name": "Spectral Kinetic Chiaroscuro",
+  "prompt": "long exposure photography, chiaroscuro lighting, motion blur, painterly film grain, dreamlike atmosphere, digital glitch, sepia and crimson tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱动态__Spectral Kinetic Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/光谱动态__Spectral Kinetic Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

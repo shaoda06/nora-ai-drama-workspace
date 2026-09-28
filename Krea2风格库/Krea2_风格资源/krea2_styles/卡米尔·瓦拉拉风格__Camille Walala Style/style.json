@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-52",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "卡米尔·瓦拉拉风格",
+  "name": "Camille Walala Style",
+  "prompt": "Style: Camille Walala Style: A vibrant, maximalist illustration style built on bold, confidently bounded geometric shapes arranged in dense, rhythmic repetition, thick, uniform outline holding every flat-color region with graphic precision, an energetic, kaleidoscopic pattern-work covering nearly every extent of the composition, a playful, optical-pop confidence replacing any naturalistic rendering entirely, and a joyful, high-energy graphic-design intensity that feels bold, celebratory, and unmistakably contemporary. Influenced by: Camille Walala,  geometric pattern-illustration technique, contemporary mural-art practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/卡米尔·瓦拉拉风格__Camille Walala Style/preview.jpg",
+  "folder": "krea2_styles/卡米尔·瓦拉拉风格__Camille Walala Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

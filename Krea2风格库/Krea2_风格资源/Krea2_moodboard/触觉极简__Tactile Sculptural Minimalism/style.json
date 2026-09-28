@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-243",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "触觉极简",
+  "name": "Tactile Sculptural Minimalism",
+  "prompt": "tactile 3d rendering, draped satin fabric, saturated color blocking, sculptural minimalist composition, soft studio lighting, high-contrast directional shadows, glossy and matte material juxtaposition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉极简__Tactile Sculptural Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/触觉极简__Tactile Sculptural Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3240",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "电影感绯红黑色猩红编辑",
+  "name": "Cinematic Crimson Noir — Scarlet Editorial",
+  "prompt": "cinematic crimson aesthetic, noir lighting, dramatic chiaroscuro, vintage 35mm film grain, surrealist editorial photography, high-contrast silhouettes, theatrical studio lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红黑色猩红编辑__Cinematic Crimson Noir — Scarlet Editorial/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红黑色猩红编辑__Cinematic Crimson Noir — Scarlet Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

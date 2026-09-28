@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3388",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "光谱夜行",
+  "name": "Spectral Nocturnal Blur",
+  "prompt": "long exposure motion blur, spectral distortion, nocturnal deep indigo palette, heavy film grain, liminal space photography, shaky camera effect, haunting dreamlike atmosphere, soft bloom lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱夜行__Spectral Nocturnal Blur/preview.webp",
+  "folder": "Krea2_moodboard/光谱夜行__Spectral Nocturnal Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

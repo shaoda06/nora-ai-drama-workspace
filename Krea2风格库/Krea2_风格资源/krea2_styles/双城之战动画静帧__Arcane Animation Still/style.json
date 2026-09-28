@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-135",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "双城之战动画静帧",
+  "name": "Arcane Animation Still",
+  "prompt": "Style: Arcane Animation Still: A richly painterly animated-illustration style built on visible, confident brushstroke texture layered directly into rendering rather than smoothed away, dramatic chiaroscuro lighting that carves bold graphic shadow across stylized angular form, a fusion of hand-painted textural depth with clean animation-ready linework, moody atmospheric tonal harmony charged with cinematic tension, and a bold, painterly-meets-graphic animation intensity that feels both illustrated and alive. Influenced by: Fortiche Production, League of Legends concept-art tradition, painterly animation technique, cinematic stylized character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/双城之战动画静帧__Arcane Animation Still/preview.jpg",
+  "folder": "krea2_styles/双城之战动画静帧__Arcane Animation Still",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

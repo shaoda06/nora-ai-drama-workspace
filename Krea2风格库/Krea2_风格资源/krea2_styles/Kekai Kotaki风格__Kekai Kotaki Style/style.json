@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-178",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "Kekai Kotaki风格",
+  "name": "Kekai Kotaki Style",
+  "prompt": "Style: Kekai Kotaki Style: A richly atmospheric fantasy concept-art style built on loose, confident brushwork that favors mood and light over crisp detail, dramatic soft-edged lighting that dissolves forms into glowing haze at the peripheries, richly layered painterly texture giving textures a lived-in, tactile weight, sweeping atmospheric depth that lets grand scale breathe through soft value transitions, and an evocative, immersive painterly intensity built for epic fantasy world-building. Influenced by: Kekai Kotaki, Guild Wars 2 concept art, painterly fantasy illustration, atmospheric concept-art technique.,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Kekai Kotaki风格__Kekai Kotaki Style/preview.jpg",
+  "folder": "krea2_styles/Kekai Kotaki风格__Kekai Kotaki Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

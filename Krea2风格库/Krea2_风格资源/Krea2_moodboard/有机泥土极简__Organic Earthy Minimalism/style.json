@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-889",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "有机泥土极简",
+  "name": "Organic Earthy Minimalism",
+  "prompt": "minimalist organic abstraction, muted earthy color palette, matte paper texture, flat vector illustration, mid-century modern graphic, botanical silhouettes, serene geometric folk, soft tactile aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/有机泥土极简__Organic Earthy Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/有机泥土极简__Organic Earthy Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

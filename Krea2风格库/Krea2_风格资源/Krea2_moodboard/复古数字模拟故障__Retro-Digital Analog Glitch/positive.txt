@@ -1,0 +1,1 @@
+low-poly 3D render, CRT scanlines, chromatic aberration, VHS glitch effect, 90s retro computing, pixelated texture, analog signal decay. Subject:{prompt}

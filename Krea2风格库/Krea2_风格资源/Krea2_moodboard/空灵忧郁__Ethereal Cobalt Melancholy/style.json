@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-739",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵忧郁",
+  "name": "Ethereal Cobalt Melancholy",
+  "prompt": "cobalt blue palette, expressive charcoal linework, ethereal glowing aura, heavy analog film grain, high contrast chiaroscuro, textured paper aesthetic, spectral silhouette, melancholic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵忧郁__Ethereal Cobalt Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/空灵忧郁__Ethereal Cobalt Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

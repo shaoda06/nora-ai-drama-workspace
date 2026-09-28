@@ -1,0 +1,1 @@
+high-contrast monochrome, heavy tactile grain, soft-focus silhouette, atmospheric chiaroscuro, motion blur, charcoal texture, cinematic noir. Subject:{prompt}

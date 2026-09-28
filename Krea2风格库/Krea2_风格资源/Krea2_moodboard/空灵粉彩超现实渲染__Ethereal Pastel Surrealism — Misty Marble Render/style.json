@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-246",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "空灵粉彩超现实渲染",
+  "name": "Ethereal Pastel Surrealism — Misty Marble Render",
+  "prompt": "dreamcore aesthetic, soft-focus 3D render, ethereal pastel palette, surrealist landscape, minimalist architectural elements, diffused cinematic lighting, nostalgic dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩超现实渲染__Ethereal Pastel Surrealism — Misty Marble Render/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩超现实渲染__Ethereal Pastel Surrealism — Misty Marble Render",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

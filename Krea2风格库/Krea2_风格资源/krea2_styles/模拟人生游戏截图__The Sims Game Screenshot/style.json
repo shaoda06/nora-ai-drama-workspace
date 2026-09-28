@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-63",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "模拟人生游戏截图",
+  "name": "The Sims Game Screenshot",
+  "prompt": "Style: The Sims Game Screenshot: A polished, gently stylized 3D-simulation illustration style built on smooth, rounded character proportion balancing cartoonish charm with grounded believability, bright, even lighting that keeps every scene warmly lit and legible, glossy specular response giving texture, sim-adjacent sheen, a confident, catalog-ready UI-clean rendering finish, and a cheerful, simulation intensity that feels bright, approachable, and unmistakably game-like. Influenced by: Maxis simulation-game rendering direction, The Sims Game, stylized 3D technique, cheerful lighting practice, simulation game-art,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/模拟人生游戏截图__The Sims Game Screenshot/preview.jpg",
+  "folder": "krea2_styles/模拟人生游戏截图__The Sims Game Screenshot",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

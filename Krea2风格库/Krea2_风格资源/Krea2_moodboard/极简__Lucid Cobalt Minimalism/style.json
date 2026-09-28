@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2164",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "极简",
+  "name": "Lucid Cobalt Minimalism",
+  "prompt": "minimalist product photography, stark white background, cobalt blue accents, translucent glass and gel, sharp caustic refraction, high-contrast studio lighting, organic biomorphic shapes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Lucid Cobalt Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/极简__Lucid Cobalt Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-876",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "靛蓝极简",
+  "name": "Monochromatic Indigo Minimalism",
+  "prompt": "minimalist monochromatic, deep indigo blue, high contrast, linocut print texture, stark white illustration, negative space, tactile paper grain, graphic silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/靛蓝极简__Monochromatic Indigo Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/靛蓝极简__Monochromatic Indigo Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

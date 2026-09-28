@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2178",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "明亮黑色复古未来",
+  "name": "Luminous Cobalt Noir — Retro-Futuristic Sheen",
+  "prompt": "cobalt blue lighting, stark chiaroscuro, pitch black background, spectral glow, high contrast noir, sculptural textures, heavy film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色复古未来__Luminous Cobalt Noir — Retro-Futuristic Sheen/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色复古未来__Luminous Cobalt Noir — Retro-Futuristic Sheen",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

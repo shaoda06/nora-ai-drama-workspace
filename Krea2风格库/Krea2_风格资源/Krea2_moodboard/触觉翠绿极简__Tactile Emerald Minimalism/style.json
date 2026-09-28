@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1104",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "触觉翠绿极简",
+  "name": "Tactile Emerald Minimalism",
+  "prompt": "heavy impasto oil painting, tactile palette knife texture, monochromatic emerald green palette, high-angle bird's-eye perspective, sculptural brushstrokes, minimalist isolation, shimmering light caustics, surrealist atmospheric depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉翠绿极简__Tactile Emerald Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/触觉翠绿极简__Tactile Emerald Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

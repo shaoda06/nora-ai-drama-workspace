@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2634",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "电影感都市纪实",
+  "name": "Cinematic Urban Chiaroscuro — Documentary Concrete",
+  "prompt": "cinematic urban chiaroscuro, dramatic directional lighting, deep architectural shadows, gritty city textures, minimalist urban composition, high-contrast street photography, solitary human figures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市纪实__Cinematic Urban Chiaroscuro — Documentary Concrete/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市纪实__Cinematic Urban Chiaroscuro — Documentary Concrete",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-331",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "胶片摄影",
+  "name": "Analog Photography",
+  "prompt": "Style: Analog Photography: A tactile, organic photographic style built on natural grain structure that gives every surface a subtle, unpolished texture rather than digital smoothness, gentle imperfections in tonal transition and mild halation around bright highlights that soften harsh contrast, a slightly muted, imperfect dynamic range that feels handled and physical rather than clinically corrected, unhurried natural or available light rendered with honest, unmanipulated character, and a nostalgic, authentic materiality that carries the quiet imperfection of chemistry and light captured on film. Influenced by: 35mm film photography tradition, darkroom development technique, analog photojournalism practice, medium-format film camera aesthetic.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/胶片摄影__Analog Photography/preview.jpg",
+  "folder": "krea2_styles/胶片摄影__Analog Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

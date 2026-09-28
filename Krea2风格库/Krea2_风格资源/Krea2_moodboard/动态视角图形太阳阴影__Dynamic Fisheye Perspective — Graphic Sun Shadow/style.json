@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1957",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态视角图形太阳阴影",
+  "name": "Dynamic Fisheye Perspective — Graphic Sun Shadow",
+  "prompt": "fisheye lens distortion, extreme wide-angle perspective, dynamic low-angle shot, saturated vibrant colors, high-contrast sunlight, Y2K street culture, sharp graphic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态视角图形太阳阴影__Dynamic Fisheye Perspective — Graphic Sun Shadow/preview.webp",
+  "folder": "Krea2_moodboard/动态视角图形太阳阴影__Dynamic Fisheye Perspective — Graphic Sun Shadow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

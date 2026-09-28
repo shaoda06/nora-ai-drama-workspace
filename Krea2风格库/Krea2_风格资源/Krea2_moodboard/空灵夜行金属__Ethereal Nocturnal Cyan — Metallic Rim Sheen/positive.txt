@@ -1,0 +1,1 @@
+cold cyan palette, ethereal glow, shallow depth of field, nocturnal cinematic noir, soft focused diffusion, high-contrast rim lighting, surreal sci-fi atmosphere. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2751",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵极简",
+  "name": "Ethereal Cobalt Minimalism",
+  "prompt": "minimalist blue palette, atmospheric gradients, soft-focus abstraction, geometric vector layers, kinetic motion blur, luminous light energy, matte texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简__Ethereal Cobalt Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简__Ethereal Cobalt Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

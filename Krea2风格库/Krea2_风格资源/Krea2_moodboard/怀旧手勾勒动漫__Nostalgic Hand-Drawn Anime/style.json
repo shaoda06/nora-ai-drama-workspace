@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-102",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧手勾勒动漫",
+  "name": "Nostalgic Hand-Drawn Anime",
+  "prompt": "1990s anime style, Studio Ghibli aesthetic, hand-painted background, nostalgic warm lighting, slice of life, rich jewel tones, detailed cel animation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧手勾勒动漫__Nostalgic Hand-Drawn Anime/preview.webp",
+  "folder": "Krea2_moodboard/怀旧手勾勒动漫__Nostalgic Hand-Drawn Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3417",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵夜行运动琥珀",
+  "name": "Ethereal Nocturnal Motion — Fiery Amber Streak",
+  "prompt": "long exposure, motion blur, analog film grain, glowing amber light, deep indigo night, liminal space, soft-focus haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行运动琥珀__Ethereal Nocturnal Motion — Fiery Amber Streak/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行运动琥珀__Ethereal Nocturnal Motion — Fiery Amber Streak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

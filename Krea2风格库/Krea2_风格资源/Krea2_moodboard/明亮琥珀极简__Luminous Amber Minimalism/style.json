@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2348",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "明亮琥珀极简",
+  "name": "Luminous Amber Minimalism",
+  "prompt": "monochromatic amber palette, minimalist still life, sharp caustic reflections, dramatic sunlight shadows, retro-modernist composition, terracotta and ochre tones, glassware refraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮琥珀极简__Luminous Amber Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/明亮琥珀极简__Luminous Amber Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

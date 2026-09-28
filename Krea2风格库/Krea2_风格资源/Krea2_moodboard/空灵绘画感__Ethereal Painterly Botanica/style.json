@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-561",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵绘画感",
+  "name": "Ethereal Painterly Botanica",
+  "prompt": "painterly floral, soft-focus atmosphere, dreamy ethereal glow, romantic botanical, impressionistic brushwork, vintage texture overlay, diffused lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵绘画感__Ethereal Painterly Botanica/preview.webp",
+  "folder": "Krea2_moodboard/空灵绘画感__Ethereal Painterly Botanica",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

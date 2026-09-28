@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-928",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "超现实印象派翠绿",
+  "name": "Surreal Impressionist Verdant Landscapes",
+  "prompt": "lush verdant landscape, painterly brushwork, monumental nature scale, vibrant emerald and azure palette, sun-dappled whimsical atmosphere, surrealist animation style, graphic shadow geometry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实印象派翠绿__Surreal Impressionist Verdant Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/超现实印象派翠绿__Surreal Impressionist Verdant Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

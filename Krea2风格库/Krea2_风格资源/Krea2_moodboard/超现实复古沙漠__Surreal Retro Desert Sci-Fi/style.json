@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1122",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "超现实复古沙漠",
+  "name": "Surreal Retro Desert Sci-Fi",
+  "prompt": "retro-futuristic surrealism, alien desert landscape, terracotta and teal palette, painterly brushstrokes, vintage 70s sci-fi aesthetic, dreamy analog lighting, weathered industrial texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实复古沙漠__Surreal Retro Desert Sci-Fi/preview.webp",
+  "folder": "Krea2_moodboard/超现实复古沙漠__Surreal Retro Desert Sci-Fi",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

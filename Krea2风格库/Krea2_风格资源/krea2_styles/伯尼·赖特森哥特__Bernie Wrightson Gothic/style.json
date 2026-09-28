@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-233",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "伯尼·赖特森哥特",
+  "name": "Bernie Wrightson Gothic",
+  "prompt": "Style: Bernie Wrightson Gothic: richly detailed gothic illustration characterized by intricate linework, masterful texture rendering, atmospheric darkness, organic complexity, dramatic chiaroscuro, and exceptional craftsmanship, blending classical draftsmanship with horror-infused visual storytelling through meticulous detail, immersive mood, and a strong sense of haunting romanticism, reminiscent of Bernie Wrightson and Gustave Doré, inspired by Frankenstein and Swamp Thing.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/伯尼·赖特森哥特__Bernie Wrightson Gothic/preview.jpg",
+  "folder": "krea2_styles/伯尼·赖特森哥特__Bernie Wrightson Gothic",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,1 @@
+motion blur, shutter drag, high-contrast black and white, ethereal ghost effect, minimalist studio background, heavy film grain, kinetic portraiture. Subject:{prompt}

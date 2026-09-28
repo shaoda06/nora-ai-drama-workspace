@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2891",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "光谱动态运动霓虹",
+  "name": "Spectral Kinetic Motion — Iridescent Neon Smear",
+  "prompt": "long exposure photography, spectral light trails, chromatic aberration, kinetic motion blur, high contrast silhouettes, neon light refraction, dreamy analog grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱动态运动霓虹__Spectral Kinetic Motion — Iridescent Neon Smear/preview.webp",
+  "folder": "Krea2_moodboard/光谱动态运动霓虹__Spectral Kinetic Motion — Iridescent Neon Smear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

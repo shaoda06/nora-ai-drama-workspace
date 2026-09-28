@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1129",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "空灵天穹",
+  "name": "Ethereal Celestial Storybook",
+  "prompt": "storybook watercolor illustration, ethereal celestial motifs, soft textured brushwork, muted earthy color palette, glowing gold leaf accents, magical realism, dreamy atmospheric lighting, delicate ink linework. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵天穹__Ethereal Celestial Storybook/preview.webp",
+  "folder": "Krea2_moodboard/空灵天穹__Ethereal Celestial Storybook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

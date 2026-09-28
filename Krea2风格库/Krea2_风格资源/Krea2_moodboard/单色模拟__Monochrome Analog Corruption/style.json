@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2034",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "单色模拟",
+  "name": "Monochrome Analog Corruption",
+  "prompt": "high-contrast monochrome, analog glitch, VHS scanlines, pixel sorting, chiaroscuro lighting, heavy film grain, corrupted data aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色模拟__Monochrome Analog Corruption/preview.webp",
+  "folder": "Krea2_moodboard/单色模拟__Monochrome Analog Corruption",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

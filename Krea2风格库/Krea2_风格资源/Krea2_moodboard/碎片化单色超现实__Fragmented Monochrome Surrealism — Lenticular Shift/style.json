@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2885",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "碎片化单色超现实",
+  "name": "Fragmented Monochrome Surrealism — Lenticular Shift",
+  "prompt": "monochrome photography, vertical strip displacement, high-contrast lighting, surrealist collage, lenticular effect, fragmented portraiture, glitch art aesthetic, tactile paper texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化单色超现实__Fragmented Monochrome Surrealism — Lenticular Shift/preview.webp",
+  "folder": "Krea2_moodboard/碎片化单色超现实__Fragmented Monochrome Surrealism — Lenticular Shift",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

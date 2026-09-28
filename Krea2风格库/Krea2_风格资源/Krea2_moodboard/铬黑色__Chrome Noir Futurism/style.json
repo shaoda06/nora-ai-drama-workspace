@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2529",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "铬黑色",
+  "name": "Chrome Noir Futurism",
+  "prompt": "liquid chrome, 1980s airbrush art, starburst lens flare, high-contrast noir, retro-futuristic gothic, analog grain texture, saturated neon highlights. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/铬黑色__Chrome Noir Futurism/preview.webp",
+  "folder": "Krea2_moodboard/铬黑色__Chrome Noir Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

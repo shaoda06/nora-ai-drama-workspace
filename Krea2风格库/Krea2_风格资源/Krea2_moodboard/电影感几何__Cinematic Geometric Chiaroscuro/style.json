@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2328",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感几何",
+  "name": "Cinematic Geometric Chiaroscuro",
+  "prompt": "high-contrast chiaroscuro, dramatic golden hour shadows, minimalist geometric composition, cinematic urban isolation, aerial perspective, stark silhouette, desaturated color grading. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感几何__Cinematic Geometric Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/电影感几何__Cinematic Geometric Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

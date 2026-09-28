@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1496",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "光谱超现实",
+  "name": "Spectral Luminal Surrealism",
+  "prompt": "analog film grain, ethereal light trails, high contrast silhouettes, teal and orange palette, dreamlike motion blur, volumetric light leaks, surreal double exposure, cinematic soft focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱超现实__Spectral Luminal Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/光谱超现实__Spectral Luminal Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

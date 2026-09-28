@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-362",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "自然光摄影",
+  "name": "Natural Lighting Photography",
+  "prompt": "Style: Natural Lighting Photography: A soft, organic photographic style built on ambient, unmanipulated illumination shaped entirely by the qualities of available light rather than artificial control, gentle, shifting tonal balance that changes with time and atmosphere, an honest, unforced rendering quality that preserves subtle imperfection and authentic dimensionality, a calm, unhurried stillness carried through patient, observational framing, and a timeless, believable authenticity that feels effortless, grounded, and quietly beautiful. Influenced by: available-light photography tradition, documentary natural-light technique, editorial location-photography practice, observational portrait method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/自然光摄影__Natural Lighting Photography/preview.jpg",
+  "folder": "krea2_styles/自然光摄影__Natural Lighting Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

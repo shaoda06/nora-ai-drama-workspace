@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2209",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "原始模拟",
+  "name": "Raw Analog Intimacy",
+  "prompt": "extreme macro photography, 35mm film grain, raw skin texture, warm cinematic lighting, tactile detail, vintage analog aesthetic, intense emotional gaze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始模拟__Raw Analog Intimacy/preview.webp",
+  "folder": "Krea2_moodboard/原始模拟__Raw Analog Intimacy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

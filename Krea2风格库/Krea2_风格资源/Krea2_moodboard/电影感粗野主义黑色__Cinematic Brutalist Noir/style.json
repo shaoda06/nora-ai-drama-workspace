@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3244",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "电影感粗野主义黑色",
+  "name": "Cinematic Brutalist Noir",
+  "prompt": "high-contrast monochrome, heavy film grain, brutalist architecture, chiaroscuro lighting, existential minimalism, geometric surrealism, vintage cinema aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感粗野主义黑色__Cinematic Brutalist Noir/preview.webp",
+  "folder": "Krea2_moodboard/电影感粗野主义黑色__Cinematic Brutalist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

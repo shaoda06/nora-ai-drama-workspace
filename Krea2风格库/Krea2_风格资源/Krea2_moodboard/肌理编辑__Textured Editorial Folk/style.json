@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-719",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "肌理编辑",
+  "name": "Textured Editorial Folk",
+  "prompt": "risograph illustration, fine cross-hatching, stippled micro-texture, muted vintage palette, flat graphic composition, textured cream paper, mid-century editorial style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理编辑__Textured Editorial Folk/preview.webp",
+  "folder": "Krea2_moodboard/肌理编辑__Textured Editorial Folk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

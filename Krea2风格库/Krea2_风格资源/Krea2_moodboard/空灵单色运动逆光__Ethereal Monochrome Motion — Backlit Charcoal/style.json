@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-748",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵单色运动逆光",
+  "name": "Ethereal Monochrome Motion — Backlit Charcoal",
+  "prompt": "stark high-contrast monochrome, ethereal motion blur, ghostly silhouettes, charcoal and ink texture, dreamlike atmospheric mist, minimalist surrealism, intentional camera movement. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色运动逆光__Ethereal Monochrome Motion — Backlit Charcoal/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色运动逆光__Ethereal Monochrome Motion — Backlit Charcoal",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

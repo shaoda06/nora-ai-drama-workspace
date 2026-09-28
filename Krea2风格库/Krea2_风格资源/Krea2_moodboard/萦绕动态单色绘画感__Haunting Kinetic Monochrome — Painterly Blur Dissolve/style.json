@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-594",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "萦绕动态单色绘画感",
+  "name": "Haunting Kinetic Monochrome — Painterly Blur Dissolve",
+  "prompt": "heavy analog film grain, extreme motion blur, high-contrast monochrome, chiaroscuro lighting, shutter drag, cinematic moody portraiture, abstract silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/萦绕动态单色绘画感__Haunting Kinetic Monochrome — Painterly Blur Dissolve/preview.webp",
+  "folder": "Krea2_moodboard/萦绕动态单色绘画感__Haunting Kinetic Monochrome — Painterly Blur Dissolve",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

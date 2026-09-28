@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3310",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "电影感超现实",
+  "name": "Submerged Cinematic Surrealism",
+  "prompt": "underwater perspective, volumetric lighting, low-angle composition, cinematic realism, teal and slate palette, surface refraction, surreal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感超现实__Submerged Cinematic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/电影感超现实__Submerged Cinematic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-906",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "图形极繁图解",
+  "name": "Graphic Maximalist Illustration",
+  "prompt": "intricate line work, maximalist pattern layering, vibrant saturated palette, graphic black ink outlines, stylized architectural detail, high-contrast shadow play. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形极繁图解__Graphic Maximalist Illustration/preview.webp",
+  "folder": "Krea2_moodboard/图形极繁图解__Graphic Maximalist Illustration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

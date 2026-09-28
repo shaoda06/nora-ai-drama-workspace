@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2189",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "电影感粗野主义",
+  "name": "Cinematic Brutalist Sol",
+  "prompt": "cinematic low-angle perspective, dramatic golden backlight, high-contrast chiaroscuro, brutalist architectural scale, intricate gritty textures, atmospheric crepuscular rays, epic silhouette composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感粗野主义__Cinematic Brutalist Sol/preview.webp",
+  "folder": "Krea2_moodboard/电影感粗野主义__Cinematic Brutalist Sol",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3122",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "极简",
+  "name": "Clinical Avant-Garde Minimal",
+  "prompt": "high-key studio lighting, stark white background, deconstructed sportswear, minimalist fashion editorial, avant-garde silhouette, color blocking, clean surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Clinical Avant-Garde Minimal/preview.webp",
+  "folder": "Krea2_moodboard/极简__Clinical Avant-Garde Minimal",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

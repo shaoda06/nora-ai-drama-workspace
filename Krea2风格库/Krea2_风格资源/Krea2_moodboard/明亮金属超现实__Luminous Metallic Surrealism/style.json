@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2695",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "明亮金属超现实",
+  "name": "Luminous Metallic Surrealism",
+  "prompt": "golden hour lighting, cinematic depth, specular highlights, reflective metallic textures, surreal juxtaposition, warm amber glow, organic contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮金属超现实__Luminous Metallic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/明亮金属超现实__Luminous Metallic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-454",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "单色模拟",
+  "name": "Monochrome Analog Disturbance",
+  "prompt": "high-contrast monochrome, distressed xerox texture, analog halftone pattern, gritty film grain, stark silhouette, ink bleed, lo-fi darkroom distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色模拟__Monochrome Analog Disturbance/preview.webp",
+  "folder": "Krea2_moodboard/单色模拟__Monochrome Analog Disturbance",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

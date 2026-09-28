@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1411",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "丰碑工业黄金",
+  "name": "Monumental Industrial Golden Haze",
+  "prompt": "cinematic megastructure, golden hour atmosphere, weathered industrial texture, colossal scale, hazy atmospheric perspective, dieselpunk ruins, dramatic low-angle composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/丰碑工业黄金__Monumental Industrial Golden Haze/preview.webp",
+  "folder": "Krea2_moodboard/丰碑工业黄金__Monumental Industrial Golden Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

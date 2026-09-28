@@ -1,0 +1,1 @@
+cyanotype motion blur, monochromatic cobalt palette, spectral light leaks, long exposure decay, ethereal ghosting, analog digital hybrid, high contrast cool tones, dreamlike temporal smear. Subject:{prompt}

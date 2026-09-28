@@ -1,0 +1,1 @@
+cinematic chiaroscuro, volumetric golden light, crepuscular rays, dusty atmospheric haze, dramatic silhouette, high-contrast lighting, amber backlighting. Subject:{prompt}

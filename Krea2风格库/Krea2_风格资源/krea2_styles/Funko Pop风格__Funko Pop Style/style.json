@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-212",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "Funko Pop风格",
+  "name": "Funko Pop Style",
+  "prompt": "Style: Funko Pop Style: A stylized, toy-figure illustration style built on an oversized, dominant head-to-body proportion ratio replacing naturalistic anatomy entirely, a glossy, uniformly smooth vinyl-like finish applied across every plane with no visible textural variation, minimal facial detail reduced to simplified dot-eyes and near-featureless expression, a rigid, static posing logic that mimics fixed collectible-figure stance, and a charmingly reductive, mass-collectible commercial polish that feels instantly recognizable and endearingly toy-like. Influenced by: Funko Pop! product-design tradition, vinyl-collectible figure aesthetic, stylized toy-proportion design practice, mass-market collectible-merchandise rendering method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Funko Pop风格__Funko Pop Style/preview.jpg",
+  "folder": "krea2_styles/Funko Pop风格__Funko Pop Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

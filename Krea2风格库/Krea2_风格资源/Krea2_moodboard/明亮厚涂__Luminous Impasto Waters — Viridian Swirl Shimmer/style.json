@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1061",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "明亮厚涂",
+  "name": "Luminous Impasto Waters — Viridian Swirl Shimmer",
+  "prompt": "thick impasto oil painting, emerald and viridian palette, shimmering water caustics, visible painterly brushstrokes, high angle liquid reflections, swirling fluid texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮厚涂__Luminous Impasto Waters — Viridian Swirl Shimmer/preview.webp",
+  "folder": "Krea2_moodboard/明亮厚涂__Luminous Impasto Waters — Viridian Swirl Shimmer",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

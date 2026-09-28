@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-893",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "植物",
+  "name": "Cobalt Botanical Fauvism",
+  "prompt": "cobalt blue background, saturated warm-toned florals, fauvist brushwork, high-contrast color blocking, minimalist graphic composition, vivid orange and crimson, painterly texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/植物__Cobalt Botanical Fauvism/preview.webp",
+  "folder": "Krea2_moodboard/植物__Cobalt Botanical Fauvism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

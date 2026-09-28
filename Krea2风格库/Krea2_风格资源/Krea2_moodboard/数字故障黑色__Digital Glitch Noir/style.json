@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1897",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "数字故障黑色",
+  "name": "Digital Glitch Noir",
+  "prompt": "glitch art, pixel sorting, digital distortion, cybernetic aesthetic, duotone color palette, retro-futuristic HUD, high-contrast lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字故障黑色__Digital Glitch Noir/preview.webp",
+  "folder": "Krea2_moodboard/数字故障黑色__Digital Glitch Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

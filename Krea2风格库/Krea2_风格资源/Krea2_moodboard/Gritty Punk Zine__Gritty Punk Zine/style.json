@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-436",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "Gritty Punk Zine",
+  "name": "Gritty Punk Zine",
+  "prompt": "punk zine aesthetic, high-contrast halftone, distressed screenprint texture, xerox photocopy art, gritty collage, neon pink accents, raw paper texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Gritty Punk Zine__Gritty Punk Zine/preview.webp",
+  "folder": "Krea2_moodboard/Gritty Punk Zine__Gritty Punk Zine",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

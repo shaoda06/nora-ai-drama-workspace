@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2690",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "电影感琥珀黑色复古颗粒",
+  "name": "Cinematic Amber Noir — Vintage Gold Grain",
+  "prompt": "chiaroscuro lighting, golden amber glow, cinematic haze, dramatic rim lighting, surreal melancholic atmosphere, low-key warm contrast, textured film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感琥珀黑色复古颗粒__Cinematic Amber Noir — Vintage Gold Grain/preview.webp",
+  "folder": "Krea2_moodboard/电影感琥珀黑色复古颗粒__Cinematic Amber Noir — Vintage Gold Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

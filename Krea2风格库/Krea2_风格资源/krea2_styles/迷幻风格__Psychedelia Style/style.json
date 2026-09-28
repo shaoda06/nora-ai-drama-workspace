@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-50",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "迷幻风格",
+  "name": "Psychedelia Style",
+  "prompt": "Style: Psychedelia Style: A hallucinatory, maximalist illustration style built on swirling, undulating linework that warps form into rhythmic, organic distortion, dense repeating pattern-work that pulses and radiates outward from every surface, a deliberate flattening of depth that lets ornamental motif and figure merge into a single continuous visual field, hypnotic radial or wave-based compositional energy charged with sensory overload, and an ecstatic, mind-bending intensity that feels perpetually in motion even in stillness. Influenced by: Peter Max, concert-poster illustration tradition, psychedelic rock album-art technique,drug induced art, Art Nouveau ornamental linework reimagined.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/迷幻风格__Psychedelia Style/preview.jpg",
+  "folder": "krea2_styles/迷幻风格__Psychedelia Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-191",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "图形半色调极简",
+  "name": "Graphic Halftone Minimalism",
+  "prompt": "halftone dot pattern, high-contrast graphic illustration, retro screenprint texture, minimalist silhouette, CMYK color palette, vintage comic book print style, stark white background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形半色调极简__Graphic Halftone Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/图形半色调极简__Graphic Halftone Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

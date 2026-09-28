@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1922",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "黑色",
+  "name": "Ghostly Chiaroscuro Noir",
+  "prompt": "high-contrast monochrome, chiaroscuro lighting, heavy film grain, ghostly motion blur, stark shadow play, cinematic noir portraiture, analog decay, low-key photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Ghostly Chiaroscuro Noir/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Ghostly Chiaroscuro Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

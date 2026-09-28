@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-478",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "夜行",
+  "name": "Nocturnal Cyanotype Dreamscape",
+  "prompt": "Prussian blue monochrome, tactile film grain, halftone and stippling, liminal dreamscape, chiaroscuro lighting, vintage print aesthetic, atmospheric fog. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行__Nocturnal Cyanotype Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/夜行__Nocturnal Cyanotype Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

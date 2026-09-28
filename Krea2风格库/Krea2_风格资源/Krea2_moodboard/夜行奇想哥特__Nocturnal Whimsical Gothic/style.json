@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-571",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "夜行奇想哥特",
+  "name": "Nocturnal Whimsical Gothic",
+  "prompt": "nocturnal atmospheric illustration, chiaroscuro lighting, whimsical gothic fantasy, stylized digital art, deep blue and amber palette, bold ink outlines, hand-drawn texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行奇想哥特__Nocturnal Whimsical Gothic/preview.webp",
+  "folder": "Krea2_moodboard/夜行奇想哥特__Nocturnal Whimsical Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

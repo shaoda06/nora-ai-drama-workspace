@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1630",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵极简",
+  "name": "Ethereal Dewy Minimalism",
+  "prompt": "macro beauty portrait, dewy glass skin, ethereal soft lighting, shallow depth of field, foreground bokeh, pastel color palette, high-gloss finish, dreamy editorial photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简__Ethereal Dewy Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简__Ethereal Dewy Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

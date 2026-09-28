@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3102",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "绯红超现实",
+  "name": "Crimson Avant-Garde Surrealism",
+  "prompt": "avant-garde editorial photography, high-contrast crimson red palette, surrealist collage elements, graphic minimalist composition, cinematic lighting with deep shadows, macro beauty portraiture, uncanny and dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红超现实__Crimson Avant-Garde Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/绯红超现实__Crimson Avant-Garde Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

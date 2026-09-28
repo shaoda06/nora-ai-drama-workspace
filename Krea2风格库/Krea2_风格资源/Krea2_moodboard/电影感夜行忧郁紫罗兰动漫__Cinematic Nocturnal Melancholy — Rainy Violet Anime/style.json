@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-16",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "电影感夜行忧郁紫罗兰动漫",
+  "name": "Cinematic Nocturnal Melancholy — Rainy Violet Anime",
+  "prompt": "melancholic anime style, cinematic urban nightscape, cool blue and purple tones, rain-soaked atmosphere, soft bokeh lighting, introspective emotional close-up, dramatic shadow play. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行忧郁紫罗兰动漫__Cinematic Nocturnal Melancholy — Rainy Violet Anime/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行忧郁紫罗兰动漫__Cinematic Nocturnal Melancholy — Rainy Violet Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-896",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "Hypnotic Linocut Noc",
+  "name": "Hypnotic Linocut Nocturne",
+  "prompt": "linocut printmaking, high-contrast duotone, concentric line patterns, surreal woodblock texture, minimalist graphic illustration, hand-carved organic aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Hypnotic Linocut Noc__Hypnotic Linocut Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/Hypnotic Linocut Noc__Hypnotic Linocut Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

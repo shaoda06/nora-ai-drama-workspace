@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1281",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "几何印象派",
+  "name": "Geometric Impressionist Landscapes",
+  "prompt": "geometric vector landscape, stylized travel poster, sharp color blocking, atmospheric perspective, clean hard-edge shapes, gouache-inspired digital illustration, minimalist architectural forms. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何印象派__Geometric Impressionist Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/几何印象派__Geometric Impressionist Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

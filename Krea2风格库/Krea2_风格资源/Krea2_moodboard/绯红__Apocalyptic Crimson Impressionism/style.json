@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1022",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "绯红",
+  "name": "Apocalyptic Crimson Impressionism",
+  "prompt": "classical oil painting, heavy impasto texture, dramatic chiaroscuro, fiery crimson and amber palette, atmospheric smoky glow, high-contrast silhouettes, apocalyptic mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红__Apocalyptic Crimson Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/绯红__Apocalyptic Crimson Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

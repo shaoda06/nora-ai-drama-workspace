@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-935",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "深渊哥特超现实",
+  "name": "Abyssal Gothic Surrealism",
+  "prompt": "gothic romanticism, deep teal and indigo, painterly oil texture, liminal surrealism, chiaroscuro lighting, atmospheric dread, solitary silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/深渊哥特超现实__Abyssal Gothic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/深渊哥特超现实__Abyssal Gothic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

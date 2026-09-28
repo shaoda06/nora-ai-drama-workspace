@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-298",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "比尔·辛凯维奇表现主义",
+  "name": "Bill Sienkiewicz Expressionism",
+  "prompt": "Style: Bill Sienkiewicz Expressionism: highly experimental illustration aesthetics combining expressive brushwork, mixed-media textures, abstract visual fragmentation, painterly distortion, emotional intensity, and unconventional storytelling techniques, blending fine art sensibilities with graphic narrative through bold mark-making, layered surfaces, and a fearless approach to visual interpretation, reminiscent of Bill Sienkiewicz and Ralph Steadman, inspired by Elektra: Assassin and Stray Toasters.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/比尔·辛凯维奇表现主义__Bill Sienkiewicz Expressionism/preview.jpg",
+  "folder": "krea2_styles/比尔·辛凯维奇表现主义__Bill Sienkiewicz Expressionism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

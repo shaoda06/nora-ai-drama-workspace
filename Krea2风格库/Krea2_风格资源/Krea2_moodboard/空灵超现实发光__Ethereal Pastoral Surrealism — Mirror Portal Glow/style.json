@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1650",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵超现实发光",
+  "name": "Ethereal Pastoral Surrealism — Mirror Portal Glow",
+  "prompt": "ethereal surrealism, pastel cottagecore, reflective mirror portal, soft focus dreamscape, lush mossy textures, golden hour lighting, whimsical floral framing. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵超现实发光__Ethereal Pastoral Surrealism — Mirror Portal Glow/preview.webp",
+  "folder": "Krea2_moodboard/空灵超现实发光__Ethereal Pastoral Surrealism — Mirror Portal Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

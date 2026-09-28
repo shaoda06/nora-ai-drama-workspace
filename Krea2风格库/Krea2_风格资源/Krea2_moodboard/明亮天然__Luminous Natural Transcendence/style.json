@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1677",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "明亮天然",
+  "name": "Luminous Natural Transcendence",
+  "prompt": "golden hour, ethereal light rays, intense lens flare, high contrast nature photography, backlit foliage, dreamy soft focus, shimmering reflections. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮天然__Luminous Natural Transcendence/preview.webp",
+  "folder": "Krea2_moodboard/明亮天然__Luminous Natural Transcendence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

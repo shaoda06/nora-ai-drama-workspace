@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3399",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "单色模拟衰败",
+  "name": "Monochrome Analog Decay",
+  "prompt": "high-contrast monochrome, analog glitch art, CRT scanlines, VHS tracking distortion, pixel displacement, ghostly silhouette, liminal horror. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色模拟衰败__Monochrome Analog Decay/preview.webp",
+  "folder": "Krea2_moodboard/单色模拟衰败__Monochrome Analog Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

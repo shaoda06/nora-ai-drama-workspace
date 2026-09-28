@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3106",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "夜行剪影",
+  "name": "Nocturnal Cobalt Silhouette",
+  "prompt": "nocturnal indigo palette, stark silhouette, cinematic low-key lighting, analog film grain, ethereal blue haze, minimalist composition, chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行剪影__Nocturnal Cobalt Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/夜行剪影__Nocturnal Cobalt Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

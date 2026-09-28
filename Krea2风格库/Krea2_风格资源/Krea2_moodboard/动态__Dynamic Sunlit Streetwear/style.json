@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2184",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷4",
+  "category_name": "摄影特效冷4",
+  "name_cn": "动态",
+  "name": "Dynamic Sunlit Streetwear",
+  "prompt": "low angle shot, worm's eye view, bright direct sunlight, vibrant saturated colors, clear blue sky, candid portraiture, streetwear aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态__Dynamic Sunlit Streetwear/preview.webp",
+  "folder": "Krea2_moodboard/动态__Dynamic Sunlit Streetwear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

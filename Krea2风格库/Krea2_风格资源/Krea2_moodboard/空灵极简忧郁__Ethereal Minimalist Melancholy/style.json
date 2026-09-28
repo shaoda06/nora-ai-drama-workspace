@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3220",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵极简忧郁",
+  "name": "Ethereal Minimalist Melancholy",
+  "prompt": "heavy film grain, minimalist composition, muted cool tones, atmospheric haze, ethereal surrealism, diffused lighting, contemplative mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简忧郁__Ethereal Minimalist Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简忧郁__Ethereal Minimalist Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

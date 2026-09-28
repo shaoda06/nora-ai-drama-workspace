@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-203",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "汤姆·巴格肖启发数字绘画",
+  "name": "Tom Bagshaw-Inspired Digital Painting",
+  "prompt": "Style: Tom Bagshaw-Inspired Digital Painting: A hauntingly elegant digital painting style built on desaturated color palettes broken by a single striking accent hue, porcelain-pale skin rendered with soft painterly translucency, richly detailed fabric, rendered in fine contrasting detail against loosely blurred or minimal backgrounds, subjects posed with a still, melancholic, intimacy, and a delicate, painterly restraint that favors quiet mood and texture over dramatic action. Influenced by: Tom Bagshaw,  digital matte painting technique, muted chiaroscuro illustration.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/汤姆·巴格肖启发数字绘画__Tom Bagshaw-Inspired Digital Painting/preview.jpg",
+  "folder": "krea2_styles/汤姆·巴格肖启发数字绘画__Tom Bagshaw-Inspired Digital Painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,1 @@
+grainy gradient, tactile noise texture, soft focus blur, chromatic aura, dreamy pastel palette, analog film grain, ethereal light leak. Subject:{prompt}

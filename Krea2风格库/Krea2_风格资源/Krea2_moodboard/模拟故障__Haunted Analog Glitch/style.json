@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2015",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "模拟故障",
+  "name": "Haunted Analog Glitch",
+  "prompt": "high-contrast monochrome, spectral ghosting, heavy analog film grain, digital glitch distortion, scratched vintage texture, motion blur, industrial noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟故障__Haunted Analog Glitch/preview.webp",
+  "folder": "Krea2_moodboard/模拟故障__Haunted Analog Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

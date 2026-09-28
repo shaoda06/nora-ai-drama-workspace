@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-40",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "图形波普",
+  "name": "Graphic Risograph Pop",
+  "prompt": "risograph texture, bold graphic illustration, flat color blocking, retro anime style, high-contrast palette, minimalist vector art, halftone grain, sharp ink outlines. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形波普__Graphic Risograph Pop/preview.webp",
+  "folder": "Krea2_moodboard/图形波普__Graphic Risograph Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

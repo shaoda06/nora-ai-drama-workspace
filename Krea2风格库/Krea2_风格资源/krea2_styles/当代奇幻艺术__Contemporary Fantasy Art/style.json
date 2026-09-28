@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-239",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "当代奇幻艺术",
+  "name": "Contemporary Fantasy Art",
+  "prompt": "Style: Contemporary Fantasy Art: modern fantasy aesthetics characterized by sophisticated visual design, refined painterly rendering, cinematic atmosphere, immersive worldbuilding, and a balance between realism and stylization, emphasizing artistic originality, premium craftsmanship, and contemporary entertainment-art sensibilities through controlled detail, elegant lighting, and highly polished execution, reminiscent of Marc Simonetti and Ruan Jia, inspired by The Witcher Concept Art and Magic: The Gathering Modern Masters.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/当代奇幻艺术__Contemporary Fantasy Art/preview.jpg",
+  "folder": "krea2_styles/当代奇幻艺术__Contemporary Fantasy Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

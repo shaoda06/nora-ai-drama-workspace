@@ -1,0 +1,1 @@
+chiaroscuro, volumetric lighting, deep cobalt and midnight blue, cinematic isolation, minimalist composition, dramatic spotlight, atmospheric fog, high contrast silhouette. Subject:{prompt}

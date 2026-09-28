@@ -1,0 +1,1 @@
+long exposure, motion blur, neon light trails, high contrast, spectral glow, chromatic aberration, stark black background, kinetic energy. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2772",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "宇宙超现实",
+  "name": "Luminescent Cosmic Surrealism",
+  "prompt": "cosmic surrealism, chromatic aberration, iridescent stardust, retro-digital aesthetic, prismatic light leaks, dreamlike atmosphere, starry void, glitter texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/宇宙超现实__Luminescent Cosmic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/宇宙超现实__Luminescent Cosmic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

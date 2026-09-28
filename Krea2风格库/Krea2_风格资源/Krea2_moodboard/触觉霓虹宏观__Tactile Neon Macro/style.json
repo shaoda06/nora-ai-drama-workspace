@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2712",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "触觉霓虹宏观",
+  "name": "Tactile Neon Macro",
+  "prompt": "extreme macro beauty photography, scratched glass overlay, vibrant magenta and pink palette, tactile skin texture, distorted light refraction, glossy cosmetic editorial, surreal high-contrast lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉霓虹宏观__Tactile Neon Macro/preview.webp",
+  "folder": "Krea2_moodboard/触觉霓虹宏观__Tactile Neon Macro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

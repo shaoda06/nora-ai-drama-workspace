@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-317",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "垃圾桶画派风格",
+  "name": "Ashcan School Style",
+  "prompt": "Style: Ashcan School Style: A gritty, unromanticized illustration style built on loose, confident brushwork capturing everyday urban life with raw, unpolished honesty, muted, somber tonal range applied with heavy, atmospheric shadow rather than bright clarity, a candid, unglamorous composition favoring social realism over idealized beauty, meticulous attention to expressive, working-class gesture and posture, and a grounded, socially conscious painterly gravitas rooted in early-20th-century American realist rebellion. Influenced by: George Bellows, John Sloan, Ashcan School painting tradition, early-20th-century American Realist movement.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/垃圾桶画派风格__Ashcan School Style/preview.jpg",
+  "folder": "krea2_styles/垃圾桶画派风格__Ashcan School Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

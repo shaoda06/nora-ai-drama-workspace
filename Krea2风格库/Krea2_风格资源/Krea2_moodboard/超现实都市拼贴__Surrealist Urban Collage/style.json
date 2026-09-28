@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2930",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "超现实都市拼贴",
+  "name": "Surrealist Urban Collage",
+  "prompt": "double exposure, surrealist collage, sepia monochrome, tactile paper texture, urban decay integration, dreamy juxtaposition, muted earth tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实都市拼贴__Surrealist Urban Collage/preview.webp",
+  "folder": "Krea2_moodboard/超现实都市拼贴__Surrealist Urban Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

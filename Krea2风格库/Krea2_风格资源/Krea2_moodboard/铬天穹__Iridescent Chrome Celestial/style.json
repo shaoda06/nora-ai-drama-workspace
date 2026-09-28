@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3435",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "铬天穹",
+  "name": "Iridescent Chrome Celestial",
+  "prompt": "liquid chrome, iridescent shimmer, starburst lens flare, hyper-reflective metallic, ethereal stardust, high-gloss finish, surreal organic forms, cosmic luminosity. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/铬天穹__Iridescent Chrome Celestial/preview.webp",
+  "folder": "Krea2_moodboard/铬天穹__Iridescent Chrome Celestial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

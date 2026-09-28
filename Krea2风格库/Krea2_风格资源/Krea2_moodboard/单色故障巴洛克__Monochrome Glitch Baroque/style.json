@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-665",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "单色故障巴洛克",
+  "name": "Monochrome Glitch Baroque",
+  "prompt": "chiaroscuro lighting, pixel sorting, monochrome halftone, digital glitch art, classical portraiture, heavy film grain, fragmented distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障巴洛克__Monochrome Glitch Baroque/preview.webp",
+  "folder": "Krea2_moodboard/单色故障巴洛克__Monochrome Glitch Baroque",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

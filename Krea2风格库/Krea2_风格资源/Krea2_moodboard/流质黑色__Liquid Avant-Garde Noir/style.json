@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3427",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "流质黑色",
+  "name": "Liquid Avant-Garde Noir",
+  "prompt": "hyperrealistic wet skin, dramatic chiaroscuro lighting, liquid texture embellishments, macro beauty portrait, muted desaturated palette, surreal avant-garde, glistening condensation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/流质黑色__Liquid Avant-Garde Noir/preview.webp",
+  "folder": "Krea2_moodboard/流质黑色__Liquid Avant-Garde Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

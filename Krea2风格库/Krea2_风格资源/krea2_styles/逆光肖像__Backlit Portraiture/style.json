@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-334",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "逆光肖像",
+  "name": "Backlit Portraiture",
+  "prompt": "Style: Backlit Portraiture: luminous photographic aesthetics defined by strong backlighting, radiant edge illumination, subtle translucency effects, atmospheric depth, graceful tonal transitions, and a heightened sense of visual separation, creating elegant and emotionally evocative imagery through carefully controlled exposure, naturalistic light diffusion, and refined portrait craftsmanship, reminiscent of Peter Lindbergh and Paolo Roversi, inspired by Vogue editorials and In the Mood for Love.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/逆光肖像__Backlit Portraiture/preview.jpg",
+  "folder": "krea2_styles/逆光肖像__Backlit Portraiture",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

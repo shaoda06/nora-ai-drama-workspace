@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2407",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "超现实翠绿",
+  "name": "Surreal Verdant Biomorphism",
+  "prompt": "surreal mossy landscapes, biomorphic root structures, monochromatic deep green, eldritch cosmic horror, high-contrast directional lighting, intricate fibrous textures, isolated mystical figures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实翠绿__Surreal Verdant Biomorphism/preview.webp",
+  "folder": "Krea2_moodboard/超现实翠绿__Surreal Verdant Biomorphism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

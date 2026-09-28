@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2657",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "半透明赛博有机集合",
+  "name": "Translucent Cyber-Organic Assemblage — Mint-Copper Resin",
+  "prompt": "translucent resin, intricate circuitry, macro photography, stark black background, techno-organic hybrid, studio lighting, pastel and metallic palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/半透明赛博有机集合__Translucent Cyber-Organic Assemblage — Mint-Copper Resin/preview.webp",
+  "folder": "Krea2_moodboard/半透明赛博有机集合__Translucent Cyber-Organic Assemblage — Mint-Copper Resin",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

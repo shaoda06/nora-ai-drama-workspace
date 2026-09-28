@@ -1,0 +1,1 @@
+isometric voxel diorama, low-poly blocky style, soft directional lighting, cozy miniature aesthetic, warm earthy color palette, clean solid background, MagicaVoxel render. Subject:{prompt}

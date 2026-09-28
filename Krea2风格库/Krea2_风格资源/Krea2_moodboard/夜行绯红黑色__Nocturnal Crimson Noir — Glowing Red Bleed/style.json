@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1389",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "夜行绯红黑色",
+  "name": "Nocturnal Crimson Noir — Glowing Red Bleed",
+  "prompt": "heavy analog film grain, glowing crimson light, high-contrast noir, soft focus blur, deep black shadows, nocturnal cinematic atmosphere, silhouette framing. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行绯红黑色__Nocturnal Crimson Noir — Glowing Red Bleed/preview.webp",
+  "folder": "Krea2_moodboard/夜行绯红黑色__Nocturnal Crimson Noir — Glowing Red Bleed",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

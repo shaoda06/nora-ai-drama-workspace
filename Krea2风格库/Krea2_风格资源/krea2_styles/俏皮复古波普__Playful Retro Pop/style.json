@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-5",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "俏皮复古波普",
+  "name": "Playful Retro Pop",
+  "prompt": "Style: Playful Retro Pop: A bold, cheerful graphic illustration style built on flat, confidently bounded color-block construction separated by crisp, uniform outline, a bright, punchy simplicity that favors instant graphic charm over painterly nuance, exaggerated, bouncy proportion carrying lighthearted, nostalgic energy, a mid-century advertising-adjacent cheerfulness applied with contemporary graphic polish, and a fun, unmistakably retro-pop vibrancy that feels playful, confident, and effortlessly charming. Influenced by: mid-century advertising-illustration tradition, retro-pop graphic-design technique, flat-color commercial-illustration practice, contemporary retro-revival illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/俏皮复古波普__Playful Retro Pop/preview.jpg",
+  "folder": "krea2_styles/俏皮复古波普__Playful Retro Pop",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

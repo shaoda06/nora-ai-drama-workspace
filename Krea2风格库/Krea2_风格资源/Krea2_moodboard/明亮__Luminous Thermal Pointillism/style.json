@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1155",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "明亮",
+  "name": "Luminous Thermal Pointillism",
+  "prompt": "stippled texture, thermal heat map palette, chiaroscuro lighting, chromatic grain, high-contrast illustration, soft-focus blur, glowing neon gradients. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Thermal Pointillism/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Thermal Pointillism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

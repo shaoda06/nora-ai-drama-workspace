@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2501",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "夜行哥特",
+  "name": "Infrared Nocturnal Gothic",
+  "prompt": "infrared photography style, glowing crimson highlights, deep teal and indigo palette, surreal cinematic atmosphere, analog film grain, nocturnal woodland, high contrast chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行哥特__Infrared Nocturnal Gothic/preview.webp",
+  "folder": "Krea2_moodboard/夜行哥特__Infrared Nocturnal Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

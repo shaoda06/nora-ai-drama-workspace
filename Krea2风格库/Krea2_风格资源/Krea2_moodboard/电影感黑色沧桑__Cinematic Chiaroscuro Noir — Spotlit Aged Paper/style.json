@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-290",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感黑色沧桑",
+  "name": "Cinematic Chiaroscuro Noir — Spotlit Aged Paper",
+  "prompt": "chiaroscuro lighting, heavy film grain, high-contrast black and white, dramatic shadows, tactile texture, noir atmosphere, extreme close-up. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色沧桑__Cinematic Chiaroscuro Noir — Spotlit Aged Paper/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色沧桑__Cinematic Chiaroscuro Noir — Spotlit Aged Paper",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

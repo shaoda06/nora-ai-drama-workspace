@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1259",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "几何黑色",
+  "name": "Geometric Sunset Noir",
+  "prompt": "stylized digital painting, bold geometric composition, high-contrast sunset lighting, warm and cool color palette, clean brushstrokes, atmospheric perspective, dramatic shadows, graphic landscape illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何黑色__Geometric Sunset Noir/preview.webp",
+  "folder": "Krea2_moodboard/几何黑色__Geometric Sunset Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

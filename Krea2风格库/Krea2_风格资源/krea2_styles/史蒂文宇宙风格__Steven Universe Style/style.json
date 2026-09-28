@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-125",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "史蒂文宇宙风格",
+  "name": "Steven Universe Style",
+  "prompt": "Style: Steven Universe Style: A soft, rounded flat-cartoon illustration style built on gentle, simplified geometric shapes carrying warm, approachable proportion, even flat-color fill applied with minimal shading beyond soft contact shadow, a pastel-adjacent restraint in tonal contrast that keeps every composition feeling calm and gentle, expressive, oversized eyes and rounded facial design prioritizing emotional warmth over detail, and a wholesome, tender animated sincerity that feels comforting, gentle, and quietly heartfelt. Influenced by: Rebecca Sugar, Cartoon Network flat-color animation tradition, gentle geometric character-design technique, contemporary emotionally-driven cartoon practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/史蒂文宇宙风格__Steven Universe Style/preview.jpg",
+  "folder": "krea2_styles/史蒂文宇宙风格__Steven Universe Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

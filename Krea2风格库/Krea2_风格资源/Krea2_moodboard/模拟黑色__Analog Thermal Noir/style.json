@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2271",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "模拟黑色",
+  "name": "Analog Thermal Noir",
+  "prompt": "analog film grain, high-contrast silhouette, glowing thermal gradients, retro-futuristic atmosphere, chromatic aberration, cinematic light leaks, soft-focus bloom. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟黑色__Analog Thermal Noir/preview.webp",
+  "folder": "Krea2_moodboard/模拟黑色__Analog Thermal Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

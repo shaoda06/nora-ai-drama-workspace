@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1198",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵粉彩超现实云朵柔软发光",
+  "name": "Ethereal Pastel Surrealism — Cloud-Soft Glow",
+  "prompt": "soft surrealism, pastel dreamscape, golden hour lighting, towering cumulus clouds, whimsical fantasy, painterly style, serene atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩超现实云朵柔软发光__Ethereal Pastel Surrealism — Cloud-Soft Glow/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩超现实云朵柔软发光__Ethereal Pastel Surrealism — Cloud-Soft Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

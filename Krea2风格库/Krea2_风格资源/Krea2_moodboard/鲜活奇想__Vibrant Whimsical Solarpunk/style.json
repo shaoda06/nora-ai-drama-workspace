@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-154",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "鲜活奇想",
+  "name": "Vibrant Whimsical Solarpunk",
+  "prompt": "vibrant vector art, Ghibli-inspired aesthetic, saturated landscape, bold outlines, sunny day, whimsical adventure, fluffy cumulus clouds, clean line art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活奇想__Vibrant Whimsical Solarpunk/preview.webp",
+  "folder": "Krea2_moodboard/鲜活奇想__Vibrant Whimsical Solarpunk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

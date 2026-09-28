@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2981",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱黑色故障",
+  "name": "Spectral Luminescent Noir — Haloed Glitch Emission",
+  "prompt": "high-contrast monochrome, spectral silhouette, glowing aura, ethereal motion blur, heavy film grain, chiaroscuro lighting, minimalist noir, overexposed halo. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色故障__Spectral Luminescent Noir — Haloed Glitch Emission/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色故障__Spectral Luminescent Noir — Haloed Glitch Emission",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3174",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵",
+  "name": "Ethereal Chiaroscuro Botanicals",
+  "prompt": "chiaroscuro botanical, macro floral photography, translucent petal texture, minimalist dark background, soft directional lighting, sculptural organic forms, dreamy ethereal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Chiaroscuro Botanicals/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Chiaroscuro Botanicals",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

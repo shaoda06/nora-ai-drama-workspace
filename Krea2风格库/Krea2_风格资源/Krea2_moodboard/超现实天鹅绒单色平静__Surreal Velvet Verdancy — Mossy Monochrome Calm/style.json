@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3112",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "超现实天鹅绒单色平静",
+  "name": "Surreal Velvet Verdancy — Mossy Monochrome Calm",
+  "prompt": "velvety moss textures, rolling organic hills, surreal scale contrast, soft cinematic lighting, minimalist landscape photography, moody forest green palette, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实天鹅绒单色平静__Surreal Velvet Verdancy — Mossy Monochrome Calm/preview.webp",
+  "folder": "Krea2_moodboard/超现实天鹅绒单色平静__Surreal Velvet Verdancy — Mossy Monochrome Calm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

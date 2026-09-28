@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2734",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "明亮靛蓝",
+  "name": "Luminous Cyan Nocturne — Stippled Indigo Print",
+  "prompt": "bioluminescent cyan glow, monochromatic indigo palette, heavy film grain, cyanotype texture, low-key chiaroscuro, ethereal silhouettes, stippled printmaking style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮靛蓝__Luminous Cyan Nocturne — Stippled Indigo Print/preview.webp",
+  "folder": "Krea2_moodboard/明亮靛蓝__Luminous Cyan Nocturne — Stippled Indigo Print",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

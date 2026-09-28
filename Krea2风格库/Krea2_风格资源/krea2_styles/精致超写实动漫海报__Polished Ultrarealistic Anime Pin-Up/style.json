@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-105",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "精致超写实动漫海报",
+  "name": "Polished Ultrarealistic Anime Pin-Up",
+  "prompt": "Style: Polished Ultrarealistic Anime Pin-Up: A high-gloss digital illustration style merging ultrarealistic rendering of skin, hair, and fabric with idealized anime facial structure and expressive large eyes, glassy specular highlights coating lips, skin, and hair strands like fresh lacquer, a confident pin-up pose with exaggerated curves softened by airbrush-smooth shading gradients, vibrant saturated color palettes popping against clean or softly blurred backdrops, and a glossy, collectible-print polish that reads as equal parts anime key visual and glamour illustration. Influenced by: Range Murata, SakimiChan, gacha-game character art, airbrush pin-up illustration.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/精致超写实动漫海报__Polished Ultrarealistic Anime Pin-Up/preview.jpg",
+  "folder": "krea2_styles/精致超写实动漫海报__Polished Ultrarealistic Anime Pin-Up",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2103",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "极简黑色",
+  "name": "Cyanic Minimalist Noir",
+  "prompt": "cyan studio lighting, high-contrast chiaroscuro, minimalist graphic composition, sharp dramatic shadows, cool blue color grading, editorial fashion photography, sculptural silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简黑色__Cyanic Minimalist Noir/preview.webp",
+  "folder": "Krea2_moodboard/极简黑色__Cyanic Minimalist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

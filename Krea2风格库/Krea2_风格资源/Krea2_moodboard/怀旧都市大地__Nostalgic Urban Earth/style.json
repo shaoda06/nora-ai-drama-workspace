@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-283",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "怀旧都市大地",
+  "name": "Nostalgic Urban Earth",
+  "prompt": "analog film grain, muted green color palette, cinematic lighting, tactile textures, high-angle perspective, vintage lo-fi aesthetic, desaturated earth tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧都市大地__Nostalgic Urban Earth/preview.webp",
+  "folder": "Krea2_moodboard/怀旧都市大地__Nostalgic Urban Earth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-442",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "动态黑曜故障",
+  "name": "Kinetic Obsidian Glitch",
+  "prompt": "high-contrast monochrome, motion blur photography, gritty film grain, digital glitch distortion, stark chiaroscuro lighting, halftone texture, spectral silhouette, cinematic noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态黑曜故障__Kinetic Obsidian Glitch/preview.webp",
+  "folder": "Krea2_moodboard/动态黑曜故障__Kinetic Obsidian Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

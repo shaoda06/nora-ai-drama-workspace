@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-339",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "模拟超现实拼贴半色调",
+  "name": "Analog Surrealist Collage — Halftone Paper Cut",
+  "prompt": "vintage mixed media collage, surrealist paper cutout, analog halftone texture, monochrome portraiture, anachronistic color pops, uncanny dreamlike composition, retro print aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟超现实拼贴半色调__Analog Surrealist Collage — Halftone Paper Cut/preview.webp",
+  "folder": "Krea2_moodboard/模拟超现实拼贴半色调__Analog Surrealist Collage — Halftone Paper Cut",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

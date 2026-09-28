@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1736",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵颗粒",
+  "name": "Ethereal Grain Impressionism",
+  "prompt": "heavy film grain, soft focus impressionism, muted sage green palette, dreamlike haze, textured tactile surface, ethereal atmospheric light, minimalist organic abstraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒__Ethereal Grain Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒__Ethereal Grain Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

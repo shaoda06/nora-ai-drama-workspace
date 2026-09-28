@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-904",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "大胆图形波普",
+  "name": "Bold Graphic Vector Pop",
+  "prompt": "flat vector illustration, bold graphic style, saturated color blocking, minimalist clean lines, geometric character design, contemporary editorial art, high contrast pop aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/大胆图形波普__Bold Graphic Vector Pop/preview.webp",
+  "folder": "Krea2_moodboard/大胆图形波普__Bold Graphic Vector Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

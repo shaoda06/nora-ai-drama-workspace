@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-288",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "氛围黑色薄雾",
+  "name": "Atmospheric Monochromatic Noir — Volumetric Mist",
+  "prompt": "high-contrast monochrome, heavy film grain, chiaroscuro lighting, volumetric mist, stark silhouettes, mid-century cinematic, atmospheric noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围黑色薄雾__Atmospheric Monochromatic Noir — Volumetric Mist/preview.webp",
+  "folder": "Krea2_moodboard/氛围黑色薄雾__Atmospheric Monochromatic Noir — Volumetric Mist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2175",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "电影感夜行黑色霓虹靛蓝",
+  "name": "Cinematic Nocturnal Noir — Neon Indigo",
+  "prompt": "cinematic film grain, low-key lighting, duotone color palette, intimate portraiture, high-contrast shadows, moody atmospheric lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色霓虹靛蓝__Cinematic Nocturnal Noir — Neon Indigo/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色霓虹靛蓝__Cinematic Nocturnal Noir — Neon Indigo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

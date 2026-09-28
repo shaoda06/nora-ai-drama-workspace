@@ -1,0 +1,1 @@
+monochrome, analog glitch, CRT scanlines, pixel sorting, high-contrast grain, haunting silhouettes, VHS degradation. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2346",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "绯红黑色图形",
+  "name": "Crimson Noir Graphic — Posterized Stipple",
+  "prompt": "high-contrast noir, crimson and black palette, graphic silhouette, stark chiaroscuro, ink and stipple texture, minimalist composition, posterized visual style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色图形__Crimson Noir Graphic — Posterized Stipple/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色图形__Crimson Noir Graphic — Posterized Stipple",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

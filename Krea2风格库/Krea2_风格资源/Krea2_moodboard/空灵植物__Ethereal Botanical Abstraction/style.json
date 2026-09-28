@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1164",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵植物",
+  "name": "Ethereal Botanical Abstraction",
+  "prompt": "dreamy macro photography, soft focus, extremely shallow depth of field, frosted glass effect, ethereal diffused lighting, painterly motion blur, tactile film grain, muted pastel palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵植物__Ethereal Botanical Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/空灵植物__Ethereal Botanical Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

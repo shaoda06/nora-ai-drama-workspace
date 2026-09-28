@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2161",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "明亮夜行",
+  "name": "Luminous Nocturnal Botany",
+  "prompt": "bioluminescent botanical, deep indigo atmosphere, translucent floral textures, sharp rim lighting, minimalist macro photography, electric violet highlights, nocturnal elegance, gradient studio background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行__Luminous Nocturnal Botany/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行__Luminous Nocturnal Botany",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

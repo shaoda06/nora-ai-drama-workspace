@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2466",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "空灵夜行剪影",
+  "name": "Ethereal Nocturnal Silhouette",
+  "prompt": "nocturnal atmospheric silhouette, deep indigo and cyan palette, ethereal backlit glow, dense misty forest, cinematic high contrast, dreamy bokeh textures, mysterious midnight blue. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行剪影__Ethereal Nocturnal Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行剪影__Ethereal Nocturnal Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

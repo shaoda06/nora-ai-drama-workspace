@@ -1,0 +1,1 @@
+intentional camera movement, ethereal motion blur, minimalist monochromatic, long exposure photography, spectral silhouette, dreamlike diffusion, high-contrast atmospheric. Subject:{prompt}

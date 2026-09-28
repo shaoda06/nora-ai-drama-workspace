@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1373",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "霓虹衰败",
+  "name": "Gritty Neon Decay",
+  "prompt": "gritty industrial decay, vibrant neon accents, cinematic low-key lighting, weathered concrete texture, urban noir atmosphere, high-contrast shadows, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹衰败__Gritty Neon Decay/preview.webp",
+  "folder": "Krea2_moodboard/霓虹衰败__Gritty Neon Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-797",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "光谱暮光黑色青蓝琥珀",
+  "name": "Spectral Twilight Noir — Teal-Amber Auras",
+  "prompt": "spectral silhouette, glowing amber aura, analog film grain, motion blur light trails, moody teal and charcoal, ethereal soft focus, nocturnal mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱暮光黑色青蓝琥珀__Spectral Twilight Noir — Teal-Amber Auras/preview.webp",
+  "folder": "Krea2_moodboard/光谱暮光黑色青蓝琥珀__Spectral Twilight Noir — Teal-Amber Auras",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

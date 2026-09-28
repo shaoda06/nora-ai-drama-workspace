@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2470",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "电影感深渊",
+  "name": "Cinematic Cyan Abyssal",
+  "prompt": "cinematic cyan lighting, volumetric fog, chiaroscuro, deep teal color palette, mysterious silhouette, liminal space, surreal spotlight. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感深渊__Cinematic Cyan Abyssal/preview.webp",
+  "folder": "Krea2_moodboard/电影感深渊__Cinematic Cyan Abyssal",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

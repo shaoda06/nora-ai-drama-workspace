@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1888",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "碎片化数字黑色",
+  "name": "Fragmented Digital Noir",
+  "prompt": "CRT glitch art, chromatic aberration, digital noise texture, distorted reeded glass, scanlines, pixel sorting, high-contrast silhouette, rainbow data corruption. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化数字黑色__Fragmented Digital Noir/preview.webp",
+  "folder": "Krea2_moodboard/碎片化数字黑色__Fragmented Digital Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

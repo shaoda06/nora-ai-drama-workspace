@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3433",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵",
+  "name": "Ethereal Thermal Aura — Heat-Map Speckle",
+  "prompt": "airbrush gradient, thermal aura glow, soft-focus blur, grainy texture, psychedelic dreamscape, vibrant color bleed, silhouette halo. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Thermal Aura — Heat-Map Speckle/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Thermal Aura — Heat-Map Speckle",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

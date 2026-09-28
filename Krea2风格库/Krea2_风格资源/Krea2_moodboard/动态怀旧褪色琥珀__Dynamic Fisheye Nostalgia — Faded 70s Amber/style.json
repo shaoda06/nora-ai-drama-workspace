@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2314",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "动态怀旧褪色琥珀",
+  "name": "Dynamic Fisheye Nostalgia — Faded 70s Amber",
+  "prompt": "extreme fisheye lens distortion, analog film grain, low-angle candid photography, sun-drenched warm lighting, Y2K urban aesthetic, circular vignette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态怀旧褪色琥珀__Dynamic Fisheye Nostalgia — Faded 70s Amber/preview.webp",
+  "folder": "Krea2_moodboard/动态怀旧褪色琥珀__Dynamic Fisheye Nostalgia — Faded 70s Amber",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

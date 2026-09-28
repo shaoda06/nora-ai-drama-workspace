@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2813",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵忧郁数字衰败",
+  "name": "Ethereal Melancholic Dreamscape — Pale Digital Decay",
+  "prompt": "ethereal, melancholic, soft-focus, muted color palette, cinematic diffusion, translucent textures, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵忧郁数字衰败__Ethereal Melancholic Dreamscape — Pale Digital Decay/preview.webp",
+  "folder": "Krea2_moodboard/空灵忧郁数字衰败__Ethereal Melancholic Dreamscape — Pale Digital Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

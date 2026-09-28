@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2198",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "绯红黑色光谱",
+  "name": "Crimson Noir Spectral",
+  "prompt": "intense crimson lighting, chiaroscuro noir, infrared film aesthetic, analog grain, spectral distortion, high contrast composition, cinematic melodrama. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色光谱__Crimson Noir Spectral/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色光谱__Crimson Noir Spectral",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

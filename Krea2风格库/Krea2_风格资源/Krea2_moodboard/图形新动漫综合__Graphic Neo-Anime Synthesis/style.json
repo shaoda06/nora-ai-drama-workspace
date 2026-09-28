@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-36",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "图形新动漫综合",
+  "name": "Graphic Neo-Anime Synthesis",
+  "prompt": "graphic anime illustration, bold line art, high-contrast flat shading, symmetrical composition, vibrant neon palette, mythological pop art, cyberpunk aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形新动漫综合__Graphic Neo-Anime Synthesis/preview.webp",
+  "folder": "Krea2_moodboard/图形新动漫综合__Graphic Neo-Anime Synthesis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

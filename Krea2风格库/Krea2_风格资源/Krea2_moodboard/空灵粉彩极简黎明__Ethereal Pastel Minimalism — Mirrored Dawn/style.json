@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3091",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵粉彩极简黎明",
+  "name": "Ethereal Pastel Minimalism — Mirrored Dawn",
+  "prompt": "minimalist landscape, glassy water reflection, pastel gradient sky, symmetrical composition, dreamy ethereal atmosphere, soft diffused lighting, surreal tranquility. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩极简黎明__Ethereal Pastel Minimalism — Mirrored Dawn/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩极简黎明__Ethereal Pastel Minimalism — Mirrored Dawn",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

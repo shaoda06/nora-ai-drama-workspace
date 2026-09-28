@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1027",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "天穹巴洛克忧郁",
+  "name": "Celestial Baroque Melancholy",
+  "prompt": "chiaroscuro oil painting, craquelure texture, tenebrism, dark baroque, surreal cosmic motifs, classical portraiture, muted earth tones, reflective gold accents. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹巴洛克忧郁__Celestial Baroque Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/天穹巴洛克忧郁__Celestial Baroque Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-117",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "手冢治虫风格",
+  "name": "Osamu Tezuka Style",
+  "prompt": "Style: Osamu Tezuka Style: A charming, expressive manga-illustration style built on confident, rounded linework carrying a distinctly whimsical, animation-influenced simplicity,  conveying deep emotional sincerity within otherwise simplified design, unmistakably classic. Influenced by: Osamu Tezuka, Astro boy, Black Jack manga, foundational manga-illustration tradition, early Japanese cel-animation technique,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/手冢治虫风格__Osamu Tezuka Style/preview.jpg",
+  "folder": "krea2_styles/手冢治虫风格__Osamu Tezuka Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

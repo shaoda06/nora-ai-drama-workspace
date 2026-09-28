@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-905",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "动态",
+  "name": "Dynamic Electric Vectorism",
+  "prompt": "flat vector illustration, bold saturated color palette, extreme low-angle perspective, clean black vector linework, dynamic athletic motion, mid-century graphic style, minimalist shading. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态__Dynamic Electric Vectorism/preview.webp",
+  "folder": "Krea2_moodboard/动态__Dynamic Electric Vectorism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

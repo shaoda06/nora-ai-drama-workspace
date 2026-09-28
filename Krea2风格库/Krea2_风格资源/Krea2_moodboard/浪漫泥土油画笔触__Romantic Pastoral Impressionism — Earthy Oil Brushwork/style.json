@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1089",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "浪漫泥土油画笔触",
+  "name": "Romantic Pastoral Impressionism — Earthy Oil Brushwork",
+  "prompt": "impressionist oil painting, dappled sunlight, textured brushstrokes, pastoral landscape, soft natural lighting, romantic naturalism, serene atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/浪漫泥土油画笔触__Romantic Pastoral Impressionism — Earthy Oil Brushwork/preview.webp",
+  "folder": "Krea2_moodboard/浪漫泥土油画笔触__Romantic Pastoral Impressionism — Earthy Oil Brushwork",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

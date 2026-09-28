@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1987",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "光谱模拟故障霓虹",
+  "name": "Spectral Analog Glitch — Iridescent Holographic Neon",
+  "prompt": "CRT scanlines, chromatic aberration, digital glitch art, iridescent holographic glow, analog video degradation, high contrast dark background, spectral neon light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱模拟故障霓虹__Spectral Analog Glitch — Iridescent Holographic Neon/preview.webp",
+  "folder": "Krea2_moodboard/光谱模拟故障霓虹__Spectral Analog Glitch — Iridescent Holographic Neon",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

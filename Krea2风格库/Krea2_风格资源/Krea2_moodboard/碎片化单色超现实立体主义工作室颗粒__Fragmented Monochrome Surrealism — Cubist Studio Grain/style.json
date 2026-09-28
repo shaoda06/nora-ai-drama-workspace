@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3191",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "碎片化单色超现实立体主义工作室颗粒",
+  "name": "Fragmented Monochrome Surrealism — Cubist Studio Grain",
+  "prompt": "monochrome portraiture, geometric fragmentation, high-contrast studio lighting, slit-scan effect, cubist photomontage, surrealist distortion, minimalist composition, fine art grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化单色超现实立体主义工作室颗粒__Fragmented Monochrome Surrealism — Cubist Studio Grain/preview.webp",
+  "folder": "Krea2_moodboard/碎片化单色超现实立体主义工作室颗粒__Fragmented Monochrome Surrealism — Cubist Studio Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

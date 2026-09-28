@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-96",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧",
+  "name": "Nostalgic Ghibli Pastoralism",
+  "prompt": "studio ghibli aesthetic, hand-drawn anime style, painterly background art, vibrant cel shading, nostalgic fantasy landscape, idyllic pastoral scenery, bright blue sky with fluffy clouds. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧__Nostalgic Ghibli Pastoralism/preview.webp",
+  "folder": "Krea2_moodboard/怀旧__Nostalgic Ghibli Pastoralism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

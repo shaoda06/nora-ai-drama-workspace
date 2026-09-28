@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-322",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "几何超现实",
+  "name": "Geometric Voyeuristic Surrealism",
+  "prompt": "geometric minimalism, binocular POV, desaturated earth tones, cinematic melancholy, textured paper grain, symmetrical composition, surrealist vignette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何超现实__Geometric Voyeuristic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/几何超现实__Geometric Voyeuristic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

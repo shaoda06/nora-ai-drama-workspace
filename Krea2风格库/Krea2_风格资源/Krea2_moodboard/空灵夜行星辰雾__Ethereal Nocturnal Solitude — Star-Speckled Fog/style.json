@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2472",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "空灵夜行星辰雾",
+  "name": "Ethereal Nocturnal Solitude — Star-Speckled Fog",
+  "prompt": "monochromatic midnight blue, atmospheric fog, solitary silhouette, cinematic chiaroscuro, starry night sky, mysterious luminous glow, gothic melancholy, high-contrast landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行星辰雾__Ethereal Nocturnal Solitude — Star-Speckled Fog/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行星辰雾__Ethereal Nocturnal Solitude — Star-Speckled Fog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

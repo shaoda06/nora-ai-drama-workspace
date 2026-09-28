@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-731",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "电影感夜行青蓝",
+  "name": "Cinematic Nocturnal Liminality — Teal Charcoal",
+  "prompt": "volumetric lighting, heavy film grain, low-key cinematic atmosphere, cool teal and charcoal palette, obscured silhouettes, dense fog and particulates, lo-fi analog aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行青蓝__Cinematic Nocturnal Liminality — Teal Charcoal/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行青蓝__Cinematic Nocturnal Liminality — Teal Charcoal",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

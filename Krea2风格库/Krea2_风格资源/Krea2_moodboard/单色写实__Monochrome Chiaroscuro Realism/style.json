@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-780",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "单色写实",
+  "name": "Monochrome Chiaroscuro Realism",
+  "prompt": "monochrome, chiaroscuro, high-contrast, charcoal and graphite, expressive portraiture, tactile texture, dramatic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色写实__Monochrome Chiaroscuro Realism/preview.webp",
+  "folder": "Krea2_moodboard/单色写实__Monochrome Chiaroscuro Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

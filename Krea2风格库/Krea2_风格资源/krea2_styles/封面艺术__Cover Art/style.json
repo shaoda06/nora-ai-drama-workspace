@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-176",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "封面艺术",
+  "name": "Cover Art",
+  "prompt": "Style: Cover Art: highly polished illustration aesthetics designed for immediate visual impact, characterized by strong focal hierarchy, compelling composition, refined rendering, premium surface treatment, and memorable storytelling cues, blending commercial appeal with artistic sophistication through meticulous craftsmanship, dramatic presentation, and collector-quality execution, reminiscent of Drew Struzan and Frank Frazetta, inspired by Star Wars theatrical posters and Conan the Barbarian paperback covers.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/封面艺术__Cover Art/preview.jpg",
+  "folder": "krea2_styles/封面艺术__Cover Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

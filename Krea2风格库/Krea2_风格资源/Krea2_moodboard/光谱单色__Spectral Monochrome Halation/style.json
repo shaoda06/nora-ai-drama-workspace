@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2982",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱单色",
+  "name": "Spectral Monochrome Halation",
+  "prompt": "extreme overexposure, glowing silhouette, high contrast monochrome, ethereal light bloom, heavy film grain, spectral halation, chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱单色__Spectral Monochrome Halation/preview.webp",
+  "folder": "Krea2_moodboard/光谱单色__Spectral Monochrome Halation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

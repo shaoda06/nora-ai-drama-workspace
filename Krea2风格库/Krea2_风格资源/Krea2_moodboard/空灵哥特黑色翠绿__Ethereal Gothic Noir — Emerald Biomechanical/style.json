@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2460",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "空灵哥特黑色翠绿",
+  "name": "Ethereal Gothic Noir — Emerald Biomechanical",
+  "prompt": "gothic dark fantasy, chiaroscuro lighting, bioluminescence, volumetric fog, intricate metallic detail, haunting atmosphere, monochromatic teal palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵哥特黑色翠绿__Ethereal Gothic Noir — Emerald Biomechanical/preview.webp",
+  "folder": "Krea2_moodboard/空灵哥特黑色翠绿__Ethereal Gothic Noir — Emerald Biomechanical",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

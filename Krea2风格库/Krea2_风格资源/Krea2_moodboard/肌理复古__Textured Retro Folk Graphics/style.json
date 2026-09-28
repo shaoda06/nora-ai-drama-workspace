@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-682",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "肌理复古",
+  "name": "Textured Retro Folk Graphics",
+  "prompt": "linocut printmaking, risograph texture, bold graphic illustration, warm mustard yellow palette, distressed ink finish, folk art aesthetic, high contrast composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理复古__Textured Retro Folk Graphics/preview.webp",
+  "folder": "Krea2_moodboard/肌理复古__Textured Retro Folk Graphics",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

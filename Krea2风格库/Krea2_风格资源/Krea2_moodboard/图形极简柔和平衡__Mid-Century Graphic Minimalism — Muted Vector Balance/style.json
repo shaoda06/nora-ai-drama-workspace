@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-631",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "图形极简柔和平衡",
+  "name": "Mid-Century Graphic Minimalism — Muted Vector Balance",
+  "prompt": "mid-century modern graphic design, minimalist flat vector illustration, geometric abstraction, retro muted color palette, clean sharp lines, organic shapes, negative space composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形极简柔和平衡__Mid-Century Graphic Minimalism — Muted Vector Balance/preview.webp",
+  "folder": "Krea2_moodboard/图形极简柔和平衡__Mid-Century Graphic Minimalism — Muted Vector Balance",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

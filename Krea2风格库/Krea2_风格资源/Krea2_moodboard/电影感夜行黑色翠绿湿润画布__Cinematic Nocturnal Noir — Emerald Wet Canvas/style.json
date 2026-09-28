@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1381",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感夜行黑色翠绿湿润画布",
+  "name": "Cinematic Nocturnal Noir — Emerald Wet Canvas",
+  "prompt": "cinematic noir lighting, monochromatic cool tones, deep cyan and emerald, high-contrast chiaroscuro, shallow depth of field, low-key moody portraiture, intimate atmospheric narrative. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色翠绿湿润画布__Cinematic Nocturnal Noir — Emerald Wet Canvas/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色翠绿湿润画布__Cinematic Nocturnal Noir — Emerald Wet Canvas",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

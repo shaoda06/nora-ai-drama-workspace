@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1111",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "肌理厚涂",
+  "name": "Textured Impasto Landscapes",
+  "prompt": "impasto oil painting, thick palette knife texture, visible brushstrokes, expressive landscape, tactile canvas texture, vibrant color contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理厚涂__Textured Impasto Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/肌理厚涂__Textured Impasto Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

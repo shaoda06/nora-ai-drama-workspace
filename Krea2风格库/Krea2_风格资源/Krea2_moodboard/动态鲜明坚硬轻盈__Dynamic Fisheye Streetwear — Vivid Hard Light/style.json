@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1976",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态鲜明坚硬轻盈",
+  "name": "Dynamic Fisheye Streetwear — Vivid Hard Light",
+  "prompt": "fisheye lens, extreme low-angle, forced perspective, vibrant color saturation, streetwear aesthetic, harsh sunlight, high-energy urban portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态鲜明坚硬轻盈__Dynamic Fisheye Streetwear — Vivid Hard Light/preview.webp",
+  "folder": "Krea2_moodboard/动态鲜明坚硬轻盈__Dynamic Fisheye Streetwear — Vivid Hard Light",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

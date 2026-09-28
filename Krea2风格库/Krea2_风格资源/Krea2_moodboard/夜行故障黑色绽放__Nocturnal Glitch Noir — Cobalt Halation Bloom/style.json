@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1947",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "夜行故障黑色绽放",
+  "name": "Nocturnal Glitch Noir — Cobalt Halation Bloom",
+  "prompt": "heavy film grain, dramatic halation glow, high contrast chiaroscuro, cobalt blue lighting, chromatic aberration, tactile noise texture, retro-futuristic noir, lo-fi cinematic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行故障黑色绽放__Nocturnal Glitch Noir — Cobalt Halation Bloom/preview.webp",
+  "folder": "Krea2_moodboard/夜行故障黑色绽放__Nocturnal Glitch Noir — Cobalt Halation Bloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

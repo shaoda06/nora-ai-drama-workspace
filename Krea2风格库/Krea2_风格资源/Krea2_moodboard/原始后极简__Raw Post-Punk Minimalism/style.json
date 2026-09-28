@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-487",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "原始后极简",
+  "name": "Raw Post-Punk Minimalism",
+  "prompt": "high-contrast monochrome, photocopy texture, punk zine aesthetic, stark black and white, gritty halftone, distressed ink, avant-garde editorial. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始后极简__Raw Post-Punk Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/原始后极简__Raw Post-Punk Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

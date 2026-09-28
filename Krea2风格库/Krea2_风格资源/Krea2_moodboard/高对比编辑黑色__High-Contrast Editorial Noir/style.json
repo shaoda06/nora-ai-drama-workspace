@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2635",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "高对比编辑黑色",
+  "name": "High-Contrast Editorial Noir",
+  "prompt": "high-contrast, minimalist editorial, harsh flash lighting, analog film grain, stark background, graphic silhouette, raw candid portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高对比编辑黑色__High-Contrast Editorial Noir/preview.webp",
+  "folder": "Krea2_moodboard/高对比编辑黑色__High-Contrast Editorial Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

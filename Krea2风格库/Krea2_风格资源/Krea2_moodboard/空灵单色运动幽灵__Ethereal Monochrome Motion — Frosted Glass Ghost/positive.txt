@@ -1,0 +1,1 @@
+high contrast monochrome, intentional motion blur, shutter drag, cinematic film grain, chiaroscuro lighting, frosted glass texture, ghostly double exposure. Subject:{prompt}

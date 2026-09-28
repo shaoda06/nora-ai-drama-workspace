@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-314",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "当代油画",
+  "name": "Contemporary Oil Painting",
+  "prompt": "Style: Contemporary Oil Painting: A richly layered painting style built on confident, visible brushwork that constructs form through deliberate, physically present strokes, meticulous blended tonal transition achieved through wet-on-wet and glazing technique in equal measure, a tactile, hand-crafted depth that preserves brush character even within refined passages, deliberate value and contrast control giving every form convincing dimensional weight, and a timeless yet unmistakably current painterly sincerity that bridges classical technique with a contemporary rendering sensibility. Influenced by: contemporary figurative-oil-painting tradition, classical atelier technique, alla prima painting practice, modern gallery-oil-painting method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/当代油画__Contemporary Oil Painting/preview.jpg",
+  "folder": "krea2_styles/当代油画__Contemporary Oil Painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

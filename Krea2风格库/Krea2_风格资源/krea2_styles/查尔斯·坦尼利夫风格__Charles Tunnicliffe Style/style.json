@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-318",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "查尔斯·坦尼利夫风格",
+  "name": "Charles Tunnicliffe Style",
+  "prompt": "Style: Charles Tunnicliffe Style: A meticulously observed natural-history illustration style built on precise, confident linework rendering fine detail with taxonomic accuracy, restrained watercolor-adjacent washes applied with quiet, disciplined restraint, a hushed, patient attention to texture and form achieved through careful, unhurried observation, a naturalist's rigor balanced against genuine painterly warmth, and a timeless, scholarly sincerity rooted in decades of dedicated field-illustration craft. Influenced by: Charles Tunnicliffe, British natural-history illustration tradition, wood-engraving-and-watercolor technique, field-guide illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/查尔斯·坦尼利夫风格__Charles Tunnicliffe Style/preview.jpg",
+  "folder": "krea2_styles/查尔斯·坦尼利夫风格__Charles Tunnicliffe Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

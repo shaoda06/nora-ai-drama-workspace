@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-513",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实复古拼贴对比",
+  "name": "Surrealist Retro Collage — Color-Block Contrast",
+  "prompt": "surrealist collage, vintage halftone texture, analog cut-and-paste aesthetic, saturated color juxtaposition, retro-futurism, botanical surrealism, dadaist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实复古拼贴对比__Surrealist Retro Collage — Color-Block Contrast/preview.webp",
+  "folder": "Krea2_moodboard/超现实复古拼贴对比__Surrealist Retro Collage — Color-Block Contrast",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2315",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "动态怀旧黄金时刻颗粒",
+  "name": "Dynamic Fisheye Nostalgia — Golden Hour Grain",
+  "prompt": "fisheye lens distortion, extreme close-up portrait, golden hour lighting, vintage film aesthetic, candid street photography, warm color grading, energetic youth culture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态怀旧黄金时刻颗粒__Dynamic Fisheye Nostalgia — Golden Hour Grain/preview.webp",
+  "folder": "Krea2_moodboard/动态怀旧黄金时刻颗粒__Dynamic Fisheye Nostalgia — Golden Hour Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-960",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "鲜活天真拼贴",
+  "name": "Vibrant Naive Collage",
+  "prompt": "naive folk art, vibrant gouache texture, hand-drawn aesthetic, bold flat shapes, whimsical collage, saturated color palette, tactile brushwork. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活天真拼贴__Vibrant Naive Collage/preview.webp",
+  "folder": "Krea2_moodboard/鲜活天真拼贴__Vibrant Naive Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

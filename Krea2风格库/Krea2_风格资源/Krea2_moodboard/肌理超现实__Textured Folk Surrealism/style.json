@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-639",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "肌理超现实",
+  "name": "Textured Folk Surrealism",
+  "prompt": "flat vector illustration, grainy stipple texture, folk surrealism, muted earthy palette, minimalist geometric shapes, risograph print aesthetic, whimsical pastoral scene. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理超现实__Textured Folk Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/肌理超现实__Textured Folk Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

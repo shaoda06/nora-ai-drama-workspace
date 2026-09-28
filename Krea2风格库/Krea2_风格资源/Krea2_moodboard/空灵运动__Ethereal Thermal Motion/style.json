@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3006",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵运动",
+  "name": "Ethereal Thermal Motion",
+  "prompt": "long exposure motion blur, thermal color palette, heavy analog film grain, ethereal light leaks, dreamlike surrealism, fluid smoky trails, luminous warm highlights. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵运动__Ethereal Thermal Motion/preview.webp",
+  "folder": "Krea2_moodboard/空灵运动__Ethereal Thermal Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

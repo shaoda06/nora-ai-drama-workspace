@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1239",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Other_其他",
+  "category_name": "其他",
+  "name_cn": "酸性浮雕版画",
+  "name": "Acid Relief Printmaking",
+  "prompt": "linocut print, acid green and black, hand-carved woodblock texture, high-contrast graphic silhouette, gritty zine aesthetic, relief printmaking, ink chatter. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/酸性浮雕版画__Acid Relief Printmaking/preview.webp",
+  "folder": "Krea2_moodboard/酸性浮雕版画__Acid Relief Printmaking",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

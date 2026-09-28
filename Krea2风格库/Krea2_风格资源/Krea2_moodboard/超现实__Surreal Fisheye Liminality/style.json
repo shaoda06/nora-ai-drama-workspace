@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-176",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "超现实",
+  "name": "Surreal Fisheye Liminality",
+  "prompt": "fisheye lens distortion, liminal space, anime inspired illustration, fluorescent lighting, 90s retro nostalgia, vibrant acidic palette, wide-angle perspective, slice of life. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Surreal Fisheye Liminality/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Surreal Fisheye Liminality",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

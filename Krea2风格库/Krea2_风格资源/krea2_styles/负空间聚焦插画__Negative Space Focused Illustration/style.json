@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-56",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "负空间聚焦插画",
+  "name": "Negative Space Focused Illustration",
+  "prompt": "Style: Negative Space Focused Illustration: A deliberately restrained illustration style built on a single confident focal cluster surrounded by vast, empty extent, minimal linework rendering only what's essential to read the subject clearly, a confident economy where the unmarked space carries as much compositional weight as the mark itself, silhouette and shape doing the primary storytelling work rather than internal detail, and a quiet, contemplative elegance that treats emptiness as an active, deliberate compositional partner. Influenced by: minimalist negative-space illustration tradition, Japanese ma compositional philosophy, contemporary editorial silhouette technique, reductive graphic-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/负空间聚焦插画__Negative Space Focused Illustration/preview.jpg",
+  "folder": "krea2_styles/负空间聚焦插画__Negative Space Focused Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

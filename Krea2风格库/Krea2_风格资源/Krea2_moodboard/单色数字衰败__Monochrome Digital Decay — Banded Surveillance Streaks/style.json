@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2962",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "单色数字衰败",
+  "name": "Monochrome Digital Decay — Banded Surveillance Streaks",
+  "prompt": "black and white photography, high contrast, pixel sorting, digital glitch, minimalist portrait, datamoshing, surreal aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色数字衰败__Monochrome Digital Decay — Banded Surveillance Streaks/preview.webp",
+  "folder": "Krea2_moodboard/单色数字衰败__Monochrome Digital Decay — Banded Surveillance Streaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

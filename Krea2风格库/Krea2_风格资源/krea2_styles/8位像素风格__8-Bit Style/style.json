@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-208",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "8位像素风格",
+  "name": "8-Bit Style",
+  "prompt": "Style: 8-Bit Style: A blocky, pixel-constrained illustration style built on hard, discrete square units standing in for all line and shading, an extremely limited tonal palette-logic forcing every gradient into stepped, visible bands, deliberate geometric simplification that reduces anatomy to its most essential recognizable silhouette, a rigid, grid-locked precision replacing any curved or organic mark-making, and a nostalgic, technically constrained charm that celebrates the aesthetic discipline of early digital-display limitation. Influenced by: early video-game sprite-art tradition, Nintendo Entertainment System graphics technique, pixel-art illustration practice, retro arcade visual-design method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/8位像素风格__8-Bit Style/preview.jpg",
+  "folder": "krea2_styles/8位像素风格__8-Bit Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

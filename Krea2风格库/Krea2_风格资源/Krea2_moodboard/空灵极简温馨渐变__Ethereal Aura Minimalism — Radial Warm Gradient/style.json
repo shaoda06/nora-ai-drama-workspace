@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1733",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵极简温馨渐变",
+  "name": "Ethereal Aura Minimalism — Radial Warm Gradient",
+  "prompt": "aura gradient, soft focus blur, grainy paper texture, minimalist abstract, ethereal glow, vibrant color fields, concentric radial composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简温馨渐变__Ethereal Aura Minimalism — Radial Warm Gradient/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简温馨渐变__Ethereal Aura Minimalism — Radial Warm Gradient",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

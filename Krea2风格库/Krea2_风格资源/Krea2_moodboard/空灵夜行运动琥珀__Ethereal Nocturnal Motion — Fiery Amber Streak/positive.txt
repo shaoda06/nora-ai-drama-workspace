@@ -1,0 +1,1 @@
+long exposure, motion blur, analog film grain, glowing amber light, deep indigo night, liminal space, soft-focus haze. Subject:{prompt}

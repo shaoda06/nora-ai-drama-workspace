@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1357",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感触觉忧郁",
+  "name": "Cinematic Tactile Melancholy",
+  "prompt": "cinematic macro photography, low-key moody lighting, tactile gritty texture, desaturated cool tones, shallow depth of field, high contrast silhouettes, organic water ripples. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感触觉忧郁__Cinematic Tactile Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/电影感触觉忧郁__Cinematic Tactile Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

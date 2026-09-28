@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-228",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "棱镜铬",
+  "name": "Prismatic Chrome Futurism",
+  "prompt": "liquid chrome, biomorphic 3D render, chromatic aberration, stark black background, starburst lens flare, iridescent metallic reflections, Y2K cyber aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜铬__Prismatic Chrome Futurism/preview.webp",
+  "folder": "Krea2_moodboard/棱镜铬__Prismatic Chrome Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

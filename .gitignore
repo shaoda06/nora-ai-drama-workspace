@@ -1,0 +1,35 @@
+# 默认只跟踪已明确属于公共模板的根目录内容。
+/*
+!/.gitignore
+!/README.md
+!/LICENSE
+!/AGENTS.md
+!/.agents/
+!/Krea2风格库/
+!/projects/
+!/综合资料/
+
+# 仅随仓库提供自维护的两个技能；其他依赖按主技能来源表获取。
+/.agents/*
+!/.agents/skills/
+/.agents/skills/*
+!/.agents/skills/nora-ai-short-drama/
+!/.agents/skills/krea2-style-library/
+
+# 保留空目录的用途说明，真实项目和本机过程资料不公开。
+/projects/*
+!/projects/README.md
+/综合资料/*
+!/综合资料/README.md
+
+# 技能历史、真实服务库存及本机缓存。
+**/历史版本/
+**/state/
+**/__pycache__/
+**/.DS_Store
+*.py[cod]
+.env
+.env.*
+
+# Krea2现行资源入库，下载暂存和上一版备份不入库。
+/Krea2风格库/Krea2_更新工具/work/

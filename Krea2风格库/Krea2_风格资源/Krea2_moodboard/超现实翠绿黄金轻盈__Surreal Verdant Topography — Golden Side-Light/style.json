@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-854",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "超现实翠绿黄金轻盈",
+  "name": "Surreal Verdant Topography — Golden Side-Light",
+  "prompt": "rolling velvet hills, vibrant emerald landscape, surreal dreamcore, fluid topographic contours, golden hour side-lighting, volumetric low-hanging clouds, pristine organic textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实翠绿黄金轻盈__Surreal Verdant Topography — Golden Side-Light/preview.webp",
+  "folder": "Krea2_moodboard/超现实翠绿黄金轻盈__Surreal Verdant Topography — Golden Side-Light",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

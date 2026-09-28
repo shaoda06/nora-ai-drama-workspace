@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2495",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "空灵写实",
+  "name": "Ethereal Mystical Realism",
+  "prompt": "crepuscular rays, ethereal atmospheric mist, golden hour backlighting, magical realism, moss-covered ancient forest, dreamlike cinematic lighting, crimson accents, volumetric light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵写实__Ethereal Mystical Realism/preview.webp",
+  "folder": "Krea2_moodboard/空灵写实__Ethereal Mystical Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

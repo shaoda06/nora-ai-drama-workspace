@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2082",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "动态动态极简",
+  "name": "Dynamic Kinetic Minimalism",
+  "prompt": "intentional camera movement, motion blur, cinematic street photography, minimalist color palette, high-angle perspective, high-contrast shadows, dynamic energy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态动态极简__Dynamic Kinetic Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/动态动态极简__Dynamic Kinetic Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

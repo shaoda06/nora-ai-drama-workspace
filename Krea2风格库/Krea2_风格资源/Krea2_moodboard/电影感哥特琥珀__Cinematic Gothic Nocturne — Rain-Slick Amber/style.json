@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2471",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "电影感哥特琥珀",
+  "name": "Cinematic Gothic Nocturne — Rain-Slick Amber",
+  "prompt": "cinematic chiaroscuro, atmospheric twilight gothic, deep blue and amber color grading, looming architectural silhouettes, moody fog and weather effects, shallow depth of field, mysterious narrative lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感哥特琥珀__Cinematic Gothic Nocturne — Rain-Slick Amber/preview.webp",
+  "folder": "Krea2_moodboard/电影感哥特琥珀__Cinematic Gothic Nocturne — Rain-Slick Amber",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

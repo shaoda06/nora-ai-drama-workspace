@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2677",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "忧郁工业超现实",
+  "name": "Melancholic Industrial Surrealism",
+  "prompt": "cinematic brutalist architecture, melancholic surrealism, desolate industrial landscape, overcast diffuse lighting, solitary figure, muted blue and gray tones, atmospheric haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁工业超现实__Melancholic Industrial Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/忧郁工业超现实__Melancholic Industrial Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

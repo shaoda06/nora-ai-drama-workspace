@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3182",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "光谱有机超现实",
+  "name": "Spectral Organic Surrealism",
+  "prompt": "ethereal spectral silhouette, thermal chromatic gradient, analog film grain texture, solarized high contrast, liquid light caustics, surreal dreamlike atmosphere, muted minimalist background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱有机超现实__Spectral Organic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/光谱有机超现实__Spectral Organic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

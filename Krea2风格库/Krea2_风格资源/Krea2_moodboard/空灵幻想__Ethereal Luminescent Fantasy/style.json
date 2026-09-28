@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1254",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "空灵幻想",
+  "name": "Ethereal Luminescent Fantasy",
+  "prompt": "bioluminescent glow, ethereal pastel fantasy, soft light diffusion, translucent glass-like textures, fluid organic shapes, dreamy digital illustration, iridescent watercolor gradients. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵幻想__Ethereal Luminescent Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/空灵幻想__Ethereal Luminescent Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

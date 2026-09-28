@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-701",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "黑色动态墨水",
+  "name": "Gritty Chiaroscuro Noir — Kinetic Crosshatch Ink",
+  "prompt": "high-contrast monochrome, stippling and cross-hatching, halftone screentone texture, chiaroscuro lighting, gritty ink illustration, distressed graphic aesthetic, low-key noir mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色动态墨水__Gritty Chiaroscuro Noir — Kinetic Crosshatch Ink/preview.webp",
+  "folder": "Krea2_moodboard/黑色动态墨水__Gritty Chiaroscuro Noir — Kinetic Crosshatch Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-79",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "霓虹超现实民俗",
+  "name": "Neon Surreal Folklore",
+  "prompt": "bold black linework, psychedelic neon palette, Japanese folklore motifs, high-contrast anime aesthetic, surreal pop illustration, flat graphic composition, retro digital texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹超现实民俗__Neon Surreal Folklore/preview.webp",
+  "folder": "Krea2_moodboard/霓虹超现实民俗__Neon Surreal Folklore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3294",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "超现实光泽植物",
+  "name": "Surreal Glossy Botanical",
+  "prompt": "surreal botanical landscape, hyper-glossy texture, vibrant saturated colors, whimsical fairy tale aesthetic, bright blue sky background, macro photography, tactile organic details. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实光泽植物__Surreal Glossy Botanical/preview.webp",
+  "folder": "Krea2_moodboard/超现实光泽植物__Surreal Glossy Botanical",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

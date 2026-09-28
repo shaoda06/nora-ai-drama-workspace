@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2951",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "碎片化单色超现实网格故障",
+  "name": "Fragmented Monochrome Surrealism — Archival Grid Glitch",
+  "prompt": "deconstructed portraiture, monochrome collage, surreal fragmentation, analog texture, high-contrast chiaroscuro, cubist grid distortion, digital glitch artifacts, avant-garde editorial. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化单色超现实网格故障__Fragmented Monochrome Surrealism — Archival Grid Glitch/preview.webp",
+  "folder": "Krea2_moodboard/碎片化单色超现实网格故障__Fragmented Monochrome Surrealism — Archival Grid Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

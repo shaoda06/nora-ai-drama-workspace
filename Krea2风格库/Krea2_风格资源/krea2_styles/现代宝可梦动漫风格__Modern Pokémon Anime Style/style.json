@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-110",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "现代宝可梦动漫风格",
+  "name": "Modern Pokémon Anime Style",
+  "prompt": "Style: Modern Pokémon Anime Style: A bright, clean animation-illustration style built on confident, simplified linework carrying appealing, rounded proportion, smooth cel-based shading applied with cheerful graphic clarity, expressive large eyes carrying much of the emotional warmth of the design, a vivid, high-energy compositional vibrancy favoring instant readability, and a wholesome, adventurous anime charm that feels bright, friendly, and unmistakably contemporary. Influenced by: OLM Inc. animation-production technique, contemporary anime cel-shaded illustration practice, Ken Sugimori character-design tradition, mainstream Japanese animation-studio method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/现代宝可梦动漫风格__Modern Pokémon Anime Style/preview.jpg",
+  "folder": "krea2_styles/现代宝可梦动漫风格__Modern Pokémon Anime Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

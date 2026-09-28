@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1813",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "怀旧超现实",
+  "name": "Nostalgic Surrealist Americana",
+  "prompt": "vintage film aesthetic, surrealist Americana, faded pastel palette, 70s analog grain, uncanny dreamscape, mid-century retro, soft focus photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实__Nostalgic Surrealist Americana/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实__Nostalgic Surrealist Americana",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

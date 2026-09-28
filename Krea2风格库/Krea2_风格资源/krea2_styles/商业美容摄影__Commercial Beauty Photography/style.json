@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-341",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "商业美容摄影",
+  "name": "Commercial Beauty Photography",
+  "prompt": "Style: Commercial Beauty Photography: luxury commercial photography aesthetics characterized by flawless presentation, sophisticated studio lighting, immaculate detail reproduction, refined tonal transitions, premium surface rendering, and high-end editorial polish, emphasizing visual perfection, elegance, and market-ready image quality through meticulous craftsmanship, controlled composition, and contemporary beauty-industry standards, reminiscent of Solve Sundsbo and Mario Testino, inspired by Vogue Beauty Covers and Dior Beauty Campaigns.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/商业美容摄影__Commercial Beauty Photography/preview.jpg",
+  "folder": "krea2_styles/商业美容摄影__Commercial Beauty Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

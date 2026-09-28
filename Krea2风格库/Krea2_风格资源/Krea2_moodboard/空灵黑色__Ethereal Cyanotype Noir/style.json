@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1546",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵黑色",
+  "name": "Ethereal Cyanotype Noir",
+  "prompt": "cyanotype photography, deep indigo and cobalt palette, heavy film grain, extreme backlight glow, haunting silhouettes, soft focus bloom, lo-fi glitch artifacts. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色__Ethereal Cyanotype Noir/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色__Ethereal Cyanotype Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

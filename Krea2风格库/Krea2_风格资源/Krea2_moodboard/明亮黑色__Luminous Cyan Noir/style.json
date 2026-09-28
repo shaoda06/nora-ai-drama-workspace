@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3111",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "明亮黑色",
+  "name": "Luminous Cyan Noir",
+  "prompt": "monochromatic cyan noir, dramatic chiaroscuro lighting, ethereal atmospheric haze, high-contrast sci-fi editorial, volumetric rim lighting, sleek cyber-minimalist silhouette, cinematic blue glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色__Luminous Cyan Noir/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色__Luminous Cyan Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

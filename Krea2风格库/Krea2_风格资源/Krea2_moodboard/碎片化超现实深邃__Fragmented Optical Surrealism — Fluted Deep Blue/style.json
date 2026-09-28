@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2791",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "碎片化超现实深邃",
+  "name": "Fragmented Optical Surrealism — Fluted Deep Blue",
+  "prompt": "slit-scan vertical fragmentation, fluted glass refraction, analog glitch distortion, rhythmic tactile texture, high-contrast minimalist portraiture, retro-futuristic color palette, optical lenticular effect. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化超现实深邃__Fragmented Optical Surrealism — Fluted Deep Blue/preview.webp",
+  "folder": "Krea2_moodboard/碎片化超现实深邃__Fragmented Optical Surrealism — Fluted Deep Blue",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

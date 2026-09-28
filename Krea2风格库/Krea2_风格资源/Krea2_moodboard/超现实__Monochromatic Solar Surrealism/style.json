@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1701",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "超现实",
+  "name": "Monochromatic Solar Surrealism",
+  "prompt": "minimalist desert landscape, warm monochromatic palette, dramatic cinematic lighting, surreal celestial elements, high-contrast silhouette, atmospheric hazy horizon, geometric composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Monochromatic Solar Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Monochromatic Solar Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

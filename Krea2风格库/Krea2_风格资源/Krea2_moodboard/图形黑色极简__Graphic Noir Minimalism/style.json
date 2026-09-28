@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-885",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "图形黑色极简",
+  "name": "Graphic Noir Minimalism",
+  "prompt": "minimalist vector illustration, high-contrast noir, geometric urban silhouette, flat color blocking, hard-edged shadows, coral and midnight blue palette, dramatic directional lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形黑色极简__Graphic Noir Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/图形黑色极简__Graphic Noir Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

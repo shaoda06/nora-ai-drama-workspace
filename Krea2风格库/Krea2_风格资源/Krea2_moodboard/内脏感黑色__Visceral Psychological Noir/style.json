@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2179",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "内脏感黑色",
+  "name": "Visceral Psychological Noir",
+  "prompt": "chiaroscuro lighting, psychological thriller aesthetic, high contrast noir, desaturated cold tones, gritty film grain, extreme close-up, intense shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感黑色__Visceral Psychological Noir/preview.webp",
+  "folder": "Krea2_moodboard/内脏感黑色__Visceral Psychological Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

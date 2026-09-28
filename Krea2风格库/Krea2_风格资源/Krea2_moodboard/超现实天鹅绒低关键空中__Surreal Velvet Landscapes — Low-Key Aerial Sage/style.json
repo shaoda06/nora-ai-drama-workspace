@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3138",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "超现实天鹅绒低关键空中",
+  "name": "Surreal Velvet Landscapes — Low-Key Aerial Sage",
+  "prompt": "velvety moss texture, surreal undulating hills, atmospheric low-key lighting, minimalist landscape, emerald and teal palette, high-angle aerial shot, solitary symbolic subject. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实天鹅绒低关键空中__Surreal Velvet Landscapes — Low-Key Aerial Sage/preview.webp",
+  "folder": "Krea2_moodboard/超现实天鹅绒低关键空中__Surreal Velvet Landscapes — Low-Key Aerial Sage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

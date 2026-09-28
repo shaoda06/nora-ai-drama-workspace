@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-258",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "钢笔墨水画",
+  "name": "Ink Pen Drawing",
+  "prompt": "Style: Ink Pen Drawing: A precise, linear illustration style built on confident, controlled strokes that construct every form entirely through line rather than blended tone, dense cross-hatching and stippling layered to achieve tonal depth purely through line density, a crisp, deliberate discipline carried through unhurried, considered mark-making, meticulous attention to line-weight variation suggesting weight and dimensionality, and a timeless, meticulous craftsmanship rooted in centuries of traditional pen-and-ink illustration practice. Influenced by: classical pen-and-ink illustration tradition, fine cross-hatching technique, engraving-adjacent linework practice, traditional academic drawing method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/钢笔墨水画__Ink Pen Drawing/preview.jpg",
+  "folder": "krea2_styles/钢笔墨水画__Ink Pen Drawing",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

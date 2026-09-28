@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-734",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "电影感阴影黑色",
+  "name": "Cinematic Shadow Noir",
+  "prompt": "heavy film grain, chiaroscuro lighting, stark silhouette, low-key atmosphere, analog aesthetic, muted sepia and charcoal tones, mysterious backlighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感阴影黑色__Cinematic Shadow Noir/preview.webp",
+  "folder": "Krea2_moodboard/电影感阴影黑色__Cinematic Shadow Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

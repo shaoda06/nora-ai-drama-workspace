@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-209",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "金缮启发数字艺术",
+  "name": "Kintsugi-Inspired Digital Art",
+  "prompt": "Style: Kintsugi-Inspired Digital Art: A contemplative repair-as-beauty illustration style built on deliberate fracture lines traced with luminous, precious-metal seams that transform breakage into ornamental focal points, a quiet philosophical tension between damage and restoration rendered with meticulous, reverent craftsmanship, smooth surrounding surfaces contrasted against the raised, textural presence of the mended seams, a hushed, contemplative stillness that treats imperfection as the compositional centerpiece rather than something hidden, and a refined, wabi-sabi sincerity that finds quiet grandeur in visible history. Influenced by: traditional kintsugi ceramic-repair technique, wabi-sabi aesthetic philosophy, Japanese lacquer-craft tradition, contemporary repair-art practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/金缮启发数字艺术__Kintsugi-Inspired Digital Art/preview.jpg",
+  "folder": "krea2_styles/金缮启发数字艺术__Kintsugi-Inspired Digital Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

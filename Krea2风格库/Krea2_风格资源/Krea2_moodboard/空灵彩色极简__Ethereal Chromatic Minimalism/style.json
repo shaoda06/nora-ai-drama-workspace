@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1735",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵彩色极简",
+  "name": "Ethereal Chromatic Minimalism",
+  "prompt": "chromatic aura gradient, minimalist color field, soft focus glow, tactile paper grain, atmospheric color bleed, hazy light halo, abstract geometry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵彩色极简__Ethereal Chromatic Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵彩色极简__Ethereal Chromatic Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

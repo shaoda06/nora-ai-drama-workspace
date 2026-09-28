@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1124",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "电影感夜行剪影水彩",
+  "name": "Cinematic Nocturnal Silhouette — Misty Watercolor",
+  "prompt": "backlit silhouette, atmospheric fog, cinematic lighting, teal and amber, volumetric glow, vintage film grain, nocturnal mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行剪影水彩__Cinematic Nocturnal Silhouette — Misty Watercolor/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行剪影水彩__Cinematic Nocturnal Silhouette — Misty Watercolor",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1712",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "超现实极简忧郁",
+  "name": "Surreal Pastoral Minimalism — Misty Overcast Melancholy",
+  "prompt": "surreal pastoralism, muted earthy tones, cinematic film grain, overcast diffused lighting, minimalist structured fashion, desaturated green landscapes, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实极简忧郁__Surreal Pastoral Minimalism — Misty Overcast Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/超现实极简忧郁__Surreal Pastoral Minimalism — Misty Overcast Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

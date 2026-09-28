@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-630",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "高对比流动黑色",
+  "name": "High-Contrast Fluid Noir",
+  "prompt": "minimalist graphic design, high-contrast black and yellow, fluid organic silhouettes, negative space illustration, vector art style, liquid smoke motifs, bold flat graphic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高对比流动黑色__High-Contrast Fluid Noir/preview.webp",
+  "folder": "Krea2_moodboard/高对比流动黑色__High-Contrast Fluid Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

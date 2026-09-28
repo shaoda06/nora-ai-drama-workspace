@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2630",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "内脏感极简编辑",
+  "name": "Visceral Minimalist Editorial",
+  "prompt": "direct flash photography, visceral skin texture, editorial macro detail, avant-garde styling, high-contrast lighting, wet-look finish, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感极简编辑__Visceral Minimalist Editorial/preview.webp",
+  "folder": "Krea2_moodboard/内脏感极简编辑__Visceral Minimalist Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

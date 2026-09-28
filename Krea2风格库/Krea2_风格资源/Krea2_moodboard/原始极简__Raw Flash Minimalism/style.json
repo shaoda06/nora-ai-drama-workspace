@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2636",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "原始极简",
+  "name": "Raw Flash Minimalism",
+  "prompt": "direct camera flash, sharp drop shadows, high-contrast photography, minimalist studio portrait, raw realistic texture, 90s fashion editorial, candid snapshot aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始极简__Raw Flash Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/原始极简__Raw Flash Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

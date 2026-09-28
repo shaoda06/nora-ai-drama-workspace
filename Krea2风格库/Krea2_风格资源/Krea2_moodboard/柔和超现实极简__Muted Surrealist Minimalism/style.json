@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1721",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "柔和超现实极简",
+  "name": "Muted Surrealist Minimalism",
+  "prompt": "minimalist surrealism, desaturated color palette, muted teal and gray tones, foggy atmospheric landscape, solitary subject, dreamlike existentialism, diffused soft lighting, clean geometric composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/柔和超现实极简__Muted Surrealist Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/柔和超现实极简__Muted Surrealist Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

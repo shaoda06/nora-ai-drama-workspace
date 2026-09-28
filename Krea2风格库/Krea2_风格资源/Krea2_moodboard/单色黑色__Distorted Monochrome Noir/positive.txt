@@ -1,0 +1,1 @@
+high-contrast black and white, extreme fisheye distortion, gritty analog film grain, dramatic low-angle perspective, heavy vignetting, noir cinematography, raw cinematic realism. Subject:{prompt}

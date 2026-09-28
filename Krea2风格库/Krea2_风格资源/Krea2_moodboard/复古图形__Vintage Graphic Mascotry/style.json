@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-181",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "复古图形",
+  "name": "Vintage Graphic Mascotry",
+  "prompt": "rubber hose animation style, bold ink outlines, vintage print texture, halftone shading, mid-century commercial art, minimalist graphic illustration, risograph aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古图形__Vintage Graphic Mascotry/preview.webp",
+  "folder": "Krea2_moodboard/复古图形__Vintage Graphic Mascotry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

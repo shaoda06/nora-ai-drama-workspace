@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-173",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "忧郁民俗",
+  "name": "Melancholic Folklore Animation",
+  "prompt": "vintage anime background, hand-painted watercolor style, gothic revival architecture, lush mossy forest, atmospheric mist, soft diffused lighting, folklore illustration, muted earth tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁民俗__Melancholic Folklore Animation/preview.webp",
+  "folder": "Krea2_moodboard/忧郁民俗__Melancholic Folklore Animation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

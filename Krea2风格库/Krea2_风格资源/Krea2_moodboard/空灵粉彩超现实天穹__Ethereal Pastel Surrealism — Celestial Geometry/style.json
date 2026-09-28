@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-321",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "空灵粉彩超现实天穹",
+  "name": "Ethereal Pastel Surrealism — Celestial Geometry",
+  "prompt": "ethereal surrealism, pastel gradient sky, minimalist dreamscape, glowing celestial body, soft-focus atmosphere, twilight lighting, serene solitude, geometric minimalism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩超现实天穹__Ethereal Pastel Surrealism — Celestial Geometry/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩超现实天穹__Ethereal Pastel Surrealism — Celestial Geometry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

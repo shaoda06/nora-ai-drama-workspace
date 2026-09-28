@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-938",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "肌理极简叙事",
+  "name": "Textured Minimalist Narrative",
+  "prompt": "minimalist illustration, hand-painted gouache texture, bold graphic ink outlines, grainy paper overlay, flat stylized shapes, serene nostalgic atmosphere, muted vintage color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理极简叙事__Textured Minimalist Narrative/preview.webp",
+  "folder": "Krea2_moodboard/肌理极简叙事__Textured Minimalist Narrative",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1166",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵印象派运动",
+  "name": "Ethereal Impressionist Motion",
+  "prompt": "intentional camera movement, heavy film grain, dreamy impressionism, soft focus haze, painterly motion blur, dappled light, muted earthy palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵印象派运动__Ethereal Impressionist Motion/preview.webp",
+  "folder": "Krea2_moodboard/空灵印象派运动__Ethereal Impressionist Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

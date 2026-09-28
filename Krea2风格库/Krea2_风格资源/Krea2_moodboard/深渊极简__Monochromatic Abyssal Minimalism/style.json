@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2459",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "深渊极简",
+  "name": "Monochromatic Abyssal Minimalism",
+  "prompt": "monochromatic cyan palette, atmospheric minimalism, surreal liminal space, soft diffused lighting, symmetrical mirror reflection, stark silhouette, vast desolate scale. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/深渊极简__Monochromatic Abyssal Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/深渊极简__Monochromatic Abyssal Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

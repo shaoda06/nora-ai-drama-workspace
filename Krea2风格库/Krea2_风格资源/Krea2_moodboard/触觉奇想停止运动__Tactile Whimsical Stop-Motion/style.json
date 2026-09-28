@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1794",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "触觉奇想停止运动",
+  "name": "Tactile Whimsical Stop-Motion",
+  "prompt": "tactile stop-motion style, felt and claymation textures, vibrant primary color palette, miniature diorama composition, shallow depth of field, whimsical character design, soft studio lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉奇想停止运动__Tactile Whimsical Stop-Motion/preview.webp",
+  "folder": "Krea2_moodboard/触觉奇想停止运动__Tactile Whimsical Stop-Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

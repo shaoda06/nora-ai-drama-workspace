@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-174",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "光泽漫画数字艺术",
+  "name": "glossy Comic-digital art",
+  "prompt": "Style: glossy Comic-digital art: A vibrant, glossy comic-digital art style built on confident, clean design merged with extremely smooth airbrushed shading, luminous semi-realistic skin rendering with sharp specular highlights , a playful, curve-forward sensibility charged with confident vibes, a backdrop providing energetic contrast to the crisp central figure, and a polished, vibrant character-illustration intensity that feels contemporary, glossy, and effortlessly eye-catching. outlines are smoothed into invisibility,  Influenced by: contemporary digital illustration tradition, semi-realistic airbrush-rendering technique, centric compositional practice, glossy character-illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/光泽漫画数字艺术__glossy Comic-digital art/preview.jpg",
+  "folder": "krea2_styles/光泽漫画数字艺术__glossy Comic-digital art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

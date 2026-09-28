@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-9",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "大胆图形",
+  "name": "Bold Graphic Vectorism",
+  "prompt": "vector illustration, bold graphic outlines, high-contrast cel shading, minimalist composition, earthy and crimson palette, clean vector linework. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/大胆图形__Bold Graphic Vectorism/preview.webp",
+  "folder": "Krea2_moodboard/大胆图形__Bold Graphic Vectorism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

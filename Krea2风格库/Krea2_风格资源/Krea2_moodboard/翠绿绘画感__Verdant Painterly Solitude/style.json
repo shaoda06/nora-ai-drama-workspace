@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1294",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "翠绿绘画感",
+  "name": "Verdant Painterly Solitude",
+  "prompt": "painterly digital illustration, lush verdant meadow, high-angle landscape, thick impasto textures, solitary figure in nature, dreamlike atmosphere, expressive swirling brushstrokes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/翠绿绘画感__Verdant Painterly Solitude/preview.webp",
+  "folder": "Krea2_moodboard/翠绿绘画感__Verdant Painterly Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

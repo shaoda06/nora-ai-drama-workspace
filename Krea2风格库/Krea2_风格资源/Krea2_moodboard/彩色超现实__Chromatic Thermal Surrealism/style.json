@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3144",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "彩色超现实",
+  "name": "Chromatic Thermal Surrealism",
+  "prompt": "thermal imaging palette, saturated chromatic gradient, soft ambient occlusion, organic surrealist forms, diffused light glow, minimalist paper texture, sculptural bas-relief. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色超现实__Chromatic Thermal Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/彩色超现实__Chromatic Thermal Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2845",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "电影感绯红",
+  "name": "Cinematic Crimson Nocturne — Ember Halo",
+  "prompt": "monochromatic crimson and amber palette, heavy analog film grain, high-contrast silhouette, long exposure motion blur, cinematic light halation, atmospheric haze, surreal chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红__Cinematic Crimson Nocturne — Ember Halo/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红__Cinematic Crimson Nocturne — Ember Halo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

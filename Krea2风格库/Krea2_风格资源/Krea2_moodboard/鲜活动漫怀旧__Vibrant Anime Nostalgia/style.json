@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-128",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "鲜活动漫怀旧",
+  "name": "Vibrant Anime Nostalgia",
+  "prompt": "anime art style, vibrant blue sky, towering cumulus clouds, sun-drenched lighting, painterly aesthetic, nostalgic atmosphere, saturated color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活动漫怀旧__Vibrant Anime Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/鲜活动漫怀旧__Vibrant Anime Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

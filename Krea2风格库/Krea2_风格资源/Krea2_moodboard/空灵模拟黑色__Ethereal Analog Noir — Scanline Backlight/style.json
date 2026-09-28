@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2932",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵模拟黑色",
+  "name": "Ethereal Analog Noir — Scanline Backlight",
+  "prompt": "high-contrast monochrome, heavy film grain, soft-focus blur, analog noise texture, backlit silhouettes, atmospheric noir, CRT scanlines. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵模拟黑色__Ethereal Analog Noir — Scanline Backlight/preview.webp",
+  "folder": "Krea2_moodboard/空灵模拟黑色__Ethereal Analog Noir — Scanline Backlight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

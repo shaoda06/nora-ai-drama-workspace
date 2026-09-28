@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3432",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵",
+  "name": "Ethereal Shin-Hanga Revival",
+  "prompt": "Shin-hanga style, Japanese woodblock print, Hasui Kawase inspired, textured washi paper, clean black outlines, atmospheric color gradients, traditional architecture, vintage Showa era aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Shin-Hanga Revival/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Shin-Hanga Revival",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

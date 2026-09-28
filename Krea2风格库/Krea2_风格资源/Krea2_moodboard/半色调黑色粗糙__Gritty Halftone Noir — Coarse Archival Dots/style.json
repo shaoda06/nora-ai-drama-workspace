@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-411",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "半色调黑色粗糙",
+  "name": "Gritty Halftone Noir — Coarse Archival Dots",
+  "prompt": "coarse halftone pattern, stark high contrast, gritty photocopy texture, vintage zine aesthetic, chiaroscuro lighting, distressed film grain, graphic black and white. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/半色调黑色粗糙__Gritty Halftone Noir — Coarse Archival Dots/preview.webp",
+  "folder": "Krea2_moodboard/半色调黑色粗糙__Gritty Halftone Noir — Coarse Archival Dots",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-324",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "图形几何极简奇想主要",
+  "name": "Graphic Geometric Minimalism — Whimsical Primary Blocking",
+  "prompt": "geometric minimalism, bold primary color blocking, clean studio lighting, flat graphic composition, whimsical surrealism, hard-edge shapes, minimalist portraiture, high-contrast aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形几何极简奇想主要__Graphic Geometric Minimalism — Whimsical Primary Blocking/preview.webp",
+  "folder": "Krea2_moodboard/图形几何极简奇想主要__Graphic Geometric Minimalism — Whimsical Primary Blocking",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

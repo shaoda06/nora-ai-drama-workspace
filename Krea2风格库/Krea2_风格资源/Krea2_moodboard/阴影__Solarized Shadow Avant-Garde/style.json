@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1852",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "阴影",
+  "name": "Solarized Shadow Avant-Garde",
+  "prompt": "chiaroscuro portrait, solarized film negative, heavy film grain, velvety black silhouettes, glowing cyan accents, moody cinematic lighting, avant-garde editorial, high contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/阴影__Solarized Shadow Avant-Garde/preview.webp",
+  "folder": "Krea2_moodboard/阴影__Solarized Shadow Avant-Garde",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

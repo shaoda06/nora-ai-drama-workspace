@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-202",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "万智牌风格",
+  "name": "MTG (Magic: The Gathering) Style",
+  "prompt": "Style: MTG (Magic: The Gathering) Style: A richly painterly fantasy card-illustration style built on confident traditional-media brushwork rendered with meticulous narrative clarity, dramatic atmospheric lighting that establishes mood and magical energy within a single evocative frame, richly textured surface detail across textures, and environment rendered with tactile painterly weight, a wide range of stylistic voices unified by strong storytelling composition and evocative world-building intensity, and a polished, collectible-card-art gravitas built to spark imagination within a small frame. Influenced by: Rebecca Guay, Wizards of the Coast card-art tradition, painterly fantasy illustration technique, narrative concept-art composition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/万智牌风格__MTG (Magic_ The Gathering) Style/preview.jpg",
+  "folder": "krea2_styles/万智牌风格__MTG (Magic_ The Gathering) Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

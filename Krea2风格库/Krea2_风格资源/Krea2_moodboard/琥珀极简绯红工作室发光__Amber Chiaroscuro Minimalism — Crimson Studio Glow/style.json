@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2327",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "琥珀极简绯红工作室发光",
+  "name": "Amber Chiaroscuro Minimalism — Crimson Studio Glow",
+  "prompt": "minimalist silhouette portrait, dramatic amber backlighting, high-contrast chiaroscuro, saturated warm gradient, sculptural form, cinematic rim lighting, graphic studio composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀极简绯红工作室发光__Amber Chiaroscuro Minimalism — Crimson Studio Glow/preview.webp",
+  "folder": "Krea2_moodboard/琥珀极简绯红工作室发光__Amber Chiaroscuro Minimalism — Crimson Studio Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

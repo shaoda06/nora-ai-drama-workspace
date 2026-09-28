@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2890",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "光谱故障超现实噪点",
+  "name": "Spectral Glitch Surrealism — Bioluminescent Prism Noise",
+  "prompt": "chromatic aberration, spectral light dispersion, stark black void, bioluminescent textures, digital glitch artifacts, neon gradient halos, prismatic refraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱故障超现实噪点__Spectral Glitch Surrealism — Bioluminescent Prism Noise/preview.webp",
+  "folder": "Krea2_moodboard/光谱故障超现实噪点__Spectral Glitch Surrealism — Bioluminescent Prism Noise",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

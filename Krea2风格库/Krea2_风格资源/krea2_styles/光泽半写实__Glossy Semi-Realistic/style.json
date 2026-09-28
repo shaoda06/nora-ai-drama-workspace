@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-198",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "光泽半写实",
+  "name": "Glossy Semi-Realistic",
+  "prompt": "Style: Glossy Semi-Realistic: A striking digital-illustration style built on confident, clean digital-gradient-linework combined with extremely smooth airbrushed shading, very glassy specular highlights for immediate emotional focus, meticulous attention to soft luminous rendering contrasted against crisp, decisive contour, a hushed, moody intimacy carried through close, direct framing, and a polished, contemporary illustration intensity that feels both delicate and graphically sharp. Influenced by: Sakimichan,  Ilya Kuvshinov, WLOP, semi-realistic anime rendering technique, contemporary gacha-adjacent illustration practice.  ray-tracing-adjacent aesthetics,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/光泽半写实__Glossy Semi-Realistic/preview.jpg",
+  "folder": "krea2_styles/光泽半写实__Glossy Semi-Realistic",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

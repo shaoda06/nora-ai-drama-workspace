@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2939",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵动态单色光谱",
+  "name": "Ethereal Kinetic Monochrome — Spectral Paper White",
+  "prompt": "motion blur, high-contrast monochrome, spectral photography, long exposure, minimalist composition, ethereal silhouettes, film grain, shutter drag. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态单色光谱__Ethereal Kinetic Monochrome — Spectral Paper White/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态单色光谱__Ethereal Kinetic Monochrome — Spectral Paper White",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

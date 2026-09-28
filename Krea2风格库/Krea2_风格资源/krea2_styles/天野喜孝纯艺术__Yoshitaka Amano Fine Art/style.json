@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-95",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "天野喜孝纯艺术",
+  "name": "Yoshitaka Amano Fine Art",
+  "prompt": "Style: Yoshitaka Amano Fine Art: ethereal fine art aesthetics characterized by calligraphic linework, graceful visual ambiguity, flowing ornamental forms, delicate painterly textures, and a dreamlike fusion of elegance and abstraction. The style favors suggestion over definition, using elongated proportions, layered decorative motifs, atmospheric negative space, and fluid visual rhythms to create imagery that feels poetic, otherworldly, and timeless. Rather than pursuing realism, it embraces expressive symbolism, visual fragility, and emotional resonance through sophisticated composition and refined artistic intuition. The result evokes the feeling of an illuminated myth, balancing luxury, mystery, and imagination with an unmistakably lyrical sensibility, reminiscent of Yoshitaka Amano and Erté, inspired by Vampire Hunter D and Final Fantasy VI concept artwork.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/天野喜孝纯艺术__Yoshitaka Amano Fine Art/preview.jpg",
+  "folder": "krea2_styles/天野喜孝纯艺术__Yoshitaka Amano Fine Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

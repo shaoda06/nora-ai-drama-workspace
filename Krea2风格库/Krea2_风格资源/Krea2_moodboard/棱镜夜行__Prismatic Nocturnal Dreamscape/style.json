@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1459",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "棱镜夜行",
+  "name": "Prismatic Nocturnal Dreamscape",
+  "prompt": "cinematic double exposure, prismatic light leaks, heavy film grain, soft-focus bokeh, ethereal glitter textures, analogue lofi aesthetic, atmospheric refraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜夜行__Prismatic Nocturnal Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/棱镜夜行__Prismatic Nocturnal Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

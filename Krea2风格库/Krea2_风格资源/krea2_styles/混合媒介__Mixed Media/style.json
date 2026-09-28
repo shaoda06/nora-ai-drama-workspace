@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-12",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "混合媒介",
+  "name": "Mixed Media",
+  "prompt": "Style: Mixed Media: A layered, tactile illustration style built on the deliberate collision of disparate techniques — loose ink linework, painterly washes, and collaged textural fragments — coexisting within a single composition, unpredictable textural bleed and torn-edge layering that keeps the whole feeling handmade and accumulated rather than uniform, confident compositional looseness that embraces visible process over polished finish, a rich tactile depth built through overlapping transparency and material contrast, and an expressive, collage-driven intensity that feels spontaneous, layered, and richly textured. Influenced by: mixed-media collage art, Carne Griffiths, ink-and-collage illustration technique, contemporary fine-art assemblage.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/混合媒介__Mixed Media/preview.jpg",
+  "folder": "krea2_styles/混合媒介__Mixed Media",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

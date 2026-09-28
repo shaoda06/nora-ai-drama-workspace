@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1276",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "暮光奇想",
+  "name": "Cozy Twilight Whimsy",
+  "prompt": "stylized digital illustration, twilight color palette, warm glowing light, whimsical storybook art, cozy night atmosphere, soft textured shading, magical fantasy landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/暮光奇想__Cozy Twilight Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/暮光奇想__Cozy Twilight Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

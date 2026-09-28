@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1309",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "肌理戏剧写实",
+  "name": "Textured Dramatic Realism",
+  "prompt": "painterly digital brushstrokes, chiaroscuro lighting, expressive sketchy line art, high-contrast shadows, textured impasto style, dramatic concept art, earthy muted palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理戏剧写实__Textured Dramatic Realism/preview.webp",
+  "folder": "Krea2_moodboard/肌理戏剧写实__Textured Dramatic Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

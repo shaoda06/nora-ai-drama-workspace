@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-6",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "大胆写实",
+  "name": "Bold Cel-Shaded Realism",
+  "prompt": "bold ink outlines, sharp cel shading, muscular anatomy, high contrast shadows, graphic novel style, isolated on white background, vector art aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/大胆写实__Bold Cel-Shaded Realism/preview.webp",
+  "folder": "Krea2_moodboard/大胆写实__Bold Cel-Shaded Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

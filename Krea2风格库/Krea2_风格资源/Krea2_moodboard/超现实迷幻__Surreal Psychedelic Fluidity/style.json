@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-185",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "超现实迷幻",
+  "name": "Surreal Psychedelic Fluidity",
+  "prompt": "psychedelic surrealism, biomorphic forms, vibrant saturated palette, fluid liquid distortion, retro cartoon influence, textured paper aesthetic, airbrushed gradients, whimsical organic lines. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实迷幻__Surreal Psychedelic Fluidity/preview.webp",
+  "folder": "Krea2_moodboard/超现实迷幻__Surreal Psychedelic Fluidity",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

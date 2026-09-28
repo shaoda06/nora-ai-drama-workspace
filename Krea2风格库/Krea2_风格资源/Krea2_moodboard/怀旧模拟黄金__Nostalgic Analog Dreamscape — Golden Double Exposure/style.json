@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1461",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "怀旧模拟黄金",
+  "name": "Nostalgic Analog Dreamscape — Golden Double Exposure",
+  "prompt": "analog film grain, golden hour glow, dreamy soft focus, vintage light leaks, nostalgic double exposure, warm amber palette, cinematic hazy atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧模拟黄金__Nostalgic Analog Dreamscape — Golden Double Exposure/preview.webp",
+  "folder": "Krea2_moodboard/怀旧模拟黄金__Nostalgic Analog Dreamscape — Golden Double Exposure",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

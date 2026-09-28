@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-319",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "景泰蓝风格",
+  "name": "Cloisonnism",
+  "prompt": "Style: Cloisonnism: A boldly graphic painting style built on flat, confidently bounded color fields separated by thick, dark contour lines functioning like the metal partitions of enamelwork, a deliberate flattening of form that rejects naturalistic shading in favor of pure shape-and-outline construction, simplified, decorative silhouette taking precedence over anatomical nuance, a rhythmic, almost stained-glass compositional clarity carried through confident linear division, and a bold, symbolic graphic intensity rooted in late-19th-century painterly rebellion against academic realism. Influenced by: Émile Bernard, Paul Gauguin, cloisonnist painting tradition, enamel-partition decorative technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/景泰蓝风格__Cloisonnism/preview.jpg",
+  "folder": "krea2_styles/景泰蓝风格__Cloisonnism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

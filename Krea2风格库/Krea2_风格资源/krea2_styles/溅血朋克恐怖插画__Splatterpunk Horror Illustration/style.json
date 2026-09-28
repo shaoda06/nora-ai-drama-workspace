@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-183",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "溅血朋克恐怖插画",
+  "name": "Splatterpunk Horror Illustration",
+  "prompt": "Style: Splatterpunk Horror Illustration: A visceral, unflinching horror-illustration style built on dense, chaotic mark-making that mirrors uncontrolled violence and bodily rupture, harsh, high-contrast rendering that swallows the composition in engulfing darkness broken by sudden, brutal illumination, deliberately crude, raw texture that rejects polish in favor of primal shock, aggressive, fragmented composition charged with confrontational intensity, and a relentless, extreme atmosphere built to overwhelm rather than merely unsettle. Influenced by: splatterpunk horror-fiction illustration tradition, extreme body-horror illustration practice, underground horror-zine technique, visceral pulp-horror rendering method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/溅血朋克恐怖插画__Splatterpunk Horror Illustration/preview.jpg",
+  "folder": "krea2_styles/溅血朋克恐怖插画__Splatterpunk Horror Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1801",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "翠绿",
+  "name": "Lush Verdant Solitude",
+  "prompt": "lush verdant foliage, soft diffused natural light, organic earth tones, serene wilderness atmosphere, shallow depth of field, sun-dappled textures, surreal nature landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/翠绿__Lush Verdant Solitude/preview.webp",
+  "folder": "Krea2_moodboard/翠绿__Lush Verdant Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

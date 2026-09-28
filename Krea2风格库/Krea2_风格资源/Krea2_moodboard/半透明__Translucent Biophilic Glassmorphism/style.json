@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-244",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "半透明",
+  "name": "Translucent Biophilic Glassmorphism",
+  "prompt": "translucent glass vessels, botanical terrarium, soft pastel gradients, 3D digital render, biophilic surrealism, refraction and gloss, minimalist studio lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/半透明__Translucent Biophilic Glassmorphism/preview.webp",
+  "folder": "Krea2_moodboard/半透明__Translucent Biophilic Glassmorphism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

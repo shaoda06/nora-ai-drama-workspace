@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-256",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "松散交叉影线人物速写",
+  "name": "Loose Crosshatched Character Sketch",
+  "prompt": "Style: Loose Crosshatched Character Sketch: A lively, unfinished-feeling character-illustration style built on confident, visibly searching linework left intentionally raw rather than cleaned up, dense parallel crosshatching used sparingly to suggest volume and shadow without committing to full rendering, expressive, exaggerated facial modeling that prioritizes emotional intensity over anatomical polish, a loose, energetic looseness at the edges that keeps the whole piece feeling immediate and process-driven, and a spirited, illustrative rawness that reads as equal parts concept sketch and finished character study. Influenced by: contemporary character-design sketch practice, marker-and-pencil illustration technique, expressive digital-sketch rendering method, gesture-driven character-study tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/松散交叉影线人物速写__Loose Crosshatched Character Sketch/preview.jpg",
+  "folder": "krea2_styles/松散交叉影线人物速写__Loose Crosshatched Character Sketch",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

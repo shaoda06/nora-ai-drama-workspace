@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-604",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "明亮暮光超现实温馨",
+  "name": "Luminous Twilight Surrealism — Foggy Warm Ember",
+  "prompt": "nocturnal surrealism, chiaroscuro lighting, deep indigo twilight, warm glowing accent, cinematic atmospheric fog, solitary figure, minimalist composition, painterly film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮暮光超现实温馨__Luminous Twilight Surrealism — Foggy Warm Ember/preview.webp",
+  "folder": "Krea2_moodboard/明亮暮光超现实温馨__Luminous Twilight Surrealism — Foggy Warm Ember",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

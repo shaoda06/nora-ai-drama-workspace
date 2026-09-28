@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1616",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "Biophilic Solarpunk ",
+  "name": "Biophilic Solarpunk Horizon",
+  "prompt": "solarpunk, biophilic architecture, aerial perspective, organic curves, misty tropical landscape, vertical forests, eco-futurism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Biophilic Solarpunk __Biophilic Solarpunk Horizon/preview.webp",
+  "folder": "Krea2_moodboard/Biophilic Solarpunk __Biophilic Solarpunk Horizon",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

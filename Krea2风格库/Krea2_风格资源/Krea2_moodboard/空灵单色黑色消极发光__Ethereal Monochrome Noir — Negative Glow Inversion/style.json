@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3394",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵单色黑色消极发光",
+  "name": "Ethereal Monochrome Noir — Negative Glow Inversion",
+  "prompt": "high-contrast monochrome, analog film grain, glowing silhouette, chiaroscuro, negative film effect, spectral halation, liminal atmosphere, vintage noir texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色黑色消极发光__Ethereal Monochrome Noir — Negative Glow Inversion/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色黑色消极发光__Ethereal Monochrome Noir — Negative Glow Inversion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

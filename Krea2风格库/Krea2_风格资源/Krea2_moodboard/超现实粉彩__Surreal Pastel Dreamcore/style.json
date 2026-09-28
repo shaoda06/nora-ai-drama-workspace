@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-261",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "超现实粉彩",
+  "name": "Surreal Pastel Dreamcore",
+  "prompt": "whimsical 3D digital art, saturated pastel gradients, soft bloom lighting, fluffy cloud motifs, surreal claymation aesthetic, cute pop-art influence, tactile fuzzy textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实粉彩__Surreal Pastel Dreamcore/preview.webp",
+  "folder": "Krea2_moodboard/超现实粉彩__Surreal Pastel Dreamcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-370",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "自拍照片",
+  "name": "Selfie Photo",
+  "prompt": "Style: Selfie Photo: A casual, close-range photographic style built on a slightly distorted, wide-angle-adjacent perspective inherent to arm's-length framing, soft, often front-facing diffused illumination that flattens shadow across the face, an intimate, immediate closeness that favors candid spontaneity over composed distance, a natural, unpolished exposure balance shaped by ambient or handheld conditions rather than deliberate setup, and a familiar, personal authenticity that feels casual, present, and unmistakably first-person. Influenced by: contemporary smartphone-photography convention, front-camera portrait technique, candid self-portraiture practice, casual social-media photographic method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/自拍照片__Selfie Photo/preview.jpg",
+  "folder": "krea2_styles/自拍照片__Selfie Photo",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

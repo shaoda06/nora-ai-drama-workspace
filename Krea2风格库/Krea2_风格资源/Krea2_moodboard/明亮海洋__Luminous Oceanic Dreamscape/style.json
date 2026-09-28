@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-949",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮海洋",
+  "name": "Luminous Oceanic Dreamscape",
+  "prompt": "bioluminescent water, deep cobalt and indigo palette, ethereal dreamscape, painterly digital brushstrokes, high-contrast light blooms, submerged fantasy, serene melancholic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮海洋__Luminous Oceanic Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/明亮海洋__Luminous Oceanic Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

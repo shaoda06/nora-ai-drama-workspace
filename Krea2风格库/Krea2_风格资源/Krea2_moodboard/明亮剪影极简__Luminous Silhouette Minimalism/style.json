@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2165",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "明亮剪影极简",
+  "name": "Luminous Silhouette Minimalism",
+  "prompt": "backlit silhouette, cool blue chiaroscuro, minimalist studio portrait, high-contrast lighting, sharp profile, biomorphic metallic accents, low-key editorial photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮剪影极简__Luminous Silhouette Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/明亮剪影极简__Luminous Silhouette Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

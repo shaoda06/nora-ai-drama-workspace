@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-326",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "安迪·沃霍尔风格",
+  "name": "Andy Warhol Style",
+  "prompt": "Style: Andy Warhol Style: A bold, flat pop-art illustration style built on high-contrast silkscreen-adjacent color-block construction, a mechanical, offset-print flatness, and a bold, ironic, instantly recognizable icon intensity rooted in mid-century pop-art tradition. Influenced by: Andy Warhol, silkscreen-printing technique, pop-art movement tradition, mass-media art,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/安迪·沃霍尔风格__Andy Warhol Style/preview.jpg",
+  "folder": "krea2_styles/安迪·沃霍尔风格__Andy Warhol Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

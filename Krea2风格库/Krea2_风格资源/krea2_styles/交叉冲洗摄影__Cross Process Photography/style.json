@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-343",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "交叉冲洗摄影",
+  "name": "Cross Process Photography",
+  "prompt": "Style: Cross Process Photography: experimental photographic aesthetics characterized by unconventional tonal relationships, heightened contrast, distinctive film-derived color shifts, graphic visual impact, and an unpredictable analog character, blending technical imperfection with artistic intent through expressive processing artifacts, atmospheric depth, and a bold editorial sensibility, reminiscent of Nick Knight and Sølve Sundsbø, inspired by Dazed & Confused editorials and i-D Magazine photography.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/交叉冲洗摄影__Cross Process Photography/preview.jpg",
+  "folder": "krea2_styles/交叉冲洗摄影__Cross Process Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

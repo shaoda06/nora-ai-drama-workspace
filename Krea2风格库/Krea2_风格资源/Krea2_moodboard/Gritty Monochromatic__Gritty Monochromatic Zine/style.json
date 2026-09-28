@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-430",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "Gritty Monochromatic",
+  "name": "Gritty Monochromatic Zine",
+  "prompt": "high-contrast monochrome, halftone dithered texture, gritty xerox aesthetic, punk zine art, stark black-and-white, 1-bit graphic style, distressed screenprint. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Gritty Monochromatic__Gritty Monochromatic Zine/preview.webp",
+  "folder": "Krea2_moodboard/Gritty Monochromatic__Gritty Monochromatic Zine",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

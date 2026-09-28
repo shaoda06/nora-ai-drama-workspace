@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-293",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "伦勃朗绘画",
+  "name": "Rembrandt Painting",
+  "prompt": "Style: Rembrandt Painting: A masterfully controlled classical painting style built on single-source directional light carving a small, dignified highlight against an otherwise deeply shadowed composition, rich, warm chiaroscuro tonal harmony bathing every plane in umber and near-black depth, thick, confident impasto brushwork in the illuminated passages contrasted against thinly glazed shadow, a quiet, contemplative gravitas carried through restrained, dignified composition, and an old-master intensity rooted in centuries of masterful oil-painting tradition. Influenced by: Rembrandt van Rijn, Dutch Golden Age painting tradition, chiaroscuro oil-painting technique, classical impasto-and-glazing method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/伦勃朗绘画__Rembrandt Painting/preview.jpg",
+  "folder": "krea2_styles/伦勃朗绘画__Rembrandt Painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

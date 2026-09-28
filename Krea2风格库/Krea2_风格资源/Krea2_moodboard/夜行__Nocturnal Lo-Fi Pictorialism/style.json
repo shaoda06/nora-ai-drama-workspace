@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1642",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "夜行",
+  "name": "Nocturnal Lo-Fi Pictorialism",
+  "prompt": "heavy film grain, soft focus blur, distressed texture, atmospheric noir, pictorialism, low-fidelity nostalgia, liminal space, dreamlike chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行__Nocturnal Lo-Fi Pictorialism/preview.webp",
+  "folder": "Krea2_moodboard/夜行__Nocturnal Lo-Fi Pictorialism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

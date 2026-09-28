@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-195",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "霓虹波普复古",
+  "name": "Gritty Neon Pop-Retro",
+  "prompt": "retro-futuristic comic illustration, bold black ink outlines, halftone dot texture, saturated pop art palette, distressed screenprint effect, cyberpunk aesthetic, high-contrast duotone. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹波普复古__Gritty Neon Pop-Retro/preview.webp",
+  "folder": "Krea2_moodboard/霓虹波普复古__Gritty Neon Pop-Retro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-53",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "C.F.A.沃伊西插画",
+  "name": "C.F.A. Voysey illustration",
+  "prompt": "Style: C.F.A. Voysey illustration: An elegant decorative illustration built on flowing, stylized organic patterning arranged with disciplined, rhythmic repetition, flat, confidently bounded shape divisions replacing naturalistic shading entirely, meticulous linear precision tracing every motif with restrained, handcrafted care, a calm, orderly compositional harmony favoring balance over ornamental excess, and a quietly refined, timeless craft sincerity rooted in early-20th-century decorative-design reform. Influenced by: C.F.A. Voysey, Arts and Crafts movement tradition, William Morris decorative-pattern technique, English textile-and-wallpaper-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/C.F.A.沃伊西插画__C.F.A. Voysey illustration/preview.jpg",
+  "folder": "krea2_styles/C.F.A.沃伊西插画__C.F.A. Voysey illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

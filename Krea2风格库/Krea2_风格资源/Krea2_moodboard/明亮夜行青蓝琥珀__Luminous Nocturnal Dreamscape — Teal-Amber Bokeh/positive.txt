@@ -1,0 +1,1 @@
+cinematic lighting, shallow depth of field, teal and amber palette, ethereal bokeh, dramatic rim light, atmospheric particulates, soft focus, high contrast chiaroscuro. Subject:{prompt}

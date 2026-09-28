@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-412",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "半色调黑色",
+  "name": "Gritty Halftone Noir — Punk Zine Stipple",
+  "prompt": "halftone pattern, high-contrast noir, stipple shading, vintage print texture, risograph aesthetic, graphic monochrome, distressed paper grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/半色调黑色__Gritty Halftone Noir — Punk Zine Stipple/preview.webp",
+  "folder": "Krea2_moodboard/半色调黑色__Gritty Halftone Noir — Punk Zine Stipple",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

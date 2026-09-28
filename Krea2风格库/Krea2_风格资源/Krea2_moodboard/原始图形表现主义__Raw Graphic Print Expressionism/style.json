@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1002",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "原始图形表现主义",
+  "name": "Raw Graphic Print Expressionism",
+  "prompt": "linocut print style, bold primary colors, textured paper background, neo-expressionist brushstrokes, high-contrast graphic art, hand-drawn ink texture, mid-century modern print. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始图形表现主义__Raw Graphic Print Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/原始图形表现主义__Raw Graphic Print Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

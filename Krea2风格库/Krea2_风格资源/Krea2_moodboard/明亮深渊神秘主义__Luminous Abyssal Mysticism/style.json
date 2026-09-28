@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-988",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮深渊神秘主义",
+  "name": "Luminous Abyssal Mysticism",
+  "prompt": "bioluminescent glow, impasto brushwork, nocturnal dreamscape, jewel-toned palette, pointillist texture, magical realism, ethereal chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮深渊神秘主义__Luminous Abyssal Mysticism/preview.webp",
+  "folder": "Krea2_moodboard/明亮深渊神秘主义__Luminous Abyssal Mysticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

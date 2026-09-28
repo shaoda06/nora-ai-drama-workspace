@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1005",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "触觉",
+  "name": "Tactile Gloss Distortion",
+  "prompt": "extreme close-up portrait, glossy wet skin texture, high-contrast studio lighting, distorted barrier effect, vibrant pigment accents, macro beauty photography, tactile impasto finish. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉__Tactile Gloss Distortion/preview.webp",
+  "folder": "Krea2_moodboard/触觉__Tactile Gloss Distortion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

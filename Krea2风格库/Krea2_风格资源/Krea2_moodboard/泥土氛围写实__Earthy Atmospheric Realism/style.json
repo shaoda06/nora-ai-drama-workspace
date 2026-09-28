@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-277",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "泥土氛围写实",
+  "name": "Earthy Atmospheric Realism",
+  "prompt": "earthy color palette, soft diffused lighting, high-angle perspective, tactile organic textures, cinematic realism, moody atmospheric composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/泥土氛围写实__Earthy Atmospheric Realism/preview.webp",
+  "folder": "Krea2_moodboard/泥土氛围写实__Earthy Atmospheric Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

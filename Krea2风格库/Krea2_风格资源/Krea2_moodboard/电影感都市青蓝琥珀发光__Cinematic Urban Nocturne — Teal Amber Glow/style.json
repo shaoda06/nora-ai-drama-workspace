@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1372",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感都市青蓝琥珀发光",
+  "name": "Cinematic Urban Nocturne — Teal Amber Glow",
+  "prompt": "cinematic night photography, atmospheric urban solitude, teal and amber color grading, soft bokeh, low-key lighting, shallow depth of field, neo-noir mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市青蓝琥珀发光__Cinematic Urban Nocturne — Teal Amber Glow/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市青蓝琥珀发光__Cinematic Urban Nocturne — Teal Amber Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

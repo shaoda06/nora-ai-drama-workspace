@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-215",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "装饰图案超写实肖像",
+  "name": "Ornamental Patterns Hyperrealism Portrait",
+  "prompt": "Style: Ornamental Patterns Hyperrealism Portrait: A meticulously rendered portrait-illustration style built on dense, intricately repeating decorative motifs woven directly into the rendering of the figure itself, each interlocking element executed with obsessive photographic precision and convincing dimensional depth, dramatic raking light that catches every raised contour and recessed groove against otherwise softly modeled skin, a hushed, exacting patience carried through the sheer density of repeated detail contrasted with quiet portrait stillness, and a technically virtuosic intensity that treats ornamental complexity and human presence as equally devotional subjects. Influenced by: hyperrealist digital-painting technique, decorative-arts portrait-illustration tradition, meticulous pattern-rendering practice, ornamental craft-illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/装饰图案超写实肖像__Ornamental Patterns Hyperrealism Portrait/preview.jpg",
+  "folder": "krea2_styles/装饰图案超写实肖像__Ornamental Patterns Hyperrealism Portrait",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

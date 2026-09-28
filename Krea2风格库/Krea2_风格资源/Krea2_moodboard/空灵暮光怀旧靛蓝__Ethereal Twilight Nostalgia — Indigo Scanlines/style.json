@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1486",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵暮光怀旧靛蓝",
+  "name": "Ethereal Twilight Nostalgia — Indigo Scanlines",
+  "prompt": "analog film grain, twilight blue hour, dreamy soft focus, cinematic silhouette, nostalgic haze, surreal melancholia, vintage retro aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵暮光怀旧靛蓝__Ethereal Twilight Nostalgia — Indigo Scanlines/preview.webp",
+  "folder": "Krea2_moodboard/空灵暮光怀旧靛蓝__Ethereal Twilight Nostalgia — Indigo Scanlines",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

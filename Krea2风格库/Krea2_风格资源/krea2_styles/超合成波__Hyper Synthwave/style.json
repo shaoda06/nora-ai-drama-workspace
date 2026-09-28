@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-369",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "超合成波",
+  "name": "Hyper Synthwave",
+  "prompt": "Style: Hyper Synthwave: A vividly nostalgic digital-aesthetic style built on intense neon glow radiating in sharp, saturated bands, a retro-futuristic grid-logic sense of depth, dramatic backlit silhouette contrast separating form from an electric, pulsing ambiance, dense atmospheric haze scattering luminous color throughout the composition, and a hypnotic, electric nostalgia suspended between 1980s retro-futurism and glowing digital fantasy. Influenced by: synthwave digital-art movement, 1980s retro-futurist visual tradition, neon-grid aesthetic technique, glow-bloom digital-rendering practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/超合成波__Hyper Synthwave/preview.jpg",
+  "folder": "krea2_styles/超合成波__Hyper Synthwave",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,1 @@
+chiaroscuro, low-key portraiture, teal and gold palette, dramatic contrast, cinematic grain, rim lighting, mysterious mood. Subject:{prompt}

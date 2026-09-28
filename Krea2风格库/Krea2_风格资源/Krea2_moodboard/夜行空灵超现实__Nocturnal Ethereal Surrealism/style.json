@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-265",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "夜行空灵超现实",
+  "name": "Nocturnal Ethereal Surrealism",
+  "prompt": "surrealist dreamscape, monochromatic blue palette, translucent fabric drapery, bioluminescent internal glow, ethereal subsurface scattering, cinematic nocturnal atmosphere, synthetic glossy textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行空灵超现实__Nocturnal Ethereal Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/夜行空灵超现实__Nocturnal Ethereal Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

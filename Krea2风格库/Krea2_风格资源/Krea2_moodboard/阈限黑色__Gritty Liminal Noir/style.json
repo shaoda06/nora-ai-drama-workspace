@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1660",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "阈限黑色",
+  "name": "Gritty Liminal Noir",
+  "prompt": "high-contrast monochrome, heavy film grain, stippled texture, liminal space, atmospheric noir, blurred silhouette, low-fidelity aesthetic, chiaroscuro lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/阈限黑色__Gritty Liminal Noir/preview.webp",
+  "folder": "Krea2_moodboard/阈限黑色__Gritty Liminal Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

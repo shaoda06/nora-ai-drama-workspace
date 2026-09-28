@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2947",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵黑色幽灵",
+  "name": "Ethereal Noir Pictorialism — Haloed Ghost Wash",
+  "prompt": "monochromatic, chiaroscuro, ethereal motion blur, soft-focus pictorialism, heavy film grain, dreamlike silhouette, high-contrast noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色幽灵__Ethereal Noir Pictorialism — Haloed Ghost Wash/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色幽灵__Ethereal Noir Pictorialism — Haloed Ghost Wash",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

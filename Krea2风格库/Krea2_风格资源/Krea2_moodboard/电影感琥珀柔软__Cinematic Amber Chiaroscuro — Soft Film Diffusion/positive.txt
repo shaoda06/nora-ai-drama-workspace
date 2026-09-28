@@ -1,0 +1,1 @@
+cinematic chiaroscuro, warm amber glow, volumetric lighting, shallow depth of field, gritty atmosphere, dramatic shadows, tactile textures. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-296",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "暗色主义",
+  "name": "Tenebrism",
+  "prompt": "Style: Tenebrism: A dramatically shadowed painting style built on an extreme, exaggerated contrast between deep, engulfing darkness and a single sharp pool of illumination, form emerging abruptly from near-total shadow rather than through gradual tonal transition, meticulous, controlled brushwork concentrated entirely within the illuminated passages while shadow remains deliberately unresolved, a theatrical, almost violent immediacy carried through the stark light-dark confrontation, and a haunting, intensely focused gravitas rooted in the most extreme tradition of chiaroscuro painting. Influenced by: Caravaggio, tenebrist painting tradition, Baroque chiaroscuro technique, dramatic single-source oil-painting method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/暗色主义__Tenebrism/preview.jpg",
+  "folder": "krea2_styles/暗色主义__Tenebrism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

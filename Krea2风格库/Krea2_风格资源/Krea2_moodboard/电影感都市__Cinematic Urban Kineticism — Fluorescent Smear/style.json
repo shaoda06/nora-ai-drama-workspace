@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2312",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感都市",
+  "name": "Cinematic Urban Kineticism — Fluorescent Smear",
+  "prompt": "cinematic motion blur, urban street photography, long exposure, shutter drag, candid isolation, muted desaturated tones, high contrast composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市__Cinematic Urban Kineticism — Fluorescent Smear/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市__Cinematic Urban Kineticism — Fluorescent Smear",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

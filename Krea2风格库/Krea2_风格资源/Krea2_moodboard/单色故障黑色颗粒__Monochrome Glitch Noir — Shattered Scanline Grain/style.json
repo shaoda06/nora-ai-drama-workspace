@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2045",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "单色故障黑色颗粒",
+  "name": "Monochrome Glitch Noir — Shattered Scanline Grain",
+  "prompt": "high-contrast monochrome, analog glitch distortion, heavy film grain, stark chiaroscuro, photocopy texture, motion blur, vertical scanlines, lo-fi noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色故障黑色颗粒__Monochrome Glitch Noir — Shattered Scanline Grain/preview.webp",
+  "folder": "Krea2_moodboard/单色故障黑色颗粒__Monochrome Glitch Noir — Shattered Scanline Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

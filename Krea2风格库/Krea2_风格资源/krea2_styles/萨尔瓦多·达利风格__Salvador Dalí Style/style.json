@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-320",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "萨尔瓦多·达利风格",
+  "name": "Salvador Dalí Style",
+  "prompt": "Style: Salvador Dalí Style: A hallucinatory surrealist painting style built on meticulously photorealistic rendering applied to fundamentally impossible, dreamlike form, melting, elongated distortion warping otherwise precisely modeled elements into uncanny, elastic softness, vast, contemplative negative space stretching into an unsettling, hazy distance, obsessive academic precision paradoxically deployed in service of pure irrational imagery, and a meticulous, uncanny intensity that treats the collision between technical mastery and impossible subject matter as the entire compositional statement. Influenced by: Salvador Dalí, Surrealist painting tradition, classical academic-painting technique, dreamlike hyperrealist practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/萨尔瓦多·达利风格__Salvador Dalí Style/preview.jpg",
+  "folder": "krea2_styles/萨尔瓦多·达利风格__Salvador Dalí Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

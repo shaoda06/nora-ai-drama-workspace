@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-84",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "水彩动漫插画",
+  "name": "Watercolor Anime Illustration",
+  "prompt": "Style: Watercolor Anime Illustration: A soft, luminous illustration style built on delicate translucent washes blending seamlessly with clean anime-adjacent linework, gentle bleeding and diffusion at the edges lending each plane a tender, organic softness, restrained tonal layering achieved through patient, unhurried wash-building rather than opaque coverage, a hushed, dreamlike stillness carried through soft directional light, and a poetic, wistful character-illustration finish that feels equally hand-painted and anime-refined. Influenced by: traditional watercolor-and-wash technique, contemporary anime-illustration tradition, gentle wash-blending practice, semi-realistic character-art method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/水彩动漫插画__Watercolor Anime Illustration/preview.jpg",
+  "folder": "krea2_styles/水彩动漫插画__Watercolor Anime Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

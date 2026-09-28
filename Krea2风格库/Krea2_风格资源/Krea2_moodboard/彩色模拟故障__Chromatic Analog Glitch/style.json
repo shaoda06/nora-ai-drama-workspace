@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-344",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "彩色模拟故障",
+  "name": "Chromatic Analog Glitch",
+  "prompt": "risograph print texture, CMYK color separation, chromatic aberration, halftone dot pattern, analog film grain, digital glitch distortion, bold geometric silhouettes, misregistered color layers. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色模拟故障__Chromatic Analog Glitch/preview.webp",
+  "folder": "Krea2_moodboard/彩色模拟故障__Chromatic Analog Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

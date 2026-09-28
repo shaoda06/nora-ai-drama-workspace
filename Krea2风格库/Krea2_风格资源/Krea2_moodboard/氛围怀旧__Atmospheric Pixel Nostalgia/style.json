@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-873",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "氛围怀旧",
+  "name": "Atmospheric Pixel Nostalgia",
+  "prompt": "pixel art, atmospheric lighting, nostalgic mood, vibrant color palette, surreal landscape, retro digital art, painterly composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围怀旧__Atmospheric Pixel Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/氛围怀旧__Atmospheric Pixel Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

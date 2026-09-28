@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3312",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "实验超现实",
+  "name": "Experimental Darkroom Surrealism",
+  "prompt": "rayograph, solarized photogram, high-contrast monochromatic noir, translucent ghostly layers, skeletal radiography, avant-garde darkroom experimentalism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/实验超现实__Experimental Darkroom Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/实验超现实__Experimental Darkroom Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

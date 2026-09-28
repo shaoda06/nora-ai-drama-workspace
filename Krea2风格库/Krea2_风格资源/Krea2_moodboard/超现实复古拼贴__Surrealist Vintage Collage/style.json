@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1203",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "超现实复古拼贴",
+  "name": "Surrealist Vintage Collage",
+  "prompt": "vintage surrealist collage, botanical illustration, engraving texture, torn paper layers, monochrome portraiture, saturated color accents, aged parchment, dreamlike juxtaposition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实复古拼贴__Surrealist Vintage Collage/preview.webp",
+  "folder": "Krea2_moodboard/超现实复古拼贴__Surrealist Vintage Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

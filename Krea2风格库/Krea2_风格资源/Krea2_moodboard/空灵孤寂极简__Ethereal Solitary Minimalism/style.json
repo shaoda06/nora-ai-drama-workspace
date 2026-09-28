@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3073",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵孤寂极简",
+  "name": "Ethereal Solitary Minimalism",
+  "prompt": "minimalist silhouette, giant celestial body, grainy paper texture, muted earth tones, atmospheric scale, contemplative solitude, high-contrast composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵孤寂极简__Ethereal Solitary Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵孤寂极简__Ethereal Solitary Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

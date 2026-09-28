@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-360",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "数字怀旧超现实",
+  "name": "Digital Nostalgic Surrealism",
+  "prompt": "lo-fi digital aesthetic, typographic silhouette, halftone dither texture, surreal dreamlike atmosphere, vintage print grain, minimalist pixel art, soft focus etherealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字怀旧超现实__Digital Nostalgic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/数字怀旧超现实__Digital Nostalgic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

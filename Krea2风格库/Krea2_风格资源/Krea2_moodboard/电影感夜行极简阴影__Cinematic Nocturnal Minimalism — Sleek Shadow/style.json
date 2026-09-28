@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1333",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感夜行极简阴影",
+  "name": "Cinematic Nocturnal Minimalism — Sleek Shadow",
+  "prompt": "chiaroscuro, low-key lighting, cinematic noir, extreme close-up, monochromatic palette, high-contrast, clinical cool tones, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行极简阴影__Cinematic Nocturnal Minimalism — Sleek Shadow/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行极简阴影__Cinematic Nocturnal Minimalism — Sleek Shadow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

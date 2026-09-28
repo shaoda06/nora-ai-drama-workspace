@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2069",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "动态速度",
+  "name": "Dynamic Velocity Blur",
+  "prompt": "motion blur, panning photography, kinetic energy, dynamic diagonal lines, vibrant color streaks, high-speed action, directional momentum. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态速度__Dynamic Velocity Blur/preview.webp",
+  "folder": "Krea2_moodboard/动态速度__Dynamic Velocity Blur",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

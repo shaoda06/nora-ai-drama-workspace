@@ -1,0 +1,1 @@
+cinematic 35mm film grain, moody twilight lighting, shallow depth of field, soft diffused glow, introspective portrait, teal and amber color grading, muted earth tones, bokeh city lights. Subject:{prompt}

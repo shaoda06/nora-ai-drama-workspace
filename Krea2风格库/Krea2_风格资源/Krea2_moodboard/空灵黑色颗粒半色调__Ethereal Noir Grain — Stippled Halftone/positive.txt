@@ -1,0 +1,1 @@
+heavy film grain, high-contrast monochrome, ethereal motion blur, chiaroscuro lighting, ghostly silhouettes, stippled halftone texture, dark atmospheric noir. Subject:{prompt}

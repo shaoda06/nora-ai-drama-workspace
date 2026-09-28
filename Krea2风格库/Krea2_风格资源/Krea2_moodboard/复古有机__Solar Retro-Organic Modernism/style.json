@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2232",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "复古有机",
+  "name": "Solar Retro-Organic Modernism",
+  "prompt": "mid-century modern architecture, organic retro-futurism, golden hour lighting, circular portal windows, warm ochre palette, analog film grain, textured plaster surfaces, sunken conversation pits. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古有机__Solar Retro-Organic Modernism/preview.webp",
+  "folder": "Krea2_moodboard/复古有机__Solar Retro-Organic Modernism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-138",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "图形单色叙事",
+  "name": "Graphic Monochrome Narrative",
+  "prompt": "manga screentone, high-contrast ink illustration, detailed cross-hatching, dynamic perspective, monochrome graphic style, slice of life atmosphere, cyanotype blue palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形单色叙事__Graphic Monochrome Narrative/preview.webp",
+  "folder": "Krea2_moodboard/图形单色叙事__Graphic Monochrome Narrative",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-180",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "黑暗奇幻插画",
+  "name": "Dark Fantasy Illustration",
+  "prompt": "Style: Dark Fantasy Illustration: A brooding, atmospheric fantasy painting style built on deep tenebrist shadow that swallows the edges of every composition, a single dramatic source of light carving form out of near-total darkness, richly textured painterly surfaces giving textures a weathered, visceral weight, an oppressive, foreboding stillness charged with looming threat, and a heavy, mythic gravitas that feels both epic and quietly menacing. Influenced by: dark fantasy concept-art tradition, Zdzisław Beksiński, tenebrist oil painting technique, gothic fantasy illustration.,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/黑暗奇幻插画__Dark Fantasy Illustration/preview.jpg",
+  "folder": "krea2_styles/黑暗奇幻插画__Dark Fantasy Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

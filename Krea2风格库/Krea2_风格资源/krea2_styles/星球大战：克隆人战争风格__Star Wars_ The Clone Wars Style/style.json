@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-30",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "星球大战：克隆人战争风格",
+  "name": "Star Wars: The Clone Wars Style",
+  "prompt": "Style: Star Wars: The Clone Wars Style: A bold, angular animation-illustration style built on stylized, geometric character proportion with sharply defined, faceted silhouette construction, confident cel-shaded rendering with graphic, high-contrast shadow blocking rather than smooth gradation, dramatic cinematic lighting establishing epic, sweeping mood within stylized composition, meticulous attention to dynamic, action-driven posing balanced against clean graphic clarity, and a bold, blockbuster-grade stylized-animation intensity that feels both angular and cinematically grand. Influenced by: Dave Filoni, stylized 3D-animation technique, geometric character-design practice, cinematic sci-fi animation method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/星球大战：克隆人战争风格__Star Wars_ The Clone Wars Style/preview.jpg",
+  "folder": "krea2_styles/星球大战：克隆人战争风格__Star Wars_ The Clone Wars Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

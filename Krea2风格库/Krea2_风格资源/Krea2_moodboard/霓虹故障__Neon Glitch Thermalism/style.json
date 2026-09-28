@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-471",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "霓虹故障",
+  "name": "Neon Glitch Thermalism",
+  "prompt": "neon thermal imaging, acid glitch art, halftone dot texture, high contrast posterization, chromatic aberration, xerox punk aesthetic, CRT scanlines. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹故障__Neon Glitch Thermalism/preview.webp",
+  "folder": "Krea2_moodboard/霓虹故障__Neon Glitch Thermalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

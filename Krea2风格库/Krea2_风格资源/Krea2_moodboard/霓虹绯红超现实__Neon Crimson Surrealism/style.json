@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-468",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "霓虹绯红超现实",
+  "name": "Neon Crimson Surrealism",
+  "prompt": "high-contrast lighting, saturated crimson red, analog film grain, glossy texture, surreal pop art, retro risograph aesthetic, direct flash photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹绯红超现实__Neon Crimson Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/霓虹绯红超现实__Neon Crimson Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

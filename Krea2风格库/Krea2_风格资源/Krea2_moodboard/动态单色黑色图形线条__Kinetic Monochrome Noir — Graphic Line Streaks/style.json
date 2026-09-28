@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-819",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "动态单色黑色图形线条",
+  "name": "Kinetic Monochrome Noir — Graphic Line Streaks",
+  "prompt": "high contrast monochrome, motion blur portrait, dramatic chiaroscuro lighting, cinematic film grain, graphic line art fusion, long exposure streaks, psychological noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态单色黑色图形线条__Kinetic Monochrome Noir — Graphic Line Streaks/preview.webp",
+  "folder": "Krea2_moodboard/动态单色黑色图形线条__Kinetic Monochrome Noir — Graphic Line Streaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

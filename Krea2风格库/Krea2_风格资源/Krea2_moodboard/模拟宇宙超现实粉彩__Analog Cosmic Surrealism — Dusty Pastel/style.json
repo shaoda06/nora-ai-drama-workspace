@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-334",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "模拟宇宙超现实粉彩",
+  "name": "Analog Cosmic Surrealism — Dusty Pastel",
+  "prompt": "analog paper collage, halftone print texture, surrealist photomontage, mid-century ephemera, vintage 70s retrofuturism, torn paper edges, uncanny juxtaposition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟宇宙超现实粉彩__Analog Cosmic Surrealism — Dusty Pastel/preview.webp",
+  "folder": "Krea2_moodboard/模拟宇宙超现实粉彩__Analog Cosmic Surrealism — Dusty Pastel",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

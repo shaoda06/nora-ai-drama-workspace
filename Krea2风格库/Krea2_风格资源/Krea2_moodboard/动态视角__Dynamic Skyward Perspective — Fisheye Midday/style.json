@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1918",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "动态视角",
+  "name": "Dynamic Skyward Perspective — Fisheye Midday",
+  "prompt": "extreme low-angle perspective, fisheye lens distortion, vibrant blue sky background, sharp midday sunlight, 90s streetwear fashion, dynamic cinematic composition, tactile fabric textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态视角__Dynamic Skyward Perspective — Fisheye Midday/preview.webp",
+  "folder": "Krea2_moodboard/动态视角__Dynamic Skyward Perspective — Fisheye Midday",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

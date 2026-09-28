@@ -1,0 +1,1 @@
+low-key lighting, chiaroscuro, deep shadows, cinematic portrait, shallow depth of field, muted earth tones, filmic grain, intimate close-up. Subject:{prompt}

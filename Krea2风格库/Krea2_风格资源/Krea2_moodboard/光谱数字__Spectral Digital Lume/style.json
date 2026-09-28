@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1880",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "光谱数字",
+  "name": "Spectral Digital Lume",
+  "prompt": "bioluminescent point cloud, electric blue glow, analog CRT scanlines, fluted glass distortion, high-contrast black void, digital spectral silhouette, cybernetic lidar aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱数字__Spectral Digital Lume/preview.webp",
+  "folder": "Krea2_moodboard/光谱数字__Spectral Digital Lume",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

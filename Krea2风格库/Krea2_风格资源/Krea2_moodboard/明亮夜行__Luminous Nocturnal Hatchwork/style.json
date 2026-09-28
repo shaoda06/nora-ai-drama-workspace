@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-708",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "明亮夜行",
+  "name": "Luminous Nocturnal Hatchwork",
+  "prompt": "dense cross-hatching, tactile pencil texture, luminous chiaroscuro, nocturnal atmospheric lighting, dreamlike impressionism, deep indigo and teal palette, vintage storybook aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行__Luminous Nocturnal Hatchwork/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行__Luminous Nocturnal Hatchwork",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

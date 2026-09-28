@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-168",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "粗轮廓风格",
+  "name": "Bold Contour Style",
+  "prompt": "Style: Bold Contour Style: graphic illustration aesthetics defined by strong outline emphasis, confident shape definition, clear visual hierarchy, impactful silhouette design, and highly readable forms, prioritizing visual clarity, structural strength, and compositional presence through disciplined line control, simplified volume construction, and deliberate graphic contrast, reminiscent of Mike Mignola and Frank Miller, inspired by Hellboy and Sin City.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/粗轮廓风格__Bold Contour Style/preview.jpg",
+  "folder": "krea2_styles/粗轮廓风格__Bold Contour Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

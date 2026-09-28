@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1896",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "数字故障",
+  "name": "Digital Dissolution Glitch",
+  "prompt": "pixel sorting, glitch art, digital disintegration, 3D heightmap displacement, fragmented realism, muted pastel palette, data corruption aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字故障__Digital Dissolution Glitch/preview.webp",
+  "folder": "Krea2_moodboard/数字故障__Digital Dissolution Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

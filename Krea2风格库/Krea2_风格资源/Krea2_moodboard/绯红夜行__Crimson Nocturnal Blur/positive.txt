@@ -1,0 +1,1 @@
+motion blur, shutter drag, crimson and amber palette, heavy analog film grain, high contrast silhouettes, cinematic chiaroscuro, lo-fi darkroom aesthetic. Subject:{prompt}

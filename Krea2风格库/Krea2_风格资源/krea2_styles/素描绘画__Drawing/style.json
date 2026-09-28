@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-243",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "素描绘画",
+  "name": "Drawing",
+  "prompt": "Style: Drawing: A direct, hand-crafted illustration style built on confident linework capturing form through economical, considered mark-making, restrained tonal shading applied through simple cross-hatching or light shading rather than elaborate rendering, an honest, unembellished clarity that favors observation over stylization, unhurried, deliberate strokes carrying a personal, tactile sensibility, and a timeless, accessible sincerity rooted in foundational drawing tradition. Influenced by: traditional pencil-and-ink drawing tradition, life-drawing practice, classical illustration fundamentals, observational sketching method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/素描绘画__Drawing/preview.jpg",
+  "folder": "krea2_styles/素描绘画__Drawing",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

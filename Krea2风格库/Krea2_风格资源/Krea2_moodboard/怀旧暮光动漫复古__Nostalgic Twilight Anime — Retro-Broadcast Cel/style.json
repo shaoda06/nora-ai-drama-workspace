@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-116",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧暮光动漫复古",
+  "name": "Nostalgic Twilight Anime — Retro-Broadcast Cel",
+  "prompt": "retro anime aesthetic, twilight gradient sky, silhouette landscape, vibrant purple and orange sunset, lo-fi digital painting, nostalgic atmosphere, cel-shaded texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧暮光动漫复古__Nostalgic Twilight Anime — Retro-Broadcast Cel/preview.webp",
+  "folder": "Krea2_moodboard/怀旧暮光动漫复古__Nostalgic Twilight Anime — Retro-Broadcast Cel",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

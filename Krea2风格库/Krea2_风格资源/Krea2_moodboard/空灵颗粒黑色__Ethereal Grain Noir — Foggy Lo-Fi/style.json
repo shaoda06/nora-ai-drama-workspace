@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1656",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵颗粒黑色",
+  "name": "Ethereal Grain Noir — Foggy Lo-Fi",
+  "prompt": "heavy film grain, high-contrast monochrome, stipple texture, liminal silhouette, atmospheric fog, lo-fi analog aesthetic, dreamlike haze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒黑色__Ethereal Grain Noir — Foggy Lo-Fi/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒黑色__Ethereal Grain Noir — Foggy Lo-Fi",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

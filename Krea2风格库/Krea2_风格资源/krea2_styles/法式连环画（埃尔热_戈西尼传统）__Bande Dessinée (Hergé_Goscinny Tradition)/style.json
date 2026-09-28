@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-157",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "法式连环画（埃尔热/戈西尼传统）",
+  "name": "Bande Dessinée (Hergé/Goscinny Tradition)",
+  "prompt": "Style: Bande Dessinée (Hergé/Goscinny Tradition): A clean, confident ligne-claire illustration style built on uniform, unmodulated contour lines holding clearly bounded, evenly flat-colored shapes, minimal internal shading that lets crisp linework and bold color carry the entire compositional weight, meticulous, precise architectural and environmental detail rendered with the same graphic clarity as the figures themselves, a measured, orderly compositional rhythm favoring readability and charm over painterly nuance, and a timeless, wholesome European adventure-comic sincerity that feels meticulous, warm, and effortlessly classic. Influenced by: Hergé, René Goscinny, ligne-claire illustration technique, Franco-Belgian bande dessinée tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/法式连环画（埃尔热_戈西尼传统）__Bande Dessinée (Hergé_Goscinny Tradition)/preview.jpg",
+  "folder": "krea2_styles/法式连环画（埃尔热_戈西尼传统）__Bande Dessinée (Hergé_Goscinny Tradition)",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

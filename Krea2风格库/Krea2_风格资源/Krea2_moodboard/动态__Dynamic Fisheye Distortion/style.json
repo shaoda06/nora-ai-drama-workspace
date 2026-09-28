@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2087",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "动态",
+  "name": "Dynamic Fisheye Distortion",
+  "prompt": "fisheye lens, extreme wide-angle, curvilinear distortion, dynamic perspective, candid photography, Y2K skate aesthetic, bold saturated colors. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态__Dynamic Fisheye Distortion/preview.webp",
+  "folder": "Krea2_moodboard/动态__Dynamic Fisheye Distortion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

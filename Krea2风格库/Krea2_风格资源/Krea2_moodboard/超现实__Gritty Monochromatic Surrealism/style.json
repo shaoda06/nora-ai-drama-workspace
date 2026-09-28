@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-429",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实",
+  "name": "Gritty Monochromatic Surrealism",
+  "prompt": "high contrast black and white, heavy film grain, halftone photocopy texture, multiple exposure portrait, surrealist chiaroscuro, distressed zine aesthetic, glitch art distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Gritty Monochromatic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Gritty Monochromatic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3454",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵流质粉彩",
+  "name": "Ethereal Liquid Refraction — Pastel Condensation",
+  "prompt": "liquid distortion, surreal glass texture, muted pastel and earth tones, soft diffused studio lighting, viscous fluid dynamics, macro refractive detail, dreamy analogue film aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵流质粉彩__Ethereal Liquid Refraction — Pastel Condensation/preview.webp",
+  "folder": "Krea2_moodboard/空灵流质粉彩__Ethereal Liquid Refraction — Pastel Condensation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

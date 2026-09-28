@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2868",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "夜行棱镜电影感",
+  "name": "Nocturnal Prismatic Cinematic",
+  "prompt": "nocturnal cinematic film, intense starburst lens flare, chromatic aberration, vintage analog grain, high contrast night photography, rainbow light leaks, ethereal glowing bloom. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行棱镜电影感__Nocturnal Prismatic Cinematic/preview.webp",
+  "folder": "Krea2_moodboard/夜行棱镜电影感__Nocturnal Prismatic Cinematic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

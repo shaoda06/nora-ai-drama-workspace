@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2517",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "空灵哥特黑色单色",
+  "name": "Ethereal Gothic Noir — Lace Veil Monochrome",
+  "prompt": "monochrome gothic portraiture, dramatic chiaroscuro lighting, intricate lace veiling, surreal organic fusion, high contrast noir, haunting ethereal mood, tactile textile textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵哥特黑色单色__Ethereal Gothic Noir — Lace Veil Monochrome/preview.webp",
+  "folder": "Krea2_moodboard/空灵哥特黑色单色__Ethereal Gothic Noir — Lace Veil Monochrome",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

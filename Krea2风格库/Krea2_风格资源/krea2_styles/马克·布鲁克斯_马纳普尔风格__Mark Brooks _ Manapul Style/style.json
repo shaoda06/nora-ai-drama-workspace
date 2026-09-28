@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-158",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "马克·布鲁克斯/马纳普尔风格",
+  "name": "Mark Brooks / Manapul Style",
+  "prompt": "Style: Mark Brooks / Manapul Style: A refined modern comic illustration style merging crisp, glossy semi-realistic linework with loose, atmospheric painterly washes, confident anatomical precision balanced against fluid, watercolor-like softness bleeding through backgrounds and costume, delicate cross-hatched shading giving skin and fabric a tactile, hand-finished quality, dynamic yet quietly cinematic posing that favors mood over bombast, and a polished, contemporary mainstream-comic sensibility that bridges tight illustrative control with expressive brushwork. Influenced by: Mark Brooks, Francis Manapul, modern mainstream comic illustration, watercolor comic-art technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/马克·布鲁克斯_马纳普尔风格__Mark Brooks _ Manapul Style/preview.jpg",
+  "folder": "krea2_styles/马克·布鲁克斯_马纳普尔风格__Mark Brooks _ Manapul Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

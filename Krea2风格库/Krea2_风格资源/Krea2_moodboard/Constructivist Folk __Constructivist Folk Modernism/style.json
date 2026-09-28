@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-615",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "Constructivist Folk ",
+  "name": "Constructivist Folk Modernism",
+  "prompt": "constructivist graphic design, naive folk illustration, primary color palette, hard-edge geometric abstraction, gouache hand-painted texture, minimalist composition, vintage screenprint aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Constructivist Folk __Constructivist Folk Modernism/preview.webp",
+  "folder": "Krea2_moodboard/Constructivist Folk __Constructivist Folk Modernism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

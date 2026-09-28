@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-838",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "肌理鲜活",
+  "name": "Textured Vibrant Fauvism",
+  "prompt": "neo-expressionist, mixed-media collage, vibrant saturated palette, oil pastel texture, screen-print grain, bold geometric shapes, graphic minimalist illustration, raw expressive line art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理鲜活__Textured Vibrant Fauvism/preview.webp",
+  "folder": "Krea2_moodboard/肌理鲜活__Textured Vibrant Fauvism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

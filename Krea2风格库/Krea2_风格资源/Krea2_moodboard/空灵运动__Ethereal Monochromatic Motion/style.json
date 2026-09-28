@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-744",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵运动",
+  "name": "Ethereal Monochromatic Motion",
+  "prompt": "high-contrast monochrome, intentional camera movement, heavy film grain, spectral silhouette, charcoal texture, atmospheric abstraction, dreamlike motion blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵运动__Ethereal Monochromatic Motion/preview.webp",
+  "folder": "Krea2_moodboard/空灵运动__Ethereal Monochromatic Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

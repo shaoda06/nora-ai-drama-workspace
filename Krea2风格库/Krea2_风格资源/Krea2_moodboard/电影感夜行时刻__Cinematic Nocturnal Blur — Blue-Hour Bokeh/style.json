@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1470",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "电影感夜行时刻",
+  "name": "Cinematic Nocturnal Blur — Blue-Hour Bokeh",
+  "prompt": "cinematic motion blur, heavy film grain, blue hour lighting, warm amber glow, lo-fi aesthetic, impressionistic urban cityscape, soft focus bokeh, 35mm film photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行时刻__Cinematic Nocturnal Blur — Blue-Hour Bokeh/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行时刻__Cinematic Nocturnal Blur — Blue-Hour Bokeh",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

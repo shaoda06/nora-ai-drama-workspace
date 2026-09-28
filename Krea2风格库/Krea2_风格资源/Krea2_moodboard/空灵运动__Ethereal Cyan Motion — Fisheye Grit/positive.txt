@@ -1,0 +1,1 @@
+motion blur, cyan and cobalt palette, ethereal long exposure, fisheye lens distortion, gritty film grain, high-contrast studio lighting, dreamy soft-focus. Subject:{prompt}

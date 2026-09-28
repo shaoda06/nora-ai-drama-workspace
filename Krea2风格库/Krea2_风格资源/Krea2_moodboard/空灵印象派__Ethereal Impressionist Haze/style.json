@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2899",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵印象派",
+  "name": "Ethereal Impressionist Haze",
+  "prompt": "intentional camera movement, heavy film grain, impressionistic landscape, motion blur, muted pastel palette, dreamlike haze, soft diffused light, abstract nature. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵印象派__Ethereal Impressionist Haze/preview.webp",
+  "folder": "Krea2_moodboard/空灵印象派__Ethereal Impressionist Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

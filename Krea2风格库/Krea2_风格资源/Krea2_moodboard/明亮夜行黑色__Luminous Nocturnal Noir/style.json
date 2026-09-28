@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-774",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "明亮夜行黑色",
+  "name": "Luminous Nocturnal Noir",
+  "prompt": "high-contrast duotone, glowing orange light, charcoal and deep blue palette, painterly brushstrokes, nocturnal atmosphere, minimalist digital landscape, stenciled silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行黑色__Luminous Nocturnal Noir/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行黑色__Luminous Nocturnal Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

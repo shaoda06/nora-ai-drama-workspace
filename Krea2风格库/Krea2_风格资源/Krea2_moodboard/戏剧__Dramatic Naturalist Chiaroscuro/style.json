@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2664",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "戏剧",
+  "name": "Dramatic Naturalist Chiaroscuro",
+  "prompt": "chiaroscuro lighting, stark black background, macro photography, scientific realism, high-contrast texture, intimate studio portrait, naturalist specimen. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/戏剧__Dramatic Naturalist Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/戏剧__Dramatic Naturalist Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

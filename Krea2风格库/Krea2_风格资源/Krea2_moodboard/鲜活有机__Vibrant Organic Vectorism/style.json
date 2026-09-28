@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-697",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "鲜活有机",
+  "name": "Vibrant Organic Vectorism",
+  "prompt": "flat vector illustration, bold graphic shapes, vibrant saturated palette, organic biomorphic curves, minimalist character design, playful modern art style, clean vector art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活有机__Vibrant Organic Vectorism/preview.webp",
+  "folder": "Krea2_moodboard/鲜活有机__Vibrant Organic Vectorism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

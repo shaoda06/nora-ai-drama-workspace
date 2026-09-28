@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1973",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "萦绕",
+  "name": "Haunting Pictorialist Ghostscapes",
+  "prompt": "pictorialism, wet plate collodion, motion blur, ghostly silhouette, distressed film texture, chiaroscuro, haunting atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/萦绕__Haunting Pictorialist Ghostscapes/preview.webp",
+  "folder": "Krea2_moodboard/萦绕__Haunting Pictorialist Ghostscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

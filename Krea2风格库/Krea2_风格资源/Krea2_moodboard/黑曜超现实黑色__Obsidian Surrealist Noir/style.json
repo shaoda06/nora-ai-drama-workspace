@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2513",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "黑曜超现实黑色",
+  "name": "Obsidian Surrealist Noir",
+  "prompt": "high-contrast black and white, chiaroscuro, dark surrealism, macro texture, low-key lighting, heavy film grain, gothic noir, intimate close-up. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑曜超现实黑色__Obsidian Surrealist Noir/preview.webp",
+  "folder": "Krea2_moodboard/黑曜超现实黑色__Obsidian Surrealist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

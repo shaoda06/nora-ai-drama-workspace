@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-825",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "极简",
+  "name": "Minimalist Esoteric Geometry",
+  "prompt": "minimalist vector art, high contrast composition, etched line art, dark charcoal background, esoteric symbolism, geometric wireframe, textured print aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Minimalist Esoteric Geometry/preview.webp",
+  "folder": "Krea2_moodboard/极简__Minimalist Esoteric Geometry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

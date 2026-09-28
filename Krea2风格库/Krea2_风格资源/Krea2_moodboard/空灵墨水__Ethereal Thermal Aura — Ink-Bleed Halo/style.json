@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3230",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵墨水",
+  "name": "Ethereal Thermal Aura — Ink-Bleed Halo",
+  "prompt": "thermal aura glow, chromatic gradient silhouette, soft-focus ink bleed, grainy analog texture, minimalist conceptual portrait, neon airbrush halo, stark dark silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵墨水__Ethereal Thermal Aura — Ink-Bleed Halo/preview.webp",
+  "folder": "Krea2_moodboard/空灵墨水__Ethereal Thermal Aura — Ink-Bleed Halo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

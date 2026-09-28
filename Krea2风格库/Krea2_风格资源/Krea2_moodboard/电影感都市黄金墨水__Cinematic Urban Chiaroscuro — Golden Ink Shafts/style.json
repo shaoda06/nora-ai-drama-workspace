@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2363",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感都市黄金墨水",
+  "name": "Cinematic Urban Chiaroscuro — Golden Ink Shafts",
+  "prompt": "chiaroscuro street photography, high-contrast urban geometry, dramatic shafts of light, brutalist concrete textures, minimalist composition, ink-black shadows, cinematic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市黄金墨水__Cinematic Urban Chiaroscuro — Golden Ink Shafts/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市黄金墨水__Cinematic Urban Chiaroscuro — Golden Ink Shafts",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

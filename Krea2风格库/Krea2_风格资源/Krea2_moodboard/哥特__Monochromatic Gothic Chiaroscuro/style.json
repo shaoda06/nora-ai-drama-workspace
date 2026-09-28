@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2455",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "哥特",
+  "name": "Monochromatic Gothic Chiaroscuro",
+  "prompt": "chiaroscuro portraiture, high-contrast monochromatic, deep shadow, visceral texture, ethereal dark gothic, low-key lighting, intense gaze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/哥特__Monochromatic Gothic Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/哥特__Monochromatic Gothic Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

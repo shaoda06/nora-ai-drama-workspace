@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-653",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵颗粒水彩",
+  "name": "Ethereal Grain Aura — Peach Watercolor Bleed",
+  "prompt": "ethereal aura gradient, soft-focus blur, tactile noise grain, organic color bleed, minimalist abstract silhouette, dreamy hazy atmosphere, risograph print texture, meditative light glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒水彩__Ethereal Grain Aura — Peach Watercolor Bleed/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒水彩__Ethereal Grain Aura — Peach Watercolor Bleed",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

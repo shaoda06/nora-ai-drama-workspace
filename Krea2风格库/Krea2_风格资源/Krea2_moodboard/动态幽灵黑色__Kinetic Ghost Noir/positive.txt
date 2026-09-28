@@ -1,0 +1,1 @@
+shutter drag, motion blur, low-key lighting, cinematic film grain, high contrast, spectral atmosphere, desaturated teal and shadow, long exposure portraiture. Subject:{prompt}

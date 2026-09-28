@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2717",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "光泽超现实编辑",
+  "name": "Hyper-Glossy Surreal Editorial",
+  "prompt": "hyper-saturated primary colors, glossy wet texture, harsh direct lighting, high-contrast editorial, cobalt blue and scarlet red, macro beauty photography, surreal avant-garde, dramatic deep shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光泽超现实编辑__Hyper-Glossy Surreal Editorial/preview.webp",
+  "folder": "Krea2_moodboard/光泽超现实编辑__Hyper-Glossy Surreal Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

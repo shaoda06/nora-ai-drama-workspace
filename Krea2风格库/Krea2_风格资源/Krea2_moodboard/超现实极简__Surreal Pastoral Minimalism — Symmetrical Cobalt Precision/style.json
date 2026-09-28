@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3540",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "超现实极简",
+  "name": "Surreal Pastoral Minimalism — Symmetrical Cobalt Precision",
+  "prompt": "surreal pastoral landscape, saturated cobalt sky, minimalist composition, liminal space, vibrant green hills, analog film aesthetic, uncanny symmetry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实极简__Surreal Pastoral Minimalism — Symmetrical Cobalt Precision/preview.webp",
+  "folder": "Krea2_moodboard/超现实极简__Surreal Pastoral Minimalism — Symmetrical Cobalt Precision",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2382",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "怀旧模拟",
+  "name": "Nostalgic Analog Chromatics",
+  "prompt": "35mm analog film aesthetic, heavy film grain, saturated crimson and cerulean, nostalgic warm lighting, low angle perspective, tactile retro texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧模拟__Nostalgic Analog Chromatics/preview.webp",
+  "folder": "Krea2_moodboard/怀旧模拟__Nostalgic Analog Chromatics",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

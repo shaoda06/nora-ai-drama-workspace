@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-281",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "绘画",
+  "name": "Painting",
+  "prompt": "Style: Painting: A richly layered illustration style built on confident brushwork that constructs form through visible, considered strokes rather than flat mechanical fill, blended tonal transition achieved through layered pigment application, a tactile, hand-crafted texture that preserves the character of the medium even within refined rendering, deliberate value and contrast control that gives form convincing dimensional weight, and a timeless, painterly sincerity rooted in foundational fine-art tradition. Influenced by: traditional oil-painting tradition, classical atelier technique, painterly fine-art practice, foundational tonal-rendering method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/绘画__Painting/preview.jpg",
+  "folder": "krea2_styles/绘画__Painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

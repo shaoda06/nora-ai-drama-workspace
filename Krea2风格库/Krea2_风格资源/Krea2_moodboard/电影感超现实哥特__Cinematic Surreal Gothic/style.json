@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2487",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "电影感超现实哥特",
+  "name": "Cinematic Surreal Gothic",
+  "prompt": "vintage 35mm film grain, cinematic surrealism, crimson and emerald palette, muted pastoral atmosphere, symmetrical theatrical composition, esoteric ritual mood, soft diffused lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感超现实哥特__Cinematic Surreal Gothic/preview.webp",
+  "folder": "Krea2_moodboard/电影感超现实哥特__Cinematic Surreal Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

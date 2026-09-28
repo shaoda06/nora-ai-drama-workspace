@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2917",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "动态黑色",
+  "name": "Kinetic Noir Abstraction — Theatrical Xerox Grit",
+  "prompt": "high-contrast monochrome, chiaroscuro lighting, motion blur, heavy film grain, shutter drag, surreal portraiture, theatrical noir, gritty xerox texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态黑色__Kinetic Noir Abstraction — Theatrical Xerox Grit/preview.webp",
+  "folder": "Krea2_moodboard/动态黑色__Kinetic Noir Abstraction — Theatrical Xerox Grit",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

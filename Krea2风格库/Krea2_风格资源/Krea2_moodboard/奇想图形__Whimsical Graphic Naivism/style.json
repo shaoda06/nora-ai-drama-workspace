@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-688",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "奇想图形",
+  "name": "Whimsical Graphic Naivism",
+  "prompt": "naive art style, flat gouache illustration, bold black outlines, risograph texture, vibrant primary color palette, mid-century modern graphic, whimsical folk art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想图形__Whimsical Graphic Naivism/preview.webp",
+  "folder": "Krea2_moodboard/奇想图形__Whimsical Graphic Naivism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2172",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "夜行黑色",
+  "name": "Nocturnal Avant-Garde Noir",
+  "prompt": "high-contrast avant-garde photography, dramatic chiaroscuro lighting, deep twilight blue and black palette, deconstructed fashion silhouettes, cinematic moody atmosphere, editorial sharp-focus portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行黑色__Nocturnal Avant-Garde Noir/preview.webp",
+  "folder": "Krea2_moodboard/夜行黑色__Nocturnal Avant-Garde Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

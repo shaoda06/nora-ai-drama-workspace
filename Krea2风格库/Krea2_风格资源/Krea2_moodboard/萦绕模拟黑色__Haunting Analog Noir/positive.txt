@@ -1,0 +1,1 @@
+high-contrast monochrome, analog film grain, chiaroscuro lighting, motion blur, distressed texture, ghostly silhouette, scanline distortion. Subject:{prompt}

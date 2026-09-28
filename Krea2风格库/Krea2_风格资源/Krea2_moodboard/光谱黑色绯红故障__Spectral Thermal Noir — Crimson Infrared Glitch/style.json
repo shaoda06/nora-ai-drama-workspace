@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2066",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "光谱黑色绯红故障",
+  "name": "Spectral Thermal Noir — Crimson Infrared Glitch",
+  "prompt": "high-contrast noir, infrared thermal aesthetic, crimson and black palette, heavy analog film grain, spectral distortion, vertical light smear, glowing minimalist silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色绯红故障__Spectral Thermal Noir — Crimson Infrared Glitch/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色绯红故障__Spectral Thermal Noir — Crimson Infrared Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

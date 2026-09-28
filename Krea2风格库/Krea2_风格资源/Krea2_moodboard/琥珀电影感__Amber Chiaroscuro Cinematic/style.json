@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2115",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "琥珀电影感",
+  "name": "Amber Chiaroscuro Cinematic",
+  "prompt": "chiaroscuro, dramatic long shadows, amber and teal color palette, cinematic urban silhouette, high contrast lighting, atmospheric haze, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀电影感__Amber Chiaroscuro Cinematic/preview.webp",
+  "folder": "Krea2_moodboard/琥珀电影感__Amber Chiaroscuro Cinematic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

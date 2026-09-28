@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1521",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "明亮空灵故障",
+  "name": "Luminous Ethereal Glitch",
+  "prompt": "iridescent pearlescent finish, ethereal pastel gradient, digital chromatic aberration, soft focus bloom, high contrast neon aura, surreal dreamcore atmosphere, liquid metallic sheen. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮空灵故障__Luminous Ethereal Glitch/preview.webp",
+  "folder": "Krea2_moodboard/明亮空灵故障__Luminous Ethereal Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2914",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "萦绕光谱黑色",
+  "name": "Haunting Spectral Noir",
+  "prompt": "high-contrast black and white, heavy film grain, multiple exposure, motion blur, chiaroscuro, analog artifacting, surrealist portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/萦绕光谱黑色__Haunting Spectral Noir/preview.webp",
+  "folder": "Krea2_moodboard/萦绕光谱黑色__Haunting Spectral Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

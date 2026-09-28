@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-306",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "凯西·鲍风格",
+  "name": "Casey Baugh Style",
+  "prompt": "Style: Casey Baugh Style: A richly painterly portrait style built on bold, confident brushwork that constructs form through visible, decisive strokes rather than smooth blending, dramatic tonal contrast carving powerful dimensionality across every plane, a loose, expressive looseness at the edges contrasted against tightly resolved focal areas, an emotionally charged, contemplative stillness carried through restrained, moody atmosphere, and a technically masterful, contemporary painterly gravitas that feels both classically grounded and boldly modern. Influenced by: Casey Baugh, contemporary painterly-portrait tradition, alla prima oil-painting technique, classical-contemporary portrait practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/凯西·鲍风格__Casey Baugh Style/preview.jpg",
+  "folder": "krea2_styles/凯西·鲍风格__Casey Baugh Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

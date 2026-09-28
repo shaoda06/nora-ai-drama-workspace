@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-204",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "空灵光泽",
+  "name": "Ethereal Solarpunk Pastoral — Glossy 3D Utopia",
+  "prompt": "solarpunk, ethereal surrealism, vibrant saturated landscapes, high-gloss futuristic accents, whimsical pastoral, bright natural daylight, hyper-realistic 3D render. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵光泽__Ethereal Solarpunk Pastoral — Glossy 3D Utopia/preview.webp",
+  "folder": "Krea2_moodboard/空灵光泽__Ethereal Solarpunk Pastoral — Glossy 3D Utopia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

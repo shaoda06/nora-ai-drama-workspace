@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2766",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "琥珀故障衰败",
+  "name": "Amber Glitch Decay",
+  "prompt": "pixel sorting, digital decay, amber and crimson palette, glitch art, high-contrast silhouette, textured data corruption, surreal distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀故障衰败__Amber Glitch Decay/preview.webp",
+  "folder": "Krea2_moodboard/琥珀故障衰败__Amber Glitch Decay",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

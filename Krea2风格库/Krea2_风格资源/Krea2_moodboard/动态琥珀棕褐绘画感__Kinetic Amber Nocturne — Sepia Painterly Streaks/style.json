@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1149",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "动态琥珀棕褐绘画感",
+  "name": "Kinetic Amber Nocturne — Sepia Painterly Streaks",
+  "prompt": "intentional camera movement, long exposure motion blur, warm amber and sepia palette, kinetic light trails, liminal nocturnal dreamscape, painterly motion streaks, abstract light bokeh. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态琥珀棕褐绘画感__Kinetic Amber Nocturne — Sepia Painterly Streaks/preview.webp",
+  "folder": "Krea2_moodboard/动态琥珀棕褐绘画感__Kinetic Amber Nocturne — Sepia Painterly Streaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

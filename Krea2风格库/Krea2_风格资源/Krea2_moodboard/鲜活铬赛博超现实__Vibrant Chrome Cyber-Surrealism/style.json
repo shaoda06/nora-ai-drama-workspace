@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3306",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "鲜活铬赛博超现实",
+  "name": "Vibrant Chrome Cyber-Surrealism",
+  "prompt": "liquid chrome texture, high-contrast pop surrealism, saturated crimson red, retro-futuristic airbrush style, reflective metallic surfaces, cybernetic aesthetic, bold studio lighting, starburst lens flares. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活铬赛博超现实__Vibrant Chrome Cyber-Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/鲜活铬赛博超现实__Vibrant Chrome Cyber-Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

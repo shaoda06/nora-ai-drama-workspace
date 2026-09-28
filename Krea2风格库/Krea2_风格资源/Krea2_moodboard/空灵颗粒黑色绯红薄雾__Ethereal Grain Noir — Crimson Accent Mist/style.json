@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3219",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵颗粒黑色绯红薄雾",
+  "name": "Ethereal Grain Noir — Crimson Accent Mist",
+  "prompt": "heavy film grain, soft-focus airbrush, minimalist silhouette, atmospheric mist, stippled texture, high-contrast gradient, dreamlike noir, diffused lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒黑色绯红薄雾__Ethereal Grain Noir — Crimson Accent Mist/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒黑色绯红薄雾__Ethereal Grain Noir — Crimson Accent Mist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

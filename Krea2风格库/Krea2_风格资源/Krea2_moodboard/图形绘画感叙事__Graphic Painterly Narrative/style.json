@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-942",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "图形绘画感叙事",
+  "name": "Graphic Painterly Narrative",
+  "prompt": "gouache painting style, bold graphic shapes, hand-painted textures, high-contrast color palette, minimalist composition, naive art influence, expressive brushstrokes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形绘画感叙事__Graphic Painterly Narrative/preview.webp",
+  "folder": "Krea2_moodboard/图形绘画感叙事__Graphic Painterly Narrative",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-585",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵动态运动粉彩",
+  "name": "Ethereal Kinetic Motion — Pastel Gray Smudge",
+  "prompt": "long exposure motion blur, ethereal spectral silhouettes, desaturated monochromatic palette, intentional camera movement, dreamlike painterly texture, minimalist atmospheric composition, diffused soft lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态运动粉彩__Ethereal Kinetic Motion — Pastel Gray Smudge/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态运动粉彩__Ethereal Kinetic Motion — Pastel Gray Smudge",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

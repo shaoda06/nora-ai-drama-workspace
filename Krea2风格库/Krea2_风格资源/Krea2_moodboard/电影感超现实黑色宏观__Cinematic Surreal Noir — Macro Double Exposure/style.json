@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2816",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "电影感超现实黑色宏观",
+  "name": "Cinematic Surreal Noir — Macro Double Exposure",
+  "prompt": "chiaroscuro noir, high-contrast monochrome, extreme macro portraiture, gritty film grain, surreal double exposure, tactile texture, cinematic shadow play. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感超现实黑色宏观__Cinematic Surreal Noir — Macro Double Exposure/preview.webp",
+  "folder": "Krea2_moodboard/电影感超现实黑色宏观__Cinematic Surreal Noir — Macro Double Exposure",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

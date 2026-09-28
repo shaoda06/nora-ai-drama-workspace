@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2375",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "肌理单色黑色",
+  "name": "Textured Monochrome Noir — Condensation Veil",
+  "prompt": "high-contrast monochrome, heavy film grain, soft-focus silhouette, textured glass overlay, chiaroscuro lighting, melancholic noir, atmospheric haze, stippled texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理单色黑色__Textured Monochrome Noir — Condensation Veil/preview.webp",
+  "folder": "Krea2_moodboard/肌理单色黑色__Textured Monochrome Noir — Condensation Veil",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-284",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "模拟复古幻想",
+  "name": "Analog Technicolor Retro-Fantasy",
+  "prompt": "vintage 35mm film grain, saturated technicolor palette, theatrical studio lighting, atmospheric haze, practical special effects, retro-cinematic composition, tactile material textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟复古幻想__Analog Technicolor Retro-Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/模拟复古幻想__Analog Technicolor Retro-Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

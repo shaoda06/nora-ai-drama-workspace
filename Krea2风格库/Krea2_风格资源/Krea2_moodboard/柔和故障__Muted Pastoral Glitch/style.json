@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-465",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "柔和故障",
+  "name": "Muted Pastoral Glitch",
+  "prompt": "muted pastoral landscape, analog film grain, surreal geometric intervention, desaturated earth tones, halftone print texture, minimalist composition, misty overcast atmosphere, digital glitch aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/柔和故障__Muted Pastoral Glitch/preview.webp",
+  "folder": "Krea2_moodboard/柔和故障__Muted Pastoral Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

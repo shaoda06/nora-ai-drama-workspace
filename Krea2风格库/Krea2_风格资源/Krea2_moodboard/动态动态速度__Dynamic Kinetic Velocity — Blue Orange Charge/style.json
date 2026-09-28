@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-910",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "动态动态速度",
+  "name": "Dynamic Kinetic Velocity — Blue Orange Charge",
+  "prompt": "intentional camera movement, kinetic motion blur, vibrant blue and orange palette, shutter drag, dynamic diagonal streaks, abstracted action, painterly light trails. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态动态速度__Dynamic Kinetic Velocity — Blue Orange Charge/preview.webp",
+  "folder": "Krea2_moodboard/动态动态速度__Dynamic Kinetic Velocity — Blue Orange Charge",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1691",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "明亮极简",
+  "name": "Luminous Monolithic Minimalism",
+  "prompt": "minimalist geometric monolith, volumetric light, twilight atmosphere, surreal landscape, ethereal glowing portal, cinematic high contrast, atmospheric fog. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮极简__Luminous Monolithic Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/明亮极简__Luminous Monolithic Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

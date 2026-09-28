@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-182",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "表现力角色插画",
+  "name": "Expressive Character Illustration",
+  "prompt": "Style: Expressive Character Illustration: A vividly emotive illustration style built on confident, deliberate linework calibrated to amplify feeling over anatomical precision, exaggerated facial and postural modeling that pushes emotional readability to the forefront of every composition, loose, energetic shading applied to reinforce mood rather than achieve full rendering, a spirited, immediate mark-making quality that keeps the piece feeling alive and reactive, and a spontaneous, character-driven intensity that treats emotional truth as the primary compositional goal. Influenced by: contemporary character-design illustration practice, expressive digital-sketch technique, gesture-driven concept-art tradition, animation-adjacent character-study method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/表现力角色插画__Expressive Character Illustration/preview.jpg",
+  "folder": "krea2_styles/表现力角色插画__Expressive Character Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

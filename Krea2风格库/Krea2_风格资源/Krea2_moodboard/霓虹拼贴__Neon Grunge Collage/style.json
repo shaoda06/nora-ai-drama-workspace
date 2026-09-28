@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-634",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "霓虹拼贴",
+  "name": "Neon Grunge Collage",
+  "prompt": "punk zine aesthetic, halftone grain, high-contrast black and white, hot pink neon accents, distressed collage, psychedelic gothic, raw ink illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹拼贴__Neon Grunge Collage/preview.webp",
+  "folder": "Krea2_moodboard/霓虹拼贴__Neon Grunge Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

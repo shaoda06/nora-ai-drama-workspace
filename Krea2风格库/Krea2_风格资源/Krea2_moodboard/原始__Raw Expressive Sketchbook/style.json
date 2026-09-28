@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-788",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "原始",
+  "name": "Raw Expressive Sketchbook",
+  "prompt": "minimalist gesture drawing, expressive pencil linework, textured paper background, visible construction lines, fluid ink silhouettes, analog sketch aesthetic, hand-drawn character design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始__Raw Expressive Sketchbook/preview.webp",
+  "folder": "Krea2_moodboard/原始__Raw Expressive Sketchbook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

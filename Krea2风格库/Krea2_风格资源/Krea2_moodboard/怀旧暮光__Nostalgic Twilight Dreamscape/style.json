@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1654",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "怀旧暮光",
+  "name": "Nostalgic Twilight Dreamscape",
+  "prompt": "vintage 35mm film grain, twilight gradient sky, soft focus bokeh, melancholic silhouette, lo-fi analog aesthetic, dusty purple and orange palette, liminal dreamscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧暮光__Nostalgic Twilight Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/怀旧暮光__Nostalgic Twilight Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

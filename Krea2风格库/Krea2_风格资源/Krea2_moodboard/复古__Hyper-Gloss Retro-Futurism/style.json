@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-872",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "复古",
+  "name": "Hyper-Gloss Retro-Futurism",
+  "prompt": "1980s airbrush illustration, highly reflective chrome, retro-futurism, Hajime Sorayama style, prismatic lens flare, vibrant gradient background, metallic sheen. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古__Hyper-Gloss Retro-Futurism/preview.webp",
+  "folder": "Krea2_moodboard/复古__Hyper-Gloss Retro-Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

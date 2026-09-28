@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-26",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "堡垒之夜风格",
+  "name": "Fortnite Style",
+  "prompt": "Style: Fortnite Style: A glossy, saturated 3D-cartoon illustration style built on smooth, stylized proportion with exaggerated, action-figure-adjacent silhouette, bright, evenly saturated cel-adjacent shading that keeps every contour crisp and readable, confident volumetric rendering balancing cartoon simplicity with dimensional polish, dynamic, energetic posing charged with playful competitive flair, and a vibrant, high-production game-art vibrancy built for instant character appeal and broad accessibility. Influenced by: Epic Games character-art direction, stylized 3D-rendering technique, competitive-game key-art practice, cel-adjacent cartoon-render method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/堡垒之夜风格__Fortnite Style/preview.jpg",
+  "folder": "krea2_styles/堡垒之夜风格__Fortnite Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

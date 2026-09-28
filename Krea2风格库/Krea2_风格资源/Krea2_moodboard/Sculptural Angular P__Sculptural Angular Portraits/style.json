@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-919",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "Sculptural Angular P",
+  "name": "Sculptural Angular Portraits",
+  "prompt": "stylized digital portrait, angular facial planes, sharp geometric shading, dramatic rim lighting, sculptural painterly finish, high contrast color palette, expressive character design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Sculptural Angular P__Sculptural Angular Portraits/preview.webp",
+  "folder": "Krea2_moodboard/Sculptural Angular P__Sculptural Angular Portraits",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

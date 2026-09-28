@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2673",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "粗野主义",
+  "name": "Reclaimed Brutalist Dystopia",
+  "prompt": "brutalist architecture, overgrown concrete, desaturated cinematic tones, dystopian cityscape, diffuse overcast lighting, surreal organic reclamation, geometric repetition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粗野主义__Reclaimed Brutalist Dystopia/preview.webp",
+  "folder": "Krea2_moodboard/粗野主义__Reclaimed Brutalist Dystopia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

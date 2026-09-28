@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1435",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "电影感夜行模拟",
+  "name": "Cinematic Nocturnal Analog",
+  "prompt": "analog film grain, stark silhouette, high contrast lighting, cinematic light leak, atmospheric fog, surreal color palette, lo-fi vintage texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行模拟__Cinematic Nocturnal Analog/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行模拟__Cinematic Nocturnal Analog",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

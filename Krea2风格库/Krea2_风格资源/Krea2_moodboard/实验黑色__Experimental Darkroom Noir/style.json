@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2285",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "实验黑色",
+  "name": "Experimental Darkroom Noir",
+  "prompt": "experimental darkroom photography, rayograph, high-contrast monochrome, sepia-toned grain, translucent silhouettes, geometric chiaroscuro, double exposure, silver gelatin texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/实验黑色__Experimental Darkroom Noir/preview.webp",
+  "folder": "Krea2_moodboard/实验黑色__Experimental Darkroom Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2541",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "明亮深渊黑色",
+  "name": "Luminous Abyssal Noir — Monolithic Cyan Beams",
+  "prompt": "chiaroscuro lighting, volumetric cyan light, atmospheric haze, minimalist monolithic structures, cinematic film grain, high contrast silhouettes, dark ambient aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮深渊黑色__Luminous Abyssal Noir — Monolithic Cyan Beams/preview.webp",
+  "folder": "Krea2_moodboard/明亮深渊黑色__Luminous Abyssal Noir — Monolithic Cyan Beams",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

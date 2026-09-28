@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2237",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "氛围",
+  "name": "Atmospheric Shin-Hanga Prints",
+  "prompt": "shin-hanga style, japanese woodblock print, textured washi paper, hasui kawase inspired, atmospheric perspective, traditional ukiyo-e, muted earth tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围__Atmospheric Shin-Hanga Prints/preview.webp",
+  "folder": "Krea2_moodboard/氛围__Atmospheric Shin-Hanga Prints",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

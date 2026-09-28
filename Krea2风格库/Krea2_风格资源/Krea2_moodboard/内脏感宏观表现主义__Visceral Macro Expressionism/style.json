@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1017",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "内脏感宏观表现主义",
+  "name": "Visceral Macro Expressionism",
+  "prompt": "macro beauty portrait, tactile impasto texture, glossy wet paint, glass overlay, vibrant saturated palette, high-contrast studio lighting, hyper-detailed skin. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感宏观表现主义__Visceral Macro Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/内脏感宏观表现主义__Visceral Macro Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

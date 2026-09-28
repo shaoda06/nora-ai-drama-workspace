@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-691",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "几何",
+  "name": "Electric Geometric Vector",
+  "prompt": "vector illustration, sharp geometric shapes, high contrast color palette, minimalist graphic design, clean digital lines, flat design with gradients, electric blue and neon accents. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何__Electric Geometric Vector/preview.webp",
+  "folder": "Krea2_moodboard/几何__Electric Geometric Vector",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

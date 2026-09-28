@@ -1,0 +1,1 @@
+cinematic backlighting, rim lighting, volumetric haze, nocturnal atmosphere, shallow depth of field, golden amber bokeh, mystical realism. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2515",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "深渊黑色",
+  "name": "Bioluminescent Abyssal Noir",
+  "prompt": "deep indigo monochrome, bioluminescent glow, chiaroscuro silhouette, underwater rim lighting, ethereal atmosphere, low-key photography, abyssal depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/深渊黑色__Bioluminescent Abyssal Noir/preview.webp",
+  "folder": "Krea2_moodboard/深渊黑色__Bioluminescent Abyssal Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

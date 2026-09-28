@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1960",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "鲜活视角",
+  "name": "Vibrant Solar Perspective",
+  "prompt": "extreme low-angle perspective, vibrant sun-drenched colors, dramatic lens flare, backlit botanical textures, hyper-saturated cobalt sky, wide-angle fisheye distortion, high-contrast natural light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活视角__Vibrant Solar Perspective/preview.webp",
+  "folder": "Krea2_moodboard/鲜活视角__Vibrant Solar Perspective",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

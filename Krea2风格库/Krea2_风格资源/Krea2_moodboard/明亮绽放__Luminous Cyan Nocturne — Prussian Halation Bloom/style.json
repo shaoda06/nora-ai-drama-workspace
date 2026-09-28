@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2959",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "明亮绽放",
+  "name": "Luminous Cyan Nocturne — Prussian Halation Bloom",
+  "prompt": "monochromatic cyanotype palette, heavy film grain, glowing ethereal highlights, nocturnal atmosphere, submerged dreamscape, halation bloom, high-contrast low-key lighting, surreal lo-fi texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮绽放__Luminous Cyan Nocturne — Prussian Halation Bloom/preview.webp",
+  "folder": "Krea2_moodboard/明亮绽放__Luminous Cyan Nocturne — Prussian Halation Bloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3536",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "空灵黑色",
+  "name": "Ethereal Cobalt Noir",
+  "prompt": "deep cobalt and violet palette, atmospheric liminal noir, heavy film grain, soft lens blur, high-contrast silhouette, cinematic moody lighting, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色__Ethereal Cobalt Noir/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色__Ethereal Cobalt Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

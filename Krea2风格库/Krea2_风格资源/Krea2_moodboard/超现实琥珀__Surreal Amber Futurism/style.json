@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3157",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "超现实琥珀",
+  "name": "Surreal Amber Futurism",
+  "prompt": "amber monochromatic palette, surrealist retro-futurism, vibrant orange background, sharp studio lighting, tactile matte texture, whimsical dadaist composition, high-contrast minimalist. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实琥珀__Surreal Amber Futurism/preview.webp",
+  "folder": "Krea2_moodboard/超现实琥珀__Surreal Amber Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1724",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵极简高关键中立",
+  "name": "Clinical Ethereal Minimalism — High-Key Neutral",
+  "prompt": "extreme close-up, high-key studio lighting, clinical aesthetic, shallow depth of field, minimalist composition, desaturated color palette, sharp focus, ethereal naturalism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简高关键中立__Clinical Ethereal Minimalism — High-Key Neutral/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简高关键中立__Clinical Ethereal Minimalism — High-Key Neutral",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

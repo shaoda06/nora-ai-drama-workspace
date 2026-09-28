@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3232",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵超现实极简粉彩云朵高关键",
+  "name": "Ethereal Surreal Minimalism — Pastel Cloud High-Key",
+  "prompt": "minimalist surrealism, dreamlike atmosphere, soft pastel palette, floating architectural elements, expansive blue sky, fluffy cumulus clouds, high-key natural lighting, magical realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵超现实极简粉彩云朵高关键__Ethereal Surreal Minimalism — Pastel Cloud High-Key/preview.webp",
+  "folder": "Krea2_moodboard/空灵超现实极简粉彩云朵高关键__Ethereal Surreal Minimalism — Pastel Cloud High-Key",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

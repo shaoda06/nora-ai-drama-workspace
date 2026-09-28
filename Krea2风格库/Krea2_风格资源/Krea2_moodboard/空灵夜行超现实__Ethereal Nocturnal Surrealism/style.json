@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1439",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "空灵夜行超现实",
+  "name": "Ethereal Nocturnal Surrealism",
+  "prompt": "dark surrealism, monochromatic blue-green, dense fog, cinematic grain, liminal atmosphere, ethereal silhouettes, long exposure motion blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行超现实__Ethereal Nocturnal Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行超现实__Ethereal Nocturnal Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

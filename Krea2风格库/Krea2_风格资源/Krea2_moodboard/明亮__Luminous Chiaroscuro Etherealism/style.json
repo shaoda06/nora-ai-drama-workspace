@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1052",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "明亮",
+  "name": "Luminous Chiaroscuro Etherealism",
+  "prompt": "chiaroscuro lighting, painterly brushstrokes, ethereal luminescence, dramatic contrast, iridescent caustics, soft-focus glow, celestial fantasy, baroque atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Chiaroscuro Etherealism/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Chiaroscuro Etherealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

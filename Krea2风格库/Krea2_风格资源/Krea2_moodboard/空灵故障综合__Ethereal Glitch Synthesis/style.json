@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2879",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵故障综合",
+  "name": "Ethereal Glitch Synthesis",
+  "prompt": "vertical pixel sorting, digital decay, emerald and neon palette, glitched organic landscapes, liquid motion blur, high-contrast data corruption, dithered textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵故障综合__Ethereal Glitch Synthesis/preview.webp",
+  "folder": "Krea2_moodboard/空灵故障综合__Ethereal Glitch Synthesis",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

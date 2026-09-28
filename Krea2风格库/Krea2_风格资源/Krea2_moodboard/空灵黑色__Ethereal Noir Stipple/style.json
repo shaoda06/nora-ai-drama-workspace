@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-703",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵黑色",
+  "name": "Ethereal Noir Stipple",
+  "prompt": "monochromatic high-contrast, stippled texture, ethereal glowing contours, chiaroscuro lighting, grainy xerox aesthetic, pitch black void, dissolving particle form. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色__Ethereal Noir Stipple/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色__Ethereal Noir Stipple",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

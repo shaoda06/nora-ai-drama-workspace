@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-721",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "图形图解",
+  "name": "Graphic Print Illustration",
+  "prompt": "cross-hatching illustration, stippling and ink textures, limited CMYK pastel palette, fine line engraving style, flat graphic composition, isometric perspective, vintage printmaking aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形图解__Graphic Print Illustration/preview.webp",
+  "folder": "Krea2_moodboard/图形图解__Graphic Print Illustration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

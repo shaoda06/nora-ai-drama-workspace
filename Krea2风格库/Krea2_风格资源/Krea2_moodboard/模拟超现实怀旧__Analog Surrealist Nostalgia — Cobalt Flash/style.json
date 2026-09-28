@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3280",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "模拟超现实怀旧",
+  "name": "Analog Surrealist Nostalgia — Cobalt Flash",
+  "prompt": "analog film grain, harsh direct flash, saturated cobalt blue, surrealist collage, vintage retro aesthetic, uncanny dreamcore, lo-fi texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟超现实怀旧__Analog Surrealist Nostalgia — Cobalt Flash/preview.webp",
+  "folder": "Krea2_moodboard/模拟超现实怀旧__Analog Surrealist Nostalgia — Cobalt Flash",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3081",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵云朵极简",
+  "name": "Ethereal Cloud Minimalism",
+  "prompt": "minimalist surrealism, ethereal cloud textures, soft diffuse lighting, sculptural white forms, pastel gradient backdrop, serene dreamscape, high-key composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵云朵极简__Ethereal Cloud Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵云朵极简__Ethereal Cloud Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

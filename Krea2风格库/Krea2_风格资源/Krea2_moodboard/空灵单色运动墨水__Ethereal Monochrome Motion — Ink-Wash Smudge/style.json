@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-749",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵单色运动墨水",
+  "name": "Ethereal Monochrome Motion — Ink-Wash Smudge",
+  "prompt": "minimalist monochrome, high-contrast black and white, ethereal motion blur, smudged charcoal texture, ghostly silhouettes, stark white background, ink wash aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色运动墨水__Ethereal Monochrome Motion — Ink-Wash Smudge/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色运动墨水__Ethereal Monochrome Motion — Ink-Wash Smudge",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-227",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "涂鸦纯艺术",
+  "name": "Scribble Fine Art",
+  "prompt": "Style: Scribble Fine Art: expressive fine art aesthetics characterized by energetic freeform mark-making, layered scribbled structures, spontaneous visual construction, dynamic line accumulation, and a deliberate balance between chaos and control. The style builds form, texture, and atmosphere through overlapping gestural lines, exploratory drawing decisions, and visible artistic thought processes, transforming sketch-like marks into sophisticated visual compositions. Rather than concealing construction, it celebrates improvisation, intuition, and the physical act of drawing, allowing complexity and emotion to emerge organically from repeated line interactions. The resulting aesthetic feels raw, intelligent, and deeply personal, blending contemporary fine art experimentation with refined compositional awareness and a strong sense of visual rhythm, reminiscent of Cy Twombly and Julie Mehretu, inspired by Untitled (New York City) and Stadia II.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/涂鸦纯艺术__Scribble Fine Art/preview.jpg",
+  "folder": "krea2_styles/涂鸦纯艺术__Scribble Fine Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3154",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "极简超现实",
+  "name": "Minimalist Surrealist Horizons",
+  "prompt": "minimalist surrealism, undulating dunes, scale disparity, solitary silhouette, geometric abstraction, twilight gradient, volumetric lighting, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简超现实__Minimalist Surrealist Horizons/preview.webp",
+  "folder": "Krea2_moodboard/极简超现实__Minimalist Surrealist Horizons",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

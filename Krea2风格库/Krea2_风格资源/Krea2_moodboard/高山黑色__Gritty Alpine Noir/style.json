@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-400",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "高山黑色",
+  "name": "Gritty Alpine Noir",
+  "prompt": "high-contrast monochrome, heavy film grain, analog distortion, chiaroscuro lighting, halftone dither, minimalist silhouette, CRT scanlines, liminal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高山黑色__Gritty Alpine Noir/preview.webp",
+  "folder": "Krea2_moodboard/高山黑色__Gritty Alpine Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

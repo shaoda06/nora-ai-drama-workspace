@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-643",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "肌理极简",
+  "name": "Textured Minimalist Printmaking",
+  "prompt": "linocut print style, risograph texture, minimalist graphic illustration, hand-carved woodblock aesthetic, high-contrast flat design, textured cream paper background, retro screenprint style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理极简__Textured Minimalist Printmaking/preview.webp",
+  "folder": "Krea2_moodboard/肌理极简__Textured Minimalist Printmaking",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

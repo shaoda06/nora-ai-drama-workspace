@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1526",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "怀旧阈限故障",
+  "name": "Nostalgic Liminal Glitch",
+  "prompt": "heavy analog film grain, chromatic aberration, dreamcore aesthetic, ethereal light leaks, lo-fi soft focus, surreal liminal atmosphere, muted pastel palette, VHS glitch distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧阈限故障__Nostalgic Liminal Glitch/preview.webp",
+  "folder": "Krea2_moodboard/怀旧阈限故障__Nostalgic Liminal Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

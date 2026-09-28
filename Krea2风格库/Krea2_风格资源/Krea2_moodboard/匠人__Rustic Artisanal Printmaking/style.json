@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-711",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "匠人",
+  "name": "Rustic Artisanal Printmaking",
+  "prompt": "linocut print, monochromatic ink illustration, textured cream paper, rustic block print, hand-carved aesthetic, cross-hatching detail, vintage engraving style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/匠人__Rustic Artisanal Printmaking/preview.webp",
+  "folder": "Krea2_moodboard/匠人__Rustic Artisanal Printmaking",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

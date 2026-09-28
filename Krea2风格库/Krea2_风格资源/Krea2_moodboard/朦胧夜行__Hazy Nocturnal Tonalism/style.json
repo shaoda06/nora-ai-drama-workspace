@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1391",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "朦胧夜行",
+  "name": "Hazy Nocturnal Tonalism",
+  "prompt": "tonalism, muted teal and sage palette, grainy analog texture, hazy atmospheric light, nocturnal mood, vintage lithograph style, soft diffusion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/朦胧夜行__Hazy Nocturnal Tonalism/preview.webp",
+  "folder": "Krea2_moodboard/朦胧夜行__Hazy Nocturnal Tonalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

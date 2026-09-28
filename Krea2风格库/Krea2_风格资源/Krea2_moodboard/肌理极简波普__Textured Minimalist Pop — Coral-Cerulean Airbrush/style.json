@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-641",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "肌理极简波普",
+  "name": "Textured Minimalist Pop — Coral-Cerulean Airbrush",
+  "prompt": "stippled texture, grainy gradient, minimalist graphic illustration, risograph print style, bold color blocking, retro vector art, high-contrast palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理极简波普__Textured Minimalist Pop — Coral-Cerulean Airbrush/preview.webp",
+  "folder": "Krea2_moodboard/肌理极简波普__Textured Minimalist Pop — Coral-Cerulean Airbrush",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

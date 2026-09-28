@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2344",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "肌理",
+  "name": "Textured Monochromatic Printmaking",
+  "prompt": "linocut print, distressed ink texture, handmade paper, high-contrast silhouette, minimalist woodblock style, organic imperfections, monochromatic printmaking. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理__Textured Monochromatic Printmaking/preview.webp",
+  "folder": "Krea2_moodboard/肌理__Textured Monochromatic Printmaking",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

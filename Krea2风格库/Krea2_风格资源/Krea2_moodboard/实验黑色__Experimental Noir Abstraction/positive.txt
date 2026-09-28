@@ -1,0 +1,1 @@
+high-contrast monochrome, heavy film grain, motion blur, chiaroscuro lighting, experimental darkroom, long exposure, atmospheric noir. Subject:{prompt}

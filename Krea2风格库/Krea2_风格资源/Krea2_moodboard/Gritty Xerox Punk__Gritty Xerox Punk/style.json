@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-310",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "Gritty Xerox Punk",
+  "name": "Gritty Xerox Punk",
+  "prompt": "high contrast black and white, xerox photocopy texture, punk zine aesthetic, halftone screentone, distressed collage, toner grain, gritty analog print. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Gritty Xerox Punk__Gritty Xerox Punk/preview.webp",
+  "folder": "Krea2_moodboard/Gritty Xerox Punk__Gritty Xerox Punk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

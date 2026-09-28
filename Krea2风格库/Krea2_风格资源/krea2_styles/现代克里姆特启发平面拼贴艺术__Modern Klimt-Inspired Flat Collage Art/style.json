@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-324",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "现代克里姆特启发平面拼贴艺术",
+  "name": "Modern Klimt-Inspired Flat Collage Art",
+  "prompt": "Style: Modern Klimt-Inspired Flat Collage Art: A richly ornamental illustration style built on dense, mosaic-like flat shapes assembled together in place of naturalistic modeling, a deliberately flattened sense of depth that abandons perspective entirely in favor of a single unified picture-extent, meticulous decorative patterning applied with mathematical, tessellated precision across every region, a hushed, reverent stillness carried through symmetrical, deliberate composition, and a luminous, contemporary decorative elegance that bridges early-20th-century ornamental painting with a modern collage-driven graphic sensibility. Influenced by: Gustav Klimt, contemporary flat-collage illustration technique, tessellated decorative-pattern practice, Byzantine mosaic-adjacent compositional method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/现代克里姆特启发平面拼贴艺术__Modern Klimt-Inspired Flat Collage Art/preview.jpg",
+  "folder": "krea2_styles/现代克里姆特启发平面拼贴艺术__Modern Klimt-Inspired Flat Collage Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

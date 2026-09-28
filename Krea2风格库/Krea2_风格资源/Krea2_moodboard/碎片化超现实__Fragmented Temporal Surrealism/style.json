@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2725",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "碎片化超现实",
+  "name": "Fragmented Temporal Surrealism",
+  "prompt": "vertical slit-scan distortion, fragmented portraiture, analog film grain, dreamlike haze, deconstructed collage, muted vintage color palette, surreal temporal slice. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化超现实__Fragmented Temporal Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/碎片化超现实__Fragmented Temporal Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

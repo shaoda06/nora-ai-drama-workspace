@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1010",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "肌理天真",
+  "name": "Textured Naive Modernism",
+  "prompt": "naive folk modernism, impasto texture, high-contrast crimson and black, visible brushstrokes, graphic geometric patterns, flat perspective, gothic whimsy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理天真__Textured Naive Modernism/preview.webp",
+  "folder": "Krea2_moodboard/肌理天真__Textured Naive Modernism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1793",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "鲜活宏观怀旧",
+  "name": "Vibrant Macro Nostalgia",
+  "prompt": "extreme shallow depth of field, vibrant color saturation, dreamy bokeh background, low-angle perspective, high-contrast natural lighting, tactile textural detail, dynamic motion blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活宏观怀旧__Vibrant Macro Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/鲜活宏观怀旧__Vibrant Macro Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

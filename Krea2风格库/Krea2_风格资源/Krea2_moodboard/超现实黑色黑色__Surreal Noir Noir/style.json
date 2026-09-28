@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-508",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实黑色黑色",
+  "name": "Surreal Noir Noir",
+  "prompt": "high-contrast black and white, dramatic chiaroscuro lighting, gritty analog film grain, psychological surrealism, halftone screen print texture, cinematic noir portraiture, distorted dreamlike composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实黑色黑色__Surreal Noir Noir/preview.webp",
+  "folder": "Krea2_moodboard/超现实黑色黑色__Surreal Noir Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

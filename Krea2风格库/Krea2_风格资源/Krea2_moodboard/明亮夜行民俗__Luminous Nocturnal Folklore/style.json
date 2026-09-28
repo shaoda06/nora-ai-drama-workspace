@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1286",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "明亮夜行民俗",
+  "name": "Luminous Nocturnal Folklore",
+  "prompt": "painterly digital illustration, warm amber glow, deep indigo twilight, soft impasto texture, nostalgic storybook style, cozy winter atmosphere, whimsical celestial elements. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行民俗__Luminous Nocturnal Folklore/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行民俗__Luminous Nocturnal Folklore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

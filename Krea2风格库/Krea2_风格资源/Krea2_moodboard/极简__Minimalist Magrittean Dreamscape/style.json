@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3104",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "极简",
+  "name": "Minimalist Magrittean Dreamscape",
+  "prompt": "minimalist surrealism, Magritte-inspired, dreamlike melancholy, cool teal and white palette, obscured figure, floating clouds, cinematic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Minimalist Magrittean Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/极简__Minimalist Magrittean Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

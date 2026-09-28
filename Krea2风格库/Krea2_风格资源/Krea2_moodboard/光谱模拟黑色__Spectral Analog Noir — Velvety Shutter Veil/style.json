@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1927",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "光谱模拟黑色",
+  "name": "Spectral Analog Noir — Velvety Shutter Veil",
+  "prompt": "high-contrast black and white, heavy film grain, motion blur, shutter drag, chiaroscuro lighting, cinematic noir, spectral photography, analog film aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱模拟黑色__Spectral Analog Noir — Velvety Shutter Veil/preview.webp",
+  "folder": "Krea2_moodboard/光谱模拟黑色__Spectral Analog Noir — Velvety Shutter Veil",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

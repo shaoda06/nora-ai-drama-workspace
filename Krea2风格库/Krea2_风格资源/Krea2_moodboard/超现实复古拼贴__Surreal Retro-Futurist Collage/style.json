@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3319",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "超现实复古拼贴",
+  "name": "Surreal Retro-Futurist Collage",
+  "prompt": "mixed-media collage, retro-futurism, surrealist composition, torn paper texture, vintage sci-fi, bold flat colors, high-contrast analog aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实复古拼贴__Surreal Retro-Futurist Collage/preview.webp",
+  "folder": "Krea2_moodboard/超现实复古拼贴__Surreal Retro-Futurist Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

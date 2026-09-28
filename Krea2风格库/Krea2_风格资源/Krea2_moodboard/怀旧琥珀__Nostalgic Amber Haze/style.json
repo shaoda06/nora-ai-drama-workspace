@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1566",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "怀旧琥珀",
+  "name": "Nostalgic Amber Haze",
+  "prompt": "analog film grain, golden hour haze, soft focus silhouette, warm sunset palette, dreamlike motion blur, vintage 35mm aesthetic, light leak, nostalgic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧琥珀__Nostalgic Amber Haze/preview.webp",
+  "folder": "Krea2_moodboard/怀旧琥珀__Nostalgic Amber Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

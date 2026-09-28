@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-576",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "有构数字",
+  "name": "Structured Digital Pastoralism",
+  "prompt": "fragmented landscape, geometric grid overlay, digital glitch distortion, muted earthy tones, painterly texture, surreal collage, atmospheric hazy light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/有构数字__Structured Digital Pastoralism/preview.webp",
+  "folder": "Krea2_moodboard/有构数字__Structured Digital Pastoralism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

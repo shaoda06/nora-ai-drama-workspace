@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2883",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "夜行超现实颗粒",
+  "name": "Electric Nocturnal Surrealism — Cyan Beam Grain",
+  "prompt": "deep cobalt and cyan palette, heavy film grain, nocturnal atmosphere, glowing ethereal highlights, distressed texture, motion blur, retro sci-fi aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行超现实颗粒__Electric Nocturnal Surrealism — Cyan Beam Grain/preview.webp",
+  "folder": "Krea2_moodboard/夜行超现实颗粒__Electric Nocturnal Surrealism — Cyan Beam Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

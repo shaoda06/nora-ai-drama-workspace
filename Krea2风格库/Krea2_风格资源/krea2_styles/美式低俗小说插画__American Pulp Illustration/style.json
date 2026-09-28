@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-147",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "美式低俗小说插画",
+  "name": "American Pulp Illustration",
+  "prompt": "Style: American Pulp Illustration: bold commercial illustration defined by dramatic storytelling, striking visual impact, confident draftsmanship, dynamic composition, rich painterly rendering, and a heightened sense of adventure and spectacle, combining accessible narrative clarity with highly crafted imagery through vibrant visual energy, polished execution, and iconic genre aesthetics, reminiscent of N.C. Wyeth and Frank McCarthy, inspired by Doc Savage magazine covers and The Shadow pulp illustrations.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/美式低俗小说插画__American Pulp Illustration/preview.jpg",
+  "folder": "krea2_styles/美式低俗小说插画__American Pulp Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

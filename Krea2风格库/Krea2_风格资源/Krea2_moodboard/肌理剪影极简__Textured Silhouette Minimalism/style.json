@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-584",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "肌理剪影极简",
+  "name": "Textured Silhouette Minimalism",
+  "prompt": "minimalist silhouette, high contrast, textured brushwork, ethereal light, expressive ink lines, vibrant color layering, painterly aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理剪影极简__Textured Silhouette Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/肌理剪影极简__Textured Silhouette Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+chiaroscuro lighting, low-key cinematic noir, heavy film grain, tactile realism, shallow depth of field, muted desaturated tones, intimate close-up. Subject:{prompt}

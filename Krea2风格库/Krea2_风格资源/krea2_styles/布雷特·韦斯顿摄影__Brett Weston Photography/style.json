@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-382",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "布雷特·韦斯顿摄影",
+  "name": "Brett Weston Photography",
+  "prompt": "Style: Brett Weston Photography: A meticulously composed black-and-white photographic style built on sharp, exacting tonal contrast that renders every texture with crystalline precision, abstract, tightly cropped framing that isolates form and pattern from broader context, a deliberate, unhurried attention to graphic composition over narrative content, meticulous control over the full tonal range from deep black to luminous white, and a disciplined, modernist photographic clarity that treats abstraction and form as the entire compositional subject. Influenced by: Brett Weston, Edward Weston, modernist black-and-white photography tradition, straight-photography technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/布雷特·韦斯顿摄影__Brett Weston Photography/preview.jpg",
+  "folder": "krea2_styles/布雷特·韦斯顿摄影__Brett Weston Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

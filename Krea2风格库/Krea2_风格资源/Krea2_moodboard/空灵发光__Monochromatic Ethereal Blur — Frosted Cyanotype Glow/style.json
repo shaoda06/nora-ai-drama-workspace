@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2427",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "空灵发光",
+  "name": "Monochromatic Ethereal Blur — Frosted Cyanotype Glow",
+  "prompt": "monochromatic blue palette, ethereal soft focus, heavy film grain, motion blur, frosted glass texture, glowing aura, cyanotype aesthetic, mysterious silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵发光__Monochromatic Ethereal Blur — Frosted Cyanotype Glow/preview.webp",
+  "folder": "Krea2_moodboard/空灵发光__Monochromatic Ethereal Blur — Frosted Cyanotype Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

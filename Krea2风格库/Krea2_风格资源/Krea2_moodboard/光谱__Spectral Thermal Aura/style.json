@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3354",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "光谱",
+  "name": "Spectral Thermal Aura",
+  "prompt": "thermal gradient aura, airbrush glow, high-contrast silhouette, grainy film texture, soft-focus diffusion, surreal spectral portrait, saturated neon bleed. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱__Spectral Thermal Aura/preview.webp",
+  "folder": "Krea2_moodboard/光谱__Spectral Thermal Aura",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

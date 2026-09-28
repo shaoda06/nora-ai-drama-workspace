@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3293",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "太阳复古超现实",
+  "name": "Sun-Drenched Retro Surrealism",
+  "prompt": "vintage Kodachrome film, saturated retro colors, harsh midday sun, surrealist composition, mid-century aesthetic, deep graphic shadows, nostalgic Americana. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/太阳复古超现实__Sun-Drenched Retro Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/太阳复古超现实__Sun-Drenched Retro Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

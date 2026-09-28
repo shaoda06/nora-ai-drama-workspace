@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1727",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "明亮",
+  "name": "Luminous Aqueous Solitude",
+  "prompt": "shimmering natural light, atmospheric mist, cool blue color palette, refractive glass distortion, minimalist arctic landscape, ethereal bokeh, high-contrast water ripples. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Aqueous Solitude/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Aqueous Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

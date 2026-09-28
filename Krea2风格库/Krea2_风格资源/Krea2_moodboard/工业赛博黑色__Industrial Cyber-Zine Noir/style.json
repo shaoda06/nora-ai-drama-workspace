@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2018",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "工业赛博黑色",
+  "name": "Industrial Cyber-Zine Noir",
+  "prompt": "high-contrast monochrome, analog film grain, saturated yellow graphic overlay, industrial lo-fi, surveillance aesthetic, photocopy texture, digital glitch. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/工业赛博黑色__Industrial Cyber-Zine Noir/preview.webp",
+  "folder": "Krea2_moodboard/工业赛博黑色__Industrial Cyber-Zine Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

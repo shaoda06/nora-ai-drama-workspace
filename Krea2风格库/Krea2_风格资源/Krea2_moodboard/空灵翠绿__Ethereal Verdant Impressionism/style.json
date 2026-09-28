@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-978",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "空灵翠绿",
+  "name": "Ethereal Verdant Impressionism",
+  "prompt": "high-angle aerial view, painterly impasto texture, verdant rolling landscape, whimsical surrealism, swirling brushstrokes, vibrant emerald and teal palette, minimalist solitude. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵翠绿__Ethereal Verdant Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/空灵翠绿__Ethereal Verdant Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

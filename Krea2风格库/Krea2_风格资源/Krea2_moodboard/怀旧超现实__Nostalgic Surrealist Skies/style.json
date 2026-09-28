@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-172",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "怀旧超现实",
+  "name": "Nostalgic Surrealist Skies",
+  "prompt": "towering cumulus clouds, deep cobalt blue sky, painterly anime background style, dramatic low angle perspective, high contrast lighting, nostalgic summer atmosphere, sculptural cloud formations. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实__Nostalgic Surrealist Skies/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实__Nostalgic Surrealist Skies",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

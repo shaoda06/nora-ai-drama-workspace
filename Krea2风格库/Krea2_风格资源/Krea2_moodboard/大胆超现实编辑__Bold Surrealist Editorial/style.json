@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3057",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "大胆超现实编辑",
+  "name": "Bold Surrealist Editorial",
+  "prompt": "high-contrast studio portrait, editorial fashion photography, saturated solid-color background, avant-garde styling, minimalist composition, surrealist elements, bold graphic makeup. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/大胆超现实编辑__Bold Surrealist Editorial/preview.webp",
+  "folder": "Krea2_moodboard/大胆超现实编辑__Bold Surrealist Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1694",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "单色阈限黑色",
+  "name": "Monochrome Liminal Noir",
+  "prompt": "high-contrast monochrome photography, heavy analog film grain, dense atmospheric fog, stark minimalist silhouettes, desolate liminal landscape, moody cinematic noir, textured black and white. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色阈限黑色__Monochrome Liminal Noir/preview.webp",
+  "folder": "Krea2_moodboard/单色阈限黑色__Monochrome Liminal Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

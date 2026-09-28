@@ -1,0 +1,1 @@
+stippled texture, chiaroscuro, absolute black background, ethereal white glow, grainy pointillism, intense rim lighting, monochrome high contrast, spectral bloom. Subject:{prompt}

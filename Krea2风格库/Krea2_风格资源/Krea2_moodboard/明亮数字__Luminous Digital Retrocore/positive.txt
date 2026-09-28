@@ -1,0 +1,1 @@
+retro-futuristic, bioluminescent cyan glow, high-contrast dark background, pixel grid texture, glitch artifacts, digital pointillism, 16-bit aesthetic, CRT scanlines. Subject:{prompt}

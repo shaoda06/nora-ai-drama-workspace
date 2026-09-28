@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-301",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "笔触强调",
+  "name": "Brushwork Emphasis",
+  "prompt": "Style: Brushwork Emphasis: painterly aesthetics centered on expressive brush handling, visible mark-making, sophisticated texture variation, dynamic surface energy, and handcrafted visual character, prioritizing artistic gesture and material presence over perfectly smooth rendering while maintaining strong structural cohesion, visual depth, and refined craftsmanship throughout the image, reminiscent of John Singer Sargent and Joaquín Sorolla, inspired by Carnation, Lily, Lily, Rose and Walk on the Beach.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/笔触强调__Brushwork Emphasis/preview.jpg",
+  "folder": "krea2_styles/笔触强调__Brushwork Emphasis",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

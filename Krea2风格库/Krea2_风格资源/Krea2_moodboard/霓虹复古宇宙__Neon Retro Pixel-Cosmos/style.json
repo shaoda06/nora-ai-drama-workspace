@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1985",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "霓虹复古宇宙",
+  "name": "Neon Retro Pixel-Cosmos",
+  "prompt": "pixel art, dithering, retro gaming aesthetic, high-contrast palette, cosmic space background, CRT glow effect, 16-bit graphics. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹复古宇宙__Neon Retro Pixel-Cosmos/preview.webp",
+  "folder": "Krea2_moodboard/霓虹复古宇宙__Neon Retro Pixel-Cosmos",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

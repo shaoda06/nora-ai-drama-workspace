@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3483",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "夜行阈限黑色",
+  "name": "Nocturnal Liminal Noir",
+  "prompt": "cinematic silhouette, heavy analogue film grain, deep cobalt blue monochrome, liminal space atmosphere, high contrast noir, blue hour lighting, textured 35mm photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行阈限黑色__Nocturnal Liminal Noir/preview.webp",
+  "folder": "Krea2_moodboard/夜行阈限黑色__Nocturnal Liminal Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2548",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "赛博极简黑色",
+  "name": "Stark Cyber Minimalist Noir",
+  "prompt": "stark studio lighting, minimalist editorial, high-contrast silhouette, cool-toned palette, futuristic tailoring, sleek noir aesthetic, clinical composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/赛博极简黑色__Stark Cyber Minimalist Noir/preview.webp",
+  "folder": "Krea2_moodboard/赛博极简黑色__Stark Cyber Minimalist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

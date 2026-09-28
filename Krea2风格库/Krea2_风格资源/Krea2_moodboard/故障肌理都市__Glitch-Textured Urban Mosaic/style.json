@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-389",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "故障肌理都市",
+  "name": "Glitch-Textured Urban Mosaic",
+  "prompt": "risograph halftone texture, digital glitch artifacts, high-angle isometric composition, chroma key blue accents, dithered pixel pointillism, sharp geometric shadows, retro-tech aesthetic, grainy paper overlay. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/故障肌理都市__Glitch-Textured Urban Mosaic/preview.webp",
+  "folder": "Krea2_moodboard/故障肌理都市__Glitch-Textured Urban Mosaic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

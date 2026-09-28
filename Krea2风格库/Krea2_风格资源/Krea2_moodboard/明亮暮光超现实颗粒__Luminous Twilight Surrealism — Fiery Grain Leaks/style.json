@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1541",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "明亮暮光超现实颗粒",
+  "name": "Luminous Twilight Surrealism — Fiery Grain Leaks",
+  "prompt": "analog film grain, fiery amber and indigo palette, soft focus dreamscape, stark silhouette, hazy sunset glow, surreal magical realism, vintage light leaks. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮暮光超现实颗粒__Luminous Twilight Surrealism — Fiery Grain Leaks/preview.webp",
+  "folder": "Krea2_moodboard/明亮暮光超现实颗粒__Luminous Twilight Surrealism — Fiery Grain Leaks",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

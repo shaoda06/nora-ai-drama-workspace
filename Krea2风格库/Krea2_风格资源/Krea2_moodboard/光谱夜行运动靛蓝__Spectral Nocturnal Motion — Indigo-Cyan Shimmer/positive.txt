@@ -1,0 +1,1 @@
+motion blur, long exposure, spectral glow, deep cyan and indigo, heavy film grain, ethereal silhouettes, lo-fi aesthetic, high-contrast darkness. Subject:{prompt}

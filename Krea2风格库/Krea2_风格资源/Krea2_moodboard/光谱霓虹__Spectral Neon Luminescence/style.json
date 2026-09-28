@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2281",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "光谱霓虹",
+  "name": "Spectral Neon Luminescence",
+  "prompt": "spectral aura, intense halation glow, heavy film grain, chromatic aberration, high-contrast silhouette, pitch-black background, luminous bloom, thermal neon energy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱霓虹__Spectral Neon Luminescence/preview.webp",
+  "folder": "Krea2_moodboard/光谱霓虹__Spectral Neon Luminescence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

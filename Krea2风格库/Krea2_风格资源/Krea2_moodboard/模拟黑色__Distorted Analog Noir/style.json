@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1980",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "模拟黑色",
+  "name": "Distorted Analog Noir",
+  "prompt": "analog glitch art, high-contrast screenprint texture, chromatic aberration, distressed grainy xerox, neon magenta and cyan accents, dark synthwave noir, posterized duotone, distorted analog signal. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟黑色__Distorted Analog Noir/preview.webp",
+  "folder": "Krea2_moodboard/模拟黑色__Distorted Analog Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

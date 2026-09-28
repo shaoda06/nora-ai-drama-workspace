@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-579",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "明亮超现实",
+  "name": "Luminous Mystical Surrealism",
+  "prompt": "mystical surrealism, bioluminescent glow, fluid organic forms, chiaroscuro lighting, ethereal aura, intricate painterly textures, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮超现实__Luminous Mystical Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/明亮超现实__Luminous Mystical Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

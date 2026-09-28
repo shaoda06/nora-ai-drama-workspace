@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3049",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "动态棱镜",
+  "name": "Kinetic Prismatic Nocturne",
+  "prompt": "long exposure motion blur, chromatic aberration, analog film grain, spectral light trails, nocturnal deep blue palette, high-contrast neon streaks, surreal kinetic energy. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态棱镜__Kinetic Prismatic Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/动态棱镜__Kinetic Prismatic Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

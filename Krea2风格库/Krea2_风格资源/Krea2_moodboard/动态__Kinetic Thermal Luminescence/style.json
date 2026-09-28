@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3011",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "动态",
+  "name": "Kinetic Thermal Luminescence",
+  "prompt": "long exposure light trails, kinetic motion blur, thermal imaging glow, analog film grain, high contrast orange and blue, ghostly silhouette, surreal dreamcore. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态__Kinetic Thermal Luminescence/preview.webp",
+  "folder": "Krea2_moodboard/动态__Kinetic Thermal Luminescence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

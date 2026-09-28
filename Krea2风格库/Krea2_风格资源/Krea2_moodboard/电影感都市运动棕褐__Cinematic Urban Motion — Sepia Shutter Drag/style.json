@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1777",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感都市运动棕褐",
+  "name": "Cinematic Urban Motion — Sepia Shutter Drag",
+  "prompt": "motion blur street photography, cinematic shutter drag, intentional camera movement, muted sepia and amber tones, melancholic urban atmosphere, dreamy impressionistic light streaks, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市运动棕褐__Cinematic Urban Motion — Sepia Shutter Drag/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市运动棕褐__Cinematic Urban Motion — Sepia Shutter Drag",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

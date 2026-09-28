@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2192",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "夜行",
+  "name": "Monolithic Nocturnal Brutalism",
+  "prompt": "brutalist architecture, nocturnal urban landscape, monolithic concrete, high contrast lighting, repetitive facade grid, cinematic solitude, warm window glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行__Monolithic Nocturnal Brutalism/preview.webp",
+  "folder": "Krea2_moodboard/夜行__Monolithic Nocturnal Brutalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

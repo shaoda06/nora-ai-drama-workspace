@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2790",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "碎片化古典集合",
+  "name": "Fragmented Classical Assemblage",
+  "prompt": "mixed-media assemblage, classical portraiture, glitch art, geometric fragmentation, chiaroscuro, layered shadowbox, anachronistic collage, surrealist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化古典集合__Fragmented Classical Assemblage/preview.webp",
+  "folder": "Krea2_moodboard/碎片化古典集合__Fragmented Classical Assemblage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

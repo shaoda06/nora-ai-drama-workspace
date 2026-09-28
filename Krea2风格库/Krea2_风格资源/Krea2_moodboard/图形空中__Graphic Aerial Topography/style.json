@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2579",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "图形空中",
+  "name": "Graphic Aerial Topography",
+  "prompt": "nadir perspective, minimalist aerial landscape, graphic natural abstraction, geometric topography, high-contrast color palette, top-down composition, clean structural lines. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形空中__Graphic Aerial Topography/preview.webp",
+  "folder": "Krea2_moodboard/图形空中__Graphic Aerial Topography",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+intentional motion blur, chiaroscuro lighting, minimalist studio background, ghostly silhouette, painterly texture, high-contrast monochrome, sepia tones. Subject:{prompt}

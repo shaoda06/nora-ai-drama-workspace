@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-870",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "天穹",
+  "name": "Celestial Solitude Landscapes",
+  "prompt": "painterly digital art, monolithic landscape, chiaroscuro lighting, twilight color palette, solitary traveler, retro-futurist atmosphere, warm glow against cool shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹__Celestial Solitude Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/天穹__Celestial Solitude Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

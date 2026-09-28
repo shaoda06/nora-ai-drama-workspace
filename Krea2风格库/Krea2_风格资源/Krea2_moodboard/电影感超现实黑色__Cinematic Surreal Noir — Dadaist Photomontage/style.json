@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3242",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "电影感超现实黑色",
+  "name": "Cinematic Surreal Noir — Dadaist Photomontage",
+  "prompt": "high-contrast black and white photography, mid-century cinematic noir, surrealist portraiture, analog film grain, chiaroscuro lighting, fragmented photomontage, vintage Hollywood glamour. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感超现实黑色__Cinematic Surreal Noir — Dadaist Photomontage/preview.webp",
+  "folder": "Krea2_moodboard/电影感超现实黑色__Cinematic Surreal Noir — Dadaist Photomontage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2646",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "单色阴影建筑",
+  "name": "Monochrome Shadow Architecture",
+  "prompt": "high-contrast black and white photography, dramatic chiaroscuro, harsh directional lighting, grainy film texture, intricate shadow patterns, noir atmosphere, overhead perspective. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色阴影建筑__Monochrome Shadow Architecture/preview.webp",
+  "folder": "Krea2_moodboard/单色阴影建筑__Monochrome Shadow Architecture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

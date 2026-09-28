@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3453",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "流质铬",
+  "name": "Thermal Liquid Chrome",
+  "prompt": "thermal imaging color palette, liquid chrome, chromatic distortion, dithered grainy texture, iridescent gradient, psychedelic liquefaction, soft fuzzy blur. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/流质铬__Thermal Liquid Chrome/preview.webp",
+  "folder": "Krea2_moodboard/流质铬__Thermal Liquid Chrome",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

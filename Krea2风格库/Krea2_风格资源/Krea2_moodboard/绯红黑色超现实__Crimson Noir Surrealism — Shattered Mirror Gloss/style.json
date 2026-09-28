@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2680",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "绯红黑色超现实",
+  "name": "Crimson Noir Surrealism — Shattered Mirror Gloss",
+  "prompt": "chiaroscuro lighting, saturated crimson red, stark black background, shattered mirror reflections, high-gloss wet textures, cinematic noir portrait, macro makeup details. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色超现实__Crimson Noir Surrealism — Shattered Mirror Gloss/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色超现实__Crimson Noir Surrealism — Shattered Mirror Gloss",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

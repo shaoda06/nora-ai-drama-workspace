@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3055",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "空灵编辑",
+  "name": "Ethereal Crystalline Editorial",
+  "prompt": "icy crystalline textures, high-fashion editorial portrait, soft diffused lighting, sheer organza and tulle, intricate gemstone embellishments, ethereal reflective surfaces, minimalist editorial aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵编辑__Ethereal Crystalline Editorial/preview.webp",
+  "folder": "Krea2_moodboard/空灵编辑__Ethereal Crystalline Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

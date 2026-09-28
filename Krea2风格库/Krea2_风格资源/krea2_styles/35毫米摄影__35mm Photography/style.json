@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-329",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "35毫米摄影",
+  "name": "35mm Photography",
+  "prompt": "Style: 35mm Photography: A classic film-photography style built on natural grain structure inherent to the smaller film format, a slightly compressed yet intimate depth-of-field character distinct from larger formats, honest, unmanipulated tonal rendering shaped by the chemistry of the film stock itself, unhurried, documentary-adjacent framing suited to spontaneous, handheld capture, and a timeless, tactile authenticity rooted in decades of photographic tradition. Influenced by: 35mm film photography tradition, photojournalism practice, Henri Cartier-Bresson candid-capture method, analog darkroom-development technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/35毫米摄影__35mm Photography/preview.jpg",
+  "folder": "krea2_styles/35毫米摄影__35mm Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

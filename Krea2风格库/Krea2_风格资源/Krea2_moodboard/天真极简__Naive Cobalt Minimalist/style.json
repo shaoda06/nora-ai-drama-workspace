@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-937",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "天真极简",
+  "name": "Naive Cobalt Minimalist",
+  "prompt": "naive art style, cobalt blue palette, textured gouache illustration, minimalist folk art, hand-drawn aesthetic, warm cream background, whimsical simplified shapes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天真极简__Naive Cobalt Minimalist/preview.webp",
+  "folder": "Krea2_moodboard/天真极简__Naive Cobalt Minimalist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

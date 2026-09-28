@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3258",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵粉彩怀旧",
+  "name": "Ethereal Pastel Nostalgia",
+  "prompt": "soft-focus haze, analog film grain, ethereal pastel palette, diffused lighting, dreamy nostalgia, vintage texture, muted color gradients. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵粉彩怀旧__Ethereal Pastel Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/空灵粉彩怀旧__Ethereal Pastel Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

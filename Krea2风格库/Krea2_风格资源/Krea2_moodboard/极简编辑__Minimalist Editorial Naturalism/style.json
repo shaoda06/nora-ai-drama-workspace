@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2105",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "极简编辑",
+  "name": "Minimalist Editorial Naturalism",
+  "prompt": "studio portrait, minimalist aesthetic, soft diffused lighting, raw skin texture, neutral color palette, high-fashion photography, clean composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简编辑__Minimalist Editorial Naturalism/preview.webp",
+  "folder": "Krea2_moodboard/极简编辑__Minimalist Editorial Naturalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

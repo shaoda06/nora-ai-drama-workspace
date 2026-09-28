@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2747",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "鲜明铬波普",
+  "name": "Hyper-Vivid Chrome Pop",
+  "prompt": "fisheye lens distortion, hyper-saturated color palette, liquid chrome textures, extreme worm's-eye view, vibrant pop surrealism, crisp direct sunlight, iridescent reflections, futuristic street fashion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜明铬波普__Hyper-Vivid Chrome Pop/preview.webp",
+  "folder": "Krea2_moodboard/鲜明铬波普__Hyper-Vivid Chrome Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

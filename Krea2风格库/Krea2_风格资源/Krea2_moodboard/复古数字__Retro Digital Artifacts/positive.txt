@@ -1,0 +1,1 @@
+90s retro OS GUI, dithered pixel art, CRT scanline effect, chromatic aberration, webcore collage, cobalt blue duotone, lo-fi digital noise. Subject:{prompt}

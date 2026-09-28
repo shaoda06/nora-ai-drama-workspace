@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-993",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮叙事",
+  "name": "Luminous Mystical Narrative",
+  "prompt": "intricate hand-drawn textures, ethereal luminous glow, chiaroscuro lighting, storybook gothic, painterly impasto brushstrokes, vibrant mystical color palette, enchanted narrative landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮叙事__Luminous Mystical Narrative/preview.webp",
+  "folder": "Krea2_moodboard/明亮叙事__Luminous Mystical Narrative",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+high-contrast black and white, motion blur, heavy film grain, shutter drag, ghostly silhouettes, analog photocopy texture, lo-fi darkroom print. Subject:{prompt}

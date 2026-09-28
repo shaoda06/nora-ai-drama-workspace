@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-57",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "收藏手办",
+  "name": "Collectible Figure",
+  "prompt": "Style: Collectible Figure: A meticulously sculpted 1:12 scale action subject cast in rigid injection-molded ABS plastic with a glossy top coat, photographed under diffused lighting with a deep focus shot capturing every sculpted detail. Influenced by: the classic action figure toy, Hasbro product, 1980s action-toy.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/收藏手办__Collectible Figure/preview.jpg",
+  "folder": "krea2_styles/收藏手办__Collectible Figure",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

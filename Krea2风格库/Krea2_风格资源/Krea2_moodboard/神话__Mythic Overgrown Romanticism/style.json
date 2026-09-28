@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-592",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "神话",
+  "name": "Mythic Overgrown Romanticism",
+  "prompt": "monumental overgrown ruins, cinematic high fantasy landscape, atmospheric mist and fog, painterly romanticist style, lush mossy textures, dappled natural lighting, epic scale matte painting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/神话__Mythic Overgrown Romanticism/preview.webp",
+  "folder": "Krea2_moodboard/神话__Mythic Overgrown Romanticism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

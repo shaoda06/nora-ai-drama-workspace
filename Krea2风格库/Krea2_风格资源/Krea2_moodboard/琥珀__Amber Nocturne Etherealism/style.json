@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2844",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "琥珀",
+  "name": "Amber Nocturne Etherealism",
+  "prompt": "long exposure motion blur, chiaroscuro lighting, warm amber glow, cinematic haze, analog film grain, ethereal light trails, heavy shadow contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀__Amber Nocturne Etherealism/preview.webp",
+  "folder": "Krea2_moodboard/琥珀__Amber Nocturne Etherealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

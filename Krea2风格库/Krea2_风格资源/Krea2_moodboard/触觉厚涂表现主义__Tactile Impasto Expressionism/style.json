@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1106",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "触觉厚涂表现主义",
+  "name": "Tactile Impasto Expressionism",
+  "prompt": "heavy impasto oil painting, sculptural palette knife texture, expressive gestural brushstrokes, high-contrast lighting, saturated pastel and primary palette, tactile paint layers, modern expressionist portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉厚涂表现主义__Tactile Impasto Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/触觉厚涂表现主义__Tactile Impasto Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

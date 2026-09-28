@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2755",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵棱镜",
+  "name": "Ethereal Prismatic Luminance",
+  "prompt": "chromatic dispersion, prismatic light refraction, stark black background, ethereal bloom effect, spectral glow, radial light symmetry, anamorphic lens flare. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵棱镜__Ethereal Prismatic Luminance/preview.webp",
+  "folder": "Krea2_moodboard/空灵棱镜__Ethereal Prismatic Luminance",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

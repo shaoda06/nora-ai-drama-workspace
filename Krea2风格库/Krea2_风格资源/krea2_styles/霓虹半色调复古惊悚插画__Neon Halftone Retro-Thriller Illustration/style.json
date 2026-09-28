@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-54",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "霓虹半色调复古惊悚插画",
+  "name": "Neon Halftone Retro-Thriller Illustration",
+  "prompt": "Style: Neon Halftone Retro-Thriller Illustration: A striking screenprint-inspired illustration style built on bold, high-contrast graphic shapes rendered through dense horizontal line-scan patterning that mimics offset-print texture, dramatic dual-toned lighting where sharp electric accents cross the subject against deep, silhouetted shadow, confident vector-clean contour holding every form with poster-ready precision, atmospheric radiating arcs suggesting motion and depth behind the central figure, and a bold, cinematic screenprint intensity that feels stylish, tense, and unmistakably retro-thriller. Influenced by: Jonathan Burton, contemporary screenprint movie-poster tradition, halftone scan-line illustration technique, synthwave-adjacent poster-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/霓虹半色调复古惊悚插画__Neon Halftone Retro-Thriller Illustration/preview.jpg",
+  "folder": "krea2_styles/霓虹半色调复古惊悚插画__Neon Halftone Retro-Thriller Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

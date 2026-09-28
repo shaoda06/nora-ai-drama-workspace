@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3234",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "有机极简",
+  "name": "Refracted Organic Minimalism",
+  "prompt": "fluted glass distortion, botanical macro minimalism, ribbed texture refraction, high-key natural lighting, organic digital fusion, vertical linear abstraction, surreal minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/有机极简__Refracted Organic Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/有机极简__Refracted Organic Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

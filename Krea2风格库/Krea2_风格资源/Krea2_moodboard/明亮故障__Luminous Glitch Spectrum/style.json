@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2075",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "明亮故障",
+  "name": "Luminous Glitch Spectrum",
+  "prompt": "chromatic aberration, analog glitch, spectral gradients, linear light distortion, neon glow, scanline texture, minimalist geometry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮故障__Luminous Glitch Spectrum/preview.webp",
+  "folder": "Krea2_moodboard/明亮故障__Luminous Glitch Spectrum",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

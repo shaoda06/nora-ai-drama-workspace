@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2296",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "太阳怀旧",
+  "name": "Sun-Drenched Fisheye Nostalgia",
+  "prompt": "extreme fisheye lens distortion, vibrant saturated colors, low-angle perspective, harsh direct sunlight, analog film grain, chromatic aberration, circular vignette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/太阳怀旧__Sun-Drenched Fisheye Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/太阳怀旧__Sun-Drenched Fisheye Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1908",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "碎片化数字写实",
+  "name": "Fragmented Digital Realism",
+  "prompt": "glitch art, pixel sorting, datamoshing, chromatic aberration, digital corruption, fragmented realism, cybernetic decay. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化数字写实__Fragmented Digital Realism/preview.webp",
+  "folder": "Krea2_moodboard/碎片化数字写实__Fragmented Digital Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

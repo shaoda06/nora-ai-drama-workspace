@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-941",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "翠绿氛围极简",
+  "name": "Verdant Atmospheric Minimalism",
+  "prompt": "monochromatic green palette, high-angle bird's-eye perspective, stippled and grainy texture, dramatic graphic shadows, minimalist landscape illustration, analog film aesthetic, painterly impasto depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/翠绿氛围极简__Verdant Atmospheric Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/翠绿氛围极简__Verdant Atmospheric Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

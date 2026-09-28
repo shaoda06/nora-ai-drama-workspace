@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-67",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "吉卜力风格",
+  "name": "Ghibli Style",
+  "prompt": "Style: Ghibli Style: A gentle, hand-painted animation illustration style built on soft watercolor-inspired shading that gives every plane a breathable, tender texture, meticulous naturalistic detail applied with unhurried patience, rounded, expressive proportions carrying quiet emotional sincerity, a hushed, wondrous stillness pervading even the most fantastical scenes, and a nostalgic, wholesome hand-crafted intensity that feels timeless and deeply human. Influenced by: Hayao Miyazaki, Studio Ghibli production technique, traditional cel-animation painting method, naturalist watercolor illustration tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/吉卜力风格__Ghibli Style/preview.jpg",
+  "folder": "krea2_styles/吉卜力风格__Ghibli Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1012",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "鲜活表现主义",
+  "name": "Vibrant Expressionist Portraiture",
+  "prompt": "expressive portraiture, bold impasto brushstrokes, high-contrast lighting, saturated neon color palette, textured painterly finish, raw emotional intensity, graphic color blocking. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活表现主义__Vibrant Expressionist Portraiture/preview.webp",
+  "folder": "Krea2_moodboard/鲜活表现主义__Vibrant Expressionist Portraiture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

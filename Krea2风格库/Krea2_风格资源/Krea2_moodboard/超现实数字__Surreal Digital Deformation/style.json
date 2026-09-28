@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2904",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "超现实数字",
+  "name": "Surreal Digital Deformation",
+  "prompt": "digital glitch portraiture, pixel sorting, slit-scan distortion, chiaroscuro lighting, temporal displacement, surreal experimental photography, fragmented identity. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实数字__Surreal Digital Deformation/preview.webp",
+  "folder": "Krea2_moodboard/超现实数字__Surreal Digital Deformation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

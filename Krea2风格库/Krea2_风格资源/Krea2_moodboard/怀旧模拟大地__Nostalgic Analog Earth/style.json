@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1422",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "怀旧模拟大地",
+  "name": "Nostalgic Analog Earth",
+  "prompt": "35mm analog film grain, nostalgic vintage aesthetic, warm golden hour lighting, tactile earthy textures, soft focus vignette, saturated retro color palette, macro nature photography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧模拟大地__Nostalgic Analog Earth/preview.webp",
+  "folder": "Krea2_moodboard/怀旧模拟大地__Nostalgic Analog Earth",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

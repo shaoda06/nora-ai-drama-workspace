@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-373",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "拼贴",
+  "name": "Electric Punk Collage",
+  "prompt": "mixed-media collage, neon punk aesthetic, torn paper edges, halftone texture, vibrant color blocking, gritty analog xerox, graphic zine style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/拼贴__Electric Punk Collage/preview.webp",
+  "folder": "Krea2_moodboard/拼贴__Electric Punk Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

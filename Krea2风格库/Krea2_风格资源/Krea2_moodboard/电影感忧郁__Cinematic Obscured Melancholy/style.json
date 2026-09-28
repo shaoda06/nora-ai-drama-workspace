@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1328",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感忧郁",
+  "name": "Cinematic Obscured Melancholy",
+  "prompt": "cinematic voyeuristic perspective, condensation on glass, vintage analog film grain, shallow depth of field, muted desaturated tones, atmospheric urban bokeh, distressed textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感忧郁__Cinematic Obscured Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/电影感忧郁__Cinematic Obscured Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

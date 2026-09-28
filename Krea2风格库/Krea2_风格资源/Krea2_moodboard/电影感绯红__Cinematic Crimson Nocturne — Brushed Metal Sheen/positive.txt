@@ -1,0 +1,1 @@
+monochromatic crimson, chiaroscuro lighting, high-contrast low-key, glossy liquid texture, cinematic macro depth, metallic red reflections, deep black shadows. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3486",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "电影感都市怀旧青蓝",
+  "name": "Cinematic Urban Nostalgia — Tungsten Teal",
+  "prompt": "cinematic 35mm film aesthetic, teal and amber color grading, nostalgic liminal space, moody urban lighting, warm tungsten glow, retro urban transit, high-contrast shadows, analog grain texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市怀旧青蓝__Cinematic Urban Nostalgia — Tungsten Teal/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市怀旧青蓝__Cinematic Urban Nostalgia — Tungsten Teal",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

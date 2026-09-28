@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-812",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "图形绯红极简艺术",
+  "name": "Graphic Crimson Minimalism — Art Deco Vector",
+  "prompt": "minimalist graphic illustration, stark black silhouette, high-contrast crimson background, Art Deco line art, vector design, geometric framing, sensual minimalist noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形绯红极简艺术__Graphic Crimson Minimalism — Art Deco Vector/preview.webp",
+  "folder": "Krea2_moodboard/图形绯红极简艺术__Graphic Crimson Minimalism — Art Deco Vector",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2999",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "空灵怀旧",
+  "name": "Ethereal Iridescent Nostalgia",
+  "prompt": "soft-focus haze, iridescent pastel palette, vintage film grain, shimmering glitter overlay, ethereal light leaks, dreamy nostalgic atmosphere, prismatic starburst reflections. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵怀旧__Ethereal Iridescent Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/空灵怀旧__Ethereal Iridescent Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

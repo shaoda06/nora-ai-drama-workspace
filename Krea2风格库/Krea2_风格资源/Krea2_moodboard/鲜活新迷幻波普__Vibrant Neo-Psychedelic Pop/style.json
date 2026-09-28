@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-648",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "鲜活新迷幻波普",
+  "name": "Vibrant Neo-Psychedelic Pop",
+  "prompt": "bold black outlines, flat vector illustration, psychedelic pop art, saturated color palette, surreal whimsical characters, retro 1970s aesthetic, high-contrast graphic design. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活新迷幻波普__Vibrant Neo-Psychedelic Pop/preview.webp",
+  "folder": "Krea2_moodboard/鲜活新迷幻波普__Vibrant Neo-Psychedelic Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

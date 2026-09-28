@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-239",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "模拟阈限",
+  "name": "Analog Liminal Glitchcore",
+  "prompt": "VHS analog glitch, low-poly PS1 aesthetic, liminal space, chromatic aberration, CRT texture, uncanny dreamcore, lo-fi CGI. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟阈限__Analog Liminal Glitchcore/preview.webp",
+  "folder": "Krea2_moodboard/模拟阈限__Analog Liminal Glitchcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-518",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "触觉新拼贴",
+  "name": "Tactile Neo-Punk Collage",
+  "prompt": "torn paper collage, halftone screen print, risograph texture, punk zine aesthetic, high contrast graphic design, mixed media assemblage, vibrant neon accents. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉新拼贴__Tactile Neo-Punk Collage/preview.webp",
+  "folder": "Krea2_moodboard/触觉新拼贴__Tactile Neo-Punk Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

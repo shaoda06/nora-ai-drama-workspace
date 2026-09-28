@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1431",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "夜行数字黑色",
+  "name": "Nocturnal Digital Noir",
+  "prompt": "deep indigo and cyan palette, high-contrast silhouettes, heavy digital grain, CRT scanline texture, liminal space, lo-fi retro-futurism, motion-blurred abstraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行数字黑色__Nocturnal Digital Noir/preview.webp",
+  "folder": "Krea2_moodboard/夜行数字黑色__Nocturnal Digital Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

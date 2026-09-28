@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-689",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "奇想",
+  "name": "Whimsical Risograph Dreamscape",
+  "prompt": "risograph print style, vibrant flat color illustration, grainy texture overlay, whimsical minimalist composition, bold black outlines, nostalgic dreamcore aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想__Whimsical Risograph Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/奇想__Whimsical Risograph Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

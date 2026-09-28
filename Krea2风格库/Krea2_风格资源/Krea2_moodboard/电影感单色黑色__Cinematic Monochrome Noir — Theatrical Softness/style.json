@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-347",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "电影感单色黑色",
+  "name": "Cinematic Monochrome Noir — Theatrical Softness",
+  "prompt": "high-contrast black and white, chiaroscuro lighting, vintage film grain, theatrical gothic portraiture, stark shadows, halftone and xerox texture, melancholic noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感单色黑色__Cinematic Monochrome Noir — Theatrical Softness/preview.webp",
+  "folder": "Krea2_moodboard/电影感单色黑色__Cinematic Monochrome Noir — Theatrical Softness",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

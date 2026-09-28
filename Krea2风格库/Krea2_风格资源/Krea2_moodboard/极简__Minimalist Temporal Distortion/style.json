@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2960",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "极简",
+  "name": "Minimalist Temporal Distortion",
+  "prompt": "minimalist surrealism, temporal distortion, architectural grid, pixel-stretched glitch, high-contrast monochrome, uncanny dreamscape, sharp focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简__Minimalist Temporal Distortion/preview.webp",
+  "folder": "Krea2_moodboard/极简__Minimalist Temporal Distortion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

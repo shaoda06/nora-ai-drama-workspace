@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-841",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "Expressive Folk Scri",
+  "name": "Expressive Folk Scribble",
+  "prompt": "hand-carved linocut texture, expressive gouache strokes, vibrant retro color palette, naive marker doodles, high-contrast graphic shapes, organic paper texture, gestural oil pastel marks. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/Expressive Folk Scri__Expressive Folk Scribble/preview.webp",
+  "folder": "Krea2_moodboard/Expressive Folk Scri__Expressive Folk Scribble",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

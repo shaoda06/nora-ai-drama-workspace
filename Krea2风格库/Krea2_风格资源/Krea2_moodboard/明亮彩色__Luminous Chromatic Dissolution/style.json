@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3052",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "明亮彩色",
+  "name": "Luminous Chromatic Dissolution",
+  "prompt": "bioluminescent light trails, chromatic aberration, surreal neon fluid dynamics, high contrast dark background, ethereal silhouette, dreamlike motion smear, vibrant neon spectrum. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮彩色__Luminous Chromatic Dissolution/preview.webp",
+  "folder": "Krea2_moodboard/明亮彩色__Luminous Chromatic Dissolution",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

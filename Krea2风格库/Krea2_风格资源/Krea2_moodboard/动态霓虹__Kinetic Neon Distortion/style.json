@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2073",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "动态霓虹",
+  "name": "Kinetic Neon Distortion",
+  "prompt": "motion blur, high-contrast studio lighting, neon saturation, abstract distortion, shutter drag, tactile texture overlays, vibrant color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态霓虹__Kinetic Neon Distortion/preview.webp",
+  "folder": "Krea2_moodboard/动态霓虹__Kinetic Neon Distortion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

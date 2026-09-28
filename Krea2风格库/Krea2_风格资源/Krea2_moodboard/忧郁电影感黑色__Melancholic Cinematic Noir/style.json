@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2832",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "忧郁电影感黑色",
+  "name": "Melancholic Cinematic Noir",
+  "prompt": "high-contrast chiaroscuro lighting, heavy analog film grain, moody cinematic atmosphere, ethereal double exposure, tactile texture, muted desaturated palette, psychological portraiture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁电影感黑色__Melancholic Cinematic Noir/preview.webp",
+  "folder": "Krea2_moodboard/忧郁电影感黑色__Melancholic Cinematic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

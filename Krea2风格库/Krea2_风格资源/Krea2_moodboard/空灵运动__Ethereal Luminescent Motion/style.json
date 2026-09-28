@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2841",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵运动",
+  "name": "Ethereal Luminescent Motion",
+  "prompt": "long exposure light painting, glowing silhouette, analog film grain, indigo and orange contrast, ethereal motion blur, twilight gradient background, dreamy cinematic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵运动__Ethereal Luminescent Motion/preview.webp",
+  "folder": "Krea2_moodboard/空灵运动__Ethereal Luminescent Motion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

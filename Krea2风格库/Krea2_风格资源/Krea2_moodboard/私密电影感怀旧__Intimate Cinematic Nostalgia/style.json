@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1404",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "私密电影感怀旧",
+  "name": "Intimate Cinematic Nostalgia",
+  "prompt": "cinematic film photography, chiaroscuro lighting, warm amber tones, shallow depth of field, analog film grain, introspective mood, soft window light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/私密电影感怀旧__Intimate Cinematic Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/私密电影感怀旧__Intimate Cinematic Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

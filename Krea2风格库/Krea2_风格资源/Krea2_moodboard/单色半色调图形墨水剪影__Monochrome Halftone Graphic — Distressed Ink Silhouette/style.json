@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-666",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "单色半色调图形墨水剪影",
+  "name": "Monochrome Halftone Graphic — Distressed Ink Silhouette",
+  "prompt": "high-contrast monochrome, halftone dot pattern, stipple spray texture, distressed ink print, minimalist graphic illustration, vintage screenprint style, chiaroscuro lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色半色调图形墨水剪影__Monochrome Halftone Graphic — Distressed Ink Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/单色半色调图形墨水剪影__Monochrome Halftone Graphic — Distressed Ink Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

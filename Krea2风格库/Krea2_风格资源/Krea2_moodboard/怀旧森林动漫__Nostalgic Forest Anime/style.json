@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-95",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "怀旧森林动漫",
+  "name": "Nostalgic Forest Anime",
+  "prompt": "classic 2D anime style, painterly forest background, nostalgic cel-shaded aesthetic, soft dappled lighting, Studio Ghibli inspired, atmospheric fantasy scenery, organic earth tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧森林动漫__Nostalgic Forest Anime/preview.webp",
+  "folder": "Krea2_moodboard/怀旧森林动漫__Nostalgic Forest Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

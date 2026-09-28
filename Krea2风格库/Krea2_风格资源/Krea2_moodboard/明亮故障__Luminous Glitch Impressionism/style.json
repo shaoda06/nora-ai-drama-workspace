@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-444",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "明亮故障",
+  "name": "Luminous Glitch Impressionism",
+  "prompt": "digital glitch, pointillist texture, chromatic aberration, neon saturated palette, halftone distortion, frosted noise filter, thermal heat map aesthetics. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮故障__Luminous Glitch Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/明亮故障__Luminous Glitch Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

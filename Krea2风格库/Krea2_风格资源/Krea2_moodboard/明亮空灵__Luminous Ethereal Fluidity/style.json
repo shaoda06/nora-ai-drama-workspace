@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3440",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "明亮空灵",
+  "name": "Luminous Ethereal Fluidity",
+  "prompt": "ethereal atmosphere, liquid textures, chiaroscuro lighting, bioluminescent shimmer, weightless suspension, dreamy volumetric haze, magical realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮空灵__Luminous Ethereal Fluidity/preview.webp",
+  "folder": "Krea2_moodboard/明亮空灵__Luminous Ethereal Fluidity",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

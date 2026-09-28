@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-707",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "夜行超现实",
+  "name": "Nocturnal Storybook Surrealism",
+  "prompt": "whimsical gothic illustration, glowing warm windows, dramatic twilight sky, textured colored pencil style, expressive hatch shading, surreal cosmic atmosphere, crooked fairytale architecture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行超现实__Nocturnal Storybook Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/夜行超现实__Nocturnal Storybook Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1374",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "忧郁",
+  "name": "Melancholic Cybernetic Nocturne",
+  "prompt": "cinematic cyber-noir, atmospheric urban fog, high-angle cityscape, desaturated teal and blue, glowing neon contrast, dystopian isolation, wet reflective surfaces. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁__Melancholic Cybernetic Nocturne/preview.webp",
+  "folder": "Krea2_moodboard/忧郁__Melancholic Cybernetic Nocturne",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3521",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "超现实阈限锐利",
+  "name": "Surreal Liminal Pastoral — Toy-Like Sharp Shadows",
+  "prompt": "liminal space, surrealist minimalist landscape, vibrant green hills, sharp dramatic shadows, uncanny dreamcore, clean digital render, perfect blue sky. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实阈限锐利__Surreal Liminal Pastoral — Toy-Like Sharp Shadows/preview.webp",
+  "folder": "Krea2_moodboard/超现实阈限锐利__Surreal Liminal Pastoral — Toy-Like Sharp Shadows",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

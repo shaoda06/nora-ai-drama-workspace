@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2004",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "单色",
+  "name": "Corrupted Monochrome Brutalism",
+  "prompt": "monochrome glitch art, pixel sorting, CRT scanlines, high contrast xerox, digital corruption, brutalist abstraction, analog signal decay. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色__Corrupted Monochrome Brutalism/preview.webp",
+  "folder": "Krea2_moodboard/单色__Corrupted Monochrome Brutalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

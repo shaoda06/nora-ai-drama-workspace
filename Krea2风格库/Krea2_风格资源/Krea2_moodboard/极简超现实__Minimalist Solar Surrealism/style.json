@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1707",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "极简超现实",
+  "name": "Minimalist Solar Surrealism",
+  "prompt": "giant glowing red sun, sage green atmospheric fog, minimalist brutalist architecture, surreal silhouette, cinematic lighting, desaturated teal palette, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简超现实__Minimalist Solar Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/极简超现实__Minimalist Solar Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

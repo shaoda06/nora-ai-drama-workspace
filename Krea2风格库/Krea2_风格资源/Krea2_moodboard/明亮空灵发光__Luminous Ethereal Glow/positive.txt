@@ -1,0 +1,1 @@
+ethereal glow, prismatic bokeh, high-key studio lighting, dewy skin, soft focus, iridescent highlights, dreamlike atmosphere. Subject:{prompt}

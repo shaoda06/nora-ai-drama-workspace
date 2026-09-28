@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-187",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "图形怪诞",
+  "name": "Gritty Graphic Macabre",
+  "prompt": "heavy ink outlines, dark fantasy graphic novel, high-contrast chiaroscuro, screentone and stipple texture, gritty pulp horror, saturated neon accents, aggressive linework. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形怪诞__Gritty Graphic Macabre/preview.webp",
+  "folder": "Krea2_moodboard/图形怪诞__Gritty Graphic Macabre",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

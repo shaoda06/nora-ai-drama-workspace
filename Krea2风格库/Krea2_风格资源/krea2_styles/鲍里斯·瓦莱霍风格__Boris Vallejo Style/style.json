@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-300",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "鲍里斯·瓦莱霍风格",
+  "name": "Boris Vallejo Style",
+  "prompt": "Style: Boris Vallejo Style: A hyper-idealized fantasy painting style built on smooth, airbrushed skin rendering that gives powerfully sculpted anatomy a glossy, almost polished-marble finish, dramatic directional lighting wrapping muscular, statuesque forms in warm heroic glow, meticulously blended tonal transitions that eliminate visible brushwork in favor of glassy precision, confident heroic posing charged with theatrical grandeur, and a bold, glossy, larger-than-life painterly radiance. Influenced by: Boris Vallejo, airbrush fantasy painting technique, heroic fantasy illustration, classical figure painting.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/鲍里斯·瓦莱霍风格__Boris Vallejo Style/preview.jpg",
+  "folder": "krea2_styles/鲍里斯·瓦莱霍风格__Boris Vallejo Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

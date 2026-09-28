@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2571",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "触觉极简",
+  "name": "Tactile Clay Minimalist",
+  "prompt": "3D clay render, matte texture, minimalist rounded geometry, soft studio lighting, playful design, clean solid background, tactile digital sculpture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉极简__Tactile Clay Minimalist/preview.webp",
+  "folder": "Krea2_moodboard/触觉极简__Tactile Clay Minimalist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

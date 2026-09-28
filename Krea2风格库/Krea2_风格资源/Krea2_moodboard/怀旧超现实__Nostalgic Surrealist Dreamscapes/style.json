@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3291",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "怀旧超现实",
+  "name": "Nostalgic Surrealist Dreamscapes",
+  "prompt": "surrealist dreamscape, vintage film grain, nostalgic atmospheric lighting, magical realism landscape, low horizon composition, retro-futurist texture, muted earth tones. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实__Nostalgic Surrealist Dreamscapes/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实__Nostalgic Surrealist Dreamscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

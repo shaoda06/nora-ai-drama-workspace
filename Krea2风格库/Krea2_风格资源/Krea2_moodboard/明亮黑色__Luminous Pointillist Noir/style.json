@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2374",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "明亮黑色",
+  "name": "Luminous Pointillist Noir",
+  "prompt": "stippling art, pointillism, high-contrast monochrome, pitch-black background, chiaroscuro, analog grain, dithered texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色__Luminous Pointillist Noir/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色__Luminous Pointillist Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

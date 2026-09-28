@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1963",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态视角鲜明天空",
+  "name": "Dynamic Fisheye Perspective — Vivid Sky Texture",
+  "prompt": "extreme fisheye lens, dynamic low-angle perspective, forced foreshortening, vibrant blue sky, immersive POV, high-contrast sunlight, streetwear aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态视角鲜明天空__Dynamic Fisheye Perspective — Vivid Sky Texture/preview.webp",
+  "folder": "Krea2_moodboard/动态视角鲜明天空__Dynamic Fisheye Perspective — Vivid Sky Texture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

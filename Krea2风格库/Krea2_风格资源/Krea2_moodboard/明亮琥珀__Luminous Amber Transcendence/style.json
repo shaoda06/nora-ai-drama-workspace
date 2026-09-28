@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-558",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "明亮琥珀",
+  "name": "Luminous Amber Transcendence",
+  "prompt": "backlit amber luminescence, translucent golden resin, ethereal divine glow, macro crystalline texture, warm honey-colored light, molten organic surfaces, symbolist painterly detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮琥珀__Luminous Amber Transcendence/preview.webp",
+  "folder": "Krea2_moodboard/明亮琥珀__Luminous Amber Transcendence",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

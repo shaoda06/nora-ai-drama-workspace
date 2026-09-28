@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-723",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "琥珀黑色",
+  "name": "Amber Noir Linearism",
+  "prompt": "glowing amber contour lines, stark charcoal textured background, minimalist graphic illustration, high contrast warm gradients, fine parallel linework, analog grain texture, surreal geometric forms. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀黑色__Amber Noir Linearism/preview.webp",
+  "folder": "Krea2_moodboard/琥珀黑色__Amber Noir Linearism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

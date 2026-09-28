@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1747",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "触觉空灵",
+  "name": "Tactile Ethereal Solitude",
+  "prompt": "blurred silhouette, tactile texture, frosted glass, ethereal glow, low-key lighting, warm sepia tones, soft focus, minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉空灵__Tactile Ethereal Solitude/preview.webp",
+  "folder": "Krea2_moodboard/触觉空灵__Tactile Ethereal Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3226",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "怀旧暮光超现实青蓝",
+  "name": "Nostalgic Twilight Surrealism — Magenta-Teal Rim",
+  "prompt": "dreamy retro-surrealism, analog film grain texture, twilight color gradient, saturated magenta and indigo, minimalist silhouette, lo-fi nostalgic aesthetic, soft golden hour lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧暮光超现实青蓝__Nostalgic Twilight Surrealism — Magenta-Teal Rim/preview.webp",
+  "folder": "Krea2_moodboard/怀旧暮光超现实青蓝__Nostalgic Twilight Surrealism — Magenta-Teal Rim",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2245",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "绯红黑色极简",
+  "name": "Crimson Noir Minimalism — Stroboscopic Gloss",
+  "prompt": "deep crimson red background, obsidian black subject, high-contrast chiaroscuro, dramatic rim lighting, minimalist cinematic composition, stroboscopic motion blur, glossy texture highlights. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红黑色极简__Crimson Noir Minimalism — Stroboscopic Gloss/preview.webp",
+  "folder": "Krea2_moodboard/绯红黑色极简__Crimson Noir Minimalism — Stroboscopic Gloss",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

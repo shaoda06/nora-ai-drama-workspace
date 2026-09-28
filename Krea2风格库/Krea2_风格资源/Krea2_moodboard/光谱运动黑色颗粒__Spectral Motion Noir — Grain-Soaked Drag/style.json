@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2254",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "光谱运动黑色颗粒",
+  "name": "Spectral Motion Noir — Grain-Soaked Drag",
+  "prompt": "intentional camera movement, long exposure portrait, high-contrast monochrome, ghostly motion blur, heavy film grain, shutter drag, cinematic chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱运动黑色颗粒__Spectral Motion Noir — Grain-Soaked Drag/preview.webp",
+  "folder": "Krea2_moodboard/光谱运动黑色颗粒__Spectral Motion Noir — Grain-Soaked Drag",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

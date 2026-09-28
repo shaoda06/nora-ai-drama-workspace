@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2458",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "明亮深渊超现实",
+  "name": "Luminous Abyssal Surrealism",
+  "prompt": "deep indigo and cyan palette, ethereal aquatic surrealism, luminous caustic lighting, submerged dreamlike atmosphere, chiaroscuro shadows, fluid water textures, nocturnal mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮深渊超现实__Luminous Abyssal Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/明亮深渊超现实__Luminous Abyssal Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

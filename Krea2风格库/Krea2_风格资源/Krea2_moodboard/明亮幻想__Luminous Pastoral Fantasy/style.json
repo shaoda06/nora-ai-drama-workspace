@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-143",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "明亮幻想",
+  "name": "Luminous Pastoral Fantasy",
+  "prompt": "studio ghibli style, vibrant pastoral landscape, fluffy cumulus clouds, lush green hills, saturated watercolor aesthetic, nostalgic summer mood, sunny fantasy world. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮幻想__Luminous Pastoral Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/明亮幻想__Luminous Pastoral Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2649",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "触觉黑色",
+  "name": "Tactile Noir Deconstruction",
+  "prompt": "high-contrast monochrome, torn paper collage, gritty film grain, chiaroscuro lighting, distressed texture, deconstructed portraiture, analog zine aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉黑色__Tactile Noir Deconstruction/preview.webp",
+  "folder": "Krea2_moodboard/触觉黑色__Tactile Noir Deconstruction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

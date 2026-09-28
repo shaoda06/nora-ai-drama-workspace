@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-848",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "鲜活新波普拼贴",
+  "name": "Vibrant Neo-Pop Collage",
+  "prompt": "digital collage, bold black outlines, hyper-saturated neon colors, vector doodle overlay, mixed-media portraiture, pop art editorial, playful sticker motifs. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活新波普拼贴__Vibrant Neo-Pop Collage/preview.webp",
+  "folder": "Krea2_moodboard/鲜活新波普拼贴__Vibrant Neo-Pop Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

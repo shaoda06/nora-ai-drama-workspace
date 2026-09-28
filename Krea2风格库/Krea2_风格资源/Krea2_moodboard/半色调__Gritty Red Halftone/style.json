@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-661",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "半色调",
+  "name": "Gritty Red Halftone",
+  "prompt": "halftone dot pattern, screen print texture, high contrast red and black, vintage ink illustration, distressed paper grain, punk zine aesthetic, stippling, graphic silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/半色调__Gritty Red Halftone/preview.webp",
+  "folder": "Krea2_moodboard/半色调__Gritty Red Halftone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

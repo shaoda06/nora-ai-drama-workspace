@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-340",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "模拟超现实拼贴绘制粉彩",
+  "name": "Analog Surrealist Collage — Painted Pastel",
+  "prompt": "analog paper collage, torn paper edges, vintage halftone texture, surreal juxtaposition, mid-century print aesthetic, dreamlike portal effect. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟超现实拼贴绘制粉彩__Analog Surrealist Collage — Painted Pastel/preview.webp",
+  "folder": "Krea2_moodboard/模拟超现实拼贴绘制粉彩__Analog Surrealist Collage — Painted Pastel",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

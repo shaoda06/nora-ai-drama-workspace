@@ -1,0 +1,1 @@
+analog scanline texture, chiaroscuro noir lighting, ethereal motion blur, monochromatic blue tint, psychological fragmentation, heavy film grain, distorted CRT aesthetic. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-907",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "图形",
+  "name": "Graphic Ukiyo-e Modernism",
+  "prompt": "graphic illustration, mid-century modern architecture, ukiyo-e woodblock style, stipple texture, fine line work, high-contrast palette, minimalist landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形__Graphic Ukiyo-e Modernism/preview.webp",
+  "folder": "Krea2_moodboard/图形__Graphic Ukiyo-e Modernism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

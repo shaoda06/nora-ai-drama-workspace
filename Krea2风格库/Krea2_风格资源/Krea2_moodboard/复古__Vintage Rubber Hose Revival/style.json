@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-182",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "复古",
+  "name": "Vintage Rubber Hose Revival",
+  "prompt": "rubber hose animation style, vintage mascot illustration, bold black outlines, mid-century cartoon aesthetic, limited flat color palette, retro screen print texture, pie-cut eyes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古__Vintage Rubber Hose Revival/preview.webp",
+  "folder": "Krea2_moodboard/复古__Vintage Rubber Hose Revival",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

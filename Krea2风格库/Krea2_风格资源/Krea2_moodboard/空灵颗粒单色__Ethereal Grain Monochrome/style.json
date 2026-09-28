@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-740",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "空灵颗粒单色",
+  "name": "Ethereal Grain Monochrome",
+  "prompt": "heavy film grain, high-contrast monochrome, soft-focus blur, motion blur, ethereal atmosphere, analog noir texture, charcoal-like shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵颗粒单色__Ethereal Grain Monochrome/preview.webp",
+  "folder": "Krea2_moodboard/空灵颗粒单色__Ethereal Grain Monochrome",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

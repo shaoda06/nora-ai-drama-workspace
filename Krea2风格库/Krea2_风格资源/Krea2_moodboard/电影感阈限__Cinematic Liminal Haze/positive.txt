@@ -1,0 +1,1 @@
+cinematic film grain, soft-focus haze, intentional motion blur, high-contrast backlight, deep teal and amber palette, liminal space, shimmering bokeh. Subject:{prompt}

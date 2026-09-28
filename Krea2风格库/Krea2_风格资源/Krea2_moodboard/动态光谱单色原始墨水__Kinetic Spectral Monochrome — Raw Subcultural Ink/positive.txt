@@ -1,0 +1,1 @@
+high-contrast monochrome, intense motion blur, shutter drag, heavy film grain, ghostly silhouette, chiaroscuro lighting, raw analog aesthetic. Subject:{prompt}

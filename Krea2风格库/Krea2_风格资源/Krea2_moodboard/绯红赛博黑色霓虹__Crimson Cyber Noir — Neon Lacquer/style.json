@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1864",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "绯红赛博黑色霓虹",
+  "name": "Crimson Cyber Noir — Neon Lacquer",
+  "prompt": "saturated red neon lighting, high-contrast noir, futuristic cyberpunk aesthetic, glossy metallic surfaces, deep shadows, cinematic low-key photography, industrial synthwave atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红赛博黑色霓虹__Crimson Cyber Noir — Neon Lacquer/preview.webp",
+  "folder": "Krea2_moodboard/绯红赛博黑色霓虹__Crimson Cyber Noir — Neon Lacquer",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

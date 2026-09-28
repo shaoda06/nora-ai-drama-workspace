@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-998",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "翠绿超现实厚涂",
+  "name": "Monochromatic Verdant Surrealism — Raking Impasto Relief",
+  "prompt": "monochromatic green palette, heavy impasto texture, swirling organic patterns, surreal nature, tactile oil paint, minimalist isolation, directional lighting, verdant landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/翠绿超现实厚涂__Monochromatic Verdant Surrealism — Raking Impasto Relief/preview.webp",
+  "folder": "Krea2_moodboard/翠绿超现实厚涂__Monochromatic Verdant Surrealism — Raking Impasto Relief",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

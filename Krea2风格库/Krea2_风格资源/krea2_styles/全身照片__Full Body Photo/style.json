@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-350",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "全身照片",
+  "name": "Full Body Photo",
+  "prompt": "Style: Full Body Photo: A comprehensive figure-photography style built on balanced, even lighting that renders the entire form with consistent clarity from head to foot, deliberate framing calibrated to capture full proportion and posture without cropping, a natural depth-of-field logic that keeps the whole figure sharply resolved, confident, considered posing designed to showcase silhouette and stance in equal measure, and a polished, complete photographic clarity that feels deliberate, well-composed, and fully contextualized. Influenced by: full-length portrait-photography tradition, fashion-lookbook photographic technique, studio full-figure practice, editorial fashion-photography method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/全身照片__Full Body Photo/preview.jpg",
+  "folder": "krea2_styles/全身照片__Full Body Photo",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-357",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "单色拼贴",
+  "name": "Deconstructed Monochrome Collage",
+  "prompt": "high-contrast monochrome, deconstructed portrait collage, analog film grain, chiaroscuro lighting, torn paper texture, halftone patterns, surreal fragmented composition, noir glitch art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色拼贴__Deconstructed Monochrome Collage/preview.webp",
+  "folder": "Krea2_moodboard/单色拼贴__Deconstructed Monochrome Collage",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

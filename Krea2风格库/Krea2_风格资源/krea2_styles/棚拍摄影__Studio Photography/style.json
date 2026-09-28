@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-391",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "棚拍摄影",
+  "name": "Studio Photography",
+  "prompt": "Style: Studio Photography: A controlled, immaculately lit photographic style built on precise lighting that sculpt form with deliberate, repeatable exactness, a clean, seamless separation between subject and surrounding space achieved through careful lighting, crisp, evenly balanced exposure that eliminates unwanted ambient interference, confident, deliberate composition within a controlled,environment, and a polished, professional-grade clarity that feels composed, exacting, and fully intentional. Influenced by: commercial studio-lighting technique, professional portrait-photography tradition, controlled-environment photographic method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/棚拍摄影__Studio Photography/preview.jpg",
+  "folder": "krea2_styles/棚拍摄影__Studio Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

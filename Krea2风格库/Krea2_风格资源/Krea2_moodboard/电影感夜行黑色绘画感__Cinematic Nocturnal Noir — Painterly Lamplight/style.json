@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1273",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "电影感夜行黑色绘画感",
+  "name": "Cinematic Nocturnal Noir — Painterly Lamplight",
+  "prompt": "chiaroscuro lighting, textured digital illustration, nocturnal urban cityscape, high contrast color palette, cinematic atmosphere, warm amber glow, minimalist geometry, moody noir aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色绘画感__Cinematic Nocturnal Noir — Painterly Lamplight/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色绘画感__Cinematic Nocturnal Noir — Painterly Lamplight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

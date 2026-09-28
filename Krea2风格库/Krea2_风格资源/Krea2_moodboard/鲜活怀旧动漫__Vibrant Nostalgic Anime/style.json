@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-131",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "鲜活怀旧动漫",
+  "name": "Vibrant Nostalgic Anime",
+  "prompt": "painterly anime style, expressive brushstrokes, sun-drenched lighting, nostalgic Japanese atmosphere, vibrant saturated colors, slice of life, high contrast composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活怀旧动漫__Vibrant Nostalgic Anime/preview.webp",
+  "folder": "Krea2_moodboard/鲜活怀旧动漫__Vibrant Nostalgic Anime",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

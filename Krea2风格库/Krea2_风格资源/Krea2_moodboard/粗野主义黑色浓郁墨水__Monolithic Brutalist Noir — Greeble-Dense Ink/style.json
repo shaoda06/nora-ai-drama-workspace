@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-833",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "粗野主义黑色浓郁墨水",
+  "name": "Monolithic Brutalist Noir — Greeble-Dense Ink",
+  "prompt": "monochrome high-contrast, brutalist megastructures, industrial greeble, dystopian atmosphere, stark chiaroscuro lighting, retro-futuristic geometry, ink-style line art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粗野主义黑色浓郁墨水__Monolithic Brutalist Noir — Greeble-Dense Ink/preview.webp",
+  "folder": "Krea2_moodboard/粗野主义黑色浓郁墨水__Monolithic Brutalist Noir — Greeble-Dense Ink",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

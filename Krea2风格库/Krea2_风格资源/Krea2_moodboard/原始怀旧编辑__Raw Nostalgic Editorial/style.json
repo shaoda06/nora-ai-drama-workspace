@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2059",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "原始怀旧编辑",
+  "name": "Raw Nostalgic Editorial",
+  "prompt": "fisheye lens distortion, direct flash photography, minimalist editorial, cool-toned color palette, 90s nostalgic aesthetic, raw studio setting, oversized tailoring. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始怀旧编辑__Raw Nostalgic Editorial/preview.webp",
+  "folder": "Krea2_moodboard/原始怀旧编辑__Raw Nostalgic Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

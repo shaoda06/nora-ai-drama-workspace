@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3379",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "动态夜行深邃",
+  "name": "Kinetic Nocturnal Blur — Deep Blue Ghosting",
+  "prompt": "long exposure light trails, heavy analog film grain, chromatic aberration, nocturnal motion blur, neon cyan and electric blue, ethereal ghosting, liminal night photography, cinematic diffusion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态夜行深邃__Kinetic Nocturnal Blur — Deep Blue Ghosting/preview.webp",
+  "folder": "Krea2_moodboard/动态夜行深邃__Kinetic Nocturnal Blur — Deep Blue Ghosting",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

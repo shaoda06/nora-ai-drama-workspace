@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3214",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵黑曜黑色",
+  "name": "Ethereal Obsidian Noir",
+  "prompt": "deep indigo and monochrome, heavy film grain texture, shrouded ethereal subjects, chiaroscuro lighting, soft-focus particulate blur, minimalist dark void. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑曜黑色__Ethereal Obsidian Noir/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑曜黑色__Ethereal Obsidian Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

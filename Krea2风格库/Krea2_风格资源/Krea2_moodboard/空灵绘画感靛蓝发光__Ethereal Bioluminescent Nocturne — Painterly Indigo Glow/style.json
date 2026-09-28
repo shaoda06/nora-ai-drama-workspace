@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-560",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "空灵绘画感靛蓝发光",
+  "name": "Ethereal Bioluminescent Nocturne — Painterly Indigo Glow",
+  "prompt": "bioluminescent glow, ethereal nocturne, deep teal and indigo palette, surreal soft-focus lighting, mystical spectral highlights, painterly dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵绘画感靛蓝发光__Ethereal Bioluminescent Nocturne — Painterly Indigo Glow/preview.webp",
+  "folder": "Krea2_moodboard/空灵绘画感靛蓝发光__Ethereal Bioluminescent Nocturne — Painterly Indigo Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

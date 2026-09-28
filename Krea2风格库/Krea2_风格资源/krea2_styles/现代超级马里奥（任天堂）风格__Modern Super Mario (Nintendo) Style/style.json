@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-29",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "现代超级马里奥（任天堂）风格",
+  "name": "Modern Super Mario (Nintendo) Style",
+  "prompt": "Style: Modern Super Mario (Nintendo) Style: A vibrant, polished 3D-cartoon illustration style built on smooth, rounded proportion carrying confident, appealing simplicity, glossy, evenly saturated shading with soft, controlled specular highlight rather than gritty realism, bright, clean cinematic lighting establishing cheerful, family-friendly warmth within every frame, meticulous attention to bouncy, exaggerated posing charged with playful energy, and a polished, high-production platformer vibrancy that feels bright, joyful, and unmistakably iconic. Influenced by: Nintendo character-art direction, contemporary 3D-platformer rendering technique, stylized cartoon-render practice, family-adventure animation method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/现代超级马里奥（任天堂）风格__Modern Super Mario (Nintendo) Style/preview.jpg",
+  "folder": "krea2_styles/现代超级马里奥（任天堂）风格__Modern Super Mario (Nintendo) Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

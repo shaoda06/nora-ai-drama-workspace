@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2811",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "明亮赛博",
+  "name": "Luminous Cyber Glitz",
+  "prompt": "macro beauty portrait, iridescent glitter makeup, prismatic light refraction, metallic chrome finish, cinematic lens flares, high-fashion editorial, ethereal glow, sharp focus skin texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮赛博__Luminous Cyber Glitz/preview.webp",
+  "folder": "Krea2_moodboard/明亮赛博__Luminous Cyber Glitz",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

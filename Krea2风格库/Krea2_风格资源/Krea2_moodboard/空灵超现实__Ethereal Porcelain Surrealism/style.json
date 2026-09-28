@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-231",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "空灵超现实",
+  "name": "Ethereal Porcelain Surrealism",
+  "prompt": "surreal 3D render, soft pastel palette, shattered porcelain, iridescent pearlescent sheen, ethereal botanical elements, dreamy studio lighting, tactile textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵超现实__Ethereal Porcelain Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/空灵超现实__Ethereal Porcelain Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

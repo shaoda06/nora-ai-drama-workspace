@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1717",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "电影感忧郁极简",
+  "name": "Cinematic Melancholic Minimalism",
+  "prompt": "cinematic color grading, moody teal and blue tones, minimalist composition, shallow depth of field, analog film aesthetic, dusk lighting, negative space, voyeuristic framing. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感忧郁极简__Cinematic Melancholic Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/电影感忧郁极简__Cinematic Melancholic Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

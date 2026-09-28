@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-31",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "M.C.埃舍尔风格",
+  "name": "M.C. Escher Style",
+  "prompt": "Style: M.C. Escher Style: A meticulously precise illustration style built on impossible, self-referential perspective that folds space back onto itself with mathematical rigor, confident, exacting linework rendering interlocking, tessellated form with obsessive geometric discipline, restrained tonal shading achieved through fine hatching that reinforces structural logic rather than atmosphere, a hypnotic, paradoxical rhythm carried through recursive, endlessly repeating pattern, and a meditative, intellectually rigorous precision that treats visual paradox itself as the compositional subject. Influenced by: M.C. Escher, tessellation-based printmaking technique, mathematical-illustration tradition, engraving-adjacent linework practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/M.C.埃舍尔风格__M.C. Escher Style/preview.jpg",
+  "folder": "krea2_styles/M.C.埃舍尔风格__M.C. Escher Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

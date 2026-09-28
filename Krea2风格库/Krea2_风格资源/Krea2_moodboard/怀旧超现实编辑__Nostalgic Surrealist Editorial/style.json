@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3236",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "怀旧超现实编辑",
+  "name": "Nostalgic Surrealist Editorial",
+  "prompt": "surrealist editorial, dreamlike atmosphere, vintage film grain, whimsical composition, muted color palette, tactile texture, cinematic realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实编辑__Nostalgic Surrealist Editorial/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实编辑__Nostalgic Surrealist Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

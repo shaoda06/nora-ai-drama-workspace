@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1567",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "怀旧粉彩",
+  "name": "Nostalgic Pastel Dreamcore",
+  "prompt": "vintage 35mm film grain, pastel dreamscape, faded teal and coral palette, soft focus bloom, sun-drenched light leak, surreal minimalism, nostalgic golden hour glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧粉彩__Nostalgic Pastel Dreamcore/preview.webp",
+  "folder": "Krea2_moodboard/怀旧粉彩__Nostalgic Pastel Dreamcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

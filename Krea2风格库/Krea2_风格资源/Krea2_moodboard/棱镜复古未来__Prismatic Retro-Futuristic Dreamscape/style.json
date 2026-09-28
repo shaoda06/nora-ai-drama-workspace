@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1220",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "棱镜复古未来",
+  "name": "Prismatic Retro-Futuristic Dreamscape",
+  "prompt": "retro-futuristic airbrush illustration, prismatic starburst lens flare, vibrant sunset gradient, analog film grain texture, chromatic aberration, reflective chrome and glass, dreamy soft-focus bloom, Y2K digital surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜复古未来__Prismatic Retro-Futuristic Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/棱镜复古未来__Prismatic Retro-Futuristic Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

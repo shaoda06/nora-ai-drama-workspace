@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2378",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "忧郁",
+  "name": "Melancholic Nature Reclamation",
+  "prompt": "muted earth tones, overcast natural light, nature reclaiming architecture, weathered industrial textures, documentary style realism, melancholic atmosphere, cinematic desaturation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁__Melancholic Nature Reclamation/preview.webp",
+  "folder": "Krea2_moodboard/忧郁__Melancholic Nature Reclamation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

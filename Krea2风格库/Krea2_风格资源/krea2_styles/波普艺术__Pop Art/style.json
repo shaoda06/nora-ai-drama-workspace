@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-315",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "波普艺术",
+  "name": "Pop Art",
+  "prompt": "Style: Pop Art: A bold, graphic illustration style built on flat, punchy color fields separated by crisp confident outline, mechanically repeated dot or halftone patterning standing in for naturalistic shading, a deliberately mass-produced, commercial-print aesthetic replacing painterly nuance with graphic clarity, exaggerated expressive framing that borrows from advertising and comic-panel drama, and a bold, ironic, instantly recognizable commercial-culture punch. Influenced by: Roy Lichtenstein, Andy Warhol, Ben-Day dot printing technique, mid-century advertising illustration.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/波普艺术__Pop Art/preview.jpg",
+  "folder": "krea2_styles/波普艺术__Pop Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

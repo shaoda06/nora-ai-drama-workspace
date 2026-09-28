@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1836",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "动态低角度波普",
+  "name": "Dynamic Low-Angle Pop",
+  "prompt": "worm's-eye view, extreme low-angle perspective, vibrant saturated colors, brilliant blue sky background, high-contrast sunlight, wide-angle lens distortion, sharp editorial focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态低角度波普__Dynamic Low-Angle Pop/preview.webp",
+  "folder": "Krea2_moodboard/动态低角度波普__Dynamic Low-Angle Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

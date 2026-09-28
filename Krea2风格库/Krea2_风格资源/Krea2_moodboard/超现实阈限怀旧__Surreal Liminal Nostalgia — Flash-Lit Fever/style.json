@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3498",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "超现实阈限怀旧",
+  "name": "Surreal Liminal Nostalgia — Flash-Lit Fever",
+  "prompt": "liminal space, uncanny valley, weirdcore, flash photography, vintage film grain, fever dream, surreal horror. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实阈限怀旧__Surreal Liminal Nostalgia — Flash-Lit Fever/preview.webp",
+  "folder": "Krea2_moodboard/超现实阈限怀旧__Surreal Liminal Nostalgia — Flash-Lit Fever",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

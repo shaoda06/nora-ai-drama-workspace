@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-237",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "角色设计插画",
+  "name": "Character Design Illustration",
+  "prompt": "Style: Character Design Illustration: design-focused illustration aesthetics characterized by strong silhouette language, appealing form construction, clear visual hierarchy, expressive anatomy, refined shape design, and highly readable visual identity, emphasizing memorable presence and cohesive artistic intent through disciplined draftsmanship, polished rendering, and a balance between stylization and realism, reminiscent of Mike Mignola and Craig Mullins, inspired by Arcane and The Art of Overwatch.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/角色设计插画__Character Design Illustration/preview.jpg",
+  "folder": "krea2_styles/角色设计插画__Character Design Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

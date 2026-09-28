@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-292",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "Anato Finnstark风格",
+  "name": "Anato Finnstark Style",
+  "prompt": "Style: Anato Finnstark Style: An epic, luminous fantasy-portrait style built on sweeping atmospheric glow that radiates outward from a central focal point, richly layered painterly brushwork dissolving into soft luminous haze at the periphery, dramatic scale conveyed through radiant backlight that illuminates simultaneously, meticulous attention to soft motion caught within the glow, and a breathtaking, cinematic grandeur that feels both intimate and monumentally epic. Influenced by: Anato Finnstark, painterly fantasy-illustration technique, luminous atmospheric concept-art practice, cinematic key-art lighting method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Anato Finnstark风格__Anato Finnstark Style/preview.jpg",
+  "folder": "krea2_styles/Anato Finnstark风格__Anato Finnstark Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

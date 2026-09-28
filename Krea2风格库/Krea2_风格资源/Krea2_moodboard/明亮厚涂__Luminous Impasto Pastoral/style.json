@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1057",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "明亮厚涂",
+  "name": "Luminous Impasto Pastoral",
+  "prompt": "thick impasto oil painting, visible textured brushstrokes, French Impressionist style, dappled natural sunlight, serene water reflections, warm earthy palette, pastoral romanticism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮厚涂__Luminous Impasto Pastoral/preview.webp",
+  "folder": "Krea2_moodboard/明亮厚涂__Luminous Impasto Pastoral",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

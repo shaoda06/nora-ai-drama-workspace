@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-388",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "碎片化单色",
+  "name": "Fragmented Monochrome Geometry",
+  "prompt": "monochrome slit-scan distortion, fragmented cubist portraiture, analog paper collage texture, high-contrast chiaroscuro, minimalist vertical segmentation, tactile halftone print, surreal geometric reconstruction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化单色__Fragmented Monochrome Geometry/preview.webp",
+  "folder": "Krea2_moodboard/碎片化单色__Fragmented Monochrome Geometry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2771",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "彩色复古超现实",
+  "name": "Chromatic Retro Surrealism",
+  "prompt": "airbrush grain texture, vibrant color gradients, retro surrealism, minimalist composition, prismatic light leak, volumetric shading, vintage sci-fi atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色复古超现实__Chromatic Retro Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/彩色复古超现实__Chromatic Retro Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

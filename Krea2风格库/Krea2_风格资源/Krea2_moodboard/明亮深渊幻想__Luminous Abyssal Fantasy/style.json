@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2451",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "明亮深渊幻想",
+  "name": "Luminous Abyssal Fantasy",
+  "prompt": "bioluminescent subterranean landscape, stylized digital fantasy, glowing crystalline structures, high-contrast atmospheric lighting, deep blue and cyan gradient, mystical god rays, geometric rock formations. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮深渊幻想__Luminous Abyssal Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/明亮深渊幻想__Luminous Abyssal Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

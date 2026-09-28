@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3332",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "超现实",
+  "name": "Surreal Spherical Landscapes",
+  "prompt": "stereographic projection, tiny planet effect, 360-degree panorama, surreal landscape, fish-eye lens distortion, circular horizon, vibrant nature. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Surreal Spherical Landscapes/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Surreal Spherical Landscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2560",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "电影感黑色极简剪影",
+  "name": "Cinematic Chiaroscuro Noir — Minimal Silhouette",
+  "prompt": "high-contrast monochrome, chiaroscuro lighting, dramatic low-key shadows, minimalist geometric framing, noir photography, extreme textural detail. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色极简剪影__Cinematic Chiaroscuro Noir — Minimal Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色极简剪影__Cinematic Chiaroscuro Noir — Minimal Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

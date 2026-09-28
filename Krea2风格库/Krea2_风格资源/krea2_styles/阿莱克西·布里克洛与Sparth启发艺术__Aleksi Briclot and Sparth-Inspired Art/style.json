@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-195",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "阿莱克西·布里克洛与Sparth启发艺术",
+  "name": "Aleksi Briclot and Sparth-Inspired Art",
+  "prompt": "Style: Aleksi Briclot and Sparth-Inspired Art: A moody, cinematic concept-illustration style built on dramatic low-key lighting that carves powerful form out of dense, atmospheric shadow, richly textured painterly rendering giving costume and structure convincing weight balanced against sleek, architectural minimalism in the surrounding composition, dynamic, foreshortened posing charged with kinetic tension set against calm, monumental spatial restraint, meticulous material detail contrasted with soft, moody atmospheric dissolution at the edges, and a polished, epic-scale intensity built for high-stakes fantasy and sci-fi key-art. Influenced by: Aleksi Briclot, Sparth (Nicolas Bouvier), painterly concept-art technique, cinematic key-art composition practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/阿莱克西·布里克洛与Sparth启发艺术__Aleksi Briclot and Sparth-Inspired Art/preview.jpg",
+  "folder": "krea2_styles/阿莱克西·布里克洛与Sparth启发艺术__Aleksi Briclot and Sparth-Inspired Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

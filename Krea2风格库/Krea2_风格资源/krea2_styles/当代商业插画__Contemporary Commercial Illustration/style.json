@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-241",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "当代商业插画",
+  "name": "Contemporary Commercial Illustration",
+  "prompt": "Style: Contemporary Commercial Illustration: A polished, versatile illustration style built on clean, confident linework balanced with smooth digital shading calibrated for broad commercial appeal, bright, approachable lighting logic that keeps every composition legible and inviting, a deliberate, market-tested clarity favoring instant communication over artistic ambiguity, meticulous attention to appealing, on-trend rendering finish, and a professional, versatile illustrative polish rooted in contemporary advertising and editorial practice. Influenced by: contemporary commercial-illustration tradition, advertising-illustration technique, editorial-illustration practice, digital-brand illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/当代商业插画__Contemporary Commercial Illustration/preview.jpg",
+  "folder": "krea2_styles/当代商业插画__Contemporary Commercial Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

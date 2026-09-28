@@ -1,0 +1,1 @@
+intentional camera movement, kinetic motion blur, high-speed shutter drag, directional streaks, ghostly motion trails, dynamic action photography, high contrast lighting. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2752",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵动态",
+  "name": "Ethereal Kinetic Cyan",
+  "prompt": "long exposure, motion blur, ethereal ghosting effect, cobalt and cyan lighting, shutter drag, fluid kinetic energy, high-contrast silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态__Ethereal Kinetic Cyan/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态__Ethereal Kinetic Cyan",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

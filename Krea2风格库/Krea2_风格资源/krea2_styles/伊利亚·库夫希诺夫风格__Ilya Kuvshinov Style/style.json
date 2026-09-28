@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-199",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "伊利亚·库夫希诺夫风格",
+  "name": "Ilya Kuvshinov Style",
+  "prompt": "Style: Ilya Kuvshinov Style: A soft, luminous anime-realism illustration style built on delicately blended airbrushed shading that gives skin a gentle glowing translucency, fine detailed linework reserved for hair and eyes while broader forms stay softly rendered, a hushed, contemplative stillness carried through gentle ambient lighting, subtle painterly texture in hair strands contrasted against smooth porcelain-like skin, and a quietly elegant, understated polish that feels intimate, modern, and effortlessly refined. Influenced by: Ilya Kuvshinov, modern anime-realism illustration, digital airbrush technique, semi-realistic character art.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/伊利亚·库夫希诺夫风格__Ilya Kuvshinov Style/preview.jpg",
+  "folder": "krea2_styles/伊利亚·库夫希诺夫风格__Ilya Kuvshinov Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

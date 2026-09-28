@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1939",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感夜行轻盈漏光",
+  "name": "Cinematic Nocturnal Blur — Veiled Light Leak",
+  "prompt": "cinematic chiaroscuro, motion blur, low-key lighting, deep blue shadows, film grain texture, selective focus, introspective atmosphere, cool color grading. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行轻盈漏光__Cinematic Nocturnal Blur — Veiled Light Leak/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行轻盈漏光__Cinematic Nocturnal Blur — Veiled Light Leak",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-466",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "新拼贴",
+  "name": "Neo-Punk Collage Zine",
+  "prompt": "risograph print aesthetic, high-contrast halftone, punk zine collage, neon pink accents, tactile paper texture, surreal editorial layout, distressed street art, bold graphic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/新拼贴__Neo-Punk Collage Zine/preview.webp",
+  "folder": "Krea2_moodboard/新拼贴__Neo-Punk Collage Zine",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

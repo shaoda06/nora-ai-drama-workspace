@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-6",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "低多边形",
+  "name": "Low Poly",
+  "prompt": "Style: Low Poly: A geometrically reductive illustration style built on flat-shaded polygonal facets that construct form through angular simplification rather than smooth curvature, crisp hard-edged transitions between adjoining segments standing in for gradual shading, a deliberate faceted minimalism that abstracts detail into confident geometric approximation, a clean, mathematically precise rhythm carried through the visible triangulated structure, and a stylized, modern-craft elegance that celebrates simplified form as its own aesthetic statement. Influenced by: low-poly 3D-modeling technique, geometric abstraction tradition, procedural digital-art practice, minimalist polygonal design method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/低多边形__Low Poly/preview.jpg",
+  "folder": "krea2_styles/低多边形__Low Poly",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

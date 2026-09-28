@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-159",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "明亮怀旧",
+  "name": "Luminous Pastoral Nostalgia",
+  "prompt": "painterly gouache texture, vibrant summer palette, dappled sunlight, nostalgic pastoral landscape, anime inspired background, soft brushstroke details, lush rolling hills. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮怀旧__Luminous Pastoral Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/明亮怀旧__Luminous Pastoral Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

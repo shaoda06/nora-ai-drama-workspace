@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1175",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "空灵怀旧暮光",
+  "name": "Ethereal Nostalgic Haze — Dusty Purple Twilight",
+  "prompt": "heavy film grain, soft focus, ethereal light diffusion, pastel gradient, motion blur, painterly texture, nostalgic analog aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵怀旧暮光__Ethereal Nostalgic Haze — Dusty Purple Twilight/preview.webp",
+  "folder": "Krea2_moodboard/空灵怀旧暮光__Ethereal Nostalgic Haze — Dusty Purple Twilight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

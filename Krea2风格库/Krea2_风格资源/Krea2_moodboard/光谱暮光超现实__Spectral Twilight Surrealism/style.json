@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1443",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "光谱暮光超现实",
+  "name": "Spectral Twilight Surrealism",
+  "prompt": "long exposure photography, ethereal teal atmosphere, surreal motion blur, ghostly figures, misty twilight, cinematic blue hour, liminal landscapes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱暮光超现实__Spectral Twilight Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/光谱暮光超现实__Spectral Twilight Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

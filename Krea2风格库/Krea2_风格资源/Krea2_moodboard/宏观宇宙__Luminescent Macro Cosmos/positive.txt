@@ -1,0 +1,1 @@
+macro photography, bioluminescent, radial symmetry, high contrast, stark black background, iridescent textures, cosmic scale, intricate organic detail. Subject:{prompt}

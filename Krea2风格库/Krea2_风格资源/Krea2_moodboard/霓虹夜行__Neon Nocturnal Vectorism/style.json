@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-635",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "霓虹夜行",
+  "name": "Neon Nocturnal Vectorism",
+  "prompt": "vector illustration, nocturnal noir, high-contrast lighting, geometric minimalism, neon rim lighting, subtle grain texture, vibrant accent colors. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹夜行__Neon Nocturnal Vectorism/preview.webp",
+  "folder": "Krea2_moodboard/霓虹夜行__Neon Nocturnal Vectorism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

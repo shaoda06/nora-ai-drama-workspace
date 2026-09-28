@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1120",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "绯红触觉超现实",
+  "name": "Crimson Tactile Surrealism",
+  "prompt": "crimson monochrome, grainy texture, surrealist collage, lo-fi digital aesthetic, tactile mixed media, atmospheric liminality, gestural brushstrokes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红触觉超现实__Crimson Tactile Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/绯红触觉超现实__Crimson Tactile Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-144",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "明亮",
+  "name": "Luminous Pastoral Impressionism",
+  "prompt": "painterly brushstrokes, vibrant gouache texture, high-contrast lighting, nostalgic atmosphere, Ghibli-esque, impasto techniques, golden hour glow, expansive landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮__Luminous Pastoral Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/明亮__Luminous Pastoral Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

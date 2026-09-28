@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-486",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "原始黑色",
+  "name": "Raw Monochromatic Distorted Noir",
+  "prompt": "high-contrast black and white, gritty halftone texture, distorted analog grain, harsh chiaroscuro, photocopy zine aesthetic, psychological horror mood, digital glitch artifacts. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始黑色__Raw Monochromatic Distorted Noir/preview.webp",
+  "folder": "Krea2_moodboard/原始黑色__Raw Monochromatic Distorted Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

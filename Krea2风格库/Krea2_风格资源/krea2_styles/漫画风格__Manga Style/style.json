@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-69",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "漫画风格",
+  "name": "Manga Style",
+  "prompt": "Style: Manga Style: A clean, expressive black-and-white illustration style built on confident, precise linework defining stylized, appealing proportions, restrained tonal shading achieved through screentone patterning or fine cross-hatching rather than continuous gradation, large expressive eyes carrying much of the emotional weight, a dynamic, panel-ready clarity favoring instant visual readability, and a versatile, universally recognizable illustrative charm rooted in mainstream Japanese comic-illustration convention. Influenced by: mainstream manga illustration tradition, screentone-shading technique, Weekly Shōnen Jump publishing convention, Japanese comic-art practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/漫画风格__Manga Style/preview.jpg",
+  "folder": "krea2_styles/漫画风格__Manga Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

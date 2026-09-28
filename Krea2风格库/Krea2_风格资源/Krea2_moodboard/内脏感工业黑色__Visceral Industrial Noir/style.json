@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1862",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "内脏感工业黑色",
+  "name": "Visceral Industrial Noir",
+  "prompt": "cinematic noir, extreme close-up, high-contrast lighting, desaturated cool tones, gritty realism, sweaty skin texture, 35mm film grain, visceral tension. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/内脏感工业黑色__Visceral Industrial Noir/preview.webp",
+  "folder": "Krea2_moodboard/内脏感工业黑色__Visceral Industrial Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

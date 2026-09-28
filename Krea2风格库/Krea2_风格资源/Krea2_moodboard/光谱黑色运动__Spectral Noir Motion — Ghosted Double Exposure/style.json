@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2987",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "光谱黑色运动",
+  "name": "Spectral Noir Motion — Ghosted Double Exposure",
+  "prompt": "high-contrast black and white photography, heavy analog film grain, dramatic motion blur, chiaroscuro lighting, ghostly double exposure, ethereal noir atmosphere, long exposure, stark chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色运动__Spectral Noir Motion — Ghosted Double Exposure/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色运动__Spectral Noir Motion — Ghosted Double Exposure",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

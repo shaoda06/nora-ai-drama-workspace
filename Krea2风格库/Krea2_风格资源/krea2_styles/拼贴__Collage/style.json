@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-10",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "拼贴",
+  "name": "Collage",
+  "prompt": "Style: Collage: A layered, tactile illustration style built on the deliberate assembly of disparate fragments arranged into a single unified composition, torn or cleanly cut edges coexisting to create unpredictable, overlapping juxtaposition, a confident compositional looseness that embraces visible seams and assembly rather than hiding them, mixed tonal registers colliding across each fragment for expressive, unexpected contrast, and a raw, handcrafted intensity that treats the act of piecing together itself as the compositional statement. Influenced by: Hannah Höch, Kurt Schwitters, collage-art tradition, mixed-media assemblage practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/拼贴__Collage/preview.jpg",
+  "folder": "krea2_styles/拼贴__Collage",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-655",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "图形极简",
+  "name": "Graphic Minimalist Serigraph",
+  "prompt": "minimalist graphic illustration, screenprint texture, bold flat color blocks, high contrast silhouette, risograph grain, stark cast shadows, retro-modern graphic style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形极简__Graphic Minimalist Serigraph/preview.webp",
+  "folder": "Krea2_moodboard/图形极简__Graphic Minimalist Serigraph",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

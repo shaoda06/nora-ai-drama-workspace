@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2210",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "电影感绯红漫射颗粒",
+  "name": "Cinematic Crimson Nocturne — Smoke-Diffused Grain",
+  "prompt": "analog film grain, chiaroscuro lighting, low-key cinematic portrait, deep shadows, crimson and amber glow, atmospheric smoke haze, high contrast silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感绯红漫射颗粒__Cinematic Crimson Nocturne — Smoke-Diffused Grain/preview.webp",
+  "folder": "Krea2_moodboard/电影感绯红漫射颗粒__Cinematic Crimson Nocturne — Smoke-Diffused Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

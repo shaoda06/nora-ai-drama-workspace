@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-880",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "肌理天真",
+  "name": "Textured Naive Storybook",
+  "prompt": "naive art style, wax crayon and oil pastel texture, storybook illustration, vibrant primary color palette, thick textured strokes, childlike simplicity, flat graphic composition, isolated on white. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理天真__Textured Naive Storybook/preview.webp",
+  "folder": "Krea2_moodboard/肌理天真__Textured Naive Storybook",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

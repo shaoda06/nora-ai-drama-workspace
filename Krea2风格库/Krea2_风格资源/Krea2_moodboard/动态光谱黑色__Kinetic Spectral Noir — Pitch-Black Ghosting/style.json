@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2251",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "动态光谱黑色",
+  "name": "Kinetic Spectral Noir — Pitch-Black Ghosting",
+  "prompt": "high-contrast black and white, chiaroscuro lighting, intentional motion blur, shutter drag, heavy film grain, cinematic noir, ghostly double exposure. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态光谱黑色__Kinetic Spectral Noir — Pitch-Black Ghosting/preview.webp",
+  "folder": "Krea2_moodboard/动态光谱黑色__Kinetic Spectral Noir — Pitch-Black Ghosting",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

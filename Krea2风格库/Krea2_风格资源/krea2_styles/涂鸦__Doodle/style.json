@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-269",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "涂鸦",
+  "name": "Doodle",
+  "prompt": "Style: Doodle: A loose, casual illustration style built on quick, unplanned linework that meanders with playful spontaneity rather than deliberate structure, minimal to no shading beyond simple scribbled fill, an unselfconscious, low-stakes energy carried through impulsive, exploratory mark-making, small whimsical details scattered organically without formal composition, and a lighthearted, effortless charm that feels immediate, personal, and free of any polish. Influenced by: margin-doodle sketching tradition, casual ballpoint-pen illustration technique, unstructured gesture-drawing practice, personal notebook-sketch method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/涂鸦__Doodle/preview.jpg",
+  "folder": "krea2_styles/涂鸦__Doodle",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

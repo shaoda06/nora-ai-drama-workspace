@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1188",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "忧郁暮光",
+  "name": "Melancholic Twilight Horizons",
+  "prompt": "solitary silhouette, twilight sky gradient, city lights bokeh, painterly digital art, melancholic atmosphere, introspective mood, deep indigo and magenta palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁暮光__Melancholic Twilight Horizons/preview.webp",
+  "folder": "Krea2_moodboard/忧郁暮光__Melancholic Twilight Horizons",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

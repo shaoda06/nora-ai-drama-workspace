@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3284",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "单色超现实棕褐",
+  "name": "Deconstructed Monochrome Surrealism — Sepia Radial Cut",
+  "prompt": "monochrome photo collage, geometric paper fragmentation, surrealist analog montage, high contrast vintage photography, radial slicing, tactile paper texture, dadaist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色超现实棕褐__Deconstructed Monochrome Surrealism — Sepia Radial Cut/preview.webp",
+  "folder": "Krea2_moodboard/单色超现实棕褐__Deconstructed Monochrome Surrealism — Sepia Radial Cut",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2481",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "氛围夜行哥特",
+  "name": "Atmospheric Nocturnal Gothic",
+  "prompt": "gothic architecture, chiaroscuro lighting, atmospheric mist, warm amber glow, rain-slicked surfaces, cinematic noir, symmetrical composition, desaturated color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围夜行哥特__Atmospheric Nocturnal Gothic/preview.webp",
+  "folder": "Krea2_moodboard/氛围夜行哥特__Atmospheric Nocturnal Gothic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

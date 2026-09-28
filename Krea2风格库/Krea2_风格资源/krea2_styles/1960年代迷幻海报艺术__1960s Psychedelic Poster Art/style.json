@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-33",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "1960年代迷幻海报艺术",
+  "name": "1960s Psychedelic Poster Art",
+  "prompt": "Style: 1960s Psychedelic Poster Art: A vibrant, maximalist illustration style built on radiating, sunburst-like linework fanning outward from a central focal point with hypnotic, rhythmic repetition, dense, swirling ornamental pattern-work filling every available extent with restless organic motion, bold, confidently bounded flat shapes separated by crisp, unmodulated outline, an ecstatic, kaleidoscopic energy that treats pattern density itself as the compositional subject, and a joyfully exuberant, retro commercial-art intensity that feels immersive, celebratory, and unmistakably era-defining. Influenced by: Peter Max, 1960s concert-poster illustration tradition, psychedelic advertising-art technique, Art Nouveau ornamental linework reimagined.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/1960年代迷幻海报艺术__1960s Psychedelic Poster Art/preview.jpg",
+  "folder": "krea2_styles/1960年代迷幻海报艺术__1960s Psychedelic Poster Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

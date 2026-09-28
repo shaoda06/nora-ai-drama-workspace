@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3197",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "单色超现实",
+  "name": "Sculptural Monochrome Surrealism",
+  "prompt": "high-contrast black and white photography, sculptural lighting, intricate tactile textures, surreal scale juxtaposition, minimalist composition, dramatic shadows, fine art monochrome. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色超现实__Sculptural Monochrome Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/单色超现实__Sculptural Monochrome Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

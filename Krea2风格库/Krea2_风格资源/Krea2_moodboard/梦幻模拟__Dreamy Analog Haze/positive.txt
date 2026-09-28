@@ -1,0 +1,1 @@
+analog film grain, soft focus, dreamy haze, pastel color palette, shallow depth of field, lo-fi texture, ethereal light leak. Subject:{prompt}

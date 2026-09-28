@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-349",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "欧普艺术半色调",
+  "name": "Cobalt Pixel Op-Art — Dithered Halftone",
+  "prompt": "cobalt blue and off-white, op-art geometric patterns, pixelated halftone, glitch art aesthetic, dithered textures, minimalist silhouettes, retro-futuristic graphic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/欧普艺术半色调__Cobalt Pixel Op-Art — Dithered Halftone/preview.webp",
+  "folder": "Krea2_moodboard/欧普艺术半色调__Cobalt Pixel Op-Art — Dithered Halftone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

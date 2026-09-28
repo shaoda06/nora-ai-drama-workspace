@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2877",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "明亮流质超现实",
+  "name": "Luminous Liquid Surrealism",
+  "prompt": "liquid holographic chrome, refractive glass structures, electric cyan and cobalt glow, iridescent pearlescent sheen, dreamlike motion blur, retro digital grain, surreal fluid silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮流质超现实__Luminous Liquid Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/明亮流质超现实__Luminous Liquid Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3426",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "明亮模拟",
+  "name": "Luminous Analog Dissociation",
+  "prompt": "heavy film grain, extreme motion blur, chromatic aberration, analog glitch, glowing light leaks, liminal dreamcore, high contrast chiaroscuro. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮模拟__Luminous Analog Dissociation/preview.webp",
+  "folder": "Krea2_moodboard/明亮模拟__Luminous Analog Dissociation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

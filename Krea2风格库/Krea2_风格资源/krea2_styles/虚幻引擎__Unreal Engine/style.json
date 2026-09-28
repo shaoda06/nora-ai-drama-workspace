@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-44",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "虚幻引擎",
+  "name": "Unreal Engine",
+  "prompt": "Style: Unreal Engine: A dimensionally precise real-time rendering style built on smooth, volumetric modeling calculated through simulated physical light and geometry, meticulously computed illumination with soft ambient occlusion settling naturally into every contour, polished specular response giving forms convincing physical depth and weight, confident dynamic reflection and atmospheric scattering rendered in real time, and a technically precise, computer-generated intensity built for cinematic, game-ready visual fidelity. Influenced by: Unreal Engine 5 real-time rendering technique, physically based rendering (PBR) method, contemporary game-cinematic rendering practice, real-time ray-tracing technology.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/虚幻引擎__Unreal Engine/preview.jpg",
+  "folder": "krea2_styles/虚幻引擎__Unreal Engine",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

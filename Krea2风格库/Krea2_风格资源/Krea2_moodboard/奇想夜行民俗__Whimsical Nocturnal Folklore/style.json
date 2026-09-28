@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-920",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "奇想夜行民俗",
+  "name": "Whimsical Nocturnal Folklore",
+  "prompt": "storybook illustration, nocturnal cozy town, folk art patterns, glowing warm light, midnight blue and teal, textured digital paint, stylized geometric shapes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想夜行民俗__Whimsical Nocturnal Folklore/preview.webp",
+  "folder": "Krea2_moodboard/奇想夜行民俗__Whimsical Nocturnal Folklore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

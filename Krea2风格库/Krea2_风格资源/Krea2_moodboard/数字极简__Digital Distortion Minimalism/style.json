@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1885",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "数字极简",
+  "name": "Digital Distortion Minimalism",
+  "prompt": "pixel sorting, digital glitch art, minimalist composition, chromatic aberration, data-bending, scanline texture, clinical lighting, fragmented reality. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字极简__Digital Distortion Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/数字极简__Digital Distortion Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

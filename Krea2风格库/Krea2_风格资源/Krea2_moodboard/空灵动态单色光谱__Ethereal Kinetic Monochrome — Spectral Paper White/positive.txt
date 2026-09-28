@@ -1,0 +1,1 @@
+motion blur, high-contrast monochrome, spectral photography, long exposure, minimalist composition, ethereal silhouettes, film grain, shutter drag. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1832",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "电影感琥珀暮光",
+  "name": "Cinematic Amber Twilight",
+  "prompt": "cinematic chiaroscuro, analog film grain, warm amber and cool indigo, golden hour lighting, intimate mood lighting, retro 35mm aesthetic, dramatic shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感琥珀暮光__Cinematic Amber Twilight/preview.webp",
+  "folder": "Krea2_moodboard/电影感琥珀暮光__Cinematic Amber Twilight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

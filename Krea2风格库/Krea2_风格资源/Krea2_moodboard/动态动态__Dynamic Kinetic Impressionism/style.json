@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1966",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "动态动态",
+  "name": "Dynamic Kinetic Impressionism",
+  "prompt": "intentional camera movement, motion blur, panning shot, kinetic energy, shutter drag, sweeping abstract trails, cool desaturated palette, dynamic diagonal composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态动态__Dynamic Kinetic Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/动态动态__Dynamic Kinetic Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

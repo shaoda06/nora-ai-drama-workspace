@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-81",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "电影感动漫",
+  "name": "Cinematic Anime",
+  "prompt": "Style: Cinematic Anime: premium animation aesthetics characterized by refined linework, sophisticated lighting design, cinematic composition, nuanced atmospheric depth, polished rendering, and emotionally driven visual storytelling, blending the clarity of high-end anime production with filmic realism through controlled detail, expressive staging, and exceptional artistic cohesion, reminiscent of Makoto Shinkai and Yoshiyuki Sadamoto, inspired by Your Name and Evangelion: 3.0+1.0 Thrice Upon a Time.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/电影感动漫__Cinematic Anime/preview.jpg",
+  "folder": "krea2_styles/电影感动漫__Cinematic Anime",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

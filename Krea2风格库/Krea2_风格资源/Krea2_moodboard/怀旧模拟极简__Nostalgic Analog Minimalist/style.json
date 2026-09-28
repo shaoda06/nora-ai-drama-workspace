@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1146",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "怀旧模拟极简",
+  "name": "Nostalgic Analog Minimalist",
+  "prompt": "nostalgic, textured brushstrokes, muted color palette, grainy analog film, serene isolation, minimalist composition, diffused light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧模拟极简__Nostalgic Analog Minimalist/preview.webp",
+  "folder": "Krea2_moodboard/怀旧模拟极简__Nostalgic Analog Minimalist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

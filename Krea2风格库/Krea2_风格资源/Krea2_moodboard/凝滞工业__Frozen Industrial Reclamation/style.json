@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1336",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "凝滞工业",
+  "name": "Frozen Industrial Reclamation",
+  "prompt": "dieselpunk, arctic industrial, rusted metal decay, glowing crystalline frost, volumetric fog, cinematic sci-fi, atmospheric scale, desolate snowy landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/凝滞工业__Frozen Industrial Reclamation/preview.webp",
+  "folder": "Krea2_moodboard/凝滞工业__Frozen Industrial Reclamation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-336",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "模拟故障怀旧琥珀",
+  "name": "Analog Glitch Nostalgia — Amber CRT Haze",
+  "prompt": "retro-futurism, bayer dithering, halftone pattern, pixel sorting, lo-fi digital, warm amber and teal palette, vintage computer aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟故障怀旧琥珀__Analog Glitch Nostalgia — Amber CRT Haze/preview.webp",
+  "folder": "Krea2_moodboard/模拟故障怀旧琥珀__Analog Glitch Nostalgia — Amber CRT Haze",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

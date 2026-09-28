@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2011",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "碎片化单色",
+  "name": "Fragmented Monochrome Deconstruction",
+  "prompt": "high-contrast monochrome portrait, fragmented identity, digital glitch distortion, tactile paper collage, geometric slicing, stark studio lighting, minimalist composition, pixel sorting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化单色__Fragmented Monochrome Deconstruction/preview.webp",
+  "folder": "Krea2_moodboard/碎片化单色__Fragmented Monochrome Deconstruction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

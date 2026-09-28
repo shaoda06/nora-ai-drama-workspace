@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-301",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "原始电影感黑色触觉贴近颗粒",
+  "name": "Raw Cinematic Noir — Tactile Close Grain",
+  "prompt": "black and white portrait, chiaroscuro lighting, heavy analog film grain, extreme close-up, raw human emotion, tactile skin texture, cinematic noir aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/原始电影感黑色触觉贴近颗粒__Raw Cinematic Noir — Tactile Close Grain/preview.webp",
+  "folder": "Krea2_moodboard/原始电影感黑色触觉贴近颗粒__Raw Cinematic Noir — Tactile Close Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1001",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "夜行都市忧郁",
+  "name": "Nocturnal Urban Melancholy",
+  "prompt": "nocturnal urban landscape, painterly impasto texture, glowing warm light, deep indigo shadows, wet street reflections, moody atmospheric perspective, historical architectural details. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行都市忧郁__Nocturnal Urban Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/夜行都市忧郁__Nocturnal Urban Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

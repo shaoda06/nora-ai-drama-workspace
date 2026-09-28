@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-153",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "鲜活奇想幻想",
+  "name": "Vibrant Whimsical Fantasy",
+  "prompt": "stylized digital painting, whimsical fantasy landscape, vibrant saturated pastel palette, studio ghibli inspired, fluffy volumetric clouds, storybook illustration style, cozy adventure atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活奇想幻想__Vibrant Whimsical Fantasy/preview.webp",
+  "folder": "Krea2_moodboard/鲜活奇想幻想__Vibrant Whimsical Fantasy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

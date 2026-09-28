@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2894",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "光谱夜行黑色",
+  "name": "Spectral Nocturnal Noir",
+  "prompt": "harsh flash photography, overexposed glowing silhouette, deep nocturnal void, vintage film grain, ethereal light bloom, high contrast chiaroscuro, spectral halation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱夜行黑色__Spectral Nocturnal Noir/preview.webp",
+  "folder": "Krea2_moodboard/光谱夜行黑色__Spectral Nocturnal Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

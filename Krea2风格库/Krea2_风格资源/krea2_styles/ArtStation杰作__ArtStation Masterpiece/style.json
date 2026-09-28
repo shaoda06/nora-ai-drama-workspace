@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-231",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "ArtStation杰作",
+  "name": "ArtStation Masterpiece",
+  "prompt": "Style: ArtStation Masterpiece: A high-production concept-art illustration style built on meticulously controlled rendering that balances painterly atmosphere with technical precision, dramatic cinematic lighting establishing mood and scale within a single portfolio-ready composition, richly detailed material and textural nuance rewarding close inspection without sacrificing overall painterly cohesion, confident, ambitious compositional scale calibrated for maximum visual impact at first glance, and a polished, industry-grade rendering intensity built to command attention within a competitive professional showcase. Influenced by: contemporary ArtStation concept-art community tradition, painterly digital-illustration technique, industry-standard portfolio-rendering practice, cinematic concept-art composition method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/ArtStation杰作__ArtStation Masterpiece/preview.jpg",
+  "folder": "krea2_styles/ArtStation杰作__ArtStation Masterpiece",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-388",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "黑客帝国调色摄影",
+  "name": "Matrix-Grading Photography",
+  "prompt": "Style: Matrix-Grading Photography: A cold, high-contrast photographic technique built on a dominant monochromatic-green color cast washing over the entire tonal range, stark, hard-edged directional lighting that carves dramatic separation between illuminated form and deep, engulfing darkness, a slightly desaturated, clinical coldness replacing natural photographic warmth entirely, meticulous crushed-shadow contrast that flattens midtones into stark extremes, and a sleek, dystopian cinematic intensity that feels simulated, sterile, and quietly unsettling. Influenced by: The Matrix cinematography tradition, monochromatic color-grading technique, dystopian film-grading practice, cyberpunk cinematic-photography method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/黑客帝国调色摄影__Matrix-Grading Photography/preview.jpg",
+  "folder": "krea2_styles/黑客帝国调色摄影__Matrix-Grading Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

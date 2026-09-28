@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-377",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "空灵故障极简",
+  "name": "Ethereal Glitch Minimalist",
+  "prompt": "chromatic aberration, motion blur silhouette, digital grain, minimalist graphic design, high contrast, cybernetic distortion, stipple texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵故障极简__Ethereal Glitch Minimalist/preview.webp",
+  "folder": "Krea2_moodboard/空灵故障极简__Ethereal Glitch Minimalist",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

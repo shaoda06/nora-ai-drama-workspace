@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3273",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "空灵暮光",
+  "name": "Ethereal Twilight Dreamcore",
+  "prompt": "dreamcore aesthetic, vintage analog film grain, twilight color palette, starburst lens flare, magical realism, shimmering glitter overlay, soft glow bloom. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵暮光__Ethereal Twilight Dreamcore/preview.webp",
+  "folder": "Krea2_moodboard/空灵暮光__Ethereal Twilight Dreamcore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

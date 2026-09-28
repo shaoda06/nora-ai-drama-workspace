@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3113",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "天穹夜行",
+  "name": "Celestial Nocturnal Solitude",
+  "prompt": "deep indigo and midnight blue, solitary silhouette, ethereal bioluminescence, perfect mirror reflection, minimalist nocturnal landscape, atmospheric cinematic lighting, surreal cosmic serenity. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹夜行__Celestial Nocturnal Solitude/preview.webp",
+  "folder": "Krea2_moodboard/天穹夜行__Celestial Nocturnal Solitude",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

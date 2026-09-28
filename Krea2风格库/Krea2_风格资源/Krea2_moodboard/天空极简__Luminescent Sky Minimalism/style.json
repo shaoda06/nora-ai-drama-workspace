@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-820",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "天空极简",
+  "name": "Luminescent Sky Minimalism",
+  "prompt": "minimalist line art, glowing white doodles, twilight blue hour, high contrast silhouettes, ethereal light painting, graphic negative space, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天空极简__Luminescent Sky Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/天空极简__Luminescent Sky Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

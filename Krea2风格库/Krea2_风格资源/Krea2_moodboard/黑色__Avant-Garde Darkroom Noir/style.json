@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-343",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "黑色",
+  "name": "Avant-Garde Darkroom Noir",
+  "prompt": "high-contrast monochrome, experimental darkroom technique, analog film grain, sharp geometric shadows, abstract photogram, chiaroscuro lighting, halftone texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Avant-Garde Darkroom Noir/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Avant-Garde Darkroom Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

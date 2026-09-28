@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2170",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "电影感模拟忧郁酷",
+  "name": "Cinematic Analog Melancholy — Cool Overcast Blue",
+  "prompt": "low angle cinematic perspective, analog film grain, desaturated color palette, overcast sky, vintage 35mm film aesthetic, somber contemplative mood, diffused natural light. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感模拟忧郁酷__Cinematic Analog Melancholy — Cool Overcast Blue/preview.webp",
+  "folder": "Krea2_moodboard/电影感模拟忧郁酷__Cinematic Analog Melancholy — Cool Overcast Blue",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

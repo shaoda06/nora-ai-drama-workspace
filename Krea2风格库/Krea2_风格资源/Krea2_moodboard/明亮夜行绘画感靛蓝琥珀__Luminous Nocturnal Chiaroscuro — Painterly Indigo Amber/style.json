@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-932",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "明亮夜行绘画感靛蓝琥珀",
+  "name": "Luminous Nocturnal Chiaroscuro — Painterly Indigo Amber",
+  "prompt": "chiaroscuro lighting, deep indigo and amber palette, painterly expressive brushstrokes, atmospheric dark fantasy, ethereal glowing light, minimalist nocturnal landscape, soft textured oil aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮夜行绘画感靛蓝琥珀__Luminous Nocturnal Chiaroscuro — Painterly Indigo Amber/preview.webp",
+  "folder": "Krea2_moodboard/明亮夜行绘画感靛蓝琥珀__Luminous Nocturnal Chiaroscuro — Painterly Indigo Amber",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

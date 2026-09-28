@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1533",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "超现实",
+  "name": "Thermal Aura Surrealism",
+  "prompt": "thermal imaging gradient, airbrushed soft focus, glowing aura, chromatic aberration, silhouetted form, grainy analog texture, surreal neon palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Thermal Aura Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Thermal Aura Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

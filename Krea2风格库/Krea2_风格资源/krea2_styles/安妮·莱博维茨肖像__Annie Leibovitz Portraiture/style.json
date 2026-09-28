@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-332",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "安妮·莱博维茨肖像",
+  "name": "Annie Leibovitz Portraiture",
+  "prompt": "Style: Annie Leibovitz Portraiture: cinematic portrait photography distinguished by sophisticated storytelling, meticulously crafted lighting, rich tonal depth, editorial elegance, and a strong sense of personality conveyed through refined composition and emotional presence, balancing realism with carefully directed visual narrative to achieve iconic and memorable imagery, reminiscent of Annie Leibovitz and Richard Avedon, inspired by Vanity Fair Portraits and Rolling Stone Cover Photography.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/安妮·莱博维茨肖像__Annie Leibovitz Portraiture/preview.jpg",
+  "folder": "krea2_styles/安妮·莱博维茨肖像__Annie Leibovitz Portraiture",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-396",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "水下摄影",
+  "name": "Underwater Photography",
+  "prompt": "Style: Underwater Photography: A soft, diffused photographic technique built on light scattering and bending as it passes through a dense medium, a gentle, hazy loss of sharpness increasing with distance , a cool, muted tonal cast that deepens and shifts the further the subject recedes, delicate suspended particulate drifting through the frame catching stray beams of light, and a weightless, dreamlike stillness that feels immersive, hushed, and quietly otherworldly. Influenced by: underwater-photography technique, natural-light diffusion, marine documentary photography, ambient light-scattering.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/水下摄影__Underwater Photography/preview.jpg",
+  "folder": "krea2_styles/水下摄影__Underwater Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

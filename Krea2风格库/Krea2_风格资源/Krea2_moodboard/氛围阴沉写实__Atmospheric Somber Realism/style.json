@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1256",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "氛围阴沉写实",
+  "name": "Atmospheric Somber Realism",
+  "prompt": "atmospheric digital painting, desaturated color palette, low-key moody lighting, textured brushwork, melancholic solitude, weathered surfaces, gothic surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围阴沉写实__Atmospheric Somber Realism/preview.webp",
+  "folder": "Krea2_moodboard/氛围阴沉写实__Atmospheric Somber Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

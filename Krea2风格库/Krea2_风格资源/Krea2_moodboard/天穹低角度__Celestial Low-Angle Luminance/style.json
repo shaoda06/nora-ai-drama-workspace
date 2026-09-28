@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1842",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "天穹低角度",
+  "name": "Celestial Low-Angle Luminance",
+  "prompt": "low angle perspective, clear blue sky background, intense direct sunlight, high contrast shadows, cinematic fashion photography, textural fabric detail, wide-angle lens distortion. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天穹低角度__Celestial Low-Angle Luminance/preview.webp",
+  "folder": "Krea2_moodboard/天穹低角度__Celestial Low-Angle Luminance",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

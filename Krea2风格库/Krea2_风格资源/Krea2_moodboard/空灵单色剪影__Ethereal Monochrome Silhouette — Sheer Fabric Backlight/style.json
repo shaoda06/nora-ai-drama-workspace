@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3212",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵单色剪影",
+  "name": "Ethereal Monochrome Silhouette — Sheer Fabric Backlight",
+  "prompt": "high-contrast silhouette, rim lighting, minimalist studio photography, sheer billowing fabric, monochrome chiaroscuro, stark backlighting, sculptural form. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵单色剪影__Ethereal Monochrome Silhouette — Sheer Fabric Backlight/preview.webp",
+  "folder": "Krea2_moodboard/空灵单色剪影__Ethereal Monochrome Silhouette — Sheer Fabric Backlight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

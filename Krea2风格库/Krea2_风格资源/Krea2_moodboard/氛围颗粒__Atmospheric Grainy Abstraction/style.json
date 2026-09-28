@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1797",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "氛围颗粒",
+  "name": "Atmospheric Grainy Abstraction",
+  "prompt": "heavy film grain, atmospheric soft focus, chromatic blur, lo-fi tactile texture, organic color gradient, diffused glowing light, analog noise. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围颗粒__Atmospheric Grainy Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/氛围颗粒__Atmospheric Grainy Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

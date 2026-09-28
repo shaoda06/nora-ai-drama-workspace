@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-155",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "地狱男爵风格",
+  "name": "Hellboy Style",
+  "prompt": "Style: Hellboy Style: A gritty, high-contrast comic-illustration style built on bold, confident inking with heavy spotted blacks that carve dramatic graphic shadow across every form, chunky, weighty linework rendering musculature and stonework with sculptural bluntness, muted, moody washes applied loosely beneath stark ink structure, a folkloric, pulp-horror gravitas charged with brooding atmosphere, and a bold, hand-inked graphic-novel intensity that feels ancient, weathered, and unmistakably hand-crafted. Influenced by: Mike Mignola, noir-inspired comic-inking technique, folk-horror illustration tradition, spotted-black ink-rendering method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/地狱男爵风格__Hellboy Style/preview.jpg",
+  "folder": "krea2_styles/地狱男爵风格__Hellboy Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

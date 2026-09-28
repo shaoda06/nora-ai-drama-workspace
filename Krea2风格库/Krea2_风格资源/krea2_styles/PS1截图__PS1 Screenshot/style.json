@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-61",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "PS1截图",
+  "name": "PS1 Screenshot",
+  "prompt": "Style: PS1 Screenshot: A low-polygon 3D scene rendered with the distinct technical limitations of playstation 1996, the subject built from sharp, unblended triangular facets with visibly segmented joint connections and blocky geometric anatomy, texture maps stretched and warped across flat polygon surfaces with visible pixelation and bilinear filtering artifacts, the environment constructed from repeating tiled textures with harsh seams and obvious draw-distance fog creeping in at mid-range, jagged stair-step edges along every diagonal line and object silhouette, the lighting flat and vertex-shaded with abrupt transitions between lit and shadowed faces, 320x240 resolution, muted 16-bit color depth, dithering patterns visible in shadow gradients and transparency effects achieved through stippled pixel alternation, Influenced by: Tomb Raider 1995 screenshot, Tekken 1996 screenshot, PS1 rendering pipeline, the tile-based environment construction of early 1990s 3D games, 32-bit console hardware, low-poly modeling,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/PS1截图__PS1 Screenshot/preview.jpg",
+  "folder": "krea2_styles/PS1截图__PS1 Screenshot",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

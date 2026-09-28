@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1812",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "私密空灵忧郁",
+  "name": "Intimate Ethereal Melancholy",
+  "prompt": "ethereal soft focus, muted neutral palette, dreamlike haze, intimate candid portrait, shallow depth of field, desaturated film grain, raw human texture, melancholic atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/私密空灵忧郁__Intimate Ethereal Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/私密空灵忧郁__Intimate Ethereal Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2678",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "暮光超现实",
+  "name": "Submerged Twilight Surrealism",
+  "prompt": "split-level surrealism, nocturnal water reflection, cinematic chiaroscuro, dreamlike juxtaposition, deep blue and gold palette, sharp focus textures, magical realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/暮光超现实__Submerged Twilight Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/暮光超现实__Submerged Twilight Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

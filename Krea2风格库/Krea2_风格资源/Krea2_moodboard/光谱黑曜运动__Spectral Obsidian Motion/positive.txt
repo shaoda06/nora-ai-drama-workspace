@@ -1,0 +1,1 @@
+high-contrast black and white, heavy film grain, motion blur, long exposure light trails, spectral noir, charcoal texture, atmospheric chiaroscuro. Subject:{prompt}

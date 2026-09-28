@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-969",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "肌理极简",
+  "name": "Textured Minimalist Folk",
+  "prompt": "grainy gouache texture, muted earth tones, minimalist flat composition, stippled shading, soft organic shapes, handcrafted illustration style, contemplative mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理极简__Textured Minimalist Folk/preview.webp",
+  "folder": "Krea2_moodboard/肌理极简__Textured Minimalist Folk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

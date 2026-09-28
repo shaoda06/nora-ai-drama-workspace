@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-374",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "超模写真",
+  "name": "Supermodel Photoshoot",
+  "prompt": "Style: Supermodel Photoshoot: A polished, high-fashion editorial photography style built on immaculately controlled studio lighting calibrated for maximum sculptural precision and flawless clarity, confident, statuesque posing framed with deliberate, magazine-ready authority, a refined retouching finish that idealizes without erasing distinctive character, dramatic directional key light carving sharp definition across every plane, and a commanding, aspirational editorial polish that feels timeless, glamorous, and unmistakably world-class. Influenced by: high-fashion editorial-photography tradition, luxury studio-lighting technique, professional glamour-retouching practice, haute-couture campaign-photography method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/超模写真__Supermodel Photoshoot/preview.jpg",
+  "folder": "krea2_styles/超模写真__Supermodel Photoshoot",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

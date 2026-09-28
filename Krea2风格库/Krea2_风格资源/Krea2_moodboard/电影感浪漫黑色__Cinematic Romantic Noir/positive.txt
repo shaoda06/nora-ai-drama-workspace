@@ -1,0 +1,1 @@
+shallow depth of field, cinematic lighting, foreground bokeh, crimson red accents, botanical framing, intimate portraiture, moody atmospheric. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2329",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "电影感黑色绯红",
+  "name": "Cinematic Chiaroscuro Noir — Crimson Cobalt Beams",
+  "prompt": "chiaroscuro lighting, stark black background, minimalist composition, dramatic atmospheric haze, volumetric spotlight, high-contrast noir, crimson and cobalt accents. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感黑色绯红__Cinematic Chiaroscuro Noir — Crimson Cobalt Beams/preview.webp",
+  "folder": "Krea2_moodboard/电影感黑色绯红__Cinematic Chiaroscuro Noir — Crimson Cobalt Beams",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+motion blur, amber and crimson palette, analog film grain, dreamlike halation, long exposure, cinematic haze, ethereal light leaks. Subject:{prompt}

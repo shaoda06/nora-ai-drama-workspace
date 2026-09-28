@@ -1,0 +1,1 @@
+high-contrast black and white, chiaroscuro lighting, stark geometric composition, hard directional light, dramatic shadows, fine film grain, minimalist noir. Subject:{prompt}

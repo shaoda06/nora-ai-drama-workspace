@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-342",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "编辑摄影",
+  "name": "Editorial Photography",
+  "prompt": "Style: Editorial Photography: A considered, narrative-driven photographic style built on deliberate, purposeful lighting calibrated to support a story rather than purely flatter, confident, composed framing designed for immediate publication-ready clarity, a polished, magazine-grade retouching finish that idealizes without erasing character, meticulous attention to context and mood woven into every compositional choice, and a sharp, professional editorial authority that feels timely, considered, and unmistakably publication-ready. Influenced by: contemporary editorial-photography tradition, magazine-photography technique, narrative-driven photojournalism practice, publication-photography method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/编辑摄影__Editorial Photography/preview.jpg",
+  "folder": "krea2_styles/编辑摄影__Editorial Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

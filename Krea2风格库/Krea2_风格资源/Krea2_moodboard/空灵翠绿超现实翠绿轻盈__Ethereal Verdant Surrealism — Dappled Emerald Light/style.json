@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1280",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "空灵翠绿超现实翠绿轻盈",
+  "name": "Ethereal Verdant Surrealism — Dappled Emerald Light",
+  "prompt": "painterly digital illustration, lush verdant greens, textured brushstrokes, surreal fantasy elements, atmospheric lighting, moody pastoral landscape, dreamlike mystery. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵翠绿超现实翠绿轻盈__Ethereal Verdant Surrealism — Dappled Emerald Light/preview.webp",
+  "folder": "Krea2_moodboard/空灵翠绿超现实翠绿轻盈__Ethereal Verdant Surrealism — Dappled Emerald Light",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

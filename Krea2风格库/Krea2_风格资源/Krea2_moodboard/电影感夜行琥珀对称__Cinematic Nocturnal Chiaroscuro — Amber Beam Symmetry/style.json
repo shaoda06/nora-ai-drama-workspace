@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2390",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "电影感夜行琥珀对称",
+  "name": "Cinematic Nocturnal Chiaroscuro — Amber Beam Symmetry",
+  "prompt": "cinematic nocturnal atmosphere, volumetric lighting, high-contrast color palette, teal and amber contrast, atmospheric fog, dramatic chiaroscuro, mysterious silhouette, moody cinematic grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行琥珀对称__Cinematic Nocturnal Chiaroscuro — Amber Beam Symmetry/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行琥珀对称__Cinematic Nocturnal Chiaroscuro — Amber Beam Symmetry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

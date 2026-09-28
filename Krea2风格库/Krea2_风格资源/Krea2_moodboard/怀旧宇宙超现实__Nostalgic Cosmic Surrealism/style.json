@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3275",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "怀旧宇宙超现实",
+  "name": "Nostalgic Cosmic Surrealism",
+  "prompt": "retro sci-fi surrealism, glowing celestial bodies, heavy film grain, dramatic chiaroscuro, ethereal light trails, desolate landscape, vintage analog texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧宇宙超现实__Nostalgic Cosmic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/怀旧宇宙超现实__Nostalgic Cosmic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

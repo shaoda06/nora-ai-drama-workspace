@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-997",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "忧郁夜行极简厚涂紫罗兰",
+  "name": "Melancholic Nocturnal Minimalism — Pointillist Impasto Violet",
+  "prompt": "nocturnal palette, minimalist composition, solitary figure, layered textural depth, dreamlike atmosphere, deep indigo and azure tones, post-impressionist influence. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/忧郁夜行极简厚涂紫罗兰__Melancholic Nocturnal Minimalism — Pointillist Impasto Violet/preview.webp",
+  "folder": "Krea2_moodboard/忧郁夜行极简厚涂紫罗兰__Melancholic Nocturnal Minimalism — Pointillist Impasto Violet",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

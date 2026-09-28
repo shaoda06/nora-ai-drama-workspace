@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2185",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷4",
+  "category_name": "摄影特效冷4",
+  "name_cn": "鲜活",
+  "name": "Vibrant Sunlit Optimism",
+  "prompt": "candid portrait, harsh direct sunlight, low-angle perspective, vibrant blue sky, saturated color palette, high-contrast aesthetic, tactile textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活__Vibrant Sunlit Optimism/preview.webp",
+  "folder": "Krea2_moodboard/鲜活__Vibrant Sunlit Optimism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

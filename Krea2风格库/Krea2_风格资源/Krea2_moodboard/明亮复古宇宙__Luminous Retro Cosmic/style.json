@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-446",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "明亮复古宇宙",
+  "name": "Luminous Retro Cosmic",
+  "prompt": "vintage 70s sci-fi aesthetic, teal and orange color grading, analog film grain, cosmic surrealism, halftone and airbrush texture, dreamlike cinematic lighting, distressed collage elements. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮复古宇宙__Luminous Retro Cosmic/preview.webp",
+  "folder": "Krea2_moodboard/明亮复古宇宙__Luminous Retro Cosmic",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

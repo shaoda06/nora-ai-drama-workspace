@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1489",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "明亮电影感",
+  "name": "Luminous Cinematic Reverie",
+  "prompt": "cinematic anamorphic bokeh, warm amber and cool teal contrast, extreme shallow depth of field, atmospheric light leaks, dreamy soft focus photography, subtle film grain texture, moody low-key lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮电影感__Luminous Cinematic Reverie/preview.webp",
+  "folder": "Krea2_moodboard/明亮电影感__Luminous Cinematic Reverie",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

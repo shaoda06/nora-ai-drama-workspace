@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-264",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "Boulet图形插画",
+  "name": "Boulet Graphic Illustration",
+  "prompt": "Style: Boulet Graphic Illustration: contemporary graphic storytelling aesthetics characterized by expressive linework, fluid visual rhythm, intelligent simplification, dynamic composition, and a balance between humor, atmosphere, and observational detail, blending sketchbook spontaneity with polished narrative craftsmanship through confident draftsmanship, readable forms, and highly engaging visual communication, reminiscent of Boulet and Lewis Trondheim, inspired by Notes and Donjon.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Boulet图形插画__Boulet Graphic Illustration/preview.jpg",
+  "folder": "krea2_styles/Boulet图形插画__Boulet Graphic Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

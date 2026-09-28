@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-148",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通2",
+  "category_name": "动漫卡通2",
+  "name_cn": "怀旧轻盈",
+  "name": "Nostalgic Ghibli Pastoral — Cumulus Summer Light",
+  "prompt": "Studio Ghibli style, hand-painted anime background, lush green hills, towering cumulus clouds, nostalgic summer atmosphere, vibrant landscape painting, scenic pastoral vista. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧轻盈__Nostalgic Ghibli Pastoral — Cumulus Summer Light/preview.webp",
+  "folder": "Krea2_moodboard/怀旧轻盈__Nostalgic Ghibli Pastoral — Cumulus Summer Light",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

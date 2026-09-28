@@ -1,0 +1,1 @@
+high-contrast monochrome, heavy film grain, chiaroscuro lighting, gritty raw texture, intense direct gaze, dramatic low-key lighting, cinematic noir. Subject:{prompt}

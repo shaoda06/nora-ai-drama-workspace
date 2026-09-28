@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3124",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "光谱黑色",
+  "name": "Luminescent Spectral Noir — Acid Green Aura",
+  "prompt": "high-contrast silhouette, acid green gradient aura, fine grain paper texture, soft-focus diffusion, minimalist surrealism, bioluminescent glow, airbrushed ink bleed. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色__Luminescent Spectral Noir — Acid Green Aura/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色__Luminescent Spectral Noir — Acid Green Aura",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

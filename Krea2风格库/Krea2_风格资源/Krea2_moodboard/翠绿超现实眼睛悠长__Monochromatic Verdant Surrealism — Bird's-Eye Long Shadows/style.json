@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3140",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "翠绿超现实眼睛悠长",
+  "name": "Monochromatic Verdant Surrealism — Bird's-Eye Long Shadows",
+  "prompt": "monochromatic green palette, bird's-eye view, dramatic long shadows, minimalist surrealism, tactile paint texture, isolated human figures, dreamlike atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/翠绿超现实眼睛悠长__Monochromatic Verdant Surrealism — Bird's-Eye Long Shadows/preview.webp",
+  "folder": "Krea2_moodboard/翠绿超现实眼睛悠长__Monochromatic Verdant Surrealism — Bird's-Eye Long Shadows",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

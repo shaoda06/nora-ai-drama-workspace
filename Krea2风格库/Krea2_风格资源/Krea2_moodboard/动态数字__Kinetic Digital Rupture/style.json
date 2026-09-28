@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1889",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "动态数字",
+  "name": "Kinetic Digital Rupture",
+  "prompt": "dynamic radial motion, brutalist architecture, digital pixel sorting, fragmented reality, high contrast industrial lighting, chromatic aberration, seismic structural rupture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态数字__Kinetic Digital Rupture/preview.webp",
+  "folder": "Krea2_moodboard/动态数字__Kinetic Digital Rupture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

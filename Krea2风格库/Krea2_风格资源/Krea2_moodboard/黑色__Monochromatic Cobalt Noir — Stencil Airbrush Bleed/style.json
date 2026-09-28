@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-450",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "黑色",
+  "name": "Monochromatic Cobalt Noir — Stencil Airbrush Bleed",
+  "prompt": "cyanotype print, cobalt and indigo, airbrush stencil, analog grain, high-contrast silhouette, distressed paper texture, halftone dot matrix, smoky ink bleed. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Monochromatic Cobalt Noir — Stencil Airbrush Bleed/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Monochromatic Cobalt Noir — Stencil Airbrush Bleed",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

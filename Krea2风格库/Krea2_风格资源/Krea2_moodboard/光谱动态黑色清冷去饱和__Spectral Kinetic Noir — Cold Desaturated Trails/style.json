@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1978",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷2",
+  "category_name": "摄影特效冷2",
+  "name_cn": "光谱动态黑色清冷去饱和",
+  "name": "Spectral Kinetic Noir — Cold Desaturated Trails",
+  "prompt": "long exposure motion blur, low-key noir lighting, spectral light trails, cold desaturated palette, kinetic action photography, high contrast silhouettes, shutter drag effect. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱动态黑色清冷去饱和__Spectral Kinetic Noir — Cold Desaturated Trails/preview.webp",
+  "folder": "Krea2_moodboard/光谱动态黑色清冷去饱和__Spectral Kinetic Noir — Cold Desaturated Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

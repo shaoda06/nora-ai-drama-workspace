@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2880",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵动态极简",
+  "name": "Ethereal Kinetic Minimalism — Ghostly Desaturation",
+  "prompt": "intentional camera movement, ethereal motion blur, minimalist monochromatic, long exposure photography, spectral silhouette, dreamlike diffusion, high-contrast atmospheric. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态极简__Ethereal Kinetic Minimalism — Ghostly Desaturation/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态极简__Ethereal Kinetic Minimalism — Ghostly Desaturation",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

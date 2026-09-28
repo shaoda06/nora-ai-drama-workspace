@@ -1,0 +1,1 @@
+analog film grain, golden hour lighting, shallow depth of field, muted earth tones, introspective mood, cinematic atmosphere, soft focus. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2545",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "明亮深渊黑色宏观流质",
+  "name": "Luminous Abyssal Noir — Macro Liquid Caustics",
+  "prompt": "chiaroscuro lighting, deep teal and obsidian palette, intricate light caustics, macro liquid photography, translucent glass reflections, dramatic rim lighting, minimalist dark studio. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮深渊黑色宏观流质__Luminous Abyssal Noir — Macro Liquid Caustics/preview.webp",
+  "folder": "Krea2_moodboard/明亮深渊黑色宏观流质__Luminous Abyssal Noir — Macro Liquid Caustics",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

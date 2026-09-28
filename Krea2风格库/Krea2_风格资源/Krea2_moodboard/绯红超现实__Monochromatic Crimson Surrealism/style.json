@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3341",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "绯红超现实",
+  "name": "Monochromatic Crimson Surrealism",
+  "prompt": "monochromatic crimson and black, high-gloss liquid latex, dramatic chiaroscuro lighting, analog horror artifacts, viscous fluid textures, surreal high-contrast portraiture, specular highlights. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红超现实__Monochromatic Crimson Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/绯红超现实__Monochromatic Crimson Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

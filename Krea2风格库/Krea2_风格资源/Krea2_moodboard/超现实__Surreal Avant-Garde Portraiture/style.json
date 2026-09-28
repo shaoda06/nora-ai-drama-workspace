@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3158",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "超现实",
+  "name": "Surreal Avant-Garde Portraiture",
+  "prompt": "surrealist portraiture, avant-garde editorial, tactile texture overlay, high-contrast chiaroscuro, crimson red accents, fragmented facial features, minimalist studio aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Surreal Avant-Garde Portraiture/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Surreal Avant-Garde Portraiture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

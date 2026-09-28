@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2387",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "碎片化黑色",
+  "name": "Fragmented Noir Portraiture",
+  "prompt": "torn paper collage, chiaroscuro portraiture, distressed texture, monochromatic noir, fragmented composition, psychological atmosphere, raw emotional gaze. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/碎片化黑色__Fragmented Noir Portraiture/preview.webp",
+  "folder": "Krea2_moodboard/碎片化黑色__Fragmented Noir Portraiture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

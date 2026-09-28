@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-11",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "黏土动画",
+  "name": "Claymation",
+  "prompt": "Style: Claymation: A charmingly tactile stop-motion illustration style built on soft, rounded forms carrying visible handcrafted imperfection, gentle fingerprint-like dents and subtle irregularity standing in for smooth digital finish, warm, even lighting that gives every contour a cozy, dimensional roundness, a slightly rigid, hand-manipulated quality to posing that carries endearing physical charm, and a nostalgic, cheerfully handmade warmth rooted in decades of stop-motion animation craft. Influenced by: Aardman Animations, stop-motion claymation technique, handcrafted figure-animation practice, British character-animation tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/黏土动画__Claymation/preview.jpg",
+  "folder": "krea2_styles/黏土动画__Claymation",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

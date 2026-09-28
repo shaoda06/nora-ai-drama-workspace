@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2900",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵夜行琥珀发光",
+  "name": "Ethereal Nocturnal Luminescence — Amber Glow Trails",
+  "prompt": "long exposure, analog film grain, twilight blue and amber, motion blur, ethereal glow, high contrast silhouette, nocturnal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵夜行琥珀发光__Ethereal Nocturnal Luminescence — Amber Glow Trails/preview.webp",
+  "folder": "Krea2_moodboard/空灵夜行琥珀发光__Ethereal Nocturnal Luminescence — Amber Glow Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

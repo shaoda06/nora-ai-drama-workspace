@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-78",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "死神风格",
+  "name": "Bleach Style",
+  "prompt": "Style: Bleach Style: A sleek, high-contrast shōnen-anime illustration style built on confident, angular linework carrying sharp, stylish silhouette design, bold cel-based shading with dramatic, graphic shadow blocking rather than smooth gradation, a moody, atmospheric restraint balanced against dynamic, action-charged posing, meticulous attention to elegant, flowing motion within otherwise crisp, controlled composition, and a stylish, brooding shōnen intensity that feels equal parts fashionable and fiercely kinetic. Influenced by: Tite Kubo, Studio Pierrot animation tradition, cel-shaded shōnen illustration technique, stylish action-anime character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/死神风格__Bleach Style/preview.jpg",
+  "folder": "krea2_styles/死神风格__Bleach Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

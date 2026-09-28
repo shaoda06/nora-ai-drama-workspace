@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3528",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "电影感新黑色",
+  "name": "Cinematic Neo-Noir Liminality",
+  "prompt": "cinematic chiaroscuro, solitary silhouette, complementary color grading, volumetric atmospheric haze, minimalist geometric architecture, high-contrast neo-noir, liminal space. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感新黑色__Cinematic Neo-Noir Liminality/preview.webp",
+  "folder": "Krea2_moodboard/电影感新黑色__Cinematic Neo-Noir Liminality",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

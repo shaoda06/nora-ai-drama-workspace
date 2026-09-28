@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-333",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "阈限",
+  "name": "Acidic Liminal Printivism",
+  "prompt": "risograph print aesthetic, acid yellow and neon accents, high-contrast halftone patterns, liminal landscape photography, analog film grain, brutalist graphic design, glitch art texture, nostalgic lo-fi atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/阈限__Acidic Liminal Printivism/preview.webp",
+  "folder": "Krea2_moodboard/阈限__Acidic Liminal Printivism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+motion blur, analog film grain, soft-focus haze, chromatic aberration, liminal atmosphere, long exposure photography, cinematic noir lighting, dreamlike distortion. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1282",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "电影感写实绘画感大地",
+  "name": "Gritty Cinematic Realism — Painterly Earth Gray",
+  "prompt": "cinematic digital painting, desaturated earth tones, weathered industrial texture, soft diffused lighting, painterly brushwork, gritty realistic aesthetic, shallow depth of field. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感写实绘画感大地__Gritty Cinematic Realism — Painterly Earth Gray/preview.webp",
+  "folder": "Krea2_moodboard/电影感写实绘画感大地__Gritty Cinematic Realism — Painterly Earth Gray",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

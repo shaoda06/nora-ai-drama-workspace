@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1907",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "数字写实",
+  "name": "Corrupted Digital Realism",
+  "prompt": "glitch art, pixel sorting, datamoshing, digital artifacting, analog-digital hybrid, corrupted realism, chromatic aberration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字写实__Corrupted Digital Realism/preview.webp",
+  "folder": "Krea2_moodboard/数字写实__Corrupted Digital Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

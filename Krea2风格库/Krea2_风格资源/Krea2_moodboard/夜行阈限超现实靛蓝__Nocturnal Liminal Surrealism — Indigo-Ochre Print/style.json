@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3517",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "夜行阈限超现实靛蓝",
+  "name": "Nocturnal Liminal Surrealism — Indigo-Ochre Print",
+  "prompt": "chiaroscuro lighting, minimalist surrealism, grainy film texture, saturated indigo and orange, geometric composition, atmospheric dreamscape, retro-futuristic depth. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行阈限超现实靛蓝__Nocturnal Liminal Surrealism — Indigo-Ochre Print/preview.webp",
+  "folder": "Krea2_moodboard/夜行阈限超现实靛蓝__Nocturnal Liminal Surrealism — Indigo-Ochre Print",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

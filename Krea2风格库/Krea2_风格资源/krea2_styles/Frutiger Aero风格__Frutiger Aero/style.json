@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-34",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "Frutiger Aero风格",
+  "name": "Frutiger Aero",
+  "prompt": "Style: Frutiger Aero: A glossy, optimistic digital-aesthetic style built on smooth, dewy translucence layered over every surface like a soft protective sheen, bright, evenly diffused lighting that keeps the whole composition feeling clean and airy, gentle lens-flare bloom radiating with cheerful, tech-utopian positivity, crisp, rounded rendering logic that softens every edge into approachable, friendly polish, and a buoyant, forward-looking digital sincerity rooted in mid-2000s techno-optimism. Influenced by: mid-2000s tech-interface design tradition, Frutiger Aero aesthetic movement, glossy UI-rendering practice, early Web 2.0 digital-design technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/Frutiger Aero风格__Frutiger Aero/preview.jpg",
+  "folder": "krea2_styles/Frutiger Aero风格__Frutiger Aero",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

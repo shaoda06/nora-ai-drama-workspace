@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-470",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "霓虹故障",
+  "name": "Neon Glitch Risography",
+  "prompt": "risograph print style, chromatic aberration, neon glitch art, grainy tactile texture, saturated gradient, retro-futuristic collage, airbrushed geometry. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹故障__Neon Glitch Risography/preview.webp",
+  "folder": "Krea2_moodboard/霓虹故障__Neon Glitch Risography",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

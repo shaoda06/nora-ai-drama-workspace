@@ -1,0 +1,1 @@
+high-contrast black and white, motion blur, spectral light trails, chiaroscuro, grainy film texture, long exposure, glowing silhouette. Subject:{prompt}

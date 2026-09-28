@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1210",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "光谱动态黑色绘画感流动",
+  "name": "Spectral Kinetic Noir — Painterly Fluid Trails",
+  "prompt": "high-contrast monochrome, motion blur portrait, chiaroscuro lighting, spectral distortion, shutter drag, ghostly motion trails, surreal noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱动态黑色绘画感流动__Spectral Kinetic Noir — Painterly Fluid Trails/preview.webp",
+  "folder": "Krea2_moodboard/光谱动态黑色绘画感流动__Spectral Kinetic Noir — Painterly Fluid Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

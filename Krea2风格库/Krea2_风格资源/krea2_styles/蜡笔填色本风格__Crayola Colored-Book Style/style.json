@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-262",
+  "library": "krea2_styles",
+  "category": "clio_Drawing",
+  "category_name": "素描",
+  "name_cn": "蜡笔填色本风格",
+  "name": "Crayola Colored-Book Style",
+  "prompt": "Style: Crayola Colored-Book Style: A cheerful, deliberately simplified illustration style built on bold, uneven waxy strokes that fill flat shapes with visible, layered texture rather than smooth coverage, thick, confident outline holding basic, uncomplicated forms, minimal shading achieved through pressure variation and layered strokes rather than blending, a charming, imperfect childlike sincerity carried through slightly uneven coloring-within-the-lines application, and a nostalgic, playful simplicity that feels handmade, joyful, and unmistakably crafted by hand. Influenced by: children's coloring-book tradition, wax-crayon illustration technique, elementary art-class practice, simplified line-and-fill illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/蜡笔填色本风格__Crayola Colored-Book Style/preview.jpg",
+  "folder": "krea2_styles/蜡笔填色本风格__Crayola Colored-Book Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

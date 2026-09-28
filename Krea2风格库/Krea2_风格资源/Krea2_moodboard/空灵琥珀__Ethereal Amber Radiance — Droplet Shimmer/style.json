@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1669",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "空灵琥珀",
+  "name": "Ethereal Amber Radiance — Droplet Shimmer",
+  "prompt": "golden hour monochromatic palette, ethereal backlit particles, shimmering water droplets, dramatic silhouette, dreamlike bokeh haze, amber light diffusion, nostalgic romanticism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵琥珀__Ethereal Amber Radiance — Droplet Shimmer/preview.webp",
+  "folder": "Krea2_moodboard/空灵琥珀__Ethereal Amber Radiance — Droplet Shimmer",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

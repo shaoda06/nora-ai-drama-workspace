@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1525",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "夜行暮光忧郁温馨",
+  "name": "Nocturnal Twilight Melancholy — Warm Bokeh Stillness",
+  "prompt": "blue hour photography, analog film grain, indigo night sky, soft focus, lo-fi aesthetic, chromatic aberration, warm bokeh highlights. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行暮光忧郁温馨__Nocturnal Twilight Melancholy — Warm Bokeh Stillness/preview.webp",
+  "folder": "Krea2_moodboard/夜行暮光忧郁温馨__Nocturnal Twilight Melancholy — Warm Bokeh Stillness",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

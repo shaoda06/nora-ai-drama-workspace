@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3051",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实4",
+  "category_name": "摄影超现实4",
+  "name_cn": "动态太阳超现实",
+  "name": "Kinetic Sun-Drenched Surrealism",
+  "prompt": "hyper-saturated neon colors, dynamic motion blur, harsh sun-drenched lighting, low-angle wide-angle perspective, surreal dreamcore atmosphere, high-contrast desert grit, vibrant Y2K aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态太阳超现实__Kinetic Sun-Drenched Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/动态太阳超现实__Kinetic Sun-Drenched Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-401",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计1",
+  "category_name": "设计1",
+  "name_cn": "模拟黑色双色调",
+  "name": "Gritty Analog Noir — Risograph Duotone",
+  "prompt": "halftone grain, risograph texture, high contrast monochrome, glitch distortion, lo-fi punk aesthetic, duotone airbrush, vintage photocopy style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟黑色双色调__Gritty Analog Noir — Risograph Duotone/preview.webp",
+  "folder": "Krea2_moodboard/模拟黑色双色调__Gritty Analog Noir — Risograph Duotone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

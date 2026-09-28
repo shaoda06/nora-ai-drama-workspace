@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1611",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "梦幻",
+  "name": "Dreamy Pastoral Etherealism",
+  "prompt": "hazy golden light, ethereal woodland atmosphere, vintage analog film texture, soft focus botanical, muted pastel palette, cinematic crepuscular rays, dreamy romantic landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/梦幻__Dreamy Pastoral Etherealism/preview.webp",
+  "folder": "Krea2_moodboard/梦幻__Dreamy Pastoral Etherealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

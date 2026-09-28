@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-167",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "阿迪·格拉诺夫风格",
+  "name": "Adi Granov Style",
+  "prompt": "Style: Adi Granov Style: A sleek, hyper-glossy painted comic-illustration style built on immaculately smooth gradient rendering that eliminates visible brushwork in favor of glassy precision, dramatic directional lighting carving crisp, confident highlight across every contour, meticulously controlled reflective sheen giving every form a polished, high-production finish, a restrained, technically disciplined realism balancing painterly depth with graphic clarity, and a sleek, cinematic comic-cover intensity built for instantly recognizable high-gloss impact. Influenced by: Adi Granov, painted comic-cover illustration tradition, hyper-glossy digital-rendering technique, cinematic character-illustration practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/阿迪·格拉诺夫风格__Adi Granov Style/preview.jpg",
+  "folder": "krea2_styles/阿迪·格拉诺夫风格__Adi Granov Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

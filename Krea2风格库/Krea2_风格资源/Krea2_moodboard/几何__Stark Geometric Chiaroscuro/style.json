@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2625",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "几何",
+  "name": "Stark Geometric Chiaroscuro",
+  "prompt": "high-contrast black and white, chiaroscuro lighting, stark geometric composition, hard directional light, dramatic shadows, fine film grain, minimalist noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/几何__Stark Geometric Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/几何__Stark Geometric Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

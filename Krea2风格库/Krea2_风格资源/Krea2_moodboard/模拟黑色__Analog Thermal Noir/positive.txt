@@ -1,0 +1,1 @@
+analog film grain, high-contrast silhouette, glowing thermal gradients, retro-futuristic atmosphere, chromatic aberration, cinematic light leaks, soft-focus bloom. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3289",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "单色超现实",
+  "name": "Monochrome Surrealist Deconstruction",
+  "prompt": "high contrast black and white, analog film grain, surrealist collage, torn paper texture, distorted portraiture, chiaroscuro lighting, post-punk aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色超现实__Monochrome Surrealist Deconstruction/preview.webp",
+  "folder": "Krea2_moodboard/单色超现实__Monochrome Surrealist Deconstruction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,1 @@
+cinematic 35mm film grain, low-key moody lighting, shallow depth of field, cool blue and slate tones, introspective candid portrait, urban nocturnal bokeh, atmospheric blur. Subject:{prompt}

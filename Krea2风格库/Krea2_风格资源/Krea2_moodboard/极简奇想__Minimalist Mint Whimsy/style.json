@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-698",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "极简奇想",
+  "name": "Minimalist Mint Whimsy",
+  "prompt": "minimalist vector illustration, mint green background, thick bold outlines, cute whimsical character, flat design, naive art style, pastel color palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/极简奇想__Minimalist Mint Whimsy/preview.webp",
+  "folder": "Krea2_moodboard/极简奇想__Minimalist Mint Whimsy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-242",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "编辑插画",
+  "name": "Editorial Illustration",
+  "prompt": "Style: Editorial Illustration: A conceptually driven illustration style built on confident, considered composition designed to communicate a single idea with immediate clarity, restrained shading and color logic that supports rather than overwhelms the central concept, meticulous attention to symbolic or metaphorical visual shorthand, a polished, deadline-tested economy of mark-making that favors clever communication over exhaustive rendering, and a sharp, intelligent illustrative wit rooted in contemporary magazine and publication practice. Influenced by: contemporary editorial-illustration tradition, conceptual magazine-illustration technique, symbolic visual-metaphor practice, publication-illustration method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/编辑插画__Editorial Illustration/preview.jpg",
+  "folder": "krea2_styles/编辑插画__Editorial Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

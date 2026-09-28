@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2800",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "绯红故障",
+  "name": "Crimson Glitch Avant-Garde",
+  "prompt": "pixel-sorted glitch art, high-contrast minimalism, crimson red accents, avant-garde surrealism, digital disintegration, vertical slit-scan distortion, stark monochromatic aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红故障__Crimson Glitch Avant-Garde/preview.webp",
+  "folder": "Krea2_moodboard/绯红故障__Crimson Glitch Avant-Garde",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

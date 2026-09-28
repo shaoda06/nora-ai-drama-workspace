@@ -1,0 +1,1 @@
+long exposure motion blur, bioluminescent cyan glow, chiaroscuro lighting, spectral silhouette, grainy film texture, stark black background, blown-out highlights, ethereal fluid motion. Subject:{prompt}

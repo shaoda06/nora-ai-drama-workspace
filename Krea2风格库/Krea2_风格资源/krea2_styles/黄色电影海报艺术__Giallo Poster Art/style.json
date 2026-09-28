@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-308",
+  "library": "krea2_styles",
+  "category": "clio_Painting",
+  "category_name": "绘画",
+  "name_cn": "黄色电影海报艺术",
+  "name": "Giallo Poster Art",
+  "prompt": "Style: Giallo Poster Art: A stylized, high-tension illustration style built on stark, high-contrast graphic composition anchored by a dramatic central figure isolated against bold negative space, illustrative airbrushed rendering charged with lurid, theatrical menace, sharp, angular shadow shapes suggesting concealed threat just beyond the frame, a deliberate tension between glamorous surface polish and gruesome implication lurking beneath, and a stylish, pulpy suspense-cinema intensity built for maximum lurid impact on a theater marquee. Influenced by: Italian giallo film-poster tradition, airbrush illustration technique, pulp-thriller poster design, 1970s European genre-cinema graphic practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/黄色电影海报艺术__Giallo Poster Art/preview.jpg",
+  "folder": "krea2_styles/黄色电影海报艺术__Giallo Poster Art",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-644",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "肌理新图形波普",
+  "name": "Textured Neo-Graphic Pop",
+  "prompt": "risograph grain texture, flat vector illustration, bold primary color palette, geometric abstraction, Corporate Memphis style, high-contrast graphic design, whimsical stylized characters. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理新图形波普__Textured Neo-Graphic Pop/preview.webp",
+  "folder": "Krea2_moodboard/肌理新图形波普__Textured Neo-Graphic Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

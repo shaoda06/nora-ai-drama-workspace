@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-890",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "超现实新渐变",
+  "name": "Surreal Neo-Folk Gradient",
+  "prompt": "flat vector illustration, grainy airbrush gradient, neo-folk symbolism, vibrant saturated palette, minimalist surrealism, clean geometric composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实新渐变__Surreal Neo-Folk Gradient/preview.webp",
+  "folder": "Krea2_moodboard/超现实新渐变__Surreal Neo-Folk Gradient",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

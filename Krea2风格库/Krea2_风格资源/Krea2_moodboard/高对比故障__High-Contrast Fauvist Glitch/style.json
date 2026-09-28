@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2765",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "高对比故障",
+  "name": "High-Contrast Fauvist Glitch",
+  "prompt": "high-contrast color blocking, cobalt blue and crimson red, fauvist expressionist strokes, surrealist silhouette, digital glitch distortion, tactile pastel texture, minimalist graphic composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高对比故障__High-Contrast Fauvist Glitch/preview.webp",
+  "folder": "Krea2_moodboard/高对比故障__High-Contrast Fauvist Glitch",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

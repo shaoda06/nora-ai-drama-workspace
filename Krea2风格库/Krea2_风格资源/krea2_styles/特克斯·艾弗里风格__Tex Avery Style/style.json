@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-137",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "特克斯·艾弗里风格",
+  "name": "Tex Avery Style",
+  "prompt": "Style: Tex Avery Style: A wildly exaggerated cartoon illustration style built on rubbery, elastic anatomy that stretches, squashes, and pops with manic comedic energy, confident thick outline holding extreme, cartoonish reaction poses pushed far beyond naturalistic limits, bright, flat color fill with minimal shading complexity, an unrestrained, gag-driven sense of comedic timing embedded in every exaggerated expression, and a hyper-kinetic, gleefully absurd animation intensity that feels loud, frantic, and effortlessly zany. Influenced by: Tex Avery, MGM/Warner Bros golden-age cartoon tradition, squash-and-stretch animation technique, classic gag-cartoon character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/特克斯·艾弗里风格__Tex Avery Style/preview.jpg",
+  "folder": "krea2_styles/特克斯·艾弗里风格__Tex Avery Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1791",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感5",
+  "category_name": "摄影超现模糊感5",
+  "name_cn": "明亮植物宏观",
+  "name": "Luminous Botanical Macro — Dewdrop Refraction",
+  "prompt": "macro photography, dewdrops, shallow depth of field, botanical details, soft bokeh, refractive light, vibrant emerald green. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮植物宏观__Luminous Botanical Macro — Dewdrop Refraction/preview.webp",
+  "folder": "Krea2_moodboard/明亮植物宏观__Luminous Botanical Macro — Dewdrop Refraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2540",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "超现实",
+  "name": "Surreal Infrared Americana",
+  "prompt": "infrared photography style, monochromatic pink lighting, desolate gothic architecture, minimalist surrealism, Aerochrome film aesthetic, cinematic nocturne, vintage film grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实__Surreal Infrared Americana/preview.webp",
+  "folder": "Krea2_moodboard/超现实__Surreal Infrared Americana",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

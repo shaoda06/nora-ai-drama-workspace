@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2539",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "模拟神话发光",
+  "name": "Analog Mythic Glow",
+  "prompt": "analog film grain, blooming orange light, minimalist silhouette, mystical twilight, lofi retro texture, cinematic dark fantasy, surreal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟神话发光__Analog Mythic Glow/preview.webp",
+  "folder": "Krea2_moodboard/模拟神话发光__Analog Mythic Glow",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1346",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感1",
+  "category_name": "摄影超现模糊感1",
+  "name_cn": "电影感夜行黑色朦胧轻盈",
+  "name": "Cinematic Nocturnal Noir — Hazy Navy Light",
+  "prompt": "chiaroscuro lighting, volumetric fog, cinematic noir, cool blue monochrome, high-ISO film grain, stark silhouettes, atmospheric haze, industrial thriller aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感夜行黑色朦胧轻盈__Cinematic Nocturnal Noir — Hazy Navy Light/preview.webp",
+  "folder": "Krea2_moodboard/电影感夜行黑色朦胧轻盈__Cinematic Nocturnal Noir — Hazy Navy Light",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

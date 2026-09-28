@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3021",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "棱镜宇宙黑色",
+  "name": "Prismatic Cosmic Noir",
+  "prompt": "chromatic aberration, prismatic light flare, vintage film grain, high contrast dark background, bioluminescent glow, surreal dreamlike atmosphere, iridescent rim lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜宇宙黑色__Prismatic Cosmic Noir/preview.webp",
+  "folder": "Krea2_moodboard/棱镜宇宙黑色__Prismatic Cosmic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

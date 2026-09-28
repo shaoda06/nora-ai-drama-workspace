@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-193",
+  "library": "krea2_styles",
+  "category": "clio_Cover Art",
+  "category_name": "封面艺术",
+  "name_cn": "切面绘画数字绘画",
+  "name": "Faceted Painterly Digital painting",
+  "prompt": "Style: Faceted Painterly Digital painting: A confidently stylized digital-painting style built on sharp, angular brushwork that constructs form through faceted, geometric planes of light and shadow rather than smooth blending, crisp specular highlight catching every sharp transitional edge with glossy precision, a soft-to-graphic tension between rendered texture and boldly simplified surrounding shape, meticulous attention to expressive, softly rendered detail set against otherwise confident graphic construction, and a polished, editorial-illustration finish that feels contemporary, stylish, and effortlessly striking. Influenced by: contemporary faceted digital-painting technique, semi-realistic editorial-illustration practice, stylized rendering method, painterly geometric-shading tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/切面绘画数字绘画__Faceted Painterly Digital painting/preview.jpg",
+  "folder": "krea2_styles/切面绘画数字绘画__Faceted Painterly Digital painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

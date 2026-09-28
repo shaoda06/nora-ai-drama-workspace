@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-161",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "米罗·马纳拉风格",
+  "name": "Milo Manara Style",
+  "prompt": "Style: Milo Manara Style: An elegant, sensuous comic-illustration style built on fluid, confident linework that traces the female form with graceful anatomical precision, delicate fine crosshatching used sparingly to suggest shadow and volume rather than heavy rendering, warm sun-bleached Mediterranean color palettes applied in soft watercolor-like washes, playful, flirtatious poses charged with lighthearted erotic tension, and a refined, painterly European comic-book sensuality that feels classic yet unmistakably illustrated. Influenced by: Milo Manara, Italian fumetti comic art, Mediterranean watercolor illustration, erotic graphic-novel linework.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/米罗·马纳拉风格__Milo Manara Style/preview.jpg",
+  "folder": "krea2_styles/米罗·马纳拉风格__Milo Manara Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

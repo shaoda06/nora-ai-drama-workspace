@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-353",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "高调光摄影",
+  "name": "High-Key Lighting Photography",
+  "prompt": "Style: High-Key Lighting Photography: A bright, evenly luminous photographic style built on soft, diffused illumination from multiple balanced sources that minimizes shadow and contrast almost entirely, a clean, airy tonal range concentrated in the upper end of the exposure scale, gentle wraparound light that flatters every plane of the subject without harsh falloff, a crisp, optimistic clarity free of moody depth, and a polished, commercial-grade brightness that reads as open, cheerful, and immaculately controlled. Influenced by: high-key studio photography technique, commercial beauty lighting tradition, fashion catalog photography, softbox lighting method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/高调光摄影__High-Key Lighting Photography/preview.jpg",
+  "folder": "krea2_styles/高调光摄影__High-Key Lighting Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

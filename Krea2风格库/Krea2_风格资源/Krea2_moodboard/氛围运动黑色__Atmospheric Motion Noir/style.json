@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1919",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "氛围运动黑色",
+  "name": "Atmospheric Motion Noir",
+  "prompt": "heavy film grain, high-contrast monochrome, cinematic motion blur, chiaroscuro lighting, abstract silhouette, lo-fi analog texture, dark atmospheric noir. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围运动黑色__Atmospheric Motion Noir/preview.webp",
+  "folder": "Krea2_moodboard/氛围运动黑色__Atmospheric Motion Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

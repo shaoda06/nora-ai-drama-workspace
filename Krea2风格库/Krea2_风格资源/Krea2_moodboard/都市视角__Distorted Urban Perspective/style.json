@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2669",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Real_摄影写实",
+  "category_name": "摄影写实",
+  "name_cn": "都市视角",
+  "name": "Distorted Urban Perspective",
+  "prompt": "wide-angle lens distortion, low-angle perspective, streetwear, candid photography, diffused lighting, raw urban texture, fish-eye aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/都市视角__Distorted Urban Perspective/preview.webp",
+  "folder": "Krea2_moodboard/都市视角__Distorted Urban Perspective",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

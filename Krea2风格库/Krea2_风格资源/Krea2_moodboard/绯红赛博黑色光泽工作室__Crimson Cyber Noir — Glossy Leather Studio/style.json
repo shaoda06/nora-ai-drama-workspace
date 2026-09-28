@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1870",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "绯红赛博黑色光泽工作室",
+  "name": "Crimson Cyber Noir — Glossy Leather Studio",
+  "prompt": "high-contrast studio photography, vibrant crimson red background, sharp graphic shadows, cyberpunk editorial fashion, glossy leather and satin textures, avant-garde styling, hard direct lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红赛博黑色光泽工作室__Crimson Cyber Noir — Glossy Leather Studio/preview.webp",
+  "folder": "Krea2_moodboard/绯红赛博黑色光泽工作室__Crimson Cyber Noir — Glossy Leather Studio",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

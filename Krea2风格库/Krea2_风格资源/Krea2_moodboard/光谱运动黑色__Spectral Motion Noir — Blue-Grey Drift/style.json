@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1935",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷1",
+  "category_name": "摄影特效冷1",
+  "name_cn": "光谱运动黑色",
+  "name": "Spectral Motion Noir — Blue-Grey Drift",
+  "prompt": "double exposure, motion blur, cool-toned color palette, analog film grain, spectral silhouettes, chromatic aberration, cinematic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱运动黑色__Spectral Motion Noir — Blue-Grey Drift/preview.webp",
+  "folder": "Krea2_moodboard/光谱运动黑色__Spectral Motion Noir — Blue-Grey Drift",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

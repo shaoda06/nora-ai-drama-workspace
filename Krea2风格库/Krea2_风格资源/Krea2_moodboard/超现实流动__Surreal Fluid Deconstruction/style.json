@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2928",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "超现实流动",
+  "name": "Surreal Fluid Deconstruction",
+  "prompt": "surrealist portraiture, digital glitch art, liquid distortion, pixel sorting, vintage flash photography, fluid dynamics, uncanny valley. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实流动__Surreal Fluid Deconstruction/preview.webp",
+  "folder": "Krea2_moodboard/超现实流动__Surreal Fluid Deconstruction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

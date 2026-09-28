@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-170",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "莫比乌斯启发插画",
+  "name": "Moebius-Inspired Illustration",
+  "prompt": "Style: Moebius-Inspired Illustration: A meticulously linear illustration style built on impossibly clean, confident linework that defines every form with fluid precision rather than heavy shading, expansive contemplative compositions that give equal weight to vast open space and intricate surface detail, delicate stippling and fine cross-hatching used sparingly to suggest volume and atmosphere, a serene, otherworldly stillness pervading even the most fantastical scenes, and a meditative, dreamlike clarity where technical mastery and imaginative wonder feel perfectly balanced. Influenced by: Jean \"Mœbius\" Giraud, French bande dessinée illustration, ligne claire technique, science-fantasy comic art.,. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/莫比乌斯启发插画__Moebius-Inspired Illustration/preview.jpg",
+  "folder": "krea2_styles/莫比乌斯启发插画__Moebius-Inspired Illustration",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

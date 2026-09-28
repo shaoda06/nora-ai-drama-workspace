@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1672",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感4",
+  "category_name": "摄影超现模糊感4",
+  "name_cn": "空灵黄金",
+  "name": "Ethereal Golden Wildlife",
+  "prompt": "golden hour wildlife photography, shallow depth of field, rim lighting, atmospheric haze, warm amber tones, telephoto lens, magical realism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黄金__Ethereal Golden Wildlife/preview.webp",
+  "folder": "Krea2_moodboard/空灵黄金__Ethereal Golden Wildlife",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

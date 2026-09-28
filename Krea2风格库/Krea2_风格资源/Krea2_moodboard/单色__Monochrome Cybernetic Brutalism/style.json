@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1209",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画6",
+  "category_name": "插画6",
+  "name_cn": "单色",
+  "name": "Monochrome Cybernetic Brutalism",
+  "prompt": "high-contrast monochrome, schematic circuit aesthetics, ASCII-inspired typography, binary brutalist graphics, pixelated geometric patterns, stark black and white, cybernetic technical illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色__Monochrome Cybernetic Brutalism/preview.webp",
+  "folder": "Krea2_moodboard/单色__Monochrome Cybernetic Brutalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

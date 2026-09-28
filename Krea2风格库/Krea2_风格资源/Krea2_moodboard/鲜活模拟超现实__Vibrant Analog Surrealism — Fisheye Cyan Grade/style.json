@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-530",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "鲜活模拟超现实",
+  "name": "Vibrant Analog Surrealism — Fisheye Cyan Grade",
+  "prompt": "35mm film photography, vibrant saturated colors, heavy analog film grain, dynamic low-angle composition, fisheye lens distortion, vintage halftone print texture, cyan-teal color grade, sun-drenched cerulean sky. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活模拟超现实__Vibrant Analog Surrealism — Fisheye Cyan Grade/preview.webp",
+  "folder": "Krea2_moodboard/鲜活模拟超现实__Vibrant Analog Surrealism — Fisheye Cyan Grade",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

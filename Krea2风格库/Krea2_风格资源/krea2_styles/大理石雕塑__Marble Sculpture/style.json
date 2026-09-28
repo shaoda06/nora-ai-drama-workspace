@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-4",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "大理石雕塑",
+  "name": "Marble Sculpture",
+  "prompt": "Style: Marble Sculpture: A dimensionally commanding sculptural form built on convincing volumetric mass shaped through confident tonal modeling rather than linear description, dramatic raking light that reveals every carved contour and recessed hollow with sculptural clarity, a translucent depth beneath the outermost extent that softens and catches illumination with quiet luminosity, a monumental stillness carried through deliberate, unhurried mass and proportion, and a timeless, classical gravitas that treats carved form itself as the entire subject. Influenced by: Michelangelo, Antonio Canova, classical figurative-sculpture tradition, academic tonal-modeling technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/大理石雕塑__Marble Sculpture/preview.jpg",
+  "folder": "krea2_styles/大理石雕塑__Marble Sculpture",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

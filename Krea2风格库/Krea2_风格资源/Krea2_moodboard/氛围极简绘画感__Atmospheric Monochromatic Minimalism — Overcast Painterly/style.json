@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-610",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "氛围极简绘画感",
+  "name": "Atmospheric Monochromatic Minimalism — Overcast Painterly",
+  "prompt": "heavy film grain, atmospheric minimalism, desaturated color palette, soft-focus photography, low contrast, overcast diffused lighting, cinematic stillness. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/氛围极简绘画感__Atmospheric Monochromatic Minimalism — Overcast Painterly/preview.webp",
+  "folder": "Krea2_moodboard/氛围极简绘画感__Atmospheric Monochromatic Minimalism — Overcast Painterly",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

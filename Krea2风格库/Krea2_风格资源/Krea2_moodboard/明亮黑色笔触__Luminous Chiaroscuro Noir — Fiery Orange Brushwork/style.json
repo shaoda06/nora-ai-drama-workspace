@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-771",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "明亮黑色笔触",
+  "name": "Luminous Chiaroscuro Noir — Fiery Orange Brushwork",
+  "prompt": "chiaroscuro lighting, fiery orange and charcoal palette, expressive digital brushstrokes, cinematic moody atmosphere, high-contrast silhouettes, textured painterly finish, nocturnal abstraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮黑色笔触__Luminous Chiaroscuro Noir — Fiery Orange Brushwork/preview.webp",
+  "folder": "Krea2_moodboard/明亮黑色笔触__Luminous Chiaroscuro Noir — Fiery Orange Brushwork",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

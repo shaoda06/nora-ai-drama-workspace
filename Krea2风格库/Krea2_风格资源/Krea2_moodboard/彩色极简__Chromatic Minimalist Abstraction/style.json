@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2572",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "彩色极简",
+  "name": "Chromatic Minimalist Abstraction",
+  "prompt": "minimalist 3D abstraction, volumetric gradient lighting, geometric precision, high-contrast composition, soft ambient glow, chromatic highlights, industrial graphic form. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/彩色极简__Chromatic Minimalist Abstraction/preview.webp",
+  "folder": "Krea2_moodboard/彩色极简__Chromatic Minimalist Abstraction",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

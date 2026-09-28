@@ -1,0 +1,1 @@
+motion blur, spectral glow, refractive glass distortion, low-key cinematic lighting, deep blue and amber palette, kinetic abstraction, atmospheric chiaroscuro. Subject:{prompt}

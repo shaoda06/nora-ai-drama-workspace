@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1299",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "大胆图解",
+  "name": "Bold Expressive Illustration",
+  "prompt": "stylized digital illustration, high-contrast lighting, bold outlines, expressive brushstrokes, vibrant color palette, contemporary graphic style, dynamic rim lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/大胆图解__Bold Expressive Illustration/preview.webp",
+  "folder": "Krea2_moodboard/大胆图解__Bold Expressive Illustration",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

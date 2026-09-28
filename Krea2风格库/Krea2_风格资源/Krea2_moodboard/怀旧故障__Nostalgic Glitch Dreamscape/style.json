@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2779",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "怀旧故障",
+  "name": "Nostalgic Glitch Dreamscape",
+  "prompt": "vintage OS GUI, chromatic aberration, analog glitch art, pixelated aesthetic, lo-fi digital surrealism, CRT monitor texture, dreamcore, pastel vaporwave. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧故障__Nostalgic Glitch Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/怀旧故障__Nostalgic Glitch Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-97",
+  "library": "krea2_styles",
+  "category": "clio_Anime",
+  "category_name": "动漫",
+  "name_cn": "JOJO的奇妙冒险风格",
+  "name": "JoJo's Bizarre Adventure Style",
+  "prompt": "Style: JoJo's Bizarre Adventure Style: A flamboyant, hyper-stylized manga-illustration style built on exaggerated, statuesque anatomy carrying dramatic fashion-forward posing, bold, high-contrast linework rendering musculature with sculptural, almost architectural precision, saturated graphic patterning integrated directly into confident silhouette design, dynamic, theatrical composition charged with operatic intensity and flair, and a bold, unapologetically stylish shōnen extravagance that feels equal parts high fashion and larger-than-life spectacle. Influenced by: Hirohiko Araki, flamboyant shōnen-manga tradition, sculptural anatomical-illustration technique, theatrical fashion-forward character-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/JOJO的奇妙冒险风格__JoJo's Bizarre Adventure Style/preview.jpg",
+  "folder": "krea2_styles/JOJO的奇妙冒险风格__JoJo's Bizarre Adventure Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

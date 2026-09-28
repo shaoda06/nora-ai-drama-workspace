@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-395",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "韦斯·安德森摄影",
+  "name": "Wes Anderson Photography",
+  "prompt": "Style: Wes Anderson Photography: A meticulously symmetrical photographic style built on precise, centered compositional balance where every element is deliberately arranged within a controlled geometric frame, flat, evenly diffused lighting that minimizes dramatic shadow in favor of clean, storybook clarity, a deadpan, static stillness carried through careful, unhurried framing, a restrained, deliberate formality where visual order itself becomes the mood, and a whimsical, meticulously curated precision that feels theatrical yet perfectly controlled. Influenced by: Wes Anderson cinematography tradition, symmetrical composition technique, deadpan visual-comedy framing practice, meticulous production-design photography.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/韦斯·安德森摄影__Wes Anderson Photography/preview.jpg",
+  "folder": "krea2_styles/韦斯·安德森摄影__Wes Anderson Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

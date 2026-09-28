@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-865",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "单色",
+  "name": "Monochrome Linear Craftsmanship",
+  "prompt": "monochrome engraving, intaglio print, cross-hatching, linocut texture, vintage woodcut, high-contrast ink, chalcography. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/单色__Monochrome Linear Craftsmanship/preview.webp",
+  "folder": "Krea2_moodboard/单色__Monochrome Linear Craftsmanship",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

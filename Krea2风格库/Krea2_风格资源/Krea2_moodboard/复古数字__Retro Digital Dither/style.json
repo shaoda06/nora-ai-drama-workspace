@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-490",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "复古数字",
+  "name": "Retro Digital Dither",
+  "prompt": "1-bit dithered art, CRT scanlines, pixel grid aesthetic, monochrome green phosphor, halftone stippling, retro computer interface, lo-fi digital glitch. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古数字__Retro Digital Dither/preview.webp",
+  "folder": "Krea2_moodboard/复古数字__Retro Digital Dither",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

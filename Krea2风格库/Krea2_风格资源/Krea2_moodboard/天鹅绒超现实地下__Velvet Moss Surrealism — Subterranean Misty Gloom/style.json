@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1570",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感3",
+  "category_name": "摄影超现模糊感3",
+  "name_cn": "天鹅绒超现实地下",
+  "name": "Velvet Moss Surrealism — Subterranean Misty Gloom",
+  "prompt": "velvety green moss texture, chiaroscuro lighting, liminal subterranean landscape, surreal organic architecture, atmospheric mist, solitary silhouette, biophilic decay. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/天鹅绒超现实地下__Velvet Moss Surrealism — Subterranean Misty Gloom/preview.webp",
+  "folder": "Krea2_moodboard/天鹅绒超现实地下__Velvet Moss Surrealism — Subterranean Misty Gloom",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

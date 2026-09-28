@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2341",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "绯红剪影黑色时尚",
+  "name": "Crimson Silhouette Noir — Sleek Fashion Rim",
+  "prompt": "high-contrast crimson lighting, stark silhouette, minimalist graphic composition, low-key chiaroscuro, vibrant red and black palette, anatomical precision, dramatic rim lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红剪影黑色时尚__Crimson Silhouette Noir — Sleek Fashion Rim/preview.webp",
+  "folder": "Krea2_moodboard/绯红剪影黑色时尚__Crimson Silhouette Noir — Sleek Fashion Rim",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

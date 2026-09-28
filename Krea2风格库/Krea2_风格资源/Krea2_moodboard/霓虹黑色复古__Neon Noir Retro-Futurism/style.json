@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-75",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "霓虹黑色复古",
+  "name": "Neon Noir Retro-Futurism",
+  "prompt": "90s anime cel shading, retro neon noir, liquid chrome textures, high contrast moody lighting, vintage film grain, saturated cyberpunk palette, atmospheric airbrush art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹黑色复古__Neon Noir Retro-Futurism/preview.webp",
+  "folder": "Krea2_moodboard/霓虹黑色复古__Neon Noir Retro-Futurism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

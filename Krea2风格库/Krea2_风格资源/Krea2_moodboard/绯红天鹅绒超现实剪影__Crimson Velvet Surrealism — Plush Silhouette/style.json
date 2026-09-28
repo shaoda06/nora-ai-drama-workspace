@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-925",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "绯红天鹅绒超现实剪影",
+  "name": "Crimson Velvet Surrealism — Plush Silhouette",
+  "prompt": "surreal minimalism, vivid crimson red background, tactile fuzzy texture, high contrast, solitary figure, dreamlike atmosphere, graphic illustration. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/绯红天鹅绒超现实剪影__Crimson Velvet Surrealism — Plush Silhouette/preview.webp",
+  "folder": "Krea2_moodboard/绯红天鹅绒超现实剪影__Crimson Velvet Surrealism — Plush Silhouette",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

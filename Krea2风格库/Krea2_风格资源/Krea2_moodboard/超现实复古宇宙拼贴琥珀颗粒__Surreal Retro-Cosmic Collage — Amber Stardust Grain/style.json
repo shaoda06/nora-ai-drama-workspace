@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-511",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "超现实复古宇宙拼贴琥珀颗粒",
+  "name": "Surreal Retro-Cosmic Collage — Amber Stardust Grain",
+  "prompt": "analog film grain, surrealist paper collage, prismatic light flares, retro-futuristic aesthetic, halftone texture, cosmic stardust, vintage editorial art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实复古宇宙拼贴琥珀颗粒__Surreal Retro-Cosmic Collage — Amber Stardust Grain/preview.webp",
+  "folder": "Krea2_moodboard/超现实复古宇宙拼贴琥珀颗粒__Surreal Retro-Cosmic Collage — Amber Stardust Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

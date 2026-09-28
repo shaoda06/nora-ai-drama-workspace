@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2496",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "明亮深渊",
+  "name": "Luminous Abyssal Immersion",
+  "prompt": "underwater photography, ethereal aquatic caustics, backlit silhouette, deep blue depths, sunshafts, weightless suspension, rising air bubbles, high-contrast cinematic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮深渊__Luminous Abyssal Immersion/preview.webp",
+  "folder": "Krea2_moodboard/明亮深渊__Luminous Abyssal Immersion",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

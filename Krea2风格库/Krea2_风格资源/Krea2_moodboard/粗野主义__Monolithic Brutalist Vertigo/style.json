@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2623",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "粗野主义",
+  "name": "Monolithic Brutalist Vertigo",
+  "prompt": "monochromatic architectural photography, extreme low-angle perspective, brutalist geometry, high-contrast chiaroscuro, imposing scale, minimalist symmetry, urban abstraction. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粗野主义__Monolithic Brutalist Vertigo/preview.webp",
+  "folder": "Krea2_moodboard/粗野主义__Monolithic Brutalist Vertigo",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

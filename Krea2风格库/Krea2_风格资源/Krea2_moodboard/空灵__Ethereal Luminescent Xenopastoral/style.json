@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2700",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵",
+  "name": "Ethereal Luminescent Xenopastoral",
+  "prompt": "ethereal glow, xenopastoral landscape, soft golden lighting, surreal nature, vibrant mossy greens, dreamy macro depth of field, pearlescent textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵__Ethereal Luminescent Xenopastoral/preview.webp",
+  "folder": "Krea2_moodboard/空灵__Ethereal Luminescent Xenopastoral",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

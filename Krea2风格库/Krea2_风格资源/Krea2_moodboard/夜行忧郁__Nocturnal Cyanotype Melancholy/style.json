@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1493",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "夜行忧郁",
+  "name": "Nocturnal Cyanotype Melancholy",
+  "prompt": "monochromatic cyan and cobalt blue, heavy film grain, lo-fi analog aesthetic, soft focus dreamlike blur, nocturnal cinematic shadows, CRT scanline distortion, melancholic urban isolation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行忧郁__Nocturnal Cyanotype Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/夜行忧郁__Nocturnal Cyanotype Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

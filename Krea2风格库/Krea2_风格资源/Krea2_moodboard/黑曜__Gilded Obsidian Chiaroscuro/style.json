@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2322",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "黑曜",
+  "name": "Gilded Obsidian Chiaroscuro",
+  "prompt": "chiaroscuro lighting, gilded gold makeup, matte black textures, high-contrast editorial portrait, sculptural skin detail, metallic shimmer, minimalist dark background. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑曜__Gilded Obsidian Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/黑曜__Gilded Obsidian Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

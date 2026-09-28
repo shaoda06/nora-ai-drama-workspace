@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-886",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "图形波普超现实扁平颗粒",
+  "name": "Graphic Pop Surrealism — Flat Vector Grain",
+  "prompt": "minimalist surrealism, flat vector illustration, bold color blocking, dreamlike atmosphere, graphic composition, saturated pop palette, clean hard-edged shapes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形波普超现实扁平颗粒__Graphic Pop Surrealism — Flat Vector Grain/preview.webp",
+  "folder": "Krea2_moodboard/图形波普超现实扁平颗粒__Graphic Pop Surrealism — Flat Vector Grain",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2821",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "夜行翠绿黑色",
+  "name": "Nocturnal Emerald Noir",
+  "prompt": "chiaroscuro lighting, cobalt and emerald color palette, analog film grain, low-key cinematic mystery, fisheye optical distortion, surreal dreamscape, high-contrast shadows. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行翠绿黑色__Nocturnal Emerald Noir/preview.webp",
+  "folder": "Krea2_moodboard/夜行翠绿黑色__Nocturnal Emerald Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

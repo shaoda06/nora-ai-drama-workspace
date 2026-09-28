@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3227",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵彩色",
+  "name": "Ethereal Chromatic Aura",
+  "prompt": "chromatic aura gradient, soft-focus blur, ethereal neon halo, minimalist white background, airbrushed color bleed, digital spiritual atmosphere, grainy texture, glowing celestial orb. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵彩色__Ethereal Chromatic Aura/preview.webp",
+  "folder": "Krea2_moodboard/空灵彩色__Ethereal Chromatic Aura",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

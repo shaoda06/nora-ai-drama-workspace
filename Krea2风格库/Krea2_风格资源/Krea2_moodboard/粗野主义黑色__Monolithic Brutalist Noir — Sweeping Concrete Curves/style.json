@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2588",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "粗野主义黑色",
+  "name": "Monolithic Brutalist Noir — Sweeping Concrete Curves",
+  "prompt": "monochromatic brutalist architecture, high-contrast chiaroscuro, sweeping geometric curves, dramatic low-angle perspective, stark concrete textures, minimalist noir atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/粗野主义黑色__Monolithic Brutalist Noir — Sweeping Concrete Curves/preview.webp",
+  "folder": "Krea2_moodboard/粗野主义黑色__Monolithic Brutalist Noir — Sweeping Concrete Curves",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

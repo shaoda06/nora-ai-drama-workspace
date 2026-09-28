@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3345",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "高饱和超现实极简",
+  "name": "Saturated Surreal Minimalism",
+  "prompt": "vibrant crimson red background, high-contrast studio lighting, glossy tactile textures, surreal sculptural composition, saturated color blocking, uncanny dreamlike atmosphere, sharp focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高饱和超现实极简__Saturated Surreal Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/高饱和超现实极简__Saturated Surreal Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

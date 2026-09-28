@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-13",
+  "library": "krea2_styles",
+  "category": "clio_3D Render",
+  "category_name": "3D渲染",
+  "name_cn": "超级无敌掌门狗风格",
+  "name": "Wallace and Gromit Style",
+  "prompt": "Style: Wallace and Gromit Style: A charmingly tactile stop-motion illustration style built on soft, rounded forms carrying visible handcrafted imperfection, gentle fingerprint-like dents and subtle irregularity standing in for smooth digital finish, warm, even lighting that gives every contour a cozy, dimensional roundness, exaggerated expressive proportions carrying subtle asymmetry and warm British whimsy, a hand-built, slightly wobbly charm that celebrates its own physical process, and a nostalgic, cheerfully eccentric handmade warmth. Influenced by: Aardman Animations, Nick Park, stop-motion claymation technique, British character-animation tradition.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/超级无敌掌门狗风格__Wallace and Gromit Style/preview.jpg",
+  "folder": "krea2_styles/超级无敌掌门狗风格__Wallace and Gromit Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

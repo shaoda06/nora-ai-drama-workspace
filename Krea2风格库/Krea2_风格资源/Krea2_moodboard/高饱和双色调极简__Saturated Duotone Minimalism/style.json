@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-538",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "高饱和双色调极简",
+  "name": "Saturated Duotone Minimalism",
+  "prompt": "duotone gel lighting, cobalt blue and scarlet red, high-contrast studio photography, graphic color blocking, saturated pop art aesthetic, minimalist composition, sharp studio lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高饱和双色调极简__Saturated Duotone Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/高饱和双色调极简__Saturated Duotone Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3509",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "空灵霓虹",
+  "name": "Ethereal Neon Fauvism",
+  "prompt": "oil pastel texture, fauvist color palette, gestural scribbles, electric yellow highlights, dreamlike atmosphere, textured paper background, ethereal glow. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵霓虹__Ethereal Neon Fauvism/preview.webp",
+  "folder": "Krea2_moodboard/空灵霓虹__Ethereal Neon Fauvism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

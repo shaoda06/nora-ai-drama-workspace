@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2504",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘2",
+  "category_name": "摄影哥特和神秘2",
+  "name_cn": "电影感阈限忧郁",
+  "name": "Cinematic Liminal Melancholy",
+  "prompt": "cinematic twilight, heavy atmospheric fog, vintage film grain, low-key lighting, liminal space, soft-focus bokeh, desaturated teal and amber, mysterious silhouette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感阈限忧郁__Cinematic Liminal Melancholy/preview.webp",
+  "folder": "Krea2_moodboard/电影感阈限忧郁__Cinematic Liminal Melancholy",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

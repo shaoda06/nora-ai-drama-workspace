@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3477",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实7",
+  "category_name": "摄影超现实7",
+  "name_cn": "怀旧阈限暮光",
+  "name": "Nostalgic Liminal Twilight",
+  "prompt": "heavy film grain, twilight blue and amber, soft-focus bloom, liminal space, cinematic silhouette, retro lo-fi texture, surreal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧阈限暮光__Nostalgic Liminal Twilight/preview.webp",
+  "folder": "Krea2_moodboard/怀旧阈限暮光__Nostalgic Liminal Twilight",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

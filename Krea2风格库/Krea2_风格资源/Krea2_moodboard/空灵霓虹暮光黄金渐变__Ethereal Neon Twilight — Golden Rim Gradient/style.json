@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2737",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实1",
+  "category_name": "摄影超现实1",
+  "name_cn": "空灵霓虹暮光黄金渐变",
+  "name": "Ethereal Neon Twilight — Golden Rim Gradient",
+  "prompt": "surreal minimalism, golden hour rim lighting, teal and magenta gradient, dreamlike atmosphere, analog film grain, high contrast silhouettes, retro-futuristic sci-fi. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵霓虹暮光黄金渐变__Ethereal Neon Twilight — Golden Rim Gradient/preview.webp",
+  "folder": "Krea2_moodboard/空灵霓虹暮光黄金渐变__Ethereal Neon Twilight — Golden Rim Gradient",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

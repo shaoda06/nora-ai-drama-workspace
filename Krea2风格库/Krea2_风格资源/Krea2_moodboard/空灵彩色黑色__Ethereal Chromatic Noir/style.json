@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3254",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵彩色黑色",
+  "name": "Ethereal Chromatic Noir",
+  "prompt": "cinematic noir silhouette, thermal aura gradient, heavy film grain, high-contrast chiaroscuro, soft-focus ethereal blur, cobalt and neon palette, tactile noise texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵彩色黑色__Ethereal Chromatic Noir/preview.webp",
+  "folder": "Krea2_moodboard/空灵彩色黑色__Ethereal Chromatic Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

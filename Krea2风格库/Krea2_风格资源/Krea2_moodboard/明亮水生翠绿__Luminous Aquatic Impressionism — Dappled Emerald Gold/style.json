@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-48",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "明亮水生翠绿",
+  "name": "Luminous Aquatic Impressionism — Dappled Emerald Gold",
+  "prompt": "high-angle overhead view, shimmering turquoise emerald water, painterly anime aesthetic, dappled light reflections, fluid liquid distortion, ethereal surrealism, vibrant teal and gold palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮水生翠绿__Luminous Aquatic Impressionism — Dappled Emerald Gold/preview.webp",
+  "folder": "Krea2_moodboard/明亮水生翠绿__Luminous Aquatic Impressionism — Dappled Emerald Gold",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

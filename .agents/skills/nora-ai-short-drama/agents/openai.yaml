@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nora AI 连续短剧创作"
+  short_description: "规范 AI 连续短剧从项目定位到逐集生成的完整创作流程"
+  default_prompt: "使用 $nora-ai-short-drama 创建或推进一部 AI 连续短剧项目。"

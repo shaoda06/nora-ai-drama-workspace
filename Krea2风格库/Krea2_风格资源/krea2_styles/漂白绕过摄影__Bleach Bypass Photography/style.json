@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-336",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "漂白绕过摄影",
+  "name": "Bleach Bypass Photography",
+  "prompt": "Style: Bleach Bypass Photography: cinematic photographic aesthetics characterized by desaturated tonal richness, elevated contrast, metallic surface response, dense shadow structure, preserved highlight detail, and a gritty yet highly controlled visual atmosphere, creating imagery with dramatic emotional weight and production-grade realism through sophisticated tonal compression and refined filmic rendering, reminiscent of Roger Deakins and Janusz Kamiński, inspired by Saving Private Ryan and Minority Report.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/漂白绕过摄影__Bleach Bypass Photography/preview.jpg",
+  "folder": "krea2_styles/漂白绕过摄影__Bleach Bypass Photography",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

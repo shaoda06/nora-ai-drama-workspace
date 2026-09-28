@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2875",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "图形动态超现实",
+  "name": "Graphic Kinetic Surrealism",
+  "prompt": "high-contrast color blocking, sharp graphic shadows, surreal minimalism, saturated crimson and chartreuse, extreme top-down perspective, kinetic motion blur, tactile organic textures. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形动态超现实__Graphic Kinetic Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/图形动态超现实__Graphic Kinetic Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3022",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "棱镜夜行",
+  "name": "Prismatic Nocturnal Glamour",
+  "prompt": "starburst lens flare, prismatic chromatic aberration, retro flash photography, analog film grain, glittering highlights, ethereal light leaks, high contrast night backdrop. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/棱镜夜行__Prismatic Nocturnal Glamour/preview.webp",
+  "folder": "Krea2_moodboard/棱镜夜行__Prismatic Nocturnal Glamour",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-221",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "极简主义",
+  "name": "Minimalism",
+  "prompt": "Style: Minimalism: A pared-back illustration style built on radical simplification of form into its most essential shapes, sparse, uncluttered composition that treats empty space as an active compositional element, minimal to no shading beyond deliberate, restrained contrast, confident economy of mark-making that resists any decorative excess, and a quiet, contemplative clarity that finds impact through restraint rather than density. Influenced by: minimalist art-movement tradition, contemporary reductive-illustration technique, geometric-abstraction practice, modernist economy-of-form method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/极简主义__Minimalism/preview.jpg",
+  "folder": "krea2_styles/极简主义__Minimalism",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

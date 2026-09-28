@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-851",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画3",
+  "category_name": "插画3",
+  "name_cn": "图形",
+  "name": "Graphic Stippled Modernism",
+  "prompt": "stippled illustration, mid-century modern graphic, bold ink outlines, primary color palette, cross-hatching texture, flat color blocking, geometric patterned art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形__Graphic Stippled Modernism/preview.webp",
+  "folder": "Krea2_moodboard/图形__Graphic Stippled Modernism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

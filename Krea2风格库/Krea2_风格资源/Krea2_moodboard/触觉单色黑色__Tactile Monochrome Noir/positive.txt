@@ -1,0 +1,1 @@
+heavy film grain, high-contrast monochrome, cinematic lighting, tactile texture, shallow depth of field, intimate composition, moody atmosphere. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2838",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "光谱黑色运动侵略",
+  "name": "Spectral Noir Motion — Aggressive Streak Chiaroscuro",
+  "prompt": "high-contrast black and white photography, dramatic motion blur, chiaroscuro lighting, grainy analog film texture, ethereal ghost-like silhouettes, urban long exposure, cinematic noir atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/光谱黑色运动侵略__Spectral Noir Motion — Aggressive Streak Chiaroscuro/preview.webp",
+  "folder": "Krea2_moodboard/光谱黑色运动侵略__Spectral Noir Motion — Aggressive Streak Chiaroscuro",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

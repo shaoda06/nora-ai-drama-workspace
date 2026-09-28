@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2449",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Gothic_摄影哥特和神秘1",
+  "category_name": "摄影哥特和神秘1",
+  "name_cn": "超现实深渊",
+  "name": "Surreal Abyssal Dreamscape",
+  "prompt": "ethereal surrealism, deep moody lighting, flowing translucent textures, bioluminescent highlights, chiaroscuro, dreamlike atmosphere, weightless composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实深渊__Surreal Abyssal Dreamscape/preview.webp",
+  "folder": "Krea2_moodboard/超现实深渊__Surreal Abyssal Dreamscape",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

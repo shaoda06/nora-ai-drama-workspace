@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2339",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖2",
+  "category_name": "摄影特效暖2",
+  "name_cn": "琥珀极简黄金时刻",
+  "name": "Amber Chiaroscuro Minimalism — Golden Hour Stone",
+  "prompt": "golden hour sunlight, dramatic chiaroscuro, minimalist silhouette, textured surface projection, amber and ochre palette, cinematic shadowplay, nostalgic mood. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/琥珀极简黄金时刻__Amber Chiaroscuro Minimalism — Golden Hour Stone/preview.webp",
+  "folder": "Krea2_moodboard/琥珀极简黄金时刻__Amber Chiaroscuro Minimalism — Golden Hour Stone",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

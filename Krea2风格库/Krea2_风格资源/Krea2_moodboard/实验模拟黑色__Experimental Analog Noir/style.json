@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3247",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "实验模拟黑色",
+  "name": "Experimental Analog Noir",
+  "prompt": "high-contrast monochrome, analog film grain, vintage photogram, experimental darkroom, glowing silhouettes, distressed film texture, surreal light trails. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/实验模拟黑色__Experimental Analog Noir/preview.webp",
+  "folder": "Krea2_moodboard/实验模拟黑色__Experimental Analog Noir",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

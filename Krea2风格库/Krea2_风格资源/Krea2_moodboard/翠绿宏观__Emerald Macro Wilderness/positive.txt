@@ -1,0 +1,1 @@
+macro photography, vibrant emerald green, shallow depth of field, dappled forest light, intricate organic texture, soft bokeh background, dewy naturalism, backlit forest details. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-224",
+  "library": "krea2_styles",
+  "category": "clio_Digital Painting",
+  "category_name": "数字绘画",
+  "name_cn": "数字绘画",
+  "name": "Digital Painting",
+  "prompt": "Style: Digital Painting: A richly layered illustration style built on confident brushwork translated through digital tools while retaining the tactile logic of traditional painting, meticulous control over light behavior achieved through non-destructive layered blending, visible painterly texture preserved even within highly refined rendering, a technically flexible balance between loose gestural mark-making and precise, considered detail, and a polished, contemporary painterly gravitas that bridges classical technique with modern production tools. Influenced by: contemporary digital-painting tradition, Photoshop/Procreate painting workflow, classical oil-painting technique translated digitally, modern concept-art rendering practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/数字绘画__Digital Painting/preview.jpg",
+  "folder": "krea2_styles/数字绘画__Digital Painting",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-674",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "复古",
+  "name": "Retro Risograph Printmaker",
+  "prompt": "risograph print style, screenprint texture, mid-century modern illustration, halftone pattern, misregistration effect, flat graphic composition, grainy paper texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/复古__Retro Risograph Printmaker/preview.webp",
+  "folder": "Krea2_moodboard/复古__Retro Risograph Printmaker",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-151",
+  "library": "krea2_styles",
+  "category": "clio_Comics",
+  "category_name": "漫画",
+  "name_cn": "图像小说",
+  "name": "Graphic Novel",
+  "prompt": "Style: Graphic Novel: A refined, narrative-driven comic-illustration style built on confident, deliberate linework calibrated for long-form storytelling clarity, a measured, literary pacing carried through composed, thoughtful framing, tonal shading achieved through cross-hatching, wash, or restrained color rather than flat panel simplicity, a grounded, atmospheric weight even within stylized composition, and a sophisticated, contemplative illustration gravitas that feels considered, mature, and built for sustained visual reading. Influenced by: contemporary graphic-novel illustration tradition, long-form narrative-comic technique, literary comic-illustration practice, mature-audience sequential-art method.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/图像小说__Graphic Novel/preview.jpg",
+  "folder": "krea2_styles/图像小说__Graphic Novel",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

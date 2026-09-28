@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-81",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "夜行图形",
+  "name": "Nocturnal Graphic Cloudscapes",
+  "prompt": "stippled texture, indigo and cerulean palette, stylized cumulus clouds, woodblock print aesthetic, clean ink outlines, nocturnal atmosphere, cel-shaded graphic art. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行图形__Nocturnal Graphic Cloudscapes/preview.webp",
+  "folder": "Krea2_moodboard/夜行图形__Nocturnal Graphic Cloudscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

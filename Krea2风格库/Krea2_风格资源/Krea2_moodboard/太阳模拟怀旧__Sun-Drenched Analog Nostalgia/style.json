@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2861",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "太阳模拟怀旧",
+  "name": "Sun-Drenched Analog Nostalgia",
+  "prompt": "golden hour backlighting, analog film grain, dramatic lens flare, nostalgic summer haze, cinematic motion blur, warm vintage color grading, dreamy light leaks. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/太阳模拟怀旧__Sun-Drenched Analog Nostalgia/preview.webp",
+  "folder": "Krea2_moodboard/太阳模拟怀旧__Sun-Drenched Analog Nostalgia",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

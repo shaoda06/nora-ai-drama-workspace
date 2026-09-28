@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3541",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "超现实翠绿图形阴影",
+  "name": "Surreal Verdant Topography — Graphic Shadow Accent",
+  "prompt": "aerial photography, undulating velvet grass, minimalist landscape, surreal atmosphere, high-angle perspective, dramatic chiaroscuro lighting, vibrant color contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实翠绿图形阴影__Surreal Verdant Topography — Graphic Shadow Accent/preview.webp",
+  "folder": "Krea2_moodboard/超现实翠绿图形阴影__Surreal Verdant Topography — Graphic Shadow Accent",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-46",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_2D_动漫卡通1",
+  "category_name": "动漫卡通1",
+  "name_cn": "明亮动漫",
+  "name": "Luminous Anime Horizon — Turquoise Cel Shading",
+  "prompt": "vibrant anime background, voluminous cumulus clouds, saturated color palette, high-altitude aerial perspective, cel-shaded digital illustration, lush green landscape, pristine turquoise water, painterly dreamlike aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮动漫__Luminous Anime Horizon — Turquoise Cel Shading/preview.webp",
+  "folder": "Krea2_moodboard/明亮动漫__Luminous Anime Horizon — Turquoise Cel Shading",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

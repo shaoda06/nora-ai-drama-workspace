@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-433",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "霓虹",
+  "name": "Gritty Neon Punk",
+  "prompt": "halftone print, neon magenta, punk zine aesthetic, gritty photocopy texture, street art stencil, risograph grain, high-contrast duotone, diy paper collage. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/霓虹__Gritty Neon Punk/preview.webp",
+  "folder": "Krea2_moodboard/霓虹__Gritty Neon Punk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

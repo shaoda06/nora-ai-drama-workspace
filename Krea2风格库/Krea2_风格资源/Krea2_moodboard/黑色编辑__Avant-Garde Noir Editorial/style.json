@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2609",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "黑色编辑",
+  "name": "Avant-Garde Noir Editorial",
+  "prompt": "high-contrast monochrome photography, stark minimalist studio background, avant-garde sculptural tailoring, dramatic chiaroscuro lighting, theatrical editorial posing, sharp geometric silhouette, 90s fashion editorial style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色编辑__Avant-Garde Noir Editorial/preview.webp",
+  "folder": "Krea2_moodboard/黑色编辑__Avant-Garde Noir Editorial",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

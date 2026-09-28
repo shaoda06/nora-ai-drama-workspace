@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-218",
+  "library": "krea2_styles",
+  "category": "clio_Design",
+  "category_name": "设计",
+  "name_cn": "包豪斯",
+  "name": "Bauhaus",
+  "prompt": "Style: Bauhaus: A functionalist geometric illustration style built on stark, primary geometric forms — circles, squares, triangles — arranged with rigorous compositional logic, flat, uniform color regions applied with deliberate, unornamented restraint, a rational, grid-driven structure replacing any decorative or naturalistic impulse, confident economy of form where every element serves clear structural purpose, and a disciplined, timeless modernist clarity rooted in functionalist design philosophy. Influenced by: Wassily Kandinsky, Bauhaus design-movement tradition, functionalist geometric-design technique, modernist constructivist practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/包豪斯__Bauhaus/preview.jpg",
+  "folder": "krea2_styles/包豪斯__Bauhaus",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

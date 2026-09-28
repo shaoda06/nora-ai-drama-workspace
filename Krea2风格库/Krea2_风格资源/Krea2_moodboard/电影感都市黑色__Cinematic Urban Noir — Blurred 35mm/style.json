@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1444",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Blur_摄影超现模糊感2",
+  "category_name": "摄影超现模糊感2",
+  "name_cn": "电影感都市黑色",
+  "name": "Cinematic Urban Noir — Blurred 35mm",
+  "prompt": "cinematic 35mm film still, motion blur, low-key moody lighting, shallow depth of field, gritty urban atmosphere, desaturated color grading, psychological tension, filmic grain. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市黑色__Cinematic Urban Noir — Blurred 35mm/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市黑色__Cinematic Urban Noir — Blurred 35mm",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

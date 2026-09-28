@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-536",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "高饱和超现实波普光泽工作室",
+  "name": "Hyper-Saturated Surreal Pop — Glossy Studio Sheen",
+  "prompt": "surrealist pop art, hyper-saturated color palette, sharp studio lighting, glossy material finish, minimalist sculptural composition, bizarre object juxtaposition, vivid color blocking. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/高饱和超现实波普光泽工作室__Hyper-Saturated Surreal Pop — Glossy Studio Sheen/preview.webp",
+  "folder": "Krea2_moodboard/高饱和超现实波普光泽工作室__Hyper-Saturated Surreal Pop — Glossy Studio Sheen",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

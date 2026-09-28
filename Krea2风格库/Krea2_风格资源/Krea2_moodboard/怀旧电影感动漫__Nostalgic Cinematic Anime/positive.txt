@@ -1,0 +1,1 @@
+classic 2D anime style, painterly backgrounds, golden hour rim lighting, dramatic sky palettes, cel-shaded characters, nostalgic atmosphere. Subject:{prompt}

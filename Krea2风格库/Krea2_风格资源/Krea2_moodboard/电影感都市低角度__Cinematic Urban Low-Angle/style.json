@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-272",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Cinema-Tone_电影色调",
+  "category_name": "电影色调",
+  "name_cn": "电影感都市低角度",
+  "name": "Cinematic Urban Low-Angle",
+  "prompt": "low-angle perspective, wide-angle lens distortion, streetwear fashion, cinematic urban lighting, sharp contrast, brutalist architectural background, worm's-eye view. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/电影感都市低角度__Cinematic Urban Low-Angle/preview.webp",
+  "folder": "Krea2_moodboard/电影感都市低角度__Cinematic Urban Low-Angle",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

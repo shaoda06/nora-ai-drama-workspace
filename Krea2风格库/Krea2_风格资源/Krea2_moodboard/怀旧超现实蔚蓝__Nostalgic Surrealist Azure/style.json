@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3279",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实6",
+  "category_name": "摄影超现实6",
+  "name_cn": "怀旧超现实蔚蓝",
+  "name": "Nostalgic Surrealist Azure",
+  "prompt": "vintage film grain, surreal collage, saturated azure palette, retro analog texture, dreamlike atmosphere, mid-century print aesthetic, lo-fi surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/怀旧超现实蔚蓝__Nostalgic Surrealist Azure/preview.webp",
+  "folder": "Krea2_moodboard/怀旧超现实蔚蓝__Nostalgic Surrealist Azure",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

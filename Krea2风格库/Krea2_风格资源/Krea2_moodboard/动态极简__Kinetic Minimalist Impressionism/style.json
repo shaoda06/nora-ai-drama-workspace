@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-575",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "动态极简",
+  "name": "Kinetic Minimalist Impressionism",
+  "prompt": "intentional motion blur, cool blue and teal palette, minimalist abstract composition, painterly textures, ghostly silhouettes, high-contrast fluid motion, digital glitch interpretation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态极简__Kinetic Minimalist Impressionism/preview.webp",
+  "folder": "Krea2_moodboard/动态极简__Kinetic Minimalist Impressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

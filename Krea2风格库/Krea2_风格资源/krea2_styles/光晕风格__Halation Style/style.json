@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-384",
+  "library": "krea2_styles",
+  "category": "clio_Photography",
+  "category_name": "摄影",
+  "name_cn": "光晕风格",
+  "name": "Halation Style",
+  "prompt": "Style: Halation Style: A softly radiant photographic technique built on a gentle glow that spreads outward from bright highlight areas, bleeding warmth into surrounding tone rather than staying sharply contained, a hazy, diffused luminosity that softens edges and dissolves crisp contrast, an unhurried, dreamlike quality where light itself seems to overflow its boundaries, delicate atmospheric bloom carried through subtle overexposed brightness, and a nostalgic, cinematic tenderness that feels romantic, hazy, and quietly luminous. Influenced by: halation film-emulsion technique, vintage cinematography lighting practice, glow-diffusion photographic method, soft-focus lens-flare technique.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/光晕风格__Halation Style/preview.jpg",
+  "folder": "krea2_styles/光晕风格__Halation Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,1 @@
+monochromatic, heavy film grain, extreme motion blur, chiaroscuro lighting, ghostly silhouette, dreamlike haze, analog photography. Subject:{prompt}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-684",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画2",
+  "category_name": "插画2",
+  "name_cn": "鲜活",
+  "name": "Vibrant Fauvist Folk",
+  "prompt": "gouache painting texture, fauvism color palette, stylized animal illustration, bold graphic outlines, modern folk art, vibrant flat color planes, halftone pattern details. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜活__Vibrant Fauvist Folk/preview.webp",
+  "folder": "Krea2_moodboard/鲜活__Vibrant Fauvist Folk",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

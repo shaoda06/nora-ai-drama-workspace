@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1305",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_painting_数字绘画",
+  "category_name": "数字绘画",
+  "name_cn": "明亮天穹厚涂翠绿",
+  "name": "Luminous Celestial Impasto — Emerald Chartreuse Swirls",
+  "prompt": "swirling impasto brushstrokes, post-impressionist digital painting, celestial nocturne, vibrant cobalt and gold, textured oil texture, dreamlike luminous atmosphere, dynamic rhythmic movement. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮天穹厚涂翠绿__Luminous Celestial Impasto — Emerald Chartreuse Swirls/preview.webp",
+  "folder": "Krea2_moodboard/明亮天穹厚涂翠绿__Luminous Celestial Impasto — Emerald Chartreuse Swirls",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

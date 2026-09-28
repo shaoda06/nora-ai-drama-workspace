@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-627",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "图形俏皮波普",
+  "name": "Graphic Playful Pop",
+  "prompt": "bold vector outlines, flat 2D illustration, risograph texture, high-contrast vibrant palette, whimsical character design, minimalist graphic style. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形俏皮波普__Graphic Playful Pop/preview.webp",
+  "folder": "Krea2_moodboard/图形俏皮波普__Graphic Playful Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

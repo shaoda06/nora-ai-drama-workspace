@@ -1,0 +1,1 @@
+chiaroscuro lighting, volumetric spotlight, nocturnal minimalism, high-contrast atmosphere, isolated subject, cinematic negative space. Subject:{prompt}

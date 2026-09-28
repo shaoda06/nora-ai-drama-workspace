@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-525",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Design_设计2",
+  "category_name": "设计2",
+  "name_cn": "空灵黑色对比",
+  "name": "Thermal Ethereal Noir — Risograph Halo Contrast",
+  "prompt": "dark silhouette, thermal imaging glow, risograph print texture, chromatic aberration, airbrushed aura, heavy film grain, minimalist surrealism. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵黑色对比__Thermal Ethereal Noir — Risograph Halo Contrast/preview.webp",
+  "folder": "Krea2_moodboard/空灵黑色对比__Thermal Ethereal Noir — Risograph Halo Contrast",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

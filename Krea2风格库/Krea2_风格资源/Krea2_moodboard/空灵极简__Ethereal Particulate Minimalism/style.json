@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3215",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "空灵极简",
+  "name": "Ethereal Particulate Minimalism",
+  "prompt": "monochrome stippling, particulate dispersion, minimalist ink wash, high contrast grain, atmospheric airbrush, negative space landscape, ethereal noise texture. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵极简__Ethereal Particulate Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/空灵极简__Ethereal Particulate Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

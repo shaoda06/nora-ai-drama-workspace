@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2852",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实2",
+  "category_name": "摄影超现实2",
+  "name_cn": "空灵动态黑色琥珀",
+  "name": "Ethereal Kinetic Noir — Amber Blue Trails",
+  "prompt": "long exposure motion blur, analog film grain, shutter drag, cinematic noir, warm amber and electric blue light, ethereal silhouettes, nocturnal atmosphere. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/空灵动态黑色琥珀__Ethereal Kinetic Noir — Amber Blue Trails/preview.webp",
+  "folder": "Krea2_moodboard/空灵动态黑色琥珀__Ethereal Kinetic Noir — Amber Blue Trails",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

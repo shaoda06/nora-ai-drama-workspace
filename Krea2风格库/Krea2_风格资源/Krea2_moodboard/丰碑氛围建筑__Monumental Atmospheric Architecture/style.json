@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2217",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Warm_摄影特效暖1",
+  "category_name": "摄影特效暖1",
+  "name_cn": "丰碑氛围建筑",
+  "name": "Monumental Atmospheric Architecture",
+  "prompt": "cinematic high-angle perspective, monumental scale architecture, dramatic chiaroscuro lighting, atmospheric environmental storytelling, textured stone and industrial materials, golden hour illumination, complex geometric composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/丰碑氛围建筑__Monumental Atmospheric Architecture/preview.webp",
+  "folder": "Krea2_moodboard/丰碑氛围建筑__Monumental Atmospheric Architecture",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

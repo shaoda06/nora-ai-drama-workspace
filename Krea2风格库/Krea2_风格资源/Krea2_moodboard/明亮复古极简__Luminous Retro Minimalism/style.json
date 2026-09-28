@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3544",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实8",
+  "category_name": "摄影超现实8",
+  "name_cn": "明亮复古极简",
+  "name": "Luminous Retro Minimalism",
+  "prompt": "minimalist composition, stark silhouette, glowing celestial orb, heavy film grain, retro-futuristic haze, crimson and amber palette, surreal liminal landscape. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/明亮复古极简__Luminous Retro Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/明亮复古极简__Luminous Retro Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

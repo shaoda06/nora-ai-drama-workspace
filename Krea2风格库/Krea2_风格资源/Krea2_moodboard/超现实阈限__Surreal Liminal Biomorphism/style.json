@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-236",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_3D_3D渲染",
+  "category_name": "3D渲染",
+  "name_cn": "超现实阈限",
+  "name": "Surreal Liminal Biomorphism",
+  "prompt": "biomorphic surrealism, minimalist landscape, tactile texture, liminal atmosphere, nostalgic CGI, isolated subject, dreamcore. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/超现实阈限__Surreal Liminal Biomorphism/preview.webp",
+  "folder": "Krea2_moodboard/超现实阈限__Surreal Liminal Biomorphism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

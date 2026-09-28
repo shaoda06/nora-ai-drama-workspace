@@ -1,0 +1,1 @@
+amber glow, motion blur, soft focus, analog film grain, pictorialism, dreamy ethereal lighting, sepia tones. Subject:{prompt}

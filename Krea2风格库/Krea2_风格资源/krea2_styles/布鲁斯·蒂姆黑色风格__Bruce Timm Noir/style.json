@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-134",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "布鲁斯·蒂姆黑色风格",
+  "name": "Bruce Timm Noir",
+  "prompt": "Style: Bruce Timm Noir: stylish noir-inspired illustration aesthetics characterized by confident silhouette design, elegant simplification, clean geometric construction, dramatic shadow composition, strong graphic readability, and cinematic visual storytelling, blending classic animation principles with crime-fiction atmosphere through disciplined linework, refined staging, and timeless visual sophistication, reminiscent of Bruce Timm and Darwyn Cooke, inspired by Batman: The Animated Series and DC: The New Frontier.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/布鲁斯·蒂姆黑色风格__Bruce Timm Noir/preview.jpg",
+  "folder": "krea2_styles/布鲁斯·蒂姆黑色风格__Bruce Timm Noir",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1020",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "奇想印象派",
+  "name": "Whimsical Impressionist Waterscapes",
+  "prompt": "impressionist impasto painting, visible brushstrokes, pastel aquatic landscape, whimsical storybook aesthetic, shimmering water reflections, thick oil texture, serene pond life, soft mint and lavender palette. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/奇想印象派__Whimsical Impressionist Waterscapes/preview.webp",
+  "folder": "Krea2_moodboard/奇想印象派__Whimsical Impressionist Waterscapes",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

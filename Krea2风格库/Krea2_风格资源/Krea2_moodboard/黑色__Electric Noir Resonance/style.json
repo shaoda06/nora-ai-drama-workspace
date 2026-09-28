@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2176",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "黑色",
+  "name": "Electric Noir Resonance",
+  "prompt": "high contrast monochromatic, cobalt blue luminescence, dense stipple texture, electric particle discharge, Kirlian photography style, heavy film grain, glowing energy silhouettes. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色__Electric Noir Resonance/preview.webp",
+  "folder": "Krea2_moodboard/黑色__Electric Noir Resonance",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

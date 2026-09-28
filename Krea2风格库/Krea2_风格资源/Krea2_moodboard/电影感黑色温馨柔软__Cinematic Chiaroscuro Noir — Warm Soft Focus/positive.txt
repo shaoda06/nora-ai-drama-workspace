@@ -1,0 +1,1 @@
+black and white film noir, dramatic rim lighting, chiaroscuro, high-contrast monochrome, heavy film grain, low-key photography, cinematic depth. Subject:{prompt}

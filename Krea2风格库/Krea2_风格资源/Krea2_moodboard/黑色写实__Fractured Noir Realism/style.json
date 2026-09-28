@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2950",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "黑色写实",
+  "name": "Fractured Noir Realism",
+  "prompt": "high-contrast black and white, chiaroscuro lighting, heavy film grain, liquid distortion, motion blur, gritty macro detail, surreal fragmentation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/黑色写实__Fractured Noir Realism/preview.webp",
+  "folder": "Krea2_moodboard/黑色写实__Fractured Noir Realism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

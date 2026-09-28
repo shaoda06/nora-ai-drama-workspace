@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-973",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "数字厚涂超现实",
+  "name": "Digital Impasto Surrealism",
+  "prompt": "heavy impasto texture, vibrant candy color palette, digital glitch distortion, pixel-sorted surrealism, palette knife strokes, liquid drip effect, high-contrast lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/数字厚涂超现实__Digital Impasto Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/数字厚涂超现实__Digital Impasto Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

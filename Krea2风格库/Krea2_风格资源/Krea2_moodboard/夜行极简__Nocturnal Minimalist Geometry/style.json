@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-943",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画4",
+  "category_name": "插画4",
+  "name_cn": "夜行极简",
+  "name": "Nocturnal Minimalist Geometry",
+  "prompt": "minimalist nocturnal painting, ultramarine blue background, glowing yellow window, stark silhouette, matte gouache texture, geometric isolation, high contrast. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/夜行极简__Nocturnal Minimalist Geometry/preview.webp",
+  "folder": "Krea2_moodboard/夜行极简__Nocturnal Minimalist Geometry",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "krea2_styles-128",
+  "library": "krea2_styles",
+  "category": "clio_Cartoon",
+  "category_name": "卡通",
+  "name_cn": "恶搞之家风格",
+  "name": "Family Guy Style",
+  "prompt": "Style: Family Guy Style: A bold, flat cartoon illustration style built on thick, confident outline holding simplified, blocky proportions, bright, evenly applied flat color with minimal shading complexity, an exaggerated, oval-headed character-design language prioritizing instant graphic readability, static, stiff posing typical of limited-animation efficiency, and a satirical, unmistakably mass-market animated-sitcom energy rooted in broad American cartoon convention. Influenced by: Seth MacFarlane, flat-color limited-animation technique, prime-time animated-sitcom tradition, satirical cartoon-design practice.. Subject: {prompt}",
+  "negative_prompt": "",
+  "image": "krea2_styles/恶搞之家风格__Family Guy Style/preview.jpg",
+  "folder": "krea2_styles/恶搞之家风格__Family Guy Style",
+  "source": "https://github.com/lumenastrum/clio-style-preview",
+  "source_revision": "82b8b79a2e52d3a53d52ba11c99c100c991dc15f"
+}

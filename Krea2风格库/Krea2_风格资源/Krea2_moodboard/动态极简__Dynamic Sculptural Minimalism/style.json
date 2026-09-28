@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2605",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Minimal_摄影简洁",
+  "category_name": "摄影简洁",
+  "name_cn": "动态极简",
+  "name": "Dynamic Sculptural Minimalism",
+  "prompt": "stark white background, high-contrast studio photography, avant-garde fashion editorial, sculptural silhouettes, dynamic movement, minimalist composition, sharp tailoring, dramatic lighting. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/动态极简__Dynamic Sculptural Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/动态极简__Dynamic Sculptural Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

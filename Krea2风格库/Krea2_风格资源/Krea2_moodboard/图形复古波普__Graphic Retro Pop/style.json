@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-617",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画1",
+  "category_name": "插画1",
+  "name_cn": "图形复古波普",
+  "name": "Graphic Retro Pop",
+  "prompt": "bold black ink outlines, saturated pop art palette, halftone and ben-day dots, retro risograph texture, graphic still life illustration, high-contrast screenprint aesthetic. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/图形复古波普__Graphic Retro Pop/preview.webp",
+  "folder": "Krea2_moodboard/图形复古波普__Graphic Retro Pop",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

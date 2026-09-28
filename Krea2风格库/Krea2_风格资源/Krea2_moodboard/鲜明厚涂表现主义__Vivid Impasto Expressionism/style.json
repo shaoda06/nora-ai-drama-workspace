@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-1119",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_illustration_插画5",
+  "category_name": "插画5",
+  "name_cn": "鲜明厚涂表现主义",
+  "name": "Vivid Impasto Expressionism",
+  "prompt": "vivid impasto brushstrokes, saturated color palette, fauvism inspired, dynamic light and shadow, expressive oil painting style, stylized non-naturalistic colors, bold color blocking. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/鲜明厚涂表现主义__Vivid Impasto Expressionism/preview.webp",
+  "folder": "Krea2_moodboard/鲜明厚涂表现主义__Vivid Impasto Expressionism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

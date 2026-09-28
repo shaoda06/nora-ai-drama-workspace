@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2168",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "蔚蓝极简",
+  "name": "Azure Horizon Minimalism",
+  "prompt": "low-angle portrait, vibrant blue sky backdrop, high-contrast lighting, minimalist composition, tactile fabric texture, fashion editorial photography, bold color saturation. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/蔚蓝极简__Azure Horizon Minimalism/preview.webp",
+  "folder": "Krea2_moodboard/蔚蓝极简__Azure Horizon Minimalism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

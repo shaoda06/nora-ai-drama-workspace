@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-3166",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实5",
+  "category_name": "摄影超现实5",
+  "name_cn": "触觉超现实",
+  "name": "Tactile Surrealist Avant-Garde",
+  "prompt": "surrealist avant-garde, high-contrast studio lighting, tactile organic texture, stark black background, zoomorphic editorial, minimalist composition, sharp focus. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/触觉超现实__Tactile Surrealist Avant-Garde/preview.webp",
+  "folder": "Krea2_moodboard/触觉超现实__Tactile Surrealist Avant-Garde",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

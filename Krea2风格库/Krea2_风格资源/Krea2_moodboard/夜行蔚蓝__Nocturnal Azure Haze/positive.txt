@@ -1,0 +1,1 @@
+cobalt blue color palette, dramatic backlit silhouette, volumetric lighting, heavy analog film grain, dreamy soft focus, nocturnal atmospheric haze, cinematic high contrast. Subject:{prompt}

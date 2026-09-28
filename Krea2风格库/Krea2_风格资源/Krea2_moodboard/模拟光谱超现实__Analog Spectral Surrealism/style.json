@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2993",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-Surreal_摄影超现实3",
+  "category_name": "摄影超现实3",
+  "name_cn": "模拟光谱超现实",
+  "name": "Analog Spectral Surrealism",
+  "prompt": "retro sci-fi, analog film grain, motion blur silhouette, glowing aura, high-contrast backlighting, surreal light leaks, dark minimalist composition. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/模拟光谱超现实__Analog Spectral Surrealism/preview.webp",
+  "folder": "Krea2_moodboard/模拟光谱超现实__Analog Spectral Surrealism",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}

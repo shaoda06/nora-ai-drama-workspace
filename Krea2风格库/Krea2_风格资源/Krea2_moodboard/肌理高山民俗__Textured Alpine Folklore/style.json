@@ -1,0 +1,14 @@
+{
+  "id": "Krea2_moodboard-2147",
+  "library": "Krea2_moodboard",
+  "category": "Krea2_moodboard_Photo-FX-Cool_摄影特效冷3",
+  "category_name": "摄影特效冷3",
+  "name_cn": "肌理高山民俗",
+  "name": "Textured Alpine Folklore",
+  "prompt": "stylized alpine landscape, woodblock print aesthetic, intricate textural detail, deep indigo and gold palette, graphic minimalist composition, pointillist stippling, folk art sensibility. Subject:{prompt}",
+  "negative_prompt": "",
+  "image": "Krea2_moodboard/肌理高山民俗__Textured Alpine Folklore/preview.webp",
+  "folder": "Krea2_moodboard/肌理高山民俗__Textured Alpine Folklore",
+  "source": "https://civitai.com/models/2856809/ray-style-switching-extension",
+  "source_revision": "3135400"
+}
