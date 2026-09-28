@@ -34,14 +34,14 @@
 
 | 技能 | 用途 | 来源与获取位置 | 是否随本仓库提供 |
 | --- | --- | --- | --- |
-| `qwen-image-2-1-prompter` | Qwen Image 2.1图片提示词编写与校对；本流程中文规则优先 | [iamyoki/qwen-image-2.1-skill](https://github.com/iamyoki/qwen-image-2.1-skill)，[技能目录](https://github.com/iamyoki/qwen-image-2.1-skill/tree/main/skills/qwen-image-2-1-prompter) | 否，按需安装 |
-| `h3-prompt-writing` | MiniMax H3视频提示词及输入模式 | MiniMax官方 [MiniMax-AI/MiniMax-H3](https://github.com/MiniMax-AI/MiniMax-H3)，[技能目录](https://github.com/MiniMax-AI/MiniMax-H3/tree/main/skills/h3-prompt-writing) | 否，按需安装 |
-| `comfyui-api` | ComfyUI提交、查询与取回 | 上游 [MCKRUZ/ComfyUI-Expert / comfyui-api](https://github.com/MCKRUZ/ComfyUI-Expert/tree/dee27dc3d69b609c0006a8a12e71aadfc475ae95/skills/comfyui-api)；使用[随包适配版](.agents/skills/nora-ai-short-drama/dependencies/comfyui-api/SKILL.md) | 是，MIT |
-| `comfyui-inventory` | ComfyUI节点、模型与接口能力核对 | 上游 [MCKRUZ/ComfyUI-Expert / comfyui-inventory](https://github.com/MCKRUZ/ComfyUI-Expert/tree/dee27dc3d69b609c0006a8a12e71aadfc475ae95/skills/comfyui-inventory)；使用[随包适配版](.agents/skills/nora-ai-short-drama/dependencies/comfyui-inventory/SKILL.md) | 是，MIT |
-| `comfyui-troubleshooter` | ComfyUI执行与质量问题诊断 | 上游 [MCKRUZ/ComfyUI-Expert / comfyui-troubleshooter](https://github.com/MCKRUZ/ComfyUI-Expert/tree/dee27dc3d69b609c0006a8a12e71aadfc475ae95/skills/comfyui-troubleshooter)；使用[随包适配版](.agents/skills/nora-ai-short-drama/dependencies/comfyui-troubleshooter/SKILL.md) | 是，MIT |
-| `stop-that-shit` | 约束过度工程、范围扩张及重复验证 | [lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，[技能目录](https://github.com/lennney/stop-that-shit/tree/main/skills/stop-that-shit) | 否，按需安装 |
-| `stss` | 精简方案、计划等决策说明中的防御性赘述 | [lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，[技能目录](https://github.com/lennney/stop-that-shit/tree/main/skills/stss) | 否，按需安装 |
-| `skill-creator` | 技能维护与格式验证 | Codex Desktop自带系统技能，按名称发现实际入口；其他平台缺少时说明维护能力缺项 | 否，使用平台内置版本 |
+| `qwen-image-2-1-prompter` | Qwen Image 2.1图片提示词编写与校对；本流程中文规则优先 | [iamyoki/qwen-image-2.1-skill](https://github.com/iamyoki/qwen-image-2.1-skill)，[技能目录](https://github.com/iamyoki/qwen-image-2.1-skill/tree/main/skills/qwen-image-2-1-prompter) | 否 |
+| `h3-prompt-writing` | MiniMax H3视频提示词及输入模式 | MiniMax官方 [MiniMax-AI/MiniMax-H3](https://github.com/MiniMax-AI/MiniMax-H3)，[技能目录](https://github.com/MiniMax-AI/MiniMax-H3/tree/main/skills/h3-prompt-writing) | 否 |
+| `comfyui-api` | ComfyUI提交、查询与取回 | 上游 [MCKRUZ/ComfyUI-Expert / comfyui-api](https://github.com/MCKRUZ/ComfyUI-Expert/tree/dee27dc3d69b609c0006a8a12e71aadfc475ae95/skills/comfyui-api)；使用[随包适配版](.agents/skills/nora-ai-short-drama/dependencies/comfyui-api/SKILL.md) | 是 |
+| `comfyui-inventory` | ComfyUI节点、模型与接口能力核对 | 上游 [MCKRUZ/ComfyUI-Expert / comfyui-inventory](https://github.com/MCKRUZ/ComfyUI-Expert/tree/dee27dc3d69b609c0006a8a12e71aadfc475ae95/skills/comfyui-inventory)；使用[随包适配版](.agents/skills/nora-ai-short-drama/dependencies/comfyui-inventory/SKILL.md) | 是 |
+| `comfyui-troubleshooter` | ComfyUI执行与质量问题诊断 | 上游 [MCKRUZ/ComfyUI-Expert / comfyui-troubleshooter](https://github.com/MCKRUZ/ComfyUI-Expert/tree/dee27dc3d69b609c0006a8a12e71aadfc475ae95/skills/comfyui-troubleshooter)；使用[随包适配版](.agents/skills/nora-ai-short-drama/dependencies/comfyui-troubleshooter/SKILL.md) | 是 |
+| `stop-that-shit` | 约束过度工程、范围扩张及重复验证 | [lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，[技能目录](https://github.com/lennney/stop-that-shit/tree/main/skills/stop-that-shit) | 否 |
+| `stss` | 精简方案、计划等决策说明中的防御性赘述 | [lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，[技能目录](https://github.com/lennney/stop-that-shit/tree/main/skills/stss) | 否 |
+| `skill-creator` | 技能维护与格式验证 | Codex Desktop自带系统技能，按名称发现实际入口；其他平台缺少时说明维护能力缺项 | 否 |
 
 三个ComfyUI技能的适配来源版本为 `dee27dc3d69b609c0006a8a12e71aadfc475ae95`，各自目录保留 `LICENSE`。本工作区的 `dependencies/` 是可维护真源；上游仅供署名、追溯和比较更新，不能用上游原版或全局同名技能自动替代。外部安装技能须保留其上游许可证，不受本仓库MIT许可证重新授权。
 
