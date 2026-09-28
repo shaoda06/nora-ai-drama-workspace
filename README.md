@@ -51,11 +51,11 @@
 
 [Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md)与[Krea2风格库技能](.agents/skills/krea2-style-library/SKILL.md)由本工作区维护并随仓库提供。Krea2技能是独立工具入口，不额外计入Nora的8个流程依赖。
 
-| 资源 | 来源与作者 | 本地内容与许可说明 |
-| --- | --- | --- |
-| Clio风格库与预览 | [lumenastrum/clio-style-preview](https://github.com/lumenastrum/clio-style-preview)；风格文本主要来自 [u/Dear-Spend-2865原始分享](https://www.reddit.com/r/StableDiffusion/comments/1uzdj7o/krea_2_styles_wildcards_txt/) | `Krea2风格库/Krea2_风格资源/krea2_styles/`；上游代码MIT，原许可见 [Clio-LICENSE.txt](Krea2风格库/Clio-LICENSE.txt)，该许可不将社区文本纳入MIT声明；预览图和文本的授权由维护者另行处理 |
-| Ray Moodboard资源包 | [Ray3780 / Ray Style Switching Extension](https://civitai.com/models/2856809/ray-style-switching-extension)；[发布元数据API](https://civitai.com/api/v1/models/2856809) | `Krea2风格库/Krea2_风格资源/Krea2_moodboard/`；当前来源包及版本记录于 `versions.json`，遵循发布者许可及原始素材权利边界，不改授MIT |
-| Moodboard原始来源 | [Krea官方Moodboard介绍](https://www.krea.ai/blog/moodboards-krea-2)、[服务条款](https://www.krea.ai/terms) | Ray发布说明称其整理自Krea公开Moodboard；本地有一张缺失预览从Krea原图补入，详见第三方说明；不把整理者的发布选项等同于原始素材的完整授权 |
+| 资源 | 来源与作者 |
+| --- | --- |
+| Clio风格库与预览 | [lumenastrum/clio-style-preview](https://github.com/lumenastrum/clio-style-preview)；风格文本主要来自 [u/Dear-Spend-2865原始分享](https://www.reddit.com/r/StableDiffusion/comments/1uzdj7o/krea_2_styles_wildcards_txt/) |
+| Ray Moodboard资源包 | [Ray3780 / Ray Style Switching Extension](https://civitai.com/models/2856809/ray-style-switching-extension)；[发布元数据API](https://civitai.com/api/v1/models/2856809) |
+| Moodboard原始来源 | [Krea官方Moodboard介绍](https://www.krea.ai/blog/moodboards-krea-2)、[服务条款](https://www.krea.ai/terms) |
 
 现行资源随仓库保留，实际应用版本及来源下载地址见 [versions.json](Krea2风格库/Krea2_风格资源/versions.json)。第三方授权事项由工作区维护者负责处理；这项分发安排不表示agent已经核实取得全部授权，也不改变原始许可。详见[第三方来源与许可](Krea2风格库/THIRD_PARTY_NOTICES.md)。
 
