@@ -698,6 +698,8 @@ def build_data(project):
                     file_order(item),
                     {"选定": 0, "候选": 1, "审阅记录": 2, "执行记录": 3}.get(item["name"], 4),
                 ))
+            elif re.fullmatch(r"09-剧集制作/EP\d{3,}/06-生成结果/C\d{3,}-场次结果/P\d{3,}-分段结果/(01-一采|02-二采|03-后处理)/执行记录(?:/R\d{3,}-(?:一采|二采|后处理))?", branch["key"]):
+                branch["children"].sort(key=lambda item: item["name"] != "监控说明.md")
         return node
 
     catalogues = {}
