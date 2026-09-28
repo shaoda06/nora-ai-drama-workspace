@@ -123,4 +123,4 @@ python3 -B -m unittest discover -s Krea2风格库/Krea2_更新工具 -p 'test_*.
 
 本工作区原创技能、脚本及文档采用根目录 [MIT许可证](LICENSE)，允许修改、再分发和商用，保留版权及许可声明。
 
-第三方内容不因放入本仓库自动改为MIT：三个ComfyUI适配技能保留各自许可证；Krea2风格文本、预览图及来源限制以[第三方说明](Krea2风格库/THIRD_PARTY_NOTICES.md)为准。工作区维护者负责处理第三方资源的授权事项，现按其决定保留资源用于分发准备；本说明不声称已取得尚未提供的授权证明。
+第三方内容不因放入本仓库自动改为MIT：三个ComfyUI适配技能保留各自许可证；Krea2风格文本、预览图及来源限制以[第三方说明](Krea2风格库/THIRD_PARTY_NOTICES.md)为准。
