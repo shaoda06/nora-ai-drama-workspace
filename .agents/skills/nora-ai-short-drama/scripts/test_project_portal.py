@@ -81,6 +81,27 @@ class PortalTests(unittest.TestCase):
         self.assertEqual(item["kind"], "text")
         self.assertEqual(data["textPreviews"][item["key"]]["text"], '{"value": 1}')
 
+    def test_formal_generation_links_use_explicit_generation_not_candidate_version(self):
+        from urllib.parse import unquote
+        record = "### 生成记录-009\n正文\n### 生成记录-026\n正文\n"
+        for version in ("v08／生成026", "v08 / 生成记录-026", "v13／生成026（测试001转正式）"):
+            self.assertEqual(unquote(portal.formal_record_url(version, record, "参考图/生成记录.md")),
+                             "参考图/生成记录.md#生成记录-026")
+        for version in ("v26", "v08／生成099", "生成009／生成026"):
+            self.assertEqual(unquote(portal.formal_record_url(version, record, "参考图/生成记录.md")),
+                             "参考图/生成记录.md")
+
+    def test_all_formal_asset_kinds_link_to_existing_generation_sections(self):
+        from urllib.parse import unquote
+        records = [self.person_fixture()[1], self.prop_fixture(), self.scene_fixture()[1]]
+        for record in records:
+            record.write_text(record.read_text().replace("| v01 |", "| v01／生成001 |"))
+        data = portal.build_data(self.root.resolve())
+        for kind in ("people", "props", "scenes"):
+            owner = data[kind][0]
+            asset = next(a for a in owner["formal"] if "v01" in a["versionHtml"])
+            self.assertEqual(unquote(asset["recordUrl"]), owner["recordKey"] + "#生成记录-001")
+
     def person_fixture(self, decision="批准采用。"):
         base = "03-人物资料"
         self.put(base + "/人物索引.md", "# 人物索引\n| 人物编号 | 姓名 | 人物定位 | 资料卡入口 |\n"

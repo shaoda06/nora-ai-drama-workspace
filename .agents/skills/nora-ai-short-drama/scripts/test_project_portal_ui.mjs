@@ -305,14 +305,14 @@ test('candidate types follow formal order, combine the explicit body alias, and 
   assert.equal(candidateGroups([]).length,0);
 });
 
-test('formal cards link to their full generation record while candidates retain entry links', () => {
+test('formal and candidate cards both pass their generation section URL', () => {
   for(const owner of ['person','scene','prop']){
     const statement=source.match(new RegExp('if\\('+owner+'\\.recordKey\\)links\\.append\\(docLink\\([^;]+;'))[0];
     const recordKey='reference/generation.md',asset={generation:'生成记录-026',recordUrl:'reference/generation.md#生成记录-026'};
     for(const candidate of [false,true]){
       const links=[];
       vm.runInNewContext(statement,{[owner]:{recordKey},asset,candidate,links:{append:link=>links.push(link)},docLink:(key,label,url)=>({key,label,url})});
-      assert.deepEqual(links,[{key:recordKey,label:candidate?'生成记录-026':'生成记录',url:candidate?asset.recordUrl:undefined}]);
+      assert.deepEqual(links,[{key:recordKey,label:candidate?'生成记录-026':'生成记录',url:asset.recordUrl}]);
     }
   }
 });

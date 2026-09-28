@@ -258,6 +258,14 @@ def markdown_links(text, source):
     return result
 
 
+def formal_record_url(version, record, record_key):
+    numbers = set(re.findall(r"生成(?:记录[-－]?)?\s*(\d+)", version))
+    headings = re.findall(r"^### (生成记录-\d+)\s*$", record, re.M)
+    matches = [name for name in headings if name.removeprefix("生成记录-") in numbers]
+    url = quote(record_key, safe="/-._~")
+    return url + "#" + quote(matches[0]) if len(numbers) == len(matches) == 1 else url
+
+
 def build_data(project):
     documents, sources, texts = {}, {}, {}
     text_previews = {}
@@ -431,6 +439,7 @@ def build_data(project):
                            "stage": stage,
                            "costume": entry["服装状态"], "version": entry["采用的候选版本"],
                            "versionHtml": inline(entry["采用的候选版本"], record_key),
+                           "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
                            "scope": entry.get("适用范围", "未记录"), "media": media,
                            "reviews": reviews, "approved": approved,
                            "statusHtml": "<br>".join(status_markup(d, record_key) for d in decisions)
@@ -506,6 +515,7 @@ def build_data(project):
             approved = bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
             formal.append({"prop": True, "type": "道具参考图", "state": entry["状态名"], "version": entry["采用的候选版本"],
                            "versionHtml": inline(entry["采用的候选版本"], record_key),
+                           "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
                            "scope": entry.get("适用范围", "未记录"), "media": media,
                            "sourceHtml": inline(entry.get("来源参考图及版本", "未记录"), record_key),
                            "reviews": reviews, "approved": approved,
@@ -582,6 +592,7 @@ def build_data(project):
             asset = {"scene": True, "type": "场次环境图" if is_environment else "辅助／既有参考图",
                      "state": entry["最初制作场次"], "scope": scope, "media": media,
                      "versionHtml": inline(entry["采用的候选版本"], record_key),
+                           "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
                      "sourceHtml": inline(entry.get("来源参考图及版本", "未记录"), record_key),
                      "reviews": reviews, "approved": approved,
                      "statusHtml": "<br>".join(status_markup(d, record_key) for d in decisions) or status_markup("未记录", record_key)}
