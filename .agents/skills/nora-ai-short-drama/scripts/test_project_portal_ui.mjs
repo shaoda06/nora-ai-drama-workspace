@@ -86,7 +86,8 @@ test('whole-card entry is restricted to outlines and top-level episode directori
   assert.match(source,/const actionLabel=item.kind==="outline"\?"阅读原文":"进入查看"/);
 });
 
-test('boxed disclosures highlight the hovered folder or keyboard-focused summary', () => {
+test('boxed disclosures keep open borders green and retain hover and keyboard styles', () => {
+  assert.match(template,/details:is\(\.folder,\.candidate-group,\.pending\)\[open\],details:is/);
   assert.match(template,/details\.intro>summary:hover,details\.intro>summary:focus-visible,details\.intro\[open\]>summary\{color:var\(--green\);text-decoration:underline;text-decoration-color:currentColor;text-underline-offset:4px\}/);
   assert.match(template,/\.catalogue-card:hover,\.catalogue-card:focus-within\{border-color:var\(--green\)\}/);
   assert.match(template,/details:is\(\.folder,\.candidate-group,\.pending\):hover:not\(:has\(details:hover\)\),details:is\(\.folder,\.candidate-group,\.pending\):has\(>summary:focus-visible\)\{border-color:var\(--green\)\}/);
@@ -329,26 +330,27 @@ test('formal and candidate cards both pass their generation section URL', () => 
 });
 
 
-test('directory accordion closes only open siblings and descendants, including on reopening', () => {
-  const folders=source.slice(source.indexOf('function renderEpisodeFolders('),source.indexOf('function renderCatalogueList('));
-  const body=folders.match(/detail\.addEventListener\("toggle",\(\)=>\{([\s\S]*?)\}\);container\.append\(detail\)/)[1];
-  const child={open:true}, grandchild={open:true}, siblingChild={open:true}, ancestor={open:true};
-  const sibling={open:true,querySelectorAll(selector){assert.equal(selector,'details[open]');return [siblingChild]}};
-  let queries=0, peerQueries=0;
-  const detail={open:false,querySelectorAll(selector){
-    assert.equal(selector,'details[open]');queries++;return [child,grandchild];
-  }};
-  const container={querySelectorAll(selector){
-    assert.equal(selector,':scope > details[open]');peerQueries++;return [detail,sibling].filter(node=>node.open);
-  }};
-  const toggle=vm.runInNewContext(`()=>{${body}}`,{detail,container,loaded:true});
-  toggle();
-  assert.equal(child.open,false);assert.equal(grandchild.open,false);assert.equal(sibling.open,true);
-  assert.equal(peerQueries,0);
-  detail.open=true;toggle();
-  assert.equal(detail.open,true);assert.equal(sibling.open,false);assert.equal(siblingChild.open,false);
-  assert.equal(ancestor.open,true);assert.equal(queries,1);
-  assert.equal(child.open,false);assert.equal(grandchild.open,false);
-  sibling.open=true;siblingChild.open=true;toggle();
-  assert.equal(sibling.open,false);assert.equal(siblingChild.open,false);assert.equal(peerQueries,2);
+test('all folder and candidate lists share the same sibling accordion', () => {
+  assert.match(source,/document\.addEventListener\("toggle",handleListToggle,true\)/);
+  const toggle=loadFunction('handleListToggle');
+  for(const kind of ['folder','candidate-group']){
+    const child={open:true}, grandchild={open:true}, siblingChild={open:true}, ancestor={open:true};
+    const sibling={open:true,querySelectorAll(selector){assert.equal(selector,'details[open]');return [siblingChild]}};
+    let queries=0, peerQueries=0;
+    const detail={open:false,matches(selector){assert.equal(selector,'details.folder,details.candidate-group');return ['folder','candidate-group'].includes(kind)},querySelectorAll(selector){
+      assert.equal(selector,'details[open]');queries++;return [child,grandchild];
+    }};
+    detail.parentElement={querySelectorAll(selector){
+      assert.equal(selector,':scope > details:is(.folder,.candidate-group)[open]');peerQueries++;return [detail,sibling].filter(node=>node.open);
+    }};
+    toggle({target:detail});
+    assert.equal(child.open,false);assert.equal(grandchild.open,false);assert.equal(sibling.open,true);assert.equal(peerQueries,0);
+    detail.open=true;toggle({target:detail});
+    assert.equal(detail.open,true);assert.equal(sibling.open,false);assert.equal(siblingChild.open,false);
+    assert.equal(ancestor.open,true);assert.equal(queries,1);
+    assert.equal(child.open,false);assert.equal(grandchild.open,false);
+    sibling.open=true;siblingChild.open=true;toggle({target:detail});
+    assert.equal(sibling.open,false);assert.equal(siblingChild.open,false);assert.equal(peerQueries,2);
+  }
+  toggle({target:{matches(){return false}}});
 });

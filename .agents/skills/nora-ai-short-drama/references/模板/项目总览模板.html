@@ -42,7 +42,7 @@ button.person-cover:hover{background:#edf3f2}
 .catalogue-grid.episode-folders{display:block}.episode-folders summary{overflow-wrap:anywhere}
 .catalogue-card:hover,.catalogue-card:focus-within{border-color:var(--green)}
 details.intro>summary:hover,details.intro>summary:focus-visible,details.intro[open]>summary{color:var(--green);text-decoration:underline;text-decoration-color:currentColor;text-underline-offset:4px}
-details:is(.folder,.candidate-group,.pending):hover:not(:has(details:hover)),details:is(.folder,.candidate-group,.pending):has(>summary:focus-visible){border-color:var(--green)}
+details:is(.folder,.candidate-group,.pending)[open],details:is(.folder,.candidate-group,.pending):hover:not(:has(details:hover)),details:is(.folder,.candidate-group,.pending):has(>summary:focus-visible){border-color:var(--green)}
 .catalogue-grid.outline-rows{grid-template-columns:minmax(0,1fr);gap:10px}.outline-rows .catalogue-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:20px;padding:14px 18px}.outline-row-copy{display:flex;flex-direction:column;gap:5px;min-width:0}.outline-row-heading{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 14px}.outline-row-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px}.outline-rows .outline-row-actions .outline{align-self:flex-end;margin:0;white-space:nowrap;border:0;background:transparent;padding:4px 6px;line-height:26px;color:var(--green)}.outline-rows .outline-row-actions .outline:hover{background:var(--wash);text-decoration:underline;text-underline-offset:4px}.outline-rows .outline-row-actions .outline:focus-visible{outline:2px solid var(--green);outline-offset:2px}.outline-rows .catalogue-status .status-badge{max-height:none;overflow:visible}.outline-rows .catalogue-path{font-size:11px!important}@media(max-width:650px){.outline-rows .catalogue-card{grid-template-columns:minmax(0,1fr);gap:10px;padding:12px 14px}.outline-row-actions{justify-self:end}}
 .outline-rows .catalogue-card.outline-slide{position:relative;display:block;overflow:hidden;min-height:128px;padding-right:64px;cursor:pointer;background:white;transition:border-color .2s ease,background-color .2s ease}
 .outline-rows .catalogue-card.outline-slide:hover,.outline-rows .catalogue-card.outline-slide:focus-within{border-color:var(--green);background:#edf6f2}
@@ -279,6 +279,15 @@ renderMetadata(el("metadata"),data.meta,data.confirmationHtml);
 el("intro-body").innerHTML=data.introHtml;if(!data.introHtml)el("intro").hidden=true;
 el("position-body").innerHTML=data.positionExists?data.positionHtml:'<p class="empty">尚未形成正式定位，不以草稿代替。</p>';
 if(!data.positionExists){el("position-raw").hidden=true;el("metadata").hidden=true}
+document.addEventListener("toggle",handleListToggle,true);
+function handleListToggle(event){
+const detail=event.target;
+if(!detail.matches("details.folder,details.candidate-group"))return;
+if(!detail.open){detail.querySelectorAll("details[open]").forEach(child=>{child.open=false});return}
+detail.parentElement.querySelectorAll(":scope > details:is(.folder,.candidate-group)[open]").forEach(sibling=>{
+if(sibling!==detail){sibling.open=false;sibling.querySelectorAll("details[open]").forEach(child=>{child.open=false})}
+});
+}
 function renderFolders(container,groups){groups.forEach(group=>{const detail=document.createElement("details");detail.className="folder";const summary=document.createElement("summary");summary.append(document.createTextNode(group.name));summary.append(textNode("span",group.files.length?group.files.length+" 份":"暂无","count"));detail.append(summary);if(!group.files.length)detail.append(textNode("p","暂无文件，未创建空目录。","empty"));let loaded=false;detail.addEventListener("toggle",()=>{if(!detail.open||loaded)return;loaded=true;group.files.forEach(file=>{const row=document.createElement("div");row.className="file-row";const button=textNode("button",file.name);button.type="button";button.addEventListener("click",()=>previewFile(file));row.append(button,rawFileLink(file.url));detail.append(row)})});container.append(detail)})}
 renderFolders(el("folders"),data.groups);
 function renderLongDocument(prefix,doc,emptyText){
@@ -587,7 +596,7 @@ function renderEpisodeFolders(container,items){
 items.forEach(item=>{
 if(item.kind!=="group"){const row=textNode("div","","file-row"),button=textNode("button",item.name);button.type="button";button.title=item.key;button.addEventListener("click",()=>previewFile(item));row.append(button,rawFileLink(item.url));container.append(row);return}
 const detail=textNode("details","","folder"),summary=textNode("summary",item.name);summary.append(textNode("span",item.children.length+" 项","count"));detail.append(summary);let loaded=false;
-detail.addEventListener("toggle",()=>{if(!detail.open){detail.querySelectorAll("details[open]").forEach(child=>{child.open=false});return}container.querySelectorAll(":scope > details[open]").forEach(sibling=>{if(sibling!==detail){sibling.open=false;sibling.querySelectorAll("details[open]").forEach(child=>{child.open=false})}});if(loaded)return;loaded=true;if(item.children.length)renderEpisodeFolders(detail,item.children);else detail.append(textNode("p","暂无文件。","empty"))});container.append(detail);
+detail.addEventListener("toggle",()=>{if(!detail.open||loaded)return;loaded=true;if(item.children.length)renderEpisodeFolders(detail,item.children);else detail.append(textNode("p","暂无文件。","empty"))});container.append(detail);
 });
 }
 function renderCatalogueList(){
