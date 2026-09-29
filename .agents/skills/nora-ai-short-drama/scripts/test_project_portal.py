@@ -14,6 +14,21 @@ class PortalTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.addCleanup(self.temp.cleanup)
 
+    def test_compilation_info_is_collapsed_without_hiding_story(self):
+        source = "09-剧集制作/EP001/02-剧本/分场剧本/EP001-C001-分场剧本.md"
+        rendered = portal.markdown("剧情正文\n\n——编制信息——\n版本：v1.3\n"
+                                   "[来源](../EP001-故事剧本.md)\n<script>alert(1)</script>", source)
+        before, details = rendered.split('<details class="intro">', 1)
+        self.assertIn("剧情正文", before)
+        self.assertNotIn("版本：", before)
+        self.assertTrue(details.startswith("<summary>编制信息</summary>"))
+        self.assertIn("版本：v1.3", details)
+        self.assertIn("data-doc=", details)
+        self.assertIn("&lt;script&gt;", details)
+        self.assertTrue(details.endswith("</details>"))
+        code = portal.markdown("```text\n——编制信息——\n```", source)
+        self.assertNotIn("<details", code)
+
     def test_video_prompts_match_execution_identity_and_translation(self):
         episode = "09-剧集制作/EP001"
         segment = episode + "/06-生成结果/C001-场次结果/P001-分段结果"

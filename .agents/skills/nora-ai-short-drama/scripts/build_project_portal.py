@@ -142,6 +142,10 @@ def markdown(text, source):
             out.append("<pre><code>" + html.escape("\n".join(chunk)) + "</code></pre>")
             i += 1
             continue
+        if line.strip() == "——编制信息——":
+            out.append('<details class="intro"><summary>编制信息</summary>'
+                       + markdown("\n".join(lines[i + 1:]), source) + "</details>")
+            break
         heading = re.match(r"^(#{1,6})\s+(.+)$", line)
         if heading:
             level, content = len(heading.group(1)), heading.group(2)
