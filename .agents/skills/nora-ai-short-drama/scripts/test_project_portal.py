@@ -744,6 +744,14 @@ class PortalTests(unittest.TestCase):
         self.assertEqual(key, "01-主旨与简介/主旨与简介.md")
         self.assertIn("#2-", href)
 
+    def test_windows_source_links_match_portal_document_keys(self):
+        href, key = portal.safe_link("../项目基本定位.md#内容", r"00-项目定位\审阅记录\记录.md")
+        self.put(portal.POSITION, "# 定位\n\n## 内容\n正文")
+        portal.build(self.root)
+        self.assertIn(key, self.extract()["documents"])
+        self.assertNotIn("%5C", href)
+        self.assertNotIn("\\", key)
+
     def test_unsafe_links_and_raw_html_are_not_executed(self):
         for target in ("javascript:alert", "data:text/html,abc", "//evil.test", "file:///etc/passwd"):
             self.assertEqual(portal.safe_link(target, portal.POSITION), (None, None))

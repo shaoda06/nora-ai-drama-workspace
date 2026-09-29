@@ -6,6 +6,7 @@ import hashlib
 import html
 import json
 import os
+import posixpath
 from pathlib import Path
 import re
 import tempfile
@@ -85,7 +86,8 @@ def safe_link(target, source):
     path = unquote(parsed.path)
     if path.startswith("/"):
         return None, None
-    key = os.path.normpath(os.path.join(os.path.dirname(source), path)) if path else source
+    source = source.replace("\\", "/")
+    key = posixpath.normpath(posixpath.join(posixpath.dirname(source), path)) if path else source
     href = quote(key, safe="/-._~") + ("?" + parsed.query if parsed.query else "")
     if parsed.fragment:
         href += "#" + quote(unquote(parsed.fragment), safe="-._~")

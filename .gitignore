@@ -7,6 +7,8 @@
 /.agents/skills/h3-prompt-writing/
 /.agents/skills/qwen-image-2-1-prompter/
 /.agents/skills/screenwriting-master/
+/.agents/skills/stop-that-shit/
+/.agents/skills/stss/
 
 # 真实项目和本机过程资料不公开，保留目录用途说明。
 /projects/*
