@@ -15,9 +15,9 @@ class PortalTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
 
     def test_compilation_info_is_collapsed_without_hiding_story(self):
-        source = "09-剧集制作/EP001/02-剧本/EP001-C001-分场剧本.md"
+        source = "09-剧集制作/EP001/02-剧集剧本/EP001-C001-分场剧本.md"
         rendered = portal.markdown("剧情正文\n\n——编制信息——\n版本：v1.3\n"
-                                   "[来源](EP001-故事剧本.md)\n<script>alert(1)</script>", source)
+                                   "[来源](EP001-本集剧本.md)\n<script>alert(1)</script>", source)
         before, details = rendered.split('<details class="intro">', 1)
         self.assertIn("剧情正文", before)
         self.assertNotIn("版本：", before)
@@ -95,7 +95,7 @@ class PortalTests(unittest.TestCase):
         paths = ["EP001-制作索引.md", "03-分镜脚本/EP001-分镜索引.md",
                  "03-分镜脚本/C001-场次分镜/EP001-C001-分镜.md",
                  "03-分镜脚本/A-说明.md", "03-分镜脚本/EP001-分镜索引-草稿-v01.md",
-                 "02-剧本/EP001-故事剧本.md", "02-剧本/EP001-C001-分场剧本.md"]
+                 "02-剧集剧本/EP001-本集剧本.md", "02-剧集剧本/EP001-C001-分场剧本.md"]
         for path in paths:
             self.put(root + "/" + path, "# 正文")
         self.put("00-项目定位/过程稿/A-说明.md", "# 说明")
@@ -103,11 +103,11 @@ class PortalTests(unittest.TestCase):
         portal.build(self.root)
         data = self.extract()
         children = data["catalogues"]["09-剧集制作"]["children"][0]["children"]
-        self.assertEqual([c["name"] for c in children], ["EP001-制作索引.md", "02-剧本", "03-分镜脚本"])
+        self.assertEqual([c["name"] for c in children], ["EP001-制作索引.md", "02-剧集剧本", "03-分镜脚本"])
         self.assertEqual([c["name"] for c in children[2]["children"]],
                          ["EP001-分镜索引.md", "A-说明.md", "EP001-分镜索引-草稿-v01.md", "C001-场次分镜"])
         self.assertEqual([c["name"] for c in children[1]["children"]],
-                         ["EP001-故事剧本.md", "EP001-C001-分场剧本.md"])
+                         ["EP001-本集剧本.md", "EP001-C001-分场剧本.md"])
         self.assertEqual(data["groups"][1]["files"][0]["name"], "Z-资料索引.md")
         self.assertTrue(all(root + "/" + path in data["documents"] for path in paths))
 
