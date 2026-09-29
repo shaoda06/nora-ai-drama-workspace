@@ -734,6 +734,11 @@ def build_data(project):
                     0 if re.fullmatch(r"EP\d{3,}-故事剧本\.md", item["name"]) else 1,
                     item["name"],
                 ))
+            elif re.fullmatch(r"09-剧集制作/EP\d{3,}/03-分镜脚本/C\d{3,}-场次分镜", branch["key"]):
+                branch["children"].sort(key=lambda item: (
+                    0 if re.fullmatch(r"EP\d{3,}-C\d{3,}-场次分镜\.md", item["name"]) else 1,
+                    item["name"],
+                ))
             elif re.fullmatch(r"09-剧集制作/EP\d{3,}/04-专用素材", branch["key"]):
                 branch["children"].sort(key=lambda item: (
                     0 if re.fullmatch(r"(?:EP\d{3,}-)?素材索引\.md", item["name"]) else

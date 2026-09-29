@@ -395,8 +395,9 @@ class PortalTests(unittest.TestCase):
 
     def test_production_navigation_retains_segments_stages_and_candidate_selection(self):
         root = "09-剧集制作/EP001"
-        self.put(root + "/03-分镜脚本/C001-场次分镜/分段分镜/EP001-C001-P001-分段分镜.md", "# 分镜1")
-        self.put(root + "/03-分镜脚本/C001-场次分镜/分段分镜/EP001-C001-P002-分段分镜.md", "# 分镜2")
+        self.put(root + "/03-分镜脚本/C001-场次分镜/EP001-C001-场次分镜.md", "# 场次分镜")
+        self.put(root + "/03-分镜脚本/C001-场次分镜/EP001-C001-P001-分段分镜.md", "# 分镜1")
+        self.put(root + "/03-分镜脚本/C001-场次分镜/EP001-C001-P002-分段分镜.md", "# 分镜2")
         self.put(root + "/05-视频提示词/C001-场次生成资料/P001-分段生成资料/EP001-C001-P001-视频提示词.md", "# 准备")
         self.put(root + "/06-生成结果/C001-场次结果/P001-分段结果/01-一采/选定/EP001-C001-P001-R001-一采.mp4", "fixture")
         self.put(root + "/06-生成结果/C001-场次结果/P001-分段结果/02-二采/候选/EP001-C001-P001-R002-二采.mp4", "fixture")
@@ -415,7 +416,10 @@ class PortalTests(unittest.TestCase):
                 return [node["key"]]
             return [key for child in node["children"] for key in leaves(child)]
         keys = leaves(ep)
-        self.assertEqual(len(keys), 10)
+        self.assertEqual(len(keys), 11)
+        scene = ep["children"][2]["children"][0]
+        self.assertEqual([n["name"] for n in scene["children"]],
+                         ["EP001-C001-场次分镜.md", "EP001-C001-P001-分段分镜.md", "EP001-C001-P002-分段分镜.md"])
         self.assertEqual(len(keys), len(set(keys)))
         self.assertIn(root + "/其他资料/过程稿/EP001-C002-草稿.md", keys)
         other = next(node for node in ep["children"] if node["name"] == "其他资料")
