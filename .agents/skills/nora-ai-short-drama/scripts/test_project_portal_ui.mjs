@@ -75,7 +75,7 @@ test('whole-card entry is restricted to outlines and top-level episode directori
   const cases=[
     [true,false,{kind:'outline',key:'06-分集大纲/EP001-分集大纲.md'},true],
     [true,true,{kind:'group',key:'09-剧集制作/EP001'},true],
-    [true,true,{kind:'group',key:'09-剧集制作/EP001/03-分镜'},false],
+    [true,true,{kind:'group',key:'09-剧集制作/EP001/03-分镜脚本'},false],
     [true,true,{kind:'document',key:'09-剧集制作/EP001/说明.md'},false],
     [false,false,{kind:'group',key:'历史版本/EP001'},false],
     [false,false,{kind:'group',key:'09-剧集制作/EP001'},false],

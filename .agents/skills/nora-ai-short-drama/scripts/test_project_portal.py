@@ -92,9 +92,9 @@ class PortalTests(unittest.TestCase):
 
     def test_indexes_then_files_then_folders_at_each_level(self):
         root = "09-剧集制作/EP001"
-        paths = ["EP001-制作索引.md", "03-分镜/EP001-分镜索引.md",
-                 "03-分镜/C001-场次分镜/EP001-C001-分镜.md",
-                 "03-分镜/A-说明.md", "03-分镜/EP001-分镜索引-草稿-v01.md",
+        paths = ["EP001-制作索引.md", "03-分镜脚本/EP001-分镜索引.md",
+                 "03-分镜脚本/C001-场次分镜/EP001-C001-分镜.md",
+                 "03-分镜脚本/A-说明.md", "03-分镜脚本/EP001-分镜索引-草稿-v01.md",
                  "02-剧本/EP001-故事剧本.md", "02-剧本/EP001-C001-分场剧本.md"]
         for path in paths:
             self.put(root + "/" + path, "# 正文")
@@ -103,7 +103,7 @@ class PortalTests(unittest.TestCase):
         portal.build(self.root)
         data = self.extract()
         children = data["catalogues"]["09-剧集制作"]["children"][0]["children"]
-        self.assertEqual([c["name"] for c in children], ["EP001-制作索引.md", "02-剧本", "03-分镜"])
+        self.assertEqual([c["name"] for c in children], ["EP001-制作索引.md", "02-剧本", "03-分镜脚本"])
         self.assertEqual([c["name"] for c in children[2]["children"]],
                          ["EP001-分镜索引.md", "A-说明.md", "EP001-分镜索引-草稿-v01.md", "C001-场次分镜"])
         self.assertEqual([c["name"] for c in children[1]["children"]],
@@ -280,14 +280,14 @@ class PortalTests(unittest.TestCase):
         portal.build(self.root)
         expected = self.extract()["scenes"]
         for episode, scene in (("EP001", "C001"), ("EP002", "C002")):
-            self.put(f"09-剧集制作/{episode}/03-分镜/{scene}-场次分镜/{episode}-{scene}-场次分镜.md", "# 分镜")
+            self.put(f"09-剧集制作/{episode}/03-分镜脚本/{scene}-场次分镜/{episode}-{scene}-场次分镜.md", "# 分镜")
         portal.build(self.root)
         data = self.extract()
         self.assertEqual(data["scenes"], expected)
         episodes = data["catalogues"]["09-剧集制作"]["children"]
         self.assertEqual(len(episodes), 2)
         for episode, scene in zip(episodes, ("C001", "C002")):
-            self.assertEqual(episode["children"][0]["name"], "03-分镜")
+            self.assertEqual(episode["children"][0]["name"], "03-分镜脚本")
             self.assertEqual(episode["children"][0]["children"][0]["name"], scene + "-场次分镜")
 
     def test_people_index_survives_empty_media_libraries(self):
@@ -395,8 +395,8 @@ class PortalTests(unittest.TestCase):
 
     def test_production_navigation_retains_segments_stages_and_candidate_selection(self):
         root = "09-剧集制作/EP001"
-        self.put(root + "/03-分镜/C001-场次分镜/分段分镜/EP001-C001-P001-分段分镜.md", "# 分镜1")
-        self.put(root + "/03-分镜/C001-场次分镜/分段分镜/EP001-C001-P002-分段分镜.md", "# 分镜2")
+        self.put(root + "/03-分镜脚本/C001-场次分镜/分段分镜/EP001-C001-P001-分段分镜.md", "# 分镜1")
+        self.put(root + "/03-分镜脚本/C001-场次分镜/分段分镜/EP001-C001-P002-分段分镜.md", "# 分镜2")
         self.put(root + "/05-视频提示词/C001-场次生成资料/P001-分段生成资料/EP001-C001-P001-视频提示词.md", "# 准备")
         self.put(root + "/06-生成结果/C001-场次结果/P001-分段结果/01-一采/选定/EP001-C001-P001-R001-一采.mp4", "fixture")
         self.put(root + "/06-生成结果/C001-场次结果/P001-分段结果/02-二采/候选/EP001-C001-P001-R002-二采.mp4", "fixture")
@@ -408,7 +408,7 @@ class PortalTests(unittest.TestCase):
         portal.build(self.root)
         ep = self.extract()["catalogues"]["09-剧集制作"]["children"][0]
         self.assertEqual([s["name"] for s in ep["children"]],
-                         ["说明.md", "01-制作前检查", "03-分镜", "05-视频提示词", "06-生成结果", "其他资料"])
+                         ["说明.md", "01-制作前检查", "03-分镜脚本", "05-视频提示词", "06-生成结果", "其他资料"])
         self.assertEqual(ep["children"][1]["children"], [])
         def leaves(node):
             if node["kind"] != "group":
