@@ -127,6 +127,8 @@ def markdown(text, source):
     Raw HTML is escaped; unknown Markdown stays readable as source text.
     """
     lines, out, i, anchors = text.splitlines(), [], 0, {}
+    in_header = True
+    metadata_field = r"^(?:文档版本|更新日期|确认状态|确认说明|制作目标|阅读边界)[:：]"
     while i < len(lines):
         line = lines[i]
         if not line.strip():
@@ -149,6 +151,8 @@ def markdown(text, source):
         heading = re.match(r"^(#{1,6})\s+(.+)$", line)
         if heading:
             level, content = len(heading.group(1)), heading.group(2)
+            if level >= 2:
+                in_header = False
             anchor = slug(content)
             count = anchors.get(anchor, 0)
             anchors[anchor] = count + 1
@@ -181,16 +185,20 @@ def markdown(text, source):
                 item = re.match(r"^\s*(?:[-*+]|\d+[.)])\s+(.+)$", lines[i])
                 if not item or bool(re.match(r"^\s*\d", lines[i])) != ordered:
                     break
-                items.append("<li>" + field_markup(item.group(1), source) + "</li>")
+                note = in_header and re.match(metadata_field, item.group(1))
+                css = ' class="document-note"' if note else ""
+                items.append(f"<li{css}>" + field_markup(item.group(1), source) + "</li>")
                 i += 1
-            out.append(f"<{tag}>" + "".join(items) + f"</{tag}>")
+            css = ' class="document-notes"' if all(item.startswith('<li class="document-note">') for item in items) else ""
+            out.append(f"<{tag}{css}>" + "".join(items) + f"</{tag}>")
             continue
         if re.fullmatch(r"\s*(---+|\*\*\*+)\s*", line):
             out.append("<hr>")
         elif line.startswith(">"):
             out.append("<blockquote>" + inline(line.lstrip("> "), source) + "</blockquote>")
         else:
-            out.append("<p>" + field_markup(line, source) + "</p>")
+            css = ' class="document-note"' if in_header and re.match(metadata_field, line) else ""
+            out.append(f"<p{css}>" + field_markup(line, source) + "</p>")
         i += 1
     return "\n".join(out)
 
