@@ -287,7 +287,7 @@ class PortalTests(unittest.TestCase):
             self.assertEqual(record.read_bytes(), before[str(record)])
             self.assertIn("待确认", candidate["userHtml"])
 
-    def test_technical_failure_or_unfinished_review_is_not_pending_approval(self):
+    def test_historical_visual_review_does_not_block_pending_user_approval(self):
         _, record = self.person_fixture()
         original = record.read_text()
         for technical, content in [("不通过", "未进行"), ("待确认", "未进行"),
@@ -298,9 +298,14 @@ class PortalTests(unittest.TestCase):
                     "- agent 内容审查发现：技术审查未通过，未进行内容审查", original))
                 portal.build(self.root)
                 person = self.extract()["people"][0]
-                self.assertFalse(person["candidates"][0]["pending"])
-                self.assertEqual(person["pendingCount"], 0)
+                self.assertTrue(person["candidates"][0]["pending"])
+                self.assertEqual(person["pendingCount"], 1)
                 self.assertTrue(person["formal"][0]["approved"])
+        for decision in ("批准采用", "不采用", "历史候选已结束，未采用，不再待审"):
+            result = portal.image_review_fields(
+                "- agent 技术审查结论：不通过\n- agent 内容审查状态：未进行\n",
+                portal.POSITION, "未记录", decision)
+            self.assertFalse(result["pending"])
         record.write_text(original)
         portal.build(self.root)
         candidate = self.extract()["people"][0]["candidates"][0]

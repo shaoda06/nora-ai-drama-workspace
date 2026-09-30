@@ -265,10 +265,10 @@ test('search and filter happen before pagination and preserve unclassified entri
   assert.equal(paging(searched.length,1,20).pages,1);
 });
 
-test('candidate review labels keep technical gate, nonblocking findings, user and legacy distinct', () => {
+test('candidate review labels distinguish historical findings from current user review', () => {
   const fields=loadFunction('candidateReviewFields');
   const fresh=fields({twoStageReview:true,technicalHtml:'不通过',contentHtml:'未进行',contentFindingsHtml:'未审',userHtml:'待确认'});
-  assert.deepEqual(Array.from(fresh,row=>Array.from(row)),[['技术审查（生成条目）','不通过'],['内容审查（非阻塞）','未进行'],['内容发现','未审'],['用户采用（生成条目）','待确认']]);
+  assert.deepEqual(Array.from(fresh,row=>Array.from(row)),[['历史技术审查','不通过'],['历史内容审查','未进行'],['历史内容发现','未审'],['用户审核','待确认']]);
   const legacy=fields({agentHtml:'历史不通过',userHtml:'批准采用'});
   assert.equal(legacy.length,2);
   assert.equal(legacy[0][0],'历史agent初审（生成条目）');

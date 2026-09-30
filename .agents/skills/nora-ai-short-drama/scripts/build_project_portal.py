@@ -63,15 +63,13 @@ def image_review_fields(chunk, source, legacy_state, user_state):
     findings = field(chunk, "agent 内容审查发现")
     staged = any(value != "未记录" for value in (technical, content, findings))
     waiting = bool(re.match(r"^(待确认|待审核)(?=$|[。；，\s])", user_state))
-    eligible = (bool(re.match(r"^通过(?=$|[。；，\s])", technical))
-                and bool(re.match(r"^已完成(?=$|[。；，\s])", content)))
     return {"twoStageReview": staged,
             "technicalHtml": status_markup(technical, source),
             "contentHtml": status_markup(content, source),
             "contentFindingsHtml": inline(findings, source),
             "agentHtml": status_markup(legacy_state, source),
             "userHtml": status_markup(user_state, source),
-            "pending": waiting and (eligible if staged else True)}
+            "pending": waiting}
 
 
 def field_markup(text, source):
