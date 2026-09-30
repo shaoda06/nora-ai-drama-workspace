@@ -1,0 +1,39 @@
+{
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "__APPROVED_PORTRAIT__.png"
+    },
+    "_meta": {
+      "title": "LoadImage"
+    }
+  },
+  "1": {
+    "class_type": "RTXVideoSuperResolution",
+    "inputs": {
+      "resize_type": "scale by multiplier",
+      "resize_type.scale": 2,
+      "quality": "ULTRA",
+      "images": [
+        "2",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "RTXVideoSuperResolution"
+    }
+  },
+  "3": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "Nora/PortraitUpscale",
+      "images": [
+        "1",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "SaveImage"
+    }
+  }
+}

@@ -15,7 +15,7 @@ BASELINES = ROOT / "references/comfyui-workflow"
 class BaselineTests(unittest.TestCase):
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
-        self.assertEqual(len(results), 7)
+        self.assertEqual(len(results), 8)
         h3 = [r for r in results if r["optional_references"]]
         self.assertEqual(len(h3), 2)
         self.assertTrue(all(r["reference_combinations"] == 147 for r in h3))
@@ -29,6 +29,19 @@ class BaselineTests(unittest.TestCase):
             api_path = Path(tmp, f"{name}.api.json")
             api = json.loads(api_path.read_text())
             api["459:458"]["inputs"]["seed"] += 1
+            api_path.write_text(json.dumps(api))
+            with self.assertRaisesRegex(AssertionError, "mismatch"):
+                wb.verify(tmp)
+
+    def test_detects_upscale_factor_drift(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            name = "Nora-RTX-图片2倍超分"
+            for suffix in ("workflow", "api"):
+                source = BASELINES / f"{name}.{suffix}.json"
+                Path(tmp, source.name).write_bytes(source.read_bytes())
+            api_path = Path(tmp, f"{name}.api.json")
+            api = json.loads(api_path.read_text())
+            api["1"]["inputs"]["resize_type.scale"] = 4
             api_path.write_text(json.dumps(api))
             with self.assertRaisesRegex(AssertionError, "mismatch"):
                 wb.verify(tmp)

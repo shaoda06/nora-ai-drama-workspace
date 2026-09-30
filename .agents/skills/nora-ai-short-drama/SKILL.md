@@ -117,6 +117,8 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 
 制作与修订读取[Qwen参考图生成与修订的七项约定](references/生成规范/Qwen-Image-2.1-提示词规范.md#22-qwen参考图生成与修订的七项约定)，输入来源、规格、审核及返修按各专项规范执行。
 
+人物正面半身图（含男女画风验证样例）先以1024×1024送审，批准后按[图片超分执行规范](references/生成规范/ComfyUI-图片超分执行规范.md)使用NVIDIA RTX节点2倍超分为2048×2048，核对文件后正式保存。此固定后处理不使用Qwen重新采样，不改变其他图的原生尺寸；历史批准图不自动重处理。
+
 ## Qwen Image 2.1 与 ComfyUI 参考规范
 
 - 编写、校对或修订图片提示词时，同时读取 `qwen-image-2-1-prompter` 和[Qwen提示词规范](references/生成规范/Qwen-Image-2.1-提示词规范.md)。按[接入与适配](references/生成规范/Qwen-Image-2.1-提示词规范.md#13-qwen-image-2-1-prompter接入与适配)选择T2I／Edit及API／Pipeline格式；按[中文规则](references/生成规范/Qwen-Image-2.1-提示词规范.md#14-统一中文编写审阅与提交)编写、审阅和提交。仅换种子对照不改冻结正文。图片输入按[输入参考图检查与记录复用](references/生成规范/Qwen-Image-2.1-提示词规范.md#24-输入参考图检查与记录复用)处理，默认不看图；缺少视觉信息先询问，新输出直接交用户审核。

@@ -72,7 +72,7 @@ class Canvas:
   return out
 
 def semantic(api):return {k:{'class_type':v['class_type'],'inputs':v['inputs']} for k,v in api.items()}
-def output_for(name):return 461 if name.startswith('Qwen') else 264 if '仅一采' in name else 214 if '仅二采' in name else 16
+def output_for(name):return 3 if name=='Nora-RTX-图片2倍超分' else 461 if name.startswith('Qwen') else 264 if '仅一采' in name else 214 if '仅二采' in name else 16
 
 def verify(directory):
  results=[]
