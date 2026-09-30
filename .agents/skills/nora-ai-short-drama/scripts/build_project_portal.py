@@ -27,11 +27,11 @@ INLINE_PATTERN = r"(\x60+)(.+?)\1|!?\[([^\]]*)\]\((<[^>]+>|[^)\n]+)\)|\*\*(.+?)\
 STATUS_COLORS = {
     **dict.fromkeys(("已完成", "已确认", "已定稿", "通过", "批准采用", "成功", "success"), "green"),
     **dict.fromkeys(("进行中", "运行中", "running"), "blue"),
-    **dict.fromkeys(("待确认", "待审核", "修改后再审", "状态不明", "unknown"), "orange"),
-    **dict.fromkeys(("失败", "不通过", "failed"), "red"),
+    **dict.fromkeys(("待确认", "待审核", "待核对", "修改后再审", "状态不明", "unknown"), "orange"),
+    **dict.fromkeys(("失败", "异常", "不通过", "failed"), "red"),
     **dict.fromkeys(("未开始", "排队中", "不采用", "未记录", "不适用", "待完成", "queued"), "gray"),
 }
-STATUS_FIELDS = {"状态", "当前状态", "确认状态", "执行状态", "真实执行状态", "技术检查结论",
+STATUS_FIELDS = {"状态", "当前状态", "确认状态", "执行状态", "真实执行状态", "技术检查结论", "文件核对结论",
                  "agent 技术审查结论", "agent 内容审查状态", "agent 初审结论", "agent初审结论", "agent 画面初审结论", "用户采用状态", "用户决定"}
 
 
@@ -47,7 +47,17 @@ def status_markup(value, source):
 
 
 def image_review_fields(chunk, source, legacy_state, user_state):
-    """Keep new review stages separate; legacy decisions remain historical facts."""
+    """Display record-based delivery; retain historical review formats unchanged."""
+    file_check = field(chunk, "文件核对结论")
+    vision = field(chunk, "看图调用状态")
+    if file_check != "未记录" or vision != "未记录":
+        return {"recordBasedReview": True, "twoStageReview": False,
+                "fileCheckHtml": status_markup(file_check, source),
+                "visionAuthorized": bool(re.match(r"^已按授权查看(?=$|[。；，\s])", vision)),
+                "visionScopeHtml": inline(field(chunk, "看图授权及限定范围"), source),
+                "visionFindingsHtml": inline(field(chunk, "授权查看的发现"), source),
+                "userHtml": status_markup(user_state, source),
+                "pending": bool(re.match(r"^(待确认|待审核)(?=$|[。；，\s])", user_state))}
     technical = field(chunk, "agent 技术审查结论")
     content = field(chunk, "agent 内容审查状态")
     findings = field(chunk, "agent 内容审查发现")

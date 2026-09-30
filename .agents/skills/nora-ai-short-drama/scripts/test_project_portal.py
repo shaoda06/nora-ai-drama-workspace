@@ -234,6 +234,39 @@ class PortalTests(unittest.TestCase):
         self.assertEqual(data["people"][0]["candidateStages"], ["成年", "少年"])
         self.assertEqual(len(data["people"][0]["candidates"]), 1)
 
+    def test_record_based_candidates_are_pending_without_visual_review(self):
+        records = [("people", self.person_fixture()[1]),
+                   ("props", self.prop_fixture()), ("scenes", self.scene_fixture()[1])]
+        for _, record in records:
+            record.write_text(re.sub(r"- agent 画面初审结论：[^\n]*",
+                "- 文件核对结论：通过\n- 看图调用状态：未调用（默认）\n"
+                "- 看图授权及限定范围：不适用\n- 授权查看的发现：不适用", record.read_text()))
+        before = {str(r): r.read_bytes() for _, r in records}
+        portal.build(self.root)
+        data = self.extract()
+        for group, record in records:
+            candidate = data[group][0]["candidates"][0]
+            self.assertTrue(candidate["recordBasedReview"])
+            self.assertTrue(candidate["pending"])
+            self.assertFalse(candidate["twoStageReview"])
+            self.assertFalse(candidate["visionAuthorized"])
+            self.assertNotIn("technicalHtml", candidate)
+            self.assertEqual(data[group][0]["pendingCount"], 1)
+            self.assertEqual(record.read_bytes(), before[str(record)])
+
+    def test_authorized_analysis_does_not_override_user_decision(self):
+        chunk = ("- 文件核对结论：通过\n- 看图调用状态：已按授权查看\n"
+                 "- 看图授权及限定范围：用户要求看左侧视格\n"
+                 "- 授权查看的发现：领口有偏差 <script>bad</script>\n")
+        pending = portal.image_review_fields(chunk, portal.POSITION, "未记录", "待确认")
+        self.assertTrue(pending["pending"])
+        self.assertTrue(pending["visionAuthorized"])
+        self.assertIn("左侧视格", pending["visionScopeHtml"])
+        self.assertNotIn("<script>", pending["visionFindingsHtml"])
+        for decision in ("批准采用", "不采用", "已结束，未采用"):
+            result = portal.image_review_fields(chunk, portal.POSITION, "未记录", decision)
+            self.assertFalse(result["pending"])
+
     def test_two_stage_review_content_deviation_does_not_block_user_review(self):
         records = [("people", self.person_fixture()[1]),
                    ("props", self.prop_fixture()), ("scenes", self.scene_fixture()[1])]

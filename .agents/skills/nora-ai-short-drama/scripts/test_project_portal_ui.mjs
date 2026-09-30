@@ -354,3 +354,15 @@ test('all folder and candidate lists share the same sibling accordion', () => {
   }
   toggle({target:{matches(){return false}}});
 });
+
+
+test('record-based image delivery shows user review without a visual gate', () => {
+  const fields = loadFunction('candidateReviewFields');
+  const asset = {recordBasedReview:true, fileCheckHtml:'通过', userHtml:'待确认', visionAuthorized:false};
+  const plain = JSON.parse(JSON.stringify(fields(asset)));
+  assert.deepEqual(plain, [['文件核对','通过'],['用户审核','待确认']]);
+  const authorized = fields({...asset, visionAuthorized:true, visionScopeHtml:'指定图的领口', visionFindingsHtml:'用户所问细节'});
+  assert.equal(authorized.length,4);
+  assert.equal(authorized[2][1],'指定图的领口');
+  assert.equal(authorized[3][1],'用户所问细节');
+});
