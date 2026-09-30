@@ -120,7 +120,7 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 ## Qwen Image 2.1 与 ComfyUI 参考规范
 
 - 编写、校对或修订图片提示词时，同时读取 `qwen-image-2-1-prompter` 和[Qwen提示词规范](references/生成规范/Qwen-Image-2.1-提示词规范.md)。按[接入与适配](references/生成规范/Qwen-Image-2.1-提示词规范.md#13-qwen-image-2-1-prompter接入与适配)选择T2I／Edit及API／Pipeline格式；按[中文规则](references/生成规范/Qwen-Image-2.1-提示词规范.md#14-统一中文编写审阅与提交)编写、审阅和提交。仅换种子对照不改冻结正文。图片输入按[输入参考图检查与记录复用](references/生成规范/Qwen-Image-2.1-提示词规范.md#24-输入参考图检查与记录复用)处理，默认不看图；缺少视觉信息先询问，新输出直接交用户审核。
-- 按[专用模板索引](references/生成规范/Qwen-Image-2.1-提示词规范.md#11-图片类型专用模板索引)选择七类图片、固定13种子情况的生成方式和输入关系，不临时增类。每种一份填写模板；生图模板不维护参考案例或待补位置，不把项目流水写入模板。
+- 按[专用模板索引](references/生成规范/Qwen-Image-2.1-提示词规范.md#11-图片类型专用模板索引)选择七类图片、固定子情况的生成方式和输入关系，不临时增类。每种一份填写模板；生图模板不维护参考案例或待补位置，不把项目流水写入模板。
 - 实际生成分别完整读取[文生图执行规范](references/生成规范/ComfyUI-文生图执行规范.md)或[图生图执行规范](references/生成规范/ComfyUI-图生图执行规范.md)，按任务配置参考图、参数及画布。用户另有明确指定时按其选择处理，连续性及验收仍按开发流程第8节。
 
 所有ComfyUI执行、查询与取回同时读取 `comfyui-api` 和[固定工具说明](references/comfyui-scripts/README.md)，复用 `references/comfyui-scripts/comfyui_client.py` 的upload／submit／status／download，不逐任务重写通信代码，不使用会重写审批状态的旧执行器，也不修改comfyui-api技能本身。工具故障或缺口先报告并集中修复；额外只读核对按相关技能处理，不静默另写临时替代工具。
