@@ -154,6 +154,18 @@ def markdown(text, source):
             out.append("<pre><code>" + html.escape("\n".join(chunk)) + "</code></pre>")
             i += 1
             continue
+        sample = re.fullmatch(r"\s*!\[([^\]]*)\]\(([^)]+)\)\s*", line) if source == POSITION else None
+        if sample:
+            href, key = safe_link(sample.group(2), source)
+            if key and not key.startswith("../") and Path(key).suffix.lower() in (".png", ".jpg", ".jpeg", ".webp"):
+                url = html.escape(href, quote=True)
+                label = html.escape(sample.group(1), quote=True)
+                out.append('<figure class="style-sample"><a href="' + url
+                           + '" target="_blank" rel="noopener"><img src="' + url
+                           + '" alt="' + label + '" loading="lazy"></a><figcaption>'
+                           + label + '</figcaption></figure>')
+                i += 1
+                continue
         if line.strip() == "——编制信息——":
             out.append('<details class="intro"><summary>编制信息</summary>'
                        + markdown("\n".join(lines[i + 1:]), source) + "</details>")

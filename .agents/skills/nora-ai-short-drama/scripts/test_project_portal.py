@@ -14,6 +14,22 @@ class PortalTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.addCleanup(self.temp.cleanup)
 
+    def test_position_style_sample_preserves_confirmation_and_relative_image(self):
+        text = ('### 画风与美术实现正文\n\n```text\n固定风格正文\n```\n\n'
+                '#### 已确认画风样例\n\n女性样例：已确认\n\n'
+                '![女性"样例](其他资料/过程稿/女 样例.png)\n\n'
+                '男性样例：待确认\n\n[男性候选](其他资料/过程稿/男.png)')
+        rendered = portal.markdown(text, portal.POSITION)
+        self.assertEqual(rendered.count('<img '), 1)
+        self.assertIn('src="00-%E9%A1%B9%E7%9B%AE%E5%AE%9A%E4%BD%8D/', rendered)
+        self.assertIn('%E5%A5%B3%20%E6%A0%B7%E4%BE%8B.png', rendered)
+        self.assertIn('alt="女性&quot;样例"', rendered)
+        self.assertIn('target="_blank" rel="noopener"', rendered)
+        self.assertIn('男性样例：待确认', rendered)
+        self.assertLess(rendered.index('固定风格正文'), rendered.index('<img '))
+        for target in ('https://example.com/a.png', '../../outside.png', 'javascript:alert(1)'):
+            self.assertNotIn('<img ', portal.markdown(f'![样例]({target})', portal.POSITION))
+
     def test_compilation_info_is_collapsed_without_hiding_story(self):
         source = "09-剧集制作/EP001/02-剧集剧本/EP001-C001-分场剧本.md"
         rendered = portal.markdown("剧情正文\n\n——编制信息——\n版本：v1.3\n"
