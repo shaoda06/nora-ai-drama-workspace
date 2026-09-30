@@ -30,6 +30,21 @@ class PortalTests(unittest.TestCase):
         for target in ('https://example.com/a.png', '../../outside.png', 'javascript:alert(1)'):
             self.assertNotIn('<img ', portal.markdown(f'![样例]({target})', portal.POSITION))
 
+    def test_style_sample_pair_groups_each_description_with_its_image(self):
+        text = ('女性样例v04：已确认；[批准依据](审阅004.md)\n\n![女性](女.png)\n\n'
+                '男性样例v05：已确认；[生成记录](生成005.md)\n\n![男性](男.png)\n\n'
+                '两张保留原图。')
+        rendered = portal.markdown(text, portal.POSITION)
+        self.assertEqual(rendered.count('class="style-samples"'), 1)
+        cards = re.findall(r'<div class="style-sample-card">(.*?)</div>', rendered, re.S)
+        self.assertEqual(len(cards), 2)
+        for card, gender in zip(cards, ('女性', '男性')):
+            self.assertIn(gender + '样例', card)
+            self.assertIn('alt="' + gender + '"', card)
+            self.assertIn('data-doc=', card)
+            self.assertEqual(card.count('<img '), 1)
+        self.assertTrue(rendered.endswith('</div><p>两张保留原图。</p>'))
+
     def test_compilation_info_is_collapsed_without_hiding_story(self):
         source = "09-剧集制作/EP001/02-剧集剧本/EP001-C001-分场剧本.md"
         rendered = portal.markdown("剧情正文\n\n——编制信息——\n版本：v1.3\n"

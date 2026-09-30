@@ -160,10 +160,15 @@ def markdown(text, source):
             if key and not key.startswith("../") and Path(key).suffix.lower() in (".png", ".jpg", ".jpeg", ".webp"):
                 url = html.escape(href, quote=True)
                 label = html.escape(sample.group(1), quote=True)
-                out.append('<figure class="style-sample"><a href="' + url
+                figure = ('<figure class="style-sample"><a href="' + url
                            + '" target="_blank" rel="noopener"><img src="' + url
                            + '" alt="' + label + '" loading="lazy"></a><figcaption>'
                            + label + '</figcaption></figure>')
+                if out and re.match(r"<p>(女性|男性)样例", out[-1]):
+                    caption = out.pop()
+                    out.append('<div class="style-sample-card">' + caption + figure + '</div>')
+                else:
+                    out.append(figure)
                 i += 1
                 continue
         if line.strip() == "——编制信息——":
@@ -222,7 +227,12 @@ def markdown(text, source):
             css = ' class="document-note"' if in_header and re.match(metadata_field, line) else ""
             out.append(f"<p{css}>" + field_markup(line, source) + "</p>")
         i += 1
-    return "\n".join(out)
+    rendered = "\n".join(out)
+    if source == POSITION:
+        rendered = re.sub(r'(?:<div class="style-sample-card">.*?</div>\n?)+',
+                          lambda match: '<div class="style-samples">' + match[0] + '</div>',
+                          rendered, flags=re.S)
+    return rendered
 
 
 def field(text, name):
