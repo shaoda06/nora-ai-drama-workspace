@@ -474,6 +474,35 @@ def build_data(project):
             return None
         return dict(link)
 
+    def directory_assets(record_key, number, kind, registered):
+        folder_key = Path(record_key).parent
+        folder = project / folder_key
+        known = {Path(a["media"]["key"]) for a in registered if a["media"]}
+        assets = []
+        if not folder.is_dir():
+            return assets
+        for path in sorted(folder.iterdir()):
+            key = path.relative_to(project).as_posix()
+            if path.name.startswith(".") or Path(key) in known:
+                continue
+            media = local_media({"key": key, "url": quote(key, safe="/-._~"), "name": path.name}, str(folder_key))
+            if not media:
+                continue
+            if kind == "prop":
+                match = re.fullmatch(re.escape(number) + r"-(.+)-道具参考图", path.stem)
+                state = match.group(1) if match else path.stem
+                image_type = "道具参考图"
+            else:
+                match = re.fullmatch(re.escape(number) + r"-(EP\d{3,}-C\d{3,})-场景参考图", path.stem)
+                state = match.group(1) if match else path.stem
+                image_type = "场次环境图" if match else ("平面图" if "平面" in path.stem else "场景参考图")
+            assets.append({kind: True, "type": image_type, "state": state, "media": media,
+                           "scope": "正式参考图目录中的已确定图片", "version": "未记录",
+                           "versionHtml": "未记录", "sourceHtml": "未记录", "recordUrl": None,
+                           "reviews": [], "approved": True, "directoryConfirmed": True,
+                           "statusHtml": status_markup("已确定（正式参考图目录）", record_key)})
+        return assets
+
     # Registry is identity authority. A loose image or old adoption summary is not one.
     for row in index_rows:
         number = row["人物编号"]
@@ -621,6 +650,7 @@ def build_data(project):
                                    "media": image, "reviews": reviews, "generation": name,
                                    "recordUrl": quote(record_key, safe="/-._~") + "#" + quote(name),
                                    **image_review_fields(chunk, record_key, agent_state, user_state)})
+        formal.extend(directory_assets(record_key, number, "prop", formal))
         prop_related = [{"name": group["name"], "files": [f for f in group["files"]
                           if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]}
                          for group in prop_groups]
@@ -718,18 +748,10 @@ def build_data(project):
                                    "reviews": reviews, "generation": name,
                                    "recordUrl": quote(record_key, safe="/-._~") + "#" + quote(name),
                                    **image_review_fields(chunk, record_key, agent_state, user_state)})
-        # Expose legacy originals without treating file presence as approval or a scene assignment.
-        known = {link["key"] for entry in registry for link in markdown_links(entry["正式文件"], record_key)}
+        # Formal directory files are confirmed assets; records enrich their metadata.
+        for asset in directory_assets(record_key, number, "scene", formal + auxiliary):
+            (formal if asset["type"] == "场次环境图" else auxiliary).append(asset)
         legacy = []
-        folder = project / Path(record_key).parent
-        if folder.is_dir():
-            for path in sorted(folder.iterdir()):
-                key = path.relative_to(project).as_posix()
-                if key in known:
-                    continue
-                media = local_media({"key": key, "url": quote(key, safe="/-._~"), "name": path.name}, str(Path(record_key).parent))
-                if media:
-                    legacy.append(media)
         related = [{"name": group["name"], "files": [f for f in group["files"]
                    if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]} for group in scene_groups]
         cover = next((a for a in formal if a["media"] and a["approved"]), None)

@@ -572,15 +572,37 @@ class PortalTests(unittest.TestCase):
         self.assertEqual(prop["cover"]["state"], "破损")
         self.assertFalse(prop["formal"][1]["approved"])
 
-    def test_prop_card_or_loose_file_does_not_approve_image(self):
+    def test_prop_formal_directory_displays_images_without_record(self):
         record = self.prop_fixture()
         record.unlink()
         portal.build(self.root)
         prop = self.extract()["props"][0]
-        self.assertIsNone(prop["cover"])
-        self.assertEqual(prop["formal"], [])
+        self.assertIsNotNone(prop["cover"])
+        self.assertEqual({a["state"] for a in prop["formal"]}, {"基础", "破损"})
+        self.assertTrue(all(a["directoryConfirmed"] for a in prop["formal"]))
         self.assertIn("status-green", prop["card"]["confirmationHtml"])
         self.assertFalse((self.root / "05-道具资料/讨论记录").exists())
+
+    def test_directory_discovery_merges_records_and_excludes_nested_files(self):
+        record = self.prop_fixture()
+        _, scene_record = self.scene_fixture()
+        before = record.read_bytes(), scene_record.read_bytes()
+        self.put("05-道具资料/PR001-盒子/参考图/PR001-开启-道具参考图.webp", "open")
+        self.put("05-道具资料/PR001-盒子/参考图/另一状态.JPG", "unknown name")
+        self.put("05-道具资料/PR001-盒子/参考图/.隐藏.png", "hidden")
+        self.put("05-道具资料/PR001-盒子/参考图/历史版本/旧图.png", "nested")
+        self.put("04-场景资料/SC001-药庐/参考图/SC001-EP001-C002-场景参考图.jpg", "second scene")
+        self.put("04-场景资料/SC001-药庐/参考图/SC001-平面布局.png", "plan")
+        portal.build(self.root)
+        data = self.extract()
+        prop, scene = data["props"][0], data["scenes"][0]
+        self.assertEqual({a["state"] for a in prop["formal"]}, {"破损", "基础", "开启", "另一状态"})
+        self.assertEqual(next(a for a in prop["formal"] if a["state"] == "破损")["version"], "v02")
+        self.assertEqual(len(scene["formal"]), 2)
+        self.assertEqual(len(scene["auxiliary"]), 2)
+        self.assertEqual(scene["formal"][1]["state"], "EP001-C002")
+        self.assertEqual(len({a["media"]["key"] for a in prop["formal"]}), 4)
+        self.assertEqual(before, (record.read_bytes(), scene_record.read_bytes()))
 
     def test_prop_template_enumeration_is_not_approval(self):
         self.prop_fixture("批准采用／修改后再审／不采用")
@@ -646,16 +668,17 @@ class PortalTests(unittest.TestCase):
         self.assertIsNone(scene["cover"])
         self.assertIn("status-green", scene["card"]["confirmationHtml"])
 
-    def test_scene_legacy_file_is_accessible_without_inferred_approval(self):
+    def test_scene_formal_directory_displays_images_without_record(self):
         self.scene_fixture()
         self.put("04-场景资料/SC001-药庐/参考图/旧环境.png", "old")
         self.put("04-场景资料/SC001-药庐/参考图/生成记录.md", "# 旧记录\n用户曾批准，范围见旧记录。")
         portal.build(self.root)
         scene = self.extract()["scenes"][0]
-        self.assertIsNone(scene["cover"])
-        self.assertEqual(scene["formal"], [])
-        self.assertEqual(len(scene["legacy"]), 3)
-        self.assertNotIn("approved", scene["legacy"][0])
+        self.assertEqual(scene["cover"]["state"], "EP001-C001")
+        self.assertEqual(len(scene["formal"]), 1)
+        self.assertEqual(len(scene["auxiliary"]), 2)
+        self.assertTrue(all(a["directoryConfirmed"] for a in scene["formal"] + scene["auxiliary"]))
+        self.assertEqual(scene["legacy"], [])
 
     def test_scene_records_isolated_and_external_images_not_loaded(self):
         self.scene_fixture()
