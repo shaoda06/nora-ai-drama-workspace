@@ -661,6 +661,34 @@ class PortalTests(unittest.TestCase):
         self.assertEqual(scene["pendingCount"], 1)
         self.assertEqual(before, (card.read_bytes(), record.read_bytes()))
 
+    def test_scene_multiple_views_coexist_with_legacy_and_directory_images(self):
+        _, record = self.scene_fixture()
+        folder = "04-场景资料/SC001-药庐/参考图/"
+        first = "SC001-EP001-C001-V001-场景参考图.png"
+        second = "SC001-EP001-C001-V002-场景参考图.webp"
+        self.put(folder + first, "view one")
+        self.put(folder + second, "view two")
+        text = record.read_text(encoding="utf-8")
+        text = text.replace("| 正式文件 | 最初制作场次 |", "| 正式文件 | 视图编号与名称 | 最初制作场次 |")
+        text = text.replace("| --- | --- | --- | --- | --- |", "| --- | --- | --- | --- | --- | --- |")
+        text = text.replace("| 旧图 |", "| 无 | 旧图 |").replace("| EP001-C001 |", "| 无 | EP001-C001 |")
+        text = text.replace("## 2. 逐次生成记录", (
+            f"| [视图]({first}) | V001 门口看向药柜 | EP001-C001 | 晨 | v02 | [审阅](../../审阅记录/SC001-审阅-001.md) |\n\n"
+            "## 2. 逐次生成记录"))
+        record.write_text(text, encoding="utf-8")
+        before = record.read_bytes()
+        portal.build(self.root)
+        scene = self.extract()["scenes"][0]
+        self.assertEqual(len(scene["formal"]), 3)
+        self.assertEqual(len(scene["auxiliary"]), 1)
+        views = {Path(a["media"]["key"]).name: a for a in scene["formal"]}
+        self.assertIn("SC001-EP001-C001-场景参考图.png", views)
+        self.assertIn("V001 门口看向药柜", views[first]["state"])
+        self.assertTrue(views[first]["approved"])
+        self.assertEqual(views[second]["state"], "EP001-C001-V002")
+        self.assertFalse(views[second]["approved"])
+        self.assertEqual(record.read_bytes(), before)
+
     def test_scene_confirmed_card_does_not_approve_cover(self):
         self.scene_fixture("修改后再审。")
         portal.build(self.root)

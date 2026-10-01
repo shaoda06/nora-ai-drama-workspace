@@ -514,7 +514,7 @@ def build_data(project):
                 state = match.group(1) if match else path.stem
                 image_type = "道具参考图"
             else:
-                match = re.fullmatch(re.escape(number) + r"-(EP\d{3,}-C\d{3,})-场景参考图", path.stem)
+                match = re.fullmatch(re.escape(number) + r"-(EP\d{3,}-C\d{3,}(?:-V\d{3,})?)-场景参考图", path.stem)
                 state = match.group(1) if match else path.stem
                 image_type = "场次环境图" if match else ("平面图" if "平面" in path.stem else "场景参考图")
             assets.append({kind: True, "type": image_type, "state": state, "media": media,
@@ -719,11 +719,11 @@ def build_data(project):
             approved = bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
             scope = entry["场景状态与适用条件"]
             # Only an explicit scene-origin filename qualifies as an episode environment.
-            is_environment = bool(links and re.fullmatch(re.escape(number) + r"-EP\d{3,}-C\d{3,}-场景参考图\.png", Path(links[0]["key"]).name))
+            is_environment = bool(links and re.fullmatch(re.escape(number) + r"-EP\d{3,}-C\d{3,}(?:-V\d{3,})?-场景参考图\.(?:png|jpg|jpeg|webp)", Path(links[0]["key"]).name))
             if re.search(r"仅.*(?:空间|布局|结构)|不是实际|仅供.*结构|结构辅助", scope):
                 is_environment = False
             asset = {"scene": True, "type": "场次环境图" if is_environment else "辅助／既有参考图",
-                     "state": entry["最初制作场次"], "scope": scope, "media": media,
+                     "state": entry["最初制作场次"] + (" · " + entry["视图编号与名称"] if entry.get("视图编号与名称") else ""), "scope": scope, "media": media,
                      "versionHtml": inline(entry["采用的候选版本"], record_key),
                            "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
                      "sourceHtml": inline(entry.get("来源参考图及版本", "未记录"), record_key),
