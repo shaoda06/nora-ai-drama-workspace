@@ -474,6 +474,27 @@ def build_data(project):
             return None
         return dict(link)
 
+    def asset_review_metadata(reviews):
+        purposes, applicability, decisions = [], [], []
+        for review in reviews:
+            text = texts.get(review["key"], "")
+            confirm = re.search(r"^## 4\. 用户确认\s*\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+            section = confirm.group(1) if confirm else ""
+            decision = field(section, "结论")
+            if decision == "未记录":
+                decision = field(section, "决定")
+            decisions.append(decision)
+            followup = re.search(r"^## 5\. 采用与后续影响\s*\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+            section = followup.group(1) if followup else ""
+            purposes.append(field(section, "留存用途"))
+            applicability.append(field(section, "当前制作适用性"))
+        return {
+            "retentionPurpose": "；".join(purposes) or "未记录",
+            "applicability": "；".join(applicability) or "待核对（未记录）",
+            "reviewRecognized": bool(decisions) and all(re.match(r"^(待确认|待审核|批准采用|修改后再审|不采用|不通过)(?:$|[。；，\s])", d) for d in decisions),
+            "coverApplicable": not any(re.match(r"^(不适用|待核对)(?:$|[。；，：\s])", a) for a in applicability),
+        }
+
     def directory_assets(record_key, number, kind, registered):
         folder_key = Path(record_key).parent
         folder = project / folder_key
@@ -497,10 +518,12 @@ def build_data(project):
                 state = match.group(1) if match else path.stem
                 image_type = "场次环境图" if match else ("平面图" if "平面" in path.stem else "场景参考图")
             assets.append({kind: True, "type": image_type, "state": state, "media": media,
-                           "scope": "正式参考图目录中的已确定图片", "version": "未记录",
+                           "scope": "目录收录；实际适用范围未记录", "version": "未记录",
                            "versionHtml": "未记录", "sourceHtml": "未记录", "recordUrl": None,
-                           "reviews": [], "approved": True, "directoryConfirmed": True,
-                           "statusHtml": status_markup("已确定（正式参考图目录）", record_key)})
+                           "reviews": [], "approved": False, "directoryDiscovered": True,
+                           "retentionPurpose": "未记录", "applicability": "待核对（未记录）",
+                           "reviewRecognized": False, "coverApplicable": False,
+                           "statusHtml": status_markup("审核结果未记录", record_key)})
         return assets
 
     # Registry is identity authority. A loose image or old adoption summary is not one.
@@ -538,7 +561,7 @@ def build_data(project):
                 review_text = texts.get(review["key"], "")
                 section = re.search(r"^## 4\. 用户确认\s*\n(.*?)(?=^## |\Z)", review_text, re.M | re.S)
                 decisions.append(field(section.group(1) if section else "", "结论"))
-            approved = bool(decisions) and all(d.startswith("批准采用") for d in decisions)
+            approved = bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
             stage = ""
             if links:
                 parent = Path(links[0]["key"]).parent
@@ -550,7 +573,7 @@ def build_data(project):
                            "versionHtml": inline(entry["采用的候选版本"], record_key),
                            "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
                            "scope": entry.get("适用范围", "未记录"), "media": media,
-                           "reviews": reviews, "approved": approved,
+                           "reviews": reviews, "approved": approved, **asset_review_metadata(reviews),
                            "statusHtml": "<br>".join(status_markup(d, record_key) for d in decisions)
                            or status_markup("未记录", record_key)})
         for match in re.finditer(r"^### (生成记录-\d+)\s*\n(.*?)(?=^### |\Z)", record, re.M | re.S):
@@ -577,8 +600,8 @@ def build_data(project):
                           if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]}
                          for group in people_groups]
         # The current registry determines which images are eligible as covers.
-        cover = next((a for a in formal if a["media"] and a["approved"] and a["type"] == "人物上半身正面肖像图"),
-                     next((a for a in formal if a["media"] and a["approved"] and a["type"] == "角色多视角参考图"), None))
+        cover = next((a for a in formal if a["media"] and a["approved"] and a["coverApplicable"] and a["type"] == "人物上半身正面肖像图"),
+                     next((a for a in formal if a["media"] and a["approved"] and a["coverApplicable"] and a["type"] == "角色多视角参考图"), None))
         people.append({"id": number, "name": row["姓名"], "role": row["人物定位"],
                        "stages": [name for name in stage_names if any(a["stage"] == name for a in formal)],
                        "candidateStages": stage_names if len(stage_names) > 1 else [],
@@ -627,7 +650,7 @@ def build_data(project):
                            "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
                            "scope": entry.get("适用范围", "未记录"), "media": media,
                            "sourceHtml": inline(entry.get("来源参考图及版本", "未记录"), record_key),
-                           "reviews": reviews, "approved": approved,
+                           "reviews": reviews, "approved": approved, **asset_review_metadata(reviews),
                            "statusHtml": "<br>".join(status_markup(d, record_key) for d in decisions)
                            or status_markup("未记录", record_key)})
         for match in re.finditer(r"^### (生成记录-\d+)\s*\n(.*?)(?=^### |\Z)", record, re.M | re.S):
@@ -655,8 +678,8 @@ def build_data(project):
                           if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]}
                          for group in prop_groups]
         # The current registry determines which images are eligible as covers.
-        cover = next((a for a in formal if a["media"] and a["approved"] and a["state"] == "基础"),
-                     next((a for a in formal if a["media"] and a["approved"]), None))
+        cover = next((a for a in formal if a["media"] and a["approved"] and a["coverApplicable"] and a["state"] == "基础"),
+                     next((a for a in formal if a["media"] and a["approved"] and a["coverApplicable"]), None))
         props.append({"id": number, "name": row["名称"], "role": row["道具类别"],
                        "card": card, "cardKey": card_key, "formal": formal, "candidates": candidates,
                        "cover": cover, "recordKey": record_key if record else None,
@@ -693,7 +716,7 @@ def build_data(project):
                 review_text = texts.get(review["key"], "")
                 confirm = re.search(r"^## 4\. 用户确认\s*\n(.*?)(?=^## |\Z)", review_text, re.M | re.S)
                 decisions.append(field(confirm.group(1) if confirm else "", "结论"))
-            approved = bool(decisions) and all(d.startswith("批准采用") for d in decisions)
+            approved = bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
             scope = entry["场景状态与适用条件"]
             # Only an explicit scene-origin filename qualifies as an episode environment.
             is_environment = bool(links and re.fullmatch(re.escape(number) + r"-EP\d{3,}-C\d{3,}-场景参考图\.png", Path(links[0]["key"]).name))
@@ -704,7 +727,7 @@ def build_data(project):
                      "versionHtml": inline(entry["采用的候选版本"], record_key),
                            "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
                      "sourceHtml": inline(entry.get("来源参考图及版本", "未记录"), record_key),
-                     "reviews": reviews, "approved": approved,
+                     "reviews": reviews, "approved": approved, **asset_review_metadata(reviews),
                      "statusHtml": "<br>".join(status_markup(d, record_key) for d in decisions) or status_markup("未记录", record_key)}
             (formal if is_environment else auxiliary).append(asset)
         for match in re.finditer(r"^### (生成记录-\d+)\s*\n(.*?)(?=^### |\Z)", record, re.M | re.S):
@@ -754,7 +777,7 @@ def build_data(project):
         legacy = []
         related = [{"name": group["name"], "files": [f for f in group["files"]
                    if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]} for group in scene_groups]
-        cover = next((a for a in formal if a["media"] and a["approved"]), None)
+        cover = next((a for a in formal if a["media"] and a["approved"] and a["coverApplicable"]), None)
         scenes.append({"id": number, "name": row["名称"], "role": row["场景类型"], "cardKey": card_key,
                        "card": card, "formal": formal, "auxiliary": auxiliary, "legacy": legacy,
                        "candidates": candidates, "cover": cover, "recordKey": record_key if record else None,

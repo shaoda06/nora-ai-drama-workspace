@@ -577,9 +577,9 @@ class PortalTests(unittest.TestCase):
         record.unlink()
         portal.build(self.root)
         prop = self.extract()["props"][0]
-        self.assertIsNotNone(prop["cover"])
+        self.assertIsNone(prop["cover"])
         self.assertEqual({a["state"] for a in prop["formal"]}, {"基础", "破损"})
-        self.assertTrue(all(a["directoryConfirmed"] for a in prop["formal"]))
+        self.assertTrue(all(a["directoryDiscovered"] for a in prop["formal"]))
         self.assertIn("status-green", prop["card"]["confirmationHtml"])
         self.assertFalse((self.root / "05-道具资料/讨论记录").exists())
 
@@ -674,11 +674,39 @@ class PortalTests(unittest.TestCase):
         self.put("04-场景资料/SC001-药庐/参考图/生成记录.md", "# 旧记录\n用户曾批准，范围见旧记录。")
         portal.build(self.root)
         scene = self.extract()["scenes"][0]
-        self.assertEqual(scene["cover"]["state"], "EP001-C001")
+        self.assertIsNone(scene["cover"])
         self.assertEqual(len(scene["formal"]), 1)
         self.assertEqual(len(scene["auxiliary"]), 2)
-        self.assertTrue(all(a["directoryConfirmed"] for a in scene["formal"] + scene["auxiliary"]))
+        self.assertTrue(all(a["directoryDiscovered"] for a in scene["formal"] + scene["auxiliary"]))
         self.assertEqual(scene["legacy"], [])
+
+    def test_review_storage_and_applicability_are_independent(self):
+        self.scene_fixture("不通过。")
+        review = self.root / "04-场景资料/审阅记录/SC001-审阅-001.md"
+        review.write_text(review.read_text("utf-8") + "\n## 5. 采用与后续影响\n- 留存用途：历史生成记录\n- 当前制作适用性：不适用；旧布局\n", encoding="utf-8")
+        before = review.read_bytes()
+        portal.build(self.root)
+        scene = self.extract()["scenes"][0]
+        asset = scene["formal"][0]
+        self.assertFalse(asset["approved"])
+        self.assertTrue(asset["reviewRecognized"])
+        self.assertEqual(asset["retentionPurpose"], "历史生成记录")
+        self.assertIn("旧布局", asset["applicability"])
+        self.assertIsNone(scene["cover"])
+        self.assertEqual(before, review.read_bytes())
+        review.write_text(review.read_text("utf-8").replace("不通过。", "批准采用。"), encoding="utf-8")
+        portal.build(self.root)
+        scene = self.extract()["scenes"][0]
+        self.assertTrue(scene["formal"][0]["approved"])
+        self.assertIsNone(scene["cover"])
+
+    def test_legacy_save_decision_is_not_quality_rejection_or_approval(self):
+        self.scene_fixture("批准保存v03，作为比较参考")
+        portal.build(self.root)
+        asset = self.extract()["scenes"][0]["formal"][0]
+        self.assertFalse(asset["approved"])
+        self.assertFalse(asset["reviewRecognized"])
+        self.assertIn("批准保存v03", asset["statusHtml"])
 
     def test_scene_records_isolated_and_external_images_not_loaded(self):
         self.scene_fixture()
