@@ -398,3 +398,19 @@ test('pending entry selects the latest pending item without changing record orde
   assert.deepEqual(person.candidates.map(asset=>asset.id),[1,2,3]);
   assert.equal(pendingTarget({candidates:[adopted]}),undefined);
 });
+
+test('prop three-view category precedes other states regardless of input order', () => {
+  const groups=loadFunction('propAssetGroups');
+  const open={state:'开启',media:{key:'参考图/PR004-开启-道具参考图.png'}};
+  const base={state:'基础',media:{key:'参考图/PR004-基础-道具参考图.png'}};
+  const explicit={state:'破损',media:{key:'参考图/PR004-破损-三视图.webp'}};
+  const unknown={state:'其他',media:{key:'参考图/细节.jpg'}};
+  const input=[open,unknown,base,explicit];
+  const result=groups(input);
+  assert.equal(result[0].label,'道具三视图');
+  assert.deepEqual(Array.from(result[0].assets),[base,explicit]);
+  assert.deepEqual(Array.from(result[1].assets),[open,unknown]);
+  assert.deepEqual(input,[open,unknown,base,explicit]);
+  assert.equal(groups([open])[0].label,'其他状态参考图');
+  assert.equal(groups([]).length,0);
+});
