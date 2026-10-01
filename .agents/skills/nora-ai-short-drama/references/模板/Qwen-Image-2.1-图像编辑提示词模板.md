@@ -56,5 +56,5 @@
 仅示意字段；实际正文维护在[角色六视图专用模板](Qwen-Image-2.1-角色六视图提示词模板.md)。
 
 ```json
-{"rewritten_prompt":"{{专用模板填写完成的正文，明确<image1>人物与<image2>服装用途}}","wh_ratio":"53:79","ratio_follow":""}
+{"rewritten_prompt":"{{专用模板填写完成的正文，明确<image1>人物与<image2>服装用途}}","wh_ratio":"2:3","ratio_follow":""}
 ```
