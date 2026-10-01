@@ -285,6 +285,23 @@ class PortalTests(unittest.TestCase):
             self.assertEqual(data[group][0]["pendingCount"], 1)
             self.assertEqual(record.read_bytes(), before[str(record)])
 
+    def test_pending_label_preserves_explicit_review_state_across_record_formats(self):
+        for chunk in ("- 文件核对结论：通过", "- agent 技术审查结论：不通过", ""):
+            for decision, expected in (
+                ("待确认；测试候选，正式v05有效", "待确认"),
+                ("待审核。用户尚未查看", "待审核"),
+                ("已采用；历史曾待确认", ""),
+                ("已批准，待超分", ""),
+                ("历史候选已结束，未采用，不再待审", ""),
+                ("修改后再审", ""),
+            ):
+                with self.subTest(chunk=chunk, decision=decision):
+                    result = portal.image_review_fields(chunk, portal.POSITION, "未记录", decision)
+                    self.assertEqual(result["pendingLabel"], expected)
+                    self.assertEqual(result["pending"], bool(expected))
+                    self.assertIn(decision.split("；")[0].split("。")[0],
+                                  result["userHtml"])
+
     def test_authorized_analysis_does_not_override_user_decision(self):
         chunk = ("- 文件核对结论：通过\n- 看图调用状态：已按授权查看\n"
                  "- 看图授权及限定范围：用户要求看左侧视格\n"

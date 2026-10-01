@@ -366,3 +366,35 @@ test('record-based image delivery shows user review without a visual gate', () =
   assert.equal(authorized[2][1],'指定图的领口');
   assert.equal(authorized[3][1],'用户所问细节');
 });
+
+const pendingSummary = loadFunction('candidatePendingSummary');
+const pendingTarget = loadFunction('personPendingTarget');
+
+test('candidate summaries split pending labels and omit zero or closed entries', () => {
+  const assets=[
+    {pending:true,pendingLabel:'待确认'},
+    {pending:true,pendingLabel:'待审核'},
+    {pending:true,pendingLabel:'待确认'},
+    {pending:false,pendingLabel:'',userHtml:'已采用；历史待确认'},
+  ];
+  assert.equal(pendingSummary(assets),'留存待确认：2 张 · 留存待审核：1 张');
+  assert.equal(pendingSummary(assets.slice(3)),'');
+  assert.equal(pendingSummary([]),'');
+  assert.equal(pendingSummary([assets[1]]),'留存待审核：1 张');
+});
+
+test('pending entry selects the latest pending item without changing record order', () => {
+  const old={id:1,state:'少年',type:'服装参考图',pending:true,pendingLabel:'待确认'};
+  const adopted={id:2,state:'成年',type:'角色多视角参考图',pending:false,pendingLabel:''};
+  const target={id:3,state:'成年',type:'角色多视角参考图',pending:true,pendingLabel:'待审核'};
+  const person={candidateStages:['少年','成年'],candidates:[old,adopted,target]};
+  assert.equal(pendingTarget(person),target);
+  const stages=candidateStages(person);
+  const stage=stages.find(group=>group.assets.includes(pendingTarget(person)));
+  assert.equal(stage.label,'成年');
+  const groups=candidateGroups(stage.assets);
+  assert.equal(groups.find(group=>group.assets.includes(target)).type,'角色多视角参考图');
+  assert.equal(pendingSummary(stage.assets),'留存待审核：1 张');
+  assert.deepEqual(person.candidates.map(asset=>asset.id),[1,2,3]);
+  assert.equal(pendingTarget({candidates:[adopted]}),undefined);
+});

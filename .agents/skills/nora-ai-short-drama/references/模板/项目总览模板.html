@@ -76,6 +76,8 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 .prose .document-notes>li{margin:4px 0}
 .prose .document-note .status-badge{font-size:12px}
 .style-samples{display:flex;flex-wrap:wrap;align-items:flex-start;gap:24px}.style-sample-card{flex:0 1 360px;min-width:0;max-width:100%}.prose .style-sample{display:inline-block;vertical-align:top;width:360px;max-width:100%;margin:12px 0 20px}.style-sample-card .style-sample{display:block;width:100%}.style-sample img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:4px}.style-sample figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+
+button.person-pending{width:100%;text-align:left;border-top:0;border-right:0;border-bottom:0}button.person-pending:hover{text-decoration:underline}.candidate-group>summary .status-badge{margin-left:10px}.candidate-pending{border-color:#b87723}.candidate-pending .asset-copy{scroll-margin-top:var(--phase-jump-offset,96px)}
 </style>
 </head>
 <body>
@@ -423,7 +425,16 @@ function personCandidateGroups(assets){
   return [...order,...Array.from(groups.keys()).filter(type=>!order.includes(type))]
     .filter(type=>groups.has(type)).map(type=>({type,assets:groups.get(type)}));
 }
-function renderPersonCandidates(person){
+function candidatePendingSummary(assets){
+  return ["待确认","待审核"].map(label=>{
+    const count=assets.filter(asset=>asset.pending&&asset.pendingLabel===label).length;
+    return count?"留存"+label+"："+count+" 张":"";
+  }).filter(Boolean).join(" · ");
+}
+function personPendingTarget(person){
+  return person.candidates.slice().reverse().find(asset=>asset.pending);
+}
+function renderPersonCandidates(person,pendingTarget=null){
   const tabs=el("person-candidate-stage-tabs"),container=el("person-candidate-groups");
   tabs.replaceChildren();container.replaceChildren();
   const stages=personCandidateStages(person);tabs.hidden=!stages.length;
@@ -432,14 +443,27 @@ function renderPersonCandidates(person){
     if(!assets.length)container.append(textNode("p","暂无已关联生成记录的候选图片；其余文件可从相关记录查看。","empty"));
     personCandidateGroups(assets).forEach(group=>{
       const details=document.createElement("details");details.className="candidate-group";
-      details.append(textNode("summary",group.type+"（"+group.assets.length+" 张）"));
+      const summary=textNode("summary",group.type+"（"+group.assets.length+" 张）");
+      const pending=candidatePendingSummary(group.assets);
+      if(pending)summary.append(textNode("span",pending,"status-badge status-orange"));
+      details.append(summary);
       let loaded=false;
-      details.addEventListener("toggle",()=>{
+      const load=()=>{
         if(!details.open||loaded)return;loaded=true;
         const grid=document.createElement("div");grid.className="asset-grid";
-        group.assets.slice().reverse().forEach(a=>grid.append(assetCard(a,person,true)));details.append(grid);
-      });
+        group.assets.slice().reverse().forEach(asset=>{
+          const card=assetCard(asset,person,true);
+          if(asset.pending)card.classList.add("candidate-pending");
+          grid.append(card);
+          if(asset===pendingTarget){
+            const target=card.querySelector(".asset-copy");target.tabIndex=-1;
+            requestAnimationFrame(()=>{target.scrollIntoView({block:"start"});target.focus({preventScroll:true})});
+          }
+        });details.append(grid);
+      };
+      details.addEventListener("toggle",load);
       container.append(details);
+      if(group.assets.includes(pendingTarget)){details.open=true;load()}
     });
   };
   if(!stages.length){show(person.candidates);return;}
@@ -448,16 +472,17 @@ function renderPersonCandidates(person){
     show(stages[index].assets);
   };
   stages.forEach((stage,index)=>{
-    const button=textNode("button",stage.label);button.type="button";
+    const pending=candidatePendingSummary(stage.assets);
+    const button=textNode("button",stage.label+(pending?" · "+pending:""));button.type="button";
     button.setAttribute("aria-controls","person-candidate-groups");button.addEventListener("click",()=>select(index));tabs.append(button);
   });
-  select(0);
+  select(pendingTarget?stages.findIndex(stage=>stage.assets.includes(pendingTarget)):0);
 }
-function openPerson(person,opener){peopleScroll=window.scrollY;personOpener=opener;el("people-list").hidden=true;el("person-detail").hidden=false;el("person-title").textContent=person.id+" · "+person.name;el("person-subtitle").textContent=person.role;renderLongDocument("person",person.card,"尚未形成正式人物资料卡，不以草稿代替。");renderPersonAssets(person);renderPersonCandidates(person);el("person-record-link").replaceChildren();if(person.recordKey)el("person-record-link").append(docLink(person.recordKey,"打开完整生成记录"));else el("person-record-link").append(textNode("p","尚无生成记录。","empty"));el("person-record-folders").replaceChildren();renderFolders(el("person-record-folders"),person.groups);el("person-tabs").replaceChildren();const sections=[["person-document","人物资料卡"],["person-assets","正式参考图"],["person-candidates","候选与审阅"],["person-records","相关记录"]];const select=id=>{sections.forEach(([key])=>el(key).hidden=key!==id);Array.from(el("person-tabs").children).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.section===id)))};sections.forEach(([id,label])=>{const b=textNode("button",label);b.type="button";b.dataset.section=id;b.setAttribute("aria-controls",id);b.addEventListener("click",()=>select(id));el("person-tabs").append(b)});select("person-document");updateBackTop();el("person-title").scrollIntoView({block:"start"});el("person-title").focus({preventScroll:true});updateBackTop()}
+function openPerson(person,opener,pendingTarget=null){peopleScroll=window.scrollY;personOpener=opener;el("people-list").hidden=true;el("person-detail").hidden=false;el("person-title").textContent=person.id+" · "+person.name;el("person-subtitle").textContent=person.role;renderLongDocument("person",person.card,"尚未形成正式人物资料卡，不以草稿代替。");renderPersonAssets(person);renderPersonCandidates(person,pendingTarget);el("person-record-link").replaceChildren();if(person.recordKey)el("person-record-link").append(docLink(person.recordKey,"打开完整生成记录"));else el("person-record-link").append(textNode("p","尚无生成记录。","empty"));el("person-record-folders").replaceChildren();renderFolders(el("person-record-folders"),person.groups);el("person-tabs").replaceChildren();const sections=[["person-document","人物资料卡"],["person-assets","正式参考图"],["person-candidates","候选与审阅"],["person-records","相关记录"]];const select=id=>{sections.forEach(([key])=>el(key).hidden=key!==id);Array.from(el("person-tabs").children).forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.section===id)))};sections.forEach(([id,label])=>{const b=textNode("button",label);b.type="button";b.dataset.section=id;b.setAttribute("aria-controls",id);b.addEventListener("click",()=>select(id));el("person-tabs").append(b)});select(pendingTarget?"person-candidates":"person-document");updateBackTop();el("person-title").scrollIntoView({block:"start"});el("person-title").focus({preventScroll:true});updateBackTop()}
 function returnToPeople(){el("person-detail").hidden=true;el("people-list").hidden=false;personOpener?.focus({preventScroll:true});window.scrollTo({top:peopleScroll,behavior:"instant"});updateBackTop()}
 function matchingPeople(query){const q=query.trim().toLocaleLowerCase();return data.people.filter(p=>(p.id+" "+p.name).toLocaleLowerCase().includes(q))}
 function personEntryButton(person,label,className){const button=textNode("button",label,className);button.type="button";button.setAttribute("aria-label","查看人物资料："+person.id+" "+person.name);button.addEventListener("click",()=>openPerson(person,button));return button}
-function renderPeople(){const people=matchingPeople(el("people-search").value);el("people-count").textContent=people.length+" / "+data.people.length+" 位人物";el("people-grid").replaceChildren();if(!people.length)el("people-grid").append(textNode("p","没有匹配人物。","empty"));people.forEach(person=>{const card=document.createElement("article");card.className="person-card";const cover=personEntryButton(person,"","person-cover");if(person.cover){const img=document.createElement("img");img.src=person.cover.media.url;img.alt=person.name+" · "+person.cover.state+"（已批准封面）";img.loading="lazy";img.addEventListener("error",()=>cover.replaceChildren(textNode("span","图片无法显示","empty")));cover.append(img)}else cover.append(textNode("span",person.id,"person-placeholder"));card.append(cover);const info=document.createElement("div");info.className="person-info";info.append(textNode("span",person.id,"person-id"),textNode("h3",person.name),textNode("p",person.role,"person-role"));info.append(textNode("p",person.cover?"封面："+person.cover.state:"暂无可用的已批准封面","person-cover-label"));const status=textNode("div","","person-stats person-status-row");status.append(textNode("span","资料卡：","person-status-label"));const badge=document.createElement("span");badge.innerHTML=person.card.confirmationHtml.match(/^<span\b[^>]*>[\s\S]*?<\/span>/)?.[0]||person.card.confirmationHtml;status.title=person.card.meta["确认状态"];status.append(badge);info.append(status);info.append(textNode("p","正式表登记 "+person.formal.length+" 张 · 留存候选 "+person.candidates.length+" 张","person-stats"));if(person.pendingCount)info.append(textNode("p","留存条目仍标待确认／待审核："+person.pendingCount+" 张","person-pending status-orange"));const open=personEntryButton(person,"查看人物资料 →","outline");info.append(open);card.append(info);el("people-grid").append(card)})}
+function renderPeople(){const people=matchingPeople(el("people-search").value);el("people-count").textContent=people.length+" / "+data.people.length+" 位人物";el("people-grid").replaceChildren();if(!people.length)el("people-grid").append(textNode("p","没有匹配人物。","empty"));people.forEach(person=>{const card=document.createElement("article");card.className="person-card";const cover=personEntryButton(person,"","person-cover");if(person.cover){const img=document.createElement("img");img.src=person.cover.media.url;img.alt=person.name+" · "+person.cover.state+"（已批准封面）";img.loading="lazy";img.addEventListener("error",()=>cover.replaceChildren(textNode("span","图片无法显示","empty")));cover.append(img)}else cover.append(textNode("span",person.id,"person-placeholder"));card.append(cover);const info=document.createElement("div");info.className="person-info";info.append(textNode("span",person.id,"person-id"),textNode("h3",person.name),textNode("p",person.role,"person-role"));info.append(textNode("p",person.cover?"封面："+person.cover.state:"暂无可用的已批准封面","person-cover-label"));const status=textNode("div","","person-stats person-status-row");status.append(textNode("span","资料卡：","person-status-label"));const badge=document.createElement("span");badge.innerHTML=person.card.confirmationHtml.match(/^<span\b[^>]*>[\s\S]*?<\/span>/)?.[0]||person.card.confirmationHtml;status.title=person.card.meta["确认状态"];status.append(badge);info.append(status);info.append(textNode("p","正式表登记 "+person.formal.length+" 张 · 留存候选 "+person.candidates.length+" 张","person-stats"));if(person.pendingCount){const pending=textNode("button","留存条目仍标待确认／待审核："+person.pendingCount+" 张 · 点击定位 →","person-pending status-orange");pending.type="button";pending.setAttribute("aria-label","查看"+person.name+"的留存待审候选，"+person.pendingCount+"张");pending.addEventListener("click",()=>openPerson(person,pending,personPendingTarget(person)));info.append(pending)}const open=personEntryButton(person,"查看人物资料 →","outline");info.append(open);card.append(info);el("people-grid").append(card)})}
 el("people-search").addEventListener("input",renderPeople);
 if(data.peopleIndex){el("people-index").href=data.documents[data.peopleIndex].url;el("people-index").dataset.doc=data.peopleIndex}else el("people-index").hidden=true;
 renderPeople();renderFolders(el("people-folders"),data.peopleGroups);

@@ -48,6 +48,8 @@ def status_markup(value, source):
 
 def image_review_fields(chunk, source, legacy_state, user_state):
     """Display record-based delivery; retain historical review formats unchanged."""
+    waiting = re.match(r"^(待确认|待审核)(?=$|[。；，\s])", user_state)
+    pending_label = waiting.group(1) if waiting else ""
     file_check = field(chunk, "文件核对结论")
     vision = field(chunk, "看图调用状态")
     if file_check != "未记录" or vision != "未记录":
@@ -57,19 +59,18 @@ def image_review_fields(chunk, source, legacy_state, user_state):
                 "visionScopeHtml": inline(field(chunk, "看图授权及限定范围"), source),
                 "visionFindingsHtml": inline(field(chunk, "授权查看的发现"), source),
                 "userHtml": status_markup(user_state, source),
-                "pending": bool(re.match(r"^(待确认|待审核)(?=$|[。；，\s])", user_state))}
+                "pending": bool(waiting), "pendingLabel": pending_label}
     technical = field(chunk, "agent 技术审查结论")
     content = field(chunk, "agent 内容审查状态")
     findings = field(chunk, "agent 内容审查发现")
     staged = any(value != "未记录" for value in (technical, content, findings))
-    waiting = bool(re.match(r"^(待确认|待审核)(?=$|[。；，\s])", user_state))
     return {"twoStageReview": staged,
             "technicalHtml": status_markup(technical, source),
             "contentHtml": status_markup(content, source),
             "contentFindingsHtml": inline(findings, source),
             "agentHtml": status_markup(legacy_state, source),
             "userHtml": status_markup(user_state, source),
-            "pending": waiting}
+            "pending": bool(waiting), "pendingLabel": pending_label}
 
 
 def field_markup(text, source):
