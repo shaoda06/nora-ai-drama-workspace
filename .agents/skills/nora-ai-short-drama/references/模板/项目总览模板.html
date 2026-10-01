@@ -150,7 +150,7 @@ button.person-pending{width:100%;text-align:left;border-top:0;border-right:0;bor
 <div id="scene-detail" hidden>
 <div class="person-detail-head"><h2 id="scene-title" tabindex="-1"></h2><div id="scene-subtitle" class="dim"></div></div>
 <div class="person-tabs" id="scene-tabs" aria-label="场景详情栏目"></div>
-<section id="scene-assets"><div id="scene-approved-supporting"></div><h3 class="person-section-title">场次环境参考图</h3><p class="people-note">自动展示正式参考图目录中的场次环境图，不合并不同状态。“可复用”不代表后续场次已采用。</p><div id="scene-gallery"></div></section>
+<section id="scene-assets"><h3 class="person-section-title">场次环境参考图</h3><p class="people-note">自动展示正式参考图目录中的场次环境图，不合并不同状态。“可复用”不代表后续场次已采用。</p><div id="scene-gallery"></div><div id="scene-approved-supporting"></div></section>
 <section id="scene-document" hidden>
 <div class="doc-head"><h3 class="person-section-title">场景资料卡</h3><a id="scene-raw" target="_blank" rel="noopener">原始 Markdown</a></div>
 <div class="metadata" id="scene-metadata"></div><div class="reading-boundary" id="scene-boundary" hidden></div>
@@ -505,7 +505,7 @@ function renderSceneSupporting(scene){
 const approved=el("scene-approved-supporting");approved.replaceChildren();
 const adopted=scene.auxiliary;
 if(adopted.length){
-approved.append(textNode("h3","平面与其他场景参考图","person-section-title"),textNode("p","用于固定空间布局与结构；场次环境图及适用条件另列于下方。","people-note"));
+approved.append(textNode("h3","平面与其他场景参考图","person-section-title"),textNode("p","用于固定空间布局与结构；场次环境图及适用条件列于上方。","people-note"));
 const grid=textNode("div","","asset-grid scene-media");adopted.forEach(a=>grid.append(sceneAssetCard(a,scene,false)));approved.append(grid);
 }
 const auxiliary=[];
