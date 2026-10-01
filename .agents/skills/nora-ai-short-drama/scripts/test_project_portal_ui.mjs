@@ -368,7 +368,7 @@ test('record-based image delivery shows user review without a visual gate', () =
 });
 
 const pendingSummary = loadFunction('candidatePendingSummary');
-const pendingTarget = loadFunction('personPendingTarget');
+const pendingTarget = loadFunction('latestPendingCandidate');
 
 test('candidate summaries split pending labels and omit zero or closed entries', () => {
   const assets=[
@@ -413,4 +413,19 @@ test('prop three-view category precedes other states regardless of input order',
   assert.deepEqual(input,[open,unknown,base,explicit]);
   assert.equal(groups([open])[0].label,'其他状态参考图');
   assert.equal(groups([]).length,0);
+});
+
+
+test('scene and prop pending entries open and reveal the target while normal entries open cards', () => {
+  for (const [name,key] of [['Scene','scene'],['Prop','prop']]) {
+    const open=source.slice(source.indexOf(`function open${name}(`),source.indexOf(`function returnTo${name}s(`));
+    const list=source.slice(source.indexOf(`function render${name}s(`),source.indexOf(`el("${key}s-search").addEventListener`));
+    assert.ok(list.includes(`open${name}(person,pending,latestPendingCandidate(person))`));
+    assert.ok(open.includes(`select(pendingTarget?"${key}-candidates":"${key}-document")`));
+    assert.ok(open.includes('if(items.includes(pendingTarget)){details.open=true;load()}'));
+    assert.ok(open.includes('if(asset===pendingTarget)'));
+    assert.ok(open.includes('target.focus({preventScroll:true})'));
+    assert.ok(open.includes('candidatePendingSummary(items)'));
+    assert.ok(list.includes('const badge=document.createElement("span")'));
+  }
 });
