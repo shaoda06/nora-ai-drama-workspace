@@ -479,6 +479,44 @@ class PortalTests(unittest.TestCase):
         self.assertEqual([n["name"] for n in film["children"]],
                          ["成片索引.md", "EP001-C001-成片说明.md", "选定", "候选", "审阅记录", "执行记录", "其他附件"])
 
+    def test_integrated_scene_storyboard_links_work_without_separate_scripts(self):
+        root = "09-剧集制作/EP001"
+        self.put("项目进度.md", "# 项目进度\n\n- 项目名称：测试项目\n- 更新时间：2026-10-03\n\n"
+                 "| 阶段名称 | 对应会话入口 | 当前状态 | 成果入口 | 待决事项 | 下一步 |\n"
+                 "| --- | --- | --- | --- | --- | --- |\n"
+                 "| EP001 制作 | 未记录 | 进行中 | 未记录 | 无 | 视频准备 |")
+        self.put(portal.POSITION, "# 项目基本定位\n\n- 确认状态：已确认\n\n## 项目规格\n测试项目")
+        story = root + "/02-剧集剧本/EP001-本集剧本.md"
+        scene = root + "/03-分镜脚本/C001-场次分镜/EP001-C001-场次分镜.md"
+        index = root + "/03-分镜脚本/EP001-分镜索引.md"
+        prompt = root + "/05-视频提示词/EP001-C001-P001-视频提示词.md"
+        self.put(story, "# 本集剧本\n\n## 1. 故事剧本正文\n\n### EP001-C001\n\n剧情和对白")
+        self.put(scene, "# 场次分镜\n\n来源剧本：[C001](../../02-剧集剧本/EP001-本集剧本.md#ep001-c001)\n\n"
+                 "## 1. 镜头正文\n\n镜号：EP001-SH001\n\n台词：今天按时下班。\n\n"
+                 "## 2. 视频分段\n\n| 分段编号 | 包含镜号 |\n| --- | --- |\n"
+                 "| EP001-C001-P001 | EP001-SH001 |\n\n### EP001-C001-P001\n\n"
+                 "| 项目镜号 | H3 段内镜号 | 段内起点（秒） | 段内终点（秒） |\n"
+                 "| --- | --- | --- | --- |\n| EP001-SH001 | Shot 1 | 0 | 8 |")
+        self.put(index, "[P001](C001-场次分镜/EP001-C001-场次分镜.md#ep001-c001-p001)")
+        self.put(prompt, "[来源P001](../03-分镜脚本/C001-场次分镜/EP001-C001-场次分镜.md#ep001-c001-p001)")
+        result = portal.build(self.root)
+        self.assertEqual(result["warnings"], [])
+        data = self.extract()
+        self.assertTrue({story, scene, index, prompt}.issubset(data["documents"]))
+        self.assertIn('id="ep001-c001"', data["documents"][story]["html"])
+        scene_html = data["documents"][scene]["html"]
+        self.assertIn('id="ep001-c001-p001"', scene_html)
+        self.assertIn('<table>', scene_html)
+        self.assertEqual(scene_html.count("今天按时下班。"), 1)
+        for key in (index, prompt):
+            rendered = data["documents"][key]["html"]
+            self.assertIn('data-doc="' + scene + '"', rendered)
+            self.assertIn('#ep001-c001-p001', rendered)
+        ep = data["catalogues"]["09-剧集制作"]["children"][0]
+        storyboard_group = next(child for child in ep["children"] if child["name"] == "03-分镜脚本")
+        scene_group = next(child for child in storyboard_group["children"] if child["name"] == "C001-场次分镜")
+        self.assertEqual([child["key"] for child in scene_group["children"]], [scene])
+
     def test_production_navigation_retains_segments_stages_and_candidate_selection(self):
         root = "09-剧集制作/EP001"
         self.put(root + "/03-分镜脚本/C001-场次分镜/EP001-C001-场次分镜.md", "# 场次分镜")
