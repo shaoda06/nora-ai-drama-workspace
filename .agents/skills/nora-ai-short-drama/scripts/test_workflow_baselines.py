@@ -27,9 +27,9 @@ class BaselineTests(unittest.TestCase):
                 source = BASELINES / f"{name}.{suffix}.json"
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             api_path = Path(tmp, f"{name}.api.json")
-            api = json.loads(api_path.read_text())
+            api = json.loads(api_path.read_text(encoding="utf-8"))
             api["459:458"]["inputs"]["seed"] += 1
-            api_path.write_text(json.dumps(api))
+            api_path.write_text(json.dumps(api), encoding="utf-8")
             with self.assertRaisesRegex(AssertionError, "mismatch"):
                 wb.verify(tmp)
 
@@ -40,9 +40,9 @@ class BaselineTests(unittest.TestCase):
                 source = BASELINES / f"{name}.{suffix}.json"
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             api_path = Path(tmp, f"{name}.api.json")
-            api = json.loads(api_path.read_text())
+            api = json.loads(api_path.read_text(encoding="utf-8"))
             api["1"]["inputs"]["resize_type.scale"] = 4
-            api_path.write_text(json.dumps(api))
+            api_path.write_text(json.dumps(api), encoding="utf-8")
             with self.assertRaisesRegex(AssertionError, "mismatch"):
                 wb.verify(tmp)
 
@@ -53,15 +53,15 @@ class BaselineTests(unittest.TestCase):
                 source = BASELINES / f"{name}.{suffix}.json"
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             api_path = Path(tmp, f"{name}.api.json")
-            api = json.loads(api_path.read_text())
+            api = json.loads(api_path.read_text(encoding="utf-8"))
             del api["51"]
-            api_path.write_text(json.dumps(api))
+            api_path.write_text(json.dumps(api), encoding="utf-8")
             with self.assertRaises(AssertionError):
                 wb.verify(tmp)
 
     def test_detects_broken_canvas_link(self):
         source = BASELINES / "Qwen2.1-文生图-普通版.workflow.json"
-        canvas = json.loads(source.read_text())
+        canvas = json.loads(source.read_text(encoding="utf-8"))
         canvas["links"][0][1] = 987654321
         with self.assertRaises(AssertionError):
             wb.Canvas(canvas)

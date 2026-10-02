@@ -78,7 +78,7 @@ def verify(directory):
  results=[]
  for p in sorted(Path(directory).glob('*.workflow.json')):
   stem=p.name.removesuffix('.workflow.json');a=p.with_name(stem+'.api.json');assert a.exists(),f'Missing API: {a.name}'
-  expected=Canvas(json.loads(p.read_text())).api(output_for(stem));actual=json.loads(a.read_text())
+  expected=Canvas(json.loads(p.read_text(encoding="utf-8"))).api(output_for(stem));actual=json.loads(a.read_text(encoding="utf-8"))
   assert semantic(actual)==semantic(expected),f'Canvas/API mismatch: {stem}'
   for k,n in expected.items():
    if 'nora_optional_reference' in n['_meta']:assert actual[k].get('_meta',{}).get('nora_optional_reference')==n['_meta']['nora_optional_reference']
@@ -105,7 +105,7 @@ def verify(directory):
  first_path=Path(directory)/'Nora-MiniMaxH3-多参考视频-仅一采.api.json'
  second_path=Path(directory)/'Nora-MiniMaxH3-多参考视频-仅二采.api.json'
  if first_path.exists() and second_path.exists():
-  first=semantic(json.loads(first_path.read_text()));second=semantic(json.loads(second_path.read_text()))
+  first=semantic(json.loads(first_path.read_text(encoding="utf-8")));second=semantic(json.loads(second_path.read_text(encoding="utf-8")))
   for node_id in first.keys() & second.keys():assert first[node_id]==second[node_id], ('Shared H3 mismatch',node_id)
  return results
 if __name__=='__main__':

@@ -285,6 +285,23 @@ class PortalTests(unittest.TestCase):
             self.assertEqual(data[group][0]["pendingCount"], 1)
             self.assertEqual(record.read_bytes(), before[str(record)])
 
+    def test_pending_label_preserves_explicit_review_state_across_record_formats(self):
+        for chunk in ("- 文件核对结论：通过", "- agent 技术审查结论：不通过", ""):
+            for decision, expected in (
+                ("待确认；测试候选，正式v05有效", "待确认"),
+                ("待审核。用户尚未查看", "待审核"),
+                ("已采用；历史曾待确认", ""),
+                ("已批准，待超分", ""),
+                ("历史候选已结束，未采用，不再待审", ""),
+                ("修改后再审", ""),
+            ):
+                with self.subTest(chunk=chunk, decision=decision):
+                    result = portal.image_review_fields(chunk, portal.POSITION, "未记录", decision)
+                    self.assertEqual(result["pendingLabel"], expected)
+                    self.assertEqual(result["pending"], bool(expected))
+                    self.assertIn(decision.split("；")[0].split("。")[0],
+                                  result["userHtml"])
+
     def test_authorized_analysis_does_not_override_user_decision(self):
         chunk = ("- 文件核对结论：通过\n- 看图调用状态：已按授权查看\n"
                  "- 看图授权及限定范围：用户要求看左侧视格\n"
@@ -555,15 +572,37 @@ class PortalTests(unittest.TestCase):
         self.assertEqual(prop["cover"]["state"], "破损")
         self.assertFalse(prop["formal"][1]["approved"])
 
-    def test_prop_card_or_loose_file_does_not_approve_image(self):
+    def test_prop_formal_directory_displays_images_without_record(self):
         record = self.prop_fixture()
         record.unlink()
         portal.build(self.root)
         prop = self.extract()["props"][0]
         self.assertIsNone(prop["cover"])
-        self.assertEqual(prop["formal"], [])
+        self.assertEqual({a["state"] for a in prop["formal"]}, {"基础", "破损"})
+        self.assertTrue(all(a["directoryDiscovered"] for a in prop["formal"]))
         self.assertIn("status-green", prop["card"]["confirmationHtml"])
         self.assertFalse((self.root / "05-道具资料/讨论记录").exists())
+
+    def test_directory_discovery_merges_records_and_excludes_nested_files(self):
+        record = self.prop_fixture()
+        _, scene_record = self.scene_fixture()
+        before = record.read_bytes(), scene_record.read_bytes()
+        self.put("05-道具资料/PR001-盒子/参考图/PR001-开启-道具参考图.webp", "open")
+        self.put("05-道具资料/PR001-盒子/参考图/另一状态.JPG", "unknown name")
+        self.put("05-道具资料/PR001-盒子/参考图/.隐藏.png", "hidden")
+        self.put("05-道具资料/PR001-盒子/参考图/历史版本/旧图.png", "nested")
+        self.put("04-场景资料/SC001-药庐/参考图/SC001-EP001-C002-场景参考图.jpg", "second scene")
+        self.put("04-场景资料/SC001-药庐/参考图/SC001-平面布局.png", "plan")
+        portal.build(self.root)
+        data = self.extract()
+        prop, scene = data["props"][0], data["scenes"][0]
+        self.assertEqual({a["state"] for a in prop["formal"]}, {"破损", "基础", "开启", "另一状态"})
+        self.assertEqual(next(a for a in prop["formal"] if a["state"] == "破损")["version"], "v02")
+        self.assertEqual(len(scene["formal"]), 2)
+        self.assertEqual(len(scene["auxiliary"]), 2)
+        self.assertEqual(scene["formal"][1]["state"], "EP001-C002")
+        self.assertEqual(len({a["media"]["key"] for a in prop["formal"]}), 4)
+        self.assertEqual(before, (record.read_bytes(), scene_record.read_bytes()))
 
     def test_prop_template_enumeration_is_not_approval(self):
         self.prop_fixture("批准采用／修改后再审／不采用")
@@ -622,6 +661,34 @@ class PortalTests(unittest.TestCase):
         self.assertEqual(scene["pendingCount"], 1)
         self.assertEqual(before, (card.read_bytes(), record.read_bytes()))
 
+    def test_scene_multiple_views_coexist_with_legacy_and_directory_images(self):
+        _, record = self.scene_fixture()
+        folder = "04-场景资料/SC001-药庐/参考图/"
+        first = "SC001-EP001-C001-V001-场景参考图.png"
+        second = "SC001-EP001-C001-V002-场景参考图.webp"
+        self.put(folder + first, "view one")
+        self.put(folder + second, "view two")
+        text = record.read_text(encoding="utf-8")
+        text = text.replace("| 正式文件 | 最初制作场次 |", "| 正式文件 | 视图编号与名称 | 最初制作场次 |")
+        text = text.replace("| --- | --- | --- | --- | --- |", "| --- | --- | --- | --- | --- | --- |")
+        text = text.replace("| 旧图 |", "| 无 | 旧图 |").replace("| EP001-C001 |", "| 无 | EP001-C001 |")
+        text = text.replace("## 2. 逐次生成记录", (
+            f"| [视图]({first}) | V001 门口看向药柜 | EP001-C001 | 晨 | v02 | [审阅](../../审阅记录/SC001-审阅-001.md) |\n\n"
+            "## 2. 逐次生成记录"))
+        record.write_text(text, encoding="utf-8")
+        before = record.read_bytes()
+        portal.build(self.root)
+        scene = self.extract()["scenes"][0]
+        self.assertEqual(len(scene["formal"]), 3)
+        self.assertEqual(len(scene["auxiliary"]), 1)
+        views = {Path(a["media"]["key"]).name: a for a in scene["formal"]}
+        self.assertIn("SC001-EP001-C001-场景参考图.png", views)
+        self.assertIn("V001 门口看向药柜", views[first]["state"])
+        self.assertTrue(views[first]["approved"])
+        self.assertEqual(views[second]["state"], "EP001-C001-V002")
+        self.assertFalse(views[second]["approved"])
+        self.assertEqual(record.read_bytes(), before)
+
     def test_scene_confirmed_card_does_not_approve_cover(self):
         self.scene_fixture("修改后再审。")
         portal.build(self.root)
@@ -629,16 +696,45 @@ class PortalTests(unittest.TestCase):
         self.assertIsNone(scene["cover"])
         self.assertIn("status-green", scene["card"]["confirmationHtml"])
 
-    def test_scene_legacy_file_is_accessible_without_inferred_approval(self):
+    def test_scene_formal_directory_displays_images_without_record(self):
         self.scene_fixture()
         self.put("04-场景资料/SC001-药庐/参考图/旧环境.png", "old")
         self.put("04-场景资料/SC001-药庐/参考图/生成记录.md", "# 旧记录\n用户曾批准，范围见旧记录。")
         portal.build(self.root)
         scene = self.extract()["scenes"][0]
         self.assertIsNone(scene["cover"])
-        self.assertEqual(scene["formal"], [])
-        self.assertEqual(len(scene["legacy"]), 3)
-        self.assertNotIn("approved", scene["legacy"][0])
+        self.assertEqual(len(scene["formal"]), 1)
+        self.assertEqual(len(scene["auxiliary"]), 2)
+        self.assertTrue(all(a["directoryDiscovered"] for a in scene["formal"] + scene["auxiliary"]))
+        self.assertEqual(scene["legacy"], [])
+
+    def test_review_storage_and_applicability_are_independent(self):
+        self.scene_fixture("不通过。")
+        review = self.root / "04-场景资料/审阅记录/SC001-审阅-001.md"
+        review.write_text(review.read_text("utf-8") + "\n## 5. 采用与后续影响\n- 留存用途：历史生成记录\n- 当前制作适用性：不适用；旧布局\n", encoding="utf-8")
+        before = review.read_bytes()
+        portal.build(self.root)
+        scene = self.extract()["scenes"][0]
+        asset = scene["formal"][0]
+        self.assertFalse(asset["approved"])
+        self.assertTrue(asset["reviewRecognized"])
+        self.assertEqual(asset["retentionPurpose"], "历史生成记录")
+        self.assertIn("旧布局", asset["applicability"])
+        self.assertIsNone(scene["cover"])
+        self.assertEqual(before, review.read_bytes())
+        review.write_text(review.read_text("utf-8").replace("不通过。", "批准采用。"), encoding="utf-8")
+        portal.build(self.root)
+        scene = self.extract()["scenes"][0]
+        self.assertTrue(scene["formal"][0]["approved"])
+        self.assertIsNone(scene["cover"])
+
+    def test_legacy_save_decision_is_not_quality_rejection_or_approval(self):
+        self.scene_fixture("批准保存v03，作为比较参考")
+        portal.build(self.root)
+        asset = self.extract()["scenes"][0]["formal"][0]
+        self.assertFalse(asset["approved"])
+        self.assertFalse(asset["reviewRecognized"])
+        self.assertIn("批准保存v03", asset["statusHtml"])
 
     def test_scene_records_isolated_and_external_images_not_loaded(self):
         self.scene_fixture()

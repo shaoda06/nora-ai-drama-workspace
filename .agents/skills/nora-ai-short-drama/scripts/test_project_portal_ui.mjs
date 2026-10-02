@@ -366,3 +366,66 @@ test('record-based image delivery shows user review without a visual gate', () =
   assert.equal(authorized[2][1],'指定图的领口');
   assert.equal(authorized[3][1],'用户所问细节');
 });
+
+const pendingSummary = loadFunction('candidatePendingSummary');
+const pendingTarget = loadFunction('latestPendingCandidate');
+
+test('candidate summaries split pending labels and omit zero or closed entries', () => {
+  const assets=[
+    {pending:true,pendingLabel:'待确认'},
+    {pending:true,pendingLabel:'待审核'},
+    {pending:true,pendingLabel:'待确认'},
+    {pending:false,pendingLabel:'',userHtml:'已采用；历史待确认'},
+  ];
+  assert.equal(pendingSummary(assets),'留存待确认：2 张 · 留存待审核：1 张');
+  assert.equal(pendingSummary(assets.slice(3)),'');
+  assert.equal(pendingSummary([]),'');
+  assert.equal(pendingSummary([assets[1]]),'留存待审核：1 张');
+});
+
+test('pending entry selects the latest pending item without changing record order', () => {
+  const old={id:1,state:'少年',type:'服装参考图',pending:true,pendingLabel:'待确认'};
+  const adopted={id:2,state:'成年',type:'角色多视角参考图',pending:false,pendingLabel:''};
+  const target={id:3,state:'成年',type:'角色多视角参考图',pending:true,pendingLabel:'待审核'};
+  const person={candidateStages:['少年','成年'],candidates:[old,adopted,target]};
+  assert.equal(pendingTarget(person),target);
+  const stages=candidateStages(person);
+  const stage=stages.find(group=>group.assets.includes(pendingTarget(person)));
+  assert.equal(stage.label,'成年');
+  const groups=candidateGroups(stage.assets);
+  assert.equal(groups.find(group=>group.assets.includes(target)).type,'角色多视角参考图');
+  assert.equal(pendingSummary(stage.assets),'留存待审核：1 张');
+  assert.deepEqual(person.candidates.map(asset=>asset.id),[1,2,3]);
+  assert.equal(pendingTarget({candidates:[adopted]}),undefined);
+});
+
+test('prop three-view category precedes other states regardless of input order', () => {
+  const groups=loadFunction('propAssetGroups');
+  const open={state:'开启',media:{key:'参考图/PR004-开启-道具参考图.png'}};
+  const base={state:'基础',media:{key:'参考图/PR004-基础-道具参考图.png'}};
+  const explicit={state:'破损',media:{key:'参考图/PR004-破损-三视图.webp'}};
+  const unknown={state:'其他',media:{key:'参考图/细节.jpg'}};
+  const input=[open,unknown,base,explicit];
+  const result=groups(input);
+  assert.equal(result[0].label,'道具三视图');
+  assert.deepEqual(Array.from(result[0].assets),[base,explicit]);
+  assert.deepEqual(Array.from(result[1].assets),[open,unknown]);
+  assert.deepEqual(input,[open,unknown,base,explicit]);
+  assert.equal(groups([open])[0].label,'其他状态参考图');
+  assert.equal(groups([]).length,0);
+});
+
+
+test('scene and prop pending entries open and reveal the target while normal entries open cards', () => {
+  for (const [name,key] of [['Scene','scene'],['Prop','prop']]) {
+    const open=source.slice(source.indexOf(`function open${name}(`),source.indexOf(`function returnTo${name}s(`));
+    const list=source.slice(source.indexOf(`function render${name}s(`),source.indexOf(`el("${key}s-search").addEventListener`));
+    assert.ok(list.includes(`open${name}(person,pending,latestPendingCandidate(person))`));
+    assert.ok(open.includes(`select(pendingTarget?"${key}-candidates":"${key}-document")`));
+    assert.ok(open.includes('if(items.includes(pendingTarget)){details.open=true;load()}'));
+    assert.ok(open.includes('if(asset===pendingTarget)'));
+    assert.ok(open.includes('target.focus({preventScroll:true})'));
+    assert.ok(open.includes('candidatePendingSummary(items)'));
+    assert.ok(list.includes('const badge=document.createElement("span")'));
+  }
+});
