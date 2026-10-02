@@ -38,8 +38,7 @@ python3 comfyui_client.py upload --url 'http://SERVER:8188' \
 ```sh
 python3 comfyui_client.py submit --url 'http://SERVER:8188' \
   --workflow '/absolute/path/task.api.json' \
-  --record-dir '/absolute/path/execution-record' \
-  --result '/absolute/path/submit-summary.json'
+  --record-dir '/absolute/path/execution-record'
 ```
 
 接收节点对象，不接受画布格式或已经包了一层 `prompt` 的请求。只做JSON及基本结构检查，节点／模型存在性、允许参数、素材批准和生成授权由agent预先确认。原节点对象作为 `prompt` 原样封装，额外生成唯一 `client_id`。JSON数字使用Python整数，不把大种子转换成浮点。
@@ -62,8 +61,10 @@ agent 可通过 `--attempt-name`、`--request-name`、`--response-name` 指定�
 
 ```sh
 python3 comfyui_client.py status --url 'http://SERVER:8188' \
-  --prompt-id 'REAL-PROMPT-ID' --result '/absolute/path/status-001.json'
+  --prompt-id 'REAL-PROMPT-ID'
 ```
+
+未指定`--result`时查询仅返回标准输出，不新增文件；需要留存时可保存本次完整输出，无需再发一次查询。
 
 先查指定history，非明确终态再核对queue。只返回本任务证据，不保存其他任务的提示词。状态为 `queued`、`running`、`success`、`failed`、`unknown`。`running`仅表示在运行队列，不证明采样步数正在推进；`success`须服务端明确completed与success且无错误／中断事件，**不等于业务要求的输出齐备或内容获批**。
 
@@ -96,3 +97,5 @@ python3 -B -m unittest discover -s '/absolute/path/comfyui-scripts' -p 'test_*.p
 ## Nora 项目配置与分享边界
 
 Nora 流程先读取当前项目根目录的 `comfyui-config.json`，仅取 `remote-url` 并显式传入 `--url`。缺少时按技能入口询问用户，默认提议为 `http://127.0.0.1:8188`，不静默创建或使用其他项目地址。本工具作为通用客户端保留的环境变量能力不覆盖此项目规则。工具不管理服务端模型、节点和依赖。新记录使用执行机器本地时区及偏移；协议原始时间戳如实保存。
+
+Nora执行附件的留存范围按[监控模板的精简留档规则](../模板/ComfyUI-任务监控提示词模板.md#执行附件精简留档)执行；普通查询与提交摘要不默认另存JSON。通用工具的可选`--result`接口及防重凭据保持原有用途。
