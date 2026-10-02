@@ -8,13 +8,13 @@
 2. agent先读取根目录 [AGENTS.md](AGENTS.md)，再按任务使用 [Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md) 或 [Krea2技能](.agents/skills/krea2-style-library/SKILL.md)。
 3. 发起新短剧时，告知题材、素材和目标，由技能按阶段创建项目。三个ComfyUI适配技能已随主技能提供，是本工作区直接使用的真源，不重复复制安装。其余依赖按主技能的[来源与获取规则](.agents/skills/nora-ai-short-drama/SKILL.md#适用平台与技能依赖)按需补齐。
 4. 新增外部技能默认安装到本工作区 `.agents/skills/{技能名}/`，已有可用安装复用。该工作区是本README所在目录，不是某部短剧的项目目录。当前独立安装的外部技能按 `.gitignore` 排除；新增技能默认可被Git发现，提交前核对来源、许可及是否需要随模板提供。
-5. 项目初始化时，agent询问该项目的ComfyUI地址，明确告知默认 `http://127.0.0.1:8188`，得到答复后创建项目根目录 `comfyui-config.json`。该文件只含 `remote-url`；本地地址指执行脚本所在机器，不默认指向另一台GPU服务器。
+5. 项目初始化的服务地址询问及配置按[主技能的项目ComfyUI配置](.agents/skills/nora-ai-short-drama/SKILL.md#项目-comfyui-配置)执行。
 
 不需要ComfyUI即可进行策划、剧本和资料整理。执行生成时，使用者须自行准备能够运行配套工作流的ComfyUI服务；本工作区不附带模型权重、不安装服务端节点，也不保证任意后端都兼容。具体核对遵循执行规范。
 
 ## 会话组织
 
-主控统一协调01—10十个职能会话：01项目基本定位、02主旨与简介、03故事大纲、04人物资料卡、05道具资料卡、06场景资料卡、07分集大纲、08人物参考图、09道具参考图、10场景参考图；另按集设置制作会话。编号表示分工，资料与审批依赖满足后可并行推进。职责、交接及命名以[会话与进度管理规范](.agents/skills/nora-ai-short-drama/references/流程规范/会话与进度管理规范.md)为准，文件目录编号不随会话编号改变。
+会话职责、编号、标题、并行与逐集接续统一维护于[会话与进度管理规范](.agents/skills/nora-ai-short-drama/references/流程规范/会话与进度管理规范.md)，此处不另列会话清单。
 
 ## 目录
 
@@ -34,22 +34,7 @@
 
 ### 短剧流程技能
 
-以下为Nora流程登记的 **8个依赖技能**，按任务需要读取或补齐，不要求每次全部加载。现行调用边界与安装规则以[主技能依赖章节](.agents/skills/nora-ai-short-drama/SKILL.md#适用平台与技能依赖)为准。
-
-| 技能 | 用途 | 来源与获取位置 | 是否随本仓库提供 |
-| --- | --- | --- | --- |
-| `qwen-image-2-1-prompter` | Qwen Image 2.1图片提示词编写与校对；本流程中文规则优先 | [iamyoki/qwen-image-2.1-skill](https://github.com/iamyoki/qwen-image-2.1-skill)，[技能目录](https://github.com/iamyoki/qwen-image-2.1-skill/tree/main/skills/qwen-image-2-1-prompter) | 否 |
-| `h3-prompt-writing` | MiniMax H3视频提示词及输入模式 | MiniMax官方 [MiniMax-AI/MiniMax-H3](https://github.com/MiniMax-AI/MiniMax-H3)，[技能目录](https://github.com/MiniMax-AI/MiniMax-H3/tree/main/skills/h3-prompt-writing) | 否 |
-| `comfyui-api` | ComfyUI提交、查询与取回 | 上游 [MCKRUZ/ComfyUI-Expert / comfyui-api](https://github.com/MCKRUZ/ComfyUI-Expert/tree/dee27dc3d69b609c0006a8a12e71aadfc475ae95/skills/comfyui-api)；使用[随包适配版](.agents/skills/nora-ai-short-drama/dependencies/comfyui-api/SKILL.md) | 是 |
-| `comfyui-inventory` | ComfyUI节点、模型与接口能力核对 | 上游 [MCKRUZ/ComfyUI-Expert / comfyui-inventory](https://github.com/MCKRUZ/ComfyUI-Expert/tree/dee27dc3d69b609c0006a8a12e71aadfc475ae95/skills/comfyui-inventory)；使用[随包适配版](.agents/skills/nora-ai-short-drama/dependencies/comfyui-inventory/SKILL.md) | 是 |
-| `comfyui-troubleshooter` | ComfyUI执行与质量问题诊断 | 上游 [MCKRUZ/ComfyUI-Expert / comfyui-troubleshooter](https://github.com/MCKRUZ/ComfyUI-Expert/tree/dee27dc3d69b609c0006a8a12e71aadfc475ae95/skills/comfyui-troubleshooter)；使用[随包适配版](.agents/skills/nora-ai-short-drama/dependencies/comfyui-troubleshooter/SKILL.md) | 是 |
-| `stop-that-shit` | 约束过度工程、范围扩张及重复验证 | [lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，[技能目录](https://github.com/lennney/stop-that-shit/tree/main/skills/stop-that-shit) | 否 |
-| `stss` | 精简方案、计划等决策说明中的防御性赘述 | [lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，[技能目录](https://github.com/lennney/stop-that-shit/tree/main/skills/stss) | 否 |
-| `skill-creator` | 技能维护与格式验证 | Codex Desktop自带系统技能，按名称发现实际入口；其他平台缺少时说明维护能力缺项 | 否 |
-
-三个ComfyUI技能的适配来源版本为 `dee27dc3d69b609c0006a8a12e71aadfc475ae95`，各自目录保留 `LICENSE`。本工作区的 `dependencies/` 是可维护真源；上游仅供署名、追溯和比较更新，不能用上游原版或全局同名技能自动替代。外部安装技能须保留其上游许可证，不受本仓库MIT许可证重新授权。
-
-**可选参考**：`screenwriting-master`（山音超级编剧大师）来自 [Shanyin-ai/shanyin-screenwriting-master](https://github.com/Shanyin-ai/shanyin-screenwriting-master)，获取仓库根目录 `screenwriting-master（Claude&GPT通用）.skill` 并解包为 `screenwriting-master/`。不随本仓库提供，仅在用户明确要求时调用；不属于上述8个必需流程依赖。
+流程依赖、可选参考、准确获取来源、使用边界及安装方式统一读取[主技能依赖章节](.agents/skills/nora-ai-short-drama/SKILL.md#适用平台与技能依赖)。随包的三个ComfyUI适配版保留各自 `LICENSE`；第三方技能许可不由本仓库MIT许可证重新授权。
 
 ### 本工作区技能与风格资源
 
