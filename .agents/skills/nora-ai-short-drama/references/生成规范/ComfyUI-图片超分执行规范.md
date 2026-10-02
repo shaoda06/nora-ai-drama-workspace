@@ -1,6 +1,6 @@
 # ComfyUI-图片超分执行规范
 
-版本：v1.7；更新日期：2026-10-02。
+版本：v1.8；更新日期：2026-10-02。
 
 适用于生产图片：人物正面半身图、人物六视图、服装正背面图、角色六视图、道具三视图、道具状态参考图、场景参考图、首帧参考图及新生成的剧集专用参考图。所有新生成及修订候选先以对应低分辨率原生生成并送审，用户批准具体版本后，以该审批原图执行一次2倍超分，核对正式尺寸后保存。超分是获批图的后处理，不重新生成提示词，不调用Qwen采样，不裁切、拉伸或换图；修改后的新候选须重新审批。
 
@@ -54,7 +54,7 @@ python3 /实际技能目录/references/comfyui-scripts/comfyui_client.py submit 
 python3 /实际技能目录/references/comfyui-scripts/comfyui_client.py status --url 'http://实际服务:8188' --timeout 25 --prompt-id '真实ID'
 ```
 
-提交摘要与普通查询不另存JSON；异常及成功终态保存当轮完整返回，沿用[执行附件精简留档](../模板/ComfyUI-任务监控提示词模板.md#执行附件精简留档)，不为保存重新查询。按照[图片监控规则](../模板/ComfyUI-任务监控提示词模板.md)动态计数：1—5项会话5秒轮询，超过5项5分钟定时；切换前按规则暂停同批定时器。用户审批期间不查询已终态生图任务；超分提交后只查询自己的真实ID。成功必须同时具备completed=true、status_str=success和节点3的一张正式PNG输出。
+附件留存与检查时间维护执行[精简留档规则](../模板/ComfyUI-任务监控提示词模板.md#执行附件精简留档)。按照[图片监控规则](../模板/ComfyUI-任务监控提示词模板.md)动态计数：1—5项会话5秒轮询，超过5项5分钟定时；切换前按规则暂停同批定时器。用户审批期间不查询已终态生图任务；超分提交后只查询自己的真实ID。成功必须同时具备completed=true、status_str=success和节点3的一张正式PNG输出。
 
 ```sh
 python3 /实际技能目录/references/comfyui-scripts/comfyui_client.py download --url 'http://实际服务:8188' --filename '节点3实际文件名.png' --subfolder '实际子目录' --type output --output '/实际过程稿目录/原候选名去扩展名-超分-001.png' --result '/实际附件目录/生成前缀-超分-001-下载响应.json'
