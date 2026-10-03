@@ -102,6 +102,44 @@ class PortalTests(unittest.TestCase):
         path.write_text(content, encoding="utf-8")
         return path
 
+    def create_symlink(self, link, target):
+        try:
+            link.symlink_to(target)
+        except OSError as error:
+            if getattr(error, "winerror", None) == 1314:
+                self.skipTest("Windows未授予创建符号链接的权限")
+            raise
+
+    def test_lf_and_crlf_sources_render_identically_without_rewriting(self):
+        content = "# 定位\n- 文档版本：v1\n- 确认状态：已确认\n- 确认依据：第一条确认；第二条确认。\n\n## 内容\n正文。\n"
+        path = self.root / portal.POSITION
+        path.parent.mkdir(parents=True)
+        rendered = []
+        for newline in ("\n", "\r\n"):
+            with self.subTest(newline=repr(newline)):
+                raw = content.replace("\n", newline).encode("utf-8")
+                path.write_bytes(raw)
+                data = portal.build_data(self.root)
+                self.assertIn('class="approval-items"', data["introHtml"])
+                self.assertEqual(path.read_bytes(), raw)
+                rendered.append((data["meta"], data["introHtml"], data["positionHtml"]))
+        self.assertEqual(rendered[0], rendered[1])
+
+    def test_catalogue_branch_keys_use_project_relative_forward_slashes(self):
+        self.put("09-剧集制作/EP001/02-剧集剧本/EP001-本集剧本.md", "# 剧本")
+        self.put("09-剧集制作/EP001/06-生成结果/C001-场次结果/P001-分段结果/01-一采/候选/结果.mp4", "video fixture")
+        data = portal.build_data(self.root)
+        pending = [data["catalogues"]["09-剧集制作"]]
+        keys = []
+        while pending:
+            node = pending.pop()
+            self.assertNotIn("\\", node["key"])
+            self.assertTrue(node["key"].startswith("09-剧集制作"))
+            keys.append(node["key"])
+            pending.extend(node.get("children", []))
+        self.assertIn("09-剧集制作/EP001/02-剧集剧本", keys)
+        self.assertIn("09-剧集制作/EP001/06-生成结果/C001-场次结果/P001-分段结果/01-一采/候选", keys)
+
     def extract(self):
         output = (self.root / "项目总览.html").read_text("utf-8")
         return json.loads(re.search(r'id="portal-data">(.*?)</script>', output, re.S).group(1))
@@ -563,7 +601,7 @@ class PortalTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as outside:
             external = Path(outside) / "private.md"
             external.write_text("private", encoding="utf-8")
-            (self.root / "历史版本/越界.md").symlink_to(external)
+            self.create_symlink(self.root / "历史版本/越界.md", external)
             portal.build(self.root)
         data = self.extract()
         self.assertFalse(data["positionExists"])
@@ -780,7 +818,7 @@ class PortalTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as outside:
             external = Path(outside) / "outside.png"
             external.write_bytes(b"outside")
-            (self.root / "04-场景资料/SC001-药庐/参考图/外部.png").symlink_to(external)
+            self.create_symlink(self.root / "04-场景资料/SC001-药庐/参考图/外部.png", external)
             portal.build(self.root)
         scene = self.extract()["scenes"][0]
         self.assertFalse(any(m["name"] == "外部.png" for m in scene["legacy"]))
@@ -980,7 +1018,7 @@ class PortalTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as outside:
             target = Path(outside) / "private.md"
             target.write_text("do not read", encoding="utf-8")
-            (self.root / "项目进度.md").symlink_to(target)
+            self.create_symlink(self.root / "项目进度.md", target)
             with self.assertRaises(ValueError):
                 portal.build(self.root)
 
@@ -1068,7 +1106,7 @@ class PortalTests(unittest.TestCase):
             target.write_text("private", encoding="utf-8")
             folder = self.root / "01-主旨与简介"
             folder.mkdir()
-            (folder / "主旨与简介.md").symlink_to(target)
+            self.create_symlink(folder / "主旨与简介.md", target)
             with self.assertRaises(ValueError):
                 portal.build(self.root)
 

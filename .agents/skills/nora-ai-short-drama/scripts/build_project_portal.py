@@ -325,7 +325,7 @@ def build_data(project):
         if not path.resolve().is_relative_to(project):
             raise ValueError("Refusing source outside project: " + relative)
         raw = path.read_bytes()
-        text = raw.decode("utf-8-sig")
+        text = raw.decode("utf-8-sig").replace("\r\n", "\n")
         sources[relative] = hashlib.sha256(raw).hexdigest()
         texts[relative] = text
         documents[relative] = {
@@ -799,7 +799,7 @@ def build_data(project):
             parts = Path(item["key"]).relative_to(root).parts
             parent = node
             for i, part in enumerate(parts[:-1], 1):
-                key = str(Path(root).joinpath(*parts[:i]))
+                key = Path(root).joinpath(*parts[:i]).as_posix()
                 if key not in branches:
                     branches[key] = {"kind": "group", "name": part, "key": key, "children": []}
                     parent["children"].append(branches[key])
