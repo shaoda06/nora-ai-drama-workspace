@@ -429,3 +429,14 @@ test('scene and prop pending entries open and reveal the target while normal ent
     assert.ok(list.includes('const badge=document.createElement("span")'));
   }
 });
+
+
+test('virtual prop interfaces retain their images without becoming three-views', () => {
+  const group=loadFunction('propAssetGroups');
+  const base={type:'道具参考图',state:'基础',media:{key:'PR001-基础-道具参考图.png'}};
+  const groups=group([base],'女主专属系统（虚拟界面）');
+  assert.equal(groups[0].label,'虚拟界面参考图');
+  assert.equal(groups[0].assets[0],base);
+  assert.equal(group([base],'普通工具')[0].label,'道具三视图');
+  assert.equal(group([],'虚拟界面').length,0);
+});
