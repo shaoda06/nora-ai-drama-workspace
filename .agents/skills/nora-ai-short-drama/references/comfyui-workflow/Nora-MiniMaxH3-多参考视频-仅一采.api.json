@@ -1,13 +1,4 @@
 {
-  "256": {
-    "class_type": "RandomNoise",
-    "inputs": {
-      "noise_seed": 84781009642919
-    },
-    "_meta": {
-      "title": "RandomNoise"
-    }
-  },
   "192": {
     "class_type": "UNETLoader",
     "inputs": {
@@ -15,14 +6,28 @@
       "weight_dtype": "default"
     },
     "_meta": {
-      "title": "UNETLoader"
+      "title": "01｜模型 · Hybrid INT8"
+    }
+  },
+  "406": {
+    "class_type": "PathchSageAttentionKJ",
+    "inputs": {
+      "sage_attention": "auto",
+      "allow_compile": false,
+      "model": [
+        "192",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Patch Sage Attention KJ"
     }
   },
   "58": {
     "class_type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
     "inputs": {
       "model": [
-        "192",
+        "406",
         0
       ]
     },
@@ -41,7 +46,7 @@
       ]
     },
     "_meta": {
-      "title": "LoraLoaderModelOnly"
+      "title": "03｜LoRA · Mystic 0.5"
     }
   },
   "53": {
@@ -55,49 +60,43 @@
       ]
     },
     "_meta": {
-      "title": "LoraLoaderModelOnly"
+      "title": "04｜LoRA · Turbo v4 1.0"
     }
   },
-  "263": {
-    "class_type": "Text",
+  "405": {
+    "class_type": "TESpeedMiniMaxH3",
     "inputs": {
-      "text": "待填写：本次分段的完整H3提示词（按h3-prompt-writing组织）"
-    },
-    "_meta": {
-      "title": "Text"
-    }
-  },
-  "252": {
-    "class_type": "ResolutionSelector",
-    "inputs": {
-      "aspect_ratio": "16:9 (Widescreen)",
-      "megapixels": 0.5,
-      "multiple": 32
-    },
-    "_meta": {
-      "title": "ResolutionSelector"
-    }
-  },
-  "259": {
-    "class_type": "PrimitiveFloat",
-    "inputs": {
-      "value": 10
-    },
-    "_meta": {
-      "title": "视频时长（秒）"
-    }
-  },
-  "250": {
-    "class_type": "ComfyMathExpression",
-    "inputs": {
-      "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
-      "values.a": [
-        "259",
+      "processing_control_value": 0.08,
+      "processing_percent_1": 0.1,
+      "processing_percent_2": 0.9,
+      "mcs": 2,
+      "device": "auto",
+      "mode": "8-step LoRA",
+      "model": [
+        "53",
         0
       ]
     },
     "_meta": {
-      "title": "ComfyMathExpression"
+      "title": "TE-Speed · 8步模式 · auto · 正式一采"
+    }
+  },
+  "36": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    },
+    "_meta": {
+      "title": "06｜视频 VAE · INT8"
+    }
+  },
+  "37": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    },
+    "_meta": {
+      "title": "07｜音频 VAE · FP32"
     }
   },
   "38": {
@@ -108,87 +107,7 @@
       "device": "default"
     },
     "_meta": {
-      "title": "CLIPLoader"
-    }
-  },
-  "36": {
-    "class_type": "VAELoader",
-    "inputs": {
-      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
-    },
-    "_meta": {
-      "title": "VAELoader"
-    }
-  },
-  "37": {
-    "class_type": "VAELoader",
-    "inputs": {
-      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
-    },
-    "_meta": {
-      "title": "VAELoader"
-    }
-  },
-  "265": {
-    "class_type": "MiniMaxH3ReferenceToVideo",
-    "inputs": {
-      "prompt": [
-        "263",
-        0
-      ],
-      "width": [
-        "252",
-        0
-      ],
-      "height": [
-        "252",
-        1
-      ],
-      "length": [
-        "250",
-        1
-      ],
-      "ref_image_size": "max",
-      "clip": [
-        "38",
-        0
-      ],
-      "vae": [
-        "36",
-        0
-      ],
-      "audio_vae": [
-        "37",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "MiniMaxH3ReferenceToVideo"
-    }
-  },
-  "223": {
-    "class_type": "BasicGuider",
-    "inputs": {
-      "model": [
-        "53",
-        0
-      ],
-      "conditioning": [
-        "265",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "BasicGuider"
-    }
-  },
-  "255": {
-    "class_type": "KSamplerSelect",
-    "inputs": {
-      "sampler_name": "euler"
-    },
-    "_meta": {
-      "title": "KSamplerSelect"
+      "title": "05｜Qwen3-VL 编码器"
     }
   },
   "261": {
@@ -198,12 +117,12 @@
       "steps": 12,
       "denoise": 1,
       "model": [
-        "53",
+        "405",
         0
       ]
     },
     "_meta": {
-      "title": "BasicScheduler"
+      "title": "08｜Beta 噪声表 · 12步"
     }
   },
   "289": {
@@ -216,73 +135,69 @@
       ]
     },
     "_meta": {
-      "title": "SplitSigmas"
+      "title": "09｜前8步 · 接导演台 sigmas"
     }
   },
-  "226": {
-    "class_type": "SamplerCustomAdvanced",
+  "402": {
+    "class_type": "MiniMaxH3Director",
     "inputs": {
-      "noise": [
-        "256",
+      "task_type": "r2v — 参考主体生视频(Reference to Video)",
+      "global_prompt": "subject_definitions:\n{{填写公共素材标签与主体定义；与本组实际合并后的Picture/Audio/Video标签逐一对应}}",
+      "bd_grp_sample": "采样设置",
+      "cfg": 1,
+      "seed": 7503308486466147,
+      "frame_rate": 24,
+      "width": 864,
+      "height": 480,
+      "ref_max_size": 864,
+      "total_frames": 984,
+      "timeline_data": "{\"version\":5,\"editMode\":\"segment\",\"timelineMode\":\"prompt_batch\",\"totalFrames\":984,\"frameRate\":24,\"width\":864,\"height\":480,\"refMaxSize\":864,\"runSelectEnabled\":false,\"runSelection\":[],\"videoClips\":[],\"global\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"subject_definitions:\\n{{填写公共素材标签与主体定义；与本组实际合并后的Picture/Audio/Video标签逐一对应}}\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":true,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}},\"output\":{\"mode\":\"fixed\",\"aspectRatio\":\"16:9 (宽屏)\",\"megapixels\":0.4,\"multiple\":32,\"longEdge\":864,\"width\":864,\"height\":480,\"maxExportFrames\":0,\"exportMode\":\"all\",\"audioMode\":\"generate\",\"exportSourceImages\":false,\"exportPreFaceRefine\":false,\"refImageSize\":\"max\",\"continuityEnabled\":true,\"continuityOverlapFrames\":22,\"continuityMode\":\"continue\",\"continuityRedraw\":0.1,\"continuityKeepTail\":true},\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":277,\"frameCount\":277,\"durationSec\":11,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-002\",\"start\":277,\"length\":362,\"frameCount\":362,\"durationSec\":15,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-003\",\"start\":639,\"length\":345,\"frameCount\":345,\"durationSec\":14,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"keyframes\":[],\"durationSec\":40,\"video\":{\"fileName\":\"\",\"frames\":[],\"type\":\"input\",\"subfolder\":\"\",\"sourceFrameCount\":984,\"deletedSourceRanges\":[],\"frameMap\":[]},\"gen\":{\"defaultFrameCount\":124},\"liveTaePreview\":false,\"batchDetailMode\":\"solo\",\"batchWorkspaces\":{\"r2v\":{\"selectedIndex\":0,\"editMode\":\"segment\",\"runSelectEnabled\":false,\"runSelection\":[],\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":277,\"frameCount\":277,\"durationSec\":11,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-002\",\"start\":277,\"length\":362,\"frameCount\":362,\"durationSec\":15,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-003\",\"start\":639,\"length\":345,\"frameCount\":345,\"durationSec\":14,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"globalCommon\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"subject_definitions:\\n{{填写公共素材标签与主体定义；与本组实际合并后的Picture/Audio/Video标签逐一对应}}\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":true,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}}}}}",
+      "bd_grp_advanced": "高级采样",
+      "steps": 8,
+      "sampler": "euler",
+      "scheduler": "beta",
+      "shift_video": 12,
+      "shift_audio": 3,
+      "export_source_images": false,
+      "export_pre_face_refine": false,
+      "bd_grp_perf": "性能",
+      "clear_vram_between_segments": false,
+      "clear_vram_before_refine": true,
+      "clear_vram_before_face_refine": false,
+      "cache_frames_codec": "raw",
+      "minimax_director_ui": "",
+      "model": [
+        "405",
         0
       ],
-      "guider": [
-        "223",
+      "video_vae": [
+        "36",
         0
       ],
-      "sampler": [
-        "255",
+      "audio_vae": [
+        "37",
+        0
+      ],
+      "clip": [
+        "38",
         0
       ],
       "sigmas": [
         "289",
         0
-      ],
-      "latent_image": [
-        "265",
-        1
       ]
     },
     "_meta": {
-      "title": "SamplerCustomAdvanced"
-    }
-  },
-  "253": {
-    "class_type": "VAEDecode",
-    "inputs": {
-      "samples": [
-        "226",
-        1
-      ],
-      "vae": [
-        "36",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "VAEDecode"
-    }
-  },
-  "254": {
-    "class_type": "VAEDecodeAudio",
-    "inputs": {
-      "samples": [
-        "226",
-        1
-      ],
-      "vae": [
-        "37",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "VAEDecodeAudio"
+      "title": "Nora导演台｜正式视频一采"
     }
   },
   "264": {
     "class_type": "VHS_VideoCombine",
     "inputs": {
-      "frame_rate": 24,
+      "frame_rate": [
+        "402",
+        2
+      ],
       "loop_count": 0,
       "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-一采",
       "format": "video/h264-mp4",
@@ -293,247 +208,16 @@
       "pingpong": false,
       "save_output": true,
       "images": [
-        "253",
+        "402",
         0
       ],
       "audio": [
-        "254",
-        0
+        "402",
+        1
       ]
     },
     "_meta": {
-      "title": "VHS_VideoCombine"
-    }
-  },
-  "51": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "__待替换_输入素材_51__.png"
-    },
-    "_meta": {
-      "title": "LoadImage",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_images.ref_image_0",
-        "output_slot": 0
-      }
-    }
-  },
-  "49": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "__待替换_输入素材_49__.png"
-    },
-    "_meta": {
-      "title": "LoadImage",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_images.ref_image_1",
-        "output_slot": 0
-      }
-    }
-  },
-  "50": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "__待替换_输入素材_50__.png"
-    },
-    "_meta": {
-      "title": "LoadImage",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_images.ref_image_2",
-        "output_slot": 0
-      }
-    }
-  },
-  "43": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "__待替换_输入素材_43__.png"
-    },
-    "_meta": {
-      "title": "LoadImage",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_images.ref_image_3",
-        "output_slot": 0
-      }
-    }
-  },
-  "19": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "__待替换_输入素材_19__.png"
-    },
-    "_meta": {
-      "title": "LoadImage",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_images.ref_image_4",
-        "output_slot": 0
-      }
-    }
-  },
-  "23": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "__待替换_输入素材_23__.png"
-    },
-    "_meta": {
-      "title": "LoadImage",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_images.ref_image_5",
-        "output_slot": 0
-      }
-    }
-  },
-  "199": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "__待替换_输入素材_199__.png"
-    },
-    "_meta": {
-      "title": "LoadImage",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_images.ref_image_6",
-        "output_slot": 0
-      }
-    }
-  },
-  "200": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "__待替换_输入素材_200__.png"
-    },
-    "_meta": {
-      "title": "LoadImage",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_images.ref_image_7",
-        "output_slot": 0
-      }
-    }
-  },
-  "201": {
-    "class_type": "LoadImage",
-    "inputs": {
-      "image": "__待替换_输入素材_201__.png"
-    },
-    "_meta": {
-      "title": "LoadImage",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_images.ref_image_8",
-        "output_slot": 0
-      }
-    }
-  },
-  "27": {
-    "class_type": "VHS_LoadVideo",
-    "inputs": {
-      "video": "__待替换_输入素材_27__.mp4",
-      "force_rate": 0,
-      "custom_width": 0,
-      "custom_height": 0,
-      "frame_load_cap": 0,
-      "skip_first_frames": 0,
-      "select_every_nth": 1,
-      "format": "AnimateDiff"
-    },
-    "_meta": {
-      "title": "VHS_LoadVideo",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_videos.ref_video_0",
-        "output_slot": 0
-      }
-    }
-  },
-  "25": {
-    "class_type": "VHS_LoadVideo",
-    "inputs": {
-      "video": "__待替换_输入素材_25__.mp4",
-      "force_rate": 0,
-      "custom_width": 0,
-      "custom_height": 0,
-      "frame_load_cap": 0,
-      "skip_first_frames": 0,
-      "select_every_nth": 1,
-      "format": "AnimateDiff"
-    },
-    "_meta": {
-      "title": "VHS_LoadVideo",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_videos.ref_video_1",
-        "output_slot": 0
-      }
-    }
-  },
-  "26": {
-    "class_type": "VHS_LoadVideo",
-    "inputs": {
-      "video": "__待替换_输入素材_26__.mp4",
-      "force_rate": 0,
-      "custom_width": 0,
-      "custom_height": 0,
-      "frame_load_cap": 0,
-      "skip_first_frames": 0,
-      "select_every_nth": 1,
-      "format": "AnimateDiff"
-    },
-    "_meta": {
-      "title": "VHS_LoadVideo",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_videos.ref_video_2",
-        "output_slot": 0
-      }
-    }
-  },
-  "48": {
-    "class_type": "LoadAudio",
-    "inputs": {
-      "audio": "__待替换_输入素材_48__.wav"
-    },
-    "_meta": {
-      "title": "LoadAudio",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_audios.ref_audio_0",
-        "output_slot": 0
-      }
-    }
-  },
-  "14": {
-    "class_type": "LoadAudio",
-    "inputs": {
-      "audio": "__待替换_输入素材_14__.wav"
-    },
-    "_meta": {
-      "title": "LoadAudio",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_audios.ref_audio_1",
-        "output_slot": 0
-      }
-    }
-  },
-  "15": {
-    "class_type": "LoadAudio",
-    "inputs": {
-      "audio": "__待替换_输入素材_15__.wav"
-    },
-    "_meta": {
-      "title": "LoadAudio",
-      "nora_optional_reference": {
-        "target": "265",
-        "input": "ref_audios.ref_audio_2",
-        "output_slot": 0
-      }
+      "title": "11｜VHS 保存 · 一采测试输出"
     }
   }
 }

@@ -83,7 +83,17 @@ def verify(directory):
   for k,n in expected.items():
    if 'nora_optional_reference' in n['_meta']:assert actual[k].get('_meta',{}).get('nora_optional_reference')==n['_meta']['nora_optional_reference']
   refs=[(k,n['_meta']['nora_optional_reference']) for k,n in expected.items() if 'nora_optional_reference' in n['_meta']]
-  assert len(refs)==(15 if '多参考视频' in stem else 0)
+  assert len(refs)==(15 if '265' in actual and '多参考视频' in stem else 0)
+  director=actual.get('402')
+  if director and director['class_type']=='MiniMaxH3Director':
+   inputs=director['inputs'];timeline=json.loads(inputs['timeline_data'])
+   for field,key in [('width','width'),('height','height'),('ref_max_size','refMaxSize'),('frame_rate','frameRate'),('total_frames','totalFrames')]:
+    assert inputs[field]==timeline[key],('Director timeline mismatch',field)
+   assert timeline['output']['width']==inputs['width'] and timeline['output']['height']==inputs['height'], 'Director output size mismatch'
+   assert timeline['global']['prompt']==inputs['global_prompt'], 'Director public prompt mismatch'
+   assert sum(s['frameCount'] for s in timeline['segments'])==inputs['total_frames'], 'Director segment frame mismatch'
+   workspace=timeline['batchWorkspaces']['r2v']
+   assert workspace['segments']==timeline['segments'] and workspace['globalCommon']==timeline['global'], 'Director editor workspace mismatch'
   # Exercise all supported reference-count combinations, removing unused loaders.
   count=0
   if refs:
@@ -101,12 +111,13 @@ def verify(directory):
         if is_link(v):assert v[0] in task
       count+=1
   results.append({'workflow':stem,'nodes':len(actual),'optional_references':len(refs),'reference_combinations':count})
-  # Shared first-pass graph inputs must remain identical between H3 stages.
+  # Compare shared inputs only when both files use the same legacy H3 backbone.
  first_path=Path(directory)/'Nora-MiniMaxH3-多参考视频-仅一采.api.json'
  second_path=Path(directory)/'Nora-MiniMaxH3-多参考视频-仅二采.api.json'
  if first_path.exists() and second_path.exists():
   first=semantic(json.loads(first_path.read_text(encoding="utf-8")));second=semantic(json.loads(second_path.read_text(encoding="utf-8")))
-  for node_id in first.keys() & second.keys():assert first[node_id]==second[node_id], ('Shared H3 mismatch',node_id)
+  if first.get('265',{}).get('class_type')==second.get('265',{}).get('class_type') and '265' in first:
+   for node_id in first.keys() & second.keys():assert first[node_id]==second[node_id], ('Shared H3 mismatch',node_id)
  return results
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__, epilog='Python 3.9+, standard library; do not use -O. Prints one JSON line per scanned pair, then PASS; exit 0 on success, nonzero on error. Check expected workflow coverage: an empty directory can also pass.')

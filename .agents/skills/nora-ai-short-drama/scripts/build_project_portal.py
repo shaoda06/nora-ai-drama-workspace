@@ -377,7 +377,7 @@ def build_data(project):
         document_key = f"09-剧集制作/{episode}/05-视频提示词/{identity}-视频提示词.md"
         document = read(document_key)
         if document:
-            english = re.search(r"^## 提交给节点263的完整提示词\s*\n```text\s*\n(.*?)```", document, re.M | re.S)
+            english = re.search(r"^## 提交给(?:模型|节点263)的完整提示词\s*\n```text\s*\n(.*?)```", document, re.M | re.S)
             chinese = re.search(r"^## 中文提示词参考版\s*\n(?:(?!^## ).)*?```text\s*\n(.*?)```", document, re.M | re.S)
             if english and chinese and english[1].strip() == prompts["english"].strip():
                 prompts["chinese"] = chinese[1].strip()

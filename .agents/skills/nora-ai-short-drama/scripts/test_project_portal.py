@@ -65,7 +65,7 @@ class PortalTests(unittest.TestCase):
         segment = episode + "/06-生成结果/C001-场次结果/P001-分段结果"
         document = episode + "/05-视频提示词/EP001-C001-P001-视频提示词.md"
         english = "Actual <Subject 1> & dialogue"
-        self.put(document, "## 提交给节点263的完整提示词\n\n```text\n" + english +
+        self.put(document, "## 提交给模型的完整提示词\n\n```text\n" + english +
                  "\n```\n\n## 中文提示词参考版\n\n说明\n\n```text\n中文参考正文\n```\n")
         expected = {}
         for stage, run, location, text in [("01-一采", "R001", "选定", english),
@@ -95,6 +95,18 @@ class PortalTests(unittest.TestCase):
             self.assertEqual(videos[key]["prompts"], prompts)
         for key in excluded:
             self.assertNotIn("prompts", videos[key])
+        current = (self.root / document).read_text(encoding="utf-8")
+        self.put(document, current.replace("提交给模型的完整提示词", "提交给节点263的完整提示词"))
+        portal.build(self.root)
+        legacy_videos = {}
+        def visit_legacy(node):
+            if node["kind"] == "video":
+                legacy_videos[node["key"]] = node
+            for child in node.get("children", []):
+                visit_legacy(child)
+        visit_legacy(self.extract()["catalogues"]["09-剧集制作"])
+        for key, prompts in expected.items():
+            self.assertEqual(legacy_videos[key]["prompts"], prompts)
 
     def put(self, name, content):
         path = self.root / name
