@@ -80,6 +80,61 @@ class BaselineTests(unittest.TestCase):
             with self.assertRaisesRegex(AssertionError, "Director timeline mismatch"):
                 wb.verify(tmp)
 
+    def verify_director_timeline(self, timeline):
+        source = BASELINES / "Nora-MiniMaxH3-多参考视频-仅一采.workflow.json"
+        canvas = json.loads(source.read_text(encoding="utf-8"))
+        director = next(n for n in canvas["nodes"] if n["id"] == 402)
+        value = json.dumps(timeline)
+        names = list(director["widgets_values_named"])
+        director["widgets_values_named"]["timeline_data"] = value
+        director["widgets_values"][names.index("timeline_data")] = value
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, source.name).write_text(json.dumps(canvas), encoding="utf-8")
+            api = wb.Canvas(canvas).api(264)
+            Path(tmp, source.name.replace(".workflow.", ".api.")).write_text(json.dumps(api), encoding="utf-8")
+            return wb.verify(tmp)
+
+    def test_accepts_native_director_workspace_projection(self):
+        source = BASELINES / "Nora-MiniMaxH3-多参考视频-仅一采.api.json"
+        timeline = json.loads(json.loads(source.read_text(encoding="utf-8"))["402"]["inputs"]["timeline_data"])
+        timeline["global"]["refs"] = [{"index": 0, "imageFile": "cast.png", "fileName": "cast.png", "previewB64": "ui-only"}]
+        workspace = timeline["batchWorkspaces"]["r2v"]
+        # The native editor stores shared content only, with media defaults and no previews.
+        fields = ("commonEnabled", "commonCollapsed", "prompt", "refs", "refAudios", "refVideos")
+        workspace["globalCommon"] = {k: copy.deepcopy(timeline["global"][k]) for k in fields}
+        workspace["globalCommon"]["refs"] = [{"index": 0, "imageFile": "cast.png", "fileName": "cast.png", "type": "input", "subfolder": ""}]
+        timeline["segments"][0]["genImage"] = {}
+        timeline["segments"][0]["previewFrames"] = ["ui-only"]
+        workspace["segments"][0]["genImage"] = {"imageFile": "", "fileName": ""}
+        workspace["segments"][0].pop("startImage")
+        workspace["segments"][0].pop("endImage")
+        self.assertNotEqual(workspace["globalCommon"], timeline["global"])
+        self.assertNotEqual(workspace["segments"], timeline["segments"])
+        self.assertEqual(len(self.verify_director_timeline(timeline)), 1)
+
+    def test_detects_director_workspace_content_drift(self):
+        source = BASELINES / "Nora-MiniMaxH3-多参考视频-仅一采.api.json"
+        original = json.loads(json.loads(source.read_text(encoding="utf-8"))["402"]["inputs"]["timeline_data"])
+        for change in ("public_prompt", "public_media", "segment_prompt", "segment_media", "duration", "selection"):
+            with self.subTest(change=change):
+                timeline = copy.deepcopy(original)
+                workspace = timeline["batchWorkspaces"]["r2v"]
+                if change == "public_prompt":
+                    workspace["globalCommon"]["prompt"] = "stale public prompt"
+                elif change == "public_media":
+                    workspace["globalCommon"]["refs"] = [{"index": 0, "imageFile": "stale.png"}]
+                elif change == "segment_prompt":
+                    workspace["segments"][0]["prompt"] = "stale segment prompt"
+                elif change == "segment_media":
+                    workspace["segments"][0]["refVideos"] = [{"index": 0, "videoFile": "stale.mp4"}]
+                elif change == "duration":
+                    workspace["segments"][0]["durationSec"] += 1
+                else:
+                    workspace["runSelectEnabled"] = True
+                    workspace["runSelection"] = [1]
+                with self.assertRaisesRegex(AssertionError, "workspace mismatch"):
+                    self.verify_director_timeline(timeline)
+
     @unittest.skipUnless(hasattr(time, "tzset"), "requires local timezone switching")
     def test_client_timestamp_follows_machine_timezone(self):
         spec = importlib.util.spec_from_file_location("nora_client", ROOT / "references/comfyui-scripts/comfyui_client.py")

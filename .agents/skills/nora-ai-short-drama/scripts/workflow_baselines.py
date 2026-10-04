@@ -74,6 +74,29 @@ class Canvas:
 def semantic(api):return {k:{'class_type':v['class_type'],'inputs':v['inputs']} for k,v in api.items()}
 def output_for(name):return 3 if name=='Nora-RTX-图片2倍超分' else 461 if name.startswith('Qwen') else 264 if '仅一采' in name else 214 if '仅二采' in name else 16
 
+def director_editor_state(block, common=False):
+ """Compare persisted Director content, excluding preview blobs and root-only fields."""
+ if common:
+  defaults={'commonEnabled':False,'commonCollapsed':False,'prompt':'','refs':[],'refAudios':[],'refVideos':[]}
+  out={k:copy.deepcopy(block.get(k,v)) for k,v in defaults.items()}
+  if 't2vCommon' in block:out['t2vCommon']=copy.deepcopy(block['t2vCommon'])
+ else:
+  out={k:copy.deepcopy(v) for k,v in block.items() if k not in {'previewB64','previewFrames','previewMime','imageB64'}}
+  out.setdefault('loras',[])
+ for field,file_key in [('refs','imageFile'),('refAudios','audioFile'),('refVideos','videoFile')]:
+  defaults={file_key:'','fileName':'','type':'input','subfolder':''}
+  if field!='refs':defaults['durationSec']=None
+  if field=='refVideos':defaults['pairedAudioFile']=''
+  out[field]=sorted(({'index':int(r.get('index',r.get('slot',0))),**{k:r.get(k,v) for k,v in defaults.items()}} for r in block.get(field,[])),key=lambda r:r['index'])
+ if not common:
+  for field in ['genImage','startImage','endImage','referenceVideo']:
+   value=block.get(field)
+   if value is None:out.pop(field,None);continue
+   defaults={'imageFile':'','fileName':''} if field!='referenceVideo' else {'videoFile':'','fileName':'','type':'input','subfolder':''}
+   if field in ('startImage','endImage'):defaults.update(width=0,height=0)
+   out[field]={k:value.get(k,v) for k,v in defaults.items()}
+ return out
+
 def verify(directory):
  results=[]
  for p in sorted(Path(directory).glob('*.workflow.json')):
@@ -93,7 +116,10 @@ def verify(directory):
    assert timeline['global']['prompt']==inputs['global_prompt'], 'Director public prompt mismatch'
    assert sum(s['frameCount'] for s in timeline['segments'])==inputs['total_frames'], 'Director segment frame mismatch'
    workspace=timeline['batchWorkspaces']['r2v']
-   assert workspace['segments']==timeline['segments'] and workspace['globalCommon']==timeline['global'], 'Director editor workspace mismatch'
+   assert director_editor_state(workspace['globalCommon'],True)==director_editor_state(timeline['global'],True), 'Director public workspace mismatch'
+   assert [director_editor_state(s) for s in workspace['segments']]==[director_editor_state(s) for s in timeline['segments']], 'Director segment workspace mismatch'
+   for field,default in [('selectedIndex',0),('editMode','segment'),('runSelectEnabled',False),('runSelection',[])]:
+    assert workspace.get(field,default)==timeline.get(field,default),('Director selection workspace mismatch',field)
   # Exercise all supported reference-count combinations, removing unused loaders.
   count=0
   if refs:

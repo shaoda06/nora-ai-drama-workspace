@@ -1,6 +1,6 @@
 # ComfyUI-MiniMaxH3导演台节点使用规范
 
-版本：v1.02；更新日期：2026-10-04。
+版本：v1.03；更新日期：2026-10-04。
 
 用于填写、修改和检查 `MiniMaxH3Director` 节点的网页画布与API任务副本。接口说明入口为[节点仓库](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director)。正式基准、固定生成参数、种子策略、执行授权和输出命名读取[H3执行规范](ComfyUI-H3视频执行规范.md)；模型正文及中文参考版读取[逐集内容制作规范第6节](../流程规范/逐集内容制作规范.md#6-分段视频提示词文档)及 `h3-prompt-writing`。本文件不复制这两类规则。
 
@@ -8,7 +8,7 @@
 
 当前正式一采画布中的导演台为402，节点类型是 `MiniMaxH3Director`。任务副本以真实节点类型和连接为依据，不能仅凭标题辨认节点。常规使用原生r2v素材组，不额外连接 `r2v_groups`；外部组一旦接入，会优先于网页素材组，不能一边填写原生组、一边以为两边会自动合并。
 
-一个素材组对应一个项目P分段，组内可包含多个Shot。`segments[]` 的数组顺序就是组顺序；每个组保留独立id，并在既有输入映射中记录对应EP/C/P。移动、复制或删除组后同步检查分镜顺序、时长、提示词、连续开关和输出范围，不把组显示序号当作永久P编号。
+本工作区采用一个素材组对应一个项目P分段的编排方式，组内可包含多个Shot；这是项目制作约定，节点本身只识别素材组，不要求使用EP/C/P编号。`segments[]` 的数组顺序就是组顺序；每个组保留独立id，并在既有输入映射中记录对应EP/C/P。移动、复制或删除组后同步检查分镜顺序、时长、提示词、连续开关和输出范围，不把组显示序号当作永久P编号。
 
 | 区域 | 用途 | 时间线字段 |
 | --- | --- | --- |
@@ -18,6 +18,19 @@
 | 模式编辑状态 | 再次打开画布时恢复公共区、各组及选择状态 | `batchWorkspaces.r2v` |
 
 使用公共素材时，明确将 `global.commonEnabled` 设为true。折叠公共区只改变展示，不等于关闭公共参数。关闭公共参数后，不把仍保留在global中的素材计入本组实际输入；不能假定本组原有槽位和提示词会自动恢复成从1开始。
+
+### 1.1 视频模式与输入条件
+
+| task_type | 输入用途 | 模型类别 |
+| --- | --- | --- |
+| t2v | 文本生成音视频，无硬首尾帧 | FL2VA |
+| i2v | 图片引导生成，使用该模式的图像输入 | FL2VA |
+| fl2v | 首帧、尾帧或首尾帧；空组可只写文本 | FL2VA |
+| r2v | 多张图片、视频与音频作为参考素材，使用公共／本组素材区 | Ref2VA |
+| v2v | 对源视频时间轴的对应片段进行编辑，源片段绑定Video 1 | Ref2VA |
+| rv2v | 源视频编辑，同时加入参考图片与音频 | Ref2VA |
+
+正式任务沿用H3执行规范中的r2v与已确认模型组合。此表说明节点能力，不授权切换模式、换模型或重做素材；i2v／fl2v的硬首尾帧和r2v的普通参考图片不能互相替代。公共／本组容量规则适用r2v，不机械套到首尾帧或源视频时间轴。
 
 ## 2. 素材排序与编号
 
@@ -122,6 +135,20 @@ offset按第2.2节计算。公共素材连续编号时，offset等于该类公�
 
 r2v中的普通Picture提供视觉参考，不是i2v／fl2v的硬首帧。首段与后段的首帧用途读取[首帧规范](../素材规范/首帧参考图规范.md)，不要仅靠写“第一帧完全一致”改变输入模式。视频自带音轨与独立Audio槽是不同输入，不把两者混计或因为上传了音色参考就复制其台词。
 
+### 3.1 音频参考与输出模式
+
+`output.audioMode`决定输出视频的音频来源，参考Audio素材则参与生成条件；上传参考音频与选择输出原声是两件事。
+
+| audioMode | 输出行为 | 使用要求 |
+| --- | --- | --- |
+| generate | 优先使用模型生成、解码的音频；适用任务在生成音频为空时可回退到原声来源 | 正式一采沿用此模式；音色参考通常按reference用途描述，不自动复制参考台词 |
+| source | v2v／rv2v取对应源片段原声；r2v没有源视频时间轴时，取本组实际合并输入中的第一条可用独立参考音频 | 使用原声须获明确授权；采用fully_copy用途时，提示词台词与该音频一致 |
+| mute | 输出静音 | 明确要求静音时使用，不能据无输出声音声称参考音频未参与条件 |
+
+r2v的source逐组选择原声，公共音频也属于本组的合并输入；不能仅在提示词中指定另一个Audio标签就改变“第一条可用音频”的选择。某组没有可用原声时，该组输出静音，不借用另一组的音频。原声输出按该段实际帧数裁切或补齐时长，并进行输出格式归一化，不能视为文件字节完全不变。generate产生空音频时，检查报告与实际来源，不把回退的原声登记成模型新生成声音。接口行为见[音频输出实现](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/main/director/audio_export.py)。
+
+音频槽可以选择音频文件，也可以从视频中提取首条音轨；提取后实际填写的是生成的音频文件，不因此占用Video槽。核对上传响应中的真实路径，不能继续把原视频路径写到audioFile。音轨提取不会自动批准声音来源或新增对白。
+
 ## 4. 公共提示词与本组提示词
 
 | 内容 | 保存位置 |
@@ -129,7 +156,7 @@ r2v中的普通Picture提供视觉参考，不是i2v／fl2v的硬首帧。首段
 | 公共主体定义及公共素材标签说明 | `global.prompt`，与402控件/API的 `global_prompt` 一致 |
 | 本段其余五节正文 | `segments[i].prompt` |
 
-公共参数开启时，节点把“公共正文＋空行＋本组正文”拼接为本组实际提示词，不是本组正文替换公共正文。公共区维护 `subject_definitions`；本组维护summary、retention_analysis、detailed_description、overall_soundscape、non_diegetic_music。拼接后符合Ref2VA六节格式，不再在本组重复注入同一份主体定义。
+公共参数开启时，节点把“公共正文＋空行＋本组正文”拼接为本组实际提示词，不是本组正文替换公共正文。本工作区按H3提示词格式，将 `subject_definitions` 放公共区，其余summary、retention_analysis、detailed_description、overall_soundscape、non_diegetic_music放本组。六节格式和这种拆分属于本工作区的填写约定；导演台接口接收字符串，不强制检查章节名称。拼接后符合Ref2VA六节格式，不再在本组重复注入同一份主体定义。
 
 公共定义只使用各组实际一致的素材含义。独有素材用途写入本组正文；新增主体、场景状态或声音信息仍依据获批资料整理，不因技术拆分改写剧情。主体与说话者编号的含义和分配读取逐集内容规范；素材顺延不改变正文中的主体或说话者关系。
 
@@ -154,11 +181,13 @@ frameCount = max(5, round(durationSec * 24))
 | 时间线根字段 | width、height、frameRate、refMaxSize、totalFrames |
 | output | 宽高与当前实际画布规格匹配，其他生成参数按正式基准 |
 | 根global与segments | 本次真实正文、素材、顺序、时长和衔接设置 |
-| `batchWorkspaces.r2v.globalCommon` | 与本次global相同 |
-| `batchWorkspaces.r2v.segments` | 与本次segments相同 |
-| 选择状态 | 根与工作区中的editMode、selectedIndex、runSelectEnabled、runSelection相符 |
+| `batchWorkspaces.r2v.globalCommon` | 公共开关、折叠状态、prompt、refs、refAudios、refVideos及存在的t2vCommon，与global对应字段一致 |
+| `batchWorkspaces.r2v.segments` | 组顺序、id、正文、素材、时长、帧数、衔接与其他持久化业务字段一致 |
+| 选择状态 | 根与工作区中的editMode、selectedIndex、runSelectEnabled、runSelection相符；原生导出省略字段时，按界面默认值核对，selectedIndex默认为0 |
 
-只修改根segments而保留工作区旧正文，会使重新打开画布时恢复出另一套内容。修改画布的 `widgets_values_named` 与对应 `widgets_values` 时保持同值；API的timeline_data使用JSON序列化得到的字符串，不拼接转义。删除无关旧预览、旧报告及生成缓存引用，不把它们当作本次结果。
+编辑工作区是经原生序列化整理后的业务快照，不是根对象的完整复制。globalCommon不必包含global的taskType、genImage、referenceVideo等模式根字段；素材预览数据可以被删除，type、subfolder、空图像字段等可以按接口补默认值，null首尾帧可以被省略。比较对应持久化内容，不要求两份原始JSON对象完全相等，也不能为追求相等把根专有字段强塞进工作区。未知字段不擅自删除；实际序列化格式见[网页编辑状态实现](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/main/web/js/minimax_timeline.js)。
+
+只修改根segments而保留工作区旧正文，会使重新打开画布时恢复出另一套内容。修改画布的 `widgets_values_named` 与对应 `widgets_values` 时保持同值；API的timeline_data使用JSON序列化得到的字符串，不拼接转义。删除无关旧预览、旧报告及生成缓存引用，不把它们当作本次结果。离线配对校验检查对应公共内容、分组内容和选择状态，能接受原生快照的精简形式；不能用忽略业务字段的方法规避内容不同步。
 
 实际种子填写402的seed，设置及复用读取[种子策略](ComfyUI-H3视频执行规范.md#场次基准种子与实际任务种子)。模板里的三组、时长、id和种子均为填写样例，不限制其他任务的组数。
 
@@ -180,17 +209,74 @@ frameCount = max(5, round(durationSec * 24))
 
 ## 7. 运行范围、缓存与输出
 
-默认运行本次全部组，关闭选择运行。局部运行明确选中的组与P映射，同时核对被引用前组的结果和缓存版本；未选组可能由缓存或源画面填充，不能用旧预览声称它也重新生成了。修改前段内容后，判断后段继承是否仍有效，不只勾后段就宣称继承了未生成的新前段。
+### 7.1 选择运行与缓存
 
-当前正式一采的model、video_vae、audio_vae、clip及外部SIGMAS按基准接线。外部SIGMAS已连接时，以外部噪声表为准，不仅凭导演台内部steps／scheduler显示判断采样步数。未连接selflift、refine、face_refine或semantic_bridge时，不把相应内存控件或名称视为功能已启用。
+默认运行本次全部组，关闭选择运行。局部运行明确选中的组与P映射，同时核对被引用前组的结果和缓存版本；不能用旧预览声称未选组也重新生成了。修改前段内容后，判断后段继承是否仍有效，不只勾后段就宣称继承了未生成的新前段。
 
-导演台输出images、audio、fps、frame_count及report等信息。视频合成使用真实images、audio和fps；实际保存节点及命名读取H3执行规范，不使用预览URL或旧缓存作结果。一个合并视频包含多组时，在既有执行记录保留完整组序与P范围，不冒充每个P的独立输出。
+| 未选组的情况 | 全部导出时的行为 |
+| --- | --- |
+| 有可用缓存 | 可将缓存加入合并结果，该组没有重新采样 |
+| v2v／rv2v无缓存，但有可用源片段 | 可直接填入源画面，该组没有重新采样 |
+| r2v等生成组无缓存，且无可用源片段 | 跳过该组，不加入合并；报告列出skipped／omitted from merge |
+
+因此“全部导出”不保证一定包含原计划的全部组。交付时核对报告中的缓存复用、源片段直通、缺失组以及实际帧数；缺失组需在获授权后执行，不能用空画面或另一段结果补成完整场次。选择运行及合并行为见[执行实现](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/main/director/executor_core.py)。
+
+### 7.2 采样输入
+
+当前正式一采的model、video_vae、audio_vae、clip及外部SIGMAS按基准接线。外部SIGMAS已连接时，以外部噪声表为准，内部steps／scheduler不替代它；sampler、CFG与Shift仍有作用，不因外部SIGMAS接入而忽略这些控件。节点出厂参数不是项目已批准参数。
+
+### 7.3 输出端口
+
+端口按实际节点类型与接口核对，不仅凭相似的IMAGE类型接线。
+
+| 输出序号 | 端口 | 内容与启用条件 |
+| ---: | --- | --- |
+| 0 | images | 最终生成画面；连接并执行Refine时为处理后的画面，首次确认等待时可能被阻断 |
+| 1 | audio | 按audioMode得到的输出音频，合成时与对应画面匹配 |
+| 2 | fps | 实际输出帧率 |
+| 3 | frame_count | 实际输出帧数，用于核对时长与输出范围 |
+| 4 | source_images | 原时间轴画面，受export_source_images控制；不是一采结果 |
+| 5 | report | 分组计划、运行与输出情况，含跳过、复用及异常说明 |
+| 6 | images_pre_refine | Refine前的一采画面，用于与二采比较或首次确认 |
+| 7 | images_pre_face_refine | 修脸前画面；需连接并启用FaceRefine，同时启用export_pre_face_refine |
+
+source_images解码失败时可能出现灰色占位，同时报告说明失败，不能将其作为生成结果。视频合成使用真实images、audio和fps；实际保存节点及命名读取H3执行规范，不使用预览URL或旧缓存作结果。一个合并视频包含多组时，在既有执行记录保留完整组序与P范围，不冒充每个P的独立输出。端口定义见[导演台节点接口](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/main/nodes/director.py)。
+
+### 7.4 可选扩展与激活条件
+
+正式一采没有连接以下扩展。只有对应方案和执行得到授权后，才在任务副本增加连接；扩展须有效接入并启用，控件名称出现refine不代表已启用二采。
+
+| 扩展 | 实际作用与条件 |
+| --- | --- |
+| Refine：refine | 连接refine后进行同尺寸精修采样；passes可重复精修 |
+| Refine：upscale | 放大到目标画布后再采样；放大方式与二采噪声表须明确，passes不代表每轮重复放大 |
+| Refine：latent_upscale | 放大H3潜变量，不进行第二次采样；不能登记成二采 |
+| Refine：confirm_first_pass | 首次Queue输出images_pre_refine，并阻断主images下游；再次Queue命中对应一采缓存后继续二采。再次执行仍需授权，缓存不匹配时不声称已沿用一采 |
+| SelfLift | 接入selflift，使一采采用低清前缀、潜变量提升、高清收尾；使用Euler，仍是一采扩展 |
+| FaceRefine | 接入face_refine后进行局部修脸采样并合回；修脸前输出还受独立开关控制 |
+| Semantic Bridge | 接入semantic_bridge改写条件token；蒸馏目标为FL2VA，r2v／v2v／rv2v是强制兼容，不视为已验证质量提升，不串联两座桥 |
+
+Refine的skip_fl2v可使首尾帧组跳过二采；采用混合模式或fl2v时检查实际设置与报告，不能仅凭连了Refine就声称每组都完成二采。扩展接入不自动改变工作流正式状态；二采倍率、模型、参数及与现行一采的衔接继续按H3执行规范确认。
 
 ## 8. 导演包导入导出
 
 导演包用于迁移导演台时间线、公共／本组提示词和媒体，以及部分节点控件，格式为 `.mmxpack.zip`。它不是完整ComfyUI画布，也不包含UNET／CLIP／VAE权重、LoRA模型链或外部SIGMAS接线，不能代替正式画布和API。
 
-网页导出前将当前编辑状态同步到时间线，检查公共素材、各组素材和缺失提示。导入会上传包内媒体并更新当前导演台时间线及部分控件，属于实际写入；操作前保留当前画布，导入后重新核对素材index与提示词标签、尺寸、种子、时长、组顺序、编辑缓存及外部接线。
+包内使用英文目录与文件名，典型结构如下，媒体扩展名依实际文件格式：
+
+```text
+pack.json
+shared_params/shared_params.json
+shared_params/Picture1.png
+asset_groups/01/group.json
+asset_groups/01/Picture4.png
+timeline.json
+source_video/                 # 有源视频时使用
+```
+
+原生导出写入timeline.json，以保留完整时间线和其他模式的草稿；符合导演包结构的转换工具可仅提供pack.json、shared_params及asset_groups，不强制要求timeline.json。组目录中的媒体文件名仍按公共区之后的绝对标签顺延；公共区占Picture 1–3时，组首张图片命名Picture4，不在组内重置为Picture1。文件名顺延不意味着不同组共享同一份本组素材。
+
+网页导出前将当前编辑状态同步到时间线，检查公共素材、各组素材和缺失提示。导入会上传包内媒体到input/minimax_director_packs/，覆盖当前导演台时间线并更新部分控件，属于实际写入；操作前保留当前画布，导入后重新核对素材index与提示词标签、尺寸、种子、时长、组顺序、编辑缓存及外部接线。部分控件可以迁移，不等于全部生成参数已与正式基准相同；按H3执行规范逐项核对。结构说明见[导演包接口](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director#导演包剧本--素材)。
 
 导演包是可选迁移工具，常规任务仍使用正式画布/API副本。没有对应使用授权时不自动导入、导出或扩展通信客户端；包导入成功不构成生成授权或素材批准。
 
@@ -199,5 +285,5 @@ frameCount = max(5, round(durationSec * 24))
 1. 核对任务模式、原生组输入和公共参数开关；明确组与P映射。
 2. 按第2节计算各模态的公共与本组绝对index，逐组核对真实文件、最终标签和合并后容量。
 3. 核对公共正文与各组正文拼接后，和对应获批英文正文及中文参考版一致。
-4. 同步时长、帧数、根时间线、r2v工作区和画布/API控件；检查选择运行与继承前组。
+4. 同步时长、帧数、根时间线、r2v工作区持久化内容和画布/API控件；检查选择运行、继承前组及实际音频来源。
 5. 按H3执行规范核对固定参数、实际种子、输出范围和本次授权，再交付画布或提交任务。填写检查不自动触发生成。
