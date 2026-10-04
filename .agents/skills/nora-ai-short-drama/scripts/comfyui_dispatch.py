@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'com
 import comfyui_client as client
 
 TASK_TYPES = ('image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess')
+VIDEO_GENERATION_NODES = {'MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo'}
 LOCK_PATH = Path(__file__).resolve().parents[1] / 'state' / 'comfyui-dispatch.lock'
 
 
@@ -65,6 +66,19 @@ def submission_lock():
             release()
 
 
+def video_job_count(queue):
+    count = 0
+    for item in queue['queue_pending'] + queue['queue_running']:
+        # ComfyUI queue entries: [number, prompt_id, prompt, extra_data, outputs...].
+        if (not isinstance(item, list) or len(item) < 3 or not isinstance(item[2], dict) or
+                not item[2] or any(not isinstance(node, dict) or
+                    not isinstance(node.get('class_type'), str) for node in item[2].values())):
+            raise client.ClientError('invalid_response', 'Queue entry lacks a readable API prompt')
+        if any(node['class_type'] in VIDEO_GENERATION_NODES for node in item[2].values()):
+            count += 1
+    return count
+
+
 def dispatch(args):
     workflow = client.strict_json(Path(args.workflow).read_bytes())
     client.validate_workflow(workflow)
@@ -109,12 +123,15 @@ def dispatch(args):
                 if (not isinstance(queue, dict) or
                         not all(isinstance(queue.get(k), list) for k in ('queue_pending', 'queue_running'))):
                     raise client.ClientError('invalid_response', 'Queue response lacks pending/running arrays')
+                videos = video_job_count(queue)
             except client.ClientError as exc:
                 checks.append({'url': url, 'state': 'unknown', 'error': str(exc)})
                 continue
-            check = {'url': url, 'pending': len(queue['queue_pending']), 'running': len(queue['queue_running'])}
-            if check['pending'] >= config['busy-pending-threshold']:
-                checks.append({**check, 'state': 'busy'})
+            check = {'url': url, 'pending': len(queue['queue_pending']),
+                     'running': len(queue['queue_running']), 'video_jobs': videos}
+            if videos or check['pending'] >= config['busy-pending-threshold']:
+                checks.append({**check, 'state': 'busy',
+                               'reason': 'video_generation' if videos else 'pending_threshold'})
                 continue
             checks.append({**check, 'state': 'selected'})
             for item in uploads:
@@ -138,7 +155,7 @@ def dispatch(args):
             # Once a POST is attempted, errors propagate: never try the next endpoint.
             result = client.submit(remote, args, workflow=workflow)
             return {'dispatch_state': 'accepted', 'url': url, 'checks': checks, **result}
-        return {'dispatch_state': 'deferred', 'reason': 'no_eligible_endpoint_below_threshold', 'checks': checks}
+        return {'dispatch_state': 'deferred', 'reason': 'no_eligible_available_endpoint', 'checks': checks}
 
 
 def parser():

@@ -37,13 +37,19 @@ class DispatchTests(unittest.TestCase):
                     state = owner.queues[self.url]
                     if isinstance(state, Exception):
                         raise state
-                    pending, running = state
-                    return {'queue_pending': [['private inputs']] * pending, 'queue_running': [[]] * running}
+                    if isinstance(state, tuple):
+                        pending, running = state
+                        item = [0, 'existing-job', {'1': {'class_type': 'LoadImage',
+                                'inputs': {'image': 'private inputs'}}}, {}, ['1']]
+                        state = {'queue_pending': [item] * pending, 'queue_running': [item] * running}
+                        owner.queues[self.url] = state
+                    return state
                 if route == '/prompt':
                     if self.url in owner.post_errors:
                         raise owner.post_errors[self.url]
-                    pending, running = owner.queues[self.url]
-                    owner.queues[self.url] = (pending + 1, running)
+                    request = json.loads(data)
+                    owner.queues[self.url]['queue_pending'].append(
+                        [0, 'new-job', request['prompt'], {}, list(request['prompt'])])
                     return {'prompt_id': f'job-{len(owner.calls)}'}
                 raise AssertionError(route)
 
@@ -98,6 +104,63 @@ class DispatchTests(unittest.TestCase):
     def test_batches_fill_default_before_overflow(self):
         urls = [d.dispatch(self.args(name=f'task-{i}'))['url'] for i in range(5)]
         self.assertEqual(urls, [A, A, B, B, C])
+
+    def test_running_or_pending_video_blocks_all_new_task_types(self):
+        for node in ('MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo'):
+            for field in ('queue_running', 'queue_pending'):
+                for kind in d.TASK_TYPES:
+                    with self.subTest(node=node, field=field, kind=kind):
+                        self.queues = {url: (0, 0) for url in (A, B, C)}
+                        item = [0, 'manual-video', {'1': {'class_type': node,
+                                'inputs': {'prompt': 'private inputs'}}}, {}, ['1']]
+                        self.queues[A] = {'queue_running': [], 'queue_pending': []}
+                        self.queues[A][field] = [item]
+                        result = d.dispatch(self.args(name=f'{node}-{field}-{kind}', task_type=kind))
+                        self.assertEqual(result['checks'][0]['video_jobs'], 1)
+                        self.assertEqual(result['checks'][0]['reason'], 'video_generation')
+                        self.assertNotIn('private inputs', json.dumps(result))
+                        if kind == 'video-second-pass':
+                            self.assertEqual(result['dispatch_state'], 'deferred')
+                        else:
+                            self.assertEqual(result['url'], B)
+
+    def test_disabled_defers_while_default_video_is_running(self):
+        self.config['enable-multi-remote'] = False
+        self.write_config()
+        self.queues[A] = {'queue_pending': [], 'queue_running': [
+            [0, 'video', {'1': {'class_type': 'MiniMaxH3Director', 'inputs': {}}}]]}
+        result = d.dispatch(self.args())
+        self.assertEqual(result['dispatch_state'], 'deferred')
+        self.assertEqual([(url, route) for url, route, _ in self.calls], [(A, '/queue')])
+        self.assertFalse((self.root / 'first').exists())
+
+    def test_video_batch_uses_one_job_per_endpoint_then_defers(self):
+        self.path.write_text(json.dumps({'1': {'class_type': 'MiniMaxH3Director', 'inputs': {}}}), encoding='utf-8')
+        results = [d.dispatch(self.args(name=f'video-{i}', task_type='video-first-pass')) for i in range(4)]
+        self.assertEqual([r['url'] for r in results[:3]], [A, B, C])
+        self.assertEqual(results[3]['dispatch_state'], 'deferred')
+        self.assertFalse((self.root / 'video-3').exists())
+
+    def test_postprocess_does_not_reserve_endpoint_and_completed_video_releases_it(self):
+        self.queues[A] = {'queue_pending': [], 'queue_running': [
+            [0, 'postprocess', {'1': {'class_type': 'VHS_VideoCombine', 'inputs': {}}}]]}
+        result = d.dispatch(self.args())
+        self.assertEqual(result['url'], A)
+        self.assertEqual(result['checks'][0]['video_jobs'], 0)
+        self.queues[A] = {'queue_pending': [], 'queue_running': [
+            [0, 'video', {'1': {'class_type': 'MiniMaxH3Director', 'inputs': {}}}]]}
+        self.assertEqual(d.dispatch(self.args(name='during-video'))['url'], B)
+        self.queues[A] = (0, 0)
+        self.assertEqual(d.dispatch(self.args(name='after-completion'))['url'], A)
+
+    def test_unreadable_queue_is_unknown_and_not_available(self):
+        for item in ([], [0, 'job', None], [0, 'job', {'1': {}}]):
+            with self.subTest(item=item):
+                self.queues = {url: (0, 0) for url in (A, B, C)}
+                self.queues[A] = {'queue_pending': [], 'queue_running': [item]}
+                result = d.dispatch(self.args(name=f'malformed-{len(self.calls)}'))
+                self.assertEqual(result['checks'][0]['state'], 'unknown')
+                self.assertEqual(result['url'], B)
 
     def test_all_busy_defer_without_post_or_evidence(self):
         self.queues = {url: (2, 1) for url in (A, B, C)}
