@@ -161,8 +161,9 @@ def validate_workflow(workflow):
                               node_id=node_id)
 
 
-def submit(client, args):
-    workflow = strict_json(Path(args.workflow).read_bytes())
+def submit(client, args, workflow=None):
+    if workflow is None:
+        workflow = strict_json(Path(args.workflow).read_bytes())
     validate_workflow(workflow)
     payload = {"prompt": workflow, "client_id": str(uuid.uuid4())}
     request_bytes = encoded(payload)

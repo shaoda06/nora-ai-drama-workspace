@@ -1,6 +1,6 @@
 # ComfyUI-图片超分执行规范
 
-版本：v1.12；更新日期：2026-10-03。
+版本：v1.13；更新日期：2026-10-04。
 
 适用于需超分的生产图片：人物正面半身图、服装正背面图、道具三视图、道具状态参考图、虚拟道具基础界面、场景参考图、首帧参考图及新生成的剧集专用参考图。本规范所列类型的新生成及修订候选先以对应低分辨率原生生成并送审，用户批准具体版本后，以该审批原图执行一次2倍超分，核对正式尺寸后保存。超分是获批图的后处理，不重新生成提示词，不调用Qwen采样，不裁切、拉伸或换图；修改后的新候选须重新审批。
 
@@ -21,7 +21,7 @@
 - 先在原生成／审阅记录确认用户已批准的对应审批尺寸具体版本，核对实际文件、来源和可解码性。用户批准即接续本规范的超分，无需再问一次执行许可；尚未批准、仅部分认可或未明确版本时不提交。
 - 输入必须是被批准的审批原图；不使用另一张同人物／同道具／同场景的其他图或中间预览。沿用已有上传响应或通过固定工具上传，使用真实返回路径。审批原图与其请求、批准记录完整保留。
 - 历史已批准的其他尺寸资产保留，不批量补超分、不因规格变化撤销批准。明确技术测试可以使用指定测试输入，测试结果不登记为正式资产。
-- 读取项目`comfyui-config.json`中的服务地址；按[库存技能](../../dependencies/comfyui-inventory/SKILL.md)核对节点与参数。没有可用节点或出现执行异常时报告，不安装依赖、不切换放大器、不自动重提。
+- 按[项目选端及任务地址规则](../../SKILL.md#项目-comfyui-配置)选择新任务服务或恢复原任务；按[库存技能](../../dependencies/comfyui-inventory/SKILL.md)核对节点与参数。没有可用节点或出现执行异常时报告，不安装依赖、不切换放大器、不自动重提。
 
 ## 2. 配套工作流与参数
 
@@ -41,17 +41,12 @@
 
 ## 3. 执行与恢复
 
-使用[固定通信工具](../comfyui-scripts/README.md)的upload、submit、status、download；不另写通信客户端或一键重试循环。以下命令中的工具路径、服务地址、文件和编号须替换为实际值：
+新任务使用[统一分配与提交入口](../comfyui-scripts/README.md#nora统一分配与提交)，任务类型填 `image-upscale`。按第2节准备API副本、批准原图和节点2的image输入绑定；选端后由入口复用固定upload和submit，保存真实上传响应、请求与提交证据。沿用下文规定的超分附件前缀传入各证据文件名，不另建管理目录。
+
+查询及取回复用固定status、download，地址读取本任务的实际提交证据。例如：
 
 ```sh
-python3 /实际技能目录/references/comfyui-scripts/comfyui_client.py upload --url 'http://实际服务:8188' --file '/实际目录/获批审批图.png' --subfolder '本任务输入目录' --result '/实际附件目录/生成前缀-超分-001-上传响应.json'
-```
-
-从本地API基准复制任务副本，把上传响应的`data.input_path`写入节点2的`image`，把本任务前缀写入节点3的`filename_prefix`，保存为`生成前缀-超分-001-工作流.json`，核对第2节参数及连线后提交一次：
-
-```sh
-python3 /实际技能目录/references/comfyui-scripts/comfyui_client.py submit --url 'http://实际服务:8188' --workflow '/实际附件目录/生成前缀-超分-001-工作流.json' --record-dir '/实际附件目录' --attempt-name '生成前缀-超分-001-提交尝试.json' --request-name '生成前缀-超分-001-请求.json' --response-name '生成前缀-超分-001-提交响应.json'
-python3 /实际技能目录/references/comfyui-scripts/comfyui_client.py status --url 'http://实际服务:8188' --timeout 25 --prompt-id '真实ID'
+python3 /实际技能目录/references/comfyui-scripts/comfyui_client.py status --url 'http://本任务实际服务:8188' --timeout 25 --prompt-id '真实ID'
 ```
 
 附件留存与检查时间维护执行[精简留档规则](../模板/ComfyUI-任务监控提示词模板.md#执行附件精简留档)。监控方式、计数、间隔及切换读取[图片监控规则](../模板/ComfyUI-任务监控提示词模板.md)，按本批实际任务填写。用户审批期间不查询已终态生图任务；超分提交后只查询自己的真实ID。成功必须同时具备completed=true、status_str=success和节点3的一张正式PNG输出。
