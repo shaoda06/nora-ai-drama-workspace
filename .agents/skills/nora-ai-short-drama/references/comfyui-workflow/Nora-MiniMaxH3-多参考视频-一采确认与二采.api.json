@@ -224,62 +224,16 @@
       "title": "502｜导演台 · 一采确认与二采"
     }
   },
-  "264": {
-    "class_type": "VHS_VideoCombine",
+  "403": {
+    "class_type": "PreviewAny",
     "inputs": {
-      "frame_rate": [
+      "source": [
         "502",
-        2
-      ],
-      "loop_count": 0,
-      "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-二采",
-      "format": "video/h264-mp4",
-      "pix_fmt": "yuv420p",
-      "crf": 19,
-      "save_metadata": true,
-      "trim_to_audio": false,
-      "pingpong": false,
-      "save_output": true,
-      "images": [
-        "502",
-        0
-      ],
-      "audio": [
-        "502",
-        1
+        5
       ]
     },
     "_meta": {
-      "title": "264｜二采末段辅助保存（分段全量见导演台导出）"
-    }
-  },
-  "408": {
-    "class_type": "VHS_VideoCombine",
-    "inputs": {
-      "frame_rate": [
-        "502",
-        2
-      ],
-      "loop_count": 0,
-      "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-一采",
-      "format": "video/h264-mp4",
-      "pix_fmt": "yuv420p",
-      "crf": 19,
-      "save_metadata": true,
-      "trim_to_audio": false,
-      "pingpong": false,
-      "save_output": true,
-      "images": [
-        "502",
-        6
-      ],
-      "audio": [
-        "502",
-        1
-      ]
-    },
-    "_meta": {
-      "title": "408｜一采末段辅助保存（分段全量见导演台导出）"
+      "title": "12｜导演台执行报告"
     }
   }
 }

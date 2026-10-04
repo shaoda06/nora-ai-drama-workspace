@@ -1,6 +1,6 @@
 {
   "id": "5ffa62de-e11a-4745-9830-d9429827a09b",
-  "revision": 0,
+  "revision": 1,
   "last_node_id": 502,
   "last_link_id": 27,
   "nodes": [
@@ -493,95 +493,6 @@
       "bgcolor": "#653"
     },
     {
-      "id": 264,
-      "type": "VHS_VideoCombine",
-      "pos": [
-        2230,
-        190
-      ],
-      "size": [
-        720,
-        744.6666666666667
-      ],
-      "flags": {},
-      "order": 13,
-      "mode": 0,
-      "inputs": [
-        {
-          "label": "图像",
-          "name": "images",
-          "type": "IMAGE",
-          "link": 17
-        },
-        {
-          "label": "音频",
-          "name": "audio",
-          "shape": 7,
-          "type": "AUDIO",
-          "link": 18
-        },
-        {
-          "label": "批次管理",
-          "name": "meta_batch",
-          "shape": 7,
-          "type": "VHS_BatchManager",
-          "link": null
-        },
-        {
-          "name": "vae",
-          "shape": 7,
-          "type": "VAE",
-          "link": null
-        },
-        {
-          "name": "frame_rate",
-          "type": "FLOAT",
-          "widget": {
-            "name": "frame_rate"
-          },
-          "link": 19
-        }
-      ],
-      "outputs": [
-        {
-          "label": "文件名",
-          "name": "Filenames",
-          "type": "VHS_FILENAMES",
-          "links": []
-        }
-      ],
-      "title": "264｜二采末段辅助保存（分段全量见导演台导出）",
-      "properties": {
-        "Node name for S&R": "VHS_VideoCombine"
-      },
-      "widgets_values": {
-        "frame_rate": 24,
-        "loop_count": 0,
-        "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-二采",
-        "format": "video/h264-mp4",
-        "pix_fmt": "yuv420p",
-        "crf": 19,
-        "save_metadata": true,
-        "trim_to_audio": false,
-        "pingpong": false,
-        "save_output": true
-      },
-      "widgets_values_named": {
-        "frame_rate": 24,
-        "loop_count": 0,
-        "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-二采",
-        "format": "video/h264-mp4",
-        "pix_fmt": "yuv420p",
-        "crf": 19,
-        "save_metadata": true,
-        "trim_to_audio": false,
-        "pingpong": false,
-        "save_output": true
-      },
-      "color": "#233",
-      "bgcolor": "#355"
-    },
-    {
       "id": 502,
       "type": "MiniMaxH3Director",
       "pos": [
@@ -664,26 +575,18 @@
           "name": "images",
           "shape": 6,
           "type": "IMAGE",
-          "links": [
-            17
-          ]
+          "links": []
         },
         {
           "name": "audio",
           "shape": 6,
           "type": "AUDIO",
-          "links": [
-            18,
-            26
-          ]
+          "links": []
         },
         {
           "name": "fps",
           "type": "FLOAT",
-          "links": [
-            19,
-            27
-          ]
+          "links": []
         },
         {
           "name": "frame_count",
@@ -707,9 +610,7 @@
           "name": "images_pre_refine",
           "shape": 6,
           "type": "IMAGE",
-          "links": [
-            25
-          ]
+          "links": []
         },
         {
           "name": "images_pre_face_refine",
@@ -832,13 +733,13 @@
       "outputs": [],
       "title": "一采确认与二采填写说明",
       "properties": {
-        "text": "视频生成基准：一采确认与二采\n导演台502；编码器INT8 ConvRot，device=default。\n首次Queue：864×480一采；确认后保持一采输入和种子不变，再Queue命中缓存进行二采，目标1376×768。\nBeta12噪声表按8分割；一采实际报告9步，二采4步。\nRefine：h3_latent / 1.0MP / Euler / passes=1 / confirm_first_pass=true。\n默认分段导出：完整逐组MP4由导演台写入output/minimax_seg_export/对应运行目录；核对执行报告中的路径及组序。408/264仅辅助保存末段，不是全量交付入口。\n清缓存会删除可复用的一采和成片缓存，不在两轮之间清理。\n样例的分组、时长和种子不是任务授权；替换全部正文、素材、种子和输出前缀后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。"
+        "text": "视频生成基准：一采确认与二采\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采864×480；Refine为h3_latent / 1.0MP / Euler / passes=1 / confirm_first_pass=true，目标1376×768。\nBeta12按8分割；一采实际9步，二采4步。\n只使用分段导出：完整逐组MP4由导演台保存，403保留报告并驱动执行，404保留说明。\n没有264/408外接保存节点；从报告核对本轮逐组文件，不切成全部导出后声称已经保存合并视频。\n清缓存会删除可复用的一采和成片缓存，不在两轮之间清理。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。"
       },
       "widgets_values": [
-        "视频生成基准：一采确认与二采\n导演台502；编码器INT8 ConvRot，device=default。\n首次Queue：864×480一采；确认后保持一采输入和种子不变，再Queue命中缓存进行二采，目标1376×768。\nBeta12噪声表按8分割；一采实际报告9步，二采4步。\nRefine：h3_latent / 1.0MP / Euler / passes=1 / confirm_first_pass=true。\n默认分段导出：完整逐组MP4由导演台写入output/minimax_seg_export/对应运行目录；核对执行报告中的路径及组序。408/264仅辅助保存末段，不是全量交付入口。\n清缓存会删除可复用的一采和成片缓存，不在两轮之间清理。\n样例的分组、时长和种子不是任务授权；替换全部正文、素材、种子和输出前缀后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。"
+        "视频生成基准：一采确认与二采\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采864×480；Refine为h3_latent / 1.0MP / Euler / passes=1 / confirm_first_pass=true，目标1376×768。\nBeta12按8分割；一采实际9步，二采4步。\n只使用分段导出：完整逐组MP4由导演台保存，403保留报告并驱动执行，404保留说明。\n没有264/408外接保存节点；从报告核对本轮逐组文件，不切成全部导出后声称已经保存合并视频。\n清缓存会删除可复用的一采和成片缓存，不在两轮之间清理。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。"
       ],
       "widgets_values_named": {
-        "text": "视频生成基准：一采确认与二采\n导演台502；编码器INT8 ConvRot，device=default。\n首次Queue：864×480一采；确认后保持一采输入和种子不变，再Queue命中缓存进行二采，目标1376×768。\nBeta12噪声表按8分割；一采实际报告9步，二采4步。\nRefine：h3_latent / 1.0MP / Euler / passes=1 / confirm_first_pass=true。\n默认分段导出：完整逐组MP4由导演台写入output/minimax_seg_export/对应运行目录；核对执行报告中的路径及组序。408/264仅辅助保存末段，不是全量交付入口。\n清缓存会删除可复用的一采和成片缓存，不在两轮之间清理。\n样例的分组、时长和种子不是任务授权；替换全部正文、素材、种子和输出前缀后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。"
+        "text": "视频生成基准：一采确认与二采\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采864×480；Refine为h3_latent / 1.0MP / Euler / passes=1 / confirm_first_pass=true，目标1376×768。\nBeta12按8分割；一采实际9步，二采4步。\n只使用分段导出：完整逐组MP4由导演台保存，403保留报告并驱动执行，404保留说明。\n没有264/408外接保存节点；从报告核对本轮逐组文件，不切成全部导出后声称已经保存合并视频。\n清缓存会删除可复用的一采和成片缓存，不在两轮之间清理。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。"
       },
       "color": "#432",
       "bgcolor": "#653"
@@ -1059,95 +960,6 @@
         "tile_overlap": 128
       },
       "title": "407｜Refine二采 · 后4步 · 1.0MP · 一采确认开启"
-    },
-    {
-      "id": 408,
-      "type": "VHS_VideoCombine",
-      "pos": [
-        3060,
-        100
-      ],
-      "size": [
-        720,
-        744.6666666666667
-      ],
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "inputs": [
-        {
-          "label": "图像",
-          "name": "images",
-          "type": "IMAGE",
-          "link": 25
-        },
-        {
-          "label": "音频",
-          "name": "audio",
-          "shape": 7,
-          "type": "AUDIO",
-          "link": 26
-        },
-        {
-          "label": "批次管理",
-          "name": "meta_batch",
-          "shape": 7,
-          "type": "VHS_BatchManager",
-          "link": null
-        },
-        {
-          "name": "vae",
-          "shape": 7,
-          "type": "VAE",
-          "link": null
-        },
-        {
-          "name": "frame_rate",
-          "type": "FLOAT",
-          "widget": {
-            "name": "frame_rate"
-          },
-          "link": 27
-        }
-      ],
-      "outputs": [
-        {
-          "label": "文件名",
-          "name": "Filenames",
-          "type": "VHS_FILENAMES",
-          "links": []
-        }
-      ],
-      "title": "408｜一采末段辅助保存（分段全量见导演台导出）",
-      "properties": {
-        "Node name for S&R": "VHS_VideoCombine"
-      },
-      "widgets_values": {
-        "frame_rate": 24,
-        "loop_count": 0,
-        "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-一采",
-        "format": "video/h264-mp4",
-        "pix_fmt": "yuv420p",
-        "crf": 19,
-        "save_metadata": true,
-        "trim_to_audio": false,
-        "pingpong": false,
-        "save_output": true
-      },
-      "widgets_values_named": {
-        "frame_rate": 24,
-        "loop_count": 0,
-        "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-一采",
-        "format": "video/h264-mp4",
-        "pix_fmt": "yuv420p",
-        "crf": 19,
-        "save_metadata": true,
-        "trim_to_audio": false,
-        "pingpong": false,
-        "save_output": true
-      },
-      "color": "#233",
-      "bgcolor": "#355"
     }
   ],
   "links": [
@@ -1224,30 +1036,6 @@
       "VAE"
     ],
     [
-      17,
-      502,
-      0,
-      264,
-      0,
-      "IMAGE"
-    ],
-    [
-      18,
-      502,
-      1,
-      264,
-      1,
-      "AUDIO"
-    ],
-    [
-      19,
-      502,
-      2,
-      264,
-      4,
-      "FLOAT"
-    ],
-    [
       20,
       502,
       5,
@@ -1294,30 +1082,6 @@
       502,
       8,
       "MMX_DIR_REFINE"
-    ],
-    [
-      25,
-      502,
-      6,
-      408,
-      0,
-      "IMAGE"
-    ],
-    [
-      26,
-      502,
-      1,
-      408,
-      1,
-      "AUDIO"
-    ],
-    [
-      27,
-      502,
-      2,
-      408,
-      4,
-      "FLOAT"
     ]
   ],
   "groups": [

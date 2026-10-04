@@ -20,7 +20,7 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(len(h3), 1)
         self.assertTrue(all(r["reference_combinations"] == 147 for r in h3))
 
-    def test_confirmation_pair_requires_first_pass_output(self):
+    def test_confirmation_pair_requires_report_output(self):
         with tempfile.TemporaryDirectory() as tmp:
             name = "Nora-MiniMaxH3-多参考视频-一采确认与二采"
             for suffix in ("workflow", "api"):
@@ -28,7 +28,7 @@ class BaselineTests(unittest.TestCase):
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             api_path = Path(tmp, f"{name}.api.json")
             api = json.loads(api_path.read_text(encoding="utf-8"))
-            del api["408"]
+            del api["403"]
             api_path.write_text(json.dumps(api), encoding="utf-8")
             with self.assertRaisesRegex(AssertionError, "mismatch"):
                 wb.verify(tmp)

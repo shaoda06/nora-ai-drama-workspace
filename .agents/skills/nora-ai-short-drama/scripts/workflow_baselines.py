@@ -72,7 +72,7 @@ class Canvas:
   return out
 
 def semantic(api):return {k:{'class_type':v['class_type'],'inputs':v['inputs']} for k,v in api.items()}
-def output_for(name):return 3 if name=='Nora-RTX-图片2倍超分' else 461 if name.startswith('Qwen') else 264 if any(s in name for s in ('仅一采','一采确认与二采','SelfLift-备用')) else 214 if '仅二采' in name else 16
+def output_for(name):return 3 if name=='Nora-RTX-图片2倍超分' else 461 if name.startswith('Qwen') else 403 if '一采确认与二采' in name else 264 if any(s in name for s in ('仅一采','SelfLift-备用')) else 214 if '仅二采' in name else 16
 
 def director_editor_state(block, common=False):
  """Compare persisted Director content, excluding preview blobs and root-only fields."""
@@ -102,7 +102,6 @@ def verify(directory):
  for p in sorted(Path(directory).glob('*.workflow.json')):
   stem=p.name.removesuffix('.workflow.json');a=p.with_name(stem+'.api.json');assert a.exists(),f'Missing API: {a.name}'
   canvas=Canvas(json.loads(p.read_text(encoding="utf-8")));expected=canvas.api(output_for(stem));actual=json.loads(a.read_text(encoding="utf-8"))
-  if stem=='Nora-MiniMaxH3-多参考视频-一采确认与二采':expected.update(canvas.api(408))
   assert semantic(actual)==semantic(expected),f'Canvas/API mismatch: {stem}'
   for k,n in expected.items():
    if 'nora_optional_reference' in n['_meta']:assert actual[k].get('_meta',{}).get('nora_optional_reference')==n['_meta']['nora_optional_reference']
