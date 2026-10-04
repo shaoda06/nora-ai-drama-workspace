@@ -17,7 +17,7 @@ class DispatchTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.config = {'enable-multi-remote': True, 'remote-urls': [A, B, C],
-                       'busy-pending-threshold': 2, 'default-only-task-types': ['video-second-pass']}
+                       'busy-pending-threshold': 2, 'default-only-task-types': list(d.VIDEO_TASK_TYPES)}
         self.write_config()
         self.workflow = {'1': {'class_type': 'LoadImage', 'inputs': {'image': 'source.png', 'seed': 84781009642919}}}
         self.path = self.root / 'task.api.json'
@@ -65,7 +65,7 @@ class DispatchTests(unittest.TestCase):
 
     def args(self, name='first', **overrides):
         result = argparse.Namespace(project=str(self.root), workflow=str(self.path), task_type='image',
-            record_dir=str(self.root / name), eligible_url=[A, B, C], uploads=None, timeout=30,
+            record_dir=str(self.root / name), eligible_url=[A, B, C], target_url=None, uploads=None, timeout=30,
             attempt_name='submit-attempt.json', request_name='request.json', response_name='response.json')
         for key, value in overrides.items():
             setattr(result, key, value)
@@ -119,7 +119,7 @@ class DispatchTests(unittest.TestCase):
                         self.assertEqual(result['checks'][0]['video_jobs'], 1)
                         self.assertEqual(result['checks'][0]['reason'], 'video_generation')
                         self.assertNotIn('private inputs', json.dumps(result))
-                        if kind == 'video-second-pass':
+                        if kind in d.VIDEO_TASK_TYPES:
                             self.assertEqual(result['dispatch_state'], 'deferred')
                         else:
                             self.assertEqual(result['url'], B)
@@ -134,12 +134,74 @@ class DispatchTests(unittest.TestCase):
         self.assertEqual([(url, route) for url, route, _ in self.calls], [(A, '/queue')])
         self.assertFalse((self.root / 'first').exists())
 
-    def test_video_batch_uses_one_job_per_endpoint_then_defers(self):
+    def test_video_batch_stays_default_and_defers_next_job(self):
         self.path.write_text(json.dumps({'1': {'class_type': 'MiniMaxH3Director', 'inputs': {}}}), encoding='utf-8')
         results = [d.dispatch(self.args(name=f'video-{i}', task_type='video-first-pass')) for i in range(4)]
-        self.assertEqual([r['url'] for r in results[:3]], [A, B, C])
-        self.assertEqual(results[3]['dispatch_state'], 'deferred')
-        self.assertFalse((self.root / 'video-3').exists())
+        self.assertEqual(results[0]['url'], A)
+        self.assertTrue(all(r['dispatch_state'] == 'deferred' for r in results[1:]))
+        self.assertFalse(any(url != A for url, _, _ in self.calls))
+        self.assertFalse((self.root / 'video-1').exists())
+
+    def test_user_selected_endpoint_overrides_default_for_both_video_passes(self):
+        for kind in d.VIDEO_TASK_TYPES:
+            with self.subTest(kind=kind):
+                self.queues = {url: (0, 0) for url in (A, B, C)}
+                result = d.dispatch(self.args(name=kind, task_type=kind, target_url=B))
+                self.assertEqual(result['url'], B)
+                self.assertEqual(result['checks'][0]['url'], B)
+        self.assertFalse(any(url != B for url, _, _ in self.calls))
+
+    def test_explicit_target_is_allowed_with_automatic_overflow_disabled(self):
+        self.config['enable-multi-remote'] = False
+        self.write_config()
+        self.assertEqual(d.dispatch(self.args(target_url=B))['url'], B)
+        self.assertFalse(any(url != B for url, _, _ in self.calls))
+
+    def test_busy_or_unreachable_target_never_falls_back(self):
+        for state in ((2, 0), d.client.ClientError('transport_error', 'offline')):
+            with self.subTest(state=state):
+                self.queues[B] = state
+                result = d.dispatch(self.args(target_url=B))
+                self.assertEqual(result['dispatch_state'], 'deferred')
+                self.assertFalse((self.root / 'first').exists())
+        self.assertTrue(all(url == B and route == '/queue' for url, route, _ in self.calls))
+
+    def test_target_must_be_configured_and_eligible(self):
+        for target, eligible in ((B, [A]), ('http://other.invalid:8188', [A, B])):
+            with self.subTest(target=target):
+                with self.assertRaises(d.client.ClientError) as caught:
+                    d.dispatch(self.args(target_url=target, eligible_url=eligible))
+                self.assertEqual(caught.exception.code, 'invalid_target')
+        self.assertEqual(self.calls, [])
+
+    def test_deferred_task_can_submit_once_capacity_returns(self):
+        args = self.args(task_type='video-first-pass')
+        self.queues[A] = (2, 0)
+        self.assertEqual(d.dispatch(args)['dispatch_state'], 'deferred')
+        self.assertFalse((self.root / 'first').exists())
+        self.queues[A] = (0, 0)
+        self.assertEqual(d.dispatch(args)['url'], A)
+        with self.assertRaises(d.client.ClientError) as caught:
+            d.dispatch(args)
+        self.assertEqual(caught.exception.code, 'submission_guard')
+        self.assertEqual(sum(route == '/prompt' for _, route, _ in self.calls), 1)
+
+    def test_h3_cannot_bypass_video_routing_by_mislabeling_as_image(self):
+        self.path.write_text(json.dumps({'1': {'class_type': 'MiniMaxH3Director', 'inputs': {}}}), encoding='utf-8')
+        for kind in ('image', 'video-postprocess'):
+            with self.subTest(kind=kind):
+                with self.assertRaises(d.client.ClientError) as caught:
+                    d.dispatch(self.args(task_type=kind))
+                self.assertEqual(caught.exception.code, 'invalid_task_type')
+        self.assertEqual(self.calls, [])
+
+    def test_legacy_second_pass_only_list_still_pins_first_pass(self):
+        self.config['default-only-task-types'] = ['video-second-pass']
+        self.write_config()
+        self.queues[A] = (2, 0)
+        self.assertEqual(d.dispatch(self.args(task_type='video-first-pass'))['dispatch_state'], 'deferred')
+        self.assertFalse(any(url != A for url, _, _ in self.calls))
+        self.assertEqual(json.loads((self.root / 'comfyui-config.json').read_text()), self.config)
 
     def test_postprocess_does_not_reserve_endpoint_and_completed_video_releases_it(self):
         self.queues[A] = {'queue_pending': [], 'queue_running': [

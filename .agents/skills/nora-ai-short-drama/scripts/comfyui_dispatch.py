@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'com
 import comfyui_client as client
 
 TASK_TYPES = ('image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess')
+VIDEO_TASK_TYPES = ('video-first-pass', 'video-second-pass')
 VIDEO_GENERATION_NODES = {'MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo'}
 LOCK_PATH = Path(__file__).resolve().parents[1] / 'state' / 'comfyui-dispatch.lock'
 
@@ -21,7 +22,7 @@ def load_config(project, timeout):
         raise client.ClientError('invalid_config', 'Configuration must be a JSON object')
     if set(data) == {'remote-url'}:
         data = {'enable-multi-remote': False, 'remote-urls': [data['remote-url']],
-                'busy-pending-threshold': 2, 'default-only-task-types': ['video-second-pass']}
+                'busy-pending-threshold': 2, 'default-only-task-types': list(VIDEO_TASK_TYPES)}
     required = {'enable-multi-remote', 'remote-urls', 'busy-pending-threshold', 'default-only-task-types'}
     if set(data) != required:
         raise client.ClientError('invalid_config', 'Expected the four project dispatch fields')
@@ -33,6 +34,7 @@ def load_config(project, timeout):
     data['remote-urls'] = [client.Client(url, timeout).url for url in urls]
     if len(set(data['remote-urls'])) != len(urls):
         raise client.ClientError('invalid_config', 'Endpoint list contains duplicate addresses')
+    data['default-only-task-types'] = list(dict.fromkeys([*VIDEO_TASK_TYPES, *pinned]))
     return data
 
 
@@ -82,6 +84,9 @@ def video_job_count(queue):
 def dispatch(args):
     workflow = client.strict_json(Path(args.workflow).read_bytes())
     client.validate_workflow(workflow)
+    if (any(node['class_type'] in VIDEO_GENERATION_NODES for node in workflow.values()) and
+            args.task_type not in VIDEO_TASK_TYPES):
+        raise client.ClientError('invalid_task_type', 'H3 generation requires a first-pass or second-pass task type')
     uploads = client.strict_json(Path(args.uploads).read_bytes()) if args.uploads else []
     if not isinstance(uploads, list):
         raise client.ClientError('invalid_uploads', 'Upload map must be an array')
@@ -110,7 +115,12 @@ def dispatch(args):
         if not eligible <= set(config['remote-urls']):
             raise client.ClientError('invalid_eligibility', 'Eligible addresses must come from this project')
         urls = config['remote-urls']
-        if not config['enable-multi-remote'] or args.task_type in config['default-only-task-types']:
+        if args.target_url:
+            target = client.Client(args.target_url, args.timeout).url
+            if target not in urls or target not in eligible:
+                raise client.ClientError('invalid_target', 'User-selected endpoint must be configured and verified eligible')
+            urls = [target]
+        elif not config['enable-multi-remote'] or args.task_type in config['default-only-task-types']:
             urls = urls[:1]
         checks = []
         for url in urls:
@@ -161,7 +171,8 @@ def dispatch(args):
 def parser():
     p = client.Parser(description=__doc__)
     p.add_argument('--project', required=True, help='Project root containing comfyui-config.json; relative to cwd')
-    p.add_argument('--task-type', required=True, choices=TASK_TYPES, help='Authorized task stage; second-pass uses its configured exception')
+    p.add_argument('--task-type', required=True, choices=TASK_TYPES, help='Authorized task stage; both video passes default to the first endpoint')
+    p.add_argument('--target-url', help='Use only this endpoint when explicitly selected by the user; no fallback, still checks eligibility and queue')
     p.add_argument('--workflow', required=True, help='Prepared API JSON; unchanged except declared uploaded input paths')
     p.add_argument('--eligible-url', action='append', required=True, help='Repeat for each endpoint whose nodes/models and existing inputs were verified')
     p.add_argument('--uploads', help='Optional JSON array of local files and loader bindings; paths relative to cwd')
