@@ -15,10 +15,23 @@ BASELINES = ROOT / "references/comfyui-workflow"
 class BaselineTests(unittest.TestCase):
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
-        self.assertEqual(len(results), 8)
+        self.assertEqual(len(results), 10)
         h3 = [r for r in results if r["optional_references"]]
         self.assertEqual(len(h3), 1)
         self.assertTrue(all(r["reference_combinations"] == 147 for r in h3))
+
+    def test_confirmation_pair_requires_first_pass_output(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            name = "Nora-MiniMaxH3-多参考视频-一采确认与二采"
+            for suffix in ("workflow", "api"):
+                source = BASELINES / f"{name}.{suffix}.json"
+                Path(tmp, source.name).write_bytes(source.read_bytes())
+            api_path = Path(tmp, f"{name}.api.json")
+            api = json.loads(api_path.read_text(encoding="utf-8"))
+            del api["408"]
+            api_path.write_text(json.dumps(api), encoding="utf-8")
+            with self.assertRaisesRegex(AssertionError, "mismatch"):
+                wb.verify(tmp)
 
     def test_detects_api_parameter_drift(self):
         with tempfile.TemporaryDirectory() as tmp:

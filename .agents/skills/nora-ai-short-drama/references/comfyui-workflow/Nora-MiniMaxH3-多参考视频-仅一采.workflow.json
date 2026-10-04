@@ -834,15 +834,15 @@
       "mode": 0,
       "inputs": [],
       "outputs": [],
-      "title": "正式一采填写说明",
+      "title": "兼容保留一采说明",
       "properties": {
-        "text": "正式视频一采基准\n864×480 / 24fps；参考图max，最大边864。\n通用Sage：auto，allow_compile=false；58号H3专用Sage保持启用。\nTE：0.08 / 0.1 / 0.9 / mcs=2 / auto / 8-step LoRA。\nEuler；外部Beta12步取前8步SIGMAS。\n公共区填写共用素材与subject_definitions，本组填写独有素材及对应分段正文。\n三组时长是填写样例，实际按获批分段调整；替换提示词、素材、种子及输出标识后再提交。\n使用方法与参数边界见ComfyUI-H3视频执行规范。\n没有二采、SelfLift或FaceRefine连接；二采方案待确认。"
+        "text": "兼容保留：仅一采工作流，不作为默认视频生成入口\n864×480 / 24fps；参考图max，最大边864。\n通用Sage：auto，allow_compile=false；58号H3专用Sage保持启用。\nTE：0.08 / 0.1 / 0.9 / mcs=2 / auto / 8-step LoRA。\nEuler；外部Beta12步取前8步SIGMAS。\n公共区填写共用素材与subject_definitions，本组填写独有素材及对应分段正文。\n三组时长是填写样例，实际按获批分段调整；替换提示词、素材、种子及输出标识后再提交。\n使用方法与参数边界见ComfyUI-H3视频执行规范。\n没有二采、SelfLift或FaceRefine连接；默认入口见“一采确认与二采”配套工作流。"
       },
       "widgets_values": [
-        "正式视频一采基准\n864×480 / 24fps；参考图max，最大边864。\n通用Sage：auto，allow_compile=false；58号H3专用Sage保持启用。\nTE：0.08 / 0.1 / 0.9 / mcs=2 / auto / 8-step LoRA。\nEuler；外部Beta12步取前8步SIGMAS。\n公共区填写共用素材与subject_definitions，本组填写独有素材及对应分段正文。\n三组时长是填写样例，实际按获批分段调整；替换提示词、素材、种子及输出标识后再提交。\n使用方法与参数边界见ComfyUI-H3视频执行规范。\n没有二采、SelfLift或FaceRefine连接；二采方案待确认。"
+        "兼容保留：仅一采工作流，不作为默认视频生成入口\n864×480 / 24fps；参考图max，最大边864。\n通用Sage：auto，allow_compile=false；58号H3专用Sage保持启用。\nTE：0.08 / 0.1 / 0.9 / mcs=2 / auto / 8-step LoRA。\nEuler；外部Beta12步取前8步SIGMAS。\n公共区填写共用素材与subject_definitions，本组填写独有素材及对应分段正文。\n三组时长是填写样例，实际按获批分段调整；替换提示词、素材、种子及输出标识后再提交。\n使用方法与参数边界见ComfyUI-H3视频执行规范。\n没有二采、SelfLift或FaceRefine连接；默认入口见“一采确认与二采”配套工作流。"
       ],
       "widgets_values_named": {
-        "text": "正式视频一采基准\n864×480 / 24fps；参考图max，最大边864。\n通用Sage：auto，allow_compile=false；58号H3专用Sage保持启用。\nTE：0.08 / 0.1 / 0.9 / mcs=2 / auto / 8-step LoRA。\nEuler；外部Beta12步取前8步SIGMAS。\n公共区填写共用素材与subject_definitions，本组填写独有素材及对应分段正文。\n三组时长是填写样例，实际按获批分段调整；替换提示词、素材、种子及输出标识后再提交。\n使用方法与参数边界见ComfyUI-H3视频执行规范。\n没有二采、SelfLift或FaceRefine连接；二采方案待确认。"
+        "text": "兼容保留：仅一采工作流，不作为默认视频生成入口\n864×480 / 24fps；参考图max，最大边864。\n通用Sage：auto，allow_compile=false；58号H3专用Sage保持启用。\nTE：0.08 / 0.1 / 0.9 / mcs=2 / auto / 8-step LoRA。\nEuler；外部Beta12步取前8步SIGMAS。\n公共区填写共用素材与subject_definitions，本组填写独有素材及对应分段正文。\n三组时长是填写样例，实际按获批分段调整；替换提示词、素材、种子及输出标识后再提交。\n使用方法与参数边界见ComfyUI-H3视频执行规范。\n没有二采、SelfLift或FaceRefine连接；默认入口见“一采确认与二采”配套工作流。"
       },
       "color": "#432",
       "bgcolor": "#653"

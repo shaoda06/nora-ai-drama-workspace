@@ -1,20 +1,22 @@
 # ComfyUI-H3视频执行规范
 
-版本：v1.30；更新日期：2026-10-04。
+版本：v1.31；更新日期：2026-10-05。
 
 本规范管理视频工作流的填写、执行与记录。制作顺序及审批读取[开发流程第二部分第7节](../流程规范/短剧开发流程规范.md#7-生成视频验收与衔接修改)；提示词正文读取[逐集内容制作规范](../流程规范/逐集内容制作规范.md)及 `h3-prompt-writing`。准备资料、实际任务和人工审核按[逐集目录规范](../流程规范/逐集目录与资产管理规范.md)保存，不把技术成功写成内容获批。
 
 ## 0. 制作策略与工作流配置
 
-正式一采使用原生MiniMax H3导演台，输入模式默认为r2v / Ref2VA。准备或修改节点内容时完整读取[导演台节点使用规范](ComfyUI-MiniMaxH3导演台节点使用规范.md)，按其组与P映射、素材排序、公共／本组正文、时长与编辑状态要求填写任务副本。
+正式视频生成使用原生MiniMax H3导演台，一采与二采通过同一画布分轮执行，输入模式默认为r2v / Ref2VA。准备或修改节点内容时完整读取[导演台节点使用规范](ComfyUI-MiniMaxH3导演台节点使用规范.md)，按其组与P映射、素材排序、公共／本组正文、时长与编辑状态要求填写任务副本。
 
 | 工作流 | 当前用途 |
 | --- | --- |
-| Nora-MiniMaxH3-多参考视频-仅一采 | 正式一采；节点402为导演台，264保存合并音视频，403展示报告 |
-| Nora-MiniMaxH3-多参考视频-仅二采 | 保留的独立二采基准；与导演台一采的衔接方案、倍率和参数待确认，不默认执行 |
+| Nora-MiniMaxH3-多参考视频-一采确认与二采 | 正式视频生成；502为导演台，407为Refine；首次只一采，人工确认后再次执行二采；默认分段导出 |
+| Nora-MiniMaxH3-多参考视频-SelfLift-备用 | 备用，不接入默认制作流程；单次渐进采样直接输出高清，不能中途送审低清 |
+| Nora-MiniMaxH3-多参考视频-仅一采 | 兼容保留，不作为默认视频生成入口 |
+| Nora-MiniMaxH3-多参考视频-仅二采 | 兼容保留的独立二采基准，不与正式导演台画布混用，不默认执行 |
 | Nora-RTX-AusBoss-切镜保护超分插帧 | 已有后处理基准；仅用于已有获批且规格兼容的二采输入，不从新一采自动进入 |
 
-一采参数和工作流确认不等于具体视频获批，也不授权下一批任务。二采与后处理仍需指定获批来源和对应执行授权；不将864×480的1.5倍算术尺寸1296×720当作已确认二采方案。
+一采参数和工作流确认不等于具体视频获批，也不授权下一批任务。二采与后处理仍需指定获批来源和对应执行授权；正式二采采用1.0MP、跟随一采比例和32对齐，目标1376×768，不用1.5倍算术尺寸1296×720替代。
 
 ## 1. 当前固定基准与任务副本
 
@@ -22,11 +24,13 @@
 
 | 阶段 | 画布 | API | API节点数 |
 | --- | --- | --- | ---: |
-| 正式一采 | [画布](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-仅一采.workflow.json) | [API](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-仅一采.api.json) | 13 |
-| 保留二采，衔接待确认 | [画布](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-仅二采.workflow.json) | [API](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-仅二采.api.json) | 41（26＋15可选加载器） |
+| 正式一采确认与二采 | [画布](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-一采确认与二采.workflow.json) | [API](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-一采确认与二采.api.json) | 15 |
+| SelfLift备用 | [画布](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-SelfLift-备用.workflow.json) | [API](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-SelfLift-备用.api.json) | 13 |
+| 兼容保留仅一采 | [画布](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-仅一采.workflow.json) | [API](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-仅一采.api.json) | 13 |
+| 兼容保留独立二采 | [画布](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-仅二采.workflow.json) | [API](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-仅二采.api.json) | 41（26＋15可选加载器） |
 | 后处理 | [画布](../comfyui-workflow/Nora-RTX-AusBoss-切镜保护超分插帧.workflow.json) | [API](../comfyui-workflow/Nora-RTX-AusBoss-切镜保护超分插帧.api.json) | 5 |
 
-正式一采不使用外部图片、音频、视频加载节点；素材通过402的 `timeline_data` 传入原生公共区和本组区。画布中的三组、11/15/14秒和种子是填写样例，不是所有任务的规定；执行前按获批资料替换提示词、素材、组与P映射、时长、实际种子及输出标识。API和画布的同名控件值须一致；连接输入覆盖控件默认值。
+正式一采不使用外部图片、音频、视频加载节点；素材通过502的 `timeline_data` 传入原生公共区和本组区。画布中的三组、11/15/14秒和种子是填写样例，不是所有任务的规定；执行前按获批资料替换提示词、素材、组与P映射、时长、实际种子及输出标识。API和画布的同名控件值须一致；连接输入覆盖控件默认值。
 
 原始项目画布、实际请求及历史批准保存在项目中，不写回可分发基准。基准中的空素材和正文占位符不得原样提交。既有二采的15个可选加载器及其 `_meta.nora_optional_reference` 仅适用于该独立二采文件，不能照搬到导演台一采。
 
@@ -40,7 +44,7 @@ python3 -B "/技能实际安装目录/nora-ai-short-drama/scripts/workflow_basel
 
 可选 `--directory "/待检查工作流目录"`，默认扫描该技能的 `references/comfyui-workflow/`，不递归。普通任务准备无需重跑整套检查。不使用 `-O`。
 
-输出每套配对一行JSON和PASS；退出0后还须核对实际覆盖了目标。当前共有8套配对；正式导演台一采为13个API节点，校验公共正文、尺寸、总帧数以及根时间线与编辑工作区的对应持久化内容、选择状态。工作区可以是原生序列化后的精简快照，不要求与根对象完整相等，比较范围读取[导演台状态同步规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#5-时长帧数与编辑状态同步)。保留二采的15个可选加载器检查147种合法参考数量组合。不同结构的一采与二采不以同号节点强行比较，也不据静态通过宣称两者已可衔接。
+输出每套配对一行JSON和PASS；退出0后还须核对实际覆盖了目标。当前共有10套配对；正式一采确认与二采为15个API节点，包含408一采辅助输出与264二采辅助输出，校验公共正文、尺寸、总帧数以及根时间线与编辑工作区的对应持久化内容、选择状态。工作区可以是原生序列化后的精简快照，不要求与根对象完整相等，比较范围读取[导演台状态同步规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#5-时长帧数与编辑状态同步)。保留二采的15个可选加载器检查147种合法参考数量组合。不同结构的一采与二采不以同号节点强行比较，也不据静态通过宣称两者已可衔接。
 
 修改校验工具后运行：
 
@@ -52,7 +56,7 @@ python3 -B -m unittest discover -s "/技能实际安装目录/nora-ai-short-dram
 
 ## 2. 参数边界
 
-正式一采的固定生成设置如下；用户未明确改变时沿用基准保存值，不用节点出厂值替代：
+正式一采确认与二采的固定生成设置如下；用户未明确改变时沿用基准保存值，不用节点出厂值替代：
 
 | 项目 | 节点及固定值 |
 | --- | --- |
@@ -61,20 +65,21 @@ python3 -B -m unittest discover -s "/技能实际安装目录/nora-ai-short-dram
 | H3专用Sage | 58：MiniMaxH3MemoryEfficientSageAttentionPatch，启用 |
 | LoRA | 128：MysticXXX_MMH3-V1.safetensors，0.5；53：minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors，1.0 |
 | TE | 405：0.08 / 0.1 / 0.9 / mcs=2 / device=auto / mode=8-step LoRA，启用 |
-| 编码器 | 38：qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors，type=minimax，device=default |
+| 编码器 | 38：qwen3vl_32b_minimax_h3_int8_convrot.safetensors，type=minimax，device=default |
 | 视频 / 音频VAE | 36：minimax_h3_video_vae_int8_convrot.safetensors；37：minimax_h3_audio_vae_fp32.safetensors |
-| 尺寸及帧率 | 402控件、timeline根字段及output统一864×480、24fps；output为0.4MP、32对齐；ref_max_size / refMaxSize=864，参考图策略max |
-| 采样 | Euler，CFG=1；261为Beta12步，289截取前8步，SIGMAS连402；402的steps/scheduler显示不覆盖外部SIGMAS |
-| Shift | 402 shift_video=12，shift_audio=3 |
-| 性能控件 | clear_vram_between_segments=false，clear_vram_before_refine=true，clear_vram_before_face_refine=false，cache_frames_codec=raw |
+| 尺寸及帧率 | 502控件、timeline根字段及output统一864×480、24fps；output为0.4MP、32对齐；ref_max_size / refMaxSize=864，参考图策略max |
+| 采样 | Euler，CFG=1；261为Beta12步，289按8分割；前段SIGMAS连502，一采噪声表末尾归零后实际报告9步；后段SIGMAS连407，二采4步。502的steps/scheduler显示不覆盖外部SIGMAS |
+| Shift | 502 shift_video=12，shift_audio=3 |
+| 性能控件 | clear_vram_between_segments=false，clear_vram_before_refine=false，clear_vram_before_face_refine=false，cache_frames_codec=raw |
 | 连续设置 | continue；重绘0.1；前段末尾22帧；keep_tail=true。实际衔接选择按导演台节点使用规范第6节 |
-| 输出 | 264：H.264 MP4 / yuv420p / CRF19 / save_output=true，保留402返回的音频与实际fps |
+| Refine | 407：upscale / h3_latent / minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors / Euler / passes=1 / seed_mode=inherit / 1.0MP；confirm_first_pass=true；skip_fl2v=true；时间与空间分块关闭 |
+| 导出 | 默认output.exportMode=segments；导演台逐组MP4为完整交付来源，按[导演台输出规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#731-导出方式与逐组文件)核对；408/264仅为末段辅助保存，H.264 MP4 / yuv420p / CRF19 / save_output=true |
 
-模型链为192 → 406 → 58 → 128 → 53 → 405；405同时接261和402。58接管H3主干注意力；通用节点的加入不表示叠加两次加速。`allow_compile`仅允许参与编译，不是节点总开关；`disabled`直接传递模型。没有Refine、SelfLift、FaceRefine或语义桥连接，不因性能控件含“refine”就认定启用二采。
+模型链为192 → 406 → 58 → 128 → 53 → 405；405同时接261和502。58接管H3主干注意力；通用节点的加入不表示叠加两次加速。`allow_compile`仅允许参与编译，不是节点总开关；`disabled`直接传递模型。407连接502.refine；没有SelfLift、FaceRefine或语义桥连接。一采实际9步加二采4步，不能把调度器显示12步登记成两轮实际总步数。
 
 保留二采及后处理文件的参数不随本次一采更新改变。后处理仍为1800×1040／ULTRA、RAFT光流、切镜阈值0.15、批次1、目标60fps；使用源视频fps、插帧返回fps与原音轨连接。该目标针对既有1440×832输入，不自动套用到新一采或其他画幅。插件使用已安装且接口兼容的版本，不固定或自动升级版本；缺少节点、模型或RAFT缓存权重时报告实际错误，不安装或替换方法。
 
-任务中的素材、公共／本组正文、时长与编辑状态按[导演台节点使用规范第2–5节](ComfyUI-MiniMaxH3导演台节点使用规范.md#2-素材排序与编号)填写；实际种子按下节保存到402的seed，画布control_after_generate固定为fixed。输出标识填264的filename_prefix，按第2.1节替换占位符。
+任务中的素材、公共／本组正文、时长与编辑状态按[导演台节点使用规范第2–5节](ComfyUI-MiniMaxH3导演台节点使用规范.md#2-素材排序与编号)填写；实际种子按下节保存到502的seed，画布control_after_generate固定为fixed。外接辅助输出标识填408和264的filename_prefix；逐组导出使用导演台报告的实际路径并按组与P映射归位，按第2.1节替换占位符。
 
 ### 场次基准种子与实际任务种子
 
@@ -86,7 +91,7 @@ python3 -B -m unittest discover -s "/技能实际安装目录/nora-ai-short-dram
 
 ### 2.1 已批准的输出前缀公式
 
-采用 `Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-{处理阶段}`。一采264填一采，保留二采214填二采，后处理16填后处理。花括号由agent替换，不是ComfyUI自动展开语法；不同任务和阶段使用实际编号，不覆盖既有结果。
+采用 `Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-{处理阶段}`。正式一采408填一采，正式二采264填二采；兼容保留独立二采214填二采，后处理16填后处理。花括号由agent替换，不是ComfyUI自动展开语法；不同任务和阶段使用实际编号，不覆盖既有结果。
 
 项目代号为已有稳定且安全的单个路径段；不包含路径分隔符、`..`、控制字符或Windows文件名禁用字符。前缀相对ComfyUI输出目录，不加扩展名，不用本机绝对路径。下载只认任务返回的filename/subfolder/type。
 
@@ -105,14 +110,14 @@ python3 -B -m unittest discover -s "/技能实际安装目录/nora-ai-short-dram
 服务配置、选端与恢复地址执行[项目ComfyUI配置](../../SKILL.md#项目-comfyui-配置)。新任务使用统一分配入口；upload/submit/status/download继续复用[固定工具](../comfyui-scripts/README.md)与comfyui-api技能，不向远端发布基准。
 
 1. **准备**：从正式基准制作本次副本，替换全部业务占位符，保存组与EP/C/P映射、获批资料版本、完整模型正文、实际素材、种子和输出范围。冻结任务按逐集目录规范存06，05不维护运行流水。
-2. **核对**：按技能入口的执行前检查使用有效库存或补查节点定义；检查新一采13个有效节点、实际模型及参数、素材身份和数量/时长、标签、时间线与输出位置；按[模型提示词长度规则](../流程规范/逐集内容制作规范.md#模型提示词长度)核对各分段最终正文并记录结果。不能用UI注册或上传成功证明全组合可运行。
+2. **核对**：按技能入口的执行前检查使用有效库存或补查节点定义；检查正式画布15个有效节点、实际模型及参数、素材身份和数量/时长、标签、时间线与输出位置；按[模型提示词长度规则](../流程规范/逐集内容制作规范.md#模型提示词长度)核对各分段最终正文并记录结果。不能用UI注册或上传成功证明全组合可运行。
 3. **提交**：仅在本次生成已获授权后，通过统一入口提交一次，记录实际服务地址和真实prompt_id。记录目录和防重文件沿用既定规则；响应不明先查队列/history，不另换目录重提。
 4. **跟进**：使用status及[监控模板](../模板/ComfyUI-任务监控提示词模板.md)，history为空不等于完成。失败使用comfyui-troubleshooter，不自动安装、重启、清队列或替换模型。
-5. **取回**：一采认264输出，保留二采认214，后处理认16；只用该任务实际filename/subfolder/type，不把画布旧预览作为结果。多组导出保存真实组顺序及输出范围。
+5. **取回**：默认分段导出按导演台报告中的本轮运行目录和逐组文件核对，按[逐组输出规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#731-导出方式与逐组文件)区分一采、二采及P映射，不以408/264末段代替全部结果。明确采用全部导出时，一采认408、二采认264；兼容保留独立二采认214，后处理认16。只用本任务真实文件身份，不把旧预览作为结果。缺少完整逐组文件时报输出异常，不把执行成功当作全部交付。
 6. **交付**：保存候选和执行记录，提供正确入口，交用户人工审核。成功、可取回或工作流确认均不等于视频内容获批。
 
 ## 5. 人工审核与轻量记录
 
 执行、候选/选定、人工审阅及场次/整集交付统一按[逐集目录规范](../流程规范/逐集目录与资产管理规范.md)维护，不另建运行台账。结果只由用户人工审核，不进行agent内容初审、自动重生成或未经批准切换处理阶段。
 
-二采方案确认前不建立新导演台二采基准、不改保留二采参数、不自动按1.5倍运行。二采确定后需同步工作流配对、获批来源复用和对应执行映射；仅一采获批不能跳过这一步。
+正式画布407.confirm_first_pass保持开启。首次执行只生成一采；用户批准后，沿用同一任务副本、导演台节点ID、实际种子与一采输入再次执行。先核对精确匹配的一采缓存，命中后只做二采；缓存缺失或不匹配时先说明，不把重新一采冒充二采。提示词、素材或一采参数返修改变时维护对应来源及批准关系。Refine参数可按已批准二采方案调整；清理缓存按[节点缓存操作](ComfyUI-MiniMaxH3导演台节点使用规范.md#75-缓存检查与清理接口)执行，不在两轮之间自动清理。

@@ -1,12 +1,12 @@
 # ComfyUI-MiniMaxH3导演台节点使用规范
 
-版本：v1.04；更新日期：2026-10-04。
+版本：v1.05；更新日期：2026-10-05。
 
 用于填写、修改和检查 `MiniMaxH3Director` 节点的网页画布与API任务副本。接口说明入口为[节点仓库](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director)。正式基准、固定生成参数、种子策略、执行授权和输出命名读取[H3执行规范](ComfyUI-H3视频执行规范.md)；模型正文及中文参考版读取[逐集内容制作规范第6节](../流程规范/逐集内容制作规范.md#6-分段视频提示词文档)及 `h3-prompt-writing`。本文件不复制这两类规则。
 
 ## 1. 节点与任务结构
 
-当前正式一采画布中的导演台为402，节点类型是 `MiniMaxH3Director`。任务副本以真实节点类型和连接为依据，不能仅凭标题辨认节点。常规使用原生r2v素材组，不额外连接 `r2v_groups`；外部组一旦接入，会优先于网页素材组，不能一边填写原生组、一边以为两边会自动合并。
+当前正式一采确认与二采画布中的导演台为502，节点类型是 `MiniMaxH3Director`。任务副本以真实节点类型和连接为依据，不能仅凭标题辨认节点。常规使用原生r2v素材组，不额外连接 `r2v_groups`；外部组一旦接入，会优先于网页素材组，不能一边填写原生组、一边以为两边会自动合并。
 
 本工作区采用一个素材组对应一个项目P分段的编排方式，组内可包含多个Shot；这是项目制作约定，节点本身只识别素材组，不要求使用EP/C/P编号。`segments[]` 的数组顺序就是组顺序；每个组保留独立id，并在既有输入映射中记录对应EP/C/P。移动、复制或删除组后同步检查分镜顺序、时长、提示词、连续开关和输出范围，不把组显示序号当作永久P编号。
 
@@ -153,7 +153,7 @@ r2v的source逐组选择原声，公共音频也属于本组的合并输入；�
 
 | 内容 | 保存位置 |
 | --- | --- |
-| 公共主体定义及公共素材标签说明 | `global.prompt`，与402控件/API的 `global_prompt` 一致 |
+| 公共主体定义及公共素材标签说明 | `global.prompt`，与导演台控件/API的 `global_prompt` 一致 |
 | 本段其余五节正文 | `segments[i].prompt` |
 
 公共参数开启时，节点把“公共正文＋空行＋本组正文”拼接为本组实际提示词，不是本组正文替换公共正文。本工作区按H3提示词格式，将 `subject_definitions` 放公共区，其余summary、retention_analysis、detailed_description、overall_soundscape、non_diegetic_music放本组。六节格式和这种拆分属于本工作区的填写约定；导演台接口接收字符串，不强制检查章节名称。拼接后符合Ref2VA六节格式，不再在本组重复注入同一份主体定义。
@@ -173,7 +173,7 @@ frameCount = max(5, round(durationSec * 24))
              + (5 - (max(5, round(durationSec * 24)) % 17)) % 17
 ```
 
-10秒对应243帧，15秒对应362帧。`length` 与frameCount一致；第一组start为0，后续start为前面各组frameCount之和；根totalFrames及402的total_frames为全部组frameCount之和。根durationSec保留原生界面的字段语义，不用它代替各组durationSec或真实输出时长；输出时长以本次文件的实际帧数和fps核对。
+10秒对应243帧，15秒对应362帧。`length` 与frameCount一致；第一组start为0，后续start为前面各组frameCount之和；根totalFrames及导演台的total_frames为全部组frameCount之和。根durationSec保留原生界面的字段语义，不用它代替各组durationSec或真实输出时长；输出时长以本次文件的实际帧数和fps核对。
 
 修改后同步核对：
 
@@ -191,7 +191,7 @@ frameCount = max(5, round(durationSec * 24))
 
 只修改根segments而保留工作区旧正文，会使重新打开画布时恢复出另一套内容。修改画布的 `widgets_values_named` 与对应 `widgets_values` 时保持同值；API的timeline_data使用JSON序列化得到的字符串，不拼接转义。删除无关旧预览、旧报告及生成缓存引用，不把它们当作本次结果。离线配对校验检查对应公共内容、分组内容和选择状态，能接受原生快照的精简形式；不能用忽略业务字段的方法规避内容不同步。
 
-实际种子填写402的seed，设置及复用读取[种子策略](ComfyUI-H3视频执行规范.md#场次基准种子与实际任务种子)。模板里的三组、时长、id和种子均为填写样例，不限制其他任务的组数。
+实际种子填写导演台的seed，设置及复用读取[种子策略](ComfyUI-H3视频执行规范.md#场次基准种子与实际任务种子)。模板里的三组、时长、id和种子均为填写样例，不限制其他任务的组数。
 
 ## 6. 段间引导与重绘
 
@@ -244,9 +244,24 @@ frameCount = max(5, round(durationSec * 24))
 
 source_images解码失败时可能出现灰色占位，同时报告说明失败，不能将其作为生成结果。视频合成使用真实images、audio和fps；实际保存节点及命名读取H3执行规范，不使用预览URL或旧缓存作结果。一个合并视频包含多组时，在既有执行记录保留完整组序与P范围，不冒充每个P的独立输出。端口定义见[导演台节点接口](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/main/nodes/director.py)。
 
+### 7.3.1 导出方式与逐组文件
+
+`output.exportMode`控制导出范围，不改变逐组采样的方式；选择运行决定哪些组参与本轮生成，两者分别核对。
+
+| exportMode | 行为 | 取回依据 |
+| --- | --- | --- |
+| all（全部导出） | 合并实际可用的各组画面、音频；未选组可能复用缓存或源画面 | 外接保存节点返回的真实文件及报告中的完整组序；不将合并文件冒充独立P |
+| segments（分段导出） | 按组增量保存完整MP4，不在内存拼成整场；外接images/images_pre_refine只携带最后一个实际运行组的完整画面 | 本轮报告中的逐组MP4路径、运行目录及组序映射；外接保存节点只作末段辅助，不代表全部组 |
+
+分段文件写入`output/minimax_seg_export/{本轮运行目录}/`。目录名称由服务端实际执行生成，以本任务报告的值为准，不用本机时间猜测。`seg_0000.mp4`对应时间线第1组，后续按原始组序编号；`_pre.mp4`表示Refine前一采，`_pN.mp4`表示第N轮精修，`_facepre.mp4`表示修脸前。首次确认只一采时，使用报告标识的实际一采文件，不能仅因没有`_pre`后缀就登记成二采。
+
+二采执行时可同时保存最终与一采对照文件；按本轮报告和Refine是否真正执行区分阶段。选择运行时只导出本轮运行组，未选组不自动补入分段交付；旧缓存、预览缩略图和外接末段视频不能证明全组完成。插件内部MP4编码失败可能不使生成任务失败，必须核对报告中的成功路径与缺失项。路径只出现在报告而没有对应history媒体条目时，核对其属于本轮output目录后按真实相对subfolder/filename/type取回；路径缺失或归属不明时先报告，不猜文件名。磁盘分段缓存目录不是正式导出目录。
+
+接口实现见[逐组MP4保存](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/main/director/segment_mp4_export.py)和[输出范围处理](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/main/director/executor_core.py)。
+
 ### 7.4 可选扩展与激活条件
 
-正式一采没有连接以下扩展。只有对应方案和执行得到授权后，才在任务副本增加连接；扩展须有效接入并启用，控件名称出现refine不代表已启用二采。
+扩展的正式启用状态读取H3执行规范；接口存在不等于启用。新增连接须有对应方案和执行授权，控件名称出现refine不代表已接入二采。
 
 | 扩展 | 实际作用与条件 |
 | --- | --- |
@@ -259,6 +274,22 @@ source_images解码失败时可能出现灰色占位，同时报告说明失败�
 | Semantic Bridge | 接入semantic_bridge改写条件token；蒸馏目标为FL2VA，r2v／v2v／rv2v是强制兼容，不视为已验证质量提升，不串联两座桥 |
 
 Refine的skip_fl2v可使首尾帧组跳过二采；采用混合模式或fl2v时检查实际设置与报告，不能仅凭连了Refine就声称每组都完成二采。扩展接入不自动改变工作流正式状态；二采倍率、模型、参数及与现行一采的衔接继续按H3执行规范确认。
+
+### 7.5 缓存检查与清理接口
+
+Refine面板的“清理缓存”按钮找到其相连的导演台，向`POST /minimax/director/clear_segment_cache`发送JSON：`{"node_id":"实际导演台ID","kind":"all"}`。传导演台ID，不传Refine节点ID；任务副本以真实连线为准。按钮不属于采样控件，API图中没有对应布尔开关。
+
+| kind | 删除范围 |
+| --- | --- |
+| first_pass | 该导演台节点的`seg_XXXX.pre.*`一采缓存 |
+| final | 除`.pre.*`之外的成片及音频等缓存 |
+| all | 该节点全部一采与成片缓存；网页按钮使用此值 |
+
+目标为服务端`output/minimax_seg_cache/{node_id}/`，不是释放显存，不清理全部ComfyUI缓存，也不删除外接保存视频或`minimax_seg_export`中的独立导出文件。不同画布使用相同导演台ID时共享该缓存范围，不能按网页标题推断只影响当前场次。
+
+Agent可以在用户明确要求并确定服务端、导演台ID及删除范围后调用该补充接口，检查响应中的removed与kind并如实记录；仅询问用途、监控任务或批准二采不构成删除授权。不为验证接口试删，不在仍需一采缓存的两轮之间自动清理。清一采或全部缓存后，确认二采无法沿用已删除的一采；重新生成仍须相应授权。与清理接口分开的`POST /minimax/director/first_pass_cache_status`用于只读比较现有缓存和当前输入，不将查询成功或缓存存在当作用户批准。
+
+接口说明见[缓存请求处理](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/main/director/http_routes.py)和[缓存清理实现](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/main/director/segment_cache.py)。
 
 ## 8. 导演包导入导出
 
