@@ -13,7 +13,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
   return <>
     <header className="site-header">
-      <Link className="brand" to="/">Nora workspace</Link>
+      <Link className="brand" to="/">Nora工作台</Link>
       <nav aria-label="主导航">
         <NavLink to="/" end>工作区</NavLink>
         <NavLink to="/krea2">风格库</NavLink>
