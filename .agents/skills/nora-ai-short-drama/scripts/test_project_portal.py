@@ -1266,6 +1266,31 @@ class PortalTests(unittest.TestCase):
         self.assertIn("<strong>重点</strong>", rendered)
         self.assertIn("&lt;b&gt;原文&lt;/b&gt;", rendered)
 
+    def test_storyboard_place_labels_and_segment_shot_navigation(self):
+        source = "09-剧集制作/EP001/03-分镜脚本/EP001-C001-场次分镜.md"
+        text = ("- 文档版本：v13\n- 确认状态：批准采用；沿原批准\n\n"
+                "**场次**：EP001-C001\n\n"
+                "**地点**：[青山村，荒院卧房](../../../04-场景资料/SC001-荒院卧房/SC001-荒院卧房-资料卡.md)\n\n"
+                "## 1. 镜头正文\n\n### 分段 P007\n\n"
+                "**对应视频分段**：[EP001-C001-P007](#ep001-c001-p007)\n\n"
+                "#### EP001-SH040\n\n**镜号**：EP001-SH040\n\n**台词**：原台词。\n\n---\n\n"
+                "#### EP001-SH012\n\n**镜号**：EP001-SH012\n\n"
+                "## 2. 视频分段\n\n### EP001-C001-P007\n\n"
+                "- 镜头正文：[P007所含镜头](#分段-p007)")
+        rendered = portal.markdown(text, source)
+        self.assertEqual(portal.field(text, "文档版本"), "v13")
+        self.assertIn('status-green', rendered)
+        self.assertIn('<strong>场次</strong>：EP001-C001', rendered)
+        self.assertIn('>青山村，荒院卧房</a>', rendered)
+        self.assertIn('data-doc="04-场景资料/SC001-荒院卧房/SC001-荒院卧房-资料卡.md"', rendered)
+        self.assertNotIn('资料卡v', rendered)
+        for anchor in ('分段-p007', 'ep001-c001-p007'):
+            self.assertIn('id="' + anchor + '"', rendered)
+        self.assertIn('#%E5%88%86%E6%AE%B5-p007', rendered)
+        self.assertLess(rendered.index('<h4 id="ep001-sh040"'), rendered.index('<h4 id="ep001-sh012"'))
+        self.assertIn('<strong>台词</strong>：原台词。', rendered)
+        self.assertIn('</p>\n<hr>\n<h4', rendered)
+
 
 if __name__ == "__main__":
     unittest.main()
