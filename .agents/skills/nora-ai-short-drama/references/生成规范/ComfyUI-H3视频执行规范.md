@@ -1,6 +1,6 @@
 # ComfyUI-H3视频执行规范
 
-版本：v1.39；更新日期：2026-10-06。
+版本：v1.40；更新日期：2026-10-06。
 
 本规范管理视频工作流的填写、执行与记录。制作顺序及审批读取[开发流程第二部分第7节](../流程规范/短剧开发流程规范.md#7-生成视频验收与衔接修改)；提示词正文读取[逐集内容制作规范](../流程规范/逐集内容制作规范.md)及 `h3-prompt-writing`。准备资料、实际任务和人工审核按[逐集目录规范](../流程规范/逐集目录与资产管理规范.md)保存，不把技术成功写成内容获批。
 
@@ -16,7 +16,7 @@
 | Nora-MiniMaxH3-多参考视频-仅二采 | 旧版保留，仅供追溯和恢复，不与正式导演台画布混用，不默认执行 |
 | Nora-RTX-AusBoss-切镜保护超分插帧 | 已有后处理基准；仅用于已有获批且规格兼容的二采输入，不从新一采自动进入 |
 
-一采参数和工作流确认不等于具体视频获批，也不授权下一批任务。二采与后处理仍需指定获批来源和对应执行授权；正式二采采用1.0MP、跟随一采比例和32对齐，目标1376×768，不用1.5倍算术尺寸1296×720替代。
+一采参数和工作流确认不等于具体视频获批，也不授权下一批任务。二采与后处理仍需指定获批来源和对应执行授权；正式二采采用1.0MP、跟随一采比例和32对齐，目标1376×768，不用一采尺寸乘1.5的算术结果替代。
 
 ## 1. 当前固定基准与任务副本
 
@@ -67,7 +67,7 @@ python3 -B -m unittest discover -s "/技能实际安装目录/nora-ai-short-dram
 | TE | 405：0.08 / 0.1 / 0.9 / mcs=2 / device=auto / mode=8-step LoRA，启用 |
 | 编码器 | 38：qwen3vl_32b_minimax_h3_int8_convrot.safetensors，type=minimax，device=default |
 | 视频 / 音频VAE | 36：minimax_h3_video_vae_int8_convrot.safetensors；37：minimax_h3_audio_vae_fp32.safetensors |
-| 尺寸及帧率 | 502控件、timeline根字段及output统一864×480、24fps；output为0.4MP、32对齐；ref_max_size / refMaxSize=864，参考图策略max |
+| 尺寸及帧率 | 502控件、timeline根字段及output统一1024×576、24fps；output为fixed尺寸模式、严格16:9、32对齐，实际约0.59MP（megapixels控件为0.6）；ref_max_size / refMaxSize=864，参考图策略max |
 | 采样 | Euler，CFG=1；261为Beta12步，289按8分割；前段SIGMAS连502，一采噪声表末尾归零后实际报告9步；后段SIGMAS连407，二采4步。502的steps/scheduler显示不覆盖外部SIGMAS |
 | Shift | 502 shift_video=12，shift_audio=3 |
 | 性能控件 | clear_vram_between_segments=false，clear_vram_before_refine=false，clear_vram_before_face_refine=false，cache_frames_codec=raw |
