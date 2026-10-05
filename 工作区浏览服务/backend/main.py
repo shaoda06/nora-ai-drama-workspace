@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Annotated, Any, Literal
 import re
 import os
+from ipaddress import ip_address, ip_network
 from urllib.parse import quote, urlsplit
 
 from fastapi import FastAPI, HTTPException, Query, Request
@@ -37,8 +38,21 @@ def entry(name):
         raise HTTPException(503, '项目读取失败：' + str(error)) from error
 
 
-def local_request(request: Request):
-    return request.client.host in ('127.0.0.1', '::1', 'testclient') and request.url.hostname in ('127.0.0.1', 'localhost', '::1')
+MANAGEMENT_NETWORKS = tuple(ip_network(value) for value in ('10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', 'fc00::/7', 'fe80::/10'))
+
+
+def management_address(value: str) -> bool:
+    try:
+        address = ip_address(value)
+    except ValueError:
+        return False
+    return address.is_loopback or any(address in network for network in MANAGEMENT_NETWORKS)
+
+
+def management_request(request: Request) -> bool:
+    peer = request.client.host
+    hostname = request.url.hostname
+    return (management_address(peer) or peer == 'testclient') and (hostname == 'localhost' or management_address(hostname))
 
 
 def view(value, name):
@@ -163,7 +177,7 @@ def style_file(path: str):
 
 @app.get('/api/krea2/state')
 def update_state(request: Request) -> dict[str, Any]:
-    return krea2.state(local_request(request))
+    return krea2.state(management_request(request))
 
 
 class UpdateAction(BaseModel):
@@ -176,10 +190,10 @@ def update_action(request: Request, action: UpdateAction) -> dict[str, bool]:
     expected = str(request.base_url).rstrip('/')
     origin = request.headers.get('origin')
     referer = urlsplit(request.headers.get('referer', ''))
-    port_stripped_local = origin == 'http://127.0.0.1' and request.headers.get('sec-fetch-site') == 'same-origin' and (
+    port_stripped_origin = origin == request.url.scheme + '://' + request.url.hostname and request.headers.get('sec-fetch-site') == 'same-origin' and (
         referer.scheme + '://' + referer.netloc == expected)
-    if not local_request(request) or (origin != expected and not port_stripped_local):
-        raise HTTPException(403, '更新管理仅限从本机地址打开，并要求同源请求')
+    if not management_request(request) or (origin != expected and not port_stripped_origin):
+        raise HTTPException(403, '更新管理仅限本机或局域网地址，并要求同源请求')
     if request.headers.get('x-krea-token') != krea2.updater.TOKEN:
         raise HTTPException(403, '操作凭证失效，请重新打开更新管理')
     if int(request.headers.get('content-length', '0')) > 4096:

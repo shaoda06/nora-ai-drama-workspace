@@ -7,10 +7,10 @@ updater = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(updater)
 
 
-def state(local: bool):
+def state(can_manage: bool):
     data = updater.catalog()
     versions = updater.versions()
-    result = {'app': 'nora-workspace-browser', 'canManage': local,
+    result = {'app': 'nora-workspace-browser', 'canManage': can_manage,
               'job': updater.JOB.copy(), 'sources': {s: {
                   'status': updater.JOB.copy() if updater.JOB['source'] == s else updater.SOURCE_STATUS[s].copy(),
                   'local': versions.get(s), 'count': sum(x['library'] == lib for x in data['styles']),
@@ -18,6 +18,6 @@ def state(local: bool):
                   'plan': {k: v for k, v in updater.PLANS.get(s, {}).items() if k != 'stage'},
                   'restore': (updater.WORK / ('previous-' + s)).exists(),
               } for s, lib in updater.SOURCES.items()}}
-    if local:
+    if can_manage:
         result['token'] = updater.TOKEN
     return result

@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router-dom';
 import { get, projectUrl, searchTree } from './api';
@@ -9,8 +10,10 @@ import { PageHeader } from './components/PageHeader';
 import { TabNav } from './components/TabNav';
 import { SearchField } from './components/SearchField';
 import { Pagination } from './components/Pagination';
+import { HeaderControlsContext } from './components/AppShell';
 
 export default function Project() {
+  const controlsRoot = useContext(HeaderControlsContext);
   const { name = '' } = useParams();
   const [section, setSection] = useState('00-项目定位');
   const [visited, setVisited] = useState(['00-项目定位']);
@@ -26,7 +29,7 @@ export default function Project() {
     {overview.data && <>
       <details className="activity" open><summary>当前阶段与待处理事项</summary><div className="grid">{overview.data.active.map((item: RecordData) => <article key={item.name}><h3>{item.name}</h3><Rich html={item.statusHtml} /><Rich html={item.pendingHtml} /><Rich html={item.nextHtml} /></article>)}</div></details>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
-      <TabNav label="项目栏目" items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />
+      {controlsRoot && createPortal(<TabNav label="项目栏目" items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
       {visited.map(label => <SectionPane key={label} project={name} section={label} revision={revision} active={label === section} />)}
     </>}
     {preview && <Preview key={preview.key || preview.url} project={name} item={preview} revision={revision} close={() => setPreview(null)} />}

@@ -78,16 +78,38 @@ class ServiceTests(unittest.TestCase):
         self.assertIs(entry['data'], data)
         self.assertEqual(entry['error'], '错误源文件')
 
-    def test_lan_cannot_manage_and_token_not_exposed(self):
+    def test_lan_can_manage_with_same_origin_and_token(self):
         lan = TestClient(main.app, base_url='http://192.168.10.15:8780', client=('192.168.10.30', 44321))
         state = lan.get('/api/krea2/state').json()
-        self.assertFalse(state['canManage'])
-        self.assertNotIn('token', state)
+        self.assertTrue(state['canManage'])
+        self.assertEqual(state['token'], main.krea2.updater.TOKEN)
         with patch.object(main.krea2.updater, 'start_job') as job:
             result = lan.post('/api/krea2/action', headers={'Origin': 'http://192.168.10.15:8780', 'X-Krea-Token': main.krea2.updater.TOKEN}, json={'source': 'clio', 'action': 'apply'})
-            self.assertEqual(result.status_code, 403)
+            self.assertEqual(result.status_code, 202)
+            job.assert_called_once_with('apply', 'clio')
+            job.reset_mock()
+            payload = {'source': 'clio', 'action': 'check'}
+            for headers in (
+                {'Origin': 'http://outside.site', 'X-Krea-Token': state['token']},
+                {'Origin': 'http://192.168.10.15:8780', 'X-Krea-Token': 'wrong-token'},
+                {'Origin': 'http://192.168.10.15', 'Sec-Fetch-Site': 'same-origin', 'X-Krea-Token': state['token']},
+            ):
+                self.assertEqual(lan.post('/api/krea2/action', headers=headers, json=payload).status_code, 403)
             job.assert_not_called()
+            self.assertEqual(lan.post('/api/krea2/action', headers={'Origin': 'http://192.168.10.15', 'Referer': 'http://192.168.10.15:8780/', 'Sec-Fetch-Site': 'same-origin', 'X-Krea-Token': state['token']}, json=payload).status_code, 202)
+            job.assert_called_once_with('check', 'clio')
         lan.close()
+
+    def test_public_peer_or_non_lan_host_cannot_manage(self):
+        for host, peer in (('192.168.10.15', '8.8.8.8'), ('outside.site', '192.168.10.30'), ('8.8.8.8', '192.168.10.30')):
+            with TestClient(main.app, base_url=f'http://{host}:8780', client=(peer, 44321)) as client:
+                state = client.get('/api/krea2/state').json()
+                self.assertFalse(state['canManage'])
+                self.assertNotIn('token', state)
+                with patch.object(main.krea2.updater, 'start_job') as job:
+                    result = client.post('/api/krea2/action', headers={'Origin': f'http://{host}:8780', 'X-Krea-Token': main.krea2.updater.TOKEN}, json={'source': 'ray', 'action': 'restore'})
+                    self.assertEqual(result.status_code, 403)
+                    job.assert_not_called()
 
     def test_local_management_requires_origin_and_token(self):
         state = self.client.get('/api/krea2/state').json()
