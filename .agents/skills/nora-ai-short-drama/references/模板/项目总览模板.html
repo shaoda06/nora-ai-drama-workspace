@@ -78,6 +78,18 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 .style-samples{display:flex;flex-wrap:wrap;align-items:flex-start;gap:24px}.style-sample-card{flex:0 1 360px;min-width:0;max-width:100%}.prose .style-sample{display:inline-block;vertical-align:top;width:360px;max-width:100%;margin:12px 0 20px}.style-sample-card .style-sample{display:block;width:100%}.style-sample img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:4px}.style-sample figcaption{font-size:13px;color:var(--muted);margin-top:6px}
 
 button.person-pending{width:100%;text-align:left;border-top:0;border-right:0;border-bottom:0}button.person-pending:hover{text-decoration:underline}.candidate-group>summary .status-badge{margin-left:10px}.candidate-pending{border-color:#b87723}.candidate-pending .asset-copy{scroll-margin-top:var(--phase-jump-offset,96px)}
+.prose details.storyboard-segment{margin:16px 0;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:var(--radius);overflow:hidden}
+.prose details.storyboard-segment[open]{border-color:var(--green)}
+.prose details.storyboard-segment>summary{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--wash);cursor:pointer;list-style:none}
+.prose details.storyboard-segment>summary::-webkit-details-marker{display:none}
+.prose details.storyboard-segment>summary::marker{content:""}
+.prose details.storyboard-segment>summary::before{content:"▶";font-size:13px;color:var(--green)}
+.prose details.storyboard-segment[open]>summary::before{content:"▼"}
+.prose details.storyboard-segment>summary h3{margin:0;font-size:23px;line-height:1.4;font-weight:800;color:var(--green)}
+.storyboard-segment-toggle{margin-left:auto;font-size:14px;font-weight:400;color:var(--muted)}
+.storyboard-segment-toggle::after{content:"展开"}
+.storyboard-segment[open]>summary .storyboard-segment-toggle::after{content:"收起"}
+.storyboard-segment-body{padding:0 18px 18px}
 </style>
 </head>
 <body>
@@ -243,7 +255,29 @@ el("page-back").hidden=context.labels.length<2;el("floating-page-back").hidden=c
 el("page-back").addEventListener("click",handlePageBack);
 el("floating-page-back").addEventListener("click",handlePageBack);
 function textNode(tag,text,className){const node=document.createElement(tag);node.textContent=text;if(className)node.className=className;return node}
-function showDoc(key,anchor){const doc=data.documents[key];if(!doc)return;el("reader-title").textContent=doc.title;el("reader-path").textContent=key;el("reader-raw").href=doc.url;el("reader-content").innerHTML=doc.html;if(!reader.open)reader.showModal();reader.scrollTop=0;if(anchor){const target=Array.from(el("reader-content").querySelectorAll("[id]")).find(n=>n.id===anchor);if(target)target.scrollIntoView()}el("reader-close").focus();updateBackTop()}
+function isStoryboardSegmentTitle(text){return /^分段 P\d{3,}$/.test(text.trim())}
+function foldStoryboardSegments(container){
+for(const heading of Array.from(container.querySelectorAll(":scope > h3"))){
+if(!isStoryboardSegmentTitle(heading.textContent))continue;
+const details=document.createElement("details");details.className="storyboard-segment";
+const summary=document.createElement("summary");
+const toggle=textNode("span","","storyboard-segment-toggle");toggle.setAttribute("aria-hidden","true");
+const body=document.createElement("div");body.className="storyboard-segment-body";
+heading.before(details);summary.append(heading,toggle);details.append(summary,body);
+while(details.nextSibling){
+const next=details.nextSibling;
+if(next.nodeType===1&&/^H[1-3]$/.test(next.tagName))break;
+body.append(next);
+}
+}
+}
+function revealReaderTarget(target,container){
+for(let parent=target.parentElement;parent&&parent!==container;parent=parent.parentElement){
+if(parent.tagName==="DETAILS")parent.open=true;
+}
+target.scrollIntoView();
+}
+function showDoc(key,anchor){const doc=data.documents[key];if(!doc)return;el("reader-title").textContent=doc.title;el("reader-path").textContent=key;el("reader-raw").href=doc.url;const content=el("reader-content");content.innerHTML=doc.html;foldStoryboardSegments(content);if(!reader.open)reader.showModal();reader.scrollTop=0;if(anchor){const target=Array.from(content.querySelectorAll("[id]")).find(n=>n.id===anchor);if(target)revealReaderTarget(target,content)}el("reader-close").focus();updateBackTop()}
 el("reader-close").addEventListener("click",()=>reader.close());
 function backTopState(pageY,readerOpen,readerY){return {page:!readerOpen&&pageY>300,reader:readerOpen&&readerY>300}}
 function phaseFloatingVisible(bottom,readerOpen){return bottom<=0&&!readerOpen}

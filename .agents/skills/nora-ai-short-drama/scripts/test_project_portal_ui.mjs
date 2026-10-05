@@ -14,6 +14,16 @@ function loadFunction(name) {
   // Selected helpers have no top-level calls after their declaration.
   return vm.runInNewContext(`(${code.trim()})`);
 }
+test('storyboard folding recognizes segment titles without folding mapping or shot titles', () => {
+  const isSegmentTitle=loadFunction('isStoryboardSegmentTitle');
+  for(const title of ['分段 P001','分段 P007','分段 P010','分段 P1000',' 分段 P002 ']){
+    assert.equal(isSegmentTitle(title),true,title);
+  }
+  for(const title of ['EP001-C001-P001','EP001-SH001','1. 镜头正文','2. 视频分段','正文里提到分段 P001','分段 P1']){
+    assert.equal(isSegmentTitle(title),false,title);
+  }
+});
+
 test('segment video prompts render Chinese then execution English as plain text', () => {
   const media=source.slice(source.indexOf('function showMedia('),source.indexOf('function catalogueMatches('));
   assert.doesNotMatch(media,/点击播放；已加载首帧，不自动播放、转换或分析内容/);
