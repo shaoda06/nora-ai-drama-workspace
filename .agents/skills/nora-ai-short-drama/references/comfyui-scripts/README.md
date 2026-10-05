@@ -93,7 +93,7 @@ python3 comfyui_client.py export-pack --url 'http://SERVER:8188' \
 
 用于按需交付网页画布可导入的原生 `.mmxpack.zip`。`--workflow`、`--node-id`、`--output`均必填；输入必须是保存的API节点对象，指定节点必须为 `MiniMaxH3Director`。读取其 `timeline_data` 和原生导出使用的steps、sampler、scheduler、cfg、shift_video、shift_audio、seed、task_type控件。控件须为直接值，不接受外接连线代替值。相对路径按调用工作目录解析，建议传绝对路径；目标须以 `.mmxpack.zip` 结尾且尚不存在。
 
-源文件不改写；网页尚未保存的编辑内容不会包含在包里。调用方先按[导演包规则](../生成规范/ComfyUI-MiniMaxH3导演台节点使用规范.md#8-导演包导入导出)核对时间线与素材，并选取这些远端素材实际所在的服务。
+源文件不改写；网页尚未保存的编辑内容不会包含在包里。调用方先按[导演包制作规范](../生成规范/ComfyUI-MiniMaxH3导演包制作规范.md)核对时间线与素材，并选取这些远端素材实际所在的服务。
 
 先向 `/minimax/director/export_pack` POST `dryRun=true` 核对缺失素材，再向同一接口POST实际导出。服务读取素材并创建临时ZIP，命令接收JSON/base64或二进制ZIP响应，在本机保存包与可选响应JSON；不调用 `/prompt`、不导入包、不运行生成或改动模型。远端临时导出文件的生命周期由原生接口管理，不操作采样缓存。
 
