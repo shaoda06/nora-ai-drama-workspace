@@ -448,13 +448,16 @@ class PortalTests(unittest.TestCase):
             self.assertEqual(record.read_bytes(), before[str(record)])
 
     def test_pending_label_preserves_explicit_review_state_across_record_formats(self):
-        for chunk in ("- 文件核对结论：通过", "- agent 技术审查结论：不通过", ""):
+        for chunk in ("- 文件核对结论：通过", "- agent 技术审查结论：不通过",
+                      "- 执行状态：unknown\n- 文件核对结论：不适用", ""):
             for decision, expected in (
                 ("待确认；测试候选，正式v05有效", "待确认"),
                 ("待审核。用户尚未查看", "待审核"),
                 ("已采用；历史曾待确认", ""),
                 ("已批准，待超分", ""),
                 ("历史候选已结束，未采用，不再待审", ""),
+                ("未送审；实际候选尚未展示", ""),
+                ("试验已结束，无输出，未采用，不再待审", ""),
                 ("修改后再审", ""),
             ):
                 with self.subTest(chunk=chunk, decision=decision):
