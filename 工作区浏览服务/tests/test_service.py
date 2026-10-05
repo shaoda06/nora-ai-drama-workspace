@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 from backend import main
+from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
 
 
@@ -135,6 +136,31 @@ class ServiceTests(unittest.TestCase):
         result = main.view({'recordUrl': '03-test%5C记录.md#生成记录-001', 'sourceUrl': 'https://example.com/source'}, '示例项目')
         self.assertEqual(result['recordUrl'], '/api/projects/%E7%A4%BA%E4%BE%8B%E9%A1%B9%E7%9B%AE/files/03-test/记录.md#生成记录-001')
         self.assertEqual(result['sourceUrl'], 'https://example.com/source')
+
+    def test_markdown_table_with_blank_lines_keeps_rows_and_links(self):
+        rendered = parser.markdown('| 类型 | 种子 | 来源 |\n\n| --- | --- | --- |\n\n| 肖像 | 123 | [记录](记录.md) |\n\n| 六视图 | 456 | 已采用 |\n\n下一段。', parser.POSITION)
+        self.assertEqual(rendered.count('<table>'), 1)
+        self.assertEqual(rendered.count('<td>'), 6)
+        self.assertIn('data-doc="00-项目定位/记录.md"', rendered)
+        self.assertIn('</table></div>\n<p>下一段。</p>', rendered)
+
+    def test_phase_status_targets_the_matching_progress_row(self):
+        progress = '| 阶段名称 | 对应会话入口 | 当前状态 | 成果入口 | 待决事项 | 下一步 |\n| --- | --- | --- | --- | --- | --- |\n| 人物资料卡 | 会话 | 待确认 | 资料卡 | CH042细节待确认 | 按用户意见修订 |\n'
+        (self.project / '项目进度.md').write_text(progress, encoding='utf-8')
+        data = self.store.get('示例项目')['data']
+        stage = next(item for item in data['active'] if item['name'] == '人物资料卡')
+        self.assertIn('id="' + stage['anchor'] + '"', data['documents']['项目进度.md']['html'])
+        self.assertIn('CH042细节待确认', data['documents']['项目进度.md']['html'])
+
+    def test_position_title_and_status_do_not_change_the_source(self):
+        source = '# 项目定位\n\n- 项目名称：示例项目，全名。\n\n## 视觉表现\n\n- 画风确认状态：已确认；采用依据保留。\n'
+        self.source.write_text(source, encoding='utf-8')
+        section = self.client.get('/api/projects/示例项目/sections/00-项目定位').json()
+        self.assertEqual(section['title'], '示例项目，全名')
+        self.assertEqual(section['introHtml'], '')
+        self.assertIn('status-green', section['bodyHtml'])
+        self.assertIn('采用依据保留', section['bodyHtml'])
+        self.assertEqual(self.source.read_text(encoding='utf-8'), source)
 
 
 if __name__ == '__main__':

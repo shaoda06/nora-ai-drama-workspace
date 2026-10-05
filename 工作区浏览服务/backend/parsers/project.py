@@ -31,7 +31,7 @@ STATUS_COLORS = {
     **dict.fromkeys(("失败", "异常", "不通过", "failed"), "red"),
     **dict.fromkeys(("未开始", "排队中", "不采用", "未记录", "不适用", "待完成", "queued"), "gray"),
 }
-STATUS_FIELDS = {"状态", "当前状态", "确认状态", "执行状态", "真实执行状态", "技术检查结论", "文件核对结论",
+STATUS_FIELDS = {"状态", "当前状态", "确认状态", "画风确认状态", "执行状态", "真实执行状态", "技术检查结论", "文件核对结论",
                  "agent 技术审查结论", "agent 内容审查状态", "agent 初审结论", "agent初审结论", "agent 画面初审结论", "用户采用状态", "用户决定"}
 
 
@@ -167,7 +167,8 @@ def markdown(text, source):
                            + label + '</figcaption></figure>')
                 if out and re.match(r"<p>(女性|男性)样例", out[-1]):
                     caption = out.pop()
-                    out.append('<div class="style-sample-card">' + caption + figure + '</div>')
+                    gender = "male" if caption.startswith("<p>男性") else "female"
+                    out.append('<div class="style-sample-card" data-gender="' + gender + '">' + caption + figure + '</div>')
                 else:
                     out.append(figure)
                 i += 1
@@ -190,14 +191,24 @@ def markdown(text, source):
                        + inline(content, source) + f"</h{level}>")
             i += 1
             continue
-        if i + 1 < len(lines) and "|" in line and re.fullmatch(
-                r"\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*", lines[i + 1]):
+        separator = i + 1
+        if "|" in line:
+            while separator < len(lines) and not lines[separator].strip():
+                separator += 1
+        if separator < len(lines) and "|" in line and re.fullmatch(
+                r"\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*", lines[separator]):
             headers = cells(line)
-            i += 2
+            i = separator + 1
             rows = []
-            while i < len(lines) and "|" in lines[i] and lines[i].strip():
+            while i < len(lines):
+                if not lines[i].strip():
+                    i += 1
+                    continue
+                if "|" not in lines[i]:
+                    break
                 row = cells(lines[i])
-                rows.append("<tr>" + "".join("<td>" + (
+                anchor = ' id="phase-' + slug(row[0]) + '"' if headers == ["阶段名称", "对应会话入口", "当前状态", "成果入口", "待决事项", "下一步"] else ""
+                rows.append("<tr" + anchor + ">" + "".join("<td>" + (
                     status_markup(c, source) if j < len(headers) and headers[j] in STATUS_FIELDS
                     else inline(c, source)) + "</td>" for j, c in enumerate(row)) + "</tr>")
                 i += 1
@@ -230,7 +241,7 @@ def markdown(text, source):
         i += 1
     rendered = "\n".join(out)
     if source == POSITION:
-        rendered = re.sub(r'(?:<div class="style-sample-card">.*?</div>\n?)+',
+        rendered = re.sub(r'(?:<div class="style-sample-card"[^>]*>.*?</div>\n?)+',
                           lambda match: '<div class="style-samples">' + match[0] + '</div>',
                           rendered, flags=re.S)
     return rendered
@@ -426,7 +437,7 @@ def build_data(project):
     if position is None:
         warnings.append("尚未形成正式定位，不以草稿代替。")
     rows = phase_rows(progress or "")
-    active = [dict(row, statusHtml=status_markup(row["status"], PROGRESS), pendingHtml=inline(row["pending"], PROGRESS),
+    active = [dict(row, anchor="phase-" + slug(row["name"]), statusHtml=status_markup(row["status"], PROGRESS), pendingHtml=inline(row["pending"], PROGRESS),
                    nextHtml=inline(row["next"], PROGRESS))
               for row in rows if row["status"] in ("进行中", "待确认")]
     if progress and not rows:
@@ -975,7 +986,7 @@ def build_data(project):
         "props": props, "propIndex": prop_index if prop_index_text else None, "propGroups": prop_groups,
         "catalogues": catalogues, "textPreviews": text_previews,
         "scenes": scenes, "sceneIndex": scene_index if scene_index_text else None, "sceneGroups": scene_groups,
-        "positionExists": position is not None, "meta": meta,
+        "positionExists": position is not None, "positionTitle": field(position or "", "项目名称").rstrip("。"), "meta": meta,
         "confirmationHtml": status_markup(meta["确认状态"], POSITION),
         "introHtml": intro_markup(intro), "positionHtml": markdown(main, POSITION),
         "warnings": warnings, "sources": sources,
