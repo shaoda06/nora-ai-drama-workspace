@@ -17,8 +17,8 @@ class PortalTests(unittest.TestCase):
     def test_position_style_sample_preserves_confirmation_and_relative_image(self):
         text = ('### 画风与美术实现正文\n\n```text\n固定风格正文\n```\n\n'
                 '#### 已确认画风样例\n\n女性样例：已确认\n\n'
-                '![女性"样例](其他资料/过程稿/女 样例.png)\n\n'
-                '男性样例：待确认\n\n[男性候选](其他资料/过程稿/男.png)')
+                '![女性"样例](其他资料/过程稿/素材/女 样例.png)\n\n'
+                '男性样例：待确认\n\n[男性候选](其他资料/过程稿/素材/男.png)')
         rendered = portal.markdown(text, portal.POSITION)
         self.assertEqual(rendered.count('<img '), 1)
         self.assertIn('src="00-%E9%A1%B9%E7%9B%AE%E5%AE%9A%E4%BD%8D/', rendered)
@@ -384,7 +384,12 @@ class PortalTests(unittest.TestCase):
                 target = self.root / stage / "其他资料" / group
                 target.parent.mkdir(exist_ok=True)
                 source.rename(target)
-            record.write_text(record.read_text().replace("../../过程稿/", "../../其他资料/过程稿/")
+            material = self.root / stage / "其他资料" / "过程稿" / "素材"
+            material.mkdir()
+            for candidate in material.parent.glob("*.png"):
+                candidate.rename(material / candidate.name)
+            self.put(stage + "/其他资料/过程稿/" + before[kind][0]["id"] + "-资料卡-草稿-v01.md", "# 草稿")
+            record.write_text(record.read_text().replace("../../过程稿/", "../../其他资料/过程稿/素材/")
                               .replace("../../审阅记录/", "../../其他资料/审阅记录/"))
             number = before[kind][0]["id"]
             self.put(stage + "/其他资料/执行附件/" + number + "-请求.json", '{"prompt": {}}')
@@ -395,9 +400,13 @@ class PortalTests(unittest.TestCase):
             self.assertEqual(len(person["candidates"]), len(before[kind][0]["candidates"]))
             self.assertEqual([x["approved"] for x in person["formal"]],
                              [x["approved"] for x in before[kind][0]["formal"]])
-            self.assertTrue(all("/其他资料/过程稿/" in c["media"]["key"] for c in person["candidates"]))
+            self.assertTrue(all("/其他资料/过程稿/素材/" in c["media"]["key"] for c in person["candidates"]))
             groups = {g["name"]: g["files"] for g in person["groups"]}
             self.assertEqual(len(groups["执行附件"]), 2)
+            keys = [item["key"] for item in groups["过程稿"]]
+            self.assertIn(stage + "/其他资料/过程稿/" + person["id"] + "-资料卡-草稿-v01.md", keys)
+            self.assertTrue(all(c["media"]["key"] in keys for c in person["candidates"]))
+            self.assertEqual(len(keys), len(set(keys)))
             self.assertTrue(all("/执行附件/" not in c["media"]["key"] for c in person["candidates"]))
 
     def test_auxiliary_groups_include_new_and_unmigrated_files_once(self):
