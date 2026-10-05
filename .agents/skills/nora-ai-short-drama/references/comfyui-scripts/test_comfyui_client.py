@@ -1,10 +1,12 @@
 """Pure unit tests: no local server, no remote calls, no media generation."""
 import argparse
+import base64
 import io
 import json
 from pathlib import Path
 import tempfile
 import unittest
+import zipfile
 from unittest.mock import patch
 
 import comfyui_client as c
@@ -21,6 +23,28 @@ class FakeClient:
         if self.error:
             raise self.error
         return self.result
+
+
+class PackClient(FakeClient):
+    def __init__(self, payload, binary=False, missing=None, expected=None, actual_missing=None):
+        super().__init__({"missing": missing or [], "totalBytes": 6, "fileCount": 1, "taskType": "r2v"})
+        self.payload, self.binary = payload, binary
+        self.expected = len(payload) if expected is None else expected
+        self.actual_missing = actual_missing or []
+
+    def open(self, route, data=None, headers=None):
+        self.calls.append((route, data))
+        if self.binary:
+            stream = io.BytesIO(self.payload)
+            stream.headers = {"Content-Type": "application/zip", "Content-Length": str(self.expected),
+                              "X-Pack-Missing": json.dumps(self.actual_missing),
+                              "X-Pack-Download-Name": "native.mmxpack.zip"}
+        else:
+            result = {"missing": self.actual_missing, "bytes": self.expected,
+                      "downloadName": "native.mmxpack.zip", "zipB64": base64.b64encode(self.payload).decode()}
+            stream = io.BytesIO(c.encoded(result))
+            stream.headers = {"Content-Type": "application/json; charset=utf-8"}
+        return stream
 
 
 class ClientTests(unittest.TestCase):
@@ -181,6 +205,77 @@ class ClientTests(unittest.TestCase):
                 c.download(client, args)
             self.assertEqual(target.read_bytes(), b"other writer")
             self.assertEqual(len(list(Path(folder).iterdir())), 1)
+
+    def pack_case(self, folder):
+        root = Path(folder)
+        timeline = {"global": {"prompt": "公共正文", "refs": [{"index": 0, "image": "ref.png"}]},
+                    "segments": [{"id": "first", "prompt": "第一组", "durationSec": 11}]}
+        inputs = {"timeline_data": json.dumps(timeline, ensure_ascii=False), "seed": 9007199254740993,
+                  "steps": 8, "task_type": "r2v", "model": ["1", 0], "clear_vram_between_segments": True}
+        source = root / "source.api.json"
+        c.write_new(source, {"702": {"class_type": "MiniMaxH3Director", "inputs": inputs}})
+        payload = io.BytesIO()
+        with zipfile.ZipFile(payload, "w") as pack:
+            pack.writestr("pack.json", c.encoded({"format": "minimax-h3-director-pack", "formatVersion": 1}))
+            pack.writestr("timeline.json", c.encoded(timeline))
+            pack.writestr("shared_params/shared_params.json", "{}")
+        args = argparse.Namespace(workflow=str(source), node_id="702", output=str(root / "out.mmxpack.zip"))
+        return args, payload.getvalue(), timeline
+
+    def test_native_pack_json_and_binary_are_identical(self):
+        for binary in (False, True):
+            with self.subTest(binary=binary), tempfile.TemporaryDirectory() as folder:
+                args, payload, timeline = self.pack_case(folder)
+                original = Path(args.workflow).read_bytes()
+                client = PackClient(payload, binary=binary)
+                result = c.export_pack(client, args)
+                self.assertEqual(Path(args.output).read_bytes(), payload)
+                self.assertEqual(Path(args.workflow).read_bytes(), original)
+                self.assertNotIn("zipB64", json.dumps(result))
+                self.assertEqual([call[0] for call in client.calls], ["/minimax/director/export_pack"] * 2)
+                preflight, actual = [json.loads(call[1]) for call in client.calls]
+                self.assertTrue(preflight.pop("dryRun"))
+                self.assertEqual(preflight, actual)
+                self.assertEqual(actual["timeline"], timeline)
+                self.assertEqual(actual["widgets"], {"seed": 9007199254740993, "steps": 8, "task_type": "r2v"})
+
+    def test_pack_missing_media_stops_before_export(self):
+        with tempfile.TemporaryDirectory() as folder:
+            args, payload, _ = self.pack_case(folder)
+            client = PackClient(payload, missing=["ref.png"])
+            with self.assertRaises(c.ClientError) as caught:
+                c.export_pack(client, args)
+            self.assertEqual(caught.exception.code, "missing_assets")
+            self.assertEqual(len(client.calls), 1)
+            self.assertFalse(Path(args.output).exists())
+
+    def test_pack_transfer_failure_leaves_no_candidate(self):
+        for options in ({"expected": 1}, {"actual_missing": ["ref.png"]}, {"binary": True, "expected": 1}):
+            with self.subTest(options=options), tempfile.TemporaryDirectory() as folder:
+                args, payload, _ = self.pack_case(folder)
+                with self.assertRaises(c.ClientError):
+                    c.export_pack(PackClient(payload, **options), args)
+                self.assertEqual([p.name for p in Path(folder).iterdir()], ["source.api.json"])
+        with tempfile.TemporaryDirectory() as folder:
+            args, _, _ = self.pack_case(folder)
+            with self.assertRaises(zipfile.BadZipFile):
+                c.export_pack(PackClient(b"not a zip"), args)
+            self.assertFalse(Path(args.output).exists())
+            self.assertFalse(list(Path(folder).glob(".comfy-pack-*")))
+
+    def test_pack_bad_source_and_existing_target_do_not_call_server(self):
+        with tempfile.TemporaryDirectory() as folder:
+            args, payload, _ = self.pack_case(folder)
+            client = PackClient(payload)
+            args.node_id = "407"
+            with self.assertRaises(c.ClientError):
+                c.export_pack(client, args)
+            args.node_id = "702"
+            Path(args.output).write_bytes(b"keep")
+            with self.assertRaises(c.ClientError):
+                c.export_pack(client, args)
+            self.assertEqual(Path(args.output).read_bytes(), b"keep")
+            self.assertEqual(client.calls, [])
 
 
 if __name__ == "__main__":

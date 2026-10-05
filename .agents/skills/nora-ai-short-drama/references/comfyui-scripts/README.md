@@ -1,14 +1,14 @@
 # 通用 ComfyUI 执行工具
 
-入口：[comfyui_client.py](comfyui_client.py)。Python 3.9+，仅标准库；安装位置属于短剧技能，代码不包含短剧业务。与 `comfyui-api` 技能结合使用：技能提供连接、接口与安全规则，脚本执行上传、提交、单轮查询、下载。节点／模型检查仍按 `comfyui-inventory`；故障按 `comfyui-troubleshooter`。
+入口：[comfyui_client.py](comfyui_client.py)。Python 3.9+，仅标准库；安装位置属于短剧技能，代码不包含短剧业务。与 `comfyui-api` 技能结合使用：技能提供连接、接口与安全规则，脚本执行上传、提交、单轮查询、下载和原生导演包导出。节点／模型检查仍按 `comfyui-inventory`；故障按 `comfyui-troubleshooter`。
 
 ## 使用边界
 
 - agent 按当前业务规范准备最终 **API 格式节点 JSON**、参考素材映射和全部参数；脚本不修改提示词、种子、节点或连线，不转换画布 JSON，不内置工作流模板。
-- 上述四类已有能力必须复用此脚本，不按任务新写 Python／shell／内联 HTTP 实现。准备 API JSON、整理业务记录和审核仍由 agent 完成。发现脚本缺陷先报告并集中修复，缺少接口则明确缺口后处理，不悄悄回退成一套临时执行器。
+- 上述已有能力必须复用此脚本，不按任务新写 Python／shell／内联 HTTP 实现。准备 API JSON、整理业务记录和审核仍由 agent 完成。发现脚本缺陷先报告并集中修复，缺少接口则明确缺口后处理，不悄悄回退成一套临时执行器。
 - 只处理当前获得授权的任务；不启动下一阶段、不自动重试提交、不管理定时器、不操作队列删除／中断／卸载／服务器配置。
 - 不决定项目路径、命名、审批或归档，不生成 `生成记录.md`，不移动候选至选定。图片由agent核对文件与执行记录后交用户审核，默认不调用看图能力或自动重试；批准后超分沿用对应专项规则。视频直接交人工审核。
-- 四个命令相互独立。已有远端素材可以复用；新本地素材先上传，agent 再把返回路径写入 API JSON。接口验证／节点发现等不在四个命令内的只读操作仍可按对应技能执行。
+- 五个命令相互独立。已有远端素材可以复用；新本地素材先上传，agent 再把返回路径写入 API JSON。接口验证／节点发现等不在这些命令内的只读操作仍可按对应技能执行。
 
 ## 调用
 
@@ -82,6 +82,25 @@ python3 comfyui_client.py download --url 'http://SERVER:8188' \
 
 这些是传输完整性检查，不读取媒体内容、不调用ffprobe／ASR、不解码视频、不进行图片视觉审核。返回 `data.path/bytes/sha256/remote`；业务元数据及审批由agent维护。
 
+### export-pack：从保存的API导出原生导演包
+
+```sh
+python3 comfyui_client.py export-pack --url 'http://SERVER:8188' \
+  --workflow '/absolute/path/task.api.json' --node-id 'DIRECTOR-NODE-ID' \
+  --output '/absolute/path/director.mmxpack.zip' \
+  --result '/absolute/path/pack-export-response.json'
+```
+
+用于按需交付网页画布可导入的原生 `.mmxpack.zip`。`--workflow`、`--node-id`、`--output`均必填；输入必须是保存的API节点对象，指定节点必须为 `MiniMaxH3Director`。读取其 `timeline_data` 和原生导出使用的steps、sampler、scheduler、cfg、shift_video、shift_audio、seed、task_type控件。控件须为直接值，不接受外接连线代替值。相对路径按调用工作目录解析，建议传绝对路径；目标须以 `.mmxpack.zip` 结尾且尚不存在。
+
+源文件不改写；网页尚未保存的编辑内容不会包含在包里。调用方先按[导演包规则](../生成规范/ComfyUI-MiniMaxH3导演台节点使用规范.md#8-导演包导入导出)核对时间线与素材，并选取这些远端素材实际所在的服务。
+
+先向 `/minimax/director/export_pack` POST `dryRun=true` 核对缺失素材，再向同一接口POST实际导出。服务读取素材并创建临时ZIP，命令接收JSON/base64或二进制ZIP响应，在本机保存包与可选响应JSON；不调用 `/prompt`、不导入包、不运行生成或改动模型。远端临时导出文件的生命周期由原生接口管理，不操作采样缓存。
+
+缺失素材会报 `missing_assets` 并停止；HTTP拒绝／超时按通用错误返回，不自动重试。传输长度、ZIP条目CRC及原生格式标识检查通过后，才以不可覆盖的原子方式发布文件。失败清理本次本地临时文件，已有包不覆盖。检查ZIP不解码媒体，也不代表网页导入已实测。
+
+成功返回 `data.path/bytes/sha256/source_workflow/node_id/download_name/preflight/zip_entries`。响应不留存大段base64；`preflight.fileCount`是原生接口收集的媒体条目数，可能包含编辑草稿中的副本，不等于去重后素材数。模型、Refine及SIGMAS等完整画布设置不在包内，网页导入步骤和边界读取上述规则。
+
 ## 回归测试与验证边界
 
 纯函数／文件安全回归测试（不启动本地服务、不访问远端）：
@@ -90,7 +109,7 @@ python3 comfyui_client.py download --url 'http://SERVER:8188' \
 python3 -B -m unittest discover -s '/absolute/path/comfyui-scripts' -p 'test_*.py' -v
 ```
 
-覆盖请求不改写、大整数种子、重复提交、POST超时不重试、状态分类、不泄漏其他任务、半下载清理及并发落盘防覆盖。POST响应丢失和并发下载边界使用单元测试注入，不通过破坏远端制造故障。真实任务排队中／运行中状态、长时间网络中断、任意自定义节点和认证网关不据此宣称全部实测。
+覆盖请求不改写、大整数种子、重复提交、POST超时不重试、状态分类、不泄漏其他任务、半下载清理及并发落盘防覆盖；导演包覆盖JSON/base64与二进制响应、原时间线与大种子保留、缺素材停止、错误节点、已有文件及坏包／截断不落成品。POST响应丢失和并发下载边界使用单元测试注入，不通过破坏远端制造故障。真实任务排队中／运行中状态、长时间网络中断、任意自定义节点和认证网关不据此宣称全部实测。
 
 ## Nora 项目配置与分享边界
 
