@@ -27,7 +27,10 @@ export default function Project() {
     <Result loading={status.isPending || overview.isPending} error={status.error || overview.error} />
     {status.data?.error && <p className="error">同步失败，保留上一份可读资料：{status.data.error}</p>}
     {overview.data && <>
-      <details className="activity" open><summary>当前阶段与待处理事项</summary><div className="grid">{overview.data.active.map((item: RecordData) => <article key={item.name}><h3>{item.name}</h3><Rich html={item.statusHtml} /><Rich html={item.pendingHtml} /><Rich html={item.nextHtml} /></article>)}</div></details>
+      <div className="activity" role="region" aria-label="当前阶段">
+        <div className="activity-heading"><strong>当前阶段</strong>{overview.data.active.length > 0 && <button className="link" onClick={() => setPreview({ kind: 'markdown', name: '项目进度', key: '项目进度.md', url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}` })}>查看完整进度</button>}</div>
+        <div className="activity-items">{overview.data.active.length ? overview.data.active.map((item: RecordData) => <div className="activity-item" key={item.name}><strong>{item.name}</strong><Rich html={item.statusHtml} /></div>) : <span className="muted">未记录进行中或待确认阶段</span>}</div>
+      </div>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
       {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
       {visited.map(label => <SectionPane key={label} project={name} section={label} revision={revision} active={label === section} />)}
