@@ -89,7 +89,7 @@ def project_status(name: str) -> dict[str, Any]:
 @app.get('/api/projects/{name}/overview')
 def overview(name: str) -> dict[str, Any]:
     data = entry(name)['data']
-    return view({k: data[k] for k in ('project', 'builtAt', 'progressUpdated', 'active', 'directories', 'warnings')}, name)
+    return view({k: data[k] for k in ('project', 'positionTitle', 'builtAt', 'progressUpdated', 'active', 'directories', 'warnings')}, name)
 
 
 @app.get('/api/projects/{name}/sections/{section}')

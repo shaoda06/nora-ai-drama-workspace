@@ -11,7 +11,6 @@
 .tab-select:focus-visible{outline:3px solid #a2cbbb;outline-offset:3px}
 .activity-state{padding:0;border:0;background:transparent;line-height:inherit}
 .activity-state:hover{background:transparent;text-decoration:underline;text-underline-offset:3px}
-.project-document-title{font-size:28px;line-height:1.4;margin:0 0 20px}
 .chapters{border:1px solid var(--line);border-radius:8px}
 .code-block{border:1px solid var(--line);background:#f4f6f3;border-radius:8px;overflow:hidden;margin:16px 0}
 .code-toolbar{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:#edf3ee}
@@ -28,4 +27,4 @@
 .style-sample figcaption{text-align:center;color:var(--muted);font-size:13px;margin-bottom:8px}
 .table-scroll{overflow:auto}.prose .table-scroll table{display:table;min-width:640px;margin:0}
 .prose tr[id^=phase-]{scroll-margin-top:85px}.dialog-body .prose h2,.dialog-body .prose h3{scroll-margin-top:100px}
-@media(max-width:760px){.style-samples{grid-template-columns:minmax(0,1fr)}.project-document-title{font-size:24px}}
+@media(max-width:760px){.style-samples{grid-template-columns:minmax(0,1fr)}}
