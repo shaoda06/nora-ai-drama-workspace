@@ -23,7 +23,7 @@ export default function Project() {
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   return <PreviewContext.Provider value={setPreview}>
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
-      <div className="muted">{status.data?.updating ? '正在同步资料…' : `资料读取：${status.data?.updated || '读取中'}`}</div>
+      <div className="muted">{status.data?.updating ? '正在同步资料…' : `资料读取：${status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '读取中'}`}</div>
       <div className="breadcrumbs"><span>{name} / </span><span aria-current="page">{overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')}</span></div>
     </PageHeader>
     <Result loading={status.isPending || overview.isPending} error={status.error || overview.error} />
