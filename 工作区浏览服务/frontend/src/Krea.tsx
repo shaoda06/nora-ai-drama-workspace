@@ -3,7 +3,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { get, styleUrl } from './api';
 import type { RecordData } from './api';
 import { Dialog, Original, Result } from './components';
-import { Pagination } from './Project';
+import { Pagination } from './components/Pagination';
+import { PageHeader } from './components/PageHeader';
+import { SearchField } from './components/SearchField';
+import { CopyButton } from './components/CopyButton';
 
 export default function Krea() {
   const [search, setSearch] = useState('');
@@ -16,8 +19,8 @@ export default function Krea() {
   const version = JSON.stringify(state.data?.sources && Object.fromEntries(Object.entries(state.data.sources).map(([key, value]) => [key, (value as RecordData).local])));
   const catalogue = useQuery({ queryKey: ['krea', search, library, category, page, version], queryFn: () => get<RecordData>(`/api/krea2/catalog?${new URLSearchParams({ q: search, library, category, page: String(page) })}`), placeholderData: previous => previous });
   return <>
-    <div className="page-heading"><div><p className="eyebrow">跨项目视觉参考</p><h1>Krea2 风格库</h1><p className="muted">浏览预览、查看提示词，保留来源与版本。</p></div><button onClick={() => setManage(true)}>资源与更新管理</button></div>
-    <div className="toolbar"><input aria-label="搜索风格" placeholder="搜索风格名称、分类" value={search} onChange={event => { setSearch(event.target.value); setPage(1); }} />
+    <PageHeader eyebrow="跨项目视觉参考" title="Krea2 风格库" description="浏览预览、查看提示词，保留来源与版本。" actions={<button onClick={() => setManage(true)}>资源与更新管理</button>} />
+    <div className="toolbar"><SearchField label="搜索风格" placeholder="搜索风格名称、分类" value={search} onChange={value => { setSearch(value); setPage(1); }} />
       <select aria-label="资源库" value={library} onChange={event => { setLibrary(event.target.value); setCategory(''); setPage(1); }}><option value="">全部资源库</option><option value="krea2_styles">Clio</option><option value="Krea2_moodboard">Ray Moodboard</option></select>
       <select aria-label="风格分类" value={category} onChange={event => { setCategory(event.target.value); setPage(1); }}><option value="">全部分类</option>{catalogue.data?.categories.map((item: string) => <option key={item}>{item}</option>)}</select><span className="muted">{catalogue.data?.total ?? '…'} 个风格</span>
     </div><Result loading={catalogue.isPending} error={catalogue.error} />
@@ -27,23 +30,14 @@ export default function Krea() {
     {manage && <UpdateManagement state={state.data} error={state.error} close={() => setManage(false)} />}
   </>;
 }
-function Copy({ text, label }: { text: string; label: string }) {
-  const [message, setMessage] = useState('');
-  return <><button onClick={async () => {
-    if (navigator.clipboard && window.isSecureContext) {
-      try { await navigator.clipboard.writeText(text); setMessage('已复制'); }
-      catch (error) { setMessage(`复制失败：${String(error)}；可选中下方文本复制。`); }
-    } else setMessage('当前局域网地址不支持自动复制，请选中下方文本复制。');
-  }}>{label}</button>{message && <p role="status" className="notice">{message}</p>}{message.includes('选中') && <textarea aria-label="手动复制内容" readOnly value={text} onFocus={event => event.currentTarget.select()} />}</>;
-}
 function Style({ identity, version, close }: { identity: string; version: string; close: () => void }) {
   const detail = useQuery({ queryKey: ['style', identity, version], queryFn: () => get<RecordData>(`/api/krea2/styles/${encodeURIComponent(identity)}`) });
   const item = detail.data;
   return <Dialog title={item?.name_cn || '风格详情'} close={close}><Result loading={detail.isPending} error={detail.error} />{item && <>
     <div className="style-detail">{item.image && <img className="preview-image" src={styleUrl(item.image)} alt={item.name} />}<div><h3>{item.name}</h3><p>{item.category_name}</p><p>来源：<Original url={item.source} label={item.library === 'krea2_styles' ? 'Clio' : 'Ray'} /></p><p className="muted">版本：{item.source_revision}</p>
-      <Copy label="复制发给 AI" text={`我选择了 Krea2 风格“${item.name_cn || item.name}”（${item.name}）。请读取工作区目录：工作区浏览服务/Krea2风格库/Krea2_风格资源/${item.folder}，查看预览图与正负面提示词，再帮我分析和应用。`} />
-    </div></div><h3>正面提示词</h3><pre>{item.prompt}</pre><Copy label="复制正面提示词" text={item.prompt} /> <Original url={styleUrl(item.folder + '/positive.txt')} label="下载 TXT" />
-    <h3>负面提示词</h3><pre>{item.negative_prompt || '原资源未提供负面提示词。'}</pre>{item.negative_prompt && <Copy label="复制负面提示词" text={item.negative_prompt} />} <Original url={styleUrl(item.folder + '/negative.txt')} label="下载 TXT" />
+      <CopyButton label="复制发给 AI" text={`我选择了 Krea2 风格“${item.name_cn || item.name}”（${item.name}）。请读取工作区目录：工作区浏览服务/Krea2风格库/Krea2_风格资源/${item.folder}，查看预览图与正负面提示词，再帮我分析和应用。`} />
+    </div></div><h3>正面提示词</h3><pre>{item.prompt}</pre><CopyButton label="复制正面提示词" text={item.prompt} /> <Original url={styleUrl(item.folder + '/positive.txt')} label="下载 TXT" />
+    <h3>负面提示词</h3><pre>{item.negative_prompt || '原资源未提供负面提示词。'}</pre>{item.negative_prompt && <CopyButton label="复制负面提示词" text={item.negative_prompt} />} <Original url={styleUrl(item.folder + '/negative.txt')} label="下载 TXT" />
   </>}</Dialog>;
 }
 function UpdateManagement({ state, error, close }: { state?: RecordData; error: Error | null; close: () => void }) {

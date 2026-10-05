@@ -5,6 +5,11 @@ import { get, projectUrl, searchTree } from './api';
 import type { FileItem, RecordData } from './api';
 import { Document, FileTree, Groups, Original, Preview, PreviewContext, Result, Rich } from './components';
 
+import { PageHeader } from './components/PageHeader';
+import { TabNav } from './components/TabNav';
+import { SearchField } from './components/SearchField';
+import { Pagination } from './components/Pagination';
+
 export default function Project() {
   const { name = '' } = useParams();
   const [section, setSection] = useState('00-项目定位');
@@ -15,13 +20,13 @@ export default function Project() {
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: previous => previous });
   return <PreviewContext.Provider value={setPreview}>
     <div className="breadcrumbs"><Link to="/">工作区</Link><span> / {name}</span></div>
-    <div className="page-heading"><div><p className="eyebrow">项目浏览</p><h1>{name}</h1></div><span className="muted">{status.data?.updating ? '正在同步资料…' : `资料读取：${status.data?.updated || '读取中'}`}</span></div>
+    <PageHeader eyebrow="项目浏览" title={name} actions={<span className="muted">{status.data?.updating ? '正在同步资料…' : `资料读取：${status.data?.updated || '读取中'}`}</span>} />
     <Result loading={status.isPending || overview.isPending} error={status.error || overview.error} />
     {status.data?.error && <p className="error">同步失败，保留上一份可读资料：{status.data.error}</p>}
     {overview.data && <>
       <details className="activity" open><summary>当前阶段与待处理事项</summary><div className="grid">{overview.data.active.map((item: RecordData) => <article key={item.name}><h3>{item.name}</h3><Rich html={item.statusHtml} /><Rich html={item.pendingHtml} /><Rich html={item.nextHtml} /></article>)}</div></details>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
-      <nav className="section-tabs" aria-label="项目栏目">{overview.data.directories.map((dir: RecordData) => <button key={dir.name} aria-current={section === dir.name ? 'page' : undefined} onClick={() => { setSection(dir.name); setVisited(old => old.includes(dir.name) ? old : [...old, dir.name]); }}>{dir.label}</button>)}</nav>
+      <TabNav label="项目栏目" items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />
       {visited.map(label => <SectionPane key={label} project={name} section={label} revision={revision} active={label === section} />)}
     </>}
     {preview && <Preview key={preview.key || preview.url} project={name} item={preview} revision={revision} close={() => setPreview(null)} />}
@@ -43,13 +48,9 @@ function Catalogue({ value, section }: { value: RecordData; section: string }) {
   const all: FileItem[] = value.children || value.items || value.files || [];
   const categories = Array.from(new Set(all.map(item => item.category).filter(Boolean)));
   const matched = searchTree(all.filter(item => !category || item.category === category), search);
-  return <><div className="toolbar"><input aria-label="搜索目录" placeholder="搜索名称、概要" value={search} onChange={event => { setSearch(event.target.value); setPage(1); }} />{categories.length > 0 && <select aria-label="目录分类" value={category} onChange={event => { setCategory(event.target.value); setPage(1); }}><option value="">全部分类</option>{categories.map(item => <option key={item}>{item}</option>)}</select>}</div>
+  return <><div className="toolbar"><SearchField label="搜索目录" placeholder="搜索名称、概要" value={search} onChange={value => { setSearch(value); setPage(1); }} />{categories.length > 0 && <select aria-label="目录分类" value={category} onChange={event => { setCategory(event.target.value); setPage(1); }}><option value="">全部分类</option>{categories.map(item => <option key={item}>{item}</option>)}</select>}</div>
     {!all.length && <p className="muted">暂无资料。</p>}<FileTree key={section} items={matched.slice((page - 1) * 36, page * 36)} />
     <Pagination page={page} total={matched.length} change={setPage} /><Groups groups={value.groups} /></>;
-}
-export function Pagination({ page, total, change }: { page: number; total: number; change: (n: number) => void }) {
-  const last = Math.max(1, Math.ceil(total / 36));
-  return total > 36 ? <div className="pagination"><button disabled={page <= 1} onClick={() => change(page - 1)}>上一页</button><span>{page} / {last} · 共{total}项</span><button disabled={page >= last} onClick={() => change(page + 1)}>下一页</button></div> : null;
 }
 function Assets({ value, project, revision }: { value: RecordData; project: string; revision: number }) {
   const [search, setSearch] = useState('');
@@ -58,13 +59,13 @@ function Assets({ value, project, revision }: { value: RecordData; project: stri
   const detail = useQuery({ queryKey: ['asset', project, value.kind, selected, revision], queryFn: () => get<RecordData>(`${projectUrl(project)}/assets/${value.kind}/${encodeURIComponent(selected!)}`), enabled: !!selected, placeholderData: (previous, query) => query?.queryKey[3] === selected ? previous : undefined });
   const matched = value.items.filter((item: RecordData) => `${item.id} ${item.name} ${item.role}`.toLowerCase().includes(search.toLowerCase()));
   return <>
-    <div hidden={!!selected}><div className="toolbar"><input aria-label="搜索资料" placeholder="搜索编号、名称" value={search} onChange={event => setSearch(event.target.value)} /><span className="muted">共{matched.length}项</span></div>
+    <div hidden={!!selected}><div className="toolbar"><SearchField label="搜索资料" placeholder="搜索编号、名称" value={search} onChange={setSearch} /><span className="muted">共{matched.length}项</span></div>
       <div className="grid">{matched.map((item: RecordData) => <article className="asset-card" key={item.id}>
         <button className="cover" onClick={() => { setSelected(item.id); setTab('资料卡'); }}>{item.cover?.media ? <img loading="lazy" src={item.cover.media.url + `?v=${revision}`} alt={item.name} /> : <span>{item.id}</span>}</button>
         <h3>{item.id} · {item.name}</h3><p>{item.role}</p><Rich html={item.statusHtml} /><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
         <button onClick={() => { setSelected(item.id); setTab('资料卡'); }}>查看详情</button> {item.pendingCount > 0 && <button className="pending" onClick={() => { setSelected(item.id); setTab('候选与审阅'); }}>留存待确认／待审核 {item.pendingCount}</button>}
       </article>)}</div><Groups groups={value.groups} /></div>
-    {selected && <><button onClick={() => setSelected(null)}>← 返回列表</button><Result loading={detail.isPending} error={detail.error} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><nav className="detail-tabs">{['资料卡', '正式参考图', '候选与审阅', '相关记录'].map(label => <button key={label} aria-current={tab === label ? 'page' : undefined} onClick={() => setTab(label)}>{label}</button>)}</nav>
+    {selected && <><button onClick={() => setSelected(null)}>← 返回列表</button><Result loading={detail.isPending} error={detail.error} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关记录'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
       <div hidden={tab !== '资料卡'}><Document key={detail.data.id} value={detail.data.card} /></div>
       <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} /></div>
       <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <AssetMedia items={detail.data.candidates} revision={revision} />}</div>

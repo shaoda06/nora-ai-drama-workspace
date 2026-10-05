@@ -79,9 +79,9 @@ export function Preview({ project, item, revision, close }: { project: string; i
       document.querySelectorAll('dialog [id]').forEach(el => { if (el.id === decodeURIComponent(hash)) el.scrollIntoView(); });
     });
   }, [query.data, item.key]);
-  const image = kind === 'image' || /\.(png|jpe?g|webp|gif)$/i.test(item.name);
-  const video = kind === 'video' || /\.(mp4|webm|mov)$/i.test(item.name);
-  const audio = kind === 'audio' || /\.(mp3|wav|ogg|flac|m4a)$/i.test(item.name);
+  const image = kind === 'image' || /\.(png|jpe?g|webp|gif)$/i.test(key || item.name);
+  const video = kind === 'video' || /\.(mp4|webm|mov)$/i.test(key || item.name);
+  const audio = kind === 'audio' || /\.(mp3|wav|ogg|flac|m4a)$/i.test(key || item.name);
   return <Dialog title={item.name} close={close}>
     <Original url={item.url} />
     {text && revision !== openedRevision && <p className="notice document-update">项目资料有更新。<button onClick={() => setOpenedRevision(revision)}>读取新版本</button></p>}
