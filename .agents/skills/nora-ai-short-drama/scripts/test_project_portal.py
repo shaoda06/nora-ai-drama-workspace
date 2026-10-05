@@ -108,6 +108,104 @@ class PortalTests(unittest.TestCase):
         for key, prompts in expected.items():
             self.assertEqual(legacy_videos[key]["prompts"], prompts)
 
+    def test_stage_first_videos_and_central_candidates_use_exact_run_prompts(self):
+        episode = "09-剧集制作/EP001"
+        identity = "EP001-C001-P001"
+        english = "Approved execution text"
+        self.put(f"{episode}/05-视频提示词/{identity}-视频提示词.md",
+                 "## 提交给模型的完整提示词\n```text\n" + english +
+                 "\n```\n## 中文提示词参考版\n```text\n当次中文\n```\n")
+        expected = {}
+        for folder, run, stage, text in [
+                ("06-生成结果/01-一采/C001-场次", "R001", "一采", english),
+                ("06-生成结果/02-二采/C001-场次", "R002", "二采", english),
+                ("其他资料/候选视频", "R003", "一采", "Historical text"),
+                ("其他资料/候选视频", "R004", "二采", english)]:
+            self.put(f"{episode}/其他资料/执行附件/{identity}-{run}-{stage}/模型提示词.txt", text)
+            key = f"{episode}/{folder}/{identity}-{run}-{stage}.mp4"
+            self.put(key, "video fixture")
+            expected[key] = {"english": text, "chinese": "当次中文" if text == english else ""}
+        missing = f"{episode}/其他资料/候选视频/{identity}-R005-二采.mp4"
+        self.put(missing, "video fixture")
+        expected[missing] = {"english": "", "chinese": ""}
+        excluded = [
+            f"{episode}/06-生成结果/01-一采/C002-场次/{identity}-R001-一采.mp4",
+            f"{episode}/06-生成结果/01-一采/C001-场次/{identity}-R002-二采.mp4",
+            f"{episode}/其他资料/候选视频/EP002-C001-P001-R001-一采.mp4",
+            f"{episode}/06-生成结果/03-后处理/C001-场次/{identity}-R006-后处理.mp4",
+            f"{episode}/其他资料/候选视频/EP001-C001-场次成片-v01.mp4",
+            f"{episode}/其他资料/执行附件/{identity}-R001-一采/seg_0000_pre.mp4"]
+        for key in excluded:
+            self.put(key, "video fixture")
+        legacy = f"{episode}/06-生成结果/C002-场次结果/P001-分段结果/01-一采"
+        self.put(legacy + "/执行记录/R001-一采/模型提示词.txt", "Legacy text")
+        old_video = legacy + "/选定/EP001-C002-P001-R001-一采.mp4"
+        self.put(old_video, "video fixture")
+        expected[old_video] = {"english": "Legacy text", "chinese": ""}
+        portal.build(self.root)
+        items = {}
+        pending = [self.extract()["catalogues"]["09-剧集制作"]]
+        while pending:
+            node = pending.pop()
+            items[node["key"]] = node
+            pending.extend(node.get("children", []))
+        for key, prompts in expected.items():
+            self.assertEqual(items[key]["prompts"], prompts)
+        for key in excluded:
+            self.assertNotIn("prompts", items[key])
+
+    def test_flat_storyboards_shared_records_and_director_pair_display_once(self):
+        episode = "09-剧集制作/EP001"
+        scene = episode + "/03-分镜脚本/EP001-C001-场次分镜.md"
+        index = episode + "/03-分镜脚本/EP001-分镜索引.md"
+        files = {
+            scene: "# 场次分镜\n## EP001-C001-P001\n本段正文",
+            index: "# 索引\n[分段](EP001-C001-场次分镜.md#ep001-c001-p001)",
+            episode + "/03-分镜脚本/EP001-C002-场次分镜.md": "# 第二场",
+            episode + "/04-专用素材/其他参考图/EP001-C001-P001-专用参考图-姿态-001.png": "image fixture",
+            episode + "/06-生成结果/01-一采/C001-场次/导演包/EP001-C001-一采定稿-导演包.mmxpack.zip": "zip fixture",
+            episode + "/06-生成结果/01-一采/C001-场次/导演包/EP001-C001-一采定稿.workflow.json": '{"nodes": []}',
+            episode + "/06-生成结果/02-二采/C001-场次/EP001-C001-P001-R002-二采.mp4": "video fixture",
+            episode + "/06-生成结果/03-后处理/C001-场次/EP001-C001-P001-R003-后处理.mp4": "video fixture",
+            episode + "/06-生成结果/04-场次成片/C001-场次/EP001-C001-成片说明.md": "# 成片说明\n- 确认状态：待确认",
+            episode + "/06-生成结果/04-场次成片/C001-场次/EP001-C001-场次成片-v01.mp4": "video fixture",
+            episode + "/06-生成结果/05-整集成片/EP001-成片说明.md": "# 整集说明",
+            episode + "/其他资料/候选视频/EP001-C001-P001-R004-一采.mp4": "video fixture",
+            episode + "/其他资料/执行附件/EP001-C001-P001-生成记录.md": "# 生成记录\n[候选](../候选视频/EP001-C001-P001-R004-一采.mp4)",
+            episode + "/其他资料/执行附件/EP001-C001-P001-R004-一采/模型提示词.txt": "Actual text",
+            episode + "/其他资料/执行附件/EP001-C001-P001-R004-一采/监控说明.md": "# 监控",
+            episode + "/其他资料/审阅记录/EP001-C001-P001-R004-一采-审阅记录-001.md": "# 审阅\n- 决定：待审核",
+        }
+        for key, content in files.items():
+            self.put(key, content)
+        portal.build(self.root)
+        data = self.extract()
+        nodes, leaves = {}, []
+        pending = [data["catalogues"]["09-剧集制作"]]
+        while pending:
+            node = pending.pop()
+            nodes[node["key"]] = node
+            if node["kind"] != "group":
+                leaves.append(node["key"])
+            pending.extend(node.get("children", []))
+        self.assertEqual(set(leaves), set(files))
+        self.assertEqual(len(leaves), len(set(leaves)))
+        storyboard = nodes[episode + "/03-分镜脚本"]["children"]
+        self.assertEqual([n["key"] for n in storyboard], [index, scene, episode + "/03-分镜脚本/EP001-C002-场次分镜.md"])
+        results = nodes[episode + "/06-生成结果"]["children"]
+        self.assertEqual([n["name"] for n in results], ["01-一采", "02-二采", "03-后处理", "04-场次成片", "05-整集成片"])
+        pack_key = next(k for k in files if k.endswith(".zip"))
+        canvas_key = next(k for k in files if k.endswith(".json"))
+        self.assertEqual(nodes[pack_key]["kind"], "file")
+        self.assertIn(".mmxpack.zip", nodes[pack_key]["url"])
+        self.assertEqual(data["textPreviews"][canvas_key]["text"], files[canvas_key])
+        self.assertIn('data-doc="' + scene + '"', data["documents"][index]["html"])
+        self.assertIn('#ep001-c001-p001', data["documents"][index]["html"])
+        self.assertIn('id="ep001-c001-p001"', data["documents"][scene]["html"])
+        self.assertIn("未记录", nodes[episode]["statusHtml"])
+        for key, content in files.items():
+            self.assertEqual((self.root / key).read_text(encoding="utf-8"), content)
+
     def put(self, name, content):
         path = self.root / name
         path.parent.mkdir(parents=True, exist_ok=True)

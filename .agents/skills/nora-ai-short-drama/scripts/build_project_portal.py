@@ -356,15 +356,30 @@ def build_data(project):
         match = re.fullmatch(
             r"09-剧集制作/(EP\d+)/06-生成结果/(C\d+)-场次结果/(P\d+)-分段结果/"
             r"(01-一采|02-二采)/(?:候选|选定)/(.+)\.(?:mp4|webm|mov)", key)
-        if not match:
-            return None
-        episode, scene, segment, stage, stem = match.groups()
-        identity = f"{episode}-{scene}-{segment}"
-        take = re.fullmatch(re.escape(identity) + r"-(R\d+)-" + stage[3:], stem)
-        if not take:
-            return None
-        stage_root = str(Path(key).parent.parent)
-        english_key = f"{stage_root}/执行记录/{take[1]}-{stage[3:]}/模型提示词.txt"
+        if match:
+            episode, scene, segment, stage, stem = match.groups()
+            identity = f"{episode}-{scene}-{segment}"
+            take = re.fullmatch(re.escape(identity) + r"-(R\d+)-" + stage[3:], stem)
+            if not take:
+                return None
+            stage_root = Path(key).parent.parent.as_posix()
+            english_key = f"{stage_root}/执行记录/{take[1]}-{stage[3:]}/模型提示词.txt"
+        else:
+            adopted = re.fullmatch(
+                r"09-剧集制作/(EP\d{3,})/06-生成结果/(01-一采|02-二采)/(C\d{3,})-场次/"
+                r"(.+)\.(?:mp4|webm|mov)", key)
+            candidate = re.fullmatch(
+                r"09-剧集制作/(EP\d{3,})/其他资料/候选视频/(.+)\.(?:mp4|webm|mov)", key)
+            if not adopted and not candidate:
+                return None
+            episode = adopted[1] if adopted else candidate[1]
+            stem = adopted[4] if adopted else candidate[2]
+            take = re.fullmatch(re.escape(episode) + r"-(C\d{3,})-(P\d{3,})-(R\d{3,})-(一采|二采)", stem)
+            if not take or adopted and (take[1] != adopted[3] or take[4] != adopted[2][3:]):
+                return None
+            scene, segment, run, stage = take.groups()
+            identity = f"{episode}-{scene}-{segment}"
+            english_key = f"09-剧集制作/{episode}/其他资料/执行附件/{identity}-{run}-{stage}/模型提示词.txt"
         prompts = {"english": "", "chinese": ""}
         english_path = project / english_key
         if not english_path.is_file() or not english_path.resolve().is_relative_to(project):
@@ -812,6 +827,10 @@ def build_data(project):
                     0 if re.fullmatch(r"EP\d{3,}-本集剧本\.md", item["name"]) else 1,
                     item["name"],
                 ))
+            elif re.fullmatch(r"09-剧集制作/EP\d{3,}/03-分镜脚本", branch["key"]):
+                branch["children"].sort(key=lambda item: (
+                    file_order(item), item["name"],
+                ))
             elif re.fullmatch(r"09-剧集制作/EP\d{3,}/03-分镜脚本/C\d{3,}-场次分镜", branch["key"]):
                 branch["children"].sort(key=lambda item: (
                     0 if re.fullmatch(r"EP\d{3,}-C\d{3,}-场次分镜\.md", item["name"]) else 1,
@@ -828,6 +847,11 @@ def build_data(project):
                     0 if re.fullmatch(r"EP\d{3,}-生成说明\.md", item["name"]) else 1,
                     item["name"],
                 ))
+            elif re.fullmatch(r"09-剧集制作/EP\d{3,}/06-生成结果/(?:04-场次成片/C\d{3,}-场次|05-整集成片)", branch["key"]):
+                branch["children"].sort(key=lambda item: (
+                    0 if re.fullmatch(r"EP\d{3,}(?:-C\d{3,})?-成片说明\.md", item["name"]) else 1,
+                    file_order(item), item["name"],
+                ))
             elif re.fullmatch(r"09-剧集制作/EP\d{3,}/06-生成结果/C\d{3,}-场次结果", branch["key"]):
                 branch["children"].sort(key=lambda item: (
                     file_order(item),
@@ -840,6 +864,8 @@ def build_data(project):
                     {"选定": 0, "候选": 1, "审阅记录": 2, "执行记录": 3}.get(item["name"], 4),
                 ))
             elif re.fullmatch(r"09-剧集制作/EP\d{3,}/06-生成结果/C\d{3,}-场次结果/P\d{3,}-分段结果/(01-一采|02-二采|03-后处理)/执行记录(?:/R\d{3,}-(?:一采|二采|后处理))?", branch["key"]):
+                branch["children"].sort(key=lambda item: item["name"] != "监控说明.md")
+            elif re.fullmatch(r"09-剧集制作/EP\d{3,}/其他资料/执行附件/EP\d{3,}-C\d{3,}-P\d{3,}-R\d{3,}-(?:一采|二采|后处理)", branch["key"]):
                 branch["children"].sort(key=lambda item: item["name"] != "监控说明.md")
         return node
 
