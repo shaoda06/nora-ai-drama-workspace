@@ -29,3 +29,7 @@
 .prose tr[id^=phase-]{scroll-margin-top:85px}.dialog-body .prose h2,.dialog-body .prose h3{scroll-margin-top:100px}
 @media(max-width:760px){.style-samples{grid-template-columns:minmax(0,1fr)}}
 .project-page{padding-top:24px}
+:root{--site-header-height:0px}html{scroll-padding-top:var(--site-header-height)}
+.site-header{position:sticky;top:0;z-index:10}
+.project-page .page-heading>div{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.project-page .page-title h1{margin:8px 0 0}.project-page .breadcrumbs{margin:0}
