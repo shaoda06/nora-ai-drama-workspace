@@ -24,7 +24,8 @@
 | `.agents/skills/nora-ai-short-drama/` | 短剧流程、模板、脚本及[配套工作流](.agents/skills/nora-ai-short-drama/references/comfyui-workflow/)；视频工作流用途见[H3执行规范](.agents/skills/nora-ai-short-drama/references/生成规范/ComfyUI-H3视频执行规范.md#0-制作策略与工作流配置) |
 | 主技能内 `dependencies/` | 三个ComfyUI适配技能的单一真源，保留上游及许可证 |
 | `.agents/skills/krea2-style-library/` | 风格库使用与维护指引 |
-| `Krea2风格库/` | 本地浏览页、当前风格资源、更新程序和启动入口 |
+| `工作区浏览服务/` | React＋FastAPI浏览服务、双击启动、共用解析器与开发历史 |
+| `工作区浏览服务/Krea2风格库/` | 本地浏览页、当前风格资源、更新程序和启动入口 |
 | `projects/` | 使用者真实短剧项目，模板仅保留目录说明 |
 | `综合资料/` | 跨项目资料、未分类资料和本机过程资料，模板仅保留目录说明 |
 
@@ -46,12 +47,12 @@
 | Ray Moodboard资源包 | [Ray3780 / Ray Style Switching Extension](https://civitai.com/models/2856809/ray-style-switching-extension)；[发布元数据API](https://civitai.com/api/v1/models/2856809) |
 | Moodboard原始来源 | [Krea官方Moodboard介绍](https://www.krea.ai/blog/moodboards-krea-2)、[服务条款](https://www.krea.ai/terms) |
 
-现行资源随仓库保留，实际应用版本及来源下载地址见 [versions.json](Krea2风格库/Krea2_风格资源/versions.json)。第三方授权事项由工作区维护者负责处理；这项分发安排不表示agent已经核实取得全部授权，也不改变原始许可。
+现行资源随仓库保留，实际应用版本及来源下载地址见 [versions.json](工作区浏览服务/Krea2风格库/Krea2_风格资源/versions.json)。第三方授权事项由工作区维护者负责处理；这项分发安排不表示agent已经核实取得全部授权，也不改变原始许可。
 
 ### 运行环境与后端来源
 
-- [Python](https://www.python.org/downloads/)：本地执行及浏览工具使用Python 3.9及以上标准库；具体用途见下方环境表。
-- [Node.js](https://nodejs.org/)：18及以上，仅用于项目浏览页的维护测试。
+- [Python](https://www.python.org/downloads/)：原固定脚本使用3.9及以上标准库；新浏览服务使用3.10及以上和独立虚拟环境，依赖见服务目录。
+- [Node.js](https://nodejs.org/)：新浏览服务构建使用22及以上；原静态模板维护测试仍可使用18及以上。
 - [ComfyUI](https://github.com/Comfy-Org/ComfyUI)：由使用者独立部署的图片／视频生成后端。本仓库携带工作流，不携带模型权重和服务端自定义节点。每个项目配置服务地址，具体节点、模型与兼容性按本地工作流及执行规范核对；这里的技能依赖清单不是后端安装清单。
 
 ## 环境
@@ -64,21 +65,30 @@
 | GitHub发布 | GitHub账号及仓库权限，可通过插件或已授权的GitHub CLI操作 |
 | 浏览风格库和项目页 | 现代浏览器；Krea2离线浏览无需常驻服务，更新需要本地Python服务和联网 |
 | 项目浏览页的维护测试 | Node.js 18及以上的 `node --test`；不是普通制作的运行依赖 |
+| 工作区浏览服务 | Python 3.10＋及requirements.txt依赖；前端构建使用Node.js 22＋、pnpm 11，日常运行不使用Node |
 | 技能格式校验 | 使用平台提供的 `skill-creator` 及其校验工具；按工具本身要求准备依赖 |
 
-Python命令示例使用 `python3`；Windows按实际安装可改为 `py -3`。macOS双击入口使用zsh，Windows使用批处理启动文件，其他平台使用下面的Python命令。没有需要整体安装的Node前端工程。
+Python命令示例使用 `python3`；Windows按实际安装可改为 `py -3`。新浏览服务的Windows入口为批处理文件，其他平台按服务README启动；保留的独立Krea2工具另有macOS入口。
+
+## 工作区浏览服务
+
+Windows双击 [启动工作区浏览服务.bat](工作区浏览服务/启动工作区浏览服务.bat)，后台启动后自动打开 `http://127.0.0.1:8782/`。首页自动发现 `projects/` 项目，统一提供项目浏览、Krea2风格库及开发记录。页面打开期间自动检测文件变化，局部更新列表；正在阅读的文档由用户选择切换新版本，不自动整页刷新。局域网使用本机局域网IP加8782端口，风格库管理仅开放本机地址。双击停止脚本结束本工作区服务；关闭网页不停止服务，不设开机自启。
+
+首次安装、构建、开发及测试说明见[服务README](工作区浏览服务/README.md)。服务需要Python 3.10＋及项目依赖，前端构建需要Node.js 22＋、pnpm 11；已构建后日常启动不需要Node.js。原有静态导出入口继续可用，和服务共用解析器。
 
 ## Krea2风格库
 
-macOS可打开 `Krea2风格库/启动Krea2风格库.command`，Windows可双击 `Krea2风格库/启动Krea2风格库.bat`。在工作区根目录也可运行：
+默认从工作区服务的“风格库”进入。以下独立启动入口保留供离线工具使用，不能和统一服务同时操作同一库的更新。
+
+macOS可打开 `工作区浏览服务/Krea2风格库/启动Krea2风格库.command`，Windows可双击 `工作区浏览服务/Krea2风格库/启动Krea2风格库.bat`。在工作区根目录也可运行：
 
 ```sh
-python3 Krea2风格库/Krea2_更新工具/server.py
+python3 工作区浏览服务/Krea2风格库/Krea2_更新工具/server.py
 ```
 
-默认访问 `http://127.0.0.1:8876/`，服务仅监听本机。`--port 8877` 可换端口，`--no-browser` 可只启动服务。结束时按Ctrl+C。直接打开 [离线浏览页](Krea2风格库/index.html) 可浏览和复制提示词，但不能更新资源。
+默认访问 `http://127.0.0.1:8876/`，服务仅监听本机。`--port 8877` 可换端口，`--no-browser` 可只启动服务。结束时按Ctrl+C。直接打开 [离线浏览页](工作区浏览服务/Krea2风格库/index.html) 可浏览和复制提示词，但不能更新资源。
 
-当前资源随工作区提供，后续由使用者在页面手动检查、准备、审阅差异、应用或恢复。更新程序不会自动在后台升级资源。详见[使用说明](Krea2风格库/使用说明.md)。
+当前资源随工作区提供，后续由使用者在页面手动检查、准备、审阅差异、应用或恢复。更新程序不会自动在后台升级资源。详见[使用说明](工作区浏览服务/Krea2风格库/使用说明.md)。
 
 ## 维护与检查
 
@@ -95,7 +105,7 @@ node --test .agents/skills/nora-ai-short-drama/scripts/test_project_portal_ui.mj
 # 仅检查本地画布/API配对，不验证远端兼容性。
 python3 -B .agents/skills/nora-ai-short-drama/scripts/workflow_baselines.py
 # Krea2：临时目录与本机临时端口测试，不联网更新资源。
-python3 -B -m unittest discover -s Krea2风格库/Krea2_更新工具 -p 'test_*.py'
+python3 -B -m unittest discover -s 工作区浏览服务/Krea2风格库/Krea2_更新工具 -p 'test_*.py'
 ```
 
 退出码0表示相应检查通过；脚本测试不等于用户批准素材，也不替代涉及交互修改时的浏览器检查。只维护说明且不影响项目数据结构时，不重新生成项目浏览页。

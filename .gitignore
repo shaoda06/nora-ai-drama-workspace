@@ -29,4 +29,9 @@
 .env.*
 
 # Krea2现行资源入库，下载暂存和上一版备份不入库。
-/Krea2风格库/Krea2_更新工具/work/
+/工作区浏览服务/Krea2风格库/Krea2_更新工具/work/
+/工作区浏览服务/.venv/
+/工作区浏览服务/frontend/node_modules/
+/工作区浏览服务/frontend/dist/
+/工作区浏览服务/frontend/*.tsbuildinfo
+/工作区浏览服务/runtime/
