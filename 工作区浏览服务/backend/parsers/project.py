@@ -384,7 +384,7 @@ def build_data(project):
             english_key = f"{stage_root}/执行记录/{take[1]}-{stage[3:]}/模型提示词.txt"
         else:
             adopted = re.fullmatch(
-                r"09-剧集制作/(EP\d{3,})/06-生成结果/(01-一采|02-二采)/(C\d{3,})-场次/"
+                r"09-剧集制作/(EP\d{3,})/(?:其他资料/阶段采用视频|06-生成结果)/(01-一采|02-二采)/(C\d{3,})-场次/"
                 r"(.+)\.(?:mp4|webm|mov)", key)
             candidate = re.fullmatch(
                 r"09-剧集制作/(EP\d{3,})/其他资料/候选视频/(.+)\.(?:mp4|webm|mov)", key)
@@ -865,7 +865,7 @@ def build_data(project):
                     0 if re.fullmatch(r"EP\d{3,}-生成说明\.md", item["name"]) else 1,
                     item["name"],
                 ))
-            elif re.fullmatch(r"09-剧集制作/EP\d{3,}/06-生成结果/(?:04-场次成片/C\d{3,}-场次|05-整集成片)", branch["key"]):
+            elif re.fullmatch(r"09-剧集制作/EP\d{3,}/06-生成结果/(?:(?:01|04)-场次成片/C\d{3,}-场次|(?:02|05)-整集成片)", branch["key"]):
                 branch["children"].sort(key=lambda item: (
                     0 if re.fullmatch(r"EP\d{3,}(?:-C\d{3,})?-成片说明\.md", item["name"]) else 1,
                     file_order(item), item["name"],
