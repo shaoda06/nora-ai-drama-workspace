@@ -17,9 +17,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   return <HeaderControlsContext.Provider value={controlsRoot}>
     <header className="site-header">
       <div className="header-main"><Link className="brand" to="/">Nora工作台</Link>
+        <div className="header-controls" ref={setControlsRoot} />
         <div className="header-info"><span className="service-dot">服务运行中</span>
           <Link className="history-link" to="/history">版本与开发记录</Link></div></div>
-      <div className="header-controls" ref={setControlsRoot} />
     </header>
     <main>{children}</main>
     <footer>源文件与实际审核记录是内容依据 · 浏览页只读展示</footer>
