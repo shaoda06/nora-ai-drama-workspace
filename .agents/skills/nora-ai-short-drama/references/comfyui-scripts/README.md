@@ -158,7 +158,7 @@ python3 /实际技能目录/scripts/comfyui_dispatch.py \
 
 标准输出为JSON。退出0时检查 `data.dispatch_state`：`accepted` 才表示取得真实prompt_id，`data.url`为实际服务；`deferred` 表示本轮未提交。checks保留候选地址、运行／等待数量、`video_jobs`数量及选端结论；忙的reason为 `video_generation` 或 `pending_threshold`，不保留其他任务提示词。将结论写入已有生成／执行记录；待提交不计入监控模板的已提交数量。接口异常或本地互斥锁被占用时退出1，读取error；锁占用意味着另一会话正在提交，稍后重新调用，不是生成失败。
 
-队列识别读取ComfyUI队列条目的API节点类型，当前覆盖配套一采的 `MiniMaxH3Director`（含导演台内二采）与独立二采的 `MiniMaxH3ReferenceToVideo`。不依赖任务标题或本机台账；后续接入新的视频生成节点时，同步脚本识别和回归用例。队列条目缺少可读API图时，该端返回unknown结论。
+队列识别读取ComfyUI队列条目的API节点类型，当前覆盖一采确认与二采工作流的 `MiniMaxH3Director`，并兼容识别旧版独立二采的 `MiniMaxH3ReferenceToVideo`；识别旧任务不表示将其作为默认入口，工作流用途读取[H3执行规范第0节](../生成规范/ComfyUI-H3视频执行规范.md#0-制作策略与工作流配置)。不依赖任务标题或本机台账；后续接入新的视频生成节点时，同步脚本识别和回归用例。队列条目缺少可读API图时，该端返回unknown结论。
 
 一次调用最多提交一次POST；POST结果不明仍保留原提交证据，不分流重提。后续status、download沿用上方命令，从submit-attempt或项目对应“提交尝试”附件的url读取实际服务。脚本不提供绕过已有证据、强行重试或修改远端队列的参数。
 

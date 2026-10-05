@@ -21,7 +21,7 @@
 | 位置 | 用途 |
 | --- | --- |
 | `AGENTS.md` | 工作区约定、默认依赖安装位置及本地Git提交规则 |
-| `.agents/skills/nora-ai-short-drama/` | 短剧流程、模板、脚本和8套配对工作流 |
+| `.agents/skills/nora-ai-short-drama/` | 短剧流程、模板、脚本及[配套工作流](.agents/skills/nora-ai-short-drama/references/comfyui-workflow/)；视频工作流用途见[H3执行规范](.agents/skills/nora-ai-short-drama/references/生成规范/ComfyUI-H3视频执行规范.md#0-制作策略与工作流配置) |
 | 主技能内 `dependencies/` | 三个ComfyUI适配技能的单一真源，保留上游及许可证 |
 | `.agents/skills/krea2-style-library/` | 风格库使用与维护指引 |
 | `Krea2风格库/` | 本地浏览页、当前风格资源、更新程序和启动入口 |
