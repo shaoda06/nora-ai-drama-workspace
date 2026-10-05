@@ -29,7 +29,7 @@ export default function Project() {
     {overview.data && <>
       <details className="activity" open><summary>当前阶段与待处理事项</summary><div className="grid">{overview.data.active.map((item: RecordData) => <article key={item.name}><h3>{item.name}</h3><Rich html={item.statusHtml} /><Rich html={item.pendingHtml} /><Rich html={item.nextHtml} /></article>)}</div></details>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
-      {controlsRoot && createPortal(<TabNav label="项目栏目" items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
+      {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
       {visited.map(label => <SectionPane key={label} project={name} section={label} revision={revision} active={label === section} />)}
     </>}
     {preview && <Preview key={preview.key || preview.url} project={name} item={preview} revision={revision} close={() => setPreview(null)} />}

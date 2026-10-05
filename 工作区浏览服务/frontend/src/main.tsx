@@ -24,8 +24,6 @@ function Home() {
   return <div className="home">
     <div className="section-heading"><h2>共用工具</h2></div>
     <div className="grid"><EntryCard to="/krea2" title="Krea2 风格库" description="预览、提示词与资源更新" /></div>
-    <div className="section-heading"><h2>版本与开发记录</h2></div>
-    <div className="grid"><EntryCard to="/history" title="版本与开发记录" description="功能进度、实现过程与验证" /></div>
     <div className="section-heading"><h2>短剧项目</h2><span className="muted">自动发现 projects 目录中的项目</span></div>
     <Result loading={projects.isPending} error={projects.error} />
     <div className="grid">{projects.data?.map(item => <EntryCard key={item.id} to={`/projects/${encodeURIComponent(item.id)}`} title={item.name} description="进入项目浏览" icon="▤" />)}</div>
