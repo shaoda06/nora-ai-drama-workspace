@@ -28,7 +28,7 @@ class BaselineTests(unittest.TestCase):
 
     def test_confirmation_pair_requires_report_output(self):
         with tempfile.TemporaryDirectory() as tmp:
-            name = "Nora-MiniMaxH3-多参考视频-一采确认与二采"
+            name = "Minimax-H3-导演台-视频生成"
             for suffix in ("workflow", "api"):
                 source = BASELINES / f"{name}.{suffix}.json"
                 Path(tmp, source.name).write_bytes(source.read_bytes())

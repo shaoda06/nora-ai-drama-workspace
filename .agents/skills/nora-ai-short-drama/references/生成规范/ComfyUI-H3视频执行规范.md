@@ -1,6 +1,6 @@
 # ComfyUI-H3视频执行规范
 
-版本：v1.45；更新日期：2026-10-06。
+版本：v1.46；更新日期：2026-10-06。
 
 本规范管理视频工作流的填写、执行与记录。制作顺序及审批读取[开发流程第二部分第7节](../流程规范/短剧开发流程规范.md#7-生成视频验收与衔接修改)；提示词正文读取[逐集内容制作规范](../流程规范/逐集内容制作规范.md)及 `h3-prompt-writing`。准备资料、实际任务和人工审核按[逐集目录规范](../流程规范/逐集目录与资产管理规范.md)保存，不把技术成功写成内容获批。
 
@@ -10,7 +10,7 @@
 
 | 工作流 | 当前用途 |
 | --- | --- |
-| Nora-MiniMaxH3-多参考视频-一采确认与二采 | 正式视频生成；502为导演台，407为Refine；首次只一采，人工确认后再次执行二采；默认分段导出，403报告驱动执行 |
+| Minimax-H3-导演台-视频生成 | 正式视频生成；502为导演台，407为Refine；首次只一采，人工确认后再次执行二采；默认分段导出，403报告驱动执行 |
 | Nora-MiniMaxH3-多参考视频-SelfLift-备用 | 备用，不接入默认制作流程；单次渐进采样直接输出高清，不能中途送审低清 |
 | Nora-MiniMaxH3-多参考视频-仅一采 | 旧版保留，仅供追溯和恢复，不作为默认视频生成入口 |
 | Nora-MiniMaxH3-多参考视频-仅二采 | 旧版保留，仅供追溯和恢复，不与正式导演台画布混用，不默认执行 |
@@ -24,7 +24,7 @@
 
 | 阶段 | 画布 | API | API节点数 |
 | --- | --- | --- | ---: |
-| 正式一采确认与二采 | [画布](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-一采确认与二采.workflow.json) | [API](../comfyui-workflow/Nora-MiniMaxH3-多参考视频-一采确认与二采.api.json) | 14 |
+| 正式一采确认与二采 | [画布](../comfyui-workflow/Minimax-H3-导演台-视频生成.workflow.json) | [API](../comfyui-workflow/Minimax-H3-导演台-视频生成.api.json) | 14 |
 | SelfLift备用 | [画布](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-SelfLift-备用.workflow.json) | [API](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-SelfLift-备用.api.json) | 13 |
 | 旧版仅一采（追溯／恢复） | [画布](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅一采.workflow.json) | [API](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅一采.api.json) | 13 |
 | 旧版独立二采（追溯／恢复） | [画布](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅二采.workflow.json) | [API](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅二采.api.json) | 41（26＋15可选加载器） |
