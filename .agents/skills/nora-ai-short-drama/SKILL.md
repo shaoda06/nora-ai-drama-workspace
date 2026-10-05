@@ -17,7 +17,7 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 
 本技能可独立分享，推荐配合 ChatGPT／Codex Desktop 使用。其他平台须提供相应会话与监控能力；能力缺失时说明受影响操作，不宣称已安排跟进。
 
-以下登记8个流程依赖技能及1个可选参考技能。GitHub项给出发布仓库和准确技能目录或安装包；随包项提供由本工作区维护、直接读取的完整适配版真源目录。
+以下登记11个按需依赖技能及1个可选参考技能。GitHub项给出发布仓库和准确技能目录或安装包；随包项提供由本工作区维护、直接读取的完整适配版真源目录。
 
 | 依赖技能 | 使用时机 | 获取来源与技能目录 |
 | --- | --- | --- |
@@ -28,10 +28,13 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 | `comfyui-troubleshooter` | 执行异常或质量问题诊断 | 工作区真源：`dependencies/comfyui-troubleshooter/`（[入口](dependencies/comfyui-troubleshooter/SKILL.md)） |
 | `stop-that-shit` | 审查过度工程、范围扩张或重复验证，及用户明确调用时；保留必要安全与验收要求 | GitHub：[lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，目录 [`skills/stop-that-shit`](https://github.com/lennney/stop-that-shit/tree/main/skills/stop-that-shit) |
 | `stss` | 审阅或改写方案、计划等决策说明，减少防御性赘述；不作为剧本、台词或模型提示词的通用润色工具 | GitHub：[lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，目录 [`skills/stss`](https://github.com/lennney/stop-that-shit/tree/main/skills/stss) |
+| `find-skills` | 用户要求查找技能，或当前任务需要发现缺少的专用技能时，检索并核对适用性；安装范围按下方获取规则执行 | GitHub：[vercel-labs/skills](https://github.com/vercel-labs/skills)，目录 [`skills/find-skills`](https://github.com/vercel-labs/skills/tree/main/skills/find-skills) |
+| `vercel-react-best-practices` | 开发、审阅或维护使用React／Next.js的工作区工具时，核对数据请求、打包和渲染性能 | GitHub：[vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)，目录 [`skills/react-best-practices`](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) |
+| `fastapi` | 开发、审阅或维护使用FastAPI的工作区后端时，核对路由、校验、依赖注入、异步和流式响应；使用特性须与项目框架版本匹配 | GitHub：[fastapi/fastapi](https://github.com/fastapi/fastapi)，目录 [`fastapi/.agents/skills/fastapi`](https://github.com/fastapi/fastapi/tree/master/fastapi/.agents/skills/fastapi) |
 | `skill-creator` | 技能维护、扩展及可移植性验证 | Codex Desktop自带；按名称发现系统技能，不另附副本 |
 | `screenwriting-master`（山音超级编剧大师，可选参考） | 仅在用户明确要求调用或查阅山音方法时读取；不因一般编剧任务自动加载，不作为本流程的必需依赖 | GitHub：[Shanyin-ai/shanyin-screenwriting-master](https://github.com/Shanyin-ai/shanyin-screenwriting-master)；仓库根目录安装包 `screenwriting-master（Claude&GPT通用）.skill`，解包后的技能目录为 `screenwriting-master/`，入口为其中的 `SKILL.md` |
 
-以上依赖按使用时机读取，不要求每项任务加载全部技能。Qwen提示词技能为社区发布，H3提示词技能由MiniMax官方发布。三个ComfyUI适配版源自 [MCKRUZ/ComfyUI-Expert](https://github.com/MCKRUZ/ComfyUI-Expert)，各自保留上游来源及MIT许可证；上游用于署名、版本追溯和维护时比较更新；本流程直接使用本技能 `dependencies/` 内的适配版真源，不能自动用上游原版或其他同名安装替代。更新由本工作区维护者在比较差异后进行，并保留来源版本及许可证。适配版不绑定项目、个人服务器、模型组合或其他技能的固定安装位置。
+以上依赖按使用时机读取，不要求每项任务加载全部技能。技能检索、React／Next.js和FastAPI开发依赖只在对应任务中使用，缺失不阻塞普通短剧创作；安装技能不等于安装框架或改变现有工具技术栈。Qwen提示词技能为社区发布，H3提示词技能由MiniMax官方发布。三个ComfyUI适配版源自 [MCKRUZ/ComfyUI-Expert](https://github.com/MCKRUZ/ComfyUI-Expert)，各自保留上游来源及MIT许可证；上游用于署名、版本追溯和维护时比较更新；本流程直接使用本技能 `dependencies/` 内的适配版真源，不能自动用上游原版或其他同名安装替代。更新由本工作区维护者在比较差异后进行，并保留来源版本及许可证。适配版不绑定项目、个人服务器、模型组合或其他技能的固定安装位置。
 
 山音技能保持独立安装；在Codex中于其 `agents/openai.yaml` 设置 `policy.allow_implicit_invocation: false`，不以 `config.toml` 完全禁用来替代。其他平台使用对应的仅显式调用机制；无法保证时说明限制。仅查阅方法不代表执行整套山音流程；不覆盖本技能已经确认的流程、模板与项目设定。需采用不同流程时先明确适用范围，缺少该可选技能不阻塞常规短剧任务。
 
