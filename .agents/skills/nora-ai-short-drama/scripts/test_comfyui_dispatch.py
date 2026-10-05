@@ -17,7 +17,7 @@ class DispatchTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.config = {'enable-multi-remote': True, 'remote-urls': [A, B, C],
-                       'busy-pending-threshold': 2, 'default-only-task-types': list(d.VIDEO_TASK_TYPES)}
+                       'busy-pending-threshold': 2, 'default-only-task-types': list(d.DEFAULT_ONLY_TASK_TYPES)}
         self.write_config()
         self.workflow = {'1': {'class_type': 'LoadImage', 'inputs': {'image': 'source.png', 'seed': 84781009642919}}}
         self.path = self.root / 'task.api.json'
@@ -95,11 +95,22 @@ class DispatchTests(unittest.TestCase):
         self.assertEqual([(url, route) for url, route, _ in self.calls], [(A, '/queue')])
         self.assertFalse((self.root / 'first/submit-attempt.json').exists())
 
-    def test_second_pass_stays_default_when_switch_is_on(self):
-        self.queues[A] = (2, 1)
-        result = d.dispatch(self.args(task_type='video-second-pass'))
-        self.assertEqual(result['dispatch_state'], 'deferred')
-        self.assertFalse(any(url != A for url, _, _ in self.calls))
+    def test_video_passes_and_postprocess_stay_default_when_busy_or_offline(self):
+        for kind in d.DEFAULT_ONLY_TASK_TYPES:
+            for state in ((2, 1), d.client.ClientError('transport_error', 'offline')):
+                with self.subTest(kind=kind, state=state):
+                    self.calls.clear()
+                    self.queues[A] = state
+                    result = d.dispatch(self.args(task_type=kind))
+                    self.assertEqual(result['dispatch_state'], 'deferred')
+                    self.assertEqual([(url, route) for url, route, _ in self.calls], [(A, '/queue')])
+                    self.assertFalse((self.root / 'first').exists())
+
+    def test_only_image_tasks_overflow_to_backup(self):
+        for kind in ('image', 'image-upscale'):
+            with self.subTest(kind=kind):
+                self.queues = {A: (2, 1), B: (0, 0), C: (0, 0)}
+                self.assertEqual(d.dispatch(self.args(name=kind, task_type=kind))['url'], B)
 
     def test_batches_fill_default_before_overflow(self):
         urls = [d.dispatch(self.args(name=f'task-{i}'))['url'] for i in range(5)]
@@ -119,7 +130,7 @@ class DispatchTests(unittest.TestCase):
                         self.assertEqual(result['checks'][0]['video_jobs'], 1)
                         self.assertEqual(result['checks'][0]['reason'], 'video_generation')
                         self.assertNotIn('private inputs', json.dumps(result))
-                        if kind in d.VIDEO_TASK_TYPES:
+                        if kind in d.DEFAULT_ONLY_TASK_TYPES:
                             self.assertEqual(result['dispatch_state'], 'deferred')
                         else:
                             self.assertEqual(result['url'], B)
@@ -142,8 +153,8 @@ class DispatchTests(unittest.TestCase):
         self.assertFalse(any(url != A for url, _, _ in self.calls))
         self.assertFalse((self.root / 'video-1').exists())
 
-    def test_user_selected_endpoint_overrides_default_for_both_video_passes(self):
-        for kind in d.VIDEO_TASK_TYPES:
+    def test_user_selected_endpoint_overrides_default_for_video_passes_and_postprocess(self):
+        for kind in d.DEFAULT_ONLY_TASK_TYPES:
             with self.subTest(kind=kind):
                 self.queues = {url: (0, 0) for url in (A, B, C)}
                 result = d.dispatch(self.args(name=kind, task_type=kind, target_url=B))
@@ -195,11 +206,13 @@ class DispatchTests(unittest.TestCase):
                 self.assertEqual(caught.exception.code, 'invalid_task_type')
         self.assertEqual(self.calls, [])
 
-    def test_legacy_second_pass_only_list_still_pins_first_pass(self):
+    def test_legacy_second_pass_only_list_still_pins_all_video_stages(self):
         self.config['default-only-task-types'] = ['video-second-pass']
         self.write_config()
         self.queues[A] = (2, 0)
-        self.assertEqual(d.dispatch(self.args(task_type='video-first-pass'))['dispatch_state'], 'deferred')
+        for kind in d.DEFAULT_ONLY_TASK_TYPES:
+            with self.subTest(kind=kind):
+                self.assertEqual(d.dispatch(self.args(task_type=kind))['dispatch_state'], 'deferred')
         self.assertFalse(any(url != A for url, _, _ in self.calls))
         self.assertEqual(json.loads((self.root / 'comfyui-config.json').read_text()), self.config)
 

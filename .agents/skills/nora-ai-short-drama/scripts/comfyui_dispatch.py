@@ -12,6 +12,7 @@ import comfyui_client as client
 
 TASK_TYPES = ('image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess')
 VIDEO_TASK_TYPES = ('video-first-pass', 'video-second-pass')
+DEFAULT_ONLY_TASK_TYPES = (*VIDEO_TASK_TYPES, 'video-postprocess')
 VIDEO_GENERATION_NODES = {'MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo'}
 LOCK_PATH = Path(__file__).resolve().parents[1] / 'state' / 'comfyui-dispatch.lock'
 
@@ -22,7 +23,7 @@ def load_config(project, timeout):
         raise client.ClientError('invalid_config', 'Configuration must be a JSON object')
     if set(data) == {'remote-url'}:
         data = {'enable-multi-remote': False, 'remote-urls': [data['remote-url']],
-                'busy-pending-threshold': 2, 'default-only-task-types': list(VIDEO_TASK_TYPES)}
+                'busy-pending-threshold': 2, 'default-only-task-types': list(DEFAULT_ONLY_TASK_TYPES)}
     required = {'enable-multi-remote', 'remote-urls', 'busy-pending-threshold', 'default-only-task-types'}
     if set(data) != required:
         raise client.ClientError('invalid_config', 'Expected the four project dispatch fields')
@@ -34,7 +35,7 @@ def load_config(project, timeout):
     data['remote-urls'] = [client.Client(url, timeout).url for url in urls]
     if len(set(data['remote-urls'])) != len(urls):
         raise client.ClientError('invalid_config', 'Endpoint list contains duplicate addresses')
-    data['default-only-task-types'] = list(dict.fromkeys([*VIDEO_TASK_TYPES, *pinned]))
+    data['default-only-task-types'] = list(dict.fromkeys([*DEFAULT_ONLY_TASK_TYPES, *pinned]))
     return data
 
 
@@ -171,7 +172,7 @@ def dispatch(args):
 def parser():
     p = client.Parser(description=__doc__)
     p.add_argument('--project', required=True, help='Project root containing comfyui-config.json; relative to cwd')
-    p.add_argument('--task-type', required=True, choices=TASK_TYPES, help='Authorized task stage; both video passes default to the first endpoint')
+    p.add_argument('--task-type', required=True, choices=TASK_TYPES, help='Authorized task stage; video passes and postprocessing default to the first endpoint')
     p.add_argument('--target-url', help='Use only this endpoint when explicitly selected by the user; no fallback, still checks eligibility and queue')
     p.add_argument('--workflow', required=True, help='Prepared API JSON; unchanged except declared uploaded input paths')
     p.add_argument('--eligible-url', action='append', required=True, help='Repeat for each endpoint whose nodes/models and existing inputs were verified')
