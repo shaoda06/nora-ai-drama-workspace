@@ -39,7 +39,7 @@
 
 ### 本工作区技能与风格资源
 
-[Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md)与[Krea2风格库技能](.agents/skills/krea2-style-library/SKILL.md)由本工作区维护并随仓库提供。Krea2技能是独立工具入口，不额外计入Nora的11个按需依赖。
+[Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md)与[Krea2风格库技能](.agents/skills/krea2-style-library/SKILL.md)由本工作区维护并随仓库提供。Krea2技能是独立工具入口，不额外计入Nora的13个按需依赖。
 
 | 资源 | 来源与作者 |
 | --- | --- |

@@ -17,7 +17,7 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 
 本技能可独立分享，推荐配合 ChatGPT／Codex Desktop 使用。其他平台须提供相应会话与监控能力；能力缺失时说明受影响操作，不宣称已安排跟进。
 
-以下登记11个按需依赖技能及1个可选参考技能。GitHub项给出发布仓库和准确技能目录或安装包；随包项提供由本工作区维护、直接读取的完整适配版真源目录。
+以下登记13个按需依赖技能及1个可选参考技能。GitHub项给出发布仓库和准确技能目录或安装包；随包项提供由本工作区维护、直接读取的完整适配版真源目录。
 
 | 依赖技能 | 使用时机 | 获取来源与技能目录 |
 | --- | --- | --- |
@@ -31,12 +31,32 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 | `find-skills` | 用户要求查找技能，或当前任务需要发现缺少的专用技能时，检索并核对适用性；安装范围按下方获取规则执行 | GitHub：[vercel-labs/skills](https://github.com/vercel-labs/skills)，目录 [`skills/find-skills`](https://github.com/vercel-labs/skills/tree/main/skills/find-skills) |
 | `vercel-react-best-practices` | 开发、审阅或维护使用React／Next.js的工作区工具时，核对数据请求、打包和渲染性能 | GitHub：[vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)，目录 [`skills/react-best-practices`](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) |
 | `fastapi` | 开发、审阅或维护使用FastAPI的工作区后端时，核对路由、校验、依赖注入、异步和流式响应；使用特性须与项目框架版本匹配 | GitHub：[fastapi/fastapi](https://github.com/fastapi/fastapi)，目录 [`fastapi/.agents/skills/fastapi`](https://github.com/fastapi/fastapi/tree/master/fastapi/.agents/skills/fastapi) |
+| `short-drama-write` | 剧本与对白写作的方法补充：人物目标、策略、回应、声音差异及可表演性；协作边界见下方规则，不接管项目流程与格式 | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-write`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-write) |
+| `humanizer-zh` | 已有中文文本的局部表达润色：空话、重复、拗口及模板句；保留剧情事实、人物声音与必要解释，协作边界见下方规则 | GitHub：[op7418/Humanizer-zh](https://github.com/op7418/Humanizer-zh)，技能目录为[仓库根目录](https://github.com/op7418/Humanizer-zh/tree/main)，入口为 `SKILL.md` |
 | `skill-creator` | 技能维护、扩展及可移植性验证 | Codex Desktop自带；按名称发现系统技能，不另附副本 |
 | `screenwriting-master`（山音超级编剧大师，可选参考） | 仅在用户明确要求调用或查阅山音方法时读取；不因一般编剧任务自动加载，不作为本流程的必需依赖 | GitHub：[Shanyin-ai/shanyin-screenwriting-master](https://github.com/Shanyin-ai/shanyin-screenwriting-master)；仓库根目录安装包 `screenwriting-master（Claude&GPT通用）.skill`，解包后的技能目录为 `screenwriting-master/`，入口为其中的 `SKILL.md` |
 
 以上依赖按使用时机读取，不要求每项任务加载全部技能。技能检索、React／Next.js和FastAPI开发依赖只在对应任务中使用，缺失不阻塞普通短剧创作；安装技能不等于安装框架或改变现有工具技术栈。Qwen提示词技能为社区发布，H3提示词技能由MiniMax官方发布。三个ComfyUI适配版源自 [MCKRUZ/ComfyUI-Expert](https://github.com/MCKRUZ/ComfyUI-Expert)，各自保留上游来源及MIT许可证；上游用于署名、版本追溯和维护时比较更新；本流程直接使用本技能 `dependencies/` 内的适配版真源，不能自动用上游原版或其他同名安装替代。更新由本工作区维护者在比较差异后进行，并保留来源版本及许可证。适配版不绑定项目、个人服务器、模型组合或其他技能的固定安装位置。
 
 山音技能保持独立安装；在Codex中于其 `agents/openai.yaml` 设置 `policy.allow_implicit_invocation: false`，不以 `config.toml` 完全禁用来替代。其他平台使用对应的仅显式调用机制；无法保证时说明限制。仅查阅方法不代表执行整套山音流程；不覆盖本技能已经确认的流程、模板与项目设定。需采用不同流程时先明确适用范围，缺少该可选技能不阻塞常规短剧任务。
+
+### 外部技能协作与规则优先级
+
+在平台约束内，本流程按以下顺序处理规则冲突：
+
+1. 用户当前明确要求及实际授权范围。
+2. 适用的工作区／项目指令，以及项目已确认的剧情、人物、风格与规格。
+3. 本技能现行规范及固定模板；同一规则从其唯一维护入口读取。
+4. 外部技能在本次任务范围内适用的方法与建议。
+5. 未被上述依据规定的通用写作建议。
+
+用户要求改变已确认的核心剧情、人物或视觉方向时，沿用本流程的影响说明与确认要求；已有明确授权则按其范围处理。同层冲突先核对规则真源与具体适用范围，仍不能判断时说明冲突及影响，由用户决定。真实模型、接口和素材容量限制属于执行条件，不能靠规则优先级绕过。
+
+`short-drama-write` 只补充场景因果、人物策略和对白手艺；其目录、场景编号、生产标签、配置、正文模板及配套解析脚本不替代本流程的规定，也不取消已有制作前检查、记录和审批。对白与场景的删改以[逐集制作规范第2节](references/流程规范/逐集内容制作规范.md#2-本集故事剧本)为准，保留观众理解核心因果所需的交流、有效的直接表达、沉默与余韵，不把“能演的不说”或“每句必须承担冲突”当作统一删减标准。
+
+`humanizer-zh` 只在获授权的文本范围内处理具体表达问题；不补造剧情事实，不改变人物关系、知情状态或对白／VO／OS性质，不把所有角色改成同一种口吻。有意的重复、口头习惯、正式语气、情绪停顿和必要解释按其作用保留；标题、字段、编号、链接和统计口径继续按本流程维护。文本修改沿用既有审阅及关联同步，不新增评分、检查表或审批阶段。
+
+依赖表登记能力与协作边界，不规定这两个技能在各大阶段的固定调用顺序或自动触发条件，也不要求每个阶段加载它们。缺少这两个方法补充技能不阻塞本流程已有的创作能力。
 
 ### 依赖发现与获取
 
