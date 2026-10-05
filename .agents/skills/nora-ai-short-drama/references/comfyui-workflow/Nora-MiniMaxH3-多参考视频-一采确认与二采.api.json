@@ -149,9 +149,9 @@
       "seed_mode": "inherit",
       "seed": 0,
       "aspect_ratio": "跟随导演台",
-      "megapixels": 1.0,
-      "width": 1376,
-      "height": 768,
+      "megapixels": 1.265625,
+      "width": 1536,
+      "height": 864,
       "skip_fl2v": true,
       "confirm_first_pass": true,
       "enable_latent_chunking": false,
@@ -164,7 +164,7 @@
       ]
     },
     "_meta": {
-      "title": "407｜Refine二采 · 后4步 · 1.0MP · 一采确认开启"
+      "title": "407｜Refine二采 · 后4步 · 1536×864 · 一采确认开启"
     }
   },
   "502": {
@@ -190,10 +190,11 @@
       "export_source_images": false,
       "export_pre_face_refine": false,
       "bd_grp_perf": "性能",
-      "clear_vram_between_segments": false,
+      "clear_vram_between_segments": true,
       "clear_vram_before_refine": false,
       "clear_vram_before_face_refine": false,
       "cache_frames_codec": "raw",
+      "precise_segment_memory": true,
       "minimax_director_ui": "",
       "model": [
         "405",

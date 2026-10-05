@@ -1,6 +1,6 @@
 # ComfyUI-H3视频执行规范
 
-版本：v1.43；更新日期：2026-10-06。
+版本：v1.44；更新日期：2026-10-06。
 
 本规范管理视频工作流的填写、执行与记录。制作顺序及审批读取[开发流程第二部分第7节](../流程规范/短剧开发流程规范.md#7-生成视频验收与衔接修改)；提示词正文读取[逐集内容制作规范](../流程规范/逐集内容制作规范.md)及 `h3-prompt-writing`。准备资料、实际任务和人工审核按[逐集目录规范](../流程规范/逐集目录与资产管理规范.md)保存，不把技术成功写成内容获批。
 
@@ -16,7 +16,7 @@
 | Nora-MiniMaxH3-多参考视频-仅二采 | 旧版保留，仅供追溯和恢复，不与正式导演台画布混用，不默认执行 |
 | Nora-RTX-AusBoss-切镜保护超分插帧 | 正式后处理；按[开发流程的整场后处理安排](../流程规范/短剧开发流程规范.md#7-生成视频验收与衔接修改)逐段输入选定二采，固定输出1920×1080、30fps |
 
-一采参数和工作流确认不等于具体视频获批，也不授权下一批任务。二采与后处理仍需指定获批来源和对应执行授权；正式二采采用1.0MP、跟随一采比例和32对齐，目标1376×768，不用一采尺寸乘1.5的算术结果替代。
+一采参数和工作流确认不等于具体视频获批，也不授权下一批任务。二采与后处理仍需指定获批来源和对应执行授权；正式一采保持1024×576，二采目标为1536×864；Refine设置与执行端条件见第2节。
 
 ## 1. 当前固定基准与任务副本
 
@@ -70,12 +70,18 @@ python3 -B -m unittest discover -s "/技能实际安装目录/nora-ai-short-dram
 | 尺寸及帧率 | 502控件、timeline根字段及output统一1024×576、24fps；output为fixed尺寸模式、严格16:9、32对齐，实际约0.59MP（megapixels控件为0.6）；ref_max_size / refMaxSize=864，参考图策略max |
 | 采样 | Euler，CFG=1；261为Beta12步，289按8分割；前段SIGMAS连502，一采噪声表末尾归零后实际报告9步；后段SIGMAS连407，二采4步。502的steps/scheduler显示不覆盖外部SIGMAS |
 | Shift | 502 shift_video=12，shift_audio=3 |
-| 性能控件 | clear_vram_between_segments=false，clear_vram_before_refine=false，clear_vram_before_face_refine=false，cache_frames_codec=raw |
+| 性能控件 | clear_vram_between_segments=true，precise_segment_memory=true；clear_vram_before_refine=false，clear_vram_before_face_refine=false，cache_frames_codec=raw |
 | 连续设置 | continue；重绘0.1；前段末尾22帧；keep_tail=true。实际衔接选择按导演台节点使用规范第6节 |
-| Refine | 407：upscale / h3_latent / minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors / Euler / passes=1 / seed_mode=inherit / 1.0MP；confirm_first_pass=true；skip_fl2v=true；时间与空间分块关闭 |
+| Refine | 407：upscale / h3_latent / minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors / Euler / passes=1 / seed_mode=inherit / megapixels=1.265625 / width=1536 / height=864；跟随一采比例，目标1536×864；confirm_first_pass=true；skip_fl2v=true；时间与空间分块关闭 |
 | 导出 | 默认output.exportMode=segments；导演台逐组MP4为完整交付来源，按[导演台输出规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#731-导出方式与逐组文件)核对；不连接264/408，403报告为执行输出节点，404仅为画布说明 |
 
 模型链为192 → 406 → 58 → 128 → 53 → 405；405同时接261和502。58接管H3主干注意力；通用节点的加入不表示叠加两次加速。`allow_compile`仅允许参与编译，不是节点总开关；`disabled`直接传递模型。407连接502.refine；没有SelfLift、FaceRefine或语义桥连接。一采实际9步加二采4步，不能把调度器显示12步登记成两轮实际总步数。
+
+Refine当前实现始终跟随一采比例，以 `megapixels × 1024²` 计算像素量，再将宽高对齐32；仅填写width/height不会覆盖这一计算。1024×576配合megapixels=1.265625得到1536×864，两阶段均为严格16:9。画布保存的MP数值与API一致。
+
+执行端须具备已验证的PR207兼容适配：段间清理先清空预取队列，再按阶段保留／卸载模型，并支持 `precise_segment_memory`。精确调度按模型权重大小与物理内存总量的比例选择策略，不是按当前内存占用率决定；工作流显式保存两个开启值，不依赖新节点默认值。节点缺少该接口时先报告兼容性问题，不静默删掉参数或自动覆盖插件。
+
+当前配套运行条件为保留DynamicVRAM及原 `--disable-pinned-memory`，在原启动参数上追加 `--vram-headroom 2`（额外预留2GiB），并核对UU相关进程／服务关闭。启动参数和系统进程状态不属于工作流JSON，执行前核对实际服务状态；准备任务不附带关闭进程、重启或修改启动器的授权。该组合已在两段缓存二采中连续两轮正常，不等于根因已确认，也不代表其他分辨率和长视频已验证。
 
 后处理准备与提交前按[开发流程第二部分第7节](../流程规范/短剧开发流程规范.md#7-生成视频验收与衔接修改)核对整场开始条件、指定来源及执行授权；每个后处理任务使用该P选定的二采原文件，固定输出1920×1080、30fps：节点1为target dimensions、width=1920、height=1080、quality=ULTRA；节点12为RAFT光流、target_fps=30、scene_cut_threshold=0.15、batch_size=1。source_fps连接源视频实际fps，节点16的frame_rate连接插帧返回fps，audio连接源视频原音轨；保持播放速度和音画同步，不用改变播放帧率代替插帧。取回后核对实际尺寸、帧率及来源，再交用户人工审核。插件使用已安装且接口兼容的版本，不固定或自动升级版本；缺少节点、模型或RAFT缓存权重时报告实际错误，不安装或替换方法。
 

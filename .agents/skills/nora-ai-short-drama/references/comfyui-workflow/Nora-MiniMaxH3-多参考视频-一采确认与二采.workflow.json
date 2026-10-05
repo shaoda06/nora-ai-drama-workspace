@@ -645,10 +645,11 @@
         false,
         false,
         "性能",
-        false,
+        true,
         false,
         false,
         "raw",
+        true,
         ""
       ],
       "widgets_values_named": {
@@ -673,10 +674,11 @@
         "export_source_images": false,
         "export_pre_face_refine": false,
         "bd_grp_perf": "性能",
-        "clear_vram_between_segments": false,
+        "clear_vram_between_segments": true,
         "clear_vram_before_refine": false,
         "clear_vram_before_face_refine": false,
         "cache_frames_codec": "raw",
+        "precise_segment_memory": true,
         "minimax_director_ui": ""
       }
     },
@@ -733,13 +735,13 @@
       "outputs": [],
       "title": "一采确认与二采填写说明",
       "properties": {
-        "text": "视频生成基准：一采确认与二采\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / 1.0MP / Euler / passes=1 / confirm_first_pass=true，目标1376×768。\nBeta12按8分割；一采实际9步，二采4步。\n只使用分段导出：完整逐组MP4由导演台保存，403保留报告并驱动执行，404保留说明。\n没有264/408外接保存节点；从报告核对本轮逐组文件，不切成全部导出后声称已经保存合并视频。\n清缓存会删除可复用的一采和成片缓存，不在两轮之间清理。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。"
+        "text": "视频生成基准：一采确认与二采\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n段间清理与精确段间调度开启；执行端兼容实现及启动条件读取H3执行规范第2节。\nBeta12按8分割；一采实际9步，二采4步。\n只使用分段导出：完整逐组MP4由导演台保存，403保留报告并驱动执行，404保留说明。\n没有264/408外接保存节点；从报告核对本轮逐组文件，不切成全部导出后声称已经保存合并视频。\n导演台缓存清理接口会删除可复用的一采和成片磁盘缓存，不在两轮之间调用；段间显存清理不删除这些文件。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
       },
       "widgets_values": [
-        "视频生成基准：一采确认与二采\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / 1.0MP / Euler / passes=1 / confirm_first_pass=true，目标1376×768。\nBeta12按8分割；一采实际9步，二采4步。\n只使用分段导出：完整逐组MP4由导演台保存，403保留报告并驱动执行，404保留说明。\n没有264/408外接保存节点；从报告核对本轮逐组文件，不切成全部导出后声称已经保存合并视频。\n清缓存会删除可复用的一采和成片缓存，不在两轮之间清理。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
+        "视频生成基准：一采确认与二采\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n段间清理与精确段间调度开启；执行端兼容实现及启动条件读取H3执行规范第2节。\nBeta12按8分割；一采实际9步，二采4步。\n只使用分段导出：完整逐组MP4由导演台保存，403保留报告并驱动执行，404保留说明。\n没有264/408外接保存节点；从报告核对本轮逐组文件，不切成全部导出后声称已经保存合并视频。\n导演台缓存清理接口会删除可复用的一采和成片磁盘缓存，不在两轮之间调用；段间显存清理不删除这些文件。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
       ],
       "widgets_values_named": {
-        "text": "视频生成基准：一采确认与二采\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / 1.0MP / Euler / passes=1 / confirm_first_pass=true，目标1376×768。\nBeta12按8分割；一采实际9步，二采4步。\n只使用分段导出：完整逐组MP4由导演台保存，403保留报告并驱动执行，404保留说明。\n没有264/408外接保存节点；从报告核对本轮逐组文件，不切成全部导出后声称已经保存合并视频。\n清缓存会删除可复用的一采和成片缓存，不在两轮之间清理。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。"
+        "text": "视频生成基准：一采确认与二采\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n段间清理与精确段间调度开启；执行端兼容实现及启动条件读取H3执行规范第2节。\nBeta12按8分割；一采实际9步，二采4步。\n只使用分段导出：完整逐组MP4由导演台保存，403保留报告并驱动执行，404保留说明。\n没有264/408外接保存节点；从报告核对本轮逐组文件，不切成全部导出后声称已经保存合并视频。\n导演台缓存清理接口会删除可复用的一采和成片磁盘缓存，不在两轮之间调用；段间显存清理不删除这些文件。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
       },
       "color": "#432",
       "bgcolor": "#653"
@@ -929,9 +931,9 @@
         0,
         "fixed",
         "跟随导演台",
-        1.0,
-        1376,
-        768,
+        1.265625,
+        1536,
+        864,
         true,
         true,
         false,
@@ -949,9 +951,9 @@
         "seed": 0,
         "control_after_generate": "fixed",
         "aspect_ratio": "跟随导演台",
-        "megapixels": 1.0,
-        "width": 1376,
-        "height": 768,
+        "megapixels": 1.265625,
+        "width": 1536,
+        "height": 864,
         "skip_fl2v": true,
         "confirm_first_pass": true,
         "enable_latent_chunking": false,
@@ -959,7 +961,7 @@
         "tile_count": 2,
         "tile_overlap": 128
       },
-      "title": "407｜Refine二采 · 后4步 · 1.0MP · 一采确认开启"
+      "title": "407｜Refine二采 · 后4步 · 1536×864 · 一采确认开启"
     }
   ],
   "links": [
