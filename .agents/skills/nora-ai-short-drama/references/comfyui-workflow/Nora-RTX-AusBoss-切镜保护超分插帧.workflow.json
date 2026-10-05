@@ -243,17 +243,17 @@
       },
       "widgets_values": [
         "target dimensions",
-        1800,
-        1040,
+        1920,
+        1080,
         "ULTRA"
       ],
       "widgets_values_named": {
         "resize_type": "target dimensions",
-        "resize_type.width": 1800,
-        "resize_type.height": 1040,
+        "resize_type.width": 1920,
+        "resize_type.height": 1080,
         "quality": "ULTRA"
       },
-      "title": "03 RTX 超分｜1800×1040 · ULTRA"
+      "title": "03 RTX 超分｜1920×1080 · ULTRA"
     },
     {
       "id": 16,
@@ -411,7 +411,7 @@
         "widget_ue_connectable": {}
       },
       "widgets_values": {
-        "frame_rate": 60,
+        "frame_rate": 30,
         "loop_count": 0,
         "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
         "format": "video/h264-mp4",
@@ -423,7 +423,7 @@
         "save_output": true
       },
       "widgets_values_named": {
-        "frame_rate": 60,
+        "frame_rate": 30,
         "loop_count": 0,
         "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
         "format": "video/h264-mp4",
@@ -439,7 +439,7 @@
     {
       "id": 12,
       "type": "AUSBOSS_NODES_FrameInterpolate",
-      "title": "04 AusBoss 切镜保护｜光流 · 24→60",
+      "title": "04 AusBoss 切镜保护｜光流 · 源帧率→30fps",
       "pos": [
         1080,
         290
@@ -523,14 +523,14 @@
       },
       "widgets_values": [
         24,
-        60,
+        30,
         "optical flow (requires cached RAFT weights)",
         0.15,
         1
       ],
       "widgets_values_named": {
         "source_fps": 24,
-        "target_fps": 60,
+        "target_fps": 30,
         "method": "optical flow (requires cached RAFT weights)",
         "scene_cut_threshold": 0.15,
         "batch_size": 1
@@ -554,9 +554,9 @@
       "outputs": [],
       "properties": {},
       "widgets_values": [
-        "2026-09-25：来自获批v07测试；已按用户批准统一本地名称及输出前缀公式，其余生成参数与连接保持不变。\n流程：获批二采分段 → RTX 1800×1040 / ULTRA → AusBoss RAFT光流 / 60fps → 保留原音轨输出。\n切镜阈值0.15，batch_size=1；source_fps接源片实际fps，VideoCombine帧率接插帧输出，不再用输入fps×2.5。\n依赖提供AUSBOSS_NODES_FrameInterpolate兼容接口的AusBoss及已缓存RAFT-small DEFAULT权重；不将旧版2.1.0固定提交作为安装限制。插件更新后的实际版本及提交以服务环境记录为准，使用前按执行规范核对更新后的节点能力；旧版实测不代表新版已验证。缺失时停止，不自动安装或退回blend。\n本片1440×832 / 24fps / 12.25秒输入实测输出1800×1040 / 60fps / 735帧，三个硬切检查通过且用户批准；不保证阈值适用于所有素材。\n保留输入v05文件名仅作示例，任务副本必须替换为本次获批二采输入；输出前缀按Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理填写实际值，按真实返回文件归档。\n逐段取回并展示，由用户人工审核；agent不抽帧、ASR、完整解码或做质量初审，获批后才合并。更新本地基准不授权提交任务。"
+        "正式后处理：获批二采分段 → RTX 1920×1080 / ULTRA → AusBoss RAFT光流 / 30fps → 保留原音轨输出。\n切镜阈值0.15，batch_size=1。source_fps接源片实际fps；VideoCombine的frame_rate接插帧输出fps，audio接原音轨。\n固定输出1920×1080、30fps；取回后核对实际规格、时长及来源，不把提高播放帧率当作插帧。\n依赖AUSBOSS_NODES_FrameInterpolate兼容接口及已缓存RAFT权重；使用前按H3执行规范核对节点能力，缺失时报告，不自动安装或切换方法。\n输入文件名须替换为本次获批二采视频；输出前缀按Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理填写。\n逐段取回并展示，由用户人工审核；agent不抽帧、ASR、完整解码或做质量初审。配置更新不授权提交生成任务。"
       ],
-      "title": "当前后处理基准｜AusBoss切镜保护｜环境版本另行核对",
+      "title": "后处理说明｜固定1920×1080 · 30fps",
       "color": "#432",
       "bgcolor": "#653"
     }

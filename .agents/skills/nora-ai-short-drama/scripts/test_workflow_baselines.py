@@ -11,6 +11,7 @@ import workflow_baselines as wb
 
 ROOT = Path(__file__).resolve().parents[1]
 BASELINES = ROOT / "references/comfyui-workflow"
+RETAINED = BASELINES / "非正式工作流"
 
 class BaselineTests(unittest.TestCase):
     def test_all_pairs_and_reference_branches(self):
@@ -19,6 +20,11 @@ class BaselineTests(unittest.TestCase):
         h3 = [r for r in results if r["optional_references"]]
         self.assertEqual(len(h3), 1)
         self.assertTrue(all(r["reference_combinations"] == 147 for r in h3))
+
+    def test_retained_pairs_can_be_checked_directly(self):
+        results = wb.verify(RETAINED)
+        self.assertEqual(len(results), 5)
+        self.assertEqual(sum(r["reference_combinations"] for r in results), 147)
 
     def test_confirmation_pair_requires_report_output(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -62,10 +68,12 @@ class BaselineTests(unittest.TestCase):
     def test_detects_missing_optional_loader(self):
         with tempfile.TemporaryDirectory() as tmp:
             name = "Nora-MiniMaxH3-多参考视频-仅二采"
+            retained = Path(tmp, "非正式工作流")
+            retained.mkdir()
             for suffix in ("workflow", "api"):
-                source = BASELINES / f"{name}.{suffix}.json"
-                Path(tmp, source.name).write_bytes(source.read_bytes())
-            api_path = Path(tmp, f"{name}.api.json")
+                source = RETAINED / f"{name}.{suffix}.json"
+                (retained / source.name).write_bytes(source.read_bytes())
+            api_path = retained / f"{name}.api.json"
             api = json.loads(api_path.read_text(encoding="utf-8"))
             del api["51"]
             api_path.write_text(json.dumps(api), encoding="utf-8")
@@ -81,7 +89,7 @@ class BaselineTests(unittest.TestCase):
 
     def test_detects_director_timeline_size_conflict(self):
         with tempfile.TemporaryDirectory() as tmp:
-            source = BASELINES / "Nora-MiniMaxH3-多参考视频-仅一采.workflow.json"
+            source = RETAINED / "Nora-MiniMaxH3-多参考视频-仅一采.workflow.json"
             canvas = json.loads(source.read_text(encoding="utf-8"))
             director = next(n for n in canvas["nodes"] if n["id"] == 402)
             timeline = json.loads(director["widgets_values_named"]["timeline_data"])
@@ -94,7 +102,7 @@ class BaselineTests(unittest.TestCase):
                 wb.verify(tmp)
 
     def verify_director_timeline(self, timeline):
-        source = BASELINES / "Nora-MiniMaxH3-多参考视频-仅一采.workflow.json"
+        source = RETAINED / "Nora-MiniMaxH3-多参考视频-仅一采.workflow.json"
         canvas = json.loads(source.read_text(encoding="utf-8"))
         director = next(n for n in canvas["nodes"] if n["id"] == 402)
         value = json.dumps(timeline)
@@ -108,7 +116,7 @@ class BaselineTests(unittest.TestCase):
             return wb.verify(tmp)
 
     def test_accepts_native_director_workspace_projection(self):
-        source = BASELINES / "Nora-MiniMaxH3-多参考视频-仅一采.api.json"
+        source = RETAINED / "Nora-MiniMaxH3-多参考视频-仅一采.api.json"
         timeline = json.loads(json.loads(source.read_text(encoding="utf-8"))["402"]["inputs"]["timeline_data"])
         timeline["global"]["refs"] = [{"index": 0, "imageFile": "cast.png", "fileName": "cast.png", "previewB64": "ui-only"}]
         workspace = timeline["batchWorkspaces"]["r2v"]
@@ -126,7 +134,7 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(len(self.verify_director_timeline(timeline)), 1)
 
     def test_detects_director_workspace_content_drift(self):
-        source = BASELINES / "Nora-MiniMaxH3-多参考视频-仅一采.api.json"
+        source = RETAINED / "Nora-MiniMaxH3-多参考视频-仅一采.api.json"
         original = json.loads(json.loads(source.read_text(encoding="utf-8"))["402"]["inputs"]["timeline_data"])
         for change in ("public_prompt", "public_media", "segment_prompt", "segment_media", "duration", "selection"):
             with self.subTest(change=change):

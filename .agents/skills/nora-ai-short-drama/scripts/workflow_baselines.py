@@ -98,8 +98,9 @@ def director_editor_state(block, common=False):
  return out
 
 def verify(directory):
+ directory=Path(directory)
  results=[]
- for p in sorted(Path(directory).glob('*.workflow.json')):
+ for p in sorted([*directory.glob('*.workflow.json'),*(directory/'非正式工作流').glob('*.workflow.json')]):
   stem=p.name.removesuffix('.workflow.json');a=p.with_name(stem+'.api.json');assert a.exists(),f'Missing API: {a.name}'
   canvas=Canvas(json.loads(p.read_text(encoding="utf-8")));expected=canvas.api(output_for(stem));actual=json.loads(a.read_text(encoding="utf-8"))
   assert semantic(actual)==semantic(expected),f'Canvas/API mismatch: {stem}'
@@ -137,16 +138,17 @@ def verify(directory):
       count+=1
   results.append({'workflow':stem,'nodes':len(actual),'optional_references':len(refs),'reference_combinations':count})
   # Compare shared inputs only when both files use the same legacy H3 backbone.
- first_path=Path(directory)/'Nora-MiniMaxH3-多参考视频-仅一采.api.json'
- second_path=Path(directory)/'Nora-MiniMaxH3-多参考视频-仅二采.api.json'
- if first_path.exists() and second_path.exists():
-  first=semantic(json.loads(first_path.read_text(encoding="utf-8")));second=semantic(json.loads(second_path.read_text(encoding="utf-8")))
-  if first.get('265',{}).get('class_type')==second.get('265',{}).get('class_type') and '265' in first:
-   for node_id in first.keys() & second.keys():assert first[node_id]==second[node_id], ('Shared H3 mismatch',node_id)
+ for folder in (directory,directory/'非正式工作流'):
+  first_path=folder/'Nora-MiniMaxH3-多参考视频-仅一采.api.json'
+  second_path=folder/'Nora-MiniMaxH3-多参考视频-仅二采.api.json'
+  if first_path.exists() and second_path.exists():
+   first=semantic(json.loads(first_path.read_text(encoding="utf-8")));second=semantic(json.loads(second_path.read_text(encoding="utf-8")))
+   if first.get('265',{}).get('class_type')==second.get('265',{}).get('class_type') and '265' in first:
+    for node_id in first.keys() & second.keys():assert first[node_id]==second[node_id], ('Shared H3 mismatch',node_id)
  return results
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__, epilog='Python 3.9+, standard library; do not use -O. Prints one JSON line per scanned pair, then PASS; exit 0 on success, nonzero on error. Check expected workflow coverage: an empty directory can also pass.')
- p.add_argument('--directory',type=Path,default=Path(__file__).resolve().parents[1]/'references/comfyui-workflow',help='Directory containing bundled-name *.workflow.json / *.api.json pairs (non-recursive). Default: references/comfyui-workflow under this skill; explicit relative paths use the current working directory.')
+ p.add_argument('--directory',type=Path,default=Path(__file__).resolve().parents[1]/'references/comfyui-workflow',help='Scan bundled-name *.workflow.json / *.api.json pairs in this directory and its immediate 非正式工作流 subdirectory, excluding other subdirectories. Default: references/comfyui-workflow under this skill; relative paths use the current working directory. Point directly at 非正式工作流 to check retained pairs only.')
  args=p.parse_args()
  for r in verify(args.directory):print(json.dumps(r,ensure_ascii=False))
  print('PASS: offline pair consistency only; remote compatibility and execution not tested.')
