@@ -4355,7 +4355,7 @@
       ],
       "flags": {},
       "order": 46,
-      "mode": 0,
+      "mode": 2,
       "inputs": [],
       "outputs": [],
       "properties": {
@@ -4393,7 +4393,7 @@
       ],
       "flags": {},
       "order": 47,
-      "mode": 0,
+      "mode": 2,
       "inputs": [],
       "outputs": [],
       "properties": {
@@ -4510,6 +4510,7 @@
       ],
       "widgets_values_named": {
         "audio": "__待替换_输入素材_48__.wav",
+        "audioUI": null,
         "upload": null
       },
       "color": "#cb3393",
@@ -4629,6 +4630,7 @@
       ],
       "widgets_values_named": {
         "audio": "__待替换_输入素材_14__.wav",
+        "audioUI": null,
         "upload": null
       },
       "color": "#cb3393",
@@ -4748,6 +4750,7 @@
       ],
       "widgets_values_named": {
         "audio": "__待替换_输入素材_15__.wav",
+        "audioUI": null,
         "upload": null
       },
       "color": "#cb3393",
@@ -4847,11 +4850,11 @@
       },
       "widgets_values": [
         84781009642919,
-        "randomize"
+        "fixed"
       ],
       "widgets_values_named": {
         "noise_seed": 84781009642919,
-        "control_after_generate": "randomize"
+        "control_after_generate": "fixed"
       },
       "color": "#2a363b",
       "bgcolor": "#3f5159"
@@ -4869,7 +4872,7 @@
       ],
       "flags": {},
       "order": 53,
-      "mode": 0,
+      "mode": 2,
       "inputs": [],
       "outputs": [],
       "properties": {
@@ -5737,7 +5740,7 @@
       ],
       "flags": {},
       "order": 57,
-      "mode": 0,
+      "mode": 2,
       "inputs": [],
       "outputs": [],
       "properties": {
@@ -6396,7 +6399,7 @@
         "兼容保留：独立仅二采，不作为现行视频生成入口；默认使用“一采确认与二采”配套工作流。\n以下为本兼容文件的原配置说明：\n分辨率示例里的megapixels值是上面分辨率选择里的参考值，而不是二采倍数的参考值，二采倍数需要自己去计算，例如一采选择0.5Mp--960X544的分辨率，二采倍数填2倍，那就是960X544的2倍，那就是960X544的2倍就是1920X1088。"
       ],
       "widgets_values_named": {
-        "text": "分辨率示例里的megapixels值是上面分辨率选择里的参考值，而不是二采倍数的参考值，二采倍数需要自己去计算，例如一采选择0.5Mp--960X544的分辨率，二采倍数填2倍，那就是960X544的2倍，那就是960X544的2倍就是1920X1088。"
+        "text": "兼容保留：独立仅二采，不作为现行视频生成入口；默认使用“一采确认与二采”配套工作流。\n以下为本兼容文件的原配置说明：\n分辨率示例里的megapixels值是上面分辨率选择里的参考值，而不是二采倍数的参考值，二采倍数需要自己去计算，例如一采选择0.5Mp--960X544的分辨率，二采倍数填2倍，那就是960X544的2倍，那就是960X544的2倍就是1920X1088。"
       },
       "color": "#322",
       "bgcolor": "#533"

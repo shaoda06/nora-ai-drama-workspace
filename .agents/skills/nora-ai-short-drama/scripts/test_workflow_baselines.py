@@ -95,6 +95,8 @@ class BaselineTests(unittest.TestCase):
             timeline = json.loads(director["widgets_values_named"]["timeline_data"])
             timeline["width"] = 960
             director["widgets_values_named"]["timeline_data"] = json.dumps(timeline)
+            names = list(director["widgets_values_named"])
+            director["widgets_values"][names.index("timeline_data")] = director["widgets_values_named"]["timeline_data"]
             Path(tmp, source.name).write_text(json.dumps(canvas), encoding="utf-8")
             api = wb.Canvas(canvas).api(264)
             Path(tmp, source.name.replace(".workflow.", ".api.")).write_text(json.dumps(api), encoding="utf-8")
@@ -155,6 +157,57 @@ class BaselineTests(unittest.TestCase):
                     workspace["runSelection"] = [1]
                 with self.assertRaisesRegex(AssertionError, "workspace mismatch"):
                     self.verify_director_timeline(timeline)
+
+    def test_detects_canvas_widget_value_drift_inside_subgraph(self):
+        source = BASELINES / "Qwen2.1-文生图-普通版.workflow.json"
+        canvas = json.loads(source.read_text(encoding="utf-8"))
+        encoder = next(n for n in canvas["definitions"]["subgraphs"][0]["nodes"] if n["id"] == 452)
+        encoder["widgets_values"][1] = encoder["widgets_values"][0]
+        with self.assertRaisesRegex(AssertionError, "widget mismatch"):
+            wb.Canvas(canvas).api(461)
+
+    def test_detects_extra_active_canvas_output(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            name = "Nora-RTX-图片2倍超分"
+            for suffix in ("workflow", "api"):
+                source = BASELINES / f"{name}.{suffix}.json"
+                Path(tmp, source.name).write_bytes(source.read_bytes())
+            path = Path(tmp, f"{name}.workflow.json")
+            canvas = json.loads(path.read_text(encoding="utf-8"))
+            next(n for n in canvas["nodes"] if n["id"] == 5)["mode"] = 0
+            path.write_text(json.dumps(canvas), encoding="utf-8")
+            with self.assertRaisesRegex(AssertionError, "active node mismatch"):
+                wb.verify(tmp)
+
+    def test_detects_stale_converted_widget_default(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            name = "Qwen2.1-图生图-普通版"
+            for suffix in ("workflow", "api"):
+                source = BASELINES / f"{name}.{suffix}.json"
+                Path(tmp, source.name).write_bytes(source.read_bytes())
+            path = Path(tmp, f"{name}.workflow.json")
+            canvas = json.loads(path.read_text(encoding="utf-8"))
+            encoder = next(n for n in canvas["definitions"]["subgraphs"][0]["nodes"] if n["id"] == 474)
+            encoder["widgets_values_named"]["resolution"] = 1024
+            encoder["widgets_values"][2] = 1024
+            path.write_text(json.dumps(canvas), encoding="utf-8")
+            with self.assertRaisesRegex(AssertionError, "stored parameter mismatch"):
+                wb.verify(tmp)
+
+    def test_detects_canvas_seed_randomization(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            name = "Qwen2.1-图生图-普通版"
+            for suffix in ("workflow", "api"):
+                source = BASELINES / f"{name}.{suffix}.json"
+                Path(tmp, source.name).write_bytes(source.read_bytes())
+            path = Path(tmp, f"{name}.workflow.json")
+            canvas = json.loads(path.read_text(encoding="utf-8"))
+            sampler = next(n for n in canvas["definitions"]["subgraphs"][0]["nodes"] if n["id"] == 458)
+            sampler["widgets_values_named"]["control_after_generate"] = "randomize"
+            sampler["widgets_values"][1] = "randomize"
+            path.write_text(json.dumps(canvas), encoding="utf-8")
+            with self.assertRaisesRegex(AssertionError, "seed control mismatch"):
+                wb.verify(tmp)
 
     @unittest.skipUnless(hasattr(time, "tzset"), "requires local timezone switching")
     def test_client_timestamp_follows_machine_timezone(self):

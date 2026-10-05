@@ -772,7 +772,7 @@
             },
             "widgets_values": [
               "待填写：本次任务的完整中文提示词",
-              "待填写：本次任务的完整中文提示词",
+              "",
               1024
             ],
             "widgets_values_named": {
@@ -1125,7 +1125,7 @@
               "Node name for S&R": "KSampler"
             },
             "widgets_values": [
-              0,
+              593103825222985,
               "fixed",
               25,
               1,
@@ -1134,7 +1134,7 @@
               1
             ],
             "widgets_values_named": {
-              "seed": 0,
+              "seed": 593103825222985,
               "control_after_generate": "fixed",
               "steps": 25,
               "cfg": 1,

@@ -3,6 +3,7 @@
 import argparse, copy, json
 from pathlib import Path
 UI_FIELDS={'control_after_generate','upload','choose video to upload','videopreview','image_upload','audioUI','preview'}
+UI_NODES={'Note','MarkdownNote','SetNode','GetNode','Reroute'}
 def is_link(v):return isinstance(v,list) and len(v)==2 and isinstance(v[0],str) and isinstance(v[1],int)
 def link_tuple(l):
  return [l['id'],l['origin_id'],l['origin_slot'],l['target_id'],l['target_slot']] if isinstance(l,dict) else l[:5]
@@ -14,6 +15,13 @@ class Canvas:
   self.children={}
   assert len(self.nodes)==len(g['nodes']), 'Duplicate canvas node ID'
   assert len(self.links)==len(g.get('links',[])), 'Duplicate canvas link ID'
+  for n in self.nodes.values():
+   named=n.get('widgets_values_named',{});stored=n.get('widgets_values',[])
+   if named:
+    if isinstance(stored,list):assert stored==list(named.values()), ('Canvas widget mismatch',self.prefix,n['id'])
+    else:
+     for field,value in named.items():
+      if field not in UI_FIELDS:assert stored.get(field)==value, ('Canvas widget mismatch',self.prefix,n['id'],field)
   for link_id,origin,slot,target,target_slot in self.links.values():
    if origin in self.nodes:
     assert link_id in (self.nodes[origin].get('outputs',[])[slot].get('links') or []), ('Broken output',link_id)
@@ -55,6 +63,11 @@ class Canvas:
  def find(self,key):
   if ':' not in key:return self,int(key)
   id,rest=key.split(':',1);return self.child(self.nodes[int(id)]).find(rest)
+ def active_nodes(self):
+  for id,n in self.nodes.items():
+   if n.get('mode',0) in (2,4):continue
+   if n['type'] in self.defs:yield from self.child(n).active_nodes()
+   elif n['type'] not in UI_NODES:yield self.prefix+str(id)
  def api(self,root,optional=True):
   out={};active=set()
   def walk(key):
@@ -107,6 +120,12 @@ def verify(directory):
   for k,n in expected.items():
    if 'nora_optional_reference' in n['_meta']:assert actual[k].get('_meta',{}).get('nora_optional_reference')==n['_meta']['nora_optional_reference']
   refs=[(k,n['_meta']['nora_optional_reference']) for k,n in expected.items() if 'nora_optional_reference' in n['_meta']]
+  assert set(canvas.active_nodes())|{k for k,_ in refs}==set(actual), f'Canvas active node mismatch: {stem}'
+  for key,item in actual.items():
+   graph,node_id=canvas.find(key);named=graph.nodes[node_id].get('widgets_values_named',{})
+   if 'seed' in item['inputs'] and 'control_after_generate' in named:assert named['control_after_generate']=='fixed', ('Canvas seed control mismatch',stem,key)
+   for field,value in item['inputs'].items():
+    if field in named and not is_link(value):assert named[field]==value, ('Canvas stored parameter mismatch',stem,key,field)
   assert len(refs)==(15 if '265' in actual and '多参考视频' in stem else 0)
   for director in (n for n in actual.values() if n['class_type']=='MiniMaxH3Director'):
    inputs=director['inputs'];timeline=json.loads(inputs['timeline_data'])

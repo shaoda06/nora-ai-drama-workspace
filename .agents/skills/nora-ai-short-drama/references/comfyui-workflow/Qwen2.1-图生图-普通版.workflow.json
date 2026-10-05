@@ -551,7 +551,7 @@
       ],
       "flags": {},
       "order": 7,
-      "mode": 0,
+      "mode": 2,
       "inputs": [
         {
           "localized_name": "image_a",
@@ -1524,8 +1524,8 @@
               "Node name for S&R": "KSampler"
             },
             "widgets_values": [
-              0,
-              "randomize",
+              1070478148268574,
+              "fixed",
               25,
               1,
               "euler",
@@ -1533,8 +1533,8 @@
               1
             ],
             "widgets_values_named": {
-              "seed": 0,
-              "control_after_generate": "randomize",
+              "seed": 1070478148268574,
+              "control_after_generate": "fixed",
               "steps": 25,
               "cfg": 1,
               "sampler_name": "euler",
@@ -1834,13 +1834,13 @@
             },
             "widgets_values": [
               "待填写：本次任务的完整中文提示词",
-              "待填写：本次任务的完整中文提示词",
-              1024
+              "",
+              0
             ],
             "widgets_values_named": {
               "prompt": "待填写：本次任务的完整中文提示词",
               "negative_prompt": "",
-              "resolution": 1024
+              "resolution": 0
             }
           }
         ],
