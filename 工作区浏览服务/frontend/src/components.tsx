@@ -80,6 +80,16 @@ export function Document({ value: latest }: { value: RecordData }) {
         const badge = el.querySelector('.status-badge');
         if (badge) el.replaceChildren(document.createTextNode('画风确认状态：'), badge);
       }
+      if (el.textContent?.startsWith('正式画幅：')) {
+        const ratio = el.textContent.match(/(\d+)\s*[:：]\s*(\d+)/);
+        if (ratio) el.textContent = `正式画幅：${ratio[1]}:${ratio[2]}`;
+      }
+    });
+    document.querySelectorAll('.style-sample-card').forEach(card => {
+      const figure = card.querySelector('figure')!;
+      const caption = figure.querySelector('figcaption')!;
+      figure.prepend(caption);
+      card.append(card.querySelector('p')!);
     });
     return { html: document.body.innerHTML, languages };
   }, [body, value.documentKey]);
