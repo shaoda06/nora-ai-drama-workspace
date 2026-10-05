@@ -75,7 +75,7 @@ video.media-player{width:min(100%,calc(65vh * var(--video-ratio)));height:auto;m
 .prose .document-notes{list-style:none;padding:10px 14px;margin:12px 0 22px;background:var(--wash);border-left:3px solid var(--line);border-radius:3px}
 .prose .document-notes>li{margin:4px 0}
 .prose .document-note .status-badge{font-size:12px}
-.style-samples{display:flex;flex-wrap:wrap;align-items:flex-start;gap:24px}.style-sample-card{flex:0 1 360px;min-width:0;max-width:100%}.prose .style-sample{display:inline-block;vertical-align:top;width:360px;max-width:100%;margin:12px 0 20px}.style-sample-card .style-sample{display:block;width:100%}.style-sample img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:4px}.style-sample figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+.style-samples{display:flex;flex-wrap:wrap;align-items:flex-start;gap:24px}.style-sample-card{flex:0 1 360px;min-width:0;max-width:100%}.prose .style-sample{display:inline-block;vertical-align:top;width:360px;max-width:100%;margin:12px 0 20px}.style-sample-card .style-sample{display:block;width:100%}.style-sample-card[data-gender=male]{order:0}.style-sample-card[data-gender=female]{order:1}.style-sample-card>h4,.style-sample-card>ul{text-align:center}.style-sample-card>ul{list-style:none;padding:0}.style-sample img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:4px}.style-sample figcaption{font-size:13px;color:var(--muted);margin-top:6px}
 
 button.person-pending{width:100%;text-align:left;border-top:0;border-right:0;border-bottom:0}button.person-pending:hover{text-decoration:underline}.candidate-group>summary .status-badge{margin-left:10px}.candidate-pending{border-color:#b87723}.candidate-pending .asset-copy{scroll-margin-top:var(--phase-jump-offset,96px)}
 .prose details.storyboard-segment{margin:16px 0;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:var(--radius);overflow:hidden}
@@ -105,7 +105,7 @@ button.person-pending{width:100%;text-align:left;border-top:0;border-right:0;bor
 <div id="warnings"></div>
 <div class="page-navigation" id="page-navigation"><div class="page-breadcrumbs" id="page-breadcrumbs" aria-label="当前位置"></div><button type="button" class="outline" id="page-back" hidden>← 返回上一级</button></div>
 <section id="position-panel" role="tabpanel" tabindex="0">
-<div class="doc-head"><h2>项目基本定位</h2><a id="position-raw" href="00-项目定位/项目基本定位.md" target="_blank" rel="noopener">原始 Markdown</a></div>
+<div class="doc-head"><h2 id="position-title">项目基本定位</h2><a id="position-raw" href="00-项目定位/项目基本定位.md" target="_blank" rel="noopener">原始 Markdown</a></div>
 <div class="metadata" id="metadata"></div>
 <details class="intro" id="intro"><summary>确认依据与资料入口</summary><div class="prose" id="intro-body"></div></details>
 <article class="prose" id="position-body"></article>
@@ -317,6 +317,7 @@ data.active.forEach(row=>{const section=document.createElement("section");sectio
 data.warnings.forEach(w=>el("warnings").append(textNode("div",w,"notice")));
 function renderMetadata(container,meta,confirmationHtml){container.replaceChildren();Object.entries(meta).forEach(([key,value])=>{const item=textNode("span",key+"：");if(key==="确认状态"){const status=document.createElement("span");status.innerHTML=confirmationHtml;item.append(status)}else item.append(document.createTextNode(value));container.append(item)})}
 renderMetadata(el("metadata"),data.meta,data.confirmationHtml);
+if(data.positionTitle!=="未记录")el("position-title").textContent=data.positionTitle;
 el("intro-body").innerHTML=data.introHtml;if(!data.introHtml)el("intro").hidden=true;
 el("position-body").innerHTML=data.positionExists?data.positionHtml:'<p class="empty">尚未形成正式定位，不以草稿代替。</p>';
 if(!data.positionExists){el("position-raw").hidden=true;el("metadata").hidden=true}

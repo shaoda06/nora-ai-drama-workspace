@@ -27,11 +27,11 @@ INLINE_PATTERN = r"(\x60+)(.+?)\1|!?\[([^\]]*)\]\((<[^>]+>|[^)\n]+)\)|\*\*(.+?)\
 STATUS_COLORS = {
     **dict.fromkeys(("已完成", "已确认", "已定稿", "通过", "批准采用", "成功", "success"), "green"),
     **dict.fromkeys(("进行中", "运行中", "running"), "blue"),
-    **dict.fromkeys(("待确认", "待审核", "待核对", "修改后再审", "状态不明", "unknown"), "orange"),
+    **dict.fromkeys(("待确认", "部分确认", "待审核", "待核对", "修改后再审", "状态不明", "unknown"), "orange"),
     **dict.fromkeys(("失败", "异常", "不通过", "failed"), "red"),
     **dict.fromkeys(("未开始", "排队中", "不采用", "未记录", "不适用", "待完成", "queued"), "gray"),
 }
-STATUS_FIELDS = {"状态", "当前状态", "确认状态", "画风确认状态", "执行状态", "真实执行状态", "技术检查结论", "文件核对结论",
+STATUS_FIELDS = {"状态", "当前状态", "确认状态", "画风确认状态", "画幅确认状态", "适配确认状态", "执行状态", "真实执行状态", "技术检查结论", "文件核对结论",
                  "agent 技术审查结论", "agent 内容审查状态", "agent 初审结论", "agent初审结论", "agent 画面初审结论", "用户采用状态", "用户决定"}
 
 
@@ -241,6 +241,13 @@ def markdown(text, source):
         i += 1
     rendered = "\n".join(out)
     if source == POSITION:
+        # Fixed sample sections own their title, approved image and record fields.
+        rendered = re.sub(r'(<h4 id="[^"]+">(男性样例|女性样例)</h4>\n)(.*?)(?=\n<h[1-4]\b|\Z)',
+                          lambda match: ('<div class="style-sample-card" data-gender="'
+                                         + ('male' if match[2] == '男性样例' else 'female') + '">'
+                                         + match[1] + re.sub(r'<figcaption>.*?</figcaption>', '', match[3], flags=re.S)
+                                         + '</div>') if '<figure class="style-sample">' in match[3] else match[0],
+                          rendered, flags=re.S)
         rendered = re.sub(r'(?:<div class="style-sample-card"[^>]*>.*?</div>\n?)+',
                           lambda match: '<div class="style-samples">' + match[0] + '</div>',
                           rendered, flags=re.S)
@@ -972,6 +979,7 @@ def build_data(project):
     body = re.sub(r"^# .+\n?", "", body, count=1)
     for key in meta:
         body = re.sub(r"^-\s*" + re.escape(key) + r"[:：].*\n?", "", body, flags=re.M)
+    body = re.sub(r"^- 项目名称(?:或代号)?[:：].*\n?", "", body, flags=re.M)
     first_section = re.search(r"^## ", body, re.M)
     intro, main = (body[:first_section.start()], body[first_section.start():]) if first_section else ("", body)
     for key, digest in sources.items():
@@ -986,7 +994,8 @@ def build_data(project):
         "props": props, "propIndex": prop_index if prop_index_text else None, "propGroups": prop_groups,
         "catalogues": catalogues, "textPreviews": text_previews,
         "scenes": scenes, "sceneIndex": scene_index if scene_index_text else None, "sceneGroups": scene_groups,
-        "positionExists": position is not None, "positionTitle": field(position or "", "项目名称").rstrip("。"), "meta": meta,
+        "positionExists": position is not None, "positionTitle": (field(position or "", "项目名称或代号")
+            if field(position or "", "项目名称或代号") != "未记录" else field(position or "", "项目名称")).rstrip("。"), "meta": meta,
         "confirmationHtml": status_markup(meta["确认状态"], POSITION),
         "introHtml": intro_markup(intro), "positionHtml": markdown(main, POSITION),
         "warnings": warnings, "sources": sources,

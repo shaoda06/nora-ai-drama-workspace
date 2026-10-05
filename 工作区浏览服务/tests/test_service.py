@@ -162,6 +162,34 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('采用依据保留', section['bodyHtml'])
         self.assertEqual(self.source.read_text(encoding='utf-8'), source)
 
+    def test_position_template_preserves_scope_evidence_and_sample_ownership(self):
+        source = ('# 项目基本定位\n\n- 项目名称或代号：模板项目\n- 文档版本：v2\n'
+                  '- 更新日期：2026-10-06\n- 确认状态：部分确认\n- 确认范围：仅EP001\n'
+                  '- 确认依据：[决定](决定.md)\n\n## 5. 视觉表现形式\n\n### 视觉规格\n'
+                  '- 正式画幅：待确认\n- 画幅待确认事项：候选16:9或9:16\n'
+                  '- 画幅确认状态：待确认\n\n### 画风与美术实现正文\n\n#### 中文\n'
+                  '~~~text\n完整中文正文\n~~~\n\n#### 英文\n'
+                  '- 对应中文版本：v1\n- 适配确认状态：已确认\n\n~~~text\nFull English text\n~~~\n'
+                  '\n### 已确认画风样例\n\n#### 男性样例\n\n![男性](男.png)\n'
+                  '\n- 样例版本：v3\n- 确认依据：[男性决定](男.md)\n'
+                  '\n#### 女性样例\n\n- 样例版本：待确认\n- 确认依据：尚未确认\n')
+        self.source.write_text(source, encoding='utf-8')
+        section = self.client.get('/api/projects/示例项目/sections/00-项目定位').json()
+        self.assertEqual(section['title'], '模板项目')
+        self.assertIn('仅EP001', section['introHtml'])
+        self.assertIn('data-doc="00-项目定位/决定.md"', section['introHtml'])
+        self.assertNotIn('项目名称或代号', section['introHtml'])
+        self.assertIn('status-orange', section['confirmationHtml'])
+        self.assertIn('正式画幅：待确认', section['bodyHtml'])
+        self.assertIn('候选16:9或9:16', section['bodyHtml'])
+        self.assertIn('完整中文正文', section['bodyHtml'])
+        self.assertIn('Full English text', section['bodyHtml'])
+        self.assertEqual(section['bodyHtml'].count('class="style-sample-card"'), 1)
+        self.assertIn('data-gender="male"', section['bodyHtml'])
+        self.assertIn('男性决定', section['bodyHtml'])
+        self.assertIn('女性样例', section['bodyHtml'])
+        self.assertEqual(self.source.read_text(encoding='utf-8'), source)
+
 
 if __name__ == '__main__':
     unittest.main()

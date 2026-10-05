@@ -36,7 +36,7 @@ class PortalTests(unittest.TestCase):
                 '两张保留原图。')
         rendered = portal.markdown(text, portal.POSITION)
         self.assertEqual(rendered.count('class="style-samples"'), 1)
-        cards = re.findall(r'<div class="style-sample-card">(.*?)</div>', rendered, re.S)
+        cards = re.findall(r'<div class="style-sample-card"[^>]*>(.*?)</div>', rendered, re.S)
         self.assertEqual(len(cards), 2)
         for card, gender in zip(cards, ('女性', '男性')):
             self.assertIn(gender + '样例', card)

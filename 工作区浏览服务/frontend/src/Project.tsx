@@ -20,7 +20,7 @@ export default function Project() {
   const [preview, setPreview] = useState<FileItem | null>(null);
   const status = useQuery({ queryKey: ['status', name], queryFn: () => get<RecordData>(`${projectUrl(name)}/status`), refetchInterval: 5000 });
   const revision = status.data?.revision || 1;
-  const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: previous => previous });
+  const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   return <PreviewContext.Provider value={setPreview}>
     <div className="breadcrumbs"><Link to="/">工作区</Link><span> / {name}</span></div>
     <PageHeader eyebrow="项目浏览" title={name} actions={<span className="muted">{status.data?.updating ? '正在同步资料…' : `资料读取：${status.data?.updated || '读取中'}`}</span>} />
@@ -33,7 +33,7 @@ export default function Project() {
       </div>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
       {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
-      {visited.map(label => <SectionPane key={label} project={name} section={label} revision={revision} active={label === section} />)}
+      {visited.map(label => <SectionPane key={name + '/' + label} project={name} section={label} revision={revision} active={label === section} />)}
     </>}
     {preview && <Preview key={preview.key || preview.url} project={name} item={preview} revision={revision} close={() => setPreview(null)} />}
   </PreviewContext.Provider>;

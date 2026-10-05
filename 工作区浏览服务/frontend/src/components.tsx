@@ -10,7 +10,7 @@ export const PreviewContext = createContext<(item: FileItem) => void>(() => {});
 export function Result({ loading, error }: { loading: boolean; error: Error | null }) {
   return error ? <p className="error" role="alert">{error.message}</p> : loading ? <p className="muted" role="status">正在读取资料…</p> : null;
 }
-export function Rich({ html = '', languages = [] }: { html?: string; languages?: { value: string; label: string; text: string }[] }) {
+export function Rich({ html = '', languages = [] }: { html?: string; languages?: { value: string; label: string; text: string; html?: string }[] }) {
   const preview = useContext(PreviewContext);
   const [language, setLanguage] = useState('zh');
   const blocks = useMemo(() => {
@@ -27,7 +27,7 @@ export function Rich({ html = '', languages = [] }: { html?: string; languages?:
   }} dangerouslySetInnerHTML={blocks ? undefined : { __html: html }}>{blocks?.map((block, index) => {
     if (!block.code) return <div className="rich-fragment" key={index} dangerouslySetInnerHTML={{ __html: block.html }} />;
     const text = block.bilingual ? languages.find(item => item.value === language)!.text : block.text;
-    return <div className="code-block" key={index}><div className="code-toolbar">{block.bilingual && <TabNav label="画风正文语言" items={languages} selected={language} onChange={setLanguage} />}<div className="code-copy"><CopyButton key={block.bilingual ? language : index} label="复制" text={text} /></div></div><pre><code>{text}</code></pre></div>;
+    return <div className="code-block" key={index}><div className="code-toolbar">{block.bilingual && <TabNav label="画风正文语言" items={languages} selected={language} onChange={setLanguage} />}<div className="code-copy"><CopyButton key={block.bilingual ? language : index} label="复制" text={text} /></div></div><pre><code>{text}</code></pre>{block.bilingual && <div className="language-notes" dangerouslySetInnerHTML={{ __html: languages.find(item => item.value === language)!.html || '' }} />}</div>;
   })}</div>;
 }
 export function Original({ url, label = '原文件' }: { url?: string; label?: string }) {
@@ -60,8 +60,21 @@ export function Document({ value: latest }: { value: RecordData }) {
     const document = new DOMParser().parseFromString(body, 'text/html');
     const chinese = Array.from(document.querySelectorAll('h3')).find(el => el.textContent === '画风与美术实现正文');
     const english = Array.from(document.querySelectorAll('h3')).find(el => el.textContent?.startsWith('画风与美术实现英文适配'));
-    const languages: { value: string; label: string; text: string }[] = [];
-    if (chinese?.nextElementSibling?.tagName === 'PRE' && english) {
+    const languages: { value: string; label: string; text: string; html?: string }[] = [];
+    if (chinese?.nextElementSibling?.tagName === 'H4' && chinese.nextElementSibling.textContent === '中文') {
+      const elements: Element[] = [];
+      for (let node: Element | null = chinese.nextElementSibling; node && !['H2', 'H3'].includes(node.tagName); node = node.nextElementSibling) elements.push(node);
+      const englishHeading = elements.findIndex(el => el.tagName === 'H4' && el.textContent === '英文');
+      if (englishHeading > 0) {
+        const chineseBlock = elements.slice(0, englishHeading);
+        const englishBlock = elements.slice(englishHeading);
+        const chineseCode = chineseBlock.find(el => el.tagName === 'PRE')!;
+        const englishCode = englishBlock.find(el => el.tagName === 'PRE')!;
+        languages.push({ value: 'zh', label: '中文', text: chineseCode.textContent || '' }, { value: 'en', label: '英文', text: englishCode.textContent || '', html: englishBlock.filter(el => !['H4', 'PRE'].includes(el.tagName)).map(el => el.outerHTML).join('') });
+        chineseCode.setAttribute('data-language-pair', 'true');
+        elements.filter(el => el !== chineseCode).forEach(el => el.remove());
+      }
+    } else if (chinese?.nextElementSibling?.tagName === 'PRE' && english) {
       const englishBlock = [];
       for (let node = english.nextElementSibling; node && !['H2', 'H3'].includes(node.tagName); node = node.nextElementSibling) englishBlock.push(node);
       const code = englishBlock.find(el => el.tagName === 'PRE');
@@ -72,20 +85,8 @@ export function Document({ value: latest }: { value: RecordData }) {
         english.remove();
       }
     }
-    document.querySelectorAll('p').forEach(el => {
-      if (el.textContent?.startsWith('后续图片与视频提示词完整引用上面的画风正文') || el.textContent?.startsWith('旧正文v07及原女v08／男v09批准事实保留')) el.remove();
-    });
-    document.querySelectorAll('li').forEach(el => {
-      if (el.textContent?.startsWith('画风确认状态：')) {
-        const badge = el.querySelector('.status-badge');
-        if (badge) el.replaceChildren(document.createTextNode('画风确认状态：'), badge);
-      }
-      if (el.textContent?.startsWith('正式画幅：')) {
-        const ratio = el.textContent.match(/(\d+)\s*[:：]\s*(\d+)/);
-        if (ratio) el.textContent = `正式画幅：${ratio[1]}:${ratio[2]}`;
-      }
-    });
     document.querySelectorAll('.style-sample-card').forEach(card => {
+      if (card.querySelector('h4')) return;
       const figure = card.querySelector('figure')!;
       const caption = figure.querySelector('figcaption')!;
       figure.prepend(caption);
@@ -105,7 +106,7 @@ export function Document({ value: latest }: { value: RecordData }) {
     {changed && <p className="notice document-update">本文有新版本，当前阅读位置保持不变。<button onClick={() => setValue(latest)}>读取新版本</button></p>}
     <div className="meta">{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}<Original url={value.url} /></div>
     <Rich html={value.confirmationHtml} /><Rich html={value.boundaryHtml} />
-    {value.introHtml && <details><summary>说明与来源</summary><Rich html={value.introHtml} /></details>}
+    {value.introHtml && (value.documentKey === '00-项目定位/项目基本定位.md' ? <Rich html={value.introHtml} /> : <details><summary>说明与来源</summary><Rich html={value.introHtml} /></details>)}
     {headings.length > 0 && <details className="chapters" open><summary>章节导航</summary>{headings.map(h => <button key={h.id} className={'link ' + h.level} onClick={() => ref.current!.querySelectorAll('[id]').forEach(el => { if (el.id === h.id) { el.scrollIntoView({ behavior: 'auto', block: 'start' }); (el as HTMLElement).tabIndex = -1; (el as HTMLElement).focus({ preventScroll: true }); } })}>{h.text}</button>)}</details>}
     <div ref={ref}><Rich html={presentation.html} languages={presentation.languages} /></div><Groups groups={latest.groups} />
   </div>;
