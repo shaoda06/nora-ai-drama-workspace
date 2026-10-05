@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { get, projectUrl, searchTree } from './api';
 import type { FileItem, RecordData } from './api';
 import { Document, FileTree, Groups, Original, Preview, PreviewContext, Result, Rich } from './components';
@@ -23,7 +23,7 @@ export default function Project() {
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   return <PreviewContext.Provider value={setPreview}>
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name} actionsInline actions={<span className="muted">{status.data?.updating ? '正在同步资料…' : `资料读取：${status.data?.updated || '读取中'}`}</span>}>
-      <div className="breadcrumbs"><Link to="/">工作区</Link><span> / {name} / </span><span aria-current="page">{overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')}</span></div>
+      <div className="breadcrumbs"><span>{name} / </span><span aria-current="page">{overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')}</span></div>
     </PageHeader>
     <Result loading={status.isPending || overview.isPending} error={status.error || overview.error} />
     {status.data?.error && <p className="error">同步失败，保留上一份可读资料：{status.data.error}</p>}

@@ -28,3 +28,4 @@
 .table-scroll{overflow:auto}.prose .table-scroll table{display:table;min-width:640px;margin:0}
 .prose tr[id^=phase-]{scroll-margin-top:85px}.dialog-body .prose h2,.dialog-body .prose h3{scroll-margin-top:100px}
 @media(max-width:760px){.style-samples{grid-template-columns:minmax(0,1fr)}}
+.project-page{padding-top:24px}

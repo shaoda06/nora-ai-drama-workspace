@@ -21,7 +21,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="header-info"><span className="service-dot">服务运行中</span>
           <Link className="history-link" to="/history">版本与开发记录</Link></div></div>
     </header>
-    <main>{children}</main>
+    <main className={location.pathname.startsWith('/projects/') ? 'project-page' : undefined}>{children}</main>
     <footer>源文件与实际审核记录是内容依据 · 浏览页只读展示</footer>
     {backTop && <button className="back-top" onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}>↑ 返回顶部</button>}
   </HeaderControlsContext.Provider>;
