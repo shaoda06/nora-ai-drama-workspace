@@ -166,9 +166,10 @@ class ServiceTests(unittest.TestCase):
             '| EP001-C002 | EP001-C002-P001 | 7 |\n', encoding='utf-8')
         source = episode / '03-分镜脚本/EP001-C001-场次分镜.md'
         source.write_text('# 场次分镜\n\n场头说明。\n## 1. 镜头正文\n'
-                          '### 分段 P001\n#### EP001-SH001\n**景别**：近景。\n'
+                          '### 分段 P001\n**对应视频分段**：EP001-C001-P001；**计划时长**：5秒。\n'
+                          '#### EP001-SH001\n\n**镜号**：EP001-SH001\n\n**景别**：近景。\n'
                           '**台词**：第一段原对白。\n[资料](../../../03-人物资料/CH001-资料卡.md)\n<script>正文文字</script>\n'
-                          '### 分段 P002\n#### EP001-SH002\n**台词**：第二段原对白。\n'
+                          '### 分段 P002\n#### EP001-SH002\n**镜号**：EP001-SH099\n**台词**：第二段原对白。\n'
                           '## 2. 视频分段\n### 分段 P001\n资源规划，不是镜头正文。\n', encoding='utf-8')
         before = source.read_bytes()
         (episode / '03-分镜脚本/EP001-C002-场次分镜.md').write_text(
@@ -184,6 +185,15 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('/api/projects/', first)
         self.assertIn('03-', first)
         self.assertIn('&lt;script&gt;正文文字&lt;/script&gt;', first)
+        self.assertIn('<h4 id="ep001-sh001">EP001-SH001</h4>', first)
+        self.assertNotIn('镜号', first)
+        self.assertNotIn('对应视频分段', first)
+        self.assertNotIn('<h3', first)
+        source_url = data['C001'][0]['scriptUrl']
+        self.assertTrue(source_url.startswith('/api/projects/'))
+        self.assertTrue(source_url.endswith('EP001-C001-%E5%9C%BA%E6%AC%A1%E5%88%86%E9%95%9C.md'))
+        self.assertEqual(self.client.get(source_url).content, before)
+        self.assertIn('<strong>镜号</strong>：EP001-SH099', data['C001'][1]['scriptHtml'])
         for excluded in ('第二段原对白。', '场头说明。', '资源规划', '另一场正文。', '旧版正文。'):
             self.assertNotIn(excluded, first)
         self.assertIn('第二段原对白。', data['C001'][1]['scriptHtml'])

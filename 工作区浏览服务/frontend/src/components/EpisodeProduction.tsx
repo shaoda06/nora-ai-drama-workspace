@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { FileItem } from '../api';
-import { Rich } from '../components';
+import { Original, Rich } from '../components';
 import { TabNav } from './TabNav';
 import { Pagination } from './Pagination';
 import { EpisodeButton } from './EpisodeButton';
@@ -20,7 +20,7 @@ export function EpisodeProduction({ items, selected, onSelect }: { items: FileIt
   const selectedScene = scene || scenes[0] || '';
   const segments = current?.segments?.[selectedScene] || [];
   const selectedSegment = segment || segments[0]?.id || '';
-  const selectedScript = segments.find(item => item.id === selectedSegment)?.scriptHtml;
+  const selectedScript = segments.find(item => item.id === selectedSegment);
   const open = (name: string) => {
     setScene('');
     setSegment('');
@@ -35,7 +35,8 @@ export function EpisodeProduction({ items, selected, onSelect }: { items: FileIt
       {selectedSegment && <div className="segment-workspace" key={selectedScene + '/' + selectedSegment}>
         <div className="video-placeholder" role="region" aria-label="视频区域" />
         <section className="segment-script" aria-label={`分段 ${selectedSegment} 分镜脚本`}>
-          {selectedScript ? <Rich html={selectedScript} /> : <p className="muted">本段分镜正文尚未记录。</p>}
+          {selectedScript?.scriptUrl && <div className="segment-script-actions"><Original url={selectedScript.scriptUrl} label="查看原文件" /></div>}
+          {selectedScript?.scriptHtml ? <Rich html={selectedScript.scriptHtml} /> : <p className="muted">本段分镜正文尚未记录。</p>}
         </section>
       </div>}
     </div>

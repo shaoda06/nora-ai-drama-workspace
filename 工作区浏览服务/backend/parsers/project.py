@@ -1033,8 +1033,13 @@ def build_data(project, *, web_episode_navigation=False):
                                   read(storyboard_source) or "", re.M | re.S)
                 segment_script = re.search(r"^###[ \t]+分段[ \t]+" + re.escape(identity[2])
                                            + r"[ \t]*\n.*?(?=^###[ \t]|\Z)", shots[1], re.M | re.S) if shots else None
+                shot_body = re.search(r"^####[ \t]+", segment_script[0], re.M) if segment_script else None
+                script_text = segment_script[0][shot_body.start():] if shot_body else ""
+                script_text = re.sub(r"(^####[ \t]+(EP\d+-SH\d+)[ \t]*\n)\s*\*\*镜号\*\*[：:][ \t]*\2[ \t]*(?=\n|$)",
+                                     r"\1", script_text, flags=re.M)
                 episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration),
-                    "scriptHtml": markdown(segment_script[0] if segment_script else "", storyboard_source)})
+                    "scriptHtml": markdown(script_text, storyboard_source),
+                    **({"scriptUrl": quote(storyboard_source, safe="/-._~")} if read(storyboard_source) is not None else {})})
         episodes.append(episode_node)
     catalogues[production] = {"kind": "group", "key": production, "name": "剧集制作", "children": episodes,
         "statistics": {"total": len(episode_numbers), "completed": counts["已完成"],

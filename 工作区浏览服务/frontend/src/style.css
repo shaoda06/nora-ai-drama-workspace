@@ -51,3 +51,4 @@
 @media(max-width:600px){.site-footer{gap:12px;padding:0 12px;font-size:11px}.site-footer .service-dot,.site-footer .history-link{font-size:inherit}}
 
 .segment-workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start;margin-top:20px}.video-placeholder{aspect-ratio:16/9;border:1px dashed #b6c9be;border-radius:8px;background:#f7f9f6}.segment-script{min-width:0}.segment-script .prose>h3:first-child{margin-top:0}.segment-script .prose h4{margin:20px 0 10px}.segment-script .prose p{margin:10px 0}@media(max-width:700px){.segment-workspace{grid-template-columns:minmax(0,1fr);gap:20px}}
+.segment-script-actions{display:flex;justify-content:flex-end;margin-bottom:12px;font-size:13px}.segment-script .prose>h4:first-child{margin-top:0}
