@@ -27,8 +27,9 @@ export function SegmentWorkspace({ items, selection: { stage, key: selected }, o
   const [tab, setTab] = useState('script');
   const [language, setLanguage] = useState('zh');
   const [scriptMode, setScriptMode] = useState('aligned');
-  const [playback, setPlayback] = useState({ key: '', time: 0 });
+  const [playback, setPlayback] = useState({ key: '', session: 0, time: 0 });
   const scriptContent = useRef<HTMLDivElement>(null);
+  const shotTimeline = useRef<HTMLDivElement>(null);
   const latest = latestVideo(items);
   const versions = items.filter(item => item.stage === stage).sort((a, b) => Number(b.approved) - Number(a.approved) || a.candidateNumber - b.candidateNumber);
   const current = versions.find(item => item.key === selected);
@@ -36,16 +37,25 @@ export function SegmentWorkspace({ items, selection: { stage, key: selected }, o
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
   const shots = context?.shots || [];
   const canAlign = shots.length > 0 && shots.every(shot => shot.duration !== null);
-  const time = playback.key === current?.key ? playback.time : 0;
-  let shotEnd = 0;
-  const activeShot = canAlign ? shots.find(shot => {
-    shotEnd += shot.duration!;
-    return time < shotEnd;
-  }) || shots[shots.length - 1] : undefined;
+  const time = playback.key === current?.key && playback.session === playbackSession ? playback.time : 0;
+  let plannedDuration = 0;
+  const timedShots = canAlign ? shots.map(shot => {
+    const start = plannedDuration;
+    plannedDuration += shot.duration!;
+    return { shot, start, end: plannedDuration };
+  }) : [];
+  const activeShot = (timedShots.find(item => time < item.end) || timedShots[timedShots.length - 1])?.shot;
   const aligned = scriptMode === 'aligned' && canAlign;
   useEffect(() => {
     scriptContent.current!.scrollTop = 0;
   }, [current?.key, tab, scriptMode, aligned ? activeShot?.id : undefined]);
+  useEffect(() => {
+    if (tab !== 'script' || !canAlign) return;
+    const container = shotTimeline.current!;
+    const title = container.querySelector('[aria-current="step"]')!.getBoundingClientRect();
+    const bounds = container.getBoundingClientRect();
+    container.scrollBy({ left: title.left < bounds.left ? title.left - bounds.left : Math.max(0, title.right - bounds.right) });
+  }, [tab, activeShot?.id, current?.key]);
   return <>
     <div className="segment-selectors tabs tabs-grouped">
       <TabSelect label="画质选择" selected={stage} onChange={value => onSelectionChange({ stage: value, key: '' })} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
@@ -55,7 +65,7 @@ export function SegmentWorkspace({ items, selection: { stage, key: selected }, o
     </div>
     <div className="segment-workspace">
       <div className="segment-media-column">
-        <SegmentVideo key={playbackSession + '/' + (current?.key || 'empty')} current={current} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} />
+        <SegmentVideo key={playbackSession + '/' + (current?.key || 'empty')} current={current} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, session: playbackSession, time })} />
         <SegmentReferences context={context} />
       </div>
       <section className="segment-script" aria-label="分镜脚本与提示词区域">
@@ -66,7 +76,16 @@ export function SegmentWorkspace({ items, selection: { stage, key: selected }, o
         {tab === 'script' && <div className="segment-script-modes">
           <TabNav compact label="分镜显示方式" items={[{ value: 'aligned', label: '跟视频对齐', disabled: !canAlign }, { value: 'all', label: '显示全部' }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
         </div>}
-        <div className="segment-script-content" ref={scriptContent}>
+        {tab === 'script' && canAlign && <div className="shot-timeline-scroll" ref={shotTimeline}>
+          <div className="shot-timeline" role="progressbar" aria-label="分镜播放进度" aria-valuemin={0} aria-valuemax={plannedDuration} aria-valuenow={Math.min(time, plannedDuration)} aria-valuetext={`当前镜头：${activeShot!.id}`}
+            style={{ gridTemplateColumns: timedShots.map(item => `minmax(90px, ${item.shot.duration}fr)`).join(' '), minWidth: `${timedShots.length * 90}px` }}>
+            {timedShots.map(({ shot, start }) => <div className="shot-timeline-item" key={shot.id} aria-current={shot.id === activeShot!.id ? 'step' : undefined}>
+              <span className="shot-timeline-title">{shot.id}</span>
+              <span className="shot-timeline-track"><span style={{ transform: `scaleX(${Math.max(0, Math.min(1, (time - start) / shot.duration!))})` }} /></span>
+            </div>)}
+          </div>
+        </div>}
+        <div className={'segment-script-content' + (aligned && tab === 'script' ? ' is-aligned' : '')} ref={scriptContent}>
         {!context ? <div className="script-placeholder">{tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}
           {tab === 'script' ? context.scriptHtml ? <Rich html={aligned ? activeShot!.html : context.scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
