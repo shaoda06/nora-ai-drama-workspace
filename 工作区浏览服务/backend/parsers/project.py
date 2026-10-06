@@ -14,7 +14,8 @@ from datetime import datetime
 from urllib.parse import quote, unquote, urlsplit
 
 MARKER = "<!-- nora-project-portal:generated-v1 -->"
-GROUPS = ("讨论记录", "过程稿", "审阅记录", "历史版本", "执行附件")
+GROUPS = ("工作稿", "历史版本", "执行附件")
+LEGACY_GROUPS = ("讨论记录", "过程稿", "审阅记录")
 POSITION = "00-项目定位/项目基本定位.md"
 STORY = "01-主旨与简介/主旨与简介.md"
 OUTLINE = "02-故事大纲/故事大纲.md"
@@ -484,7 +485,10 @@ def build_data(project, *, web_episode_navigation=False):
 
     def collect_groups(directory):
         result = []
-        for group in GROUPS:
+        for group in (*GROUPS, *LEGACY_GROUPS):
+            if group in LEGACY_GROUPS and not any(
+                    (project / directory / parent / group).is_dir() for parent in ("其他资料", "")):
+                continue
             files = []
             for folder in (project / directory / "其他资料" / group, project / directory / group):
                 for path in sorted(folder.rglob("*")):
@@ -538,18 +542,33 @@ def build_data(project, *, web_episode_navigation=False):
             return None
         return dict(link)
 
+    def review_section(review, heading):
+        text = texts.get(review["key"], "")
+        fragment = unquote(urlsplit(review["url"]).fragment)
+        if fragment:
+            headings = list(re.finditer(r"^(#{1,6}) (.+?)\s*$", text, re.M))
+            start = next((h for h in headings if slug(h.group(2)) == fragment), None)
+            if start is None:
+                return ""
+            end = next((h.start() for h in headings if h.start() > start.start()
+                        and len(h.group(1)) <= len(start.group(1))), len(text))
+            text = text[start.end():end]
+        elif review["key"].endswith("-工作稿.md"):
+            # A work document can contain different decisions for different outputs.
+            return ""
+        match = re.search(r"^(#{2,6}) " + re.escape(heading)
+                          + r"\s*\n(.*?)(?=^#{1,6} |\Z)", text, re.M | re.S)
+        return match.group(2) if match else ""
+
     def asset_review_metadata(reviews):
         purposes, applicability, decisions = [], [], []
         for review in reviews:
-            text = texts.get(review["key"], "")
-            confirm = re.search(r"^## 4\. 用户确认\s*\n(.*?)(?=^## |\Z)", text, re.M | re.S)
-            section = confirm.group(1) if confirm else ""
+            section = review_section(review, "4. 用户确认")
             decision = field(section, "结论")
             if decision == "未记录":
                 decision = field(section, "决定")
             decisions.append(decision)
-            followup = re.search(r"^## 5\. 采用与后续影响\s*\n(.*?)(?=^## |\Z)", text, re.M | re.S)
-            section = followup.group(1) if followup else ""
+            section = review_section(review, "5. 采用与后续影响")
             purposes.append(field(section, "留存用途"))
             applicability.append(field(section, "当前制作适用性"))
         return {
@@ -559,8 +578,8 @@ def build_data(project, *, web_episode_navigation=False):
             "coverApplicable": not any(re.match(r"^(不适用|待核对)(?:$|[。；，：\s])", a) for a in applicability),
         }
 
-    def directory_assets(record_key, number, kind, registered):
-        folder_key = Path(record_key).parent
+    def directory_assets(record_key, number, kind, registered, folder_key):
+        folder_key = Path(folder_key)
         folder = project / folder_key
         known = {Path(a["media"]["key"]) for a in registered if a["media"]}
         assets = []
@@ -607,7 +626,9 @@ def build_data(project, *, web_episode_navigation=False):
         appearance = re.search(r"^## 3\. 外貌与基础造型\s*\n(.*?)(?=^## |\Z)",
                                texts.get(card_key, ""), re.M | re.S)
         stage_names = re.findall(r"^### 3\.\d+ (.+?)\s*$", appearance.group(1), re.M) if appearance else []
-        record_key = (Path(card_key).parent / "参考图/生成记录.md").as_posix()
+        formal_folder = (Path(card_key).parent / "参考图").as_posix()
+        work_key = PEOPLE + "/其他资料/工作稿/" + number + "-参考图-工作稿.md"
+        record_key = work_key if (project / work_key).is_file() else formal_folder + "/生成记录.md"
         record = read(record_key) or ""
         formal, candidates = [], []
         formal_section = re.search(r"^## 1\. 当前正式资产\s*\n(.*?)(?=^## |\Z)", record, re.M | re.S)
@@ -615,21 +636,19 @@ def build_data(project, *, web_episode_navigation=False):
                                    ("图片类型", "人物状态", "服装状态", "正式文件", "采用的候选版本", "审阅记录"))
         for entry in rows_formal:
             links = markdown_links(entry["正式文件"], record_key)
-            media = next((m for link in links if (m := local_media(link, str(Path(record_key).parent)))), None)
+            media = next((m for link in links if (m := local_media(link, formal_folder))), None)
             # Never promote candidates or history through a malformed registry link.
-            if media and any(p in GROUPS for p in Path(media["key"]).parts):
+            if media and any(p in (*GROUPS, *LEGACY_GROUPS) for p in Path(media["key"]).parts):
                 media = None
             reviews = markdown_links(entry["审阅记录"], record_key)
             decisions = []
             for review in reviews:
-                review_text = texts.get(review["key"], "")
-                section = re.search(r"^## 4\. 用户确认\s*\n(.*?)(?=^## |\Z)", review_text, re.M | re.S)
-                decisions.append(field(section.group(1) if section else "", "结论"))
+                decisions.append(field(review_section(review, "4. 用户确认"), "结论"))
             approved = bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
             stage = ""
             if links:
                 parent = Path(links[0]["key"]).parent
-                if parent.parent == Path(record_key).parent and parent.name in stage_names:
+                if parent.parent == Path(formal_folder) and parent.name in stage_names:
                     stage = parent.name
             formal.append({"type": entry["图片类型"], "state": entry["人物状态"],
                            "stage": stage,
@@ -646,7 +665,7 @@ def build_data(project, *, web_episode_navigation=False):
             chunk = re.sub(r"^```[^\n]*\n.*?^```[^\n]*$", "", chunk, flags=re.M | re.S)
             output = field(chunk, "输出候选文件")
             media = [m for link in markdown_links(output, record_key)
-                     if (m := local_media(link, (PEOPLE + "/其他资料/过程稿", PEOPLE + "/过程稿")))]
+                     if (m := local_media(link, (PEOPLE + "/其他资料/工作稿/素材", PEOPLE + "/其他资料/过程稿", PEOPLE + "/过程稿")))]
             if not media:
                 continue
             review_line = next((line for line in chunk.splitlines() if re.match(r"^- 审阅记录[^：]*：", line)), "")
@@ -690,7 +709,9 @@ def build_data(project, *, web_episode_navigation=False):
             warnings.append(number + "资料卡入口未识别，请核对道具索引。")
             continue
         card = long_document(card_key, False)
-        record_key = (Path(card_key).parent / "参考图/生成记录.md").as_posix()
+        formal_folder = (Path(card_key).parent / "参考图").as_posix()
+        work_key = PROPS + "/其他资料/工作稿/" + number + "-参考图-工作稿.md"
+        record_key = work_key if (project / work_key).is_file() else formal_folder + "/生成记录.md"
         record = read(record_key) or ""
         formal, candidates = [], []
         formal_section = re.search(r"^## 1\. 当前正式资产\s*\n(.*?)(?=^## |\Z)", record, re.M | re.S)
@@ -698,16 +719,14 @@ def build_data(project, *, web_episode_navigation=False):
                                    ("状态名", "正式文件", "采用的候选版本", "审阅记录"))
         for entry in rows_formal:
             links = markdown_links(entry["正式文件"], record_key)
-            media = next((m for link in links if (m := local_media(link, str(Path(record_key).parent)))), None)
+            media = next((m for link in links if (m := local_media(link, formal_folder))), None)
             # Never promote candidates or history through a malformed registry link.
-            if media and Path(media["key"]).parent != Path(record_key).parent:
+            if media and Path(media["key"]).parent != Path(formal_folder):
                 media = None
             reviews = markdown_links(entry["审阅记录"], record_key)
             decisions = []
             for review in reviews:
-                review_text = texts.get(review["key"], "")
-                section = re.search(r"^## 4\. 用户确认\s*\n(.*?)(?=^## |\Z)", review_text, re.M | re.S)
-                decisions.append(field(section.group(1) if section else "", "结论"))
+                decisions.append(field(review_section(review, "4. 用户确认"), "结论"))
             approved = bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
             formal.append({"prop": True, "type": "道具参考图", "state": entry["状态名"], "version": entry["采用的候选版本"],
                            "versionHtml": inline(entry["采用的候选版本"], record_key),
@@ -723,7 +742,7 @@ def build_data(project, *, web_episode_navigation=False):
             chunk = re.sub(r"^```[^\n]*\n.*?^```[^\n]*$", "", chunk, flags=re.M | re.S)
             output = field(chunk, "输出候选文件")
             media = [m for link in markdown_links(output, record_key)
-                     if (m := local_media(link, (PROPS + "/其他资料/过程稿", PROPS + "/过程稿")))]
+                     if (m := local_media(link, (PROPS + "/其他资料/工作稿/素材", PROPS + "/其他资料/过程稿", PROPS + "/过程稿")))]
             if not media:
                 continue
             review_line = next((line for line in chunk.splitlines() if re.match(r"^- 审阅记录[^：]*：", line)), "")
@@ -737,7 +756,7 @@ def build_data(project, *, web_episode_navigation=False):
                                    "media": image, "reviews": reviews, "generation": name,
                                    "recordUrl": quote(record_key, safe="/-._~") + "#" + quote(name),
                                    **image_review_fields(chunk, record_key, agent_state, user_state)})
-        formal.extend(directory_assets(record_key, number, "prop", formal))
+        formal.extend(directory_assets(record_key, number, "prop", formal, formal_folder))
         prop_related = [{"name": group["name"], "files": [f for f in group["files"]
                           if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]}
                          for group in prop_groups]
@@ -764,22 +783,22 @@ def build_data(project, *, web_episode_navigation=False):
             warnings.append(number + "资料卡入口未识别，请核对场景索引。")
             continue
         card = long_document(card_key, False)
-        record_key = (Path(card_key).parent / "参考图/生成记录.md").as_posix()
+        formal_folder = (Path(card_key).parent / "参考图").as_posix()
+        work_key = SCENES + "/其他资料/工作稿/" + number + "-参考图-工作稿.md"
+        record_key = work_key if (project / work_key).is_file() else formal_folder + "/生成记录.md"
         record = read(record_key) or ""
         formal, auxiliary, candidates = [], [], []
         section = re.search(r"^## (?:1[.、] )?当前正式资产[^\n]*\n(.*?)(?=^## |\Z)", record, re.M | re.S)
         registry = table_records(section.group(1) if section else "", ("正式文件", "最初制作场次", "场景状态与适用条件", "采用的候选版本", "审阅记录"))
         for entry in registry:
             links = markdown_links(entry["正式文件"], record_key)
-            media = next((m for link in links if (m := local_media(link, str(Path(record_key).parent)))), None)
-            if media and (Path(media["key"]).parent != Path(record_key).parent):
+            media = next((m for link in links if (m := local_media(link, formal_folder))), None)
+            if media and (Path(media["key"]).parent != Path(formal_folder)):
                 media = None
             reviews = markdown_links(entry["审阅记录"], record_key)
             decisions = []
             for review in reviews:
-                review_text = texts.get(review["key"], "")
-                confirm = re.search(r"^## 4\. 用户确认\s*\n(.*?)(?=^## |\Z)", review_text, re.M | re.S)
-                decisions.append(field(confirm.group(1) if confirm else "", "结论"))
+                decisions.append(field(review_section(review, "4. 用户确认"), "结论"))
             approved = bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
             scope = entry["场景状态与适用条件"]
             # Only an explicit scene-origin filename qualifies as an episode environment.
@@ -826,7 +845,7 @@ def build_data(project, *, web_episode_navigation=False):
                     origin = origins.pop()
             seen_outputs = set()
             for link in outputs:
-                media = local_media(link, (SCENES + "/其他资料/过程稿", SCENES + "/过程稿"))
+                media = local_media(link, (SCENES + "/其他资料/工作稿/素材", SCENES + "/其他资料/过程稿", SCENES + "/过程稿"))
                 if not media or media["key"] in seen_outputs:
                     continue
                 seen_outputs.add(media["key"])
@@ -836,7 +855,7 @@ def build_data(project, *, web_episode_navigation=False):
                                    "recordUrl": quote(record_key, safe="/-._~") + "#" + quote(name),
                                    **image_review_fields(chunk, record_key, agent_state, user_state)})
         # Formal directory files are confirmed assets; records enrich their metadata.
-        for asset in directory_assets(record_key, number, "scene", formal + auxiliary):
+        for asset in directory_assets(record_key, number, "scene", formal + auxiliary, formal_folder):
             (formal if asset["type"] == "场次环境图" else auxiliary).append(asset)
         legacy = []
         related = [{"name": group["name"], "files": [f for f in group["files"]

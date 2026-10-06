@@ -1,5 +1,6 @@
 """Local fixture tests. Never opens a browser, calls ComfyUI, or mutates real projects."""
 import json
+import os
 from pathlib import Path
 import re
 import tempfile
@@ -13,6 +14,67 @@ class PortalTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         self.addCleanup(self.temp.cleanup)
+
+    def test_work_draft_categories_do_not_create_legacy_groups(self):
+        self.put("00-项目定位/其他资料/工作稿/项目基本定位-工作稿.md", "# 工作稿\n草稿")
+        self.put("00-项目定位/其他资料/工作稿/素材/样例.png", "image")
+        portal.build(self.root)
+        data = self.extract()
+        self.assertEqual([g["name"] for g in data["groups"]], ["工作稿", "历史版本", "执行附件"])
+        self.assertEqual(len(data["groups"][0]["files"]), 2)
+        self.assertFalse((self.root / portal.POSITION).exists())
+
+    def test_image_work_draft_uses_scoped_approval_and_original_asset_folder(self):
+        _, person_record = self.person_fixture()
+        prop_record = self.prop_fixture()
+        _, scene_record = self.scene_fixture()
+        for stage, number, old_record, collection in (
+                (portal.PEOPLE, "CH001", person_record, "people"),
+                (portal.PROPS, "PR001", prop_record, "props"),
+                (portal.SCENES, "SC001", scene_record, "scenes")):
+            old_key = old_record.relative_to(self.root).as_posix()
+            new_key = f"{stage}/其他资料/工作稿/{number}-参考图-工作稿.md"
+            blocks, review_targets = [], {}
+            record = old_record.read_text()
+            for link in portal.markdown_links(record, old_key):
+                if "审阅记录/" in link["key"] and link["key"] not in review_targets:
+                    anchor = f"审阅-生成记录-001-{len(blocks)+1:03}"
+                    review_targets[link["key"]] = "#" + anchor
+                    text = (self.root / link["key"]).read_text()
+                    text = re.sub(r"^# .*\n", f"### {anchor}\n", text, count=1)
+                    text = re.sub(r"^## ", "#### ", text, flags=re.M)
+                    blocks.append(text)
+            def relocate(match):
+                target = match.group(2)
+                _, key = portal.safe_link(target, old_key)
+                if key in review_targets:
+                    return f"[{match.group(1)}]({review_targets[key]})"
+                if "过程稿/" in key:
+                    new_media = f"{stage}/其他资料/工作稿/素材/{Path(key).name}"
+                    self.put(new_media, (self.root / key).read_text())
+                    key = new_media
+                target = Path(os.path.relpath(self.root / key, (self.root / new_key).parent)).as_posix()
+                return f"[{match.group(1)}]({target})"
+            record = re.sub(r"\[([^\]]*)\]\(([^)]+)\)", relocate, record)
+            work = self.put(new_key, record + "\n## 4. 审阅区\n" + "\n".join(blocks))
+            # An unrelated rejected output must not change approval of the selected one.
+            work.write_text(work.read_text() + "\n### 审阅-无关候选\n#### 4. 用户确认\n- 结论：不采用\n")
+            portal.build(self.root)
+            asset = self.extract()[collection][0]
+            self.assertEqual(asset["recordKey"], new_key)
+            self.assertIsNotNone(asset["cover"])
+            self.assertTrue(asset["cover"]["approved"])
+            self.assertEqual(asset["pendingCount"], 1)
+            self.assertIn("/其他资料/工作稿/素材/", asset["candidates"][0]["media"]["key"])
+            self.assertIn("/参考图/", asset["cover"]["media"]["key"])
+            with self.subTest(stage=stage):
+                # Missing or whole-file approval links must never borrow another decision.
+                valid_text = work.read_text()
+                for invalid in ("", "#不存在"):
+                    broken = re.sub(r"\]\(#审阅-生成记录-[^)]+\)", "](" + Path(new_key).name + invalid + ")", valid_text)
+                    work.write_text(broken)
+                    portal.build(self.root)
+                    self.assertIsNone(self.extract()[collection][0]["cover"])
 
     def test_position_style_sample_preserves_confirmation_and_relative_image(self):
         text = ('### 画风与美术实现正文\n\n```text\n固定风格正文\n```\n\n'
@@ -292,7 +354,7 @@ class PortalTests(unittest.TestCase):
                          ["EP001-分镜索引.md", "A-说明.md", "EP001-分镜索引-草稿-v01.md", "C001-场次分镜"])
         self.assertEqual([c["name"] for c in children[1]["children"]],
                          ["EP001-本集剧本.md", "EP001-C001-分场剧本.md"])
-        self.assertEqual(data["groups"][1]["files"][0]["name"], "Z-资料索引.md")
+        self.assertEqual(next(g for g in data["groups"] if g["name"] == "过程稿")["files"][0]["name"], "Z-资料索引.md")
         self.assertTrue(all(root + "/" + path in data["documents"] for path in paths))
 
     def test_folder_previews_cover_documents_text_media_and_unknown_files(self):
@@ -304,7 +366,7 @@ class PortalTests(unittest.TestCase):
             self.put(base + "附件." + extension, payload)
         portal.build(self.root)
         data = self.extract()
-        files = data["groups"][1]["files"]
+        files = next(g for g in data["groups"] if g["name"] == "过程稿")["files"]
         self.assertEqual({Path(f["key"]).suffix[1:]: f["kind"] for f in files}, expected)
         self.assertEqual(data["textPreviews"][base + "附件.json"]["text"], payload)
         self.assertNotIn(base + "附件.png", data["textPreviews"])
@@ -1057,8 +1119,8 @@ class PortalTests(unittest.TestCase):
         self.put("03-人物资料/审阅记录/人物索引-审阅记录-001.md", "# 跨人物")
         portal.build(self.root)
         data = self.extract()
-        self.assertEqual(len(data["people"][0]["groups"][2]["files"]), 1)
-        self.assertEqual(len(data["peopleGroups"][2]["files"]), 3)
+        self.assertEqual(len(next(g for g in data["people"][0]["groups"] if g["name"] == "审阅记录")["files"]), 1)
+        self.assertEqual(len(next(g for g in data["peopleGroups"] if g["name"] == "审阅记录")["files"]), 3)
 
     def test_people_prompt_code_cannot_supply_approval_fields(self):
         _, record = self.person_fixture()
@@ -1079,7 +1141,7 @@ class PortalTests(unittest.TestCase):
         portal.build(self.root)
         data = self.extract()
         self.assertFalse(data["positionExists"])
-        self.assertEqual(len(data["groups"][1]["files"]), 1)
+        self.assertEqual(len(next(g for g in data["groups"] if g["name"] == "过程稿")["files"]), 1)
         self.assertNotIn("候选内容", data["positionHtml"])
 
     def test_real_metadata_extra_sections_and_source_bytes_are_preserved(self):
@@ -1223,8 +1285,8 @@ class PortalTests(unittest.TestCase):
         self.assertFalse(data["story"]["exists"])
         self.assertEqual(data["story"]["bodyHtml"], "")
         self.assertEqual(data["story"]["boundaryHtml"], "")
-        self.assertEqual([len(g["files"]) for g in data["story"]["groups"]], [0, 1, 0, 1, 0])
-        self.assertEqual([len(g["files"]) for g in data["groups"]], [0, 0, 0, 0, 0])
+        self.assertEqual({g["name"]: len(g["files"]) for g in data["story"]["groups"]}, {"工作稿": 0, "历史版本": 1, "执行附件": 0, "过程稿": 1})
+        self.assertEqual([len(g["files"]) for g in data["groups"]], [0, 0, 0])
         self.assertFalse((self.root / "01-主旨与简介/讨论记录").exists())
 
     def test_story_outside_source_symlink_rejected(self):
@@ -1254,8 +1316,8 @@ class PortalTests(unittest.TestCase):
         self.assertIn("原秘密", outline["bodyHtml"])
         self.assertIn('data-doc="01-主旨与简介/主旨与简介.md"', outline["introHtml"])
         self.assertEqual(outline["boundaryHtml"], "")
-        self.assertEqual([len(g["files"]) for g in outline["groups"]], [0, 0, 1, 0, 0])
-        self.assertEqual([len(g["files"]) for g in data["story"]["groups"]], [0, 0, 0, 0, 0])
+        self.assertEqual({g["name"]: len(g["files"]) for g in outline["groups"]}, {"工作稿": 0, "历史版本": 0, "执行附件": 0, "审阅记录": 1})
+        self.assertEqual([len(g["files"]) for g in data["story"]["groups"]], [0, 0, 0])
         self.assertEqual(source.read_text("utf-8"), content)
 
     def test_outline_draft_is_not_formal_and_no_extra_folders_created(self):
@@ -1265,7 +1327,7 @@ class PortalTests(unittest.TestCase):
         outline = self.extract()["outline"]
         self.assertFalse(outline["exists"])
         self.assertEqual(outline["bodyHtml"], "")
-        self.assertEqual([len(g["files"]) for g in outline["groups"]], [0, 1, 0, 1, 0])
+        self.assertEqual({g["name"]: len(g["files"]) for g in outline["groups"]}, {"工作稿": 0, "历史版本": 1, "执行附件": 0, "过程稿": 1})
         self.assertFalse((self.root / "02-故事大纲/讨论记录").exists())
 
     def test_rebuild_updates_view_not_source_files(self):
