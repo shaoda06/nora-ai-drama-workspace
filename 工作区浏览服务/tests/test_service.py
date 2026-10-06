@@ -184,6 +184,26 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('这是正文字段', preview['contentHtml'])
         self.assertEqual(self.source.read_text(encoding='utf-8'), source)
 
+    def test_sample_resolution_moves_to_title_and_keeps_three_record_fields(self):
+        source = ('#### 男性样例\n\n![男性](男.png)\n\n'
+                  '- 分辨率：1024×1024\n- 样例版本：v15\n'
+                  '- 确认依据：旧说明有512×512；[采用](采用.md)\n'
+                  '- 执行记录：[生成](生成.md)\n\n'
+                  '#### 女性样例\n\n- 分辨率：待确认\n- 样例版本：v05\n'
+                  '- 确认依据：尚未确认\n- 执行记录：[旧试验](试验.md)\n')
+        rendered = parser.markdown(source, parser.POSITION)
+        self.assertIn('<h4 id="男性样例">男性样例，1024×1024</h4>', rendered)
+        self.assertIn('<h4 id="女性样例">女性样例，待确认</h4>', rendered)
+        self.assertNotIn('<li>分辨率', rendered)
+        self.assertEqual(rendered.count('<li>'), 6)
+        self.assertEqual(rendered.count('class="style-sample-card"'), 1)
+        self.assertIn('旧说明有512×512', rendered)
+        self.assertIn('data-doc="00-项目定位/采用.md"', rendered)
+        self.assertIn('data-doc="00-项目定位/生成.md"', rendered)
+        old = parser.markdown('#### 男性样例\n\n![男性](男.png)\n\n- 确认依据：旧尺寸512×512\n', parser.POSITION)
+        self.assertIn('<h4 id="男性样例">男性样例</h4>', old)
+        self.assertNotIn('男性样例，512', old)
+
     def test_position_title_and_status_do_not_change_the_source(self):
         source = '# 项目定位\n\n- 项目名称：示例项目，全名。\n\n## 视觉表现\n\n- 画风确认状态：已确认；采用依据保留。\n'
         self.source.write_text(source, encoding='utf-8')

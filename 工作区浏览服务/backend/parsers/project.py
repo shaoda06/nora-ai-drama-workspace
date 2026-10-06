@@ -242,11 +242,20 @@ def markdown(text, source):
     rendered = "\n".join(out)
     if source == POSITION:
         # Fixed sample sections own their title, approved image and record fields.
+        def sample_section(match):
+            heading, content = match[1], match[3]
+            resolution = re.search(r'<li>分辨率[:：]\s*(.*?)</li>', content, re.S)
+            if resolution:
+                heading = heading.replace('</h4>', '，' + resolution[1] + '</h4>')
+                content = content[:resolution.start()] + content[resolution.end():]
+            content = re.sub(r'<figcaption>.*?</figcaption>', '', content, flags=re.S)
+            if '<figure class="style-sample">' not in content:
+                return heading + content
+            return ('<div class="style-sample-card" data-gender="'
+                    + ('male' if match[2] == '男性样例' else 'female') + '">'
+                    + heading + content + '</div>')
         rendered = re.sub(r'(<h4 id="[^"]+">(男性样例|女性样例)</h4>\n)(.*?)(?=\n<h[1-4]\b|\Z)',
-                          lambda match: ('<div class="style-sample-card" data-gender="'
-                                         + ('male' if match[2] == '男性样例' else 'female') + '">'
-                                         + match[1] + re.sub(r'<figcaption>.*?</figcaption>', '', match[3], flags=re.S)
-                                         + '</div>') if '<figure class="style-sample">' in match[3] else match[0],
+                          sample_section,
                           rendered, flags=re.S)
         rendered = re.sub(r'(?:<div class="style-sample-card"[^>]*>.*?</div>\n?)+',
                           lambda match: '<div class="style-samples">' + match[0] + '</div>',
