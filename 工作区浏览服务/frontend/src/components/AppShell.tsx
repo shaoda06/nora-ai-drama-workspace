@@ -4,11 +4,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { Notifications } from './Notifications';
 
 export const HeaderControlsContext = createContext<HTMLElement | null>(null);
+export const FooterSyncContext = createContext<HTMLElement | null>(null);
 
 export function AppShell({ children }: { children: ReactNode }) {
   const location = useLocation();
   const [backTop, setBackTop] = useState(false);
   const [controlsRoot, setControlsRoot] = useState<HTMLDivElement | null>(null);
+  const [syncRoot, setSyncRoot] = useState<HTMLSpanElement | null>(null);
   const header = useRef<HTMLElement>(null);
   useEffect(() => {
     const observer = new ResizeObserver(([entry]) => {
@@ -23,15 +25,17 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('scroll', listener);
   }, []);
   useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
-  return <Notifications><HeaderControlsContext.Provider value={controlsRoot}>
+  return <Notifications><HeaderControlsContext.Provider value={controlsRoot}><FooterSyncContext.Provider value={syncRoot}>
     <header className="site-header" ref={header}>
       <div className="header-main"><Link className="brand" to="/">Nora工作台</Link>
-        <div className="header-controls" ref={setControlsRoot} />
-        <div className="header-info"><span className="service-dot">服务运行中</span>
-          <Link className="history-link" to="/history">版本与开发记录</Link></div></div>
+        <div className="header-controls" ref={setControlsRoot} /></div>
     </header>
     <main className={location.pathname.startsWith('/projects/') ? 'project-page' : undefined}>{children}</main>
-    <footer>源文件与实际审核记录是内容依据 · 浏览页只读展示</footer>
+    <footer className="site-footer">
+      <span className="service-dot">服务运行中</span>
+      <Link className="history-link" to="/history">版本与开发记录</Link>
+      <span className="footer-sync"><span ref={setSyncRoot} />{!location.pathname.startsWith('/projects/') && '上次同步：—'}</span>
+    </footer>
     {backTop && <button className="back-top" onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}>↑ 返回顶部</button>}
-  </HeaderControlsContext.Provider></Notifications>;
+  </FooterSyncContext.Provider></HeaderControlsContext.Provider></Notifications>;
 }

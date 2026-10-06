@@ -11,13 +11,14 @@ import { Breadcrumbs } from './components/Breadcrumbs';
 import { TabNav } from './components/TabNav';
 import { SearchField } from './components/SearchField';
 import { Pagination } from './components/Pagination';
-import { HeaderControlsContext } from './components/AppShell';
+import { FooterSyncContext, HeaderControlsContext } from './components/AppShell';
 import { useNotify } from './components/Notifications';
 import { EpisodeProduction } from './components/EpisodeProduction';
 
 export default function Project() {
   const notify = useNotify();
   const controlsRoot = useContext(HeaderControlsContext);
+  const syncRoot = useContext(FooterSyncContext);
   const { name = '' } = useParams();
   const [section, setSection] = useState('00-项目定位');
   const [visited, setVisited] = useState(['00-项目定位']);
@@ -32,6 +33,7 @@ export default function Project() {
   const revision = status.data?.revision || 1;
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   return <PreviewContext.Provider value={setPreview}>
+    {syncRoot && createPortal(<>上次同步：{status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '—'}</>, syncRoot)}
     {overview.data && (
       <div className="activity" role="region" aria-label="当前阶段">
         <div className="activity-heading"><strong>当前阶段</strong>{overview.data.active.length > 0 && <span>（<button className="link" onClick={() => setPreview({ kind: 'markdown', name: '项目进度', key: '项目进度.md', url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}` })}>查看完整进度</button>）</span>}</div>
@@ -39,7 +41,6 @@ export default function Project() {
       </div>
     )}
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
-      <div className="muted">上次同步：{status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '—'}</div>
       <Breadcrumbs items={[name, overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), ...(section === '09-剧集制作' && episode ? [episode] : [])]} />
     </PageHeader>
     <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} />
