@@ -976,6 +976,7 @@ def build_data(project, *, web_episode_navigation=False):
 
     production = "09-剧集制作"
     existing_episodes = {}
+    episode_videos = {}
     production_statuses = {match[1]: row["status"] for row in rows
                            if (match := re.fullmatch(r"(EP\d{3,})\s*制作", row["name"]))}
     folder = project / production
@@ -984,6 +985,7 @@ def build_data(project, *, web_episode_navigation=False):
             continue
         root = episode.relative_to(project).as_posix()
         files = inventory(root)
+        episode_videos[episode.name] = [item for item in files if item["kind"] == "video"]
         children = file_tree(files, root, episode.name)["children"]
         present = {item["name"] for item in children}
         for directory in sorted(episode.iterdir()):
@@ -1037,8 +1039,24 @@ def build_data(project, *, web_episode_navigation=False):
                 script_text = segment_script[0][shot_body.start():] if shot_body else ""
                 script_text = re.sub(r"(^####[ \t]+(EP\d+-SH\d+)[ \t]*\n)\s*\*\*镜号\*\*[：:][ \t]*\2[ \t]*(?=\n|$)",
                                      r"\1", script_text, flags=re.M)
+                videos = []
+                segment_identity = row["分段"]
+                episode_root = production + "/" + number
+                for item in episode_videos.get(number, []):
+                    take = re.fullmatch(re.escape(segment_identity) + r"-(R\d{3,})-(一采|二采|后处理)\.(?:mp4|webm|mov)", item["name"])
+                    if not take:
+                        continue
+                    folders = (episode_root + "/其他资料/候选视频",
+                               episode_root + "/06-生成结果/" + identity[1] + "-场次结果/" + identity[2] + "-分段结果/"
+                               + {"一采": "01-一采", "二采": "02-二采", "后处理": "03-后处理"}[take[2]] + "/候选")
+                    if Path(item["key"]).parent.as_posix() in folders:
+                        videos.append({"key": item["key"], "url": item["url"], "run": take[1], "stage": take[2]})
+                videos.sort(key=lambda item: (int(item["run"][1:]), item["stage"], item["key"]))
+                for index, video in enumerate(videos, 1):
+                    video["name"] = "候选" + str(index)
                 episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration),
                     "scriptHtml": markdown(script_text, storyboard_source),
+                    "videos": videos,
                     **({"scriptUrl": quote(storyboard_source, safe="/-._~")} if read(storyboard_source) is not None else {})})
         episodes.append(episode_node)
     catalogues[production] = {"kind": "group", "key": production, "name": "剧集制作", "children": episodes,

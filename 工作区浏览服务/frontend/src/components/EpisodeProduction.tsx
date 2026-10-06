@@ -4,6 +4,7 @@ import { Original, Rich } from '../components';
 import { TabNav } from './TabNav';
 import { Pagination } from './Pagination';
 import { EpisodeButton } from './EpisodeButton';
+import { SegmentVideo } from './SegmentVideo';
 
 export function EpisodeProduction({ items, selected, onSelect }: { items: FileItem[]; selected: string | null; onSelect: (episode: string | null) => void }) {
   const [scene, setScene] = useState('');
@@ -33,7 +34,7 @@ export function EpisodeProduction({ items, selected, onSelect }: { items: FileIt
         {segments.map(item => <button key={item.id} aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} title={`${item.id} · 计划时长 ${item.duration}秒`} aria-pressed={item.id === selectedSegment} onClick={() => setSegment(item.id)}><span>{item.id}</span><span>{item.duration}秒</span></button>)}
       </div></div>}
       {selectedSegment && <div className="segment-workspace" key={selectedScene + '/' + selectedSegment}>
-        <div className="video-placeholder" role="region" aria-label="视频区域" />
+        <SegmentVideo items={selectedScript!.videos} />
         <section className="segment-script" aria-label={`分段 ${selectedSegment} 分镜脚本`}>
           {selectedScript?.scriptUrl && <div className="segment-script-actions"><Original url={selectedScript.scriptUrl} label="查看原文件" /></div>}
           {selectedScript?.scriptHtml ? <Rich html={selectedScript.scriptHtml} /> : <p className="muted">本段分镜正文尚未记录。</p>}

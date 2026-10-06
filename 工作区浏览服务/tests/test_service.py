@@ -149,8 +149,8 @@ class ServiceTests(unittest.TestCase):
             '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
             '| EP001-C001 | EP001-C001-P099 | 15 |\n', encoding='utf-8')
         data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
-        self.assertEqual(data['segments'], {'C002': [{'id': 'P001', 'duration': 11, 'scriptHtml': ''}],
-                                           'C001': [{'id': 'P002', 'duration': 5.5, 'scriptHtml': ''}, {'id': 'P001', 'duration': 4.75, 'scriptHtml': ''}]})
+        self.assertEqual(data['segments'], {'C002': [{'id': 'P001', 'duration': 11, 'scriptHtml': '', 'videos': []}],
+                                           'C001': [{'id': 'P002', 'duration': 5.5, 'scriptHtml': '', 'videos': []}, {'id': 'P001', 'duration': 4.75, 'scriptHtml': '', 'videos': []}]})
         self.assertEqual(index.read_bytes(), source)
 
     def test_segment_script_uses_only_current_shot_body(self):
@@ -199,6 +199,31 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('第二段原对白。', data['C001'][1]['scriptHtml'])
         self.assertIn('另一场正文。', data['C002'][0]['scriptHtml'])
         self.assertEqual(source.read_bytes(), before)
+
+    def test_segment_videos_match_identity_and_sort_execution_numbers(self):
+        episode = self.project / '09-剧集制作/EP001'
+        (episode / '02-剧集剧本').mkdir(parents=True)
+        (episode / '02-剧集剧本/EP001-本集剧本.md').write_text(
+            '## 1. 故事剧本正文\n### EP001-C001\n剧情。\n', encoding='utf-8')
+        (episode / '03-分镜脚本').mkdir()
+        (episode / '03-分镜脚本/EP001-分镜索引.md').write_text(
+            '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+            '| EP001-C001 | EP001-C001-P001 | 5 |\n', encoding='utf-8')
+        candidates = episode / '其他资料/候选视频'
+        candidates.mkdir(parents=True)
+        for name in ('EP001-C001-P001-R010-二采.mp4', 'EP001-C001-P001-R002-一采.mp4',
+                     'EP001-C001-P002-R001-一采.mp4', 'EP001-C002-P001-R001-一采.mp4',
+                     'EP002-C001-P001-R001-一采.mp4', 'EP001-C001-场次成片-v01.mp4'):
+            (candidates / name).write_bytes(b'video candidate')
+        attachments = episode / '其他资料/执行附件'
+        attachments.mkdir()
+        (attachments / 'EP001-C001-P001-R011-后处理.mp4').write_bytes(b'not a final candidate')
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]['segments']['C001'][0]['videos']
+        self.assertEqual([(v['name'], v['run'], v['stage']) for v in data],
+                         [('候选1', 'R002', '一采'), ('候选2', 'R010', '二采')])
+        self.assertEqual(self.client.get(data[0]['url']).content, b'video candidate')
+        self.assertTrue(data[0]['url'].startswith('/api/projects/'))
+        self.assertTrue((candidates / 'EP001-C001-P001-R002-一采.mp4').is_file())
 
     def test_segment_duration_must_be_positive(self):
         episode = self.project / '09-剧集制作/EP001'

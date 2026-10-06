@@ -52,3 +52,5 @@
 
 .segment-workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start;margin-top:20px}.video-placeholder{aspect-ratio:16/9;border:1px dashed #b6c9be;border-radius:8px;background:#f7f9f6}.segment-script{min-width:0}.segment-script .prose>h3:first-child{margin-top:0}.segment-script .prose h4{margin:20px 0 10px}.segment-script .prose p{margin:10px 0}@media(max-width:700px){.segment-workspace{grid-template-columns:minmax(0,1fr);gap:20px}}
 .segment-script-actions{float:right;margin:0 0 0 16px;font-size:13px}.segment-script .prose>h4:first-child{margin-top:0}
+
+.segment-video{min-width:0}.video-tabs{overflow-x:auto;margin-bottom:12px}.video-tabs .tabs{flex-wrap:nowrap;margin:0;width:max-content;min-width:100%;gap:8px}.video-tabs button{flex-shrink:0;white-space:nowrap}.segment-video video{display:block;width:100%;aspect-ratio:16/9;background:#101916;border-radius:8px}.video-source{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px;font-size:13px;color:var(--muted)}
