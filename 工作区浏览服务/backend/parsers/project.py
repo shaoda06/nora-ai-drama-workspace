@@ -1019,6 +1019,16 @@ def build_data(project, *, web_episode_navigation=False):
             episode_node["scenes"] = list(dict.fromkeys(re.findall(
                 r"^###[ \t]+" + re.escape(number) + r"-(C\d{3,})[ \t]*$",
                 script_body[1] if script_body else "", re.M)))
+            episode_node["segments"] = {scene: [] for scene in episode_node["scenes"]}
+            storyboard_index = production + "/" + number + "/03-分镜脚本/" + number + "-分镜索引.md"
+            for row in table_records(read(storyboard_index) or "", ("场次", "分段", "分段计划时长（秒）")):
+                identity = re.fullmatch(re.escape(number) + r"-(C\d{3,})-(P\d{3,})", row["分段"])
+                if not identity or identity[1] not in episode_node["segments"] or row["场次"] != number + "-" + identity[1]:
+                    continue
+                duration = row["分段计划时长（秒）"]
+                if not re.fullmatch(r"\d+(?:\.\d+)?", duration) or float(duration) <= 0:
+                    raise ValueError(storyboard_index + "：" + row["分段"] + "的分段计划时长必须为正数秒")
+                episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration)})
         episodes.append(episode_node)
     catalogues[production] = {"kind": "group", "key": production, "name": "剧集制作", "children": episodes,
         "statistics": {"total": len(episode_numbers), "completed": counts["已完成"],

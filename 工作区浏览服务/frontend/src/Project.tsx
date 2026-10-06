@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
@@ -24,6 +24,7 @@ export default function Project() {
   const [visited, setVisited] = useState(['00-项目定位']);
   const [preview, setPreview] = useState<FileItem | null>(null);
   const [episode, setEpisode] = useState<string | null>(null);
+  const currentPath = useRef<HTMLSpanElement>(null);
   const status = useQuery({ queryKey: ['status', name], queryFn: async () => {
     const value = await get<RecordData>(`${projectUrl(name)}/status`);
     if (value.updating) notify('正在同步资料…');
@@ -31,6 +32,8 @@ export default function Project() {
     return value;
   }, refetchInterval: 5000 });
   const revision = status.data?.revision || 1;
+  const production = useQuery<RecordData>({ queryKey: ['section', name, '09-剧集制作', revision], enabled: false, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
+  const episodeTitle = production.data?.children.find((item: FileItem) => item.name === episode)?.title || '题名未记录';
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   return <PreviewContext.Provider value={setPreview}>
     {syncRoot && createPortal(<>上次同步：{status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '—'}</>, syncRoot)}
@@ -41,13 +44,13 @@ export default function Project() {
       </div>
     )}
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
-      <Breadcrumbs items={[{ label: overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), href: `#/projects/${encodeURIComponent(name)}`, onClick: () => setEpisode(null) }, ...(section === '09-剧集制作' && episode ? [{ label: episode }] : [])]} />
+      <Breadcrumbs currentRef={currentPath} items={[{ label: overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), href: `#/projects/${encodeURIComponent(name)}`, onClick: () => setEpisode(null) }, ...(section === '09-剧集制作' && episode ? [{ label: `${episode} · ${episodeTitle}` }] : [])]} />
     </PageHeader>
     <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} />
     {overview.data && <>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
       {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { if (value === '09-剧集制作' && value !== section) setEpisode(null); setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
-      {visited.map(label => <SectionPane key={name + '/' + label} project={name} section={label} revision={revision} active={label === section} episode={episode} onEpisodeChange={setEpisode} />)}
+      {visited.map(label => <SectionPane key={name + '/' + label} project={name} section={label} revision={revision} active={label === section} episode={episode} onEpisodeChange={value => { setEpisode(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} />)}
     </>}
     {preview && <Preview key={preview.key || preview.url} project={name} item={preview} revision={revision} close={() => setPreview(null)} />}
   </PreviewContext.Provider>;

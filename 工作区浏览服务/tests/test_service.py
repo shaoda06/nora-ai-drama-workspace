@@ -128,6 +128,44 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('主旨正文保留。', story.json()['bodyHtml'])
         self.assertEqual(script.read_bytes(), source)
 
+    def test_segments_use_current_index_and_match_story_scenes(self):
+        episode = self.project / '09-剧集制作/EP001'
+        (episode / '02-剧集剧本').mkdir(parents=True)
+        (episode / '02-剧集剧本/EP001-本集剧本.md').write_text(
+            '## 1. 故事剧本正文\n### EP001-C002\n第二场。\n### EP001-C001\n第一场。\n', encoding='utf-8')
+        (episode / '03-分镜脚本').mkdir()
+        index = episode / '03-分镜脚本/EP001-分镜索引.md'
+        index.write_text('| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+                         '| EP001-C001 | EP001-C001-P002 | 5.5 |\n'
+                         '| EP001-C002 | EP001-C002-P001 | 11 |\n'
+                         '| EP001-C001 | EP001-C001-P001 | 4.75 |\n'
+                         '| EP002-C001 | EP002-C001-P009 | 9 |\n'
+                         '| EP001-C003 | EP001-C003-P001 | 10 |\n'
+                         '| EP001-C001 | EP001-C002-P002 | 7 |\n', encoding='utf-8')
+        source = index.read_bytes()
+        history = episode / '其他资料/历史版本'
+        history.mkdir(parents=True)
+        (history / 'EP001-分镜索引-旧版.md').write_text(
+            '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+            '| EP001-C001 | EP001-C001-P099 | 15 |\n', encoding='utf-8')
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual(data['segments'], {'C002': [{'id': 'P001', 'duration': 11}],
+                                           'C001': [{'id': 'P002', 'duration': 5.5}, {'id': 'P001', 'duration': 4.75}]})
+        self.assertEqual(index.read_bytes(), source)
+
+    def test_segment_duration_must_be_positive(self):
+        episode = self.project / '09-剧集制作/EP001'
+        (episode / '02-剧集剧本').mkdir(parents=True)
+        (episode / '02-剧集剧本/EP001-本集剧本.md').write_text(
+            '## 1. 故事剧本正文\n### EP001-C001\n剧情。\n', encoding='utf-8')
+        (episode / '03-分镜脚本').mkdir()
+        (episode / '03-分镜脚本/EP001-分镜索引.md').write_text(
+            '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+            '| EP001-C001 | EP001-C001-P001 | 0 |\n', encoding='utf-8')
+        response = self.client.get('/api/projects/示例项目/sections/09-剧集制作')
+        self.assertEqual(response.status_code, 503)
+        self.assertIn('分段计划时长必须为正数秒', response.json()['detail'])
+
     def test_discovery_and_dynamic_document(self):
         self.assertEqual(self.client.get('/api/projects').json()[0]['name'], '示例项目')
         section = self.client.get('/api/projects/示例项目/sections/00-项目定位')
