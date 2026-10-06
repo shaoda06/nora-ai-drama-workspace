@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import type { GenerationContext, SegmentVideo as VideoItem } from '../api';
 import { Original, PreviewContext, Rich } from '../components';
 import { TabNav } from './TabNav';
@@ -24,11 +24,26 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
   const [selected, setSelected] = useState('');
   const [tab, setTab] = useState('script');
   const [language, setLanguage] = useState('zh');
+  const [scriptMode, setScriptMode] = useState('all');
+  const [playback, setPlayback] = useState({ key: '', time: 0 });
+  const scriptContent = useRef<HTMLDivElement>(null);
   const latest = items.reduce<VideoItem | undefined>((latest, item) => !latest || Number(item.run.slice(1)) > Number(latest.run.slice(1)) ? item : latest, undefined);
   const versions = items.filter(item => item.stage === stage).sort((a, b) => Number(b.approved) - Number(a.approved) || a.candidateNumber - b.candidateNumber);
   const current = versions.find(item => item.key === selected);
   const context = current?.context;
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
+  const shots = context?.shots || [];
+  const canAlign = shots.length > 0 && shots.every(shot => shot.duration !== null);
+  const time = playback.key === current?.key ? playback.time : 0;
+  let shotEnd = 0;
+  const activeShot = canAlign ? shots.find(shot => {
+    shotEnd += shot.duration!;
+    return time < shotEnd;
+  }) || shots[shots.length - 1] : undefined;
+  const aligned = scriptMode === 'aligned' && canAlign;
+  useEffect(() => {
+    scriptContent.current!.scrollTop = 0;
+  }, [current?.key, tab, scriptMode, aligned ? activeShot?.id : undefined]);
   return <>
     <div className="segment-selectors tabs tabs-grouped">
       <TabSelect label="画质选择" selected={stage} onChange={value => { setStage(value); setSelected(''); }} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
@@ -37,7 +52,7 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
     </div>
     <div className="segment-workspace">
       <div className="segment-media-column">
-        <SegmentVideo key={current?.key || 'empty'} current={current} />
+        <SegmentVideo key={current?.key || 'empty'} current={current} onTimeChange={time => setPlayback({ key: current!.key, time })} />
         <SegmentReferences context={context} />
       </div>
       <section className="segment-script" aria-label="分镜脚本与提示词区域">
@@ -45,10 +60,13 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
           <TabNav label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }]} selected={tab} onChange={setTab} disabled={!current} />
           <Original url={tab === 'script' ? context?.scriptUrl : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />
         </div>
-        <div className="segment-script-content">
+        {tab === 'script' && <div className="segment-script-modes">
+          <TabNav label="分镜显示方式" items={[{ value: 'all', label: '显示全部' }, { value: 'aligned', label: '跟视频对齐', disabled: !canAlign }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
+        </div>}
+        <div className="segment-script-content" ref={scriptContent}>
         {!context ? <div className="script-placeholder">{tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}
-          {tab === 'script' ? context.scriptHtml ? <Rich html={context.scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
+          {tab === 'script' ? context.scriptHtml ? <Rich html={aligned ? activeShot!.html : context.scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
             <div className="segment-prompt-actions">
               <TabNav label="提示词语言" items={[{ value: 'zh', label: '中文' }, { value: 'en', label: '英文' }]} selected={language} onChange={setLanguage} />
               {prompt && <CopyButton label="复制" text={prompt} />}

@@ -77,6 +77,8 @@ class GenerationContextTests(unittest.TestCase):
                     self.assertEqual(context['issues'], [])
                     self.assertLess(context['scriptHtml'].index('时间'), context['scriptHtml'].index('时长'))
                     self.assertLess(context['scriptHtml'].index('时长'), context['scriptHtml'].index('景别'))
+                    self.assertEqual([(shot['id'], shot['duration']) for shot in context['shots']], [('EP001-SH001', 3)])
+                    self.assertIn(run + '当次原文', context['shots'][0]['html'])
                     self.assertIn(run, client.get(context['scriptUrl']).text)
                     self.assertEqual(client.get(context['references']['common'][0]['url']).text, run + '公共图.png')
                     self.assertEqual(client.get(context['references']['segment'][0]['url']).text, run + '首帧.png')
@@ -104,6 +106,7 @@ class GenerationContextTests(unittest.TestCase):
         self.assertIn('R001当次原文', context['scriptHtml'])
         self.assertEqual(context['prompts']['english'], 'R001 actual submitted prompt')
         self.assertEqual(context['source'], 'EP001-C001-P001-R003-二采')
+        self.assertEqual(context['shots'], self.videos()[0]['context']['shots'])
 
     def test_second_pass_uses_its_own_snapshot_and_retains_source(self):
         self.add_run('R001')
@@ -138,12 +141,40 @@ class GenerationContextTests(unittest.TestCase):
         (self.project / (root + '/输入素材/首帧.png')).unlink()
         result = self.videos()[0]['context']
         self.assertEqual(result['scriptHtml'], '')
+        self.assertEqual(result['shots'], [])
         self.assertTrue(result['references']['segment'][0]['missing'])
         self.assertIn('文件版本与记录不一致', ' '.join(result['issues']))
         (self.project / (root + '/输入映射.json')).unlink()
         result = self.videos()[0]['context']
         self.assertEqual(result['scriptHtml'], '')
         self.assertEqual(result['prompts']['english'], '')
+
+    def test_shots_keep_historical_order_durations_and_scene_times(self):
+        context, _, _ = self.add_run('R001')
+        text = ('- 文档版本：v001\n## 1. 镜头正文\n### 分段 P001\n'
+                '#### EP001-SH003\n**时间**：00:11-00:14\n**时长**：3秒\n**景别**：第一镜。\n'
+                '#### EP001-SH004\n**时间**：00:14-00:17.5\n**时长**：3.5秒。\n**景别**：第二镜。\n'
+                '### 分段 P002\n#### EP001-SH005\n**时长**：9秒\n下一段。\n')
+        self.write(context['storyboard']['file'], text)
+        result = self.videos()[0]['context']
+        self.assertEqual([(shot['id'], shot['duration']) for shot in result['shots']],
+                         [('EP001-SH003', 3), ('EP001-SH004', 3.5)])
+        self.assertIn('00:11-00:14', result['shots'][0]['html'])
+        self.assertIn('第一镜', result['shots'][0]['html'])
+        self.assertNotIn('第二镜', result['shots'][0]['html'])
+        self.assertNotIn('下一段', result['shots'][1]['html'])
+        self.assertEqual(result['issues'], [])
+        self.assertEqual((self.project / context['storyboard']['file']).read_text(encoding='utf-8'), text)
+
+    def test_missing_or_invalid_shot_duration_is_not_invented(self):
+        context, _, _ = self.add_run('R001')
+        for value in ('', '**时长**：0秒', '**时长**：待定', '**时长**：-3秒'):
+            with self.subTest(value=value):
+                self.write(context['storyboard']['file'], self.storyboard('v001', '原文保持').replace('**时长**：3秒', value))
+                result = self.videos()[0]['context']
+                self.assertIsNone(result['shots'][0]['duration'])
+                self.assertIn('原文保持', result['scriptHtml'])
+                self.assertIn('无法跟视频对齐', ' '.join(result['issues']))
 
     def test_context_sources_cannot_escape_project_or_form_a_cycle(self):
         context, root, _ = self.add_run('R001')

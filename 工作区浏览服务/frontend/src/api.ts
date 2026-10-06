@@ -7,6 +7,7 @@ export const projectUrl = (name: string) => `/api/projects/${encodeURIComponent(
 export const styleUrl = (path: string) => `/api/krea2/files/${path.split('/').map(encodeURIComponent).join('/')}`;
 export interface GenerationContext {
   scriptHtml: string; scriptUrl?: string; source?: string; issues: string[];
+  shots: { id: string; duration: number | null; html: string }[];
   prompts: { english: string; chinese: string; englishUrl?: string; chineseUrl?: string };
   references: Record<'common' | 'segment', { name: string; label: string; url?: string; missing?: boolean }[]>;
 }
