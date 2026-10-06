@@ -40,7 +40,7 @@ export default function Project() {
       <div className="muted">上次同步：{status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '—'}</div>
       <Breadcrumbs items={[name, overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')]} />
     </PageHeader>
-    <Result loading={status.isPending || overview.isPending} error={status.error || overview.error} />
+    <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} />
     {overview.data && <>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
       {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
@@ -51,7 +51,7 @@ export default function Project() {
 }
 function SectionPane({ project, section, revision, active }: { project: string; section: string; revision: number; active: boolean }) {
   const query = useQuery({ queryKey: ['section', project, section, revision], queryFn: () => get<RecordData>(`${projectUrl(project)}/sections/${encodeURIComponent(section)}`), enabled: active, placeholderData: previous => previous });
-  return <section className="panel" hidden={!active}><h2>{section === '00-项目定位' ? '项目定位' : query.data?.title && query.data.title !== '未记录' ? query.data.title : section.replace(/^\d+-/, '')}</h2><Result loading={query.isPending} error={query.error} />{query.data && <Section value={query.data} project={project} section={section} revision={revision} />}</section>;
+  return <section className="panel" hidden={!active}><h2>{section === '00-项目定位' ? '项目定位' : query.data?.title && query.data.title !== '未记录' ? query.data.title : section.replace(/^\d+-/, '')}</h2><Result page loading={active && query.isPending} error={query.error} />{query.data && <Section value={query.data} project={project} section={section} revision={revision} />}</section>;
 }
 function Section({ value, project, section, revision }: { value: RecordData; project: string; section: string; revision: number }) {
   if (value.kind === 'people' || value.kind === 'scenes' || value.kind === 'props') return <Assets value={value} project={project} revision={revision} />;

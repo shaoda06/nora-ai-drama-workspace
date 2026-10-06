@@ -10,10 +10,10 @@ import { DocumentInformation } from './components/DocumentInformation';
 import { Loading } from './components/Loading';
 
 export const PreviewContext = createContext<(item: FileItem) => void>(() => {});
-export function Result({ loading, error }: { loading: boolean; error: Error | null }) {
+export function Result({ loading, error, page = false }: { loading: boolean; error: Error | null; page?: boolean }) {
   const notify = useNotify();
   useEffect(() => { if (error) notify(error.message, 'error'); }, [error, notify]);
-  return loading && !error ? <Loading /> : null;
+  return loading && !error ? <Loading page={page} /> : null;
 }
 export function Rich({ html = '', languages = [] }: { html?: string; languages?: { value: string; label: string; text: string; html?: string }[] }) {
   const preview = useContext(PreviewContext);

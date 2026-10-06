@@ -26,12 +26,12 @@ function Home() {
     <div className="section-heading"><h2>共用工具</h2></div>
     <div className="grid"><EntryCard to="/krea2" title="Krea2 风格库" description="预览、提示词与资源更新" /></div>
     <div className="section-heading"><h2>短剧项目</h2><span className="muted">自动发现 projects 目录中的项目</span></div>
-    <Result loading={projects.isPending} error={projects.error} />
+    <Result page loading={projects.isPending} error={projects.error} />
     <div className="grid">{projects.data?.map(item => <EntryCard key={item.id} to={`/projects/${encodeURIComponent(item.id)}`} title={item.name} description="进入项目浏览" icon="▤" />)}</div>
     {projects.data?.length === 0 && <p className="muted">暂无项目。项目资料保存到工作区 projects 目录后会出现在这里。</p>}
   </div>;
 }
 function App() {
-  return <AppShell><Suspense fallback={<Loading />}><Routes><Route path="/" element={<Home />} /><Route path="/projects/:name" element={<Project />} /><Route path="/krea2" element={<Krea />} /><Route path="/history" element={<History />} /><Route path="*" element={<p>入口不存在。<Link to="/">回到工作区</Link></p>} /></Routes></Suspense></AppShell>;
+  return <AppShell><Suspense fallback={<Loading page />}><Routes><Route path="/" element={<Home />} /><Route path="/projects/:name" element={<Project />} /><Route path="/krea2" element={<Krea />} /><Route path="/history" element={<History />} /><Route path="*" element={<p>入口不存在。<Link to="/">回到工作区</Link></p>} /></Routes></Suspense></AppShell>;
 }
 createRoot(document.getElementById('root')!).render(<PageBoundary><QueryClientProvider client={client}><HashRouter><App /></HashRouter></QueryClientProvider></PageBoundary>);

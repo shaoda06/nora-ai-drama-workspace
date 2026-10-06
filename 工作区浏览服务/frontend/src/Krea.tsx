@@ -26,7 +26,7 @@ export default function Krea() {
     {controlsRoot && createPortal(<div className="toolbar"><SearchField label="搜索风格" placeholder="搜索风格名称、分类" value={search} onChange={value => { setSearch(value); setPage(1); }} />
       <select aria-label="资源库" value={library} onChange={event => { setLibrary(event.target.value); setCategory(''); setPage(1); }}><option value="">全部资源库</option><option value="krea2_styles">风格库</option><option value="Krea2_moodboard">灵感库</option></select>
       <select aria-label="风格分类" value={category} onChange={event => { setCategory(event.target.value); setPage(1); }}><option value="">全部分类</option>{catalogue.data?.categories.map((item: string) => <option key={item}>{item}</option>)}</select><span className="muted">{catalogue.data?.total ?? '…'} 个风格</span>
-    </div>, controlsRoot)}<Result loading={catalogue.isPending} error={catalogue.error} />
+    </div>, controlsRoot)}<Result page loading={catalogue.isPending} error={catalogue.error} />
     <div className="style-grid">{catalogue.data?.items.map((item: RecordData) => <button className="style-card" key={item.id} onClick={() => setSelected(item.id)}>{item.image ? <img loading="lazy" src={styleUrl(item.image)} alt={item.name_cn || item.name} /> : <div className="cover">图片缺失</div>}<span><strong>{item.name_cn || item.name}</strong><small>{item.name}</small><small>{item.category_name}</small></span></button>)}</div>
     <Pagination page={page} total={catalogue.data?.total || 0} change={setPage} />
     {selected && <Style identity={selected} version={version} close={() => setSelected(null)} />}
