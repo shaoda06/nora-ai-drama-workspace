@@ -29,6 +29,7 @@ export function EpisodeProduction({ items, selected, onSelect }: { items: FileIt
   return current ? <div className="episode-detail">
     {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={id => { setScene(id); setSegment(''); }} />}
     <div className="episode-scene-content" aria-label={selectedScene ? `场次 ${selectedScene} 内容` : '场次内容'}>
+      {selectedScene && <div className="video-placeholder scene-video-placeholder" role="region" aria-label="场次视频区域">视频区域</div>}
       {segments.length > 0 && <div className="segment-scroll"><div className="segment-strip" role="group" aria-label="本场分段" style={{ gridTemplateColumns: segments.map(item => `${item.duration}fr`).join(' '), minWidth: `${segments.reduce((total, item) => total + item.duration, 0) / Math.min(...segments.map(item => item.duration)) * 40}px` }}>
         {segments.map(item => <button key={item.id} aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} title={`${item.id} · 计划时长 ${item.duration}秒`} aria-pressed={item.id === selectedSegment} onClick={() => setSegment(item.id)}><span>{item.id}</span><span>{item.duration}秒</span></button>)}
       </div></div>}
