@@ -113,7 +113,7 @@ export function Document({ value: latest }: { value: RecordData }) {
   }, [presentation.html]);
   return <div className="document">
     {changed && <p className="notice document-update">本文有新版本，当前阅读位置保持不变。<button onClick={() => setValue(latest)}>读取新版本</button></p>}
-    <div className={'meta' + (inlineStatus ? ' document-meta-inline' : '')}>{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}{inlineStatus && <Rich html={confirmation.badgeHtml} />}<Original url={value.url} /></div>
+    <div className={'meta' + (inlineStatus ? ' document-meta-inline' : '')}>{inlineStatus && <Rich html={confirmation.badgeHtml} />}{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}<Original url={value.url} /></div>
     <Rich html={confirmation.notesHtml} /><Rich html={value.boundaryHtml} />
     {value.summaryHtml && <div className="document-summary"><Rich html={value.summaryHtml} /></div>}
     {value.introHtml && <details className="document-sources"><summary>{value.documentKey === '00-项目定位/项目基本定位.md' ? '采用依据与关联资料' : '说明与来源'}</summary><Rich html={value.introHtml} /></details>}

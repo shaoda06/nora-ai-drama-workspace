@@ -214,16 +214,21 @@ class ServiceTests(unittest.TestCase):
         source = ('# 项目定位\n\n- 确认范围：画幅已确认，地理待定。\n'
                   '- 单集目标时长：1—2分钟\n- 确认依据：[采用](采用.md)\n'
                   '- 采用经过：旧42集改为71集，依据保留。\n\n## 1. 正文\n'
-                  '单集目标时长：这句话属于正文，应完整保留。\n')
+                  '单集目标时长：这句话属于正文，应完整保留。\n'
+                  '\n### 制作规格\n\n- 单集目标时长：2—3分钟\n')
         self.source.write_text(source, encoding='utf-8')
         section = self.client.get('/api/projects/示例项目/sections/00-项目定位').json()
         self.assertIn('地理待定', section['summaryHtml'])
-        self.assertIn('1—2分钟', section['summaryHtml'])
+        self.assertNotIn('单集目标时长', section['summaryHtml'])
+        self.assertIn('1—2分钟', section['introHtml'])
         self.assertNotIn('采用经过', section['summaryHtml'])
         self.assertNotIn('地理待定', section['introHtml'])
         self.assertIn('旧42集改为71集', section['introHtml'])
         self.assertIn('data-doc="00-项目定位/采用.md"', section['introHtml'])
         self.assertIn('这句话属于正文，应完整保留', section['bodyHtml'])
+        self.assertIn('制作规格', section['bodyHtml'])
+        self.assertIn('2—3分钟', section['bodyHtml'])
+        self.assertNotIn('2—3分钟', section['introHtml'])
         self.assertEqual(self.source.read_text(encoding='utf-8'), source)
 
 

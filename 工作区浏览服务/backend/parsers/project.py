@@ -984,8 +984,8 @@ def build_data(project):
     body = re.sub(r"^- 项目名称(?:或代号)?[:：].*\n?", "", body, flags=re.M)
     first_section = re.search(r"^## ", body, re.M)
     intro, main = (body[:first_section.start()], body[first_section.start():]) if first_section else ("", body)
-    summary_lines = re.findall(r"^-\s*(?:确认范围|单集目标时长)[:：].*$", intro, re.M)
-    intro = re.sub(r"^-\s*(?:确认范围|单集目标时长)[:：].*\n?", "", intro, flags=re.M)
+    summary_lines = re.findall(r"^-\s*确认范围[:：].*$", intro, re.M)
+    intro = re.sub(r"^-\s*确认范围[:：].*\n?", "", intro, flags=re.M)
     for key, digest in sources.items():
         if hashlib.sha256((project / key).read_bytes()).hexdigest() != digest:
             raise RuntimeError("Source changed while reading; rerun: " + key)

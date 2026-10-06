@@ -7,6 +7,7 @@ import type { FileItem, RecordData } from './api';
 import { Document, FileTree, Groups, Original, Preview, PreviewContext, Result, Rich } from './components';
 
 import { PageHeader } from './components/PageHeader';
+import { Breadcrumbs } from './components/Breadcrumbs';
 import { TabNav } from './components/TabNav';
 import { SearchField } from './components/SearchField';
 import { Pagination } from './components/Pagination';
@@ -30,7 +31,7 @@ export default function Project() {
     )}
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
       <div className="muted">{status.data?.updating ? '正在同步资料…' : `资料读取：${status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '读取中'}`}</div>
-      <div className="breadcrumbs"><span>{name} / </span><span aria-current="page">{overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')}</span></div>
+      <Breadcrumbs items={[name, overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')]} />
     </PageHeader>
     <Result loading={status.isPending || overview.isPending} error={status.error || overview.error} />
     {status.data?.error && <p className="error">同步失败，保留上一份可读资料：{status.data.error}</p>}

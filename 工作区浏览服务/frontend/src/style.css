@@ -37,3 +37,5 @@
 .document-summary .prose ul{list-style:none;padding:0;margin:0}.document-summary .prose li+li{margin-top:8px}
 .document-sources{margin:14px 0 18px}.document-sources>summary{color:var(--green);font-size:14px}
 .document-meta-inline{align-items:center;column-gap:12px}.document-meta-inline>.prose{display:inline-block}
+
+.breadcrumbs{font-size:15px;font-weight:600;color:inherit;line-height:1.6}.breadcrumbs [aria-current="page"]{color:var(--green)}.breadcrumb-separator{color:var(--muted);padding:0 4px}
