@@ -11,8 +11,8 @@ function SegmentReferences({ context }: { context?: GenerationContext }) {
     {context ? (['common', 'segment'] as const).map(group => <div className="segment-reference-group" key={group}>
       <h3>{group === 'common' ? '公共参考图' : '本组参考图'}</h3>
       <div className="segment-reference-images">{context.references[group].map((image, index) => <figure key={index}>
+        <figcaption>{image.label}</figcaption>
         {image.url ? <button className="reference-preview" onClick={() => preview({ kind: 'image', name: image.name, url: image.url })} aria-label={`查看 ${image.label} ${image.name}`}><img src={image.url} alt={image.name} loading="lazy" /></button> : <p className="muted">原图缺失</p>}
-        <figcaption>{image.label}<Original url={image.url} label="原图" /></figcaption>
       </figure>)}{!context.references[group].length && <p className="muted">{context.issues.length ? '该次参考图关联尚未完整记录。' : '该次未使用此类参考图。'}</p>}</div>
     </div>) : <span className="placeholder-label">参考图区域</span>}
   </section>;
@@ -44,17 +44,16 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
         <SegmentReferences context={context} />
       </div>
       <section className="segment-script" aria-label="分镜脚本与提示词区域">
-        <TabNav label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }]} selected={tab} onChange={setTab} disabled={!current} />
+        <div className="segment-script-header">
+          <TabNav label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }]} selected={tab} onChange={setTab} disabled={!current} />
+          <Original url={tab === 'script' ? context?.scriptUrl : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />
+        </div>
         <div className="segment-script-content">
         {!context ? <div className="script-placeholder">{tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}
-          {tab === 'script' ? context.scriptHtml ? <>
-            <div className="segment-script-actions"><Original url={context.scriptUrl} label="查看原文件" /></div>
-            <Rich html={context.scriptHtml} />
-          </> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
+          {tab === 'script' ? context.scriptHtml ? <Rich html={context.scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
             <div className="segment-prompt-actions">
               <TabNav label="提示词语言" items={[{ value: 'zh', label: '中文' }, { value: 'en', label: '英文' }]} selected={language} onChange={setLanguage} />
-              <Original url={context.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />
               {prompt && <CopyButton label="复制" text={prompt} />}
             </div>
             {prompt ? <pre className="segment-prompt-text">{prompt}</pre> : <div className="script-placeholder">该次{language === 'zh' ? '中文参考版' : '实际提交的英文提示词'}尚未关联或已缺失。</div>}
