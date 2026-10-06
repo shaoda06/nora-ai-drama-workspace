@@ -98,6 +98,29 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('进行中', data['children'][2]['statusHtml'])
         self.assertEqual(progress.read_bytes(), source)
 
+    def test_episode_scenes_follow_current_story_body_only(self):
+        folder = self.project / '09-剧集制作/EP001/02-剧集剧本'
+        folder.mkdir(parents=True)
+        script = folder / 'EP001-本集剧本.md'
+        script.write_text('# 本集剧本\n\n## 1. 故事剧本正文\n'
+                          '### EP001-C002\n剧情。\n### EP001-C001\n剧情。\n'
+                          '### EP001-C002\n重复标题。\n### EP002-C003\n其他集。\n'
+                          '## 2. 其他备注\n### EP001-C004\n不属于正文。\n', encoding='utf-8')
+        source = script.read_bytes()
+        history = self.project / '09-剧集制作/EP001/其他资料/历史版本'
+        history.mkdir(parents=True)
+        (history / 'EP001-本集剧本-旧版.md').write_text(
+            '## 1. 故事剧本正文\n### EP001-C009\n', encoding='utf-8')
+        outlines = self.project / '06-分集大纲'
+        outlines.mkdir()
+        (outlines / '分集索引.md').write_text(
+            '| 集号 | 一句话概要 | 大纲入口 |\n| --- | --- | --- |\n'
+            '| EP002 | 二 | [大纲](EP002-分集大纲.md) |\n', encoding='utf-8')
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
+        self.assertEqual(data['children'][0]['scenes'], ['C002', 'C001'])
+        self.assertEqual(data['children'][1]['scenes'], [])
+        self.assertEqual(script.read_bytes(), source)
+
     def test_discovery_and_dynamic_document(self):
         self.assertEqual(self.client.get('/api/projects').json()[0]['name'], '示例项目')
         section = self.client.get('/api/projects/示例项目/sections/00-项目定位')
