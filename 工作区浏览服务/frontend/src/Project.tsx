@@ -37,13 +37,13 @@ export default function Project() {
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   return <PreviewContext.Provider value={setPreview}>
     {syncRoot && createPortal(<>上次同步：{status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '—'}</>, syncRoot)}
+    <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
     {overview.data && (
       <div className="activity" role="region" aria-label="当前阶段">
         <div className="activity-heading"><strong>当前阶段</strong>{overview.data.active.length > 0 && <span>（<button className="link" onClick={() => setPreview({ kind: 'markdown', name: '项目进度', key: '项目进度.md', url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}` })}>查看完整进度</button>）</span>}</div>
         <div className="activity-items">{overview.data.active.length ? overview.data.active.map((item: RecordData) => <div className="activity-item" key={item.name}><strong>{item.name}</strong><button className="activity-state" aria-label={`${item.name}：${item.status}，查看待决事项`} onClick={() => setPreview({ kind: 'markdown', name: `${item.name} · 待决事项与下一步`, doc: { html: item.statusHtml + '<h3>待决事项</h3><p>' + item.pendingHtml + '</p><h3>下一步</h3><p>' + item.nextHtml + '</p>' }, key: `项目进度.md#${item.anchor}`, url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}#${item.anchor}` })}><Rich html={item.statusHtml} /></button></div>) : <span className="muted">未记录进行中或待确认阶段</span>}</div>
       </div>
     )}
-    <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
       <Breadcrumbs currentRef={currentPath} items={[{ label: overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), href: `#/projects/${encodeURIComponent(name)}`, onClick: () => setEpisode(null) }, ...(section === '09-剧集制作' && episode ? [{ label: `${episode} · ${episodeTitle}` }] : [])]} />
     </PageHeader>
     <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} />

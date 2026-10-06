@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { FileItem } from '../api';
+import { Rich } from '../components';
 import { TabNav } from './TabNav';
 import { Pagination } from './Pagination';
 import { EpisodeButton } from './EpisodeButton';
@@ -19,6 +20,7 @@ export function EpisodeProduction({ items, selected, onSelect }: { items: FileIt
   const selectedScene = scene || scenes[0] || '';
   const segments = current?.segments?.[selectedScene] || [];
   const selectedSegment = segment || segments[0]?.id || '';
+  const selectedScript = segments.find(item => item.id === selectedSegment)?.scriptHtml;
   const open = (name: string) => {
     setScene('');
     setSegment('');
@@ -30,6 +32,12 @@ export function EpisodeProduction({ items, selected, onSelect }: { items: FileIt
       {segments.length > 0 && <div className="segment-scroll"><div className="segment-strip" role="group" aria-label="本场分段" style={{ gridTemplateColumns: segments.map(item => `${item.duration}fr`).join(' '), minWidth: `${segments.reduce((total, item) => total + item.duration, 0) / Math.min(...segments.map(item => item.duration)) * 40}px` }}>
         {segments.map(item => <button key={item.id} aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} title={`${item.id} · 计划时长 ${item.duration}秒`} aria-pressed={item.id === selectedSegment} onClick={() => setSegment(item.id)}><span>{item.id}</span><span>{item.duration}秒</span></button>)}
       </div></div>}
+      {selectedSegment && <div className="segment-workspace" key={selectedScene + '/' + selectedSegment}>
+        <div className="video-placeholder" role="region" aria-label="视频区域" />
+        <section className="segment-script" aria-label={`分段 ${selectedSegment} 分镜脚本`}>
+          {selectedScript ? <Rich html={selectedScript} /> : <p className="muted">本段分镜正文尚未记录。</p>}
+        </section>
+      </div>}
     </div>
   </div> : <>
     <div ref={cards} className="episode-grid">{items.slice((page - 1) * 36, page * 36).map(item => <EpisodeButton key={item.key} item={item} onSelect={open} />)}</div>

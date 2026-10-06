@@ -1028,7 +1028,13 @@ def build_data(project, *, web_episode_navigation=False):
                 duration = row["分段计划时长（秒）"]
                 if not re.fullmatch(r"\d+(?:\.\d+)?", duration) or float(duration) <= 0:
                     raise ValueError(storyboard_index + "：" + row["分段"] + "的分段计划时长必须为正数秒")
-                episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration)})
+                storyboard_source = production + "/" + number + "/03-分镜脚本/" + number + "-" + identity[1] + "-场次分镜.md"
+                shots = re.search(r"^##[ \t]+1\.[ \t]*镜头正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)",
+                                  read(storyboard_source) or "", re.M | re.S)
+                segment_script = re.search(r"^###[ \t]+分段[ \t]+" + re.escape(identity[2])
+                                           + r"[ \t]*\n.*?(?=^###[ \t]|\Z)", shots[1], re.M | re.S) if shots else None
+                episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration),
+                    "scriptHtml": markdown(segment_script[0] if segment_script else "", storyboard_source)})
         episodes.append(episode_node)
     catalogues[production] = {"kind": "group", "key": production, "name": "剧集制作", "children": episodes,
         "statistics": {"total": len(episode_numbers), "completed": counts["已完成"],

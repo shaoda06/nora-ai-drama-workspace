@@ -149,9 +149,46 @@ class ServiceTests(unittest.TestCase):
             '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
             '| EP001-C001 | EP001-C001-P099 | 15 |\n', encoding='utf-8')
         data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
-        self.assertEqual(data['segments'], {'C002': [{'id': 'P001', 'duration': 11}],
-                                           'C001': [{'id': 'P002', 'duration': 5.5}, {'id': 'P001', 'duration': 4.75}]})
+        self.assertEqual(data['segments'], {'C002': [{'id': 'P001', 'duration': 11, 'scriptHtml': ''}],
+                                           'C001': [{'id': 'P002', 'duration': 5.5, 'scriptHtml': ''}, {'id': 'P001', 'duration': 4.75, 'scriptHtml': ''}]})
         self.assertEqual(index.read_bytes(), source)
+
+    def test_segment_script_uses_only_current_shot_body(self):
+        episode = self.project / '09-剧集制作/EP001'
+        (episode / '02-剧集剧本').mkdir(parents=True)
+        (episode / '02-剧集剧本/EP001-本集剧本.md').write_text(
+            '## 1. 故事剧本正文\n### EP001-C001\n第一场。\n### EP001-C002\n第二场。\n', encoding='utf-8')
+        (episode / '03-分镜脚本').mkdir()
+        (episode / '03-分镜脚本/EP001-分镜索引.md').write_text(
+            '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+            '| EP001-C001 | EP001-C001-P001 | 5 |\n'
+            '| EP001-C001 | EP001-C001-P002 | 10 |\n'
+            '| EP001-C002 | EP001-C002-P001 | 7 |\n', encoding='utf-8')
+        source = episode / '03-分镜脚本/EP001-C001-场次分镜.md'
+        source.write_text('# 场次分镜\n\n场头说明。\n## 1. 镜头正文\n'
+                          '### 分段 P001\n#### EP001-SH001\n**景别**：近景。\n'
+                          '**台词**：第一段原对白。\n[资料](../../../03-人物资料/CH001-资料卡.md)\n<script>正文文字</script>\n'
+                          '### 分段 P002\n#### EP001-SH002\n**台词**：第二段原对白。\n'
+                          '## 2. 视频分段\n### 分段 P001\n资源规划，不是镜头正文。\n', encoding='utf-8')
+        before = source.read_bytes()
+        (episode / '03-分镜脚本/EP001-C002-场次分镜.md').write_text(
+            '## 1. 镜头正文\n### 分段 P001\n#### EP001-SH003\n另一场正文。\n', encoding='utf-8')
+        history = episode / '其他资料/历史版本'
+        history.mkdir(parents=True)
+        (history / 'EP001-C001-场次分镜-旧版.md').write_text(
+            '## 1. 镜头正文\n### 分段 P001\n旧版正文。\n', encoding='utf-8')
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]['segments']
+        first = data['C001'][0]['scriptHtml']
+        self.assertIn('<strong>景别</strong>：近景。', first)
+        self.assertIn('第一段原对白。', first)
+        self.assertIn('/api/projects/', first)
+        self.assertIn('03-', first)
+        self.assertIn('&lt;script&gt;正文文字&lt;/script&gt;', first)
+        for excluded in ('第二段原对白。', '场头说明。', '资源规划', '另一场正文。', '旧版正文。'):
+            self.assertNotIn(excluded, first)
+        self.assertIn('第二段原对白。', data['C001'][1]['scriptHtml'])
+        self.assertIn('另一场正文。', data['C002'][0]['scriptHtml'])
+        self.assertEqual(source.read_bytes(), before)
 
     def test_segment_duration_must_be_positive(self):
         episode = self.project / '09-剧集制作/EP001'
