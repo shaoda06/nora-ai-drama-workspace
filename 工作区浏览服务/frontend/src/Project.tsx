@@ -22,6 +22,12 @@ export default function Project() {
   const revision = status.data?.revision || 1;
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   return <PreviewContext.Provider value={setPreview}>
+    {overview.data && (
+      <div className="activity" role="region" aria-label="当前阶段">
+        <div className="activity-heading"><strong>当前阶段</strong>{overview.data.active.length > 0 && <span>（<button className="link" onClick={() => setPreview({ kind: 'markdown', name: '项目进度', key: '项目进度.md', url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}` })}>查看完整进度</button>）</span>}</div>
+        <div className="activity-items">{overview.data.active.length ? overview.data.active.map((item: RecordData) => <div className="activity-item" key={item.name}><strong>{item.name}</strong><button className="activity-state" aria-label={`${item.name}：${item.status}，查看待决事项`} onClick={() => setPreview({ kind: 'markdown', name: `${item.name} · 待决事项与下一步`, doc: { html: item.statusHtml + '<h3>待决事项</h3><p>' + item.pendingHtml + '</p><h3>下一步</h3><p>' + item.nextHtml + '</p>' }, key: `项目进度.md#${item.anchor}`, url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}#${item.anchor}` })}><Rich html={item.statusHtml} /></button></div>) : <span className="muted">未记录进行中或待确认阶段</span>}</div>
+      </div>
+    )}
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
       <div className="muted">{status.data?.updating ? '正在同步资料…' : `资料读取：${status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '读取中'}`}</div>
       <div className="breadcrumbs"><span>{name} / </span><span aria-current="page">{overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')}</span></div>
@@ -29,10 +35,6 @@ export default function Project() {
     <Result loading={status.isPending || overview.isPending} error={status.error || overview.error} />
     {status.data?.error && <p className="error">同步失败，保留上一份可读资料：{status.data.error}</p>}
     {overview.data && <>
-      <div className="activity" role="region" aria-label="当前阶段">
-        <div className="activity-heading"><strong>当前阶段</strong>{overview.data.active.length > 0 && <span>（<button className="link" onClick={() => setPreview({ kind: 'markdown', name: '项目进度', key: '项目进度.md', url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}` })}>查看完整进度</button>）</span>}</div>
-        <div className="activity-items">{overview.data.active.length ? overview.data.active.map((item: RecordData) => <div className="activity-item" key={item.name}><strong>{item.name}</strong><button className="activity-state" aria-label={`${item.name}：${item.status}，查看待决事项`} onClick={() => setPreview({ kind: 'markdown', name: `${item.name} · 待决事项与下一步`, doc: { html: item.statusHtml + '<h3>待决事项</h3><p>' + item.pendingHtml + '</p><h3>下一步</h3><p>' + item.nextHtml + '</p>' }, key: `项目进度.md#${item.anchor}`, url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}#${item.anchor}` })}><Rich html={item.statusHtml} /></button></div>) : <span className="muted">未记录进行中或待确认阶段</span>}</div>
-      </div>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
       {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
       {visited.map(label => <SectionPane key={name + '/' + label} project={name} section={label} revision={revision} active={label === section} />)}
