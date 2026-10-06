@@ -72,6 +72,13 @@ export function Document({ value: latest }: { value: RecordData }) {
   const presentation = useMemo(() => {
     if (value.documentKey !== '00-项目定位/项目基本定位.md') return { html: body, languages: [] };
     const document = new DOMParser().parseFromString(body, 'text/html');
+    const visual = Array.from(document.querySelectorAll('h3')).find(el => el.textContent?.trim() === '视觉规格');
+    if (visual?.nextElementSibling?.tagName === 'UL') {
+      const hiddenFields = new Set(['画风正文版本', '验证范围', '画风确认依据', '画幅待确认事项', '画幅确认依据']);
+      Array.from(visual.nextElementSibling.children).forEach(item => {
+        if (hiddenFields.has((item.textContent || '').split(/[:：]/, 1)[0].trim())) item.remove();
+      });
+    }
     const chinese = Array.from(document.querySelectorAll('h3')).find(el => el.textContent === '画风与美术实现正文');
     const english = Array.from(document.querySelectorAll('h3')).find(el => el.textContent?.startsWith('画风与美术实现英文适配'));
     const languages: { value: string; label: string; text: string; html?: string }[] = [];
