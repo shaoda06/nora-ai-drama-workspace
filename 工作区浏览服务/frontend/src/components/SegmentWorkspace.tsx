@@ -20,9 +20,9 @@ function SegmentReferences({ context }: { context?: GenerationContext }) {
   </section>;
 }
 
-export function SegmentWorkspace({ items, selection: { stage, key: selected }, onSelectionChange, playbackControl, scenePlaybackTime, onLocalPlay }: {
+export function SegmentWorkspace({ items, selection: { stage, key: selected }, onSelectionChange, playbackControl, autoPlay, playbackSession, onVideoEnded, onVideoError }: {
   items: VideoItem[]; selection: { stage: string; key: string }; onSelectionChange: (selection: { stage: string; key: string }) => void;
-  playbackControl: ReactNode; scenePlaybackTime?: number; onLocalPlay: () => void;
+  playbackControl: ReactNode; autoPlay: boolean; playbackSession: number; onVideoEnded: () => void; onVideoError: () => void;
 }) {
   const [tab, setTab] = useState('script');
   const [language, setLanguage] = useState('zh');
@@ -36,7 +36,7 @@ export function SegmentWorkspace({ items, selection: { stage, key: selected }, o
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
   const shots = context?.shots || [];
   const canAlign = shots.length > 0 && shots.every(shot => shot.duration !== null);
-  const time = scenePlaybackTime ?? (playback.key === current?.key ? playback.time : 0);
+  const time = playback.key === current?.key ? playback.time : 0;
   let shotEnd = 0;
   const activeShot = canAlign ? shots.find(shot => {
     shotEnd += shot.duration!;
@@ -55,7 +55,7 @@ export function SegmentWorkspace({ items, selection: { stage, key: selected }, o
     </div>
     <div className="segment-workspace">
       <div className="segment-media-column">
-        <SegmentVideo key={current?.key || 'empty'} current={current} syncTime={scenePlaybackTime} onPlay={onLocalPlay} onTimeChange={time => setPlayback({ key: current!.key, time })} />
+        <SegmentVideo key={playbackSession + '/' + (current?.key || 'empty')} current={current} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} />
         <SegmentReferences context={context} />
       </div>
       <section className="segment-script" aria-label="分镜脚本与提示词区域">

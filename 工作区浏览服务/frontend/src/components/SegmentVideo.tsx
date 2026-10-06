@@ -10,22 +10,19 @@ export const candidateLabel = (number: number) => {
 
 export const latestVideo = (items: VideoItem[]) => items.reduce<VideoItem | undefined>((latest, item) => !latest || Number(item.run.slice(1)) > Number(latest.run.slice(1)) ? item : latest, undefined);
 
-export function SegmentVideo({ current, onTimeChange, scene = false, autoPlay = false, syncTime, onPlay, onEnded, onError }: {
-  current?: VideoItem; onTimeChange: (time: number) => void; scene?: boolean; autoPlay?: boolean; syncTime?: number;
-  onPlay?: () => void; onEnded?: () => void; onError?: () => void;
+export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError }: {
+  current?: VideoItem; onTimeChange: (time: number) => void; autoPlay?: boolean;
+  onEnded?: () => void; onError?: () => void;
 }) {
   const [error, setError] = useState(false);
   const video = useRef<HTMLVideoElement>(null);
   useEffect(() => {
-    if (scene && !autoPlay) video.current?.pause();
-  }, [scene, autoPlay]);
-  useEffect(() => {
-    if (syncTime !== undefined && video.current!.readyState >= 1) video.current!.currentTime = syncTime;
-  }, [syncTime]);
+    if (!autoPlay) video.current?.pause();
+  }, [autoPlay]);
   const label = (item: VideoItem) => item.approved ? '正式版' : candidateLabel(item.candidateNumber);
-  return <section className={scene ? 'segment-video scene-video' : 'segment-video'} aria-label={scene ? '场次视频区域' : '视频区域'}>
-    {current ? <video ref={video} key={current.key} controls autoPlay={autoPlay} preload="metadata" src={current.url} aria-label={`${label(current)} ${current.run} ${current.stage}`} onError={() => { setError(true); onError?.(); }} onPlay={onPlay}
-      onLoadedMetadata={event => { if (syncTime !== undefined) event.currentTarget.currentTime = syncTime; onTimeChange(event.currentTarget.currentTime); }}
+  return <section className="segment-video" aria-label="视频区域">
+    {current ? <video ref={video} key={current.key} controls autoPlay={autoPlay} preload="metadata" src={current.url} aria-label={`${label(current)} ${current.run} ${current.stage}`} onError={() => { setError(true); onError?.(); }}
+      onLoadedMetadata={event => onTimeChange(event.currentTarget.currentTime)}
       onTimeUpdate={event => onTimeChange(event.currentTarget.currentTime)}
       onSeeked={event => onTimeChange(event.currentTarget.currentTime)}
       onPause={event => onTimeChange(event.currentTarget.currentTime)}
