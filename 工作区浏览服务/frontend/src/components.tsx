@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { get, projectUrl } from './api';
@@ -56,9 +56,14 @@ function Folder({ item }: { item: FileItem }) {
     {open && <FileTree items={item.children || item.files || []} />}</details>;
 }
 export function Groups({ groups = [], chapter = false }: { groups?: Group[]; chapter?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const contentId = useId();
   if (!groups.length) return null;
   const folders = <div>{groups.map(group => <Folder key={group.name} item={{ kind: 'group', ...group }} />)}</div>;
-  return chapter ? <section className="groups"><h2>其他资料</h2>{folders}</section> : <details className="groups"><summary>其他资料</summary>{folders}</details>;
+  return chapter ? <section className="groups">
+    <div className="groups-heading"><h2>其他资料</h2><button className="link groups-toggle" aria-label={`${open ? '收起' : '展开'}其他资料`} aria-expanded={open} aria-controls={contentId} onClick={() => setOpen(!open)}>{open ? '收起 ▴' : '展开 ▾'}</button></div>
+    {open && <div id={contentId} className="groups-content">{folders}</div>}
+  </section> : <details className="groups"><summary>其他资料</summary>{folders}</details>;
 }
 export function Document({ value: latest }: { value: RecordData }) {
   const [value, setValue] = useState(latest);
