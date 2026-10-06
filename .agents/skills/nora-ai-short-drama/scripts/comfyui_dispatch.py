@@ -9,6 +9,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'comfyui-scripts'))
 import comfyui_client as client
+from generation_context import prepare_generation_context
 
 TASK_TYPES = ('image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess')
 VIDEO_TASK_TYPES = ('video-first-pass', 'video-second-pass')
@@ -163,6 +164,11 @@ def dispatch(args):
                             raise
                         stream.write(client.encoded({'ok': True, 'url': url, 'time': client.now(), 'data': uploaded}))
                 workflow[item['node']]['inputs'][item['input']] = uploaded['input_path']
+            if args.task_type in DEFAULT_ONLY_TASK_TYPES:
+                try:
+                    prepare_generation_context(args.project, record, workflow, args.task_type)
+                except KeyError as exc:
+                    raise ValueError('生成资料输入映射或API缺少字段：' + str(exc)) from exc
             # Once a POST is attempted, errors propagate: never try the next endpoint.
             result = client.submit(remote, args, workflow=workflow)
             return {'dispatch_state': 'accepted', 'url': url, 'checks': checks, **result}
@@ -177,7 +183,7 @@ def parser():
     p.add_argument('--workflow', required=True, help='Prepared API JSON; unchanged except declared uploaded input paths')
     p.add_argument('--eligible-url', action='append', required=True, help='Repeat for each endpoint whose nodes/models and existing inputs were verified')
     p.add_argument('--uploads', help='Optional JSON array of local files and loader bindings; paths relative to cwd')
-    p.add_argument('--record-dir', required=True, help='Existing business evidence directory; no separate scheduling ledger')
+    p.add_argument('--record-dir', required=True, help='Existing business evidence directory; video tasks require 输入映射.json and automatically save generation inputs before POST')
     p.add_argument('--attempt-name', default='submit-attempt.json', help='Exclusive attempt evidence filename')
     p.add_argument('--request-name', default='request.json', help='Actual request evidence filename')
     p.add_argument('--response-name', default='response.json', help='Actual submission response filename')

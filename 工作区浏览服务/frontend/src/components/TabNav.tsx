@@ -1,6 +1,6 @@
 import { TabSelect } from './TabSelect';
 
-export function TabNav({ items, selected, onChange, label, vertical = false, groups, disabled = false }: {
+export function TabNav({ items, selected, onChange, label, vertical = false, groups, disabled = false, compact = false }: {
   items: { value: string; label: string; disabled?: boolean }[];
   selected: string;
   onChange: (value: string) => void;
@@ -8,8 +8,9 @@ export function TabNav({ items, selected, onChange, label, vertical = false, gro
   vertical?: boolean;
   groups?: { label: string; values: string[] }[];
   disabled?: boolean;
+  compact?: boolean;
 }) {
-  return <nav className={vertical ? 'tabs tabs-vertical' : groups ? 'tabs tabs-grouped' : 'tabs'} aria-label={label}>
+  return <nav className={(vertical ? 'tabs tabs-vertical' : groups ? 'tabs tabs-grouped' : 'tabs') + (compact ? ' tabs-compact' : '')} aria-label={label}>
     {items.map(item => {
       const group = groups?.find(group => group.values.includes(item.value));
       if (!group) return <button key={item.value} disabled={disabled || item.disabled} aria-current={selected === item.value ? 'page' : undefined} onClick={() => onChange(item.value)}>{item.label}</button>;

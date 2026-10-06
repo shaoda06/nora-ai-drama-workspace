@@ -61,14 +61,14 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
           <Original url={tab === 'script' ? context?.scriptUrl : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />
         </div>
         {tab === 'script' && <div className="segment-script-modes">
-          <TabNav label="分镜显示方式" items={[{ value: 'all', label: '显示全部' }, { value: 'aligned', label: '跟视频对齐', disabled: !canAlign }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
+          <TabNav compact label="分镜显示方式" items={[{ value: 'all', label: '显示全部' }, { value: 'aligned', label: '跟视频对齐', disabled: !canAlign }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
         </div>}
         <div className="segment-script-content" ref={scriptContent}>
         {!context ? <div className="script-placeholder">{tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}
           {tab === 'script' ? context.scriptHtml ? <Rich html={aligned ? activeShot!.html : context.scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
             <div className="segment-prompt-actions">
-              <TabNav label="提示词语言" items={[{ value: 'zh', label: '中文' }, { value: 'en', label: '英文' }]} selected={language} onChange={setLanguage} />
+              <TabNav compact label="提示词语言" items={[{ value: 'zh', label: '中文' }, { value: 'en', label: '英文' }]} selected={language} onChange={setLanguage} />
               {prompt && <CopyButton label="复制" text={prompt} />}
             </div>
             {prompt ? <pre className="segment-prompt-text">{prompt}</pre> : <div className="script-placeholder">该次{language === 'zh' ? '中文参考版' : '实际提交的英文提示词'}尚未关联或已缺失。</div>}

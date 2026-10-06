@@ -1,4 +1,5 @@
 import json
+import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
@@ -8,6 +9,11 @@ from fastapi.testclient import TestClient
 from backend import main
 from backend.parsers.project import build_data
 from backend.services.projects import ProjectStore
+
+spec = importlib.util.spec_from_file_location('generation_writer', Path(__file__).resolve().parents[2] /
+    '.agents/skills/nora-ai-short-drama/scripts/generation_context.py')
+writer = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(writer)
 
 
 class GenerationContextTests(unittest.TestCase):
@@ -59,6 +65,137 @@ class GenerationContextTests(unittest.TestCase):
 
     def videos(self):
         return build_data(self.project, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos']
+
+    def automatic_task(self, selected=(0, 1), common_enabled=True):
+        root = self.project / (self.episode + '/其他资料/执行附件/EP001-C001-P001-R004-一采')
+        script = self.episode + '/03-分镜脚本/EP001-C001-场次分镜.md'
+        self.write(script, self.storyboard('v21', '当次第一段') + '**时间**：00:11-00:14\n**时长**：3秒\n第二段原文。\n')
+        self.write(self.episode + '/03-分镜脚本/EP001-分镜索引.md',
+                   '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+                   '| EP001-C001 | EP001-C001-P001 | 11 |\n| EP001-C001 | EP001-C001-P002 | 6 |\n')
+        self.write('图片/公共.png', '提交时公共原图')
+        self.write('图片/本组.png', '提交时本组原图')
+        common = {'prompt': '实际公共正文', 'commonEnabled': common_enabled, 'taskType': 'r2v',
+                  'refs': [{'imageFile': 'remote/common.png', 'index': 0}]}
+        groups = [{'prompt': '第一段实际英文', 'refs': [{'imageFile': 'remote/local.png', 'index': 1}]},
+                  {'prompt': '第二段实际英文', 'refs': []}]
+        mapping = {'scene': 'EP001-C001', 'scene_storyboard_version': 'v21', 'selected_indices': list(selected),
+                   'segments': [], 'uploads': [{'input_path': 'remote/common.png', 'file': '图片/公共.png'},
+                                              {'input_path': 'remote/local.png', 'file': '图片/本组.png'}],
+                   'prompt_id': '既有事实不得修改', 'checks': {'原执行检查': True}}
+        for number, run in ((1, 'R004'), (2, 'R003')):
+            identity = f'EP001-C001-P{number:03d}-{run}-一采'
+            directory = self.episode + '/其他资料/执行附件/' + identity
+            mapping['segments'].append({'segment': f'EP001-C001-P{number:03d}', 'round': run,
+                                        'local_execution_dir': str(self.project / directory)})
+            if number - 1 in selected:
+                self.write(directory + '/中文提示词参考版.txt', f'当次中文{number}')
+                self.write(self.episode + '/其他资料/候选视频/' + identity + '.mp4', identity)
+        self.write(str((root / '输入映射.json').relative_to(self.project)), json.dumps(mapping, ensure_ascii=False))
+        timeline = {'global': common, 'segments': groups, 'editMode': 'segment', 'runSelectEnabled': len(selected) != 2, 'runSelection': list(selected)}
+        workflow = {'105001': {'class_type': 'MiniMaxH3Director',
+                              'inputs': {'global_prompt': common['prompt'], 'timeline_data': json.dumps(timeline)}}}
+        return root, workflow, mapping
+
+    def test_automatic_submission_inputs_are_read_as_frozen_history(self):
+        root, workflow, before = self.automatic_task()
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        mapping = json.loads((root / '输入映射.json').read_text(encoding='utf-8'))
+        self.assertEqual({key: mapping[key] for key in before}, before)
+        self.assertEqual([context['identity'] for context in mapping['generation_contexts']],
+                         ['EP001-C001-P001-R004-一采', 'EP001-C001-P002-R003-一采'])
+        self.write(self.episode + '/03-分镜脚本/EP001-C001-场次分镜.md', self.storyboard('v99', '后来新版'))
+        self.write('图片/公共.png', '后来更新原图')
+        with patch.object(main, 'store', ProjectStore(self.project.parent)):
+            with TestClient(main.app) as client:
+                segments = client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]['segments']['C001']
+                first, second = [segment['videos'][0]['context'] for segment in segments]
+                self.assertIn('当次第一段', first['scriptHtml'])
+                self.assertNotIn('后来新版', first['scriptHtml'])
+                self.assertIn('第二段原文', second['scriptHtml'])
+                self.assertEqual(first['prompts']['english'], '实际公共正文\n\n第一段实际英文')
+                self.assertEqual(second['prompts']['chinese'], '当次中文2')
+                self.assertEqual(first['issues'], [])
+                self.assertEqual(second['issues'], [])
+                self.assertEqual(client.get(first['references']['common'][0]['url']).text, '提交时公共原图')
+                self.assertEqual(client.get(first['references']['segment'][0]['url']).text, '提交时本组原图')
+                self.assertEqual([(shot['id'], shot['duration']) for shot in second['shots']], [('EP001-SH002', 3)])
+
+    def test_selection_and_disabled_common_inputs_follow_actual_api(self):
+        root, workflow, _ = self.automatic_task(selected=(1,), common_enabled=False)
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        contexts = json.loads((root / '输入映射.json').read_text(encoding='utf-8'))['generation_contexts']
+        self.assertEqual(len(contexts), 1)
+        self.assertEqual(contexts[0]['identity'], 'EP001-C001-P002-R003-一采')
+        self.assertEqual(contexts[0]['references'], {'common': [], 'segment': []})
+        self.assertEqual((self.project / contexts[0]['prompts']['english']).read_text(encoding='utf-8').strip(), '第二段实际英文')
+        self.assertFalse((root / '模型提示词.txt').exists())
+
+    def test_external_groups_cannot_be_misrecorded_as_native_inputs(self):
+        root, workflow, _ = self.automatic_task()
+        workflow['105001']['inputs']['r2v_groups'] = ['external-node', 0]
+        with self.assertRaisesRegex(ValueError, '不可按原生组记录外部输入'):
+            writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        self.assertFalse((root / '分镜脚本.md').exists())
+
+    def test_automatic_references_follow_slots_and_local_replacement(self):
+        root, workflow, _ = self.automatic_task(selected=(0,))
+        timeline = json.loads(workflow['105001']['inputs']['timeline_data'])
+        timeline['global']['refs'] = [{'imageFile': 'remote/common.png', 'index': 2}, {'imageFile': 'remote/common.png', 'index': 0}]
+        timeline['segments'][0]['refs'] = [{'imageFile': 'remote/local.png', 'index': 2}]
+        workflow['105001']['inputs']['timeline_data'] = json.dumps(timeline)
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        context = json.loads((root / '输入映射.json').read_text(encoding='utf-8'))['generation_contexts'][0]
+        self.assertEqual([item['label'] for item in context['references']['common']], ['<Picture 1>'])
+        self.assertEqual([item['label'] for item in context['references']['segment']], ['<Picture 3>'])
+
+    def test_automatic_second_pass_saves_own_inputs_and_source(self):
+        root, workflow, mapping = self.automatic_task(selected=(0,))
+        directory = root.with_name('EP001-C001-P001-R005-二采')
+        mapping['segments'][0].update(round='R005', local_execution_dir=str(directory), source='EP001-C001-P001-R004-一采')
+        self.write(str((directory / '输入映射.json').relative_to(self.project)), json.dumps(mapping))
+        writer.prepare_generation_context(self.project, directory, workflow, 'video-second-pass')
+        context = json.loads((directory / '输入映射.json').read_text(encoding='utf-8'))['generation_contexts'][0]
+        self.assertEqual(context['source'], 'EP001-C001-P001-R004-一采')
+        self.assertEqual(context['identity'], 'EP001-C001-P001-R005-二采')
+        self.assertEqual((self.project / context['prompts']['english']).read_text(encoding='utf-8'), '实际公共正文\n\n第一段实际英文')
+
+    def test_same_preparation_is_idempotent_and_changed_input_cannot_overwrite(self):
+        root, workflow, _ = self.automatic_task()
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        saved = (root / '输入映射.json').read_bytes()
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        self.assertEqual((root / '输入映射.json').read_bytes(), saved)
+        self.write('图片/公共.png', '另一版图')
+        with self.assertRaisesRegex(ValueError, '不可覆盖'):
+            writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        self.assertEqual((root / '输入素材/公共.png').read_text(encoding='utf-8'), '提交时公共原图')
+        self.assertEqual((root / '输入映射.json').read_bytes(), saved)
+
+    def test_mismatched_prepared_prompt_cannot_be_saved_as_actual(self):
+        root, workflow, _ = self.automatic_task()
+        self.write(str((root / '模型提示词.txt').relative_to(self.project)), '错误正文')
+        with self.assertRaisesRegex(ValueError, '冻结英文与本次实际API'):
+            writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        self.assertNotIn('generation_contexts', json.loads((root / '输入映射.json').read_text(encoding='utf-8')))
+        self.assertFalse((root / '分镜脚本.md').exists())
+
+    def test_postprocess_automatically_binds_source_without_own_empty_inputs(self):
+        root, workflow, _ = self.automatic_task()
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        original = self.videos()[0]['context']
+        identity = 'EP001-C001-P001-R005-后处理'
+        record = self.project / (self.episode + '/其他资料/执行附件/' + identity)
+        self.write(str((record / '输入映射.json').relative_to(self.project)), json.dumps({
+            'scene': 'EP001-C001', 'selected_indices': [0],
+            'segments': [{'segment': 'EP001-C001-P001', 'round': 'R005', 'source': 'EP001-C001-P001-R004-一采'}]}))
+        self.write(self.episode + '/其他资料/候选视频/' + identity + '.mp4', identity)
+        writer.prepare_generation_context(self.project, record, {}, 'video-postprocess')
+        result = self.videos()[-1]['context']
+        self.assertEqual(result['shots'], original['shots'])
+        self.assertEqual(result['prompts'], original['prompts'])
+        self.assertEqual(result['references'], original['references'])
+        self.assertEqual(result['source'], 'EP001-C001-P001-R004-一采')
 
     def test_all_four_surfaces_follow_exact_run_and_original_file_links(self):
         self.add_run('R001')

@@ -59,6 +59,9 @@ class DispatchTests(unittest.TestCase):
         self.patch_lock = patch.object(d, 'LOCK_PATH', self.root / 'shared.lock')
         self.patch_lock.start()
         self.addCleanup(self.patch_lock.stop)
+        self.context_patch = patch.object(d, 'prepare_generation_context')
+        self.save_context = self.context_patch.start()
+        self.addCleanup(self.context_patch.stop)
 
     def write_config(self):
         (self.root / 'comfyui-config.json').write_text(json.dumps(self.config), encoding='utf-8')
@@ -152,6 +155,18 @@ class DispatchTests(unittest.TestCase):
         self.assertTrue(all(r['dispatch_state'] == 'deferred' for r in results[1:]))
         self.assertFalse(any(url != A for url, _, _ in self.calls))
         self.assertFalse((self.root / 'video-1').exists())
+        self.assertEqual(self.save_context.call_count, 1)
+
+    def test_video_context_failure_stops_before_post(self):
+        self.save_context.side_effect = ValueError('当次分镜版本不一致')
+        with self.assertRaisesRegex(ValueError, '当次分镜版本不一致'):
+            d.dispatch(self.args(task_type='video-first-pass'))
+        self.assertFalse(any(route == '/prompt' for _, route, _ in self.calls))
+        self.assertFalse((self.root / 'first/submit-attempt.json').exists())
+
+    def test_image_submission_does_not_save_video_context(self):
+        d.dispatch(self.args())
+        self.save_context.assert_not_called()
 
     def test_user_selected_endpoint_overrides_default_for_video_passes_and_postprocess(self):
         for kind in d.DEFAULT_ONLY_TASK_TYPES:
