@@ -107,6 +107,7 @@ button.person-pending{width:100%;text-align:left;border-top:0;border-right:0;bor
 <section id="position-panel" role="tabpanel" tabindex="0">
 <div class="doc-head"><h2 id="position-title">项目基本定位</h2><a id="position-raw" href="00-项目定位/项目基本定位.md" target="_blank" rel="noopener">原始 Markdown</a></div>
 <div class="metadata" id="metadata"></div>
+<div class="prose" id="position-summary"></div>
 <details class="intro" id="intro"><summary>确认依据与资料入口</summary><div class="prose" id="intro-body"></div></details>
 <article class="prose" id="position-body"></article>
 <section class="process" aria-label="项目定位过程资料"><h2>过程资料</h2><div id="folders"></div></section>
@@ -319,6 +320,7 @@ function renderMetadata(container,meta,confirmationHtml){container.replaceChildr
 renderMetadata(el("metadata"),data.meta,data.confirmationHtml);
 if(data.positionTitle!=="未记录")el("position-title").textContent=data.positionTitle;
 el("intro-body").innerHTML=data.introHtml;if(!data.introHtml)el("intro").hidden=true;
+el("position-summary").innerHTML=data.summaryHtml;
 el("position-body").innerHTML=data.positionExists?data.positionHtml:'<p class="empty">尚未形成正式定位，不以草稿代替。</p>';
 if(!data.positionExists){el("position-raw").hidden=true;el("metadata").hidden=true}
 document.addEventListener("toggle",handleListToggle,true);

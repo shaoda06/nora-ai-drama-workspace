@@ -106,7 +106,8 @@ export function Document({ value: latest }: { value: RecordData }) {
     {changed && <p className="notice document-update">本文有新版本，当前阅读位置保持不变。<button onClick={() => setValue(latest)}>读取新版本</button></p>}
     <div className="meta">{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}<Original url={value.url} /></div>
     <Rich html={value.confirmationHtml} /><Rich html={value.boundaryHtml} />
-    {value.introHtml && (value.documentKey === '00-项目定位/项目基本定位.md' ? <Rich html={value.introHtml} /> : <details><summary>说明与来源</summary><Rich html={value.introHtml} /></details>)}
+    {value.summaryHtml && <div className="document-summary"><Rich html={value.summaryHtml} /></div>}
+    {value.introHtml && <details className="document-sources"><summary>{value.documentKey === '00-项目定位/项目基本定位.md' ? '采用依据与关联资料' : '说明与来源'}</summary><Rich html={value.introHtml} /></details>}
     {headings.length > 0 && <details className="chapters" open><summary>章节导航</summary>{headings.map(h => <button key={h.id} className={'link ' + h.level} onClick={() => ref.current!.querySelectorAll('[id]').forEach(el => { if (el.id === h.id) { el.scrollIntoView({ behavior: 'auto', block: 'start' }); (el as HTMLElement).tabIndex = -1; (el as HTMLElement).focus({ preventScroll: true }); } })}>{h.text}</button>)}</details>}
     <div ref={ref}><Rich html={presentation.html} languages={presentation.languages} /></div><Groups groups={latest.groups} />
   </div>;

@@ -179,7 +179,8 @@ class ServiceTests(unittest.TestCase):
         self.source.write_text(source, encoding='utf-8')
         section = self.client.get('/api/projects/示例项目/sections/00-项目定位').json()
         self.assertEqual(section['title'], '模板项目')
-        self.assertIn('仅EP001', section['introHtml'])
+        self.assertIn('仅EP001', section['summaryHtml'])
+        self.assertNotIn('仅EP001', section['introHtml'])
         self.assertIn('data-doc="00-项目定位/决定.md"', section['introHtml'])
         self.assertNotIn('项目名称或代号', section['introHtml'])
         self.assertIn('status-orange', section['confirmationHtml'])
@@ -191,6 +192,38 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('data-gender="male"', section['bodyHtml'])
         self.assertIn('男性决定', section['bodyHtml'])
         self.assertIn('女性样例', section['bodyHtml'])
+        self.assertEqual(self.source.read_text(encoding='utf-8'), source)
+
+    def test_root_other_materials_opens_files_without_mixing_stage_records(self):
+        root_record = self.project / '其他资料/历史版本/项目进度-归档.md'
+        stage_record = self.project / '00-项目定位/其他资料/审阅记录/定位-审阅.md'
+        for path in (root_record, stage_record):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text('# 记录\n\n原始依据。', encoding='utf-8')
+        overview = self.client.get('/api/projects/示例项目/overview').json()
+        self.assertIn('其他资料', [item['name'] for item in overview['directories']])
+        response = self.client.get('/api/projects/示例项目/sections/其他资料')
+        self.assertEqual(response.status_code, 200)
+        files = response.json()['children'][0]['children']
+        self.assertEqual([item['key'] for item in files], ['其他资料/历史版本/项目进度-归档.md'])
+        preview = self.client.get('/api/projects/示例项目/document', params={'path': files[0]['key']})
+        self.assertIn('原始依据', preview.json()['html'])
+        self.assertEqual(self.client.get('/api/projects/示例项目/sections/不存在').status_code, 404)
+
+    def test_position_current_fields_are_separate_from_adoption_history(self):
+        source = ('# 项目定位\n\n- 确认范围：画幅已确认，地理待定。\n'
+                  '- 单集目标时长：1—2分钟\n- 确认依据：[采用](采用.md)\n'
+                  '- 采用经过：旧42集改为71集，依据保留。\n\n## 1. 正文\n'
+                  '单集目标时长：这句话属于正文，应完整保留。\n')
+        self.source.write_text(source, encoding='utf-8')
+        section = self.client.get('/api/projects/示例项目/sections/00-项目定位').json()
+        self.assertIn('地理待定', section['summaryHtml'])
+        self.assertIn('1—2分钟', section['summaryHtml'])
+        self.assertNotIn('采用经过', section['summaryHtml'])
+        self.assertNotIn('地理待定', section['introHtml'])
+        self.assertIn('旧42集改为71集', section['introHtml'])
+        self.assertIn('data-doc="00-项目定位/采用.md"', section['introHtml'])
+        self.assertIn('这句话属于正文，应完整保留', section['bodyHtml'])
         self.assertEqual(self.source.read_text(encoding='utf-8'), source)
 
 

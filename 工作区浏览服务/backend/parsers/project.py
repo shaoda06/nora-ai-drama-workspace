@@ -969,6 +969,8 @@ def build_data(project):
         "note": "只列实际已有的剧集目录，不按大纲预建制作任务。选择剧集后通过可折叠列表查看本集目录与文件。视频结果仅供用户人工审核。"}
     catalogues["历史版本"] = dict(file_tree(inventory("历史版本"), "历史版本", "历史版本"),
         note="以下是项目根目录的历史归档，仅供追溯，不代表当前设定或当前批准。各阶段自己的历史文件仍在对应标签中。")
+    catalogues["其他资料"] = dict(file_tree(inventory("其他资料"), "其他资料", "其他资料"),
+        note="本栏目仅展示项目根目录其他资料中的实际文件，包括项目进度的历史备份；各阶段的讨论、审阅和历史版本在对应页面底部查看。")
 
     directories = [{"name": p.name, "label": re.sub(r"^\d+-", "", p.name),
                     "url": quote(p.name, safe="-._~") + "/"}
@@ -982,6 +984,8 @@ def build_data(project):
     body = re.sub(r"^- 项目名称(?:或代号)?[:：].*\n?", "", body, flags=re.M)
     first_section = re.search(r"^## ", body, re.M)
     intro, main = (body[:first_section.start()], body[first_section.start():]) if first_section else ("", body)
+    summary_lines = re.findall(r"^-\s*(?:确认范围|单集目标时长)[:：].*$", intro, re.M)
+    intro = re.sub(r"^-\s*(?:确认范围|单集目标时长)[:：].*\n?", "", intro, flags=re.M)
     for key, digest in sources.items():
         if hashlib.sha256((project / key).read_bytes()).hexdigest() != digest:
             raise RuntimeError("Source changed while reading; rerun: " + key)
@@ -997,6 +1001,7 @@ def build_data(project):
         "positionExists": position is not None, "positionTitle": (field(position or "", "项目名称或代号")
             if field(position or "", "项目名称或代号") != "未记录" else field(position or "", "项目名称")).rstrip("。"), "meta": meta,
         "confirmationHtml": status_markup(meta["确认状态"], POSITION),
+        "summaryHtml": markdown("\n".join(summary_lines), POSITION),
         "introHtml": intro_markup(intro), "positionHtml": markdown(main, POSITION),
         "warnings": warnings, "sources": sources,
     }

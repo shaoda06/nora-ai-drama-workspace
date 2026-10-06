@@ -33,3 +33,6 @@
 .site-header{position:sticky;top:0;z-index:10}
 .project-page .page-heading>div{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
 .project-page .page-title h1{margin:8px 0 0}.project-page .breadcrumbs{margin:0}
+.document-summary{margin:14px 0;padding:12px 16px;background:#f7f9f6;border:1px solid var(--line);border-radius:8px}
+.document-summary .prose ul{list-style:none;padding:0;margin:0}.document-summary .prose li+li{margin-top:8px}
+.document-sources{margin:14px 0 18px}.document-sources>summary{color:var(--green);font-size:14px}
