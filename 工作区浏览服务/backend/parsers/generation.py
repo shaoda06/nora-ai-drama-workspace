@@ -1,4 +1,5 @@
 """Resolve a video's explicitly recorded generation inputs, never current defaults."""
+import mimetypes
 import re
 from pathlib import Path
 from urllib.parse import quote
@@ -86,15 +87,19 @@ def resolve_context(identity, contexts, project, read, read_plain, previews, tra
     if not result["prompts"]["english"]:
         result["issues"].append("该次实际提交的提示词快照尚未关联或已缺失。")
     if "references" not in context:
-        result["issues"].append("该次参考图关联尚未记录。")
+        result["issues"].append("该次参考素材关联尚未记录。")
     for group in ("common", "segment"):
         for item in context.get("references", {}).get(group, []):
             path = local_file(item["file"])
-            image = {"name": Path(item["file"]).name, "label": item["label"]}
+            kind = (mimetypes.guess_type(item["file"])[0] or '').split('/')[0]
+            if kind not in ('image', 'video', 'audio'):
+                raise ValueError("该次参考素材类型无法识别：" + item["file"])
+            material = {"name": Path(item["file"]).name, "label": item["label"], "kind": kind}
             if path:
-                image["url"] = quote(item["file"], safe="/-._~")
+                material["url"] = quote(item["file"], safe="/-._~")
             else:
-                image["missing"] = True
-                result["issues"].append("该次输入原图缺失：" + image["name"])
-            result["references"][group].append(image)
+                material["missing"] = True
+                result["issues"].append("该次输入原素材缺失：" + material["name"])
+            result["references"][group].append(material)
+        result["references"][group].sort(key=lambda item: ('image', 'video', 'audio').index(item['kind']))
     return result

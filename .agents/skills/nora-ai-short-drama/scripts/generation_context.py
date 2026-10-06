@@ -54,14 +54,25 @@ def prepare_generation_context(project, record, workflow, task_type):
         if inputs['global_prompt'] != common['prompt']:
             raise ValueError('实际节点的公共提示词与时间线不一致')
 
-        def references(items):
-            images = []
-            for item in sorted(items, key=lambda item: item['index']):
-                original = inside(uploads[item['imageFile']]['file'])
-                images.append({'file': snapshot(record / '输入素材' / original.name, original.read_bytes()),
-                               'label': f"<Picture {item['index'] + 1}>",
-                               'original_file': original.relative_to(project).as_posix()})
-            return images
+        def references(group):
+            result = {'common': [], 'segment': []}
+            for field, file_field, label in (('refs', 'imageFile', 'Picture'), ('refVideos', 'videoFile', 'Video'), ('refAudios', 'audioFile', 'Audio')):
+                public = list(common.get(field, [])) if common_enabled else []
+                local = list(group.get(field, []))
+                if field == 'refVideos':
+                    for data, items in ((common, public), (group, local)):
+                        legacy = data.get('referenceVideo')
+                        if legacy and (legacy.get('videoFile') or legacy.get('fileName')) and not any(item['index'] == 0 for item in items):
+                            if data is not common or common_enabled:
+                                items.insert(0, {**legacy, 'index': 0, 'videoFile': legacy.get('videoFile') or legacy['fileName']})
+                local_slots = {item['index'] for item in local}
+                for scope, items in (('common', [item for item in public if item['index'] not in local_slots]), ('segment', local)):
+                    for item in sorted(items, key=lambda item: item['index']):
+                        original = inside(uploads[item[file_field]]['file'])
+                        result[scope].append({'file': snapshot(record / '输入素材' / original.name, original.read_bytes()),
+                                              'label': f"<{label} {item['index'] + 1}>",
+                                              'original_file': original.relative_to(project).as_posix()})
+            return result
     else:
         indices = mapping['selected_indices']
 
@@ -91,10 +102,8 @@ def prepare_generation_context(project, record, workflow, task_type):
             chinese = directory / '中文提示词参考版.txt'
             if chinese.is_file():
                 prompts['chinese'] = chinese.relative_to(project).as_posix()
-            local_slots = {item['index'] for item in group['refs']}
             context.update(storyboard={'file': script, 'version': mapping['scene_storyboard_version'].rstrip('。')},
-                           prompts=prompts, references={'common': references([item for item in common['refs'] if item['index'] not in local_slots]) if common_enabled else [],
-                                                       'segment': references(group['refs'])})
+                           prompts=prompts, references=references(group))
         contexts.append(context)
     if 'generation_contexts' in mapping and mapping['generation_contexts'] != contexts:
         raise ValueError('已有当次资料关联与本次API不一致，不能改写同一执行身份')

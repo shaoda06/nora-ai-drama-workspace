@@ -160,6 +160,68 @@ class GenerationContextTests(unittest.TestCase):
         self.assertEqual(context['identity'], 'EP001-C001-P001-R005-二采')
         self.assertEqual((self.project / context['prompts']['english']).read_text(encoding='utf-8'), '实际公共正文\n\n第一段实际英文')
 
+    def test_all_media_inputs_are_frozen_and_sorted_for_preview(self):
+        root, workflow, mapping = self.automatic_task(selected=(0,))
+        timeline = json.loads(workflow['105001']['inputs']['timeline_data'])
+        for name, field, file_field in [('公共视频.mp4', 'refVideos', 'videoFile'), ('公共声音.wav', 'refAudios', 'audioFile')]:
+            self.write('素材/' + name, '提交时' + name)
+            mapping['uploads'].append({'input_path': 'remote/' + name, 'file': '素材/' + name})
+            timeline['global'][field] = [{file_field: 'remote/' + name, 'index': 0}]
+        self.write(str((root / '输入映射.json').relative_to(self.project)), json.dumps(mapping))
+        workflow['105001']['inputs']['timeline_data'] = json.dumps(timeline)
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        self.write('素材/公共视频.mp4', '后来视频')
+        self.write('素材/公共声音.wav', '后来声音')
+        # Historical mappings may have a different array order; preview still sorts by media type.
+        saved = json.loads((root / '输入映射.json').read_text(encoding='utf-8'))
+        saved['generation_contexts'][0]['references']['common'].reverse()
+        self.write(str((root / '输入映射.json').relative_to(self.project)), json.dumps(saved))
+        with patch.object(main, 'store', ProjectStore(self.project.parent)), TestClient(main.app) as client:
+            references = client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]['segments']['C001'][0]['videos'][0]['context']['references']['common']
+            self.assertEqual([(item['kind'], item['label']) for item in references],
+                             [('image', '<Picture 1>'), ('video', '<Video 1>'), ('audio', '<Audio 1>')])
+            self.assertEqual(client.get(references[1]['url']).text, '提交时公共视频.mp4')
+            self.assertEqual(client.get(references[2]['url']).text, '提交时公共声音.wav')
+
+    def test_multimedia_common_override_is_independent_for_each_type(self):
+        for enabled in (True, False):
+            with self.subTest(common_enabled=enabled):
+                root, workflow, mapping = self.automatic_task(selected=(0,), common_enabled=enabled)
+                # Separate execution records for the two cases.
+                root = root.with_name('EP001-C001-P001-R006-一采' if enabled else 'EP001-C001-P001-R007-一采')
+                mapping['segments'][0].update(round='R006' if enabled else 'R007', local_execution_dir=str(root))
+                timeline = json.loads(workflow['105001']['inputs']['timeline_data'])
+                for scope, target in [('公共', timeline['global']), ('本组', timeline['segments'][0])]:
+                    for extension, field, file_field in [('mp4', 'refVideos', 'videoFile'), ('wav', 'refAudios', 'audioFile')]:
+                        name = scope + '.' + extension
+                        self.write('素材/' + name, name)
+                        mapping['uploads'].append({'input_path': name, 'file': '素材/' + name})
+                        target[field] = [{file_field: name, 'index': 0}]
+                timeline['global']['refVideos'].append({'videoFile': '公共.mp4', 'index': 2})
+                self.write(str((root / '输入映射.json').relative_to(self.project)), json.dumps(mapping))
+                workflow['105001']['inputs']['timeline_data'] = json.dumps(timeline)
+                writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+                refs = json.loads((root / '输入映射.json').read_text(encoding='utf-8'))['generation_contexts'][0]['references']
+                self.assertEqual([item['label'] for item in refs['common']], ['<Picture 1>', '<Video 3>'] if enabled else [])
+                self.assertEqual([item['label'] for item in refs['segment']], ['<Picture 2>', '<Video 1>', '<Audio 1>'])
+
+    def test_legacy_video_input_is_slot_one_and_native_slot_one_wins(self):
+        root, workflow, mapping = self.automatic_task(selected=(0,))
+        self.write('素材/兼容.mp4', '实际兼容输入')
+        mapping['uploads'].append({'input_path': 'legacy.mp4', 'file': '素材/兼容.mp4'})
+        self.write(str((root / '输入映射.json').relative_to(self.project)), json.dumps(mapping))
+        timeline = json.loads(workflow['105001']['inputs']['timeline_data'])
+        timeline['global']['referenceVideo'] = {'fileName': 'legacy.mp4'}
+        timeline['segments'][0]['referenceVideo'] = {'videoFile': 'unsubmitted.mp4'}
+        timeline['segments'][0]['refVideos'] = [{'videoFile': 'legacy.mp4', 'index': 0}]
+        workflow['105001']['inputs']['timeline_data'] = json.dumps(timeline)
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        refs = json.loads((root / '输入映射.json').read_text(encoding='utf-8'))['generation_contexts'][0]['references']
+        self.assertEqual([item['label'] for item in refs['common']], ['<Picture 1>'])
+        self.assertEqual([item['label'] for item in refs['segment']], ['<Picture 2>', '<Video 1>'])
+        self.assertEqual((self.project / refs['segment'][1]['file']).read_text(encoding='utf-8'), '实际兼容输入')
+
     def test_same_preparation_is_idempotent_and_changed_input_cannot_overwrite(self):
         root, workflow, _ = self.automatic_task()
         writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')

@@ -9,7 +9,7 @@ export interface GenerationContext {
   scriptHtml: string; scriptUrl?: string; source?: string; issues: string[];
   shots: { id: string; duration: number | null; html: string }[];
   prompts: { english: string; chinese: string; englishUrl?: string; chineseUrl?: string };
-  references: Record<'common' | 'segment', { name: string; label: string; url?: string; missing?: boolean }[]>;
+  references: Record<'common' | 'segment', { name: string; label: string; kind: 'image' | 'video' | 'audio'; url?: string; missing?: boolean }[]>;
 }
 export interface SegmentVideo { key: string; url: string; run: string; stage: string; approved: boolean; candidateNumber: number; context: GenerationContext }
 export interface FileItem { kind: string; name: string; title?: string; scenes?: string[]; segments?: Record<string, { id: string; duration: number; scriptHtml: string; scriptUrl?: string; videos: SegmentVideo[] }[]>; key?: string; url?: string; children?: FileItem[]; files?: FileItem[]; summary?: string; category?: string; statusHtml?: string; media?: FileItem; doc?: Record<string, unknown>; prompts?: { english?: string; chinese?: string }; }

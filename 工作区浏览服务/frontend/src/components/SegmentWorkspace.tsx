@@ -3,31 +3,34 @@ import type { ReactNode } from 'react';
 import type { GenerationContext, SegmentVideo as VideoItem } from '../api';
 import { Original, PreviewContext, Rich } from '../components';
 import { TabNav } from './TabNav';
+import { UnderlineTabs } from './UnderlineTabs';
 import { TabSelect } from './TabSelect';
 import { candidateLabel, latestVideo, SegmentVideo } from './SegmentVideo';
 import { CopyButton } from './CopyButton';
 
 function SegmentReferences({ context }: { context?: GenerationContext }) {
   const preview = useContext(PreviewContext);
-  return <section className="segment-references" aria-label="参考图区域">
+  return <section className="segment-references" aria-label="参考素材区域">
     {context ? (['common', 'segment'] as const).map(group => <div className="segment-reference-group" key={group}>
-      <h3>{group === 'common' ? '公共参考图' : '本组参考图'}</h3>
-      <div className="segment-reference-images">{context.references[group].map((image, index) => <figure key={index}>
-        <figcaption>{image.label}</figcaption>
-        {image.url ? <button className="reference-preview" onClick={() => preview({ kind: 'image', name: image.name, url: image.url })} aria-label={`查看 ${image.label} ${image.name}`}><img src={image.url} alt={image.name} loading="lazy" /></button> : <p className="muted">原图缺失</p>}
-      </figure>)}{!context.references[group].length && <p className="muted">{context.issues.length ? '该次参考图关联尚未完整记录。' : '该次未使用此类参考图。'}</p>}</div>
-    </div>) : <span className="placeholder-label">参考图区域</span>}
+      <h3>{group === 'common' ? '公共参考素材' : '本组参考素材'}</h3>
+      <div className="segment-reference-images">{context.references[group].map((material, index) => <figure key={index}>
+        <figcaption>{material.label}</figcaption>
+        {material.url ? <button className="reference-preview" onClick={() => preview({ kind: material.kind, name: material.name, url: material.url })} aria-label={`查看 ${material.label} ${material.name}`}>
+          {material.kind === 'image' ? <img src={material.url} alt={material.name} loading="lazy" /> : material.kind === 'video' ? <><video src={material.url} muted preload="metadata" /><span className="reference-media-label">视频 ▶</span></> : <span className="reference-audio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13M9 9l12-2" fill="none" stroke="currentColor" strokeWidth="2" /><circle cx="6" cy="18" r="3" fill="currentColor" /><circle cx="18" cy="16" r="3" fill="currentColor" /></svg><span>音频</span></span>}
+        </button> : <p className="muted">原素材缺失</p>}
+      </figure>)}{!context.references[group].length && <p className="muted">{context.issues.length ? '该次参考素材关联尚未完整记录。' : '该次未使用此类参考素材。'}</p>}</div>
+    </div>) : <span className="placeholder-label">参考素材区域</span>}
   </section>;
 }
 
-export function SegmentWorkspace({ items, selection: { stage, key: selected }, onSelectionChange, playbackControl, autoPlay, playbackSession, onVideoEnded, onVideoError }: {
+export function SegmentWorkspace({ items, selection: { stage, key: selected }, onSelectionChange, playbackControl, autoPlay, onVideoEnded, onVideoError }: {
   items: VideoItem[]; selection: { stage: string; key: string }; onSelectionChange: (selection: { stage: string; key: string }) => void;
-  playbackControl: ReactNode; autoPlay: boolean; playbackSession: number; onVideoEnded: () => void; onVideoError: () => void;
+  playbackControl: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
 }) {
   const [tab, setTab] = useState('script');
   const [language, setLanguage] = useState('zh');
   const [scriptMode, setScriptMode] = useState('aligned');
-  const [playback, setPlayback] = useState({ key: '', session: 0, time: 0 });
+  const [playback, setPlayback] = useState({ key: '', time: 0 });
   const scriptContent = useRef<HTMLDivElement>(null);
   const shotTimeline = useRef<HTMLDivElement>(null);
   const latest = latestVideo(items);
@@ -37,7 +40,7 @@ export function SegmentWorkspace({ items, selection: { stage, key: selected }, o
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
   const shots = context?.shots || [];
   const canAlign = shots.length > 0 && shots.every(shot => shot.duration !== null);
-  const time = playback.key === current?.key && playback.session === playbackSession ? playback.time : 0;
+  const time = playback.key === current?.key ? playback.time : 0;
   let plannedDuration = 0;
   const timedShots = canAlign ? shots.map(shot => {
     const start = plannedDuration;
@@ -65,12 +68,12 @@ export function SegmentWorkspace({ items, selection: { stage, key: selected }, o
     </div>
     <div className="segment-workspace">
       <div className="segment-media-column">
-        <SegmentVideo key={playbackSession + '/' + (current?.key || 'empty')} current={current} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, session: playbackSession, time })} />
+        <SegmentVideo key={current?.key || 'empty'} current={current} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} />
         <SegmentReferences context={context} />
       </div>
       <section className="segment-script" aria-label="分镜脚本与提示词区域">
         <div className="segment-script-header">
-          <TabNav label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }]} selected={tab} onChange={setTab} disabled={!current} />
+          <UnderlineTabs label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }]} selected={tab} onChange={setTab} disabled={!current} />
           <Original url={tab === 'script' ? context?.scriptUrl : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />
         </div>
         {tab === 'script' && <div className="segment-script-modes">
