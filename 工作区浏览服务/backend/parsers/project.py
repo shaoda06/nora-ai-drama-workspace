@@ -989,7 +989,10 @@ def build_data(project):
                 children.append(file_tree([], root + "/" + directory.name, directory.name))
         children.sort(key=lambda item: (file_order(item), item["name"]))
         phase = [r for r in rows if re.search(r"\b" + re.escape(episode.name) + r"\b", r["name"])]
+        title_match = re.search(r"^(?:-[ \t]*)?本集题名[:：][ \t]*([^。\n]+)",
+                               read("06-分集大纲/" + episode.name + "-分集大纲.md") or "", re.M)
         episode_node = {"kind": "group", "name": episode.name, "key": root,
+            "title": title_match[1].strip() if title_match else "",
             "summary": str(len(files)) + " 份文件",
             "statusHtml": "<br>".join(status_markup(r["status"], PROGRESS) for r in phase) or status_markup("未记录", PROGRESS),
             "note": "展开目录查看子目录和文件。制作状态仅引用项目进度；文件存在、分段获批均不代表整集完成。",
@@ -997,7 +1000,7 @@ def build_data(project):
         }
         episodes.append(episode_node)
     catalogues[production] = {"kind": "group", "key": production, "name": "剧集制作", "children": episodes,
-        "note": "只列实际已有的剧集目录，不按大纲预建制作任务。选择剧集后通过可折叠列表查看本集目录与文件。视频结果仅供用户人工审核。"}
+        "note": "选择剧集查看本集内容。"}
     catalogues["历史版本"] = dict(file_tree(inventory("历史版本"), "历史版本", "历史版本"),
         note="以下是项目根目录的历史归档，仅供追溯，不代表当前设定或当前批准。各阶段自己的历史文件仍在对应标签中。")
     catalogues["其他资料"] = dict(file_tree(inventory("其他资料"), "其他资料", "其他资料"),

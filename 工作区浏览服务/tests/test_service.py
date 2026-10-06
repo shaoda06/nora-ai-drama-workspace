@@ -29,6 +29,23 @@ class ServiceTests(unittest.TestCase):
         self.override.stop()
         self.temp.cleanup()
 
+    def test_production_titles_from_current_outline_and_existing_directories(self):
+        outlines = self.project / '06-分集大纲'
+        outlines.mkdir()
+        for number, text in (('EP001', '本集题名：先撑过今晚。来源范围：旧场次。'),
+                             ('EP002', '- 本集题名：婶子也不能白拿。'),
+                             ('EP003', '- 一句话概要：没有题名。'),
+                             ('EP004', '本集题名：仅有大纲，没有制作目录。')):
+            (outlines / (number + '-分集大纲.md')).write_text('# 分集大纲\n\n' + text + '\n', encoding='utf-8')
+        for number in ('EP001', 'EP002', 'EP003', 'EP005'):
+            folder = self.project / '09-剧集制作' / number / '02-剧集剧本'
+            folder.mkdir(parents=True)
+            (folder / (number + '-本集剧本.md')).write_text('# 本集剧本\n', encoding='utf-8')
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
+        self.assertEqual([(item['name'], item['title']) for item in data['children']],
+                         [('EP001', '先撑过今晚'), ('EP002', '婶子也不能白拿'), ('EP003', ''), ('EP005', '')])
+        self.assertIn('EP001-本集剧本.md', str(data['children'][0]['children']))
+
     def test_discovery_and_dynamic_document(self):
         self.assertEqual(self.client.get('/api/projects').json()[0]['name'], '示例项目')
         section = self.client.get('/api/projects/示例项目/sections/00-项目定位')
