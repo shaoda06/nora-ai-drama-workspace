@@ -46,6 +46,31 @@ class ServiceTests(unittest.TestCase):
                          [('EP001', '先撑过今晚'), ('EP002', '婶子也不能白拿'), ('EP003', ''), ('EP005', '')])
         self.assertIn('EP001-本集剧本.md', str(data['children'][0]['children']))
 
+    def test_production_statistics_count_episodes_not_preparation_states(self):
+        outlines = self.project / '06-分集大纲'
+        outlines.mkdir()
+        (outlines / '分集索引.md').write_text(
+            '# 分集索引\n\n| 集号 | 一句话概要 | 大纲入口 |\n| --- | --- | --- |\n'
+            '| EP001 | 一 | [大纲](EP001-分集大纲.md) |\n'
+            '| EP002 | 二 | [大纲](EP002-分集大纲.md) |\n'
+            '| EP002 | 重复条目 | [大纲](EP002-分集大纲.md) |\n'
+            '| EP003 | 三 | [大纲](EP003-分集大纲.md) |\n', encoding='utf-8')
+        for number in ('EP001', 'EP002', 'EP004'):
+            (self.project / '09-剧集制作' / number).mkdir(parents=True)
+        (self.project / '项目进度.md').write_text(
+            '# 项目进度\n\n| 阶段名称 | 对应会话入口 | 当前状态 | 成果入口 | 待决事项 | 下一步 |\n'
+            '| --- | --- | --- | --- | --- | --- |\n'
+            '| EP001 制作 | 无 | 已完成 | 无 | 无 | 无 |\n'
+            '| EP002 制作 | 无 | 进行中 | 无 | 无 | 无 |\n'
+            '| EP003 剧本 | 无 | 已完成 | 无 | 无 | 无 |\n'
+            '| EP004 分镜 | 无 | 已完成 | 无 | 无 | 无 |\n'
+            '| EP004 制作 | 无 | 已确认 | 无 | 无 | 无 |\n', encoding='utf-8')
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
+        self.assertEqual(data['statistics'], {'total': 4, 'completed': 1, 'remaining': 3, 'running': 1})
+        self.assertEqual([item['name'] for item in data['children']], ['EP001', 'EP002', 'EP004'])
+        self.assertNotIn('已完成', data['children'][2]['statusHtml'])
+        self.assertIn('已确认', data['children'][2]['statusHtml'])
+
     def test_discovery_and_dynamic_document(self):
         self.assertEqual(self.client.get('/api/projects').json()[0]['name'], '示例项目')
         section = self.client.get('/api/projects/示例项目/sections/00-项目定位')
