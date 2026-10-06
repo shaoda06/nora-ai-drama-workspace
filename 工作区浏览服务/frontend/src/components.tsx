@@ -6,12 +6,14 @@ import type { FileItem, Group, RecordData } from './api';
 import { CopyButton } from './components/CopyButton';
 import { TabNav } from './components/TabNav';
 import { useNotify } from './components/Notifications';
+import { DocumentInformation } from './components/DocumentInformation';
 
 export const PreviewContext = createContext<(item: FileItem) => void>(() => {});
 export function Result({ loading, error }: { loading: boolean; error: Error | null }) {
   const notify = useNotify();
   useEffect(() => { if (error) notify(error.message, 'error'); }, [error, notify]);
-  return loading ? <p className="muted" role="status">正在读取资料…</p> : null;
+  useEffect(() => { if (loading) notify('正在读取资料…'); }, [loading, notify]);
+  return null;
 }
 export function Rich({ html = '', languages = [] }: { html?: string; languages?: { value: string; label: string; text: string; html?: string }[] }) {
   const preview = useContext(PreviewContext);
@@ -30,7 +32,7 @@ export function Rich({ html = '', languages = [] }: { html?: string; languages?:
   }} dangerouslySetInnerHTML={blocks ? undefined : { __html: html }}>{blocks?.map((block, index) => {
     if (!block.code) return <div className="rich-fragment" key={index} dangerouslySetInnerHTML={{ __html: block.html }} />;
     const text = block.bilingual ? languages.find(item => item.value === language)!.text : block.text;
-    return <div className="code-block" key={index}><div className="code-toolbar">{block.bilingual && <TabNav label="画风正文语言" items={languages} selected={language} onChange={setLanguage} />}<div className="code-copy"><CopyButton key={block.bilingual ? language : index} label="复制" text={text} /></div></div><pre><code>{text}</code></pre>{block.bilingual && <div className="language-notes" dangerouslySetInnerHTML={{ __html: languages.find(item => item.value === language)!.html || '' }} />}</div>;
+    return <div className="code-block" key={index}><div className="code-toolbar">{block.bilingual && <TabNav label="画风正文语言" items={languages} selected={language} onChange={setLanguage} />}<div className="code-copy"><CopyButton key={block.bilingual ? language : index} label="复制" text={text} /></div></div><pre><code>{block.bilingual ? text.trim().replace(/\n{3,}/g, '\n\n') : text}</code></pre>{block.bilingual && <div className="language-notes" dangerouslySetInnerHTML={{ __html: languages.find(item => item.value === language)!.html || '' }} />}</div>;
   })}</div>;
 }
 export function Original({ url, label = '原文件' }: { url?: string; label?: string }) {
@@ -56,17 +58,8 @@ export function Groups({ groups = [] }: { groups?: Group[] }) {
 }
 export function Document({ value: latest }: { value: RecordData }) {
   const [value, setValue] = useState(latest);
-  const inlineStatus = ['00-项目定位/项目基本定位.md', '01-主旨与简介/主旨与简介.md', '02-故事大纲/故事大纲.md'].includes(value.documentKey);
-  const confirmation = useMemo(() => {
-    if (!inlineStatus) return { badgeHtml: '', notesHtml: value.confirmationHtml };
-    const document = new DOMParser().parseFromString(value.confirmationHtml, 'text/html');
-    const badge = document.querySelector('.status-badge')!;
-    const badgeHtml = badge.outerHTML;
-    badge.remove();
-    return { badgeHtml, notesHtml: document.body.innerHTML };
-  }, [inlineStatus, value.confirmationHtml]);
-  const changed = (value.html || value.bodyHtml) !== (latest.html || latest.bodyHtml);
-  const body = value.html || value.bodyHtml || '';
+  const changed = (value.html || value.bodyHtml) !== (latest.html || latest.bodyHtml) || value.headerHtml !== latest.headerHtml;
+  const body = value.bodyHtml || value.contentHtml || value.html || '';
   const presentation = useMemo(() => {
     if (value.documentKey !== '00-项目定位/项目基本定位.md') return { html: body, languages: [] };
     const document = new DOMParser().parseFromString(body, 'text/html');
@@ -116,10 +109,8 @@ export function Document({ value: latest }: { value: RecordData }) {
   }, [presentation.html]);
   return <div className="document">
     {changed && <p className="notice document-update">本文有新版本，当前阅读位置保持不变。<button onClick={() => setValue(latest)}>读取新版本</button></p>}
-    <div className={'meta' + (inlineStatus ? ' document-meta-inline' : '')}>{inlineStatus && <Rich html={confirmation.badgeHtml} />}{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}<Original url={value.url} /></div>
-    <Rich html={confirmation.notesHtml} /><Rich html={value.boundaryHtml} />
-    {value.summaryHtml && <div className="document-summary"><Rich html={value.summaryHtml} /></div>}
-    {value.introHtml && <details className="document-sources"><summary>{value.documentKey === '00-项目定位/项目基本定位.md' ? '采用依据与关联资料' : '说明与来源'}</summary><Rich html={value.introHtml} /></details>}
+    <div className="meta document-meta-inline">{value.confirmationHtml && <Rich html={value.confirmationHtml.match(/^<span class="status-badge.*?<\/span>/s)?.[0]} />}{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}<Original url={value.url} /></div>
+    {value.headerHtml && <DocumentInformation><Rich html={value.headerHtml} /></DocumentInformation>}
     {headings.length > 0 && <details className="chapters" open><summary>章节导航</summary>{headings.map(h => <button key={h.id} className={'link ' + h.level} onClick={() => ref.current!.querySelectorAll('[id]').forEach(el => { if (el.id === h.id) { el.scrollIntoView({ behavior: 'auto', block: 'start' }); (el as HTMLElement).tabIndex = -1; (el as HTMLElement).focus({ preventScroll: true }); } })}>{h.text}</button>)}</details>}
     <div ref={ref}><Rich html={presentation.html} languages={presentation.languages} /></div><Groups groups={latest.groups} />
   </div>;

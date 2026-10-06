@@ -97,7 +97,7 @@ def section(name: str, section: str) -> dict[str, Any]:
     data = entry(name)['data']
     if section == '00-项目定位':
         result = {'exists': data['positionExists'], 'title': data['positionTitle'], 'meta': data['meta'], 'confirmationHtml': data['confirmationHtml'],
-                  'introHtml': data['introHtml'], 'summaryHtml': data['summaryHtml'], 'bodyHtml': data['positionHtml'], 'groups': data['groups'],
+                  'introHtml': data['introHtml'], 'summaryHtml': data['summaryHtml'], 'headerHtml': data['headerHtml'], 'bodyHtml': data['positionHtml'], 'groups': data['groups'],
                   'documentKey': parser.POSITION}
         if parser.POSITION in data['documents']:
             result['url'] = data['documents'][parser.POSITION]['url']

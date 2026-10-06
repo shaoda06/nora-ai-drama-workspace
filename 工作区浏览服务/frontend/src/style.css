@@ -37,6 +37,7 @@
 .document-summary .prose ul{list-style:none;padding:0;margin:0}.document-summary .prose li+li{margin-top:8px}
 .document-sources{margin:14px 0 18px}.document-sources>summary{color:var(--green);font-size:14px}
 .document-meta-inline{align-items:center;column-gap:12px}.document-meta-inline>.prose{display:inline-block}
+.document-information{margin:12px 0 18px;border:1px solid var(--line);border-radius:8px;background:#f7f9f6;padding:8px 16px}.document-information>summary{color:var(--green);font-size:14px}.document-information .prose>ul{list-style:none;padding:0;margin:8px 0}.document-information .prose>ul>li{margin:8px 0}.document-information .prose .document-note{font-size:14px;color:inherit}
 
 .breadcrumbs{font-size:15px;font-weight:600;color:inherit;line-height:1.6}.breadcrumbs [aria-current="page"]{color:var(--green)}.breadcrumb-separator{color:var(--muted);padding:0 4px}
 

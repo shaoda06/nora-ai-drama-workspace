@@ -282,7 +282,9 @@ def phase_rows(text):
         if line.strip().startswith("|") and cells(line) == [
                 "阶段名称", "对应会话入口", "当前状态", "成果入口", "待决事项", "下一步"]:
             result = []
-            for row in lines[i + 2:]:
+            for row in lines[i + 1:]:
+                if not row.strip() or re.fullmatch(r"\s*\|[\s:|\-]+", row):
+                    continue
                 if not row.strip().startswith("|"):
                     break
                 values = cells(row)
@@ -290,6 +292,22 @@ def phase_rows(text):
                     result.append(dict(zip(("name", "chat", "status", "outputs", "pending", "next"), values)))
             return result
     return []
+
+
+def document_header(text, source):
+    """Preserve all text before the first content chapter, including extra fields."""
+    title = re.match(r"^# .+\n?", text)
+    body = text[title.end():] if title else text
+    start = re.search(r"^## ", body, re.M)
+    if not start:
+        return {}
+    intro, main = body[:start.start()], body[start.start():]
+    if not intro.strip():
+        return {}
+    meta = {key: field(intro, key) for key in ("文档版本", "更新日期", "确认状态")}
+    return {"headerHtml": markdown(intro, source),
+            "contentHtml": markdown((title[0] if title else "") + main, source),
+            "meta": meta, "confirmationHtml": status_markup(meta["确认状态"], source)}
 
 
 def table_records(text, required):
@@ -349,6 +367,7 @@ def build_data(project):
         documents[relative] = {
             "title": next((line[2:].strip() for line in text.splitlines() if line.startswith("# ")), path.stem),
             "html": markdown(text, relative), "url": quote(relative, safe="/-._~"),
+            **document_header(text, relative),
         }
         return text
 
@@ -485,6 +504,7 @@ def build_data(project):
         for key in (*meta, "项目名称或代号", "确认范围", "阅读边界"):
             intro = re.sub(r"^-[ \t]*" + re.escape(key) + r"[:：][^\n]*\n?", "", intro, flags=re.M)
         return {"exists": text is not None, "meta": meta,
+                "headerHtml": documents[source].get("headerHtml", "") if text is not None else "",
                 "url": quote(source, safe="/-._~"), "confirmationHtml": status_markup(meta["确认状态"], source),
                 "boundaryHtml": inline(boundary, source) if boundary != "未记录" else "",
                 "summaryHtml": markdown("\n".join(summary_lines), source),
@@ -1003,6 +1023,7 @@ def build_data(project):
         "positionExists": position is not None, "positionTitle": (field(position or "", "项目名称或代号")
             if field(position or "", "项目名称或代号") != "未记录" else field(position or "", "项目名称")).rstrip("。"), "meta": meta,
         "confirmationHtml": status_markup(meta["确认状态"], POSITION),
+        "headerHtml": documents[POSITION].get("headerHtml", "") if position is not None else "",
         "summaryHtml": markdown("\n".join(summary_lines), POSITION),
         "introHtml": intro_markup(intro), "positionHtml": markdown(main, POSITION),
         "warnings": warnings, "sources": sources,

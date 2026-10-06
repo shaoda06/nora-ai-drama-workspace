@@ -23,6 +23,7 @@ export default function Project() {
   const [preview, setPreview] = useState<FileItem | null>(null);
   const status = useQuery({ queryKey: ['status', name], queryFn: async () => {
     const value = await get<RecordData>(`${projectUrl(name)}/status`);
+    if (value.updating) notify('正在同步资料…');
     if (value.error) notify('资料同步未完成，当前显示上一次读取的内容。', 'error');
     return value;
   }, refetchInterval: 5000 });
@@ -36,7 +37,7 @@ export default function Project() {
       </div>
     )}
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
-      <div className="muted">{status.data?.updating ? '正在同步资料…' : `资料读取：${status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '读取中'}`}</div>
+      <div className="muted">上次同步：{status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '—'}</div>
       <Breadcrumbs items={[name, overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')]} />
     </PageHeader>
     <Result loading={status.isPending || overview.isPending} error={status.error || overview.error} />

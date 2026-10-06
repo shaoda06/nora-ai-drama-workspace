@@ -152,6 +152,38 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('id="' + stage['anchor'] + '"', data['documents']['项目进度.md']['html'])
         self.assertIn('CH042细节待确认', data['documents']['项目进度.md']['html'])
 
+    def test_phase_table_with_blank_lines_reads_all_actual_states(self):
+        progress = ('| 阶段名称 | 对应会话入口 | 当前状态 | 成果入口 | 待决事项 | 下一步 |\n\n'
+                    '| --- | --- | --- | --- | --- | --- |\n\n'
+                    '| 人物资料卡 | 会话 | 待确认 | 卡 | 待审 | 修改 |\n\n'
+                    '| EP001 制作 | 会话 | 进行中 | 剧本 | 待审 | 制作 |\n\n'
+                    '| 分集大纲 | 会话 | 已完成 | 大纲 | 无 | 接续 |\n\n## 其他内容\n')
+        path = self.project / '项目进度.md'
+        path.write_text(progress, encoding='utf-8')
+        value = self.client.get('/api/projects/示例项目/overview').json()
+        self.assertEqual([(item['name'], item['status']) for item in value['active']],
+                         [('人物资料卡', '待确认'), ('EP001 制作', '进行中')])
+        self.assertEqual(path.read_text(encoding='utf-8'), progress)
+
+    def test_document_header_preserves_extra_fields_and_source_links(self):
+        source = ('# 项目定位\n\n- 项目名称或代号：示例项目\n- 文档版本：v03\n'
+                  '- 更新日期：2026-10-06\n- 确认状态：部分确认；旧限定说明。\n'
+                  '- 确认范围：主线已确认\n- 确认依据：[决定](决定.md)\n'
+                  '- 旧制作目标：全部保留\n\n额外说明也保留。\n\n## 正文\n'
+                  '- 确认范围：这是正文字段。\n')
+        self.source.write_text(source, encoding='utf-8')
+        value = self.client.get('/api/projects/示例项目/sections/00-项目定位').json()
+        self.assertIn('旧制作目标：全部保留', value['headerHtml'])
+        self.assertIn('旧限定说明', value['headerHtml'])
+        self.assertIn('额外说明也保留', value['headerHtml'])
+        self.assertIn('data-doc="00-项目定位/决定.md"', value['headerHtml'])
+        self.assertNotIn('这是正文字段', value['headerHtml'])
+        preview = self.client.get('/api/projects/示例项目/document', params={'path': parser.POSITION}).json()
+        self.assertEqual(preview['headerHtml'], value['headerHtml'])
+        self.assertNotIn('旧制作目标', preview['contentHtml'])
+        self.assertIn('这是正文字段', preview['contentHtml'])
+        self.assertEqual(self.source.read_text(encoding='utf-8'), source)
+
     def test_position_title_and_status_do_not_change_the_source(self):
         source = '# 项目定位\n\n- 项目名称：示例项目，全名。\n\n## 视觉表现\n\n- 画风确认状态：已确认；采用依据保留。\n'
         self.source.write_text(source, encoding='utf-8')
