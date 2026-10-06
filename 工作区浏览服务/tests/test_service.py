@@ -210,6 +210,29 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('原始依据', preview.json()['html'])
         self.assertEqual(self.client.get('/api/projects/示例项目/sections/不存在').status_code, 404)
 
+    def test_common_header_keeps_scope_and_legacy_notes_separate(self):
+        for directory, name in [('01-主旨与简介', '主旨与简介'), ('02-故事大纲', '故事大纲')]:
+            path = self.project / directory / (name + '.md')
+            path.parent.mkdir(parents=True, exist_ok=True)
+            source = ('# ' + name + '\n\n- 项目名称或代号：示例项目\n'
+                      '- 文档版本：v02\n- 更新日期：2026-10-06\n'
+                      '- 确认状态：部分确认\n- 确认范围：主线已确认，细节待定。\n'
+                      '- 确认依据：[决定](决定.md)\n- 确认说明：旧说明完整保留。\n'
+                      '\n## 正文\n\n- 确认范围：这是正文原句，不是头部字段。\n')
+            path.write_text(source, encoding='utf-8')
+        for directory, name in [('01-主旨与简介', '主旨与简介'), ('02-故事大纲', '故事大纲')]:
+            with self.subTest(document=name):
+                path = self.project / directory / (name + '.md')
+                source = path.read_text(encoding='utf-8')
+                value = self.client.get('/api/projects/示例项目/sections/' + directory).json()
+                self.assertIn('主线已确认，细节待定', value['summaryHtml'])
+                self.assertNotIn('主线已确认', value['introHtml'])
+                self.assertIn('旧说明完整保留', value['introHtml'])
+                self.assertIn('data-doc="' + directory + '/决定.md"', value['introHtml'])
+                self.assertIn('这是正文原句', value['bodyHtml'])
+                self.assertNotIn('这是正文原句', value['summaryHtml'])
+                self.assertEqual(path.read_text(encoding='utf-8'), source)
+
     def test_position_current_fields_are_separate_from_adoption_history(self):
         source = ('# 项目定位\n\n- 确认范围：画幅已确认，地理待定。\n'
                   '- 单集目标时长：1—2分钟\n- 确认依据：[采用](采用.md)\n'

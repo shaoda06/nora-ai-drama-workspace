@@ -5,10 +5,13 @@ import { get, projectUrl } from './api';
 import type { FileItem, Group, RecordData } from './api';
 import { CopyButton } from './components/CopyButton';
 import { TabNav } from './components/TabNav';
+import { useNotify } from './components/Notifications';
 
 export const PreviewContext = createContext<(item: FileItem) => void>(() => {});
 export function Result({ loading, error }: { loading: boolean; error: Error | null }) {
-  return error ? <p className="error" role="alert">{error.message}</p> : loading ? <p className="muted" role="status">正在读取资料…</p> : null;
+  const notify = useNotify();
+  useEffect(() => { if (error) notify(error.message, 'error'); }, [error, notify]);
+  return loading ? <p className="muted" role="status">正在读取资料…</p> : null;
 }
 export function Rich({ html = '', languages = [] }: { html?: string; languages?: { value: string; label: string; text: string; html?: string }[] }) {
   const preview = useContext(PreviewContext);

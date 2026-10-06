@@ -342,7 +342,7 @@ el(prefix+"-boundary").innerHTML="阅读边界："+doc.boundaryHtml;
 el(prefix+"-boundary").hidden=!doc.boundaryHtml;
 el(prefix+"-intro-body").innerHTML=doc.introHtml;
 el(prefix+"-intro").hidden=!doc.introHtml;
-if(doc.exists)el(prefix+"-body").innerHTML=doc.bodyHtml;
+if(doc.exists)el(prefix+"-body").innerHTML=(doc.summaryHtml?'<div class="document-summary">'+doc.summaryHtml+'</div>':'')+doc.bodyHtml;
 else{el(prefix+"-body").append(textNode("p",emptyText,"empty"));el(prefix+"-raw").hidden=true;el(prefix+"-metadata").hidden=true}
 renderFolders(el(prefix+"-folders"),doc.groups);
 renderChapters(prefix);

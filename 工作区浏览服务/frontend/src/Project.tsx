@@ -12,14 +12,20 @@ import { TabNav } from './components/TabNav';
 import { SearchField } from './components/SearchField';
 import { Pagination } from './components/Pagination';
 import { HeaderControlsContext } from './components/AppShell';
+import { useNotify } from './components/Notifications';
 
 export default function Project() {
+  const notify = useNotify();
   const controlsRoot = useContext(HeaderControlsContext);
   const { name = '' } = useParams();
   const [section, setSection] = useState('00-项目定位');
   const [visited, setVisited] = useState(['00-项目定位']);
   const [preview, setPreview] = useState<FileItem | null>(null);
-  const status = useQuery({ queryKey: ['status', name], queryFn: () => get<RecordData>(`${projectUrl(name)}/status`), refetchInterval: 5000 });
+  const status = useQuery({ queryKey: ['status', name], queryFn: async () => {
+    const value = await get<RecordData>(`${projectUrl(name)}/status`);
+    if (value.error) notify('资料同步未完成，当前显示上一次读取的内容。', 'error');
+    return value;
+  }, refetchInterval: 5000 });
   const revision = status.data?.revision || 1;
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   return <PreviewContext.Provider value={setPreview}>
@@ -34,7 +40,6 @@ export default function Project() {
       <Breadcrumbs items={[name, overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')]} />
     </PageHeader>
     <Result loading={status.isPending || overview.isPending} error={status.error || overview.error} />
-    {status.data?.error && <p className="error">同步失败，保留上一份可读资料：{status.data.error}</p>}
     {overview.data && <>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
       {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}

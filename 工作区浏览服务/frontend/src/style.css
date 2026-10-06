@@ -39,3 +39,5 @@
 .document-meta-inline{align-items:center;column-gap:12px}.document-meta-inline>.prose{display:inline-block}
 
 .breadcrumbs{font-size:15px;font-weight:600;color:inherit;line-height:1.6}.breadcrumbs [aria-current="page"]{color:var(--green)}.breadcrumb-separator{color:var(--muted);padding:0 4px}
+
+.notification{position:fixed;inset:auto;left:24px;bottom:24px;margin:0;z-index:60;display:flex;align-items:flex-start;gap:16px;max-width:min(520px,calc(100vw - 48px));padding:14px 18px;border:1px solid var(--line);border-radius:8px;background:white;box-shadow:0 4px 20px #24342d25;overflow-wrap:anywhere}.notification-error{border-color:#e7b5b5;color:#a52c2c}.notification button{padding:0 5px;border:0;background:transparent;color:inherit;line-height:1.7}

@@ -139,7 +139,7 @@ def markdown(text, source):
     """
     lines, out, i, anchors = text.splitlines(), [], 0, {}
     in_header = True
-    metadata_field = r"^(?:文档版本|更新日期|确认状态|确认说明|制作目标|阅读边界)[:：]"
+    metadata_field = r"^(?:项目名称或代号|文档版本|更新日期|确认状态|确认范围|确认依据|确认说明|制作目标|阅读边界)[:：]"
     while i < len(lines):
         line = lines[i]
         if not line.strip():
@@ -481,11 +481,13 @@ def build_data(project):
         start = re.search(r"^## ", body, re.M)
         intro, main = (body[:start.start()], body[start.start():]) if start else ("", body)
         boundary = field(intro, "阅读边界")
-        for key in (*meta, "阅读边界"):
+        summary_lines = re.findall(r"^-[ \t]*确认范围[:：].*$", intro, re.M)
+        for key in (*meta, "项目名称或代号", "确认范围", "阅读边界"):
             intro = re.sub(r"^-[ \t]*" + re.escape(key) + r"[:：][^\n]*\n?", "", intro, flags=re.M)
         return {"exists": text is not None, "meta": meta,
                 "url": quote(source, safe="/-._~"), "confirmationHtml": status_markup(meta["确认状态"], source),
                 "boundaryHtml": inline(boundary, source) if boundary != "未记录" else "",
+                "summaryHtml": markdown("\n".join(summary_lines), source),
                 "introHtml": markdown(intro, source), "bodyHtml": markdown(main, source),
                 "groups": collect_groups(str(Path(source).parent)) if with_groups else []}
 
