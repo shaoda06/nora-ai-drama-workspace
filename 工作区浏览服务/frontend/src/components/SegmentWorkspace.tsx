@@ -1,9 +1,10 @@
 import { useContext, useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import type { GenerationContext, SegmentVideo as VideoItem } from '../api';
 import { Original, PreviewContext, Rich } from '../components';
 import { TabNav } from './TabNav';
 import { TabSelect } from './TabSelect';
-import { candidateLabel, SegmentVideo } from './SegmentVideo';
+import { candidateLabel, latestVideo, SegmentVideo } from './SegmentVideo';
 import { CopyButton } from './CopyButton';
 
 function SegmentReferences({ context }: { context?: GenerationContext }) {
@@ -19,22 +20,23 @@ function SegmentReferences({ context }: { context?: GenerationContext }) {
   </section>;
 }
 
-export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
-  const [stage, setStage] = useState('');
-  const [selected, setSelected] = useState('');
+export function SegmentWorkspace({ items, selection: { stage, key: selected }, onSelectionChange, playbackControl, scenePlaybackTime, onLocalPlay }: {
+  items: VideoItem[]; selection: { stage: string; key: string }; onSelectionChange: (selection: { stage: string; key: string }) => void;
+  playbackControl: ReactNode; scenePlaybackTime?: number; onLocalPlay: () => void;
+}) {
   const [tab, setTab] = useState('script');
   const [language, setLanguage] = useState('zh');
-  const [scriptMode, setScriptMode] = useState('all');
+  const [scriptMode, setScriptMode] = useState('aligned');
   const [playback, setPlayback] = useState({ key: '', time: 0 });
   const scriptContent = useRef<HTMLDivElement>(null);
-  const latest = items.reduce<VideoItem | undefined>((latest, item) => !latest || Number(item.run.slice(1)) > Number(latest.run.slice(1)) ? item : latest, undefined);
+  const latest = latestVideo(items);
   const versions = items.filter(item => item.stage === stage).sort((a, b) => Number(b.approved) - Number(a.approved) || a.candidateNumber - b.candidateNumber);
   const current = versions.find(item => item.key === selected);
   const context = current?.context;
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
   const shots = context?.shots || [];
   const canAlign = shots.length > 0 && shots.every(shot => shot.duration !== null);
-  const time = playback.key === current?.key ? playback.time : 0;
+  const time = scenePlaybackTime ?? (playback.key === current?.key ? playback.time : 0);
   let shotEnd = 0;
   const activeShot = canAlign ? shots.find(shot => {
     shotEnd += shot.duration!;
@@ -46,13 +48,14 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
   }, [current?.key, tab, scriptMode, aligned ? activeShot?.id : undefined]);
   return <>
     <div className="segment-selectors tabs tabs-grouped">
-      <TabSelect label="画质选择" selected={stage} onChange={value => { setStage(value); setSelected(''); }} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
-      <TabSelect label="版本切换" disabled={!stage} selected={current?.key || ''} onChange={setSelected} items={versions.map(item => ({ value: item.key, label: item.approved ? '正式版' : candidateLabel(item.candidateNumber) }))} />
-      <button disabled={!latest} onClick={() => { setStage(latest!.stage); setSelected(latest!.key); }}>最新</button>
+      <TabSelect label="画质选择" selected={stage} onChange={value => onSelectionChange({ stage: value, key: '' })} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
+      <TabSelect label="版本切换" disabled={!stage} selected={current?.key || ''} onChange={key => onSelectionChange({ stage, key })} items={versions.map(item => ({ value: item.key, label: item.approved ? '正式版' : candidateLabel(item.candidateNumber) }))} />
+      <button disabled={!latest} onClick={() => onSelectionChange({ stage: latest!.stage, key: latest!.key })}>最新</button>
+      {playbackControl}
     </div>
     <div className="segment-workspace">
       <div className="segment-media-column">
-        <SegmentVideo key={current?.key || 'empty'} current={current} onTimeChange={time => setPlayback({ key: current!.key, time })} />
+        <SegmentVideo key={current?.key || 'empty'} current={current} syncTime={scenePlaybackTime} onPlay={onLocalPlay} onTimeChange={time => setPlayback({ key: current!.key, time })} />
         <SegmentReferences context={context} />
       </div>
       <section className="segment-script" aria-label="分镜脚本与提示词区域">
@@ -61,7 +64,7 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
           <Original url={tab === 'script' ? context?.scriptUrl : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />
         </div>
         {tab === 'script' && <div className="segment-script-modes">
-          <TabNav compact label="分镜显示方式" items={[{ value: 'all', label: '显示全部' }, { value: 'aligned', label: '跟视频对齐', disabled: !canAlign }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
+          <TabNav compact label="分镜显示方式" items={[{ value: 'aligned', label: '跟视频对齐', disabled: !canAlign }, { value: 'all', label: '显示全部' }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
         </div>}
         <div className="segment-script-content" ref={scriptContent}>
         {!context ? <div className="script-placeholder">{tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
