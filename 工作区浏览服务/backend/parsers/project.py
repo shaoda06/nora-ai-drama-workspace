@@ -1015,10 +1015,10 @@ def build_data(project, *, web_episode_navigation=False):
             "note": "等待审阅也属于进行中；整集完成以项目进度为准。"})
         if web_episode_navigation:
             script = read(production + "/" + number + "/02-剧集剧本/" + number + "-本集剧本.md") or ""
-            story = re.search(r"^##[ \t]+1\.[ \t]*故事剧本正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)", script, re.M | re.S)
+            script_body = re.search(r"^##[ \t]+1\.[ \t]*故事剧本正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)", script, re.M | re.S)
             episode_node["scenes"] = list(dict.fromkeys(re.findall(
                 r"^###[ \t]+" + re.escape(number) + r"-(C\d{3,})[ \t]*$",
-                story[1] if story else "", re.M)))
+                script_body[1] if script_body else "", re.M)))
         episodes.append(episode_node)
     catalogues[production] = {"kind": "group", "key": production, "name": "剧集制作", "children": episodes,
         "statistics": {"total": len(episode_numbers), "completed": counts["已完成"],

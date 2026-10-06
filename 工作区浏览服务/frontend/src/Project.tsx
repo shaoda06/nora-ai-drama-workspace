@@ -41,12 +41,12 @@ export default function Project() {
       </div>
     )}
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
-      <Breadcrumbs items={[name, overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), ...(section === '09-剧集制作' && episode ? [episode] : [])]} />
+      <Breadcrumbs items={[{ label: overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), href: `#/projects/${encodeURIComponent(name)}`, onClick: () => setEpisode(null) }, ...(section === '09-剧集制作' && episode ? [{ label: episode }] : [])]} />
     </PageHeader>
     <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} />
     {overview.data && <>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
-      {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
+      {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { if (value === '09-剧集制作' && value !== section) setEpisode(null); setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
       {visited.map(label => <SectionPane key={name + '/' + label} project={name} section={label} revision={revision} active={label === section} episode={episode} onEpisodeChange={setEpisode} />)}
     </>}
     {preview && <Preview key={preview.key || preview.url} project={name} item={preview} revision={revision} close={() => setPreview(null)} />}
@@ -54,9 +54,8 @@ export default function Project() {
 }
 function SectionPane({ project, section, revision, active, episode, onEpisodeChange }: { project: string; section: string; revision: number; active: boolean; episode: string | null; onEpisodeChange: (episode: string | null) => void }) {
   const query = useQuery({ queryKey: ['section', project, section, revision], queryFn: () => get<RecordData>(`${projectUrl(project)}/sections/${encodeURIComponent(section)}`), enabled: active, placeholderData: previous => previous });
-  const title = section === '00-项目定位' ? '项目定位' : query.data?.title && query.data.title !== '未记录' ? query.data.title : section.replace(/^\d+-/, '');
   const statistics = section === '09-剧集制作' ? query.data?.statistics : undefined;
-  return <section className="panel" hidden={!active}><div className={statistics ? 'production-heading' : undefined}><h2>{title}</h2>{statistics && <div className="production-statistics" aria-label="剧集制作统计"><span>共 <strong>{statistics.total}</strong> 集</span><span>未开始 <strong>{statistics.notStarted}</strong> 集</span><span>进行中 <strong>{statistics.running}</strong> 集</span><span>已完成 <strong>{statistics.completed}</strong> 集</span></div>}</div><Result page loading={active && query.isPending} error={query.error} />{query.data && <Section value={query.data} project={project} section={section} revision={revision} episode={episode} onEpisodeChange={onEpisodeChange} />}</section>;
+  return <section className="panel" hidden={!active}>{statistics && <div className="production-statistics" aria-label="剧集制作统计"><span>共 <strong>{statistics.total}</strong> 集</span><span>未开始 <strong>{statistics.notStarted}</strong> 集</span><span>进行中 <strong>{statistics.running}</strong> 集</span><span>已完成 <strong>{statistics.completed}</strong> 集</span></div>}<Result page loading={active && query.isPending} error={query.error} />{query.data && (section !== '09-剧集制作' || active) && <Section value={query.data} project={project} section={section} revision={revision} episode={episode} onEpisodeChange={onEpisodeChange} />}</section>;
 }
 function Section({ value, project, section, revision, episode, onEpisodeChange }: { value: RecordData; project: string; section: string; revision: number; episode: string | null; onEpisodeChange: (episode: string | null) => void }) {
   if (section === '09-剧集制作') return <EpisodeProduction items={value.children} selected={episode} onSelect={onEpisodeChange} />;

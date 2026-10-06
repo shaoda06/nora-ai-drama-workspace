@@ -1,5 +1,5 @@
-export function Breadcrumbs({ items }: { items: string[] }) {
+export function Breadcrumbs({ items }: { items: { label: string; href?: string; onClick?: () => void }[] }) {
   return <nav className="breadcrumbs" aria-label="当前位置">{items.map((item, index) =>
-    <span key={index}>{index > 0 && <span className="breadcrumb-separator" aria-hidden="true"> / </span>}<span aria-current={index === items.length - 1 ? 'page' : undefined}>{item}</span></span>
+    <span key={index}>{index > 0 && <span className="breadcrumb-separator" aria-hidden="true"> / </span>}{index === items.length - 1 ? <span aria-current="page">{item.label}</span> : <a href={item.href} onClick={event => { if (item.onClick) { event.preventDefault(); item.onClick(); } }}>{item.label}</a>}</span>
   )}</nav>;
 }

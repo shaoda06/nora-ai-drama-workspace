@@ -99,6 +99,10 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(progress.read_bytes(), source)
 
     def test_episode_scenes_follow_current_story_body_only(self):
+        story_folder = self.project / '01-主旨与简介'
+        story_folder.mkdir()
+        (story_folder / '主旨与简介.md').write_text(
+            '# 主旨与简介\n\n## 1. 主旨\n主旨正文保留。\n', encoding='utf-8')
         folder = self.project / '09-剧集制作/EP001/02-剧集剧本'
         folder.mkdir(parents=True)
         script = folder / 'EP001-本集剧本.md'
@@ -119,6 +123,9 @@ class ServiceTests(unittest.TestCase):
         data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
         self.assertEqual(data['children'][0]['scenes'], ['C002', 'C001'])
         self.assertEqual(data['children'][1]['scenes'], [])
+        story = self.client.get('/api/projects/示例项目/sections/01-主旨与简介')
+        self.assertEqual(story.status_code, 200)
+        self.assertIn('主旨正文保留。', story.json()['bodyHtml'])
         self.assertEqual(script.read_bytes(), source)
 
     def test_discovery_and_dynamic_document(self):

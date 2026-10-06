@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { FileItem } from '../api';
 import { Rich } from '../components';
 import { TabNav } from './TabNav';
@@ -10,6 +10,11 @@ export function EpisodeProduction({ items, selected, onSelect }: { items: FileIt
   const [page, setPage] = useState(1);
   const heading = useRef<HTMLHeadingElement>(null);
   const cards = useRef<HTMLDivElement>(null);
+  const previousEpisode = useRef(selected);
+  useEffect(() => {
+    if (!selected && previousEpisode.current) cards.current!.querySelector<HTMLButtonElement>(`[data-episode="${previousEpisode.current}"]`)!.focus();
+    previousEpisode.current = selected;
+  }, [selected]);
   const current = items.find(item => item.name === selected);
   const scenes = current?.scenes || [];
   const selectedScene = scene || scenes[0] || '';
@@ -18,15 +23,11 @@ export function EpisodeProduction({ items, selected, onSelect }: { items: FileIt
     onSelect(name);
     requestAnimationFrame(() => { heading.current!.scrollIntoView({ block: 'start' }); heading.current!.focus({ preventScroll: true }); });
   };
-  const back = () => {
-    onSelect(null);
-    requestAnimationFrame(() => cards.current!.querySelector<HTMLButtonElement>(`[data-episode="${selected}"]`)!.focus());
-  };
   return current ? <div className="episode-detail">
     <div className="episode-heading">
       <h3 ref={heading} tabIndex={-1}>{current.name} · {current.title || '题名未记录'}</h3>
       <Rich html={current.statusHtml} />
-      <button onClick={back}>← 返回选集列表</button>
+      <button onClick={() => onSelect(null)}>← 返回选集列表</button>
     </div>
     {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
     <div className="episode-scene-content" aria-label={selectedScene ? `场次 ${selectedScene} 内容` : '场次内容'} />
