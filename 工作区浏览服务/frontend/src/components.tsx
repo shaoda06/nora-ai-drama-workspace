@@ -53,8 +53,10 @@ function Folder({ item }: { item: FileItem }) {
   return <details open={open} onToggle={event => setOpen(event.currentTarget.open)}><summary>{item.name}</summary>
     {open && <FileTree items={item.children || item.files || []} />}</details>;
 }
-export function Groups({ groups = [] }: { groups?: Group[] }) {
-  return groups.length ? <details className="groups"><summary>其他资料</summary><div>{groups.map(group => <Folder key={group.name} item={{ kind: 'group', ...group }} />)}</div></details> : null;
+export function Groups({ groups = [], chapter = false }: { groups?: Group[]; chapter?: boolean }) {
+  if (!groups.length) return null;
+  const folders = <div>{groups.map(group => <Folder key={group.name} item={{ kind: 'group', ...group }} />)}</div>;
+  return chapter ? <section className="groups"><h2>其他资料</h2>{folders}</section> : <details className="groups"><summary>其他资料</summary>{folders}</details>;
 }
 export function Document({ value: latest }: { value: RecordData }) {
   const [value, setValue] = useState(latest);
@@ -100,19 +102,20 @@ export function Document({ value: latest }: { value: RecordData }) {
     return { html: document.body.innerHTML, languages };
   }, [body, value.documentKey]);
   const ref = useRef<HTMLDivElement>(null);
+  const hasGroups = !!latest.groups?.length;
   const [headings, setHeadings] = useState<{ id: string; text: string; level: string }[]>([]);
   useEffect(() => {
     setHeadings(Array.from(ref.current!.querySelectorAll('h2,h3')).map((heading, i) => {
       if (!heading.id) heading.id = `chapter-${i}`;
       return { id: heading.id, text: heading.textContent || '', level: heading.tagName };
     }));
-  }, [presentation.html]);
+  }, [presentation.html, hasGroups]);
   return <div className="document">
     {changed && <p className="notice document-update">本文有新版本，当前阅读位置保持不变。<button onClick={() => setValue(latest)}>读取新版本</button></p>}
     <div className="meta document-meta-inline">{value.confirmationHtml && <Rich html={value.confirmationHtml.match(/^<span class="status-badge.*?<\/span>/s)?.[0]} />}{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}<Original url={value.url} /></div>
     {value.headerHtml && <DocumentInformation><Rich html={value.headerHtml} /></DocumentInformation>}
     {headings.length > 0 && <details className="chapters" open><summary>章节导航</summary>{headings.map(h => <button key={h.id} className={'link ' + h.level} onClick={() => ref.current!.querySelectorAll('[id]').forEach(el => { if (el.id === h.id) { el.scrollIntoView({ behavior: 'auto', block: 'start' }); (el as HTMLElement).tabIndex = -1; (el as HTMLElement).focus({ preventScroll: true }); } })}>{h.text}</button>)}</details>}
-    <div ref={ref}><Rich html={presentation.html} languages={presentation.languages} /></div><Groups groups={latest.groups} />
+    <div ref={ref}><Rich html={presentation.html} languages={presentation.languages} /><Groups groups={latest.groups} chapter /></div>
   </div>;
 }
 export function Dialog({ title, children, close }: { title: string; children: ReactNode; close: () => void }) {
