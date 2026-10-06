@@ -8,6 +8,8 @@ import { TabNav } from './components/TabNav';
 import { useNotify } from './components/Notifications';
 import { DocumentInformation } from './components/DocumentInformation';
 import { Loading } from './components/Loading';
+import { ChapterNavigation } from './components/ChapterNavigation';
+import type { ChapterHeading } from './components/ChapterNavigation';
 
 export const PreviewContext = createContext<(item: FileItem) => void>(() => {});
 export function Result({ loading, error, page = false }: { loading: boolean; error: Error | null; page?: boolean }) {
@@ -103,18 +105,18 @@ export function Document({ value: latest }: { value: RecordData }) {
   }, [body, value.documentKey]);
   const ref = useRef<HTMLDivElement>(null);
   const hasGroups = !!latest.groups?.length;
-  const [headings, setHeadings] = useState<{ id: string; text: string; level: string }[]>([]);
+  const [headings, setHeadings] = useState<ChapterHeading[]>([]);
   useEffect(() => {
-    setHeadings(Array.from(ref.current!.querySelectorAll('h2,h3')).map((heading, i) => {
+    setHeadings(Array.from(ref.current!.querySelectorAll('h2,h3,h4,h5,h6')).map((heading, i) => {
       if (!heading.id) heading.id = `chapter-${i}`;
-      return { id: heading.id, text: heading.textContent || '', level: heading.tagName };
+      return { id: heading.id, text: heading.textContent || '', level: Number(heading.tagName[1]) };
     }));
   }, [presentation.html, hasGroups]);
   return <div className="document">
     {changed && <p className="notice document-update">本文有新版本，当前阅读位置保持不变。<button onClick={() => setValue(latest)}>读取新版本</button></p>}
     <div className="meta document-meta-inline">{value.confirmationHtml && <Rich html={value.confirmationHtml.match(/^<span class="status-badge.*?<\/span>/s)?.[0]} />}{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}<Original url={value.url} /></div>
     {value.headerHtml && <DocumentInformation><Rich html={value.headerHtml} /></DocumentInformation>}
-    {headings.length > 0 && <details className="chapters" open><summary>章节导航</summary>{headings.map(h => <button key={h.id} className={'link ' + h.level} onClick={() => ref.current!.querySelectorAll('[id]').forEach(el => { if (el.id === h.id) { el.scrollIntoView({ behavior: 'auto', block: 'start' }); (el as HTMLElement).tabIndex = -1; (el as HTMLElement).focus({ preventScroll: true }); } })}>{h.text}</button>)}</details>}
+    <ChapterNavigation headings={headings} onNavigate={id => ref.current!.querySelectorAll('[id]').forEach(el => { if (el.id === id) { el.scrollIntoView({ behavior: 'auto', block: 'start' }); (el as HTMLElement).tabIndex = -1; (el as HTMLElement).focus({ preventScroll: true }); } })} />
     <div ref={ref}><Rich html={presentation.html} languages={presentation.languages} /><Groups groups={latest.groups} chapter /></div>
   </div>;
 }
