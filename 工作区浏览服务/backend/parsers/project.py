@@ -996,6 +996,9 @@ def build_data(project, *, web_episode_navigation=False):
     production = "09-剧集制作"
     existing_episodes = {}
     episode_videos = {}
+    generation_contexts = {}
+    if web_episode_navigation:
+        from .generation import resolve_context
     production_statuses = {match[1]: row["status"] for row in rows
                            if (match := re.fullmatch(r"(EP\d{3,})\s*制作", row["name"]))}
     folder = project / production
@@ -1005,6 +1008,20 @@ def build_data(project, *, web_episode_navigation=False):
         root = episode.relative_to(project).as_posix()
         files = inventory(root)
         episode_videos[episode.name] = [item for item in files if item["kind"] == "video"]
+        if web_episode_navigation:
+            for item in files:
+                if item["name"] != "输入映射.json" or "执行附件" not in Path(item["key"]).parts:
+                    continue
+                snapshot = text_previews[item["key"]]
+                mapping_text = ((project / item["key"]).read_text("utf-8-sig")
+                                if snapshot["notice"] else snapshot["text"])
+                for context in json.loads(mapping_text).get("generation_contexts", []):
+                    identity = context["identity"]
+                    if not re.fullmatch(re.escape(episode.name) + r"-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)", identity):
+                        raise ValueError(item["key"] + "：生成资料身份格式不正确")
+                    if identity in generation_contexts:
+                        raise ValueError("生成资料关联重复：" + identity)
+                    generation_contexts[identity] = context
         children = file_tree(files, root, episode.name)["children"]
         present = {item["name"] for item in children}
         for directory in sorted(episode.iterdir()):
@@ -1093,6 +1110,8 @@ def build_data(project, *, web_episode_navigation=False):
                 for video in videos:
                     stage_counts[video["stage"]] += 1
                     video["candidateNumber"] = stage_counts[video["stage"]]
+                    video["context"] = resolve_context(segment_identity + "-" + video["run"] + "-" + video["stage"],
+                        generation_contexts, project, read, read_plain, text_previews)
                 episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration),
                     "scriptHtml": markdown(script_text, storyboard_source),
                     "videos": videos,

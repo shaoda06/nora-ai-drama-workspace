@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import type { FileItem } from '../api';
-import { Original, Rich } from '../components';
 import { TabNav } from './TabNav';
 import { Pagination } from './Pagination';
 import { EpisodeButton } from './EpisodeButton';
-import { SegmentVideo } from './SegmentVideo';
+import { SegmentWorkspace } from './SegmentWorkspace';
 
 export function EpisodeProduction({ items, selected, onSelect }: { items: FileItem[]; selected: string | null; onSelect: (episode: string | null) => void }) {
   const [scene, setScene] = useState('');
@@ -33,13 +32,7 @@ export function EpisodeProduction({ items, selected, onSelect }: { items: FileIt
       {segments.length > 0 && <div className="segment-scroll"><div className="segment-strip" role="group" aria-label="本场分段" style={{ gridTemplateColumns: segments.map(item => `${item.duration}fr`).join(' '), minWidth: `${segments.reduce((total, item) => total + item.duration, 0) / Math.min(...segments.map(item => item.duration)) * 40}px` }}>
         {segments.map(item => <button key={item.id} aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} title={`${item.id} · 计划时长 ${item.duration}秒`} aria-pressed={item.id === selectedSegment} onClick={() => setSegment(item.id)}><span>{item.id}</span><span>{item.duration}秒</span></button>)}
       </div></div>}
-      {selectedSegment && <div className="segment-workspace" key={selectedScene + '/' + selectedSegment}>
-        <SegmentVideo items={selectedScript!.videos} />
-        <section className="segment-script" aria-label={`分镜脚本区域，分段 ${selectedSegment}`}>
-          {selectedScript?.scriptUrl && <div className="segment-script-actions"><Original url={selectedScript.scriptUrl} label="查看原文件" /></div>}
-          {selectedScript?.scriptHtml ? <Rich html={selectedScript.scriptHtml} /> : <p className="muted">本段分镜正文尚未记录。</p>}
-        </section>
-      </div>}
+      {selectedSegment && <SegmentWorkspace key={selectedScene + '/' + selectedSegment} items={selectedScript!.videos} />}
     </div>
   </div> : <>
     <div ref={cards} className="episode-grid">{items.slice((page - 1) * 36, page * 36).map(item => <EpisodeButton key={item.key} item={item} onSelect={open} />)}</div>

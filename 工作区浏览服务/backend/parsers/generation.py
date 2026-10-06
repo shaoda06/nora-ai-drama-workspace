@@ -1,0 +1,93 @@
+"""Resolve a video's explicitly recorded generation inputs, never current defaults."""
+import re
+from pathlib import Path
+from urllib.parse import quote
+
+from .project import field, markdown
+
+
+def segment_body(text, segment):
+    shots = re.search(r"^##[ \t]+1\.[ \t]*镜头正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)", text, re.M | re.S)
+    section = re.search(r"^###[ \t]+分段[ \t]+" + re.escape(segment)
+                        + r"[ \t]*\n.*?(?=^###[ \t]|\Z)", shots[1], re.M | re.S) if shots else None
+    start = re.search(r"^####[ \t]+", section[0], re.M) if section else None
+    body = section[0][start.start():] if start else ""
+    body = re.sub(r"(^####[ \t]+(EP\d+-SH\d+)[ \t]*\n)\s*\*\*镜号\*\*[：:][ \t]*\2[ \t]*(?=\n|$)",
+                  r"\1", body, flags=re.M)
+    # Historical files retain their bytes; display the existing duration after time.
+    shots = re.split(r"(?=^####[ \t])", body, flags=re.M)
+    for index, shot in enumerate(shots):
+        duration = re.search(r"^\*\*时长\*\*[：:][^\n]*\n?", shot, re.M)
+        time = re.search(r"^\*\*时间\*\*[：:][^\n]*\n?", shot, re.M)
+        if duration and time and duration.start() > time.end():
+            without_duration = shot[:duration.start()] + shot[duration.end():]
+            shots[index] = without_duration[:time.end()] + "\n" + duration[0].rstrip() + "\n" + without_duration[time.end():]
+    return "".join(shots)
+
+
+def resolve_context(identity, contexts, project, read, read_plain, previews, trail=()):
+    empty = {"scriptHtml": "", "prompts": {"english": "", "chinese": ""},
+             "references": {"common": [], "segment": []}, "issues": []}
+    if identity not in contexts:
+        return dict(empty, issues=["该次生成的资料关联尚未记录。"])
+    if identity in trail:
+        raise ValueError("视频来源循环：" + identity)
+    context = contexts[identity]
+    if "source" in context and "storyboard" not in context and "prompts" not in context:
+        result = resolve_context(context["source"], contexts, project, read, read_plain, previews, (*trail, identity))
+        return dict(result, source=context["source"])
+    result = empty
+    if "source" in context:
+        result["source"] = context["source"]
+
+    def local_file(key):
+        path = project / key
+        if Path(key).is_absolute() or not path.resolve().is_relative_to(project):
+            raise ValueError("生成资料越出项目：" + key)
+        return path if path.is_file() else None
+
+    storyboard = context.get("storyboard")
+    if storyboard and local_file(storyboard["file"]):
+        text = read(storyboard["file"])
+        if field(text, "文档版本").rstrip("。") != storyboard["version"]:
+            result["issues"].append("该次分镜的文件版本与记录不一致。")
+        else:
+            body = segment_body(text, identity.split("-")[2])
+            result.update(scriptHtml=markdown(body, storyboard["file"]),
+                          scriptUrl=quote(storyboard["file"], safe="/-._~"))
+            if not body:
+                result["issues"].append("该次分镜中未找到对应分段的镜头正文。")
+    else:
+        result["issues"].append("该次分镜原文件尚未关联或已缺失。")
+
+    for language in ("english", "chinese"):
+        key = context.get("prompts", {}).get(language)
+        if not key or not local_file(key):
+            continue
+        if key.endswith(".md"):
+            text = read(key)
+            english = re.search(r"^## 提交给(?:模型|节点263)的完整提示词\s*\n```text\s*\n(.*?)```", text, re.M | re.S)
+            chinese = re.search(r"^## 中文提示词参考版\s*\n(?:(?!^## ).)*?```text\s*\n(.*?)```", text, re.M | re.S)
+            if language == "chinese" and english and chinese and english[1].strip() == result["prompts"]["english"].replace("\r\n", "\n").strip():
+                result["prompts"][language] = chinese[1].strip()
+        else:
+            read_plain(key)
+            if not previews[key]["notice"]:
+                result["prompts"][language] = previews[key]["text"]
+        if result["prompts"][language]:
+            result["prompts"][language + "Url"] = quote(key, safe="/-._~")
+    if not result["prompts"]["english"]:
+        result["issues"].append("该次实际提交的提示词快照尚未关联或已缺失。")
+    if "references" not in context:
+        result["issues"].append("该次参考图关联尚未记录。")
+    for group in ("common", "segment"):
+        for item in context.get("references", {}).get(group, []):
+            path = local_file(item["file"])
+            image = {"name": Path(item["file"]).name, "label": item["label"]}
+            if path:
+                image["url"] = quote(item["file"], safe="/-._~")
+            else:
+                image["missing"] = True
+                result["issues"].append("该次输入原图缺失：" + image["name"])
+            result["references"][group].append(image)
+    return result
