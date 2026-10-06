@@ -23,20 +23,22 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
   const [selected, setSelected] = useState('');
   const [tab, setTab] = useState('script');
   const [language, setLanguage] = useState('zh');
+  const latest = items.reduce<VideoItem | undefined>((latest, item) => !latest || Number(item.run.slice(1)) > Number(latest.run.slice(1)) ? item : latest, undefined);
   const versions = items.filter(item => item.stage === stage).sort((a, b) => Number(b.approved) - Number(a.approved) || a.candidateNumber - b.candidateNumber);
   const current = versions.find(item => item.key === selected);
   const context = current?.context;
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
   return <>
     <div className="segment-selectors tabs tabs-grouped">
-      <label className="segment-selector"><span>画质选择</span><select className="tab-select" aria-label="画质选择" data-active={Boolean(stage)} value={stage} onChange={event => { setStage(event.target.value); setSelected(''); }}>
-        <option value="">不选择</option>
+      <select className="tab-select" aria-label="画质选择" data-active={Boolean(stage)} value={stage} onChange={event => { setStage(event.target.value); setSelected(''); }}>
+        <option value="">画质选择</option>
         {['一采', '二采', '后处理'].map(value => <option key={value} value={value}>{value}</option>)}
-      </select></label>
-      <label className="segment-selector"><span>版本切换</span><select className="tab-select" aria-label="版本切换" disabled={!stage} data-active={Boolean(current)} value={current?.key || ''} onChange={event => setSelected(event.target.value)}>
-        <option value="">不选择</option>
+      </select>
+      <select className="tab-select" aria-label="版本切换" disabled={!stage} data-active={Boolean(current)} value={current?.key || ''} onChange={event => setSelected(event.target.value)}>
+        <option value="">版本切换</option>
         {versions.map(item => <option key={item.key} value={item.key}>{item.approved ? '正式版' : candidateLabel(item.candidateNumber)}</option>)}
-      </select></label>
+      </select>
+      <button disabled={!latest} onClick={() => { setStage(latest!.stage); setSelected(latest!.key); }}>最新</button>
     </div>
     <div className="segment-workspace">
       <div className="segment-media-column">
