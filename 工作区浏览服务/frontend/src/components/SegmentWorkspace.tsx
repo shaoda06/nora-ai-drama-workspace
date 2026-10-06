@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import type { GenerationContext, SegmentVideo as VideoItem } from '../api';
 import { Original, PreviewContext, Rich } from '../components';
 import { TabNav } from './TabNav';
+import { TabSelect } from './TabSelect';
 import { candidateLabel, SegmentVideo } from './SegmentVideo';
 import { CopyButton } from './CopyButton';
 
@@ -30,14 +31,8 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
   return <>
     <div className="segment-selectors tabs tabs-grouped">
-      <select className="tab-select" aria-label="画质选择" data-active={Boolean(stage)} value={stage} onChange={event => { setStage(event.target.value); setSelected(''); }}>
-        <option value="">画质选择</option>
-        {['一采', '二采', '后处理'].map(value => <option key={value} value={value}>{value}</option>)}
-      </select>
-      <select className="tab-select" aria-label="版本切换" disabled={!stage} data-active={Boolean(current)} value={current?.key || ''} onChange={event => setSelected(event.target.value)}>
-        <option value="">版本切换</option>
-        {versions.map(item => <option key={item.key} value={item.key}>{item.approved ? '正式版' : candidateLabel(item.candidateNumber)}</option>)}
-      </select>
+      <TabSelect label="画质选择" selected={stage} onChange={value => { setStage(value); setSelected(''); }} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
+      <TabSelect label="版本切换" disabled={!stage} selected={current?.key || ''} onChange={setSelected} items={versions.map(item => ({ value: item.key, label: item.approved ? '正式版' : candidateLabel(item.candidateNumber) }))} />
       <button disabled={!latest} onClick={() => { setStage(latest!.stage); setSelected(latest!.key); }}>最新</button>
     </div>
     <div className="segment-workspace">
