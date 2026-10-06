@@ -219,11 +219,67 @@ class ServiceTests(unittest.TestCase):
         attachments.mkdir()
         (attachments / 'EP001-C001-P001-R011-后处理.mp4').write_bytes(b'not a final candidate')
         data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]['segments']['C001'][0]['videos']
-        self.assertEqual([(v['name'], v['run'], v['stage']) for v in data],
-                         [('候选1', 'R002', '一采'), ('候选2', 'R010', '二采')])
+        self.assertEqual([(v['candidateNumber'], v['run'], v['stage'], v['approved']) for v in data],
+                         [(1, 'R002', '一采', False), (1, 'R010', '二采', False)])
         self.assertEqual(self.client.get(data[0]['url']).content, b'video candidate')
         self.assertTrue(data[0]['url'].startswith('/api/projects/'))
         self.assertTrue((candidates / 'EP001-C001-P001-R002-一采.mp4').is_file())
+
+    def test_stage_formal_uses_current_adoption_and_preserves_candidate_numbers(self):
+        episode = self.project / '09-剧集制作/EP001'
+        (episode / '02-剧集剧本').mkdir(parents=True)
+        (episode / '02-剧集剧本/EP001-本集剧本.md').write_text(
+            '## 1. 故事剧本正文\n### EP001-C001\n剧情。\n', encoding='utf-8')
+        (episode / '03-分镜脚本').mkdir()
+        (episode / '03-分镜脚本/EP001-分镜索引.md').write_text(
+            '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+            '| EP001-C001 | EP001-C001-P001 | 5 |\n', encoding='utf-8')
+        candidates = episode / '其他资料/候选视频'
+        candidates.mkdir(parents=True)
+        names = ['EP001-C001-P001-R001-一采.mp4', 'EP001-C001-P001-R002-一采.mp4',
+                 'EP001-C001-P001-R003-一采.mp4', 'EP001-C001-P001-R004-二采.mp4']
+        for name in names:
+            (candidates / name).write_bytes(name.encode())
+        adopted = episode / '其他资料/阶段采用视频/01-一采/C001-场次'
+        adopted.mkdir(parents=True)
+        (candidates / names[1]).rename(adopted / names[1])
+        work = episode / '其他资料/工作稿'
+        work.mkdir()
+        record = work / 'EP001-C001-P001-视频制作-工作稿.md'
+        def write_record(run, filename, decision):
+            record.write_text('## 1. 当前选定结果\n'
+                '| 处理阶段 | 当前选定文件 | R编号 | 来源任务 | 人工批准依据 |\n'
+                '| --- | --- | --- | --- | --- |\n'
+                f'| 一采 | [选定](../阶段采用视频/01-一采/C001-场次/{filename}) | {run} | 本次任务 | 用户批准 |\n'
+                f'## 2. 逐次执行与采用记录\n### {run}\n- 处理阶段：一采\n- 用户决定：{decision}\n', encoding='utf-8')
+        def videos():
+            return parser.build_data(self.project, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos']
+        # Directory placement cannot substitute for the adoption decision.
+        write_record('R002', names[1], '待审核')
+        self.assertFalse(any(v['approved'] for v in videos()))
+        write_record('R001', names[1], '批准采用')
+        self.assertFalse(any(v['approved'] for v in videos()))
+        write_record('R002', names[1], '批准采用')
+        data = videos()
+        self.assertEqual([(v['run'], v['candidateNumber'], v['approved']) for v in data],
+                         [('R001', 1, False), ('R002', 2, True), ('R003', 3, False), ('R004', 1, False)])
+        self.assertEqual(len(data), 4)
+        self.assertEqual((adopted / names[1]).read_bytes(), names[1].encode())
+        # Replacing the adopted version restores the old candidate's original number.
+        (adopted / names[1]).rename(candidates / names[1])
+        (candidates / names[2]).rename(adopted / names[2])
+        write_record('R003', names[2], '批准采用')
+        data = videos()
+        self.assertEqual([(v['run'], v['candidateNumber'], v['approved']) for v in data[:3]],
+                         [('R001', 1, False), ('R002', 2, False), ('R003', 3, True)])
+        # Unmigrated projects still read their existing generation record.
+        legacy = episode / '其他资料/执行附件'
+        legacy.mkdir()
+        text = record.read_text(encoding='utf-8').replace('### R003\n', '### R003整场返修\n')
+        record.unlink()
+        (legacy / 'EP001-C001-P001-生成记录.md').write_text(text, encoding='utf-8')
+        self.assertEqual([(v['run'], v['approved']) for v in videos()[:3]],
+                         [('R001', False), ('R002', False), ('R003', True)])
 
     def test_segment_duration_must_be_positive(self):
         episode = self.project / '09-剧集制作/EP001'

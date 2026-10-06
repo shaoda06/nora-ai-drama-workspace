@@ -5,7 +5,7 @@ export async function get<T>(path: string): Promise<T> {
 }
 export const projectUrl = (name: string) => `/api/projects/${encodeURIComponent(name)}`;
 export const styleUrl = (path: string) => `/api/krea2/files/${path.split('/').map(encodeURIComponent).join('/')}`;
-export interface SegmentVideo { key: string; url: string; name: string; run: string; stage: string }
+export interface SegmentVideo { key: string; url: string; run: string; stage: string; approved: boolean; candidateNumber: number }
 export interface FileItem { kind: string; name: string; title?: string; scenes?: string[]; segments?: Record<string, { id: string; duration: number; scriptHtml: string; scriptUrl?: string; videos: SegmentVideo[] }[]>; key?: string; url?: string; children?: FileItem[]; files?: FileItem[]; summary?: string; category?: string; statusHtml?: string; media?: FileItem; doc?: Record<string, unknown>; prompts?: { english?: string; chinese?: string }; }
 export interface Group { name: string; files: FileItem[] }
 // Source records contain stage-specific fields; retain their original keys and text.

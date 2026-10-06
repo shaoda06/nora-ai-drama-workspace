@@ -35,7 +35,7 @@ export function EpisodeProduction({ items, selected, onSelect }: { items: FileIt
       </div></div>}
       {selectedSegment && <div className="segment-workspace" key={selectedScene + '/' + selectedSegment}>
         <SegmentVideo items={selectedScript!.videos} />
-        <section className="segment-script" aria-label={`分段 ${selectedSegment} 分镜脚本`}>
+        <section className="segment-script" aria-label={`分镜脚本区域，分段 ${selectedSegment}`}>
           {selectedScript?.scriptUrl && <div className="segment-script-actions"><Original url={selectedScript.scriptUrl} label="查看原文件" /></div>}
           {selectedScript?.scriptHtml ? <Rich html={selectedScript.scriptHtml} /> : <p className="muted">本段分镜正文尚未记录。</p>}
         </section>

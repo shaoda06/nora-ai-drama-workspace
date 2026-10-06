@@ -1061,18 +1061,38 @@ def build_data(project, *, web_episode_navigation=False):
                 videos = []
                 segment_identity = row["分段"]
                 episode_root = production + "/" + number
+                record_key = episode_root + "/其他资料/工作稿/" + segment_identity + "-视频制作-工作稿.md"
+                record = read(record_key)
+                if record is None:
+                    record_key = episode_root + "/其他资料/执行附件/" + segment_identity + "-生成记录.md"
+                    record = read(record_key) or ""
+                current_results = re.search(r"^## 1\. 当前选定结果\s*\n(.*?)(?=^## |\Z)", record, re.M | re.S)
+                approved_keys = set()
+                for adopted in table_records(current_results[1] if current_results else "", ("处理阶段", "当前选定文件", "R编号", "人工批准依据")):
+                    run_entry = re.search(r"^### " + re.escape(adopted["R编号"]) + r"(?!\d)[^\n]*\n(.*?)(?=^### |^## |\Z)", record, re.M | re.S)
+                    if (run_entry and re.match(r"^批准采用(?:$|[。；，\s])", field(run_entry[1], "用户决定"))
+                            and field(run_entry[1], "处理阶段").startswith(adopted["处理阶段"])):
+                        approved_keys.update(link["key"] for link in markdown_links(adopted["当前选定文件"], record_key)
+                            if re.fullmatch(re.escape(segment_identity + "-" + adopted["R编号"] + "-" + adopted["处理阶段"])
+                                            + r"\.(?:mp4|webm|mov)", Path(link["key"]).name))
                 for item in episode_videos.get(number, []):
                     take = re.fullmatch(re.escape(segment_identity) + r"-(R\d{3,})-(一采|二采|后处理)\.(?:mp4|webm|mov)", item["name"])
                     if not take:
                         continue
+                    stage_folder = {"一采": "01-一采", "二采": "02-二采", "后处理": "03-后处理"}[take[2]]
+                    legacy_root = episode_root + "/06-生成结果/" + identity[1] + "-场次结果/" + identity[2] + "-分段结果/" + stage_folder
                     folders = (episode_root + "/其他资料/候选视频",
-                               episode_root + "/06-生成结果/" + identity[1] + "-场次结果/" + identity[2] + "-分段结果/"
-                               + {"一采": "01-一采", "二采": "02-二采", "后处理": "03-后处理"}[take[2]] + "/候选")
+                               episode_root + "/其他资料/阶段采用视频/" + stage_folder + "/" + identity[1] + "-场次",
+                               episode_root + "/06-生成结果/" + stage_folder + "/" + identity[1] + "-场次",
+                               legacy_root + "/候选", legacy_root + "/选定")
                     if Path(item["key"]).parent.as_posix() in folders:
-                        videos.append({"key": item["key"], "url": item["url"], "run": take[1], "stage": take[2]})
+                        videos.append({"key": item["key"], "url": item["url"], "run": take[1], "stage": take[2],
+                                       "approved": item["key"] in approved_keys})
                 videos.sort(key=lambda item: (int(item["run"][1:]), item["stage"], item["key"]))
-                for index, video in enumerate(videos, 1):
-                    video["name"] = "候选" + str(index)
+                stage_counts = {"一采": 0, "二采": 0, "后处理": 0}
+                for video in videos:
+                    stage_counts[video["stage"]] += 1
+                    video["candidateNumber"] = stage_counts[video["stage"]]
                 episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration),
                     "scriptHtml": markdown(script_text, storyboard_source),
                     "videos": videos,
