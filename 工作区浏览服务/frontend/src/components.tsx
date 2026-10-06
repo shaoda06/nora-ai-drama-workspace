@@ -7,13 +7,13 @@ import { CopyButton } from './components/CopyButton';
 import { TabNav } from './components/TabNav';
 import { useNotify } from './components/Notifications';
 import { DocumentInformation } from './components/DocumentInformation';
+import { Loading } from './components/Loading';
 
 export const PreviewContext = createContext<(item: FileItem) => void>(() => {});
 export function Result({ loading, error }: { loading: boolean; error: Error | null }) {
   const notify = useNotify();
   useEffect(() => { if (error) notify(error.message, 'error'); }, [error, notify]);
-  useEffect(() => { if (loading) notify('正在读取资料…'); }, [loading, notify]);
-  return null;
+  return loading && !error ? <Loading /> : null;
 }
 export function Rich({ html = '', languages = [] }: { html?: string; languages?: { value: string; label: string; text: string; html?: string }[] }) {
   const preview = useContext(PreviewContext);

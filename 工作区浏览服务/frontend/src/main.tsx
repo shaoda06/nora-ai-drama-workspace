@@ -7,6 +7,7 @@ import { get } from './api';
 import { Result } from './components';
 import { AppShell } from './components/AppShell';
 import { EntryCard } from './components/EntryCard';
+import { Loading } from './components/Loading';
 import './style.css';
 const Project = lazy(() => import('./Project'));
 const Krea = lazy(() => import('./Krea'));
@@ -31,6 +32,6 @@ function Home() {
   </div>;
 }
 function App() {
-  return <AppShell><Suspense fallback={<p role="status">正在打开…</p>}><Routes><Route path="/" element={<Home />} /><Route path="/projects/:name" element={<Project />} /><Route path="/krea2" element={<Krea />} /><Route path="/history" element={<History />} /><Route path="*" element={<p>入口不存在。<Link to="/">回到工作区</Link></p>} /></Routes></Suspense></AppShell>;
+  return <AppShell><Suspense fallback={<Loading />}><Routes><Route path="/" element={<Home />} /><Route path="/projects/:name" element={<Project />} /><Route path="/krea2" element={<Krea />} /><Route path="/history" element={<History />} /><Route path="*" element={<p>入口不存在。<Link to="/">回到工作区</Link></p>} /></Routes></Suspense></AppShell>;
 }
 createRoot(document.getElementById('root')!).render(<PageBoundary><QueryClientProvider client={client}><HashRouter><App /></HashRouter></QueryClientProvider></PageBoundary>);
