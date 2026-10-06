@@ -40,7 +40,7 @@ class ProjectStore:
         with entry['lock']:
             if entry['data'] is None and not entry['updating']:
                 entry['snapshot'] = self.snapshot(path)
-                entry['data'] = build_data(path)
+                entry['data'] = build_data(path, web_episode_navigation=True)
                 entry['revision'] = 1
         return entry
 
@@ -59,7 +59,7 @@ class ProjectStore:
 
     def refresh(self, name, entry, snapshot):
         try:
-            data = build_data(self.project(name))
+            data = build_data(self.project(name), web_episode_navigation=True)
         except (OSError, ValueError, RuntimeError, UnicodeError) as error:
             with entry['lock']:
                 entry['error'] = str(error)

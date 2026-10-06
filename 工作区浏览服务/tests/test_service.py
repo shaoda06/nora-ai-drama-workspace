@@ -37,14 +37,21 @@ class ServiceTests(unittest.TestCase):
                              ('EP003', '- 一句话概要：没有题名。'),
                              ('EP004', '本集题名：仅有大纲，没有制作目录。')):
             (outlines / (number + '-分集大纲.md')).write_text('# 分集大纲\n\n' + text + '\n', encoding='utf-8')
+        (outlines / '分集索引.md').write_text(
+            '| 集号 | 一句话概要 | 大纲入口 |\n| --- | --- | --- |\n'
+            '| EP004 | 四 | [大纲](EP004-分集大纲.md) |\n', encoding='utf-8')
         for number in ('EP001', 'EP002', 'EP003', 'EP005'):
             folder = self.project / '09-剧集制作' / number / '02-剧集剧本'
             folder.mkdir(parents=True)
             (folder / (number + '-本集剧本.md')).write_text('# 本集剧本\n', encoding='utf-8')
         data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
         self.assertEqual([(item['name'], item['title']) for item in data['children']],
-                         [('EP001', '先撑过今晚'), ('EP002', '婶子也不能白拿'), ('EP003', ''), ('EP005', '')])
+                         [('EP001', '先撑过今晚'), ('EP002', '婶子也不能白拿'), ('EP003', ''),
+                          ('EP004', '仅有大纲，没有制作目录'), ('EP005', '')])
         self.assertIn('EP001-本集剧本.md', str(data['children'][0]['children']))
+        self.assertIn('未开始', data['children'][3]['statusHtml'])
+        self.assertEqual(data['children'][3]['children'], [])
+        self.assertFalse((self.project / '09-剧集制作/EP004').exists())
 
     def test_production_statistics_count_episodes_not_preparation_states(self):
         outlines = self.project / '06-分集大纲'
@@ -66,10 +73,30 @@ class ServiceTests(unittest.TestCase):
             '| EP004 分镜 | 无 | 已完成 | 无 | 无 | 无 |\n'
             '| EP004 制作 | 无 | 已确认 | 无 | 无 | 无 |\n', encoding='utf-8')
         data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
-        self.assertEqual(data['statistics'], {'total': 4, 'completed': 1, 'remaining': 3, 'running': 1})
-        self.assertEqual([item['name'] for item in data['children']], ['EP001', 'EP002', 'EP004'])
-        self.assertNotIn('已完成', data['children'][2]['statusHtml'])
-        self.assertIn('已确认', data['children'][2]['statusHtml'])
+        self.assertEqual(data['statistics'], {'total': 4, 'completed': 1, 'notStarted': 1, 'running': 2})
+        self.assertEqual([item['name'] for item in data['children']], ['EP001', 'EP002', 'EP003', 'EP004'])
+        self.assertIn('未开始', data['children'][2]['statusHtml'])
+        self.assertIn('进行中', data['children'][3]['statusHtml'])
+        self.assertNotIn('已完成', data['children'][3]['statusHtml'])
+
+    def test_episode_review_is_running_and_explicit_unstarted_is_kept(self):
+        production = self.project / '09-剧集制作'
+        for number in ('EP001', 'EP002', 'EP003'):
+            (production / number).mkdir(parents=True)
+        progress = self.project / '项目进度.md'
+        progress.write_text(
+            '| 阶段名称 | 对应会话入口 | 当前状态 | 成果入口 | 待决事项 | 下一步 |\n'
+            '| --- | --- | --- | --- | --- | --- |\n'
+            '| EP001 制作 | 无 | 待确认 | 无 | 审阅视频 | 无 |\n'
+            '| EP002 制作 | 无 | 未开始 | 无 | 无 | 无 |\n', encoding='utf-8')
+        source = progress.read_bytes()
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
+        self.assertEqual(data['statistics'], {'total': 3, 'completed': 0, 'notStarted': 1, 'running': 2})
+        self.assertIn('进行中', data['children'][0]['statusHtml'])
+        self.assertNotIn('待确认', data['children'][0]['statusHtml'])
+        self.assertIn('未开始', data['children'][1]['statusHtml'])
+        self.assertIn('进行中', data['children'][2]['statusHtml'])
+        self.assertEqual(progress.read_bytes(), source)
 
     def test_discovery_and_dynamic_document(self):
         self.assertEqual(self.client.get('/api/projects').json()[0]['name'], '示例项目')

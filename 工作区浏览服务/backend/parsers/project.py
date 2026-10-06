@@ -356,7 +356,7 @@ def formal_record_url(version, record, record_key):
     return url + "#" + quote(matches[0]) if len(numbers) == len(matches) == 1 else url
 
 
-def build_data(project):
+def build_data(project, *, web_episode_navigation=False):
     documents, sources, texts = {}, {}, {}
     text_previews = {}
     warnings = []
@@ -975,7 +975,7 @@ def build_data(project):
             ([dict(file_tree(leftover, root, "未登记／其他文件"), note="索引未关联的文件仅供核对，不推断用途、授权或采用状态。")] if leftover else [])}
 
     production = "09-剧集制作"
-    episodes = []
+    existing_episodes = {}
     production_statuses = {match[1]: row["status"] for row in rows
                            if (match := re.fullmatch(r"(EP\d{3,})\s*制作", row["name"]))}
     folder = project / production
@@ -991,22 +991,32 @@ def build_data(project):
                     and directory.resolve().is_relative_to(project) and directory.name not in present):
                 children.append(file_tree([], root + "/" + directory.name, directory.name))
         children.sort(key=lambda item: (file_order(item), item["name"]))
-        title_match = re.search(r"^(?:-[ \t]*)?本集题名[:：][ \t]*([^。\n]+)",
-                               read("06-分集大纲/" + episode.name + "-分集大纲.md") or "", re.M)
-        episode_node = {"kind": "group", "name": episode.name, "key": root,
-            "title": title_match[1].strip() if title_match else "",
+        existing_episodes[episode.name] = {"kind": "group", "name": episode.name, "key": root,
             "summary": str(len(files)) + " 份文件",
-            "statusHtml": status_markup(production_statuses.get(episode.name, "未记录"), PROGRESS),
-            "note": "展开目录查看子目录和文件。制作状态仅引用项目进度；文件存在、分段获批均不代表整集完成。",
             "children": children,
         }
+    episode_numbers = planned_episodes | existing_episodes.keys()
+    episodes = []
+    counts = {"未开始": 0, "进行中": 0, "已完成": 0}
+    for number in sorted(episode_numbers, key=lambda value: int(value[2:])):
+        raw_status = production_statuses.get(number)
+        state = ("已完成" if raw_status == "已完成" else "进行中"
+                 if raw_status in ("进行中", "待确认") or (number in existing_episodes and raw_status != "未开始")
+                 else "未开始")
+        counts[state] += 1
+        if not web_episode_navigation and number not in existing_episodes:
+            continue
+        episode_node = existing_episodes.get(number) or {
+            "kind": "group", "name": number, "key": production + "/" + number, "children": []}
+        title_match = re.search(r"^(?:-[ \t]*)?本集题名[:：][ \t]*([^。\n]+)",
+                               read(outline_root + "/" + number + "-分集大纲.md") or "", re.M)
+        episode_node.update({"title": title_match[1].strip() if title_match else "",
+            "statusHtml": status_markup(state if web_episode_navigation else raw_status or "未记录", PROGRESS),
+            "note": "等待审阅也属于进行中；整集完成以项目进度为准。"})
         episodes.append(episode_node)
-    episode_numbers = planned_episodes | {item["name"] for item in episodes}
-    completed = sum(production_statuses.get(number) == "已完成" for number in episode_numbers)
-    running = sum(production_statuses.get(number) == "进行中" for number in episode_numbers)
     catalogues[production] = {"kind": "group", "key": production, "name": "剧集制作", "children": episodes,
-        "statistics": {"total": len(episode_numbers), "completed": completed,
-                       "remaining": len(episode_numbers) - completed, "running": running},
+        "statistics": {"total": len(episode_numbers), "completed": counts["已完成"],
+                       "notStarted": counts["未开始"], "running": counts["进行中"]},
         "note": "选择剧集查看本集内容。"}
     catalogues["历史版本"] = dict(file_tree(inventory("历史版本"), "历史版本", "历史版本"),
         note="以下是项目根目录的历史归档，仅供追溯，不代表当前设定或当前批准。各阶段自己的历史文件仍在对应标签中。")
