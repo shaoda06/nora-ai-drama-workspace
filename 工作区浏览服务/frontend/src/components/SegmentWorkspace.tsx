@@ -44,7 +44,8 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
         <SegmentReferences context={context} />
       </div>
       <section className="segment-script" aria-label="分镜脚本与提示词区域">
-        <TabNav label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }]} selected={tab} onChange={setTab} />
+        <TabNav label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }]} selected={tab} onChange={setTab} disabled={!current} />
+        <div className="segment-script-content">
         {!context ? <div className="script-placeholder">{tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}
           {tab === 'script' ? context.scriptHtml ? <>
@@ -60,6 +61,7 @@ export function SegmentWorkspace({ items }: { items: VideoItem[] }) {
           </>}
           {context.issues.length > 0 && <div className="notice">{context.issues.map(issue => <p key={issue}>{issue}</p>)}</div>}
         </>}
+        </div>
       </section>
     </div>
   </>;
