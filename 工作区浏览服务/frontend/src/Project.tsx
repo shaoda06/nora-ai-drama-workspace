@@ -61,7 +61,7 @@ function SectionPane({ project, section, revision, active, episode, onEpisodeCha
   return <section className="panel" hidden={!active}>{statistics && <div className="production-statistics" aria-label="剧集制作统计"><span>共 <strong>{statistics.total}</strong> 集</span><span>未开始 <strong>{statistics.notStarted}</strong> 集</span><span>进行中 <strong>{statistics.running}</strong> 集</span><span>已完成 <strong>{statistics.completed}</strong> 集</span></div>}<Result page loading={active && query.isPending} error={query.error} />{query.data && (section !== '09-剧集制作' || active) && <Section value={query.data} project={project} section={section} revision={revision} episode={episode} onEpisodeChange={onEpisodeChange} />}</section>;
 }
 function Section({ value, project, section, revision, episode, onEpisodeChange }: { value: RecordData; project: string; section: string; revision: number; episode: string | null; onEpisodeChange: (episode: string | null) => void }) {
-  if (section === '09-剧集制作') return <EpisodeProduction items={value.children} selected={episode} onSelect={onEpisodeChange} />;
+  if (section === '09-剧集制作') return <EpisodeProduction project={project} items={value.children} selected={episode} onSelect={onEpisodeChange} />;
   if (value.kind === 'people' || value.kind === 'scenes' || value.kind === 'props') return <Assets value={value} project={project} revision={revision} />;
   if ('exists' in value) return value.exists ? <Document value={value} /> : <><p className="muted">尚无正式文档。</p><Groups groups={value.groups} /></>;
   return <Catalogue value={value} section={section} />;

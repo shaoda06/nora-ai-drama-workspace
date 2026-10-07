@@ -2,11 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import type { FileItem } from '../api';
 import { latestVideo } from './SegmentVideo';
 import { SegmentWorkspace } from './SegmentWorkspace';
+import { useRevisionNotesExport } from './RevisionNotes';
+import type { NoteScope } from './RevisionNotes';
 
 type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
 
-export function SceneWorkspace({ scene, segments }: { scene: string; segments: Segments }) {
+export function SceneWorkspace({ scope, segments }: { scope: NoteScope; segments: Segments }) {
+  const { scene } = scope;
+  const notesExport = useRevisionNotesExport(scope, segments);
   const [segment, setSegment] = useState(segments[0]?.id || '');
   const [selections, setSelections] = useState<Record<string, Selection>>({});
   const [continuous, setContinuous] = useState(false);
@@ -47,9 +51,10 @@ export function SceneWorkspace({ scene, segments }: { scene: string; segments: S
       {segments.map(item => <button key={item.id} aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} title={`${item.id} · 计划时长 ${item.duration}秒`} aria-pressed={item.id === segment} onClick={() => { setAutoPlay(false); setSegment(item.id); setError(''); }}><span>{item.id}</span><span>{item.duration}秒</span></button>)}
     </div></div>}
     {error && <p className="error" role="alert">{error}</p>}
-    {currentSegment && <SegmentWorkspace key={segment} items={currentSegment.videos} selection={chosen}
+    {currentSegment && <SegmentWorkspace key={segment} scope={scope} segment={segment} items={currentSegment.videos} selection={chosen}
       autoPlay={autoPlay} onVideoError={() => setAutoPlay(false)} onVideoEnded={advance}
       onSelectionChange={value => { setAutoPlay(false); setError(''); setSelections(previous => ({ ...previous, [segment]: value })); }}
-      playbackControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>} />}
+      playbackControl={<div className="scene-review-actions"><label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>{notesExport.control}</div>} />}
+    {notesExport.dialog}
   </div>;
 }

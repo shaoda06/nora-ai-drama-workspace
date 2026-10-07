@@ -12,10 +12,12 @@ from pydantic import BaseModel
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
 from backend.services import krea2
+from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes
 
 TOOL = Path(__file__).resolve().parent.parent
 WORKSPACE = TOOL.parent
 store = ProjectStore(WORKSPACE / 'projects')
+revision_notes = RevisionNotes()
 app = FastAPI(title='Nora工作区浏览服务', version='0.1.0', docs_url=None, redoc_url=None)
 
 
@@ -53,6 +55,15 @@ def management_request(request: Request) -> bool:
     peer = request.client.host
     hostname = request.url.hostname
     return (management_address(peer) or peer == 'testclient') and (hostname == 'localhost' or management_address(hostname))
+
+
+def local_write_request(request: Request) -> bool:
+    expected = str(request.base_url).rstrip('/')
+    origin = request.headers.get('origin')
+    referer = urlsplit(request.headers.get('referer', ''))
+    port_stripped_origin = origin == request.url.scheme + '://' + request.url.hostname and request.headers.get('sec-fetch-site') == 'same-origin' and (
+        referer.scheme + '://' + referer.netloc == expected)
+    return management_request(request) and (origin == expected or port_stripped_origin)
 
 
 def view(value, name):
@@ -146,6 +157,28 @@ def project_file(name: str, path: str, v: str | None = None):
     return FileResponse(target)
 
 
+@app.get('/api/projects/{name}/revision-notes/{episode}/{scene}')
+def scene_revision_notes(name: str, episode: Episode, scene: Scene) -> SceneNotes:
+    try:
+        return revision_notes.read(store.project(name), episode, scene)
+    except FileNotFoundError as error:
+        raise HTTPException(404, str(error)) from error
+    except (OSError, ValueError, UnicodeError) as error:
+        raise HTTPException(503, '修改意见读取失败：' + str(error)) from error
+
+
+@app.put('/api/projects/{name}/revision-notes/{episode}/{scene}')
+def save_revision_note(name: str, episode: Episode, scene: Scene, value: NoteInput, request: Request) -> RevisionNote:
+    if not local_write_request(request):
+        raise HTTPException(403, '修改意见仅限本机或局域网地址，并要求同源请求')
+    try:
+        return revision_notes.save(store.project(name), episode, scene, value)
+    except FileNotFoundError as error:
+        raise HTTPException(404, str(error)) from error
+    except (OSError, ValueError, UnicodeError) as error:
+        raise HTTPException(503, '修改意见未保存：' + str(error)) from error
+
+
 @app.get('/api/krea2/catalog')
 def styles(q: str = '', library: str = '', category: str = '', page: Annotated[int, Query(ge=1)] = 1) -> dict[str, Any]:
     data = krea2.updater.catalog()['styles']
@@ -187,12 +220,7 @@ class UpdateAction(BaseModel):
 
 @app.post('/api/krea2/action', status_code=202)
 def update_action(request: Request, action: UpdateAction) -> dict[str, bool]:
-    expected = str(request.base_url).rstrip('/')
-    origin = request.headers.get('origin')
-    referer = urlsplit(request.headers.get('referer', ''))
-    port_stripped_origin = origin == request.url.scheme + '://' + request.url.hostname and request.headers.get('sec-fetch-site') == 'same-origin' and (
-        referer.scheme + '://' + referer.netloc == expected)
-    if not management_request(request) or (origin != expected and not port_stripped_origin):
+    if not local_write_request(request):
         raise HTTPException(403, '更新管理仅限本机或局域网地址，并要求同源请求')
     if request.headers.get('x-krea-token') != krea2.updater.TOKEN:
         raise HTTPException(403, '操作凭证失效，请重新打开更新管理')
