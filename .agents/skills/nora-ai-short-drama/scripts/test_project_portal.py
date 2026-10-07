@@ -650,6 +650,22 @@ class PortalTests(unittest.TestCase):
         self.assertIsNone(audio["children"][1]["media"])
         self.assertEqual(audio["children"][2]["name"], "未登记／其他文件")
 
+    def test_reference_library_process_files_are_separate_from_unregistered_media(self):
+        for root in ("07-参考音频", "08-参考视频"):
+            self.put(root + "/其他资料/工作稿/索引-工作稿.md", "# 工作稿\n\n保留用户决定")
+            self.put(root + "/其他资料/历史版本/索引-归档.md", "# 旧版")
+            self.put(root + "/其他资料/执行附件/命令.txt", "fixture command")
+            self.put(root + "/未登记.wav", "fixture media")
+        portal.build(self.root)
+        data = self.extract()
+        for root in ("07-参考音频", "08-参考视频"):
+            children = data["catalogues"][root]["children"]
+            self.assertEqual([node["name"] for node in children], ["未登记／其他文件", "其他资料"])
+            self.assertEqual([node["key"] for node in children[0]["children"]], [root + "/未登记.wav"])
+            self.assertEqual({node["name"] for node in children[1]["children"]}, {"工作稿", "历史版本", "执行附件"})
+            self.assertIn(root + "/其他资料/工作稿/索引-工作稿.md", data["documents"])
+            self.assertTrue((self.root / root / "其他资料/历史版本/索引-归档.md").is_file())
+
     def test_catalogue_empty_libraries_do_not_create_directories(self):
         portal.build(self.root)
         for root in ("07-参考音频", "08-参考视频"):

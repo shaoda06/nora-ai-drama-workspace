@@ -987,11 +987,15 @@ def build_data(project, *, web_episode_navigation=False):
                 "summary": row["参考用途与适用范围"], "media": item,
                 "sourceHtml": inline(row["来源及使用授权说明"], index_key), "duration": row["实测时长"],
                 "statusHtml": status_markup(row["审核／采用状态及版本依据"], index_key)})
-        leftover = [f for f in inventory(root) if f["key"] not in referenced and f["key"] != index_key]
+        library_files = inventory(root)
+        process_files = [f for f in library_files if f["key"].startswith(root + "/其他资料/")]
+        leftover = [f for f in library_files if f["key"] not in referenced and f["key"] != index_key
+                    and not f["key"].startswith(root + "/其他资料/")]
         catalogues[root] = {"kind": "group", "key": root, "name": label, "categories": list(categories),
             "note": "按现有索引展示用途、来源、时长及审核依据；不自动播放、不加工素材，也不将文件存在解释为已审核。",
             "indexKey": index_key if media_index_text else None, "children": media_items +
-            ([dict(file_tree(leftover, root, "未登记／其他文件"), note="索引未关联的文件仅供核对，不推断用途、授权或采用状态。")] if leftover else [])}
+            ([dict(file_tree(leftover, root, "未登记／其他文件"), note="索引未关联的文件仅供核对，不推断用途、授权或采用状态。")] if leftover else []) +
+            ([file_tree(process_files, root + "/其他资料", "其他资料")] if process_files else [])}
 
     production = "09-剧集制作"
     existing_episodes = {}
