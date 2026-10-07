@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Annotated, Any, Literal
+import json
 import re
 import os
 from ipaddress import ip_address, ip_network
@@ -19,7 +20,9 @@ WORKSPACE = Path(os.environ.get('NORA_WORKSPACE', TOOL.parent)).resolve()
 ENVIRONMENT = os.environ.get('NORA_SERVICE_ENV', 'production')
 store = ProjectStore(WORKSPACE / 'projects')
 revision_notes = RevisionNotes()
-app = FastAPI(title='Nora工作区浏览服务', version='0.1.0', docs_url=None, redoc_url=None)
+VERSION = json.loads((TOOL / 'frontend/package.json').read_text('utf-8'))['version']
+FRONTEND_RELEASE = TOOL / 'frontend/dist/release.json'
+app = FastAPI(title='Nora工作区浏览服务', version=VERSION, docs_url=None, redoc_url=None)
 
 
 @app.middleware('http')
@@ -29,6 +32,8 @@ async def security_headers(request: Request, call_next):
     response.headers['Referrer-Policy'] = 'same-origin'
     if request.url.path.startswith('/api/'):
         response.headers['Cache-Control'] = 'no-store'
+    elif response.headers.get('content-type', '').startswith('text/html'):
+        response.headers['Cache-Control'] = 'no-cache'
     return response
 
 
@@ -89,8 +94,9 @@ def projects() -> list[dict[str, str]]:
 
 @app.get('/api/service')
 def service() -> dict[str, Any]:
+    ready = FRONTEND_RELEASE.is_file() and json.loads(FRONTEND_RELEASE.read_text('utf-8'))['version'] == VERSION
     return {'app': 'nora-workspace-browser', 'version': app.version, 'pid': os.getpid(), 'workspace': str(WORKSPACE),
-            'tool': str(TOOL), 'environment': ENVIRONMENT}
+            'tool': str(TOOL), 'environment': ENVIRONMENT, 'ready': ready}
 
 
 @app.get('/api/projects/{name}/status')

@@ -67,8 +67,11 @@ export async function saveNote(url: string, key: string) {
   // A response for older text must never replace what the user typed meanwhile.
   if (succeeded && state(url).drafts[key].value !== value) void saveNote(url, key);
 }
+export function hasUnsavedNotes() {
+  return [...scenes.values()].some(scene => Object.values(scene.drafts).some(draft => draft.status !== 'saved'));
+}
 window.addEventListener('beforeunload', event => {
-  if ([...scenes.values()].some(scene => Object.values(scene.drafts).some(draft => draft.status !== 'saved'))) {
+  if (hasUnsavedNotes()) {
     event.preventDefault();
   }
 });

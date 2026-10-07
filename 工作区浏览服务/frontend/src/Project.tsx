@@ -15,17 +15,18 @@ import { FooterSyncContext, HeaderControlsContext } from './components/AppShell'
 import { useNotify } from './components/Notifications';
 import { EpisodeProduction } from './components/EpisodeProduction';
 import { AssetMediaCard } from './components/AssetMediaCard';
+import { useRefreshState } from './refreshPosition';
 
 export default function Project() {
   const notify = useNotify();
   const controlsRoot = useContext(HeaderControlsContext);
   const syncRoot = useContext(FooterSyncContext);
   const { name = '' } = useParams();
-  const [section, setSection] = useState('00-项目定位');
-  const [visited, setVisited] = useState(['00-项目定位']);
+  const [section, setSection] = useRefreshState(`project/${name}/section`, '00-项目定位');
+  const [visited, setVisited] = useState([section]);
   const [entries, setEntries] = useState<Record<string, number>>({});
   const [preview, setPreview] = useState<FileItem | null>(null);
-  const [episode, setEpisode] = useState<string | null>(null);
+  const [episode, setEpisode] = useRefreshState<string | null>(`project/${name}/episode`, null);
   const currentPath = useRef<HTMLSpanElement>(null);
   const openSection = (value: string) => {
     setEpisode(null);
@@ -48,6 +49,11 @@ export default function Project() {
   const production = useQuery<RecordData>({ queryKey: ['section', name, '09-剧集制作', revision], enabled: false, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   const episodeTitle = production.data?.children.find((item: FileItem) => item.name === episode)?.title || '题名未记录';
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
+  useEffect(() => {
+    if (overview.data && !overview.data.directories.some((dir: RecordData) => dir.name === section)) {
+      setSection('00-项目定位'); setVisited(['00-项目定位']); setEpisode(null);
+    }
+  }, [overview.data, section, setSection, setEpisode]);
   return <PreviewContext.Provider value={setPreview}>
     {syncRoot && createPortal(<>上次同步：{status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '—'}</>, syncRoot)}
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>

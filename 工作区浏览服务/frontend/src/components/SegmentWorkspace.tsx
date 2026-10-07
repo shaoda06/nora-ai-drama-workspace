@@ -9,6 +9,7 @@ import { candidateLabel, latestVideo, SegmentVideo } from './SegmentVideo';
 import { CopyButton } from './CopyButton';
 import { RevisionNoteEditor } from './RevisionNotes';
 import type { NoteScope } from './RevisionNotes';
+import { useRefreshState } from '../refreshPosition';
 
 function SegmentReferences({ context }: { context?: GenerationContext }) {
   const preview = useContext(PreviewContext);
@@ -31,9 +32,10 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
   playbackControl: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
   cachedSources: Record<string, string>;
 }) {
-  const [tab, setTab] = useState('script');
-  const [language, setLanguage] = useState('zh');
-  const [scriptMode, setScriptMode] = useState('aligned');
+  const positionKey = `segment/${scope.project}/${scope.episode}/${scope.scene}/${segment}`;
+  const [tab, setTab] = useRefreshState(positionKey + '/tab', 'script');
+  const [language, setLanguage] = useRefreshState(positionKey + '/language', 'zh');
+  const [scriptMode, setScriptMode] = useRefreshState(positionKey + '/scriptMode', 'aligned');
   const [playback, setPlayback] = useState({ key: '', time: 0 });
   const [loadedFile, setLoadedFile] = useState({ key: '', revision: '' });
   const scriptContent = useRef<HTMLDivElement>(null);

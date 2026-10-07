@@ -10,13 +10,15 @@ import { SegmentWorkspace } from './SegmentWorkspace';
 import { useRevisionNotesExport } from './RevisionNotes';
 import { useSceneVideoCache } from './useSceneVideoCache';
 import type { NoteScope } from './RevisionNotes';
+import { useRefreshState } from '../refreshPosition';
 
 type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
 
 export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope; segments: Segments; revision: number }) {
   const { scene } = scope;
-  const [view, setView] = useState('segments');
+  const positionKey = `scene/${scope.project}/${scope.episode}/${scene}`;
+  const [view, setView] = useRefreshState(positionKey + '/view', 'segments');
   const storyboardPath = `09-剧集制作/${scope.episode}/03-分镜脚本/${scope.episode}-${scene}-场次分镜.md`;
   const storyboard = useQuery({ queryKey: ['document', scope.project, storyboardPath, revision], queryFn: () => get<RecordData>(`${projectUrl(scope.project)}/document?path=${encodeURIComponent(storyboardPath)}`), enabled: view === 'storyboard' && !!scene, placeholderData: previous => previous });
   const notesExport = useRevisionNotesExport(scope, segments);
@@ -24,14 +26,17 @@ export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope
     const video = latestVideo(item.videos);
     return video ? [video] : [];
   }));
-  const [segment, setSegment] = useState(segments[0]?.id || '');
-  const [selections, setSelections] = useState<Record<string, Selection>>({});
+  const [requestedSegment, setSegment] = useRefreshState(positionKey + '/segment', segments[0]?.id || '');
+  const segment = segments.some(item => item.id === requestedSegment) ? requestedSegment : segments[0]?.id || '';
+  const [selections, setSelections] = useRefreshState<Record<string, Selection>>(positionKey + '/selections', {});
   const [continuous, setContinuous] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
   const [error, setError] = useState('');
   const currentSegment = segments.find(item => item.id === segment);
   const latest = currentSegment && latestVideo(currentSegment.videos);
-  const chosen = selections[segment] || { stage: latest?.stage || '', key: latest?.key || '' };
+  const savedSelection = selections[segment];
+  const chosen = savedSelection && (!savedSelection.key || currentSegment?.videos.some(video => video.stage === savedSelection.stage && video.key === savedSelection.key))
+    ? savedSelection : { stage: latest?.stage || '', key: latest?.key || '' };
   useEffect(() => {
     setSelections(previous => {
       const arriving = segments.filter(item => !previous[item.id] && item.videos.length).map(item => {

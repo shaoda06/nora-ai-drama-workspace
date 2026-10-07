@@ -5,21 +5,25 @@ import { TabNav } from './TabNav';
 import { Pagination } from './Pagination';
 import { EpisodeButton } from './EpisodeButton';
 import { SceneWorkspace } from './SceneWorkspace';
+import { useRefreshState } from '../refreshPosition';
 
 export function EpisodeProduction({ project, items, selected, onSelect, revision }: { project: string; items: FileItem[]; selected: string | null; onSelect: (episode: string | null) => void; revision: number }) {
   const preview = useContext(PreviewContext);
-  const [scene, setScene] = useState('');
+  const [scene, setScene] = useRefreshState(`project/${project}/production/scene`, '');
   const [page, setPage] = useState(1);
   const cards = useRef<HTMLDivElement>(null);
   const previousEpisode = useRef(selected);
   useEffect(() => {
-    if (!selected && previousEpisode.current) cards.current!.querySelector<HTMLButtonElement>(`[data-episode="${previousEpisode.current}"]`)!.focus();
+    if (!selected && previousEpisode.current) cards.current!.querySelector<HTMLButtonElement>(`[data-episode="${previousEpisode.current}"]`)?.focus();
     previousEpisode.current = selected;
   }, [selected]);
   const current = items.find(item => item.name === selected);
+  useEffect(() => {
+    if (selected && !current) onSelect(null);
+  }, [selected, current, onSelect]);
   const script = current?.children?.find(item => item.name === '02-剧集剧本')?.children?.find(item => item.name === `${current.name}-本集剧本.md`);
   const scenes = current?.scenes || [];
-  const selectedScene = scene || scenes[0] || '';
+  const selectedScene = scenes.includes(scene) ? scene : scenes[0] || '';
   const segments = current?.segments?.[selectedScene] || [];
   const open = (name: string) => {
     setScene('');
