@@ -20,6 +20,8 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
   const [playOnLoad, setPlayOnLoad] = useState(autoPlay);
   const video = useRef<HTMLVideoElement>(null);
   const updated = current && loaded && current.fileRevision !== loaded.fileRevision;
+  const deliveryLabel = /^(已核对不变|已核对并替换|终态已取回并核对)/.test(current?.deliveryStatus || '') ? '完成版'
+    : current?.deliveryStatus === '运行中已取回，待收尾核对' ? '取回版' : '';
   useEffect(() => {
     if (!autoPlay) video.current?.pause();
   }, [autoPlay]);
@@ -31,7 +33,7 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
       onSeeked={event => onTimeChange(event.currentTarget.currentTime)}
       onPause={event => onTimeChange(event.currentTarget.currentTime)}
       onEnded={event => { onTimeChange(event.currentTarget.currentTime); onEnded?.(); }} /> : <div className="video-placeholder">视频区域</div>}
-    <div className="video-source">{current && loaded && <><span>{current.approved ? '正式版 · 原' : ''}{candidateLabel(current.candidateNumber)} · {current.run} · {current.stage}</span><Original url={loaded.url} label="查看视频原文件" /></>}</div>
+    <div className="video-source">{current && loaded && <><div className="video-source-summary"><span>{current.approved ? '正式版 · 原' : ''}{candidateLabel(current.candidateNumber)} · {current.run} · {current.stage}</span>{deliveryLabel && <span className="video-delivery" data-state={deliveryLabel === '完成版' ? 'complete' : 'retrieved'} role="status">{deliveryLabel}</span>}</div><Original url={loaded.url} label="查看视频原文件" /></>}</div>
     {updated && <div className="video-update" role="status"><span>视频已有更新</span><button onClick={() => { setPlayOnLoad(!video.current!.paused); setLoaded(current); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></div>}
     {error && <p className="error" role="alert">视频无法播放，请打开原文件。</p>}
   </section>;

@@ -40,8 +40,6 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
   const latest = latestVideo(items);
   const versions = items.filter(item => item.stage === stage).sort((a, b) => Number(b.approved) - Number(a.approved) || b.candidateNumber - a.candidateNumber);
   const current = versions.find(item => item.key === selected);
-  const deliveryLabel = /^(已核对不变|已核对并替换|终态已取回并核对)/.test(current?.deliveryStatus || '') ? '完成版'
-    : current?.deliveryStatus === '运行中已取回，待收尾核对' ? '取回版' : '';
   const context = current?.context;
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
   const shots = context?.shots || [];
@@ -73,7 +71,6 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
       <button disabled={!latest} onClick={() => onSelectionChange({ stage: latest!.stage, key: latest!.key })}>最新</button>
       {playbackControl}
     </div>
-    {deliveryLabel && <div className="segment-delivery" role="status">{deliveryLabel}</div>}
     <div className="segment-workspace">
       <div className="segment-media-column">
         <SegmentVideo key={current?.key || 'empty'} current={current} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
