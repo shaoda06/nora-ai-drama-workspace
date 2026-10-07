@@ -1140,13 +1140,11 @@ def build_data(project, *, web_episode_navigation=False):
         "note": "选择剧集查看本集内容。"}
     catalogues["历史版本"] = dict(file_tree(inventory("历史版本"), "历史版本", "历史版本"),
         note="以下是项目根目录的历史归档，仅供追溯，不代表当前设定或当前批准。各阶段自己的历史文件仍在对应标签中。")
-    catalogues["其他资料"] = dict(file_tree(inventory("其他资料"), "其他资料", "其他资料"),
-        note="本栏目仅展示项目根目录其他资料中的实际文件，包括项目进度的历史备份；各阶段的讨论、审阅和历史版本在对应页面底部查看。")
 
     directories = [{"name": p.name, "label": re.sub(r"^\d+-", "", p.name),
                     "url": quote(p.name, safe="-._~") + "/"}
                    for p in sorted(project.iterdir())
-                   if p.is_dir() and not p.name.startswith(".") and p.name != "99-综合资料"]
+                   if p.is_dir() and not p.name.startswith(".") and p.name not in ("99-综合资料", "其他资料")]
     meta = {key: field(position or "", key) for key in ("文档版本", "更新日期", "确认状态")}
     body = position or ""
     body = re.sub(r"^# .+\n?", "", body, count=1)
