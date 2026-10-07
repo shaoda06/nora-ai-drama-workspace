@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { get, projectUrl, searchTree } from './api';
 import type { FileItem, RecordData } from './api';
-import { Document, FileTree, Groups, Original, Preview, PreviewContext, Result, Rich } from './components';
+import { Document, FileTree, Groups, Preview, PreviewContext, Result, Rich } from './components';
 
 import { PageHeader } from './components/PageHeader';
 import { Breadcrumbs } from './components/Breadcrumbs';
@@ -14,6 +14,7 @@ import { Pagination } from './components/Pagination';
 import { FooterSyncContext, HeaderControlsContext } from './components/AppShell';
 import { useNotify } from './components/Notifications';
 import { EpisodeProduction } from './components/EpisodeProduction';
+import { AssetMediaCard } from './components/AssetMediaCard';
 
 export default function Project() {
   const notify = useNotify();
@@ -65,11 +66,11 @@ export default function Project() {
 }
 function SectionPane({ project, section, revision, active, episode, onEpisodeChange }: { project: string; section: string; revision: number; active: boolean; episode: string | null; onEpisodeChange: (episode: string | null) => void }) {
   const query = useQuery({ queryKey: ['section', project, section, revision], queryFn: () => get<RecordData>(`${projectUrl(project)}/sections/${encodeURIComponent(section)}`), enabled: active, placeholderData: previous => previous });
-  const statistics = section === '09-剧集制作' ? query.data?.statistics : undefined;
+  const statistics = section === '09-剧集制作' && !episode ? query.data?.statistics : undefined;
   return <section className="panel" hidden={!active}>{statistics && <div className="production-statistics" aria-label="剧集制作统计"><span>共 <strong>{statistics.total}</strong> 集</span><span>未开始 <strong>{statistics.notStarted}</strong> 集</span><span>进行中 <strong>{statistics.running}</strong> 集</span><span>已完成 <strong>{statistics.completed}</strong> 集</span></div>}<Result page loading={active && query.isPending} error={query.error} />{query.data && (section !== '09-剧集制作' || active) && <Section value={query.data} project={project} section={section} revision={revision} episode={episode} onEpisodeChange={onEpisodeChange} />}</section>;
 }
 function Section({ value, project, section, revision, episode, onEpisodeChange }: { value: RecordData; project: string; section: string; revision: number; episode: string | null; onEpisodeChange: (episode: string | null) => void }) {
-  if (section === '09-剧集制作') return <EpisodeProduction project={project} items={value.children} selected={episode} onSelect={onEpisodeChange} />;
+  if (section === '09-剧集制作') return <EpisodeProduction project={project} items={value.children} selected={episode} onSelect={onEpisodeChange} revision={revision} />;
   if (value.kind === 'people' || value.kind === 'scenes' || value.kind === 'props') return <Assets value={value} project={project} revision={revision} />;
   if ('exists' in value) return value.exists ? <Document value={value} /> : <><p className="muted">尚无正式文档。</p><Groups groups={value.groups} /></>;
   return <Catalogue value={value} section={section} />;
@@ -95,7 +96,7 @@ function Assets({ value, project, revision }: { value: RecordData; project: stri
     <div hidden={!!selected}><div className="toolbar"><SearchField label="搜索资料" placeholder="搜索编号、名称" value={search} onChange={setSearch} /><span className="muted">共{matched.length}项</span></div>
       <div className="grid">{matched.map((item: RecordData) => <article className="asset-card" key={item.id}>
         <button className="cover" onClick={() => { setSelected(item.id); setTab('资料卡'); }}>{item.cover?.media ? <img loading="lazy" src={item.cover.media.url + `?v=${revision}`} alt={item.name} /> : <span>{item.id}</span>}</button>
-        <h3>{item.id} · {item.name}</h3><p>{item.role}</p><Rich html={item.statusHtml} /><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
+        <h3>{item.id} · {item.name}</h3><p>{item.role}</p><div className="asset-card-status"><span>资料卡状态：</span><Rich html={item.statusHtml} /></div><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
         <button onClick={() => { setSelected(item.id); setTab('资料卡'); }}>查看详情</button> {item.pendingCount > 0 && <button className="pending" onClick={() => { setSelected(item.id); setTab('候选与审阅'); }}>留存待确认／待审核 {item.pendingCount}</button>}
       </article>)}</div><Groups groups={value.groups} /></div>
     {selected && <><button onClick={() => setSelected(null)}>← 返回列表</button><Result loading={detail.isPending} error={detail.error} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关记录'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
@@ -107,16 +108,10 @@ function Assets({ value, project, revision }: { value: RecordData; project: stri
   </>;
 }
 function AssetMedia({ items, revision }: { items: RecordData[]; revision: number }) {
-  const preview = useContext(PreviewContext);
   const grouped: Record<string, RecordData[]> = {};
   for (const item of items) {
     const label = [item.stage, item.type, item.state, item.costume].filter(Boolean).join(' · ') || '参考图';
     (grouped[label] ||= []).push(item);
   }
-  return items.length ? <div>{Object.entries(grouped).map(([name, assets]) => <details key={name} open><summary>{name}（{assets.length}）</summary><div className="grid">{assets.map((item, index) => <article key={item.media?.key || item.generation || index}>
-    {item.media ? <><button className="cover" onClick={() => preview(item.media)}><img className="reference" loading="lazy" src={item.media.url + `?v=${revision}`} alt={item.media.name} /></button><Original url={item.media.url} label="原图" /></> : <p className="muted">已登记，图片文件缺失。</p>}
-    {Object.entries(item).filter(([key, content]) => key.endsWith('Html') && typeof content === 'string' && content).map(([key, content]) => <div key={key}><p className="field-label">{({ statusHtml: '状态', sourceHtml: '来源', fileCheckHtml: '文件核对', visionScopeHtml: '看图授权及范围', visionFindingsHtml: '授权查看的发现', userHtml: '用户决定', agentHtml: '历史初审', technicalHtml: '技术审查', contentHtml: '内容审查', contentFindingsHtml: '审查发现', versionHtml: '采用版本' } as Record<string, string>)[key] || key.replace('Html', '')}</p><Rich html={String(content)} /></div>)}
-    {['version', 'scope', 'retentionPurpose', 'applicability', 'pendingLabel', 'userState', 'generation'].map(key => item[key] && <p key={key}>{({ version: '版本', scope: '适用范围', retentionPurpose: '留存用途', applicability: '适用条件', pendingLabel: '留存状态', userState: '用户决定', generation: '生成记录' } as Record<string, string>)[key]}：{item[key]}</p>)}
-    <Original url={item.recordUrl} label="生成记录" /> {item.reviews?.map((review: FileItem) => <FileTree key={review.key} items={[{ ...review, kind: 'markdown' }]} />)}
-  </article>)}</div></details>)}</div> : <p className="muted">暂无已登记图片。</p>;
+  return items.length ? <div className="asset-media-grid">{Object.entries(grouped).map(([name, assets]) => <AssetMediaCard key={name} title={name} items={assets} revision={revision} />)}</div> : <p className="muted">暂无已登记图片。</p>;
 }

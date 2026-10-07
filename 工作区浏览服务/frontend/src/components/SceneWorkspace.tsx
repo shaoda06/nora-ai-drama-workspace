@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
-import type { FileItem } from '../api';
+import { useQuery } from '@tanstack/react-query';
+import { get, projectUrl } from '../api';
+import type { FileItem, RecordData } from '../api';
+import { Document, Result } from '../components';
+import { UnderlineTabs } from './UnderlineTabs';
 import { latestVideo } from './SegmentVideo';
 import { SegmentWorkspace } from './SegmentWorkspace';
 import { useRevisionNotesExport } from './RevisionNotes';
@@ -9,8 +13,11 @@ import type { NoteScope } from './RevisionNotes';
 type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
 
-export function SceneWorkspace({ scope, segments }: { scope: NoteScope; segments: Segments }) {
+export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope; segments: Segments; revision: number }) {
   const { scene } = scope;
+  const [view, setView] = useState('segments');
+  const storyboardPath = `09-剧集制作/${scope.episode}/03-分镜脚本/${scope.episode}-${scene}-场次分镜.md`;
+  const storyboard = useQuery({ queryKey: ['document', scope.project, storyboardPath, revision], queryFn: () => get<RecordData>(`${projectUrl(scope.project)}/document?path=${encodeURIComponent(storyboardPath)}`), enabled: view === 'storyboard' && !!scene, placeholderData: previous => previous });
   const notesExport = useRevisionNotesExport(scope, segments);
   const [segment, setSegment] = useState(segments[0]?.id || '');
   const [selections, setSelections] = useState<Record<string, Selection>>({});
@@ -39,7 +46,10 @@ export function SceneWorkspace({ scope, segments }: { scope: NoteScope; segments
     setSegment(next.id);
     setAutoPlay(true);
   };
-  return <div className="episode-scene-content" aria-label={scene ? `场次 ${scene} 内容` : '场次内容'}>
+  return <>
+    <div className="scene-workspace-tabs"><UnderlineTabs label="场次内容" items={[{ value: 'segments', label: '分段制作' }, { value: 'storyboard', label: '场次分镜' }]} selected={view} onChange={value => { setAutoPlay(false); setView(value); }} /></div>
+    <div className="episode-scene-content" aria-label={scene ? `场次 ${scene} 内容` : '场次内容'}>
+    {view === 'segments' ? <>
     {segments.some((item, index) => index > 0 && Number(item.id.slice(1)) < Number(segments[index - 1].id.slice(1))) && <p className="segment-order-note muted">分段按分镜索引中的剧情顺序排列，编号保留原标识。</p>}
     {segments.length > 0 && <div className="segment-scroll"><div className="segment-strip" role="group" aria-label="本场分段" style={{ '--segment-columns': segments.map(item => `minmax(0, ${item.duration}fr)`).join(' ') } as CSSProperties}>
       {segments.map(item => <button key={item.id} aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} title={`${item.id} · 计划时长 ${item.duration}秒`} aria-pressed={item.id === segment} onClick={() => { setAutoPlay(false); setSegment(item.id); setError(''); }}><span>{item.id}</span><span>{item.duration}秒</span></button>)}
@@ -50,5 +60,12 @@ export function SceneWorkspace({ scope, segments }: { scope: NoteScope; segments
       onSelectionChange={value => { setAutoPlay(false); setError(''); setSelections(previous => ({ ...previous, [segment]: value })); }}
       playbackControl={<div className="scene-review-actions"><label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>{notesExport.control}</div>} />}
     {notesExport.dialog}
-  </div>;
+    </> : <div className="scene-storyboard">
+      {!scene ? <p className="muted">本集尚无场次分镜。</p> : <>
+        <Result loading={storyboard.isPending} error={storyboard.error} />
+        {storyboard.error && <p className="error">场次分镜读取失败：{storyboard.error.message}</p>}
+        {storyboard.data && <Document value={storyboard.data} />}
+      </>}
+    </div>}
+  </div></>;
 }
