@@ -14,6 +14,9 @@
 /.agents/skills/fastapi/
 /.agents/skills/short-drama-write/
 /.agents/skills/humanizer-zh/
+/.agents/skills/dialogue/
+/.agents/skills/short-drama-storyboard/
+/.agents/skills/short-drama-review/
 
 # 真实项目和本机过程资料不公开，保留目录用途说明。
 /projects/*

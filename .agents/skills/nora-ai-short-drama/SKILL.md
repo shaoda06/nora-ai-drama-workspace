@@ -17,7 +17,7 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 
 本技能可独立分享，推荐配合 ChatGPT／Codex Desktop 使用。其他平台须提供相应会话与监控能力；能力缺失时说明受影响操作，不宣称已安排跟进。
 
-以下登记13个按需依赖技能及1个可选参考技能。GitHub项给出发布仓库和准确技能目录或安装包；随包项提供由本工作区维护、直接读取的完整适配版真源目录。
+以下登记16个按需依赖技能及1个可选参考技能。GitHub项给出发布仓库和准确技能目录或安装包；随包项提供由本工作区维护、直接读取的完整适配版真源目录。
 
 | 依赖技能 | 使用时机 | 获取来源与技能目录 |
 | --- | --- | --- |
@@ -33,12 +33,17 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 | `fastapi` | FastAPI工具开发与审阅；调用要求见[辅助技能](#辅助技能的条件调用) | GitHub：[fastapi/fastapi](https://github.com/fastapi/fastapi)，目录 [`fastapi/.agents/skills/fastapi`](https://github.com/fastapi/fastapi/tree/master/fastapi/.agents/skills/fastapi) |
 | `short-drama-write` | 剧本与对白写作的方法补充：人物目标、策略、回应、声音差异及可表演性；协作边界见下方规则，不接管项目流程与格式 | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-write`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-write) |
 | `humanizer-zh` | 已有中文文本的局部表达润色：空话、重复、拗口及模板句；保留剧情事实、人物声音与必要解释，协作边界见下方规则 | GitHub：[op7418/Humanizer-zh](https://github.com/op7418/Humanizer-zh)，技能目录为[仓库根目录](https://github.com/op7418/Humanizer-zh/tree/main)，入口为 `SKILL.md` |
+| `dialogue` | 剧本初稿或实质性修订后、送审前诊断人物声音、接话、说明性对白与情绪节奏，再由本轮编写者订正 | GitHub：[jwynia/agent-skills](https://github.com/jwynia/agent-skills)，目录 [`skills/creative/fiction/character/dialogue`](https://github.com/jwynia/agent-skills/tree/main/skills/creative/fiction/character/dialogue) |
+| `short-drama-storyboard` | 场次分镜新写或实质性修订前，补充镜头选择、切镜、对白覆盖与站位接续方法 | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-storyboard`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-storyboard) |
+| `short-drama-review` | 剧本、场次分镜与视频提示词文本交付前，按当前阶段选用审查方法，融入既有自检与订正 | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-review`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-review) |
 | `skill-creator` | 技能维护、扩展及可移植性验证 | Codex Desktop自带；按名称发现系统技能，不另附副本 |
 | `screenwriting-master`（山音超级编剧大师，可选参考） | 仅在用户明确要求调用或查阅山音方法时读取；不因一般编剧任务自动加载，不作为本流程的必需依赖 | GitHub：[Shanyin-ai/shanyin-screenwriting-master](https://github.com/Shanyin-ai/shanyin-screenwriting-master)；仓库根目录安装包 `screenwriting-master（Claude&GPT通用）.skill`，解包后的技能目录为 `screenwriting-master/`，入口为其中的 `SKILL.md` |
 
 以上依赖按使用时机读取，不要求每项任务加载全部技能。技能检索、React／Next.js和FastAPI开发依赖只在对应任务中使用，缺失不阻塞普通短剧创作；安装技能不等于安装框架或改变现有工具技术栈。Qwen提示词技能为社区发布，H3提示词技能由MiniMax官方发布。三个ComfyUI适配版源自 [MCKRUZ/ComfyUI-Expert](https://github.com/MCKRUZ/ComfyUI-Expert)，各自保留上游来源及MIT许可证；上游用于署名、版本追溯和维护时比较更新；本流程直接使用本技能 `dependencies/` 内的适配版真源，不能自动用上游原版或其他同名安装替代。更新由本工作区维护者在比较差异后进行，并保留来源版本及许可证。适配版不绑定项目、个人服务器、模型组合或其他技能的固定安装位置。
 
 山音技能保持独立安装；在Codex中于其 `agents/openai.yaml` 设置 `policy.allow_implicit_invocation: false`，不以 `config.toml` 完全禁用来替代。其他平台使用对应的仅显式调用机制；无法保证时说明限制。仅查阅方法不代表执行整套山音流程；不覆盖本技能已经确认的流程、模板与项目设定。需采用不同流程时先明确适用范围，缺少该可选技能不阻塞常规短剧任务。
+
+2026-10-08新增安装来源：`dialogue` 取自上述仓库提交 [`e02ec7e`](https://github.com/jwynia/agent-skills/tree/e02ec7e226a6e4f8419fd3b88a1d8e472d421b32/skills/creative/fiction/character/dialogue)，保留其 `SKILL.md` 中的MIT声明（该提交未提供独立许可证文件）；`short-drama-storyboard` 与 `short-drama-review` 取自上述仓库提交 [`c2426e0`](https://github.com/zenstory-ai/drama-skills/tree/c2426e03c0e7722bebcc6a488b6658dc38c65ac3/skills)，各自保留完整技能目录及仓库MIT许可证。此处记录来源版本，不自动追随上游更新。
 
 ### 外部技能协作与规则优先级
 
@@ -56,7 +61,11 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 
 `humanizer-zh` 只在获授权的文本范围内处理具体表达问题；不补造剧情事实，不改变人物关系、知情状态或对白／VO／OS性质，不把所有角色改成同一种口吻。有意的重复、口头习惯、正式语气、情绪停顿和必要解释按其作用保留；标题、字段、编号、链接和统计口径继续按本流程维护。文本修改沿用既有审阅及关联同步，不新增评分、检查表或审批阶段。
 
-这两个技能的阶段调用时机由开发流程的[全剧准备](references/流程规范/短剧开发流程规范.md#第一部分全剧准备)及[逐集制作第3步](references/流程规范/短剧开发流程规范.md#3-扩写本集故事剧本并明确场次需求)维护；剧本中的具体用法见[编剧补充与表达润色](references/流程规范/逐集内容制作规范.md#编剧补充与表达润色)。按名称发现并读取实际安装入口，不要求每个阶段加载；缺少这两个方法补充技能不阻塞本流程已有的创作能力。
+`dialogue` 用于诊断对白，诊断完成后由承担本轮创作／修订的编写者按授权订正原稿；其“不代写”边界不取消本流程已有的订正职责。不把“每句兼任多项功能”“每次交流都有隐藏目的”或人人设置口头禅作为硬性标准，不补造人物性格、经历或方言；有效的直说、沉默、解释和情绪停顿按剧情作用保留。其输出目录询问及配置文件不适用，诊断结论并入既有编写依据、审阅记录或交付说明，不新建对白报告、输出配置或调用台账。
+
+`short-drama-storyboard` 只补充镜头设计方法，沿用本流程的场次分镜、P段规划及参考输入规则；其编号、目录、画幅偏好、镜长示例与切镜密度不作为本流程标准，不按每镜自动生成关键帧，不移除各P所需的真实环境参考。`short-drama-review` 仅补充剧本、分镜及提示词的文本自检；检查后由本轮编写者在已有授权内订正，不新增独立审批，不自动另派审查agent，不审核图片或视频结果，不将其通过结论等同于用户批准。两者的外部配置、数据产物、配套校验脚本及媒体生产流程不替代本流程模板或执行规范。
+
+上述创作补充技能的阶段调用时机由开发流程的[全剧准备](references/流程规范/短剧开发流程规范.md#第一部分全剧准备)、[逐集制作第3步](references/流程规范/短剧开发流程规范.md#3-扩写本集故事剧本并明确场次需求)、[第4步](references/流程规范/短剧开发流程规范.md#4-整理场次分镜并划分视频生成分段)及[文本交付前自检](references/流程规范/短剧开发流程规范.md#文本交付前的自检与订正)维护；具体用法分别见[编剧补充与表达润色](references/流程规范/逐集内容制作规范.md#编剧补充与表达润色)、[分镜方法补充](references/流程规范/逐集内容制作规范.md#分镜方法补充)及[文本审查的方法补充](references/流程规范/逐集内容制作规范.md#文本审查的方法补充)。按名称发现并读取实际安装入口，不能只写“已参考”；缺少方法补充技能时如实说明受影响的方法，不声称已用，也不阻塞本流程已有的创作能力。
 
 ### 辅助技能的条件调用
 
