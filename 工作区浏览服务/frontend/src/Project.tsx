@@ -22,9 +22,17 @@ export default function Project() {
   const { name = '' } = useParams();
   const [section, setSection] = useState('00-项目定位');
   const [visited, setVisited] = useState(['00-项目定位']);
+  const [entries, setEntries] = useState<Record<string, number>>({});
   const [preview, setPreview] = useState<FileItem | null>(null);
   const [episode, setEpisode] = useState<string | null>(null);
   const currentPath = useRef<HTMLSpanElement>(null);
+  const openSection = (value: string) => {
+    setEpisode(null);
+    setSection(value);
+    setVisited(old => old.includes(value) ? old : [...old, value]);
+    setEntries(old => ({ ...old, [value]: (old[value] || 0) + 1 }));
+    requestAnimationFrame(() => currentPath.current!.scrollIntoView({ block: 'start' }));
+  };
   const status = useQuery({ queryKey: ['status', name], queryFn: async () => {
     const value = await get<RecordData>(`${projectUrl(name)}/status`);
     if (value.updating) notify('正在同步资料…');
@@ -44,13 +52,13 @@ export default function Project() {
         <div className="activity-items">{overview.data.active.length ? overview.data.active.map((item: RecordData) => <div className="activity-item" key={item.name}><strong>{item.name}</strong><button className="activity-state" aria-label={`${item.name}：${item.status}，查看待决事项`} onClick={() => setPreview({ kind: 'markdown', name: `${item.name} · 待决事项与下一步`, doc: { html: item.statusHtml + '<h3>待决事项</h3><p>' + item.pendingHtml + '</p><h3>下一步</h3><p>' + item.nextHtml + '</p>' }, key: `项目进度.md#${item.anchor}`, url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}#${item.anchor}` })}><Rich html={item.statusHtml} /></button></div>) : <span className="muted">未记录进行中或待确认阶段</span>}</div>
       </div>
     )}
-      <Breadcrumbs currentRef={currentPath} items={[{ label: overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), href: `#/projects/${encodeURIComponent(name)}`, onClick: () => setEpisode(null) }, ...(section === '09-剧集制作' && episode ? [{ label: `${episode} · ${episodeTitle}` }] : [])]} />
+      <Breadcrumbs currentRef={currentPath} items={[{ label: overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), href: `#/projects/${encodeURIComponent(name)}`, onClick: () => openSection(section) }, ...(section === '09-剧集制作' && episode ? [{ label: `${episode} · ${episodeTitle}` }] : [])]} />
     </PageHeader>
     <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} />
     {overview.data && <>
       {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
-      {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={value => { if (value === '09-剧集制作' && value !== section) setEpisode(null); setSection(value); setVisited(old => old.includes(value) ? old : [...old, value]); }} />, controlsRoot)}
-      {visited.map(label => <SectionPane key={name + '/' + label} project={name} section={label} revision={revision} active={label === section} episode={episode} onEpisodeChange={value => { setEpisode(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} />)}
+      {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={overview.data.directories.map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={openSection} />, controlsRoot)}
+      {visited.map(label => <SectionPane key={name + '/' + label + '/' + (entries[label] || 0)} project={name} section={label} revision={revision} active={label === section} episode={episode} onEpisodeChange={value => { setEpisode(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} />)}
     </>}
     {preview && <Preview key={preview.key || preview.url} project={name} item={preview} revision={revision} close={() => setPreview(null)} />}
   </PreviewContext.Provider>;

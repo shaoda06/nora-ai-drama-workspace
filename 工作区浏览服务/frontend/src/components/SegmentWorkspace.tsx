@@ -99,7 +99,8 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
           </div>
         </div>}
         <div className={'segment-script-content' + (aligned && tab === 'script' ? ' is-aligned' : '')} ref={scriptContent}>
-        {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? <div className="script-placeholder">{editingNotes ? '修改意见区域' : tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
+        {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} time={time} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? <div className="script-placeholder">{editingNotes ? '修改意见区域' : tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
+          {context.issues.length > 0 && <details className="notice generation-context-issues"><summary>{segment} / {current!.stage} / {current!.run} 资料关联提示</summary>{context.issues.map(issue => <p key={issue}>{issue}</p>)}</details>}
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}
           {tab === 'script' ? context.scriptHtml ? <Rich html={aligned ? activeShot!.html : context.scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
             <div className="segment-prompt-actions">

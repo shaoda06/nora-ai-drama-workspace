@@ -16,7 +16,7 @@ export function TabNav({ items, selected, onChange, label, vertical = false, gro
       if (!group) return <button key={item.value} disabled={disabled || item.disabled} aria-current={selected === item.value ? 'page' : undefined} onClick={() => onChange(item.value)}>{item.label}</button>;
       if (item.value !== group.values[0]) return null;
       const active = group.values.includes(selected);
-      return <TabSelect key={group.label} disabled={disabled} label={group.label} selected={active ? selected : ''} onChange={onChange} items={items.filter(item => group.values.includes(item.value))} />;
+      return <TabSelect reselect key={group.label} disabled={disabled} label={group.label} selected={active ? selected : ''} onChange={onChange} items={items.filter(item => group.values.includes(item.value))} />;
     })}
   </nav>;
 }
