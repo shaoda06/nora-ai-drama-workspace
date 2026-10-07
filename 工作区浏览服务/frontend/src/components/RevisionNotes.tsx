@@ -18,10 +18,12 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision }: { 
   return <div className="revision-note-editor">
     <p className="revision-note-identity">{scope.project} / {scope.episode} / {scope.scene} / {segment} / {current.stage} / {current.approved ? '正式版' : candidateLabel(current.candidateNumber)} · {current.run}</p>
     {data.error && <p className="error" role="alert">修改意见读取失败：{data.error}<button onClick={() => { void loadNotes(data.url); }}>重试读取</button></p>}
-    <label htmlFor="revision-note-text">修改意见</label>
+    <div className="revision-note-heading">
+      <label htmlFor="revision-note-text">修改意见</label>
+      <div className="revision-note-status" role="status"><span className="revision-note-state" data-state={statusKind}>{data.error ? '读取失败' : data.loading ? '正在读取…' : status}</span>{note && <span className="muted">更新于 {new Date(note.updatedAt).toLocaleString('zh-CN')}</span>}{draft?.status === 'error' && <button onClick={() => { void saveNote(data.url, key); }}>重试保存</button>}</div>
+    </div>
     <textarea id="revision-note-text" placeholder="填写修改意见..." maxLength={20000} disabled={!data.loaded} value={draft?.value.text ?? note?.text ?? ''}
       onChange={event => editNote(data.url, { ...identity, text: event.target.value, fileRevision })} onBlur={() => { void saveNote(data.url, key); }} />
-    <div className="revision-note-status" role="status"><span className="revision-note-state" data-state={statusKind}>{data.error ? '读取失败' : data.loading ? '正在读取…' : status}</span>{note && <span className="muted">更新于 {new Date(note.updatedAt).toLocaleString('zh-CN')}</span>}{draft?.status === 'error' && <button onClick={() => { void saveNote(data.url, key); }}>重试保存</button>}</div>
     {draft?.error && <p className="error">{draft.error}</p>}
     {note && note.fileRevision !== fileRevision && <p className="muted">该意见记录于此版本更新前。</p>}
   </div>;
