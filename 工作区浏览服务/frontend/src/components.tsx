@@ -135,7 +135,7 @@ export function Document({ value: latest }: { value: RecordData }) {
 export function Dialog({ title, children, close }: { title: string; children: ReactNode; close: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => { const dialog = ref.current!; dialog.showModal(); return () => dialog.close(); }, []);
-  return <dialog ref={ref} onCancel={close} onClick={event => { if (event.target === event.currentTarget) close(); }}><header><h2>{title}</h2><button aria-label="关闭" onClick={close}>关闭 ×</button></header><div className="dialog-body">{children}</div></dialog>;
+  return <dialog ref={ref} onCancel={event => { event.preventDefault(); close(); }} onClick={event => { if (event.target === event.currentTarget) close(); }}><header><h2>{title}</h2><button aria-label="关闭" onClick={close}>关闭 ×</button></header><div className="dialog-body">{children}</div></dialog>;
 }
 export function Preview({ project, item, revision, close }: { project: string; item: FileItem; revision: number; close: () => void }) {
   // Keep the opened item and revision until the user chooses to load newer text.

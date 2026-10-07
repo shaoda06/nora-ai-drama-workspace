@@ -53,10 +53,10 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
   }) : [];
   const activeShot = (timedShots.find(item => time < item.end) || timedShots[timedShots.length - 1])?.shot;
   const aligned = scriptMode === 'aligned' && canAlign;
-  const editingNotes = tab === 'script' && scriptMode === 'notes';
+  const editingNotes = tab === 'notes';
   useEffect(() => {
     scriptContent.current!.scrollTop = 0;
-  }, [current?.key, tab, scriptMode, aligned ? activeShot?.id : undefined]);
+  }, [current?.key, tab, scriptMode, tab === 'script' && aligned ? activeShot?.id : undefined]);
   useEffect(() => {
     if (tab !== 'script' || !canAlign || editingNotes) return;
     const container = shotTimeline.current!;
@@ -81,13 +81,13 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
         <SegmentVideo key={current?.key || 'empty'} current={current} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
         <SegmentReferences context={context} />
       </div>
-      <section className="segment-script" aria-label="分镜脚本与提示词区域">
+      <section className="segment-script" aria-label="分镜脚本、提示词与修改意见区域">
         <div className="segment-script-header">
-          <UnderlineTabs label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }]} selected={tab} onChange={setTab} disabled={!current} />
+          <UnderlineTabs label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }, { value: 'notes', label: '修改意见' }]} selected={tab} onChange={setTab} disabled={!current} />
           {!editingNotes && <Original url={tab === 'script' ? context?.scriptUrl : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />}
         </div>
         {tab === 'script' && <div className="segment-script-modes">
-          <TabNav compact label="分镜显示方式" items={[{ value: 'aligned', label: '跟视频对齐', disabled: !canAlign }, { value: 'all', label: '显示全部' }, { value: 'notes', label: '修改意见' }]} selected={editingNotes ? 'notes' : aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
+          <TabNav compact label="分镜显示方式" items={[{ value: 'aligned', label: '跟视频对齐', disabled: !canAlign }, { value: 'all', label: '显示全部' }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
         </div>}
         {tab === 'script' && canAlign && !editingNotes && <div className="shot-timeline-scroll" ref={shotTimeline}>
           <div className="shot-timeline" role="progressbar" aria-label="分镜播放进度" aria-valuemin={0} aria-valuemax={plannedDuration} aria-valuenow={Math.min(time, plannedDuration)} aria-valuetext={`当前镜头：${activeShot!.id}`}
@@ -99,7 +99,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
           </div>
         </div>}
         <div className={'segment-script-content' + (aligned && tab === 'script' ? ' is-aligned' : '')} ref={scriptContent}>
-        {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? <div className="script-placeholder">{tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
+        {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? <div className="script-placeholder">{editingNotes ? '修改意见区域' : tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}
           {tab === 'script' ? context.scriptHtml ? <Rich html={aligned ? activeShot!.html : context.scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
             <div className="segment-prompt-actions">
