@@ -34,7 +34,7 @@ export function SegmentWorkspace({ items, selection: { stage, key: selected }, o
   const scriptContent = useRef<HTMLDivElement>(null);
   const shotTimeline = useRef<HTMLDivElement>(null);
   const latest = latestVideo(items);
-  const versions = items.filter(item => item.stage === stage).sort((a, b) => Number(b.approved) - Number(a.approved) || a.candidateNumber - b.candidateNumber);
+  const versions = items.filter(item => item.stage === stage).sort((a, b) => Number(b.approved) - Number(a.approved) || b.candidateNumber - a.candidateNumber);
   const current = versions.find(item => item.key === selected);
   const context = current?.context;
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
