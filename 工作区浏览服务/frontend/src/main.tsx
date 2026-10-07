@@ -26,7 +26,7 @@ function Home() {
     <div className="section-heading"><h2>共用工具</h2></div>
     <div className="grid"><EntryCard to="/krea2" title="Krea2 风格库" description="预览、提示词与资源更新" /></div>
     <div className="section-heading"><h2>短剧项目</h2><span className="muted">自动发现 projects 目录中的项目</span></div>
-    <Result page loading={projects.isPending} error={projects.error} />
+    <Result page loading={projects.isPending} error={projects.error} retry={projects.refetch} retrying={projects.isFetching} />
     <div className="grid">{projects.data?.map(item => <EntryCard key={item.id} to={`/projects/${encodeURIComponent(item.id)}`} title={item.name} description="进入项目浏览" icon="▤" />)}</div>
     {projects.data?.length === 0 && <p className="muted">暂无项目。项目资料保存到工作区 projects 目录后会出现在这里。</p>}
   </div>;

@@ -76,8 +76,7 @@ export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope
     {notesExport.dialog}
     </> : <div className="scene-storyboard">
       {!scene ? <p className="muted">本集尚无场次分镜。</p> : <>
-        <Result loading={storyboard.isPending} error={storyboard.error} />
-        {storyboard.error && <p className="error">场次分镜读取失败，请稍后再试。</p>}
+        <Result loading={storyboard.isPending} error={storyboard.error} retry={storyboard.refetch} retrying={storyboard.isFetching} />
         {storyboard.data && <Document value={storyboard.data} />}
       </>}
     </div>}

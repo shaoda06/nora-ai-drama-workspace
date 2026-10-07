@@ -26,24 +26,24 @@ export default function Krea() {
     {controlsRoot && createPortal(<div className="toolbar"><SearchField label="搜索风格" placeholder="搜索风格名称、分类" value={search} onChange={value => { setSearch(value); setPage(1); }} />
       <select aria-label="资源库" value={library} onChange={event => { setLibrary(event.target.value); setCategory(''); setPage(1); }}><option value="">全部资源库</option><option value="krea2_styles">风格库</option><option value="Krea2_moodboard">灵感库</option></select>
       <select aria-label="风格分类" value={category} onChange={event => { setCategory(event.target.value); setPage(1); }}><option value="">全部分类</option>{catalogue.data?.categories.map((item: string) => <option key={item}>{item}</option>)}</select><span className="muted">{catalogue.data?.total ?? '…'} 个风格</span>
-    </div>, controlsRoot)}<Result page loading={catalogue.isPending} error={catalogue.error} />
+    </div>, controlsRoot)}<Result page loading={catalogue.isPending} error={catalogue.error} retry={catalogue.refetch} retrying={catalogue.isFetching} />
     <div className="style-grid">{catalogue.data?.items.map((item: RecordData) => <button className="style-card" key={item.id} onClick={() => setSelected(item.id)}>{item.image ? <img loading="lazy" src={styleUrl(item.image)} alt={item.name_cn || item.name} /> : <div className="cover">图片缺失</div>}<span><strong>{item.name_cn || item.name}</strong><small>{item.name}</small><small>{item.category_name}</small></span></button>)}</div>
     <Pagination page={page} total={catalogue.data?.total || 0} change={setPage} />
     {selected && <Style identity={selected} version={version} close={() => setSelected(null)} />}
-    {manage && <UpdateManagement state={state.data} error={state.error} close={() => setManage(false)} />}
+    {manage && <UpdateManagement state={state.data} error={state.error} retry={state.refetch} retrying={state.isFetching} close={() => setManage(false)} />}
   </>;
 }
 function Style({ identity, version, close }: { identity: string; version: string; close: () => void }) {
   const detail = useQuery({ queryKey: ['style', identity, version], queryFn: () => get<RecordData>(`/api/krea2/styles/${encodeURIComponent(identity)}`) });
   const item = detail.data;
-  return <Dialog title={item?.name_cn || '风格详情'} close={close}><Result loading={detail.isPending} error={detail.error} />{item && <>
+  return <Dialog title={item?.name_cn || '风格详情'} close={close}><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{item && <>
     <div className="style-detail">{item.image && <img className="preview-image" src={styleUrl(item.image)} alt={item.name} />}<div><h3>{item.name}</h3><p>{item.category_name}</p><p>来源：<Original url={item.source} label={item.library === 'krea2_styles' ? '风格库（Clio）' : '灵感库（Ray）'} /></p><p className="muted">版本：{item.source_revision}</p>
       <CopyButton label="复制发给 AI" text={`我选择了 Krea2 风格“${item.name_cn || item.name}”（${item.name}）。请读取工作区目录：工作区浏览服务/Krea2风格库/Krea2_风格资源/${item.folder}，查看预览图与正负面提示词，再帮我分析和应用。`} />
     </div></div><h3>正面提示词</h3><pre>{item.prompt}</pre><CopyButton label="复制正面提示词" text={item.prompt} /> <Original url={styleUrl(item.folder + '/positive.txt')} label="下载 TXT" />
     <h3>负面提示词</h3><pre>{item.negative_prompt || '原资源未提供负面提示词。'}</pre>{item.negative_prompt && <CopyButton label="复制负面提示词" text={item.negative_prompt} />} <Original url={styleUrl(item.folder + '/negative.txt')} label="下载 TXT" />
   </>}</Dialog>;
 }
-function UpdateManagement({ state, error, close }: { state?: RecordData; error: Error | null; close: () => void }) {
+function UpdateManagement({ state, error, retry, retrying, close }: { state?: RecordData; error: Error | null; retry: () => unknown; retrying: boolean; close: () => void }) {
   const client = useQueryClient();
   const [actionError, setActionError] = useState('');
   const run = async (source: string, action: string) => {
@@ -54,7 +54,7 @@ function UpdateManagement({ state, error, close }: { state?: RecordData; error: 
       await client.invalidateQueries({ queryKey: ['krea-state'] });
     } catch (error) { setActionError(String(error)); }
   };
-  return <Dialog title="资源与更新管理" close={close}><Result loading={!state} error={error} />
+  return <Dialog title="资源与更新管理" close={close}><Result loading={!state} error={error} retry={retry} retrying={retrying} />
     {state && <>{!state.canManage && <p className="notice">更新管理仅支持本机或局域网地址，请通过对应地址打开。</p>}
       {actionError && <p className="error" role="alert">{actionError}</p>}{Object.entries(state.sources).map(([source, raw]) => {
         const data = raw as RecordData;

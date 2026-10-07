@@ -12,9 +12,12 @@ import { ChapterNavigation } from './components/ChapterNavigation';
 import type { ChapterHeading } from './components/ChapterNavigation';
 
 export const PreviewContext = createContext<(item: FileItem) => void>(() => {});
-export function Result({ loading, error, page = false }: { loading: boolean; error: Error | null; page?: boolean }) {
+export function Result({ loading, error, retry, retrying, page = false }: {
+  loading: boolean; error: Error | null; retry: () => unknown; retrying: boolean; page?: boolean;
+}) {
   const notify = useNotify();
-  useEffect(() => { if (error) notify('资料读取失败，请稍后再试。', 'error'); }, [error, notify]);
+  useEffect(() => { if (error) return notify('资料读取失败，请点击重新读取。', 'error'); }, [error, notify]);
+  if (error) return <p className="error" role="alert">资料读取失败，请点击重新读取。 <button disabled={retrying} onClick={() => { void retry(); }}>{retrying ? '正在读取…' : '重新读取'}</button></p>;
   return loading && !error ? <Loading page={page} /> : null;
 }
 export function Rich({ html = '', languages = [] }: { html?: string; languages?: { value: string; label: string; text: string; html?: string }[] }) {
@@ -157,7 +160,7 @@ export function Preview({ project, item, revision, close }: { project: string; i
   return <Dialog title={item.name} close={close}>
     <Original url={item.url} />
     {text && !item.doc && revision !== openedRevision && <p className="notice document-update">项目资料有更新。<button onClick={() => setOpenedRevision(revision)}>读取新版本</button></p>}
-    {item.doc ? <Rich html={String(item.doc.html)} /> : text ? <><Result loading={query.isPending} error={query.error} />{query.data && (query.data.html ? <Document value={query.data} /> : <><p>{query.data.notice}</p><pre>{query.data.text}</pre></>)}</> :
+    {item.doc ? <Rich html={String(item.doc.html)} /> : text ? <><Result loading={query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} />{query.data && (query.data.html ? <Document value={query.data} /> : <><p>{query.data.notice}</p><pre>{query.data.text}</pre></>)}</> :
       image ? <img className="preview-image" src={item.url} alt={item.name} onError={() => setMediaError('图片无法加载，请使用原文件入口。')} /> :
       video ? <video controls preload="metadata" src={item.url} onError={() => setMediaError('视频无法加载，请使用原文件入口。')} /> :
       audio ? <audio controls preload="metadata" src={item.url} onError={() => setMediaError('音频无法加载，请使用原文件入口。')} /> : <p>此格式暂不支持页内预览，请打开原文件。</p>}
