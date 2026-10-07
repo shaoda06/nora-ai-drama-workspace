@@ -50,7 +50,7 @@
 python3 /实际技能目录/references/comfyui-scripts/comfyui_client.py status --url 'http://本任务实际服务:8188' --timeout 25 --prompt-id '真实ID'
 ```
 
-附件留存与检查时间维护执行[精简留档规则](../模板/ComfyUI-任务监控提示词模板.md#执行附件精简留档)。监控方式、计数、间隔及切换读取[图片监控规则](../模板/ComfyUI-任务监控提示词模板.md)，按本批实际任务填写。用户审批期间不查询已终态生图任务；超分提交后只查询自己的真实ID。成功必须同时具备completed=true、status_str=success和节点3的一张正式PNG输出。
+附件留存与检查时间维护执行[精简留档规则](../流程规范/ComfyUI-任务监控规范.md#执行附件精简留档)。监控方式、计数、间隔及切换读取[图片监控规则](../流程规范/ComfyUI-任务监控规范.md)，按本批实际任务填写。用户审批期间不查询已终态生图任务；超分提交后只查询自己的真实ID。成功必须同时具备completed=true、status_str=success和节点3的一张正式PNG输出。
 
 ```sh
 python3 /实际技能目录/references/comfyui-scripts/comfyui_client.py download --url 'http://实际服务:8188' --filename '节点3实际文件名.png' --subfolder '实际子目录' --type output --output '/实际过程稿目录/素材/原候选名去扩展名-超分-001.png' --result '/实际附件目录/生成前缀-超分-001-下载响应.json'
