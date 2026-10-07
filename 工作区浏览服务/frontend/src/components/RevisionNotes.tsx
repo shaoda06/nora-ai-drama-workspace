@@ -11,7 +11,7 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
   const buffer = useRef<HTMLTextAreaElement>(null);
   const [insertMessage, setInsertMessage] = useState('');
   const tenths = Math.floor(time * 10);
-  const timestamp = `${String(Math.floor(tenths / 600)).padStart(2, '0')}:${String(Math.floor(tenths / 10) % 60).padStart(2, '0')}.${tenths % 10}`;
+  const timestamp = `${String(Math.floor(tenths / 600)).padStart(2, '0')}.${String(Math.floor(tenths / 10) % 60).padStart(2, '0')}.${tenths % 10}秒`;
   const data = useSceneNotes(scope.project, scope.episode, scope.scene);
   const identity = { segment, stage: current.stage, run: current.run };
   const key = noteKey(identity);
@@ -41,7 +41,7 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
     <p className="revision-note-identity">{scope.project} / {scope.episode} / {scope.scene} / {segment} / {current.stage} / {current.approved ? '正式版' : candidateLabel(current.candidateNumber)} · {current.run}</p>
     {data.error && <p className="error" role="alert">修改意见读取失败：{data.error}<button onClick={() => { void loadNotes(data.url); }}>重试读取</button></p>}
     <div className="revision-note-heading">
-      <div className="revision-note-label"><label htmlFor="revision-note-text">修改意见</label><button className="link" disabled={!data.loaded} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={event => { void insertTime(event.currentTarget); }}>自动插入</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
+      <div className="revision-note-label"><label htmlFor="revision-note-text">修改意见</label><button className="link" disabled={!data.loaded} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={event => { void insertTime(event.currentTarget); }}>插入时间</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
       <div className="revision-note-status" role="status"><span className="revision-note-state" data-state={statusKind}>{data.error ? '读取失败' : data.loading ? '正在读取…' : status}</span>{note && <span className="muted">更新于 {new Date(note.updatedAt).toLocaleString('zh-CN')}</span>}{draft?.status === 'error' && <button onClick={() => { void saveNote(data.url, key); }}>重试保存</button>}</div>
     </div>
     <textarea ref={textarea} id="revision-note-text" placeholder="填写修改意见..." maxLength={20000} disabled={!data.loaded} value={text}
