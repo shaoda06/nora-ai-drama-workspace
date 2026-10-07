@@ -12,6 +12,7 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision }: { 
   const key = noteKey(identity);
   const draft = data.drafts[key];
   const note = data.notes[key];
+  const text = draft?.value.text ?? note?.text ?? '';
   useEffect(() => () => { void saveNote(data.url, key); }, [data.url, key]);
   const status = draft ? { waiting: '等待保存', saving: '保存中…', saved: '已保存', error: '未保存' }[draft.status] : note ? '已保存' : '尚未填写';
   const statusKind = data.error ? 'error' : data.loading ? 'loading' : draft?.status ?? (note ? 'saved' : 'empty');
@@ -19,10 +20,10 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision }: { 
     <p className="revision-note-identity">{scope.project} / {scope.episode} / {scope.scene} / {segment} / {current.stage} / {current.approved ? '正式版' : candidateLabel(current.candidateNumber)} · {current.run}</p>
     {data.error && <p className="error" role="alert">修改意见读取失败：{data.error}<button onClick={() => { void loadNotes(data.url); }}>重试读取</button></p>}
     <div className="revision-note-heading">
-      <label htmlFor="revision-note-text">修改意见</label>
+      <div className="revision-note-label"><label htmlFor="revision-note-text">修改意见</label><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
       <div className="revision-note-status" role="status"><span className="revision-note-state" data-state={statusKind}>{data.error ? '读取失败' : data.loading ? '正在读取…' : status}</span>{note && <span className="muted">更新于 {new Date(note.updatedAt).toLocaleString('zh-CN')}</span>}{draft?.status === 'error' && <button onClick={() => { void saveNote(data.url, key); }}>重试保存</button>}</div>
     </div>
-    <textarea id="revision-note-text" placeholder="填写修改意见..." maxLength={20000} disabled={!data.loaded} value={draft?.value.text ?? note?.text ?? ''}
+    <textarea id="revision-note-text" placeholder="填写修改意见..." maxLength={20000} disabled={!data.loaded} value={text}
       onChange={event => editNote(data.url, { ...identity, text: event.target.value, fileRevision })} onBlur={() => { void saveNote(data.url, key); }} />
     {draft?.error && <p className="error">{draft.error}</p>}
     {note && note.fileRevision !== fileRevision && <p className="muted">该意见记录于此版本更新前。</p>}
@@ -52,10 +53,10 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
   };
   return { control: <><button disabled={!data.loaded} onClick={exportNotes}>导出修改意见</button>
     {data.error && <span className="error">意见读取失败<button onClick={() => { void loadNotes(data.url); }}>重试</button></span>}</>,
-    dialog: draft !== null && <Dialog title={`${scope.episode} · ${scope.scene} 导出修改意见`} close={close}>
+    dialog: draft !== null && <Dialog title={`${scope.episode} · ${scope.scene} 导出修改意见`} close={close} headerActions={confirmClose ? <div className="revision-export-close-actions"><button autoFocus onClick={() => setConfirmClose(false)}>继续编辑</button><button className="revision-export-discard" onClick={() => { setDraft(null); setConfirmClose(false); }}>放弃修改并关闭</button></div> : undefined}>
       <p className="muted">本场次全部画质、全部版本中已填写的意见。此处编辑只影响本次导出稿。</p>
       <textarea className="revision-notes-export" aria-label="导出修改意见文本" value={draft.text} onChange={event => { setDraft({ ...draft, text: event.target.value }); setConfirmClose(false); }} />
       <div className="revision-export-actions"><CopyButton label="复制" text={draft.text} />{changed && <button onClick={() => { setDraft({ ...draft, text: draft.original }); setConfirmClose(false); }}>还原</button>}</div>
-      {confirmClose && <div className="notice" role="alert"><p>关闭后，本次导出稿的自定义修改不会保存。各段原始修改意见仍会保留。</p><div className="revision-export-actions"><button autoFocus onClick={() => setConfirmClose(false)}>继续编辑</button><button onClick={() => { setDraft(null); setConfirmClose(false); }}>放弃修改并关闭</button></div></div>}
+      {confirmClose && <div className="notice" role="alert"><p>关闭后，本次导出稿的自定义修改不会保存。各段原始修改意见仍会保留。</p></div>}
     </Dialog> };
 }
