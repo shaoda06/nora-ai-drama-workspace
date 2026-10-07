@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
@@ -34,12 +34,16 @@ export default function Project() {
     setEntries(old => ({ ...old, [value]: (old[value] || 0) + 1 }));
     requestAnimationFrame(() => currentPath.current!.scrollIntoView({ block: 'start' }));
   };
-  const status = useQuery({ queryKey: ['status', name], queryFn: async () => {
-    const value = await get<RecordData>(`${projectUrl(name)}/status`);
-    if (value.updating) notify('正在同步资料…');
-    if (value.error) notify('资料同步未完成，当前显示上一次读取的内容。', 'error');
-    return value;
-  }, refetchInterval: 5000 });
+  const status = useQuery({ queryKey: ['status', name], queryFn: () =>
+    get<RecordData>(`${projectUrl(name)}/status`), refetchInterval: 5000 });
+  const syncError = status.data?.error;
+  const syncing = status.data?.updating;
+  useEffect(() => {
+    if (syncError) notify('资料更新暂未成功，将自动重试；当前显示上次读取的内容。', 'error');
+  }, [name, syncError, notify]);
+  useEffect(() => {
+    if (syncing && !syncError) notify('正在同步资料…');
+  }, [name, syncing, syncError, notify]);
   const revision = status.data?.revision || 1;
   const production = useQuery<RecordData>({ queryKey: ['section', name, '09-剧集制作', revision], enabled: false, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   const episodeTitle = production.data?.children.find((item: FileItem) => item.name === episode)?.title || '题名未记录';

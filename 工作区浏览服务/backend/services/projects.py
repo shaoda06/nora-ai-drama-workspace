@@ -1,9 +1,12 @@
 from pathlib import Path
+import logging
 import re
 import threading
+import time
 
 from backend.parsers.project import build_data
 
+logger = logging.getLogger(__name__)
 
 class ProjectStore:
     """Parse on demand; keep the last complete result while a change is read."""
@@ -36,7 +39,7 @@ class ProjectStore:
             entry = self.entries.get(name)
             if entry is None:
                 entry = {'data': None, 'revision': 0, 'error': None, 'updating': False,
-                         'snapshot': None, 'checked': 0.0, 'lock': threading.Lock()}
+                         'snapshot': None, 'checked': 0.0, 'retry_at': 0.0, 'lock': threading.Lock()}
                 self.entries[name] = entry
         with entry['lock']:
             if entry['data'] is None and not entry['updating']:
@@ -46,13 +49,13 @@ class ProjectStore:
         return entry
 
     def status(self, name: str):
-        import time
         entry = self.get(name)
         with entry['lock']:
-            if time.monotonic() - entry['checked'] >= 3 and not entry['updating']:
-                entry['checked'] = time.monotonic()
+            now = time.monotonic()
+            if now - entry['checked'] >= 3 and not entry['updating']:
+                entry['checked'] = now
                 snapshot = self.snapshot(self.project(name))
-                if snapshot != entry['snapshot']:
+                if snapshot != entry['snapshot'] or (entry['error'] and now >= entry['retry_at']):
                     entry['updating'] = True
                     threading.Thread(target=self.refresh, args=(name, entry, snapshot), daemon=True).start()
             return {'revision': entry['revision'], 'updating': entry['updating'],
@@ -62,14 +65,16 @@ class ProjectStore:
         try:
             data = build_data(self.project(name), web_episode_navigation=True)
         except (OSError, ValueError, RuntimeError, UnicodeError) as error:
+            logger.exception('Project sync failed: %s', name)
             with entry['lock']:
                 entry['error'] = str(error)
                 entry['updating'] = False
                 entry['snapshot'] = snapshot
+                entry['retry_at'] = time.monotonic() + 30
             return
         with entry['lock']:
             entry.update(data=data, snapshot=snapshot, revision=entry['revision'] + 1,
-                         error=None, updating=False)
+                         error=None, updating=False, retry_at=0.0)
 
     def file(self, name: str, relative: str, revision: str | None = None):
         root = self.project(name)

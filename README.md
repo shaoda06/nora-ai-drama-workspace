@@ -53,7 +53,7 @@
 
 - [Python](https://www.python.org/downloads/)：原固定脚本使用3.9及以上标准库；新浏览服务使用3.10及以上和独立虚拟环境，依赖见服务目录。
 - [FFmpeg](https://ffmpeg.org/download.html)：本地音视频裁剪、解码及合成依赖；安装与调用统一按[FFmpeg初始化与运行](#ffmpeg初始化与运行)。
-- [Node.js](https://nodejs.org/)：新浏览服务构建使用22及以上；原静态模板维护测试仍可使用18及以上。
+- [Node.js](https://nodejs.org/)：浏览服务构建使用22及以上。
 - [ComfyUI](https://github.com/Comfy-Org/ComfyUI)：由使用者独立部署的图片／视频生成后端。本仓库携带工作流，不携带模型权重和服务端自定义节点。每个项目配置服务地址，具体节点、模型与兼容性按本地工作流及执行规范核对；这里的技能依赖清单不是后端安装清单。
 
 ## 环境
@@ -109,9 +109,10 @@ python3 工作区浏览服务/Krea2风格库/Krea2_更新工具/server.py
 ```sh
 # ComfyUI通信客户端：本地测试，不访问生产服务。
 python3 -B -m unittest discover -s .agents/skills/nora-ai-short-drama/references/comfyui-scripts -p 'test_*.py'
-# 项目浏览页与工作流脚本。
+# 工作流脚本。
 python3 -B -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p 'test_*.py'
-node --test .agents/skills/nora-ai-short-drama/scripts/test_project_portal_ui.mjs
+# 项目浏览服务：在该目录执行资料解析、API与同步测试。
+(cd 工作区浏览服务 && python3 -X utf8 -B -m unittest discover -s tests -v)
 # 仅检查本地画布/API配对，不验证远端兼容性。
 python3 -B .agents/skills/nora-ai-short-drama/scripts/workflow_baselines.py
 # Krea2：临时目录与本机临时端口测试，不联网更新资源。

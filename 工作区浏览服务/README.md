@@ -73,7 +73,7 @@ pnpm --dir frontend build
 ├── 停止工作区浏览服务.bat
 ├── backend/
 │   ├── main.py                # API与前端发布入口
-│   ├── parsers/project.py     # 服务和离线页共用的项目解析器
+│   ├── parsers/project.py     # 项目源文件解析器
 │   └── services/              # 项目变化检测、修改意见保存、Krea2更新适配
 ├── frontend/src/             # React组件、项目页、风格页、开发记录
 ├── Krea2风格库/               # 完整原工具与资源，保持相对位置
@@ -83,11 +83,11 @@ pnpm --dir frontend build
 └── runtime/                  # 本机日志及验证附件，不入Git
 ```
 
-- 首页每5秒发现项目目录，项目页每5秒查询变化。后端比较文件路径、修改时间和大小；有变化时后台重新解析，失败保留上次完整结果并显示错误。首次打开大项目需要一次完整解析；不是逐栏目只读取磁盘。API按当前栏目、资料卡、文档分别发送，首页不含全部项目正文。
+- 首页每5秒发现项目目录，项目页每5秒查询变化。后端比较文件路径、修改时间和大小；有变化时后台重新解析，失败保留上次完整结果并记录错误日志；页面打开期间每隔30秒重试，文件再次变化时提前重试。同一错误持续期间只通知一次，成功后清除错误。首次打开大项目需要一次完整解析；不是逐栏目只读取磁盘。API按当前栏目、资料卡、文档分别发送，首页不含全部项目正文。
 - 自动更新保持选中的栏目、搜索、展开目录及已打开的媒体。已打开正文有变化时提示“读取新版本”，用户选择后切换，不重载整页。没有打开页面时不运行项目扫描；下次进入检查变化。
 - 人物、场景、道具及剧集目录沿用已有解析规则和审核原文，不迁移创作文件、不补造采用事实。媒体按路径提供，支持Range读取，视频与音频手动播放。
 - Krea2目录整体迁入，3947项资源保留。新界面复用原更新程序，保留Clio／Ray独立检查、准备差异、应用、放弃与恢复上一版。更新仍是用户手动触发，不自动下载或升级。`work/` 的准备包和上一版保留，但不入Git。
-- 原技能 `scripts/build_project_portal.py` 保持命令，调用共用解析器按需导出 `项目总览.html`。离线页仍是快照，使用它时需重新导出；服务不为每次编辑重写静态页。
+- 项目静态HTML已退出日常流程，不再生成或维护。旧源码可从Git历史恢复，两个项目的旧页面按浏览入口规范归档到各自99-综合资料；这些快照不会自动更新，也不替代源文件和素材备份。
 - 视频修改意见按场次独立保存到单集 `其他资料/工作稿/EP编号-C编号-视频修改意见.json`，身份为P／阶段／R；停笔约1秒或离开编辑区保存，失败保留草稿并允许重试。当前场次全部已填写版本可在弹窗汇总、编辑并复制，导出不清空记录、不改审批或执行事实；存放结构以逐集目录规范为准。
 - 开发记录使用Markdown源文档，网页只读显示；Git保存代码修改，`docs/开发记录/` 说明原因、实现、检查和剩余事项，`docs/版本记录.md` 跟踪发布功能。不把开发记录写入短剧项目进度。
 
@@ -108,8 +108,6 @@ pnpm --dir frontend build
 .venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8781
 pnpm --dir frontend dev
 .venv/Scripts/python.exe -m unittest discover -s tests -v
-python -X utf8 -B -m unittest discover -s ../.agents/skills/nora-ai-short-drama/scripts -p test_project_portal.py
-node --test ../.agents/skills/nora-ai-short-drama/scripts/test_project_portal_ui.mjs
 python -X utf8 -B -m unittest discover -s Krea2风格库/Krea2_更新工具 -p 'test_*.py'
 pnpm --dir frontend build
 ```

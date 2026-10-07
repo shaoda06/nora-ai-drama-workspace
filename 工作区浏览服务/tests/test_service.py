@@ -339,10 +339,47 @@ class ServiceTests(unittest.TestCase):
     def test_refresh_failure_retains_previous_data_and_reports_error(self):
         entry = self.store.get('示例项目')
         data = entry['data']
-        with patch('backend.services.projects.build_data', side_effect=ValueError('错误源文件')):
+        with self.assertLogs('backend.services.projects', level='ERROR') as log, patch(
+                'backend.services.projects.build_data', side_effect=ValueError('错误源文件')):
             self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
         self.assertIs(entry['data'], data)
         self.assertEqual(entry['error'], '错误源文件')
+        self.assertIn('示例项目', log.output[0])
+        self.assertIn('错误源文件', log.output[0])
+
+    def test_failed_refresh_retries_unchanged_files_after_delay_and_recovers(self):
+        entry = self.store.get('示例项目')
+        data = entry['data']
+        with patch('backend.services.projects.time.monotonic', return_value=100), self.assertLogs(
+                'backend.services.projects', level='ERROR'), patch(
+                'backend.services.projects.build_data', side_effect=RuntimeError('读取期间文件变化')):
+            self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
+        with patch('backend.services.projects.time.monotonic', return_value=110), patch(
+                'backend.services.projects.threading.Thread') as worker:
+            self.store.status('示例项目')
+            worker.assert_not_called()
+        with patch('backend.services.projects.time.monotonic', return_value=130), patch(
+                'backend.services.projects.threading.Thread') as worker:
+            state = self.store.status('示例项目')
+            worker.return_value.start.assert_called_once()
+            self.assertTrue(state['updating'])
+        self.assertIs(entry['data'], data)
+        self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
+        self.assertIsNone(entry['error'])
+        self.assertFalse(entry['updating'])
+        self.assertEqual(entry['revision'], 2)
+
+    def test_new_file_change_retries_before_failure_delay(self):
+        entry = self.store.get('示例项目')
+        with patch('backend.services.projects.time.monotonic', return_value=100), self.assertLogs(
+                'backend.services.projects', level='ERROR'), patch(
+                'backend.services.projects.build_data', side_effect=ValueError('错误源文件')):
+            self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
+        self.source.write_text('# 已修正的资料', encoding='utf-8')
+        with patch('backend.services.projects.time.monotonic', return_value=110), patch(
+                'backend.services.projects.threading.Thread') as worker:
+            self.store.status('示例项目')
+            worker.return_value.start.assert_called_once()
 
     def test_lan_can_manage_with_same_origin_and_token(self):
         lan = TestClient(main.app, base_url='http://192.168.10.15:8780', client=('192.168.10.30', 44321))
