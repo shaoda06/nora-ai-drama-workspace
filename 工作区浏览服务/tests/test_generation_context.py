@@ -2,6 +2,7 @@ import json
 import importlib.util
 from pathlib import Path
 import tempfile
+import shutil
 import unittest
 from unittest.mock import patch
 
@@ -65,6 +66,81 @@ class GenerationContextTests(unittest.TestCase):
 
     def videos(self):
         return build_data(self.project, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos']
+
+    def test_running_candidate_uses_unique_task_state_and_frozen_inputs(self):
+        _, _, candidate = self.add_run('R004')
+        owner = self.episode + '/其他资料/工作稿/EP001-C001-P002-视频制作-工作稿.md'
+        self.write(owner, '### R009\n- 任务状态：运行中\n- 最近检查时间：2026-10-07 09:30\n'
+                          '### R010\n- 任务状态：成功\n')
+        record = self.episode + '/其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md'
+        self.write(record, '### R004\n- 共同任务证据与状态入口：[共同状态](EP001-C001-P002-视频制作-工作稿.md#r009)\n'
+                           '- 取回核对状态：运行中已取回，待收尾核对\n')
+        before = self.videos()[0]
+        self.assertEqual(before['taskStatus'], '运行中')
+        self.assertEqual(before['deliveryStatus'], '运行中已取回，待收尾核对')
+        self.assertEqual(before['checkedAt'], '2026-10-07 09:30')
+        self.assertIn('R004当次原文', before['context']['scriptHtml'])
+        self.assertFalse(before['approved'])
+        self.write(owner, '### R009\n- 任务状态：失败\n- 最近检查时间：2026-10-07 09:35\n')
+        after = self.videos()[0]
+        self.assertEqual(after['taskStatus'], '失败')
+        self.assertEqual(after['deliveryStatus'], before['deliveryStatus'])
+        self.assertEqual(after['url'], before['url'])
+        self.assertEqual(after['candidateNumber'], before['candidateNumber'])
+        self.assertTrue((self.project / candidate).exists())
+
+    def test_final_replacement_changes_file_url_without_inheriting_old_approval(self):
+        _, _, candidate = self.add_run('R004')
+        record = self.episode + '/其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md'
+        adopted = ('## 1. 当前选定结果\n| 处理阶段 | 当前选定文件 | R编号 | 人工批准依据 |\n'
+                   '| --- | --- | --- | --- |\n| 一采 | [视频](../候选视频/EP001-C001-P001-R004-一采.mp4) | R004 | 人工批准 |\n')
+        entry = '## 2. 逐次执行与采用记录\n### R004\n- 处理阶段：一采\n- 用户决定：批准采用\n'
+        self.write(record, adopted + entry + '- 取回核对状态：运行中已取回，待收尾核对\n')
+        before = self.videos()[0]
+        self.assertTrue(before['approved'])
+        # Reuse an unchanged file: status-only changes cannot force a player reload.
+        self.write(record, adopted + entry + '- 取回核对状态：已核对不变\n- 任务状态：成功\n')
+        self.assertEqual(self.videos()[0]['fileRevision'], before['fileRevision'])
+        # Follow the publishing rule: retain the reviewed bytes and review fact, clear current adoption.
+        archive = self.episode + '/其他资料/历史版本/EP001-C001-P001-R004-一采-运行中取回-20261007-093600.mp4'
+        (self.project / archive).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(self.project / candidate, self.project / archive)
+        self.write(record, '## 1. 当前选定结果\n' + entry.replace('批准采用', '待审核') +
+                   '- 取回核对状态：已核对并替换\n- 任务状态：成功\n'
+                   '## 4. 审阅区\n原文件曾获用户批准采用，现已留存。\n')
+        final = self.episode + '/其他资料/执行附件/EP001-C001-P001-R004-一采/收尾取回.mp4'
+        self.write(final, '收尾裁尾后的文件：同一R、同一候选身份')
+        (self.project / final).replace(self.project / candidate)
+        after = self.videos()[0]
+        self.assertEqual(after['key'], before['key'])
+        self.assertEqual(after['run'], before['run'])
+        self.assertEqual(after['candidateNumber'], before['candidateNumber'])
+        self.assertNotEqual(after['fileRevision'], before['fileRevision'])
+        self.assertNotEqual(after['url'], before['url'])
+        self.assertEqual(after['deliveryStatus'], '已核对并替换')
+        self.assertFalse(after['approved'])
+        self.assertEqual(after['context'], before['context'])
+        self.assertEqual((self.project / archive).read_text(encoding='utf-8'), 'EP001-C001-P001-R004-一采')
+        with patch.object(main, 'store', ProjectStore(self.project.parent)), TestClient(main.app) as client:
+            video = client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]['segments']['C001'][0]['videos'][0]
+            response = client.get(video['url'])
+            self.assertIn('收尾裁尾', response.text)
+            self.assertEqual(response.headers['cache-control'], 'no-store')
+            # Old native-player range requests must still read the reviewed bytes.
+            old_url = '/api/projects/示例项目/files/' + before['url']
+            self.assertEqual(client.get(old_url).text, 'EP001-C001-P001-R004-一采')
+            ranged = client.get(old_url, headers={'Range': 'bytes=0-4'})
+            self.assertEqual(ranged.status_code, 206)
+            self.assertEqual(ranged.content, b'EP001')
+            self.assertEqual(client.get(video['url'].split('?')[0] + '?v=unknown').status_code, 404)
+
+    def test_unrecorded_history_is_not_assumed_verified_or_successful(self):
+        self.add_run('R001')
+        video = self.videos()[0]
+        self.assertEqual(video['deliveryStatus'], '未记录')
+        self.assertEqual(video['taskStatus'], '未记录')
+        self.assertEqual(video['checkedAt'], '未记录')
+        self.assertIn('?v=', video['url'])
 
     def automatic_task(self, selected=(0, 1), common_enabled=True):
         root = self.project / (self.episode + '/其他资料/执行附件/EP001-C001-P001-R004-一采')

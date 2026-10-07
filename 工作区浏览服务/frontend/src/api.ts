@@ -11,7 +11,7 @@ export interface GenerationContext {
   prompts: { english: string; chinese: string; englishUrl?: string; chineseUrl?: string };
   references: Record<'common' | 'segment', { name: string; label: string; kind: 'image' | 'video' | 'audio'; url?: string; missing?: boolean }[]>;
 }
-export interface SegmentVideo { key: string; url: string; run: string; stage: string; approved: boolean; candidateNumber: number; context: GenerationContext }
+export interface SegmentVideo { key: string; url: string; run: string; stage: string; approved: boolean; candidateNumber: number; context: GenerationContext; fileRevision: string; deliveryStatus: string; taskStatus: string; checkedAt: string }
 export interface FileItem { kind: string; name: string; title?: string; scenes?: string[]; segments?: Record<string, { id: string; duration: number; scriptHtml: string; scriptUrl?: string; videos: SegmentVideo[] }[]>; key?: string; url?: string; children?: FileItem[]; files?: FileItem[]; summary?: string; category?: string; statusHtml?: string; media?: FileItem; doc?: Record<string, unknown>; prompts?: { english?: string; chinese?: string }; }
 export interface Group { name: string; files: FileItem[] }
 // Source records contain stage-specific fields; retain their original keys and text.

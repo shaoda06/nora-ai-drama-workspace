@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import threading
 
 from backend.parsers.project import build_data
@@ -70,9 +71,24 @@ class ProjectStore:
             entry.update(data=data, snapshot=snapshot, revision=entry['revision'] + 1,
                          error=None, updating=False)
 
-    def file(self, name: str, relative: str):
+    def file(self, name: str, relative: str, revision: str | None = None):
         root = self.project(name)
         path = (root / relative).resolve()
-        if not path.is_relative_to(root) or not path.is_file() or any(p.startswith('.') for p in Path(relative).parts):
+        if not path.is_relative_to(root) or any(p.startswith('.') for p in Path(relative).parts):
+            raise FileNotFoundError('文件不存在或不在项目内')
+        identity = re.fullmatch(r'(EP\d{3,})-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)', path.stem)
+        if revision and identity:
+            if path.is_file():
+                stat = path.stat()
+                if revision == str(stat.st_mtime_ns) + '-' + str(stat.st_size):
+                    return path
+            history = root / '09-剧集制作' / identity[1] / '其他资料/历史版本'
+            for archive in history.glob(path.stem + '-运行中取回-*' + path.suffix):
+                if archive.is_file() and archive.resolve().is_relative_to(root):
+                    stat = archive.stat()
+                    if revision == str(stat.st_mtime_ns) + '-' + str(stat.st_size):
+                        return archive
+            raise FileNotFoundError('该视频文件版本不可用，请加载新文件')
+        if not path.is_file():
             raise FileNotFoundError('文件不存在或不在项目内')
         return path

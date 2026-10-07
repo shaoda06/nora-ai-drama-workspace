@@ -66,6 +66,11 @@ export function SegmentWorkspace({ items, selection: { stage, key: selected }, o
       <button disabled={!latest} onClick={() => onSelectionChange({ stage: latest!.stage, key: latest!.key })}>最新</button>
       {playbackControl}
     </div>
+    {current && (current.deliveryStatus !== '未记录' || current.taskStatus !== '未记录') && <div className="segment-delivery" role="status">
+      {current.deliveryStatus !== '未记录' && <span>{current.deliveryStatus}</span>}
+      {current.taskStatus !== '未记录' && <span>{['失败', '中断'].includes(current.taskStatus) ? `任务${current.taskStatus}，本段为已取回的部分结果` : `任务${current.taskStatus}`}</span>}
+      {current.checkedAt !== '未记录' && <span>最近检查：{current.checkedAt}</span>}
+    </div>}
     <div className="segment-workspace">
       <div className="segment-media-column">
         <SegmentVideo key={current?.key || 'empty'} current={current} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} />

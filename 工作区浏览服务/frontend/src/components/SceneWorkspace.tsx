@@ -8,10 +8,7 @@ type Selection = { stage: string; key: string };
 
 export function SceneWorkspace({ scene, segments }: { scene: string; segments: Segments }) {
   const [segment, setSegment] = useState(segments[0]?.id || '');
-  const [selections, setSelections] = useState<Record<string, Selection>>(() => Object.fromEntries(segments.map(item => {
-    const latest = latestVideo(item.videos);
-    return [item.id, { stage: latest?.stage || '', key: latest?.key || '' }];
-  })));
+  const [selections, setSelections] = useState<Record<string, Selection>>({});
   const [continuous, setContinuous] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
   const [error, setError] = useState('');
@@ -19,6 +16,15 @@ export function SceneWorkspace({ scene, segments }: { scene: string; segments: S
   const currentSegment = segments.find(item => item.id === segment);
   const latest = currentSegment && latestVideo(currentSegment.videos);
   const chosen = selections[segment] || { stage: latest?.stage || '', key: latest?.key || '' };
+  useEffect(() => {
+    setSelections(previous => {
+      const arriving = segments.filter(item => !previous[item.id] && item.videos.length).map(item => {
+        const latest = latestVideo(item.videos)!;
+        return [item.id, { stage: latest.stage, key: latest.key }];
+      });
+      return arriving.length ? { ...previous, ...Object.fromEntries(arriving) } : previous;
+    });
+  }, [segments]);
   useEffect(() => {
     if (!currentSegment) return;
     const container = stripScroll.current!;

@@ -1103,8 +1103,25 @@ def build_data(project, *, web_episode_navigation=False):
                                episode_root + "/06-生成结果/" + stage_folder + "/" + identity[1] + "-场次",
                                legacy_root + "/候选", legacy_root + "/选定")
                     if Path(item["key"]).parent.as_posix() in folders:
+                        stat = (project / item["key"]).stat()
+                        revision = str(stat.st_mtime_ns) + "-" + str(stat.st_size)
+                        entry = re.search(r"^### " + re.escape(take[1]) + r"(?!\d)[^\n]*\n(.*?)(?=^### |^## |\Z)", record, re.M | re.S)
+                        body = entry[1] if entry else ""
+                        task_body = body
+                        for link in markdown_links(field(body, "共同任务证据与状态入口"), record_key):
+                            anchor = unquote(urlsplit(link["url"]).fragment)
+                            if (link["key"].endswith("-视频制作-工作稿.md")
+                                    and re.fullmatch(r"r\d{3,}", anchor, re.I)):
+                                owner = read(link["key"]) or ""
+                                task_entry = re.search(r"^### " + anchor.upper() + r"(?!\d)[^\n]*\n(.*?)(?=^### |^## |\Z)", owner, re.M | re.S)
+                                task_body = task_entry[1] if task_entry else ""
+                                break
                         videos.append({"key": item["key"], "url": item["url"], "run": take[1], "stage": take[2],
-                                       "approved": item["key"] in approved_keys})
+                                       "approved": item["key"] in approved_keys, "fileRevision": revision,
+                                       "deliveryStatus": field(body, "取回核对状态"),
+                                       "taskStatus": field(task_body, "任务状态"),
+                                       "checkedAt": field(task_body, "最近检查时间")})
+                        videos[-1]["url"] += "?v=" + revision
                 videos.sort(key=lambda item: (int(item["run"][1:]), item["stage"], item["key"]))
                 stage_counts = {"一采": 0, "二采": 0, "后处理": 0}
                 for video in videos:

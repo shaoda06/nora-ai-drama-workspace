@@ -138,9 +138,9 @@ def document(name: str, path: Annotated[str, Query()]) -> dict[str, Any]:
 
 
 @app.get('/api/projects/{name}/files/{path:path}')
-def project_file(name: str, path: str):
+def project_file(name: str, path: str, v: str | None = None):
     try:
-        target = store.file(name, path)
+        target = store.file(name, path, v)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     return FileResponse(target)

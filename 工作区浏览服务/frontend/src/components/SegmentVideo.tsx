@@ -15,19 +15,23 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
   onEnded?: () => void; onError?: () => void;
 }) {
   const [error, setError] = useState(false);
+  const [loaded, setLoaded] = useState(current);
+  const [playOnLoad, setPlayOnLoad] = useState(autoPlay);
   const video = useRef<HTMLVideoElement>(null);
+  const updated = current && loaded && current.fileRevision !== loaded.fileRevision;
   useEffect(() => {
     if (!autoPlay) video.current?.pause();
   }, [autoPlay]);
   const label = (item: VideoItem) => item.approved ? '正式版' : candidateLabel(item.candidateNumber);
   return <section className="segment-video" aria-label="视频区域">
-    {current ? <video ref={video} key={current.key} controls autoPlay={autoPlay} preload="metadata" src={current.url} aria-label={`${label(current)} ${current.run} ${current.stage}`} onError={() => { setError(true); onError?.(); }}
+    {loaded ? <video ref={video} key={loaded.fileRevision} controls autoPlay={playOnLoad} preload="metadata" src={loaded.url} aria-label={`${label(current!)} ${current!.run} ${current!.stage}`} onError={() => { setError(true); onError?.(); }}
       onLoadedMetadata={event => onTimeChange(event.currentTarget.currentTime)}
       onTimeUpdate={event => onTimeChange(event.currentTarget.currentTime)}
       onSeeked={event => onTimeChange(event.currentTarget.currentTime)}
       onPause={event => onTimeChange(event.currentTarget.currentTime)}
       onEnded={event => { onTimeChange(event.currentTarget.currentTime); onEnded?.(); }} /> : <div className="video-placeholder">视频区域</div>}
-    <div className="video-source">{current && <><span>{current.approved ? '正式版 · 原' : ''}{candidateLabel(current.candidateNumber)} · {current.run} · {current.stage}</span><Original url={current.url} label="查看视频原文件" /></>}</div>
+    <div className="video-source">{current && loaded && <><span>{current.approved ? '正式版 · 原' : ''}{candidateLabel(current.candidateNumber)} · {current.run} · {current.stage}</span><Original url={loaded.url} label="查看视频原文件" /></>}</div>
+    {updated && <div className="video-update" role="status"><span>视频已有更新</span><button onClick={() => { setPlayOnLoad(!video.current!.paused); setLoaded(current); setError(false); onTimeChange(0); }}>加载新文件</button></div>}
     {error && <p className="error" role="alert">视频无法播放，请打开原文件。</p>}
   </section>;
 }
