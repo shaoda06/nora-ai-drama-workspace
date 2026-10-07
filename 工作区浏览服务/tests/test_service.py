@@ -344,20 +344,24 @@ class ServiceTests(unittest.TestCase):
             self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
         self.assertIs(entry['data'], data)
         self.assertEqual(entry['error'], '错误源文件')
+        self.assertEqual(entry['error_kind'], 'read_failed')
         self.assertIn('示例项目', log.output[0])
         self.assertIn('错误源文件', log.output[0])
 
     def test_failed_refresh_retries_unchanged_files_after_delay_and_recovers(self):
         entry = self.store.get('示例项目')
         data = entry['data']
-        with patch('backend.services.projects.time.monotonic', return_value=100), self.assertLogs(
+        with patch('backend.services.projects.time.monotonic', return_value=100), patch(
+                'backend.services.projects.time.time', return_value=1000), self.assertLogs(
                 'backend.services.projects', level='ERROR'), patch(
                 'backend.services.projects.build_data', side_effect=RuntimeError('读取期间文件变化')):
             self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
         with patch('backend.services.projects.time.monotonic', return_value=110), patch(
                 'backend.services.projects.threading.Thread') as worker:
-            self.store.status('示例项目')
+            state = self.store.status('示例项目')
             worker.assert_not_called()
+            self.assertEqual(state['retryAt'], 1030000)
+            self.assertEqual(state['errorKind'], 'read_failed')
         with patch('backend.services.projects.time.monotonic', return_value=130), patch(
                 'backend.services.projects.threading.Thread') as worker:
             state = self.store.status('示例项目')
@@ -366,8 +370,46 @@ class ServiceTests(unittest.TestCase):
         self.assertIs(entry['data'], data)
         self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
         self.assertIsNone(entry['error'])
+        self.assertIsNone(entry['error_kind'])
+        self.assertEqual(entry['retry_at_time'], 0)
         self.assertFalse(entry['updating'])
         self.assertEqual(entry['revision'], 2)
+
+    def test_source_edit_is_classified_without_error_log_and_preserves_data(self):
+        entry = self.store.get('示例项目')
+        data = entry['data']
+        with self.assertLogs('backend.services.projects', level='INFO') as log, patch(
+                'backend.services.projects.build_data', side_effect=parser.SourceChangedError('Source changed while reading; rerun: 定位.md')):
+            self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
+        self.assertIs(entry['data'], data)
+        self.assertEqual(entry['error_kind'], 'source_changed')
+        self.assertEqual(log.records[0].levelname, 'INFO')
+        self.assertIn('定位.md', log.output[0])
+
+    def test_parser_identifies_source_edited_during_read(self):
+        read_bytes = Path.read_bytes
+
+        def edit_after_read(path):
+            raw = read_bytes(path)
+            if path == self.source:
+                self.source.write_text('# 写入中的新资料\n', encoding='utf-8')
+            return raw
+
+        with patch.object(Path, 'read_bytes', edit_after_read), self.assertRaises(parser.SourceChangedError):
+            parser.build_data(self.project, web_episode_navigation=True)
+
+    def test_due_retry_is_not_delayed_by_recent_scan(self):
+        entry = self.store.get('示例项目')
+        with patch('backend.services.projects.time.monotonic', return_value=100), self.assertLogs(
+                'backend.services.projects', level='ERROR'), patch(
+                'backend.services.projects.build_data', side_effect=ValueError('错误源文件')):
+            self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
+        entry['checked'] = 129
+        with patch('backend.services.projects.time.monotonic', return_value=130), patch(
+                'backend.services.projects.threading.Thread') as worker:
+            state = self.store.status('示例项目')
+            worker.return_value.start.assert_called_once()
+            self.assertTrue(state['updating'])
 
     def test_new_file_change_retries_before_failure_delay(self):
         entry = self.store.get('示例项目')

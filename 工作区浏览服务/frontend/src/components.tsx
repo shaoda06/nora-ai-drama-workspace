@@ -14,7 +14,7 @@ import type { ChapterHeading } from './components/ChapterNavigation';
 export const PreviewContext = createContext<(item: FileItem) => void>(() => {});
 export function Result({ loading, error, page = false }: { loading: boolean; error: Error | null; page?: boolean }) {
   const notify = useNotify();
-  useEffect(() => { if (error) notify(error.message, 'error'); }, [error, notify]);
+  useEffect(() => { if (error) notify('资料读取失败，请稍后再试。', 'error'); }, [error, notify]);
   return loading && !error ? <Loading page={page} /> : null;
 }
 export function Rich({ html = '', languages = [] }: { html?: string; languages?: { value: string; label: string; text: string; html?: string }[] }) {

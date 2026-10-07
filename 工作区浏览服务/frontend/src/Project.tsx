@@ -12,13 +12,12 @@ import { TabNav } from './components/TabNav';
 import { SearchField } from './components/SearchField';
 import { Pagination } from './components/Pagination';
 import { FooterSyncContext, HeaderControlsContext } from './components/AppShell';
-import { useNotify } from './components/Notifications';
+import { SyncNotification } from './components/SyncNotification';
 import { EpisodeProduction } from './components/EpisodeProduction';
 import { AssetMediaCard } from './components/AssetMediaCard';
 import { useRefreshState } from './refreshPosition';
 
 export default function Project() {
-  const notify = useNotify();
   const controlsRoot = useContext(HeaderControlsContext);
   const syncRoot = useContext(FooterSyncContext);
   const { name = '' } = useParams();
@@ -37,14 +36,14 @@ export default function Project() {
   };
   const status = useQuery({ queryKey: ['status', name], queryFn: () =>
     get<RecordData>(`${projectUrl(name)}/status`), refetchInterval: 5000 });
-  const syncError = status.data?.error;
+  const retryAt = status.data?.retryAt;
   const syncing = status.data?.updating;
+  const { refetch } = status;
   useEffect(() => {
-    if (syncError) notify('资料更新暂未成功，将自动重试；当前显示上次读取的内容。', 'error');
-  }, [name, syncError, notify]);
-  useEffect(() => {
-    if (syncing && !syncError) notify('正在同步资料…');
-  }, [name, syncing, syncError, notify]);
+    if (!retryAt || syncing) return;
+    const timer = window.setTimeout(() => { void refetch(); }, Math.max(0, retryAt - Date.now()));
+    return () => window.clearTimeout(timer);
+  }, [name, retryAt, syncing, refetch]);
   const revision = status.data?.revision || 1;
   const production = useQuery<RecordData>({ queryKey: ['section', name, '09-剧集制作', revision], enabled: false, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   const episodeTitle = production.data?.children.find((item: FileItem) => item.name === episode)?.title || '题名未记录';
@@ -55,6 +54,7 @@ export default function Project() {
     }
   }, [overview.data, section, setSection, setEpisode]);
   return <PreviewContext.Provider value={setPreview}>
+    <SyncNotification key={name} error={status.data?.error} errorKind={status.data?.errorKind} retryAt={retryAt} updating={syncing} />
     {syncRoot && createPortal(<>上次同步：{status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '—'}</>, syncRoot)}
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
     {overview.data && (

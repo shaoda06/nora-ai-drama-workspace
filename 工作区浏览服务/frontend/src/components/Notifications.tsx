@@ -2,19 +2,24 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
-type Notification = { text: string; tone: 'info' | 'error' };
-const NotificationContext = createContext<(text: string, tone?: Notification['tone']) => void>(() => {});
+type Notification = { text: ReactNode; tone: 'info' | 'error'; duration: number };
+const NotificationContext = createContext<(text: ReactNode, tone?: Notification['tone'], duration?: number) => () => void>(() => () => {});
 export const useNotify = () => useContext(NotificationContext);
 
 export function Notifications({ children }: { children: ReactNode }) {
   const [message, setMessage] = useState<Notification | null>(null);
   const popup = useRef<HTMLElement>(null);
-  const notify = useCallback((text: string, tone: Notification['tone'] = 'info') => setMessage({ text, tone }), []);
+  const notify = useCallback((text: ReactNode, tone: Notification['tone'] = 'info', duration = 3000) => {
+    const next = { text, tone, duration };
+    setMessage(next);
+    return () => setMessage(current => current === next ? null : current);
+  }, []);
   useEffect(() => {
     if (!message) return;
     popup.current!.hidePopover();
     popup.current!.showPopover();
-    const timer = window.setTimeout(() => setMessage(null), 3000);
+    if (!message.duration) return;
+    const timer = window.setTimeout(() => setMessage(null), message.duration);
     return () => window.clearTimeout(timer);
   }, [message]);
   return <NotificationContext.Provider value={notify}>{children}{message && createPortal(

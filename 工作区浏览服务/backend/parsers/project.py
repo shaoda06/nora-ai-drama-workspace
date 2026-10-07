@@ -10,6 +10,10 @@ import re
 from datetime import datetime
 from urllib.parse import quote, unquote, urlsplit
 
+class SourceChangedError(RuntimeError):
+    """A source document was edited while the project was being read."""
+
+
 GROUPS = ("工作稿", "历史版本", "执行附件")
 LEGACY_GROUPS = ("讨论记录", "过程稿", "审阅记录")
 POSITION = "00-项目定位/项目基本定位.md"
@@ -1157,7 +1161,7 @@ def build_data(project, *, web_episode_navigation=False):
     intro = re.sub(r"^-\s*确认范围[:：].*\n?", "", intro, flags=re.M)
     for key, digest in sources.items():
         if hashlib.sha256((project / key).read_bytes()).hexdigest() != digest:
-            raise RuntimeError("Source changed while reading; rerun: " + key)
+            raise SourceChangedError("Source changed while reading; rerun: " + key)
     return {
         "project": field(progress or "", "项目名称") if field(progress or "", "项目名称") != "未记录" else project.name,
         "builtAt": datetime.now().astimezone().isoformat(timespec="seconds"),
