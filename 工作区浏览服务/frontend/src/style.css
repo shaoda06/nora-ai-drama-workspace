@@ -75,6 +75,7 @@
 dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-export-close-actions{margin-left:auto;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}.revision-export-discard{background:#a23b34;border-color:#a23b34;color:white}.revision-export-discard:hover{background:#87312b;border-color:#87312b}@media(max-width:600px){.revision-export-close-actions{width:100%}}
 
 .segment-order-note{font-size:12px;margin:0 0 8px}
+.scene-video-preparation{font-size:12px;line-height:20px;color:var(--muted);text-align:right;margin:8px 0 0}
 @media(max-width:1000px){.segment-strip{grid-template-columns:repeat(auto-fit,minmax(54px,1fr));background:white}.segment-strip>button{background:white;border-bottom:1px solid var(--line)}.segment-strip>button[aria-pressed="true"]{background:var(--green)}}
 
 .header-main:has(.tabs-grouped){flex-wrap:wrap}

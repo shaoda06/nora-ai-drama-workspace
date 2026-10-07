@@ -25,10 +25,11 @@ function SegmentReferences({ context }: { context?: GenerationContext }) {
   </section>;
 }
 
-export function SegmentWorkspace({ scope, segment, items, selection: { stage, key: selected }, onSelectionChange, playbackControl, autoPlay, onVideoEnded, onVideoError }: {
+export function SegmentWorkspace({ scope, segment, items, selection: { stage, key: selected }, onSelectionChange, playbackControl, autoPlay, onVideoEnded, onVideoError, cachedSources }: {
   scope: NoteScope; segment: string;
   items: VideoItem[]; selection: { stage: string; key: string }; onSelectionChange: (selection: { stage: string; key: string }) => void;
   playbackControl: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
+  cachedSources: Record<string, string>;
 }) {
   const [tab, setTab] = useState('script');
   const [language, setLanguage] = useState('zh');
@@ -73,7 +74,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
     </div>
     <div className="segment-workspace">
       <div className="segment-media-column">
-        <SegmentVideo key={current?.key || 'empty'} current={current} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
+        <SegmentVideo key={current?.key || 'empty'} current={current} cachedSource={current && cachedSources[current.url]} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
         <SegmentReferences context={context} />
       </div>
       <section className="segment-script" aria-label="分镜脚本、提示词与修改意见区域">

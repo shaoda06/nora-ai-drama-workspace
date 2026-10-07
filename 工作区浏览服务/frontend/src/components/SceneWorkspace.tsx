@@ -8,6 +8,7 @@ import { UnderlineTabs } from './UnderlineTabs';
 import { latestVideo } from './SegmentVideo';
 import { SegmentWorkspace } from './SegmentWorkspace';
 import { useRevisionNotesExport } from './RevisionNotes';
+import { useSceneVideoCache } from './useSceneVideoCache';
 import type { NoteScope } from './RevisionNotes';
 
 type Segments = NonNullable<FileItem['segments']>[string];
@@ -19,6 +20,10 @@ export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope
   const storyboardPath = `09-剧集制作/${scope.episode}/03-分镜脚本/${scope.episode}-${scene}-场次分镜.md`;
   const storyboard = useQuery({ queryKey: ['document', scope.project, storyboardPath, revision], queryFn: () => get<RecordData>(`${projectUrl(scope.project)}/document?path=${encodeURIComponent(storyboardPath)}`), enabled: view === 'storyboard' && !!scene, placeholderData: previous => previous });
   const notesExport = useRevisionNotesExport(scope, segments);
+  const videoCache = useSceneVideoCache(segments.flatMap(item => {
+    const video = latestVideo(item.videos);
+    return video ? [video] : [];
+  }));
   const [segment, setSegment] = useState(segments[0]?.id || '');
   const [selections, setSelections] = useState<Record<string, Selection>>({});
   const [continuous, setContinuous] = useState(false);
@@ -54,8 +59,12 @@ export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope
     {segments.length > 0 && <div className="segment-scroll"><div className="segment-strip" role="group" aria-label="本场分段" style={{ '--segment-columns': segments.map(item => `minmax(0, ${item.duration}fr)`).join(' ') } as CSSProperties}>
       {segments.map(item => <button key={item.id} aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} title={`${item.id} · 计划时长 ${item.duration}秒`} aria-pressed={item.id === segment} onClick={() => { setAutoPlay(false); setSegment(item.id); setError(''); }}><span>{item.id}</span><span>{item.duration}秒</span></button>)}
     </div></div>}
+    {videoCache.total > 0 && <p className="scene-video-preparation" role="status" title={videoCache.failures.join('\n')}>
+      {videoCache.failures.length ? `最新视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
+        : videoCache.ready === videoCache.total ? '本场最新视频已全部准备好' : `最新视频已准备 ${videoCache.ready}／${videoCache.total}`}
+    </p>}
     {error && <p className="error" role="alert">{error}</p>}
-    {currentSegment && <SegmentWorkspace key={segment} scope={scope} segment={segment} items={currentSegment.videos} selection={chosen}
+    {currentSegment && <SegmentWorkspace key={segment} scope={scope} segment={segment} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources}
       autoPlay={autoPlay} onVideoError={() => setAutoPlay(false)} onVideoEnded={advance}
       onSelectionChange={value => { setAutoPlay(false); setError(''); setSelections(previous => ({ ...previous, [segment]: value })); }}
       playbackControl={<div className="scene-review-actions"><label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>{notesExport.control}</div>} />}
