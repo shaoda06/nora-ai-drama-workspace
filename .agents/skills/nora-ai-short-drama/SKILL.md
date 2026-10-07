@@ -26,11 +26,11 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 | `comfyui-api` | ComfyUI执行、查询和取回 | 工作区真源：`dependencies/comfyui-api/`（[入口](dependencies/comfyui-api/SKILL.md)） |
 | `comfyui-inventory` | 按执行规范发现或只读核对服务能力 | 工作区真源：`dependencies/comfyui-inventory/`（[入口](dependencies/comfyui-inventory/SKILL.md)） |
 | `comfyui-troubleshooter` | 执行异常或质量问题诊断 | 工作区真源：`dependencies/comfyui-troubleshooter/`（[入口](dependencies/comfyui-troubleshooter/SKILL.md)） |
-| `stop-that-shit` | 审查过度工程、范围扩张或重复验证，及用户明确调用时；保留必要安全与验收要求 | GitHub：[lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，目录 [`skills/stop-that-shit`](https://github.com/lennney/stop-that-shit/tree/main/skills/stop-that-shit) |
-| `stss` | 审阅或改写方案、计划等决策说明，减少防御性赘述；不作为剧本、台词或模型提示词的通用润色工具 | GitHub：[lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，目录 [`skills/stss`](https://github.com/lennney/stop-that-shit/tree/main/skills/stss) |
-| `find-skills` | 用户要求查找技能，或当前任务需要发现缺少的专用技能时，检索并核对适用性；安装范围按下方获取规则执行 | GitHub：[vercel-labs/skills](https://github.com/vercel-labs/skills)，目录 [`skills/find-skills`](https://github.com/vercel-labs/skills/tree/main/skills/find-skills) |
-| `vercel-react-best-practices` | 开发、审阅或维护使用React／Next.js的工作区工具时，核对数据请求、打包和渲染性能 | GitHub：[vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)，目录 [`skills/react-best-practices`](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) |
-| `fastapi` | 开发、审阅或维护使用FastAPI的工作区后端时，核对路由、校验、依赖注入、异步和流式响应；使用特性须与项目框架版本匹配 | GitHub：[fastapi/fastapi](https://github.com/fastapi/fastapi)，目录 [`fastapi/.agents/skills/fastapi`](https://github.com/fastapi/fastapi/tree/master/fastapi/.agents/skills/fastapi) |
+| `stop-that-shit` | 工程范围与验证取舍；调用要求见[辅助技能](#辅助技能的条件调用) | GitHub：[lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，目录 [`skills/stop-that-shit`](https://github.com/lennney/stop-that-shit/tree/main/skills/stop-that-shit) |
+| `stss` | 方案及决策说明；调用要求见[辅助技能](#辅助技能的条件调用) | GitHub：[lennney/stop-that-shit](https://github.com/lennney/stop-that-shit)，目录 [`skills/stss`](https://github.com/lennney/stop-that-shit/tree/main/skills/stss) |
+| `find-skills` | 发现缺少的专用技能；调用要求见[辅助技能](#辅助技能的条件调用) | GitHub：[vercel-labs/skills](https://github.com/vercel-labs/skills)，目录 [`skills/find-skills`](https://github.com/vercel-labs/skills/tree/main/skills/find-skills) |
+| `vercel-react-best-practices` | React／Next.js工具开发与审阅；调用要求见[辅助技能](#辅助技能的条件调用) | GitHub：[vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)，目录 [`skills/react-best-practices`](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) |
+| `fastapi` | FastAPI工具开发与审阅；调用要求见[辅助技能](#辅助技能的条件调用) | GitHub：[fastapi/fastapi](https://github.com/fastapi/fastapi)，目录 [`fastapi/.agents/skills/fastapi`](https://github.com/fastapi/fastapi/tree/master/fastapi/.agents/skills/fastapi) |
 | `short-drama-write` | 剧本与对白写作的方法补充：人物目标、策略、回应、声音差异及可表演性；协作边界见下方规则，不接管项目流程与格式 | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-write`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-write) |
 | `humanizer-zh` | 已有中文文本的局部表达润色：空话、重复、拗口及模板句；保留剧情事实、人物声音与必要解释，协作边界见下方规则 | GitHub：[op7418/Humanizer-zh](https://github.com/op7418/Humanizer-zh)，技能目录为[仓库根目录](https://github.com/op7418/Humanizer-zh/tree/main)，入口为 `SKILL.md` |
 | `skill-creator` | 技能维护、扩展及可移植性验证 | Codex Desktop自带；按名称发现系统技能，不另附副本 |
@@ -58,6 +58,20 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 
 这两个技能的阶段调用时机由开发流程的[全剧准备](references/流程规范/短剧开发流程规范.md#第一部分全剧准备)及[逐集制作第3步](references/流程规范/短剧开发流程规范.md#3-扩写本集故事剧本并明确场次需求)维护；剧本中的具体用法见[编剧补充与表达润色](references/流程规范/逐集内容制作规范.md#编剧补充与表达润色)。按名称发现并读取实际安装入口，不要求每个阶段加载；缺少这两个方法补充技能不阻塞本流程已有的创作能力。
 
+### 辅助技能的条件调用
+
+各阶段按当前任务及下方条件选择技能。命中时读取实际安装入口的 `SKILL.md` 及本次所需参考，再将方法落实到获授权的产出或检查；本会话已读取且版本未变的内容可以复用。仅列出技能名称、安装成功或阅读完毕，不等于已经完成应用。交付创作或维护成果时，在既有编写依据、执行记录或交付说明中简述实际采用的技能及落实内容，不新建技能调用台账；未实际使用不声称已用，纯查询及无变化监控仍遵循原通知要求。
+
+以下辅助任务可出现在任何制作阶段，不新增制作步骤。目录、模板、创作与审核要求、依赖获取及执行授权仍按上方[协作优先级](#外部技能协作与规则优先级)处理；表中技能不替代剧本、图片或视频提示词的专用入口。
+
+| 技能 | 读取时机 | 参考重点及落实结果 |
+| --- | --- | --- |
+| `stop-that-shit` | 用户明确调用，或工具／规则维护中正在考虑额外机制、扩大范围、反复验证而需要判断必要性时 | 用其责任与范围判断核对具体需求和已有保证，保留必要的调用方修改、安全与验收，去掉无实际用途的新增机制；将结论落实到本次实现或审阅意见。普通查询、正常校验和创作任务不因涉及工具而一律加载；阅读技能不安装Guard或改变任务模式。 |
+| `stss` | 编写、审阅或改写需要用户作选择的方案、计划、取舍说明时，发现防御性赘述，或用户明确要求用它处理时 | 按实际任务选择审阅或改写，保留事实、证据程度、必要限制和待决定事项，删掉不影响决定的自我辩护及重复铺垫，落实到当前说明。只读审阅不扩成全文修改；剧本、台词和模型正文仍使用其专用技能。 |
+| `find-skills` | 用户要求寻找技能，或已核对现有安装与主技能入口、仍缺少当前任务所需的专用能力时 | 按具体任务检索并读取候选入口，核对适用范围、来源、依赖、与现有流程的冲突及是否重复，再提出有依据的选项；只盘点已安装技能时不为凑调用而联网搜索。安装、升级及安装位置按[依赖发现与获取](#依赖发现与获取)和实际授权处理，不照搬全局安装命令或批量更新。 |
+| `vercel-react-best-practices` | 开发、修订或审阅使用React／Next.js的工作区浏览工具及其他已授权工具时 | 读取与本次组件、数据请求、打包、渲染或交互性能问题有关的规则，落实到受影响代码或具体审阅意见，并按工具现有测试验证。按实际技术栈选用；不把Next.js专有做法套给普通React，不为使用技能改框架或批量重构无关代码。 |
+| `fastapi` | 开发、修订或审阅使用FastAPI的工作区后端时 | 读取与本次路由、输入／输出模型、依赖注入、同步／异步、流式响应或前端资源服务有关的参考，先核对项目实际框架版本支持，再落实到接口实现或审阅意见，并按现有测试验证。技能中的较新接口及工具偏好不授权升级依赖或改换既有启动方式。 |
+
 ### 依赖发现与获取
 
 项目画风无论来自名称、图片或风格库，均按[项目画风展开、示例验证与复用](references/流程规范/短剧开发流程规范.md#项目画风展开示例验证与复用)转换为具体美术实现，制定、保存及生产引用前执行该入口的正文内容边界检查，经用户确认后保存唯一正文，并通过图片／视频模板固定引用；不把风格名称当作完整实现。
@@ -65,7 +79,7 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 工作区的 `krea2-style-library` 是独立的可选画风辅助工具，不计入上述流程依赖。确定项目视觉风格时，按[视觉风格选择与记录](references/流程规范/短剧开发流程规范.md#视觉风格选择与记录)主动介绍其用途及访问方式；实际使用时按名称发现并读取该技能，提供真实浏览入口。用户可不使用风格库；工具或资源缺失不阻塞定位，不自动安装、更新资源或切换生成模型。
 
 1. 三个ComfyUI技能以本文件依赖表链接的 `dependencies/{技能名}/SKILL.md` 为本流程唯一现行入口；它们随工作区提供，不再次复制安装，不因发现全局同名版本切换。关联脚本和参考资料均从所选入口解析。同名旧安装需要整理时先比较并保存独有内容，未经授权不删除其他位置的安装。平台未自动列出嵌套技能时，按表中明确路径读取；若平台不支持该方式，报告能力限制，不静默创建另一套可编辑真源。
-2. 其他依赖先从当前平台按名称发现并读取实际入口，已有可用安装则复用，不自动覆盖或升级。缺失且本次任务需要时按表中来源获取完整技能目录及必需资源；许可证位于仓库根目录时也须保留。以 `.skill` 包发布的解包取得技能目录。不要安装仓库内无关技能或Hook。
+2. 其他依赖先从当前平台按名称发现并读取实际入口，已有可用安装则复用，不自动覆盖或升级；需要查找缺少的专用技能时，按[辅助技能的条件调用](#辅助技能的条件调用)使用 `find-skills`。缺失且本次任务需要时按表中来源获取完整技能目录及必需资源；许可证位于仓库根目录时也须保留。以 `.skill` 包发布的解包取得技能目录。不要安装仓库内无关技能或Hook。
 3. 除非用户明确指定其他安装范围或目录，新增依赖默认安装到当前工作区 `.agents/skills/{技能名}/`。工作区指包含工作区级 `AGENTS.md`、`projects/` 和主技能的根目录，不是某部短剧的项目目录；有多重工作区且归属不明时先确认。随包真源不适用重复安装。安装后核对入口可读取及平台发现状态；山音采用仅显式调用策略。
 4. Codex Desktop的 `skill-creator` 使用内置入口；其他平台若无此技能，说明技能维护阶段缺少依赖。来源不可访问或安装能力缺失时，报告具体缺项及受影响阶段，无关策划可继续。按需补齐依赖，不要求项目初始化时安装所有技能。依赖获取不授权安装ComfyUI节点、模型或更改服务器，也不等于ComfyUI已具备运行条件。
 
@@ -158,6 +172,7 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 | H3提示词与视频执行 | 下方MiniMax H3入口 |
 | 导演包制作、场次一采定稿留档与网页导入测试 | [导演包制作规范](references/生成规范/ComfyUI-MiniMaxH3导演包制作规范.md)；按开发流程的时机落实定稿留档，按需制作测试包；核对来源、时间线与素材，交付包与已配置画布，分别记录导出和导入测试结果 |
 | 项目浏览与交付前同步 | 下方项目浏览入口 |
+| 工具开发／审阅、方案说明及技能发现 | 上方[辅助技能的条件调用](#辅助技能的条件调用)；按本次技术栈和问题选择，普通项目资料维护不加载开发技能 |
 
 ## 看图能力调用边界
 
