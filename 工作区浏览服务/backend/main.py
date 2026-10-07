@@ -15,7 +15,8 @@ from backend.services import krea2
 from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes
 
 TOOL = Path(__file__).resolve().parent.parent
-WORKSPACE = TOOL.parent
+WORKSPACE = Path(os.environ.get('NORA_WORKSPACE', TOOL.parent)).resolve()
+ENVIRONMENT = os.environ.get('NORA_SERVICE_ENV', 'production')
 store = ProjectStore(WORKSPACE / 'projects')
 revision_notes = RevisionNotes()
 app = FastAPI(title='Nora工作区浏览服务', version='0.1.0', docs_url=None, redoc_url=None)
@@ -88,7 +89,8 @@ def projects() -> list[dict[str, str]]:
 
 @app.get('/api/service')
 def service() -> dict[str, Any]:
-    return {'app': 'nora-workspace-browser', 'version': app.version, 'pid': os.getpid(), 'workspace': str(WORKSPACE)}
+    return {'app': 'nora-workspace-browser', 'version': app.version, 'pid': os.getpid(), 'workspace': str(WORKSPACE),
+            'tool': str(TOOL), 'environment': ENVIRONMENT}
 
 
 @app.get('/api/projects/{name}/status')
