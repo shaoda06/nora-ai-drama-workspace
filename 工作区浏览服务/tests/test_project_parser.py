@@ -725,6 +725,29 @@ class ProjectParserTests(unittest.TestCase):
         self.assertIsNone(audio["children"][1]["media"])
         self.assertEqual(audio["children"][2]["name"], "未登记／其他文件")
 
+    def test_reference_cards_keep_media_separate_from_adoption_evidence(self):
+        for root, prefix, folder, extension, status in (
+                ("07-参考音频", "RA", "正式素材", "wav", "批准采用"),
+                ("08-参考视频", "RV", "人物表演与动作", "mp4", "未采用")):
+            index = root + "/" + root.split("-", 1)[1] + "索引.md"
+            media = folder + "/" + prefix + "001." + extension
+            record = "其他资料/工作稿/索引-工作稿.md"
+            self.put(root + "/" + media, "fixture media")
+            self.put(root + "/" + record, "# 记录\n## 采用依据\n真实说明")
+            text = "| 编号 | 名称 | 分类 | 文件入口 | 参考用途与适用范围 | 来源及使用授权说明 | 实测时长 | 审核／采用状态及版本依据 |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n"
+            text += f"| {prefix}001 | 测试 | 分类 | [媒体]({media}) | 范围 | 用户授权 | 4秒 | {status}；版本说明；[采用依据]({record}#采用依据) |\n"
+            text += f"| {prefix}002 | 状态缺失 | 分类 | 待制作 | 范围 | 来源 | 未测 | 尚无记载 |\n"
+            source = self.put(index, text)
+            items = portal.build_data(self.root)["catalogues"][root]["children"]
+            self.assertEqual(items[0]["media"]["key"], root + "/" + media)
+            self.assertIn(status, items[0]["approvalHtml"])
+            self.assertNotIn("版本说明", items[0]["approvalHtml"])
+            self.assertIn("版本说明", items[0]["statusHtml"])
+            self.assertIn('data-doc="' + root + "/" + record + '"', items[0]["statusHtml"])
+            self.assertIn("未知", items[1]["approvalHtml"])
+            self.assertIn("尚无记载", items[1]["statusHtml"])
+            self.assertEqual(source.read_text("utf-8"), text)
+
     def test_reference_library_process_files_are_separate_from_unregistered_media(self):
         for root in ("07-参考音频", "08-参考视频"):
             self.put(root + "/其他资料/工作稿/索引-工作稿.md", "# 工作稿\n\n保留用户决定")

@@ -18,7 +18,8 @@ import { EpisodeOutlines } from './components/EpisodeOutlines';
 import { AssetMedia } from './components/AssetMedia';
 import { AssetCandidateMedia } from './components/AssetCandidateMedia';
 import { useRefreshState } from './refreshPosition';
-import { useNotify } from './components/Notifications';
+import { AudioPreviewButton, useAudioPreview } from './components/AudioPreviewButton';
+import { ReferenceLibrary } from './components/ReferenceLibrary';
 
 type AssetSelection = { id: string; name: string };
 type AssetNavigation = { asset: AssetSelection | null; onAssetChange: (asset: AssetSelection | null) => void };
@@ -91,6 +92,7 @@ function Section({ value, project, section, revision, active, episode, onEpisode
   if (section === '09-剧集制作') return <EpisodeProduction project={project} items={value.children} selected={episode} onSelect={onEpisodeChange} revision={revision} />;
   if (section === '06-分集大纲') return <EpisodeOutlines value={value} />;
   if (value.kind === 'people' || value.kind === 'scenes' || value.kind === 'props') return <Assets value={value} project={project} revision={revision} active={active} asset={asset} onAssetChange={onAssetChange} />;
+  if (section === '07-参考音频' || section === '08-参考视频') return <ReferenceLibrary value={value} revision={revision} active={active} asset={asset} onAssetChange={onAssetChange} />;
   if ('exists' in value) return value.exists ? <Document value={value} /> : <><p className="muted">尚无正式文档。</p><Groups groups={value.groups} /></>;
   return <Catalogue value={value} section={section} />;
 }
@@ -109,41 +111,21 @@ function Assets({ value, project, revision, active, asset, onAssetChange }: { va
   const [search, setSearch] = useState('');
   const selected = asset?.id || null;
   const [tab, setTab] = useState('资料卡');
-  const audio = useRef<HTMLAudioElement>(null);
-  const voiceId = useRef<string | null>(null);
-  const [playingId, setPlayingId] = useState<string | null>(null);
-  const [voiceProgress, setVoiceProgress] = useState(0);
-  const notify = useNotify();
-  useEffect(() => {
-    if (!active || selected) audio.current?.pause();
-    return () => { audio.current?.pause(); };
-  }, [active, selected]);
-  const playVoice = (item: RecordData) => {
-    const player = audio.current!;
-    if (voiceId.current === item.id && !player.paused) { player.pause(); return; }
-    player.pause();
-    if (voiceId.current !== item.id || player.ended) {
-      voiceId.current = item.id;
-      setVoiceProgress(0);
-      player.src = item.voice.url + `?v=${revision}`;
-    }
-    void player.play().catch(error => {
-      if (error.name !== 'AbortError') notify('音色播放失败，请稍后重试。', 'error');
-    });
-  };
+  const voice = useAudioPreview(active, selected, revision);
+  const voiceButton = (item: RecordData) => <AudioPreviewButton name={`${item.name}音色`} enabled={!!item.voice} playing={voice.playingId === item.id} progress={voice.currentId === item.id ? voice.progress : 0} onClick={() => voice.toggle(item.id, item.voice.url)} />;
   const detail = useQuery({ queryKey: ['asset', project, value.kind, selected, revision], queryFn: () => get<RecordData>(`${projectUrl(project)}/assets/${value.kind}/${encodeURIComponent(selected!)}`), enabled: !!selected, placeholderData: (previous, query) => query?.queryKey[3] === selected ? previous : undefined });
   const matched = value.items.filter((item: RecordData) => `${item.id} ${item.name} ${item.role}`.toLowerCase().includes(search.toLowerCase()));
   return <>
-    {value.kind === 'people' && <audio ref={audio} preload="none" onPlay={() => setPlayingId(voiceId.current)} onPause={() => setPlayingId(null)} onTimeUpdate={event => { const player = event.currentTarget; if (player.duration > 0) setVoiceProgress(player.currentTime / player.duration); }} onEnded={() => { setPlayingId(null); setVoiceProgress(0); }} />}
+    {value.kind === 'people' && voice.player}
     <div hidden={!!selected}><div className="toolbar"><SearchField label="搜索资料" placeholder="搜索编号、名称" value={search} onChange={setSearch} /><span className="muted">共{matched.length}项</span></div>
       <div className="grid asset-list-grid">{matched.map((item: RecordData) => <article className="asset-card" key={item.id}>
         <button className={value.kind === 'people' && item.cover?.media ? 'cover character-cover-image' : 'cover'} onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('资料卡'); }}>{item.cover?.media ? <img loading="lazy" src={item.cover.media.url + `?v=${revision}`} alt={item.name} /> : <span>{item.id}</span>}</button>
-        <div className="asset-card-heading"><h3 title={`${item.id} · ${item.name}`}>{item.id} · {item.name}</h3>{value.kind === 'people' && <button className="voice-preview" disabled={!item.voice} aria-label={!item.voice ? `${item.name}暂无音色` : `${playingId === item.id ? '暂停' : '播放'}${item.name}音色`} title={!item.voice ? '暂无音色' : playingId === item.id ? '暂停音色' : '试听音色'} aria-pressed={playingId === item.id} onClick={() => playVoice(item)}>{playingId === item.id ? 'Ⅱ' : '▶'}<svg className="voice-progress" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="6" pathLength="100" strokeDasharray="100" strokeDashoffset={100 * (1 - (voiceId.current === item.id ? voiceProgress : 0))} /></svg></button>}</div>
+        <div className="asset-card-heading"><h3 title={`${item.id} · ${item.name}`}>{item.id} · {item.name}</h3>{value.kind === 'people' && voiceButton(item)}</div>
         <p className="asset-card-role" title={item.role}><span className="field-label">{({ people: '人物定位', scenes: '场景类型', props: '道具类别' } as Record<string, string>)[value.kind]}：</span>{item.role}</p>
         <div className="asset-card-footer"><div className="asset-card-status"><span>资料卡状态：</span><Rich html={item.statusHtml} /></div><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
         <button onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('资料卡'); }}>查看详情</button></div> {item.pendingCount > 0 && <button className="pending" onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('候选与审阅'); }}>留存待确认／待审核 {item.pendingCount}</button>}
       </article>)}</div><Groups groups={value.groups} /></div>
-    {selected && <><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关文件'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
+    {selected && <><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><div className="asset-detail-heading"><h2>{detail.data.id} · {detail.data.name}</h2>{value.kind === 'people' && voiceButton(detail.data)}</div><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关文件'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
       <div hidden={tab !== '资料卡'}><Document key={detail.data.id} value={detail.data.card} /></div>
       <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} formal /></div>
       <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <AssetCandidateMedia key={selected} items={detail.data.candidates} revision={revision} />}</div>
