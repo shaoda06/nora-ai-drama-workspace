@@ -990,7 +990,9 @@ def build_data(project, *, web_episode_navigation=False):
             continue
         indexed.add(key)
         doc = long_document(key, False)
+        title_match = re.search(r"^(?:-[ \t]*)?本集题名[:：][ \t]*([^。\n]+)", read(key) or "", re.M)
         outline_items.append({"kind": "outline", "name": number, "key": key, "doc": doc,
+                              "title": title_match[1].strip() if title_match else "",
                               "category": row.get("所属故事阶段", ""), "summary": row["一句话概要"],
                               "statusHtml": doc["confirmationHtml"]})
     outline_files = inventory(outline_root)

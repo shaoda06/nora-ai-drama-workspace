@@ -692,13 +692,15 @@ class ProjectParserTests(unittest.TestCase):
 
     def test_catalogue_outlines_follow_index_not_production_status(self):
         self.put("06-分集大纲/分集索引.md", "# 索引\n| 集号 | 所属故事阶段 | 一句话概要 | 大纲入口 |\n| --- | --- | --- | --- |\n| EP001 | 第一阶段 | 原概要 | [文档](EP001-分集大纲.md) |\n| EP002 | 第二阶段 | 缺文件 | [文档](EP002-分集大纲.md) |")
-        source = self.put("06-分集大纲/EP001-分集大纲.md", "# EP001\n- 确认状态：已确认\n## 剧情\n原剧情")
+        source = self.put("06-分集大纲/EP001-分集大纲.md", "# EP001\n- 确认状态：已确认\n本集题名：先撑过今晚。\n## 剧情\n原剧情")
         self.data = portal.build_data(self.root)
         items = self.data["catalogues"]["06-分集大纲"]["children"]
         self.assertEqual([i["name"] for i in items], ["EP001", "EP002"])
         self.assertEqual(items[0]["category"], "第一阶段")
+        self.assertEqual(items[0]["title"], "先撑过今晚")
+        self.assertEqual(items[1]["title"], "")
         self.assertFalse(items[1]["doc"]["exists"])
-        self.assertEqual(source.read_text("utf-8"), "# EP001\n- 确认状态：已确认\n## 剧情\n原剧情")
+        self.assertEqual(source.read_text("utf-8"), "# EP001\n- 确认状态：已确认\n本集题名：先撑过今晚。\n## 剧情\n原剧情")
         self.assertEqual(self.data["catalogues"]["09-剧集制作"]["children"], [])
 
     def test_outline_without_stage_column_remains_readable(self):

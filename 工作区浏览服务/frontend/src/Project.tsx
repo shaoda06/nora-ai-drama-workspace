@@ -14,6 +14,7 @@ import { Pagination } from './components/Pagination';
 import { FooterSyncContext, HeaderControlsContext } from './components/AppShell';
 import { SyncNotification } from './components/SyncNotification';
 import { EpisodeProduction } from './components/EpisodeProduction';
+import { EpisodeOutlines } from './components/EpisodeOutlines';
 import { AssetMedia } from './components/AssetMedia';
 import { AssetCandidateMedia } from './components/AssetCandidateMedia';
 import { useRefreshState } from './refreshPosition';
@@ -88,6 +89,7 @@ function SectionPane({ project, section, revision, active, episode, onEpisodeCha
 }
 function Section({ value, project, section, revision, active, episode, onEpisodeChange, asset, onAssetChange }: { value: RecordData; project: string; section: string; revision: number; active: boolean; episode: string | null; onEpisodeChange: (episode: string | null) => void } & AssetNavigation) {
   if (section === '09-剧集制作') return <EpisodeProduction project={project} items={value.children} selected={episode} onSelect={onEpisodeChange} revision={revision} />;
+  if (section === '06-分集大纲') return <EpisodeOutlines value={value} />;
   if (value.kind === 'people' || value.kind === 'scenes' || value.kind === 'props') return <Assets value={value} project={project} revision={revision} active={active} asset={asset} onAssetChange={onAssetChange} />;
   if ('exists' in value) return value.exists ? <Document value={value} /> : <><p className="muted">尚无正式文档。</p><Groups groups={value.groups} /></>;
   return <Catalogue value={value} section={section} />;
@@ -137,11 +139,11 @@ function Assets({ value, project, revision, active, asset, onAssetChange }: { va
       <div className="grid asset-list-grid">{matched.map((item: RecordData) => <article className="asset-card" key={item.id}>
         <button className={value.kind === 'people' && item.cover?.media ? 'cover character-cover-image' : 'cover'} onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('资料卡'); }}>{item.cover?.media ? <img loading="lazy" src={item.cover.media.url + `?v=${revision}`} alt={item.name} /> : <span>{item.id}</span>}</button>
         <div className="asset-card-heading"><h3 title={`${item.id} · ${item.name}`}>{item.id} · {item.name}</h3>{value.kind === 'people' && <button className="voice-preview" disabled={!item.voice} aria-label={!item.voice ? `${item.name}暂无音色` : `${playingId === item.id ? '暂停' : '播放'}${item.name}音色`} title={!item.voice ? '暂无音色' : playingId === item.id ? '暂停音色' : '试听音色'} aria-pressed={playingId === item.id} onClick={() => playVoice(item)}>{playingId === item.id ? 'Ⅱ' : '▶'}<svg className="voice-progress" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="6" pathLength="100" strokeDasharray="100" strokeDashoffset={100 * (1 - (voiceId.current === item.id ? voiceProgress : 0))} /></svg></button>}</div>
-        <p className="asset-card-role" title={item.role}>{item.role}</p>
+        <p className="asset-card-role" title={item.role}><span className="field-label">{({ people: '人物定位', scenes: '场景类型', props: '道具类别' } as Record<string, string>)[value.kind]}：</span>{item.role}</p>
         <div className="asset-card-footer"><div className="asset-card-status"><span>资料卡状态：</span><Rich html={item.statusHtml} /></div><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
         <button onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('资料卡'); }}>查看详情</button></div> {item.pendingCount > 0 && <button className="pending" onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('候选与审阅'); }}>留存待确认／待审核 {item.pendingCount}</button>}
       </article>)}</div><Groups groups={value.groups} /></div>
-    {selected && <><button onClick={() => onAssetChange(null)}>← 返回列表</button><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关文件'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
+    {selected && <><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关文件'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
       <div hidden={tab !== '资料卡'}><Document key={detail.data.id} value={detail.data.card} /></div>
       <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} formal /></div>
       <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <AssetCandidateMedia key={selected} items={detail.data.candidates} revision={revision} />}</div>
