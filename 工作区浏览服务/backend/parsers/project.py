@@ -26,11 +26,11 @@ PROPS = "05-道具资料"
 TEXT_PREVIEW_LIMIT = 256 * 1024
 INLINE_PATTERN = r"(\x60+)(.+?)\1|!?\[([^\]]*)\]\((<[^>]+>|[^)\n]+)\)|\*\*(.+?)\*\*"
 STATUS_COLORS = {
-    **dict.fromkeys(("已完成", "已确认", "已定稿", "通过", "批准采用", "成功", "success"), "green"),
+    **dict.fromkeys(("已完成", "已确认", "已定稿", "通过", "批准采用", "已采用", "成功", "success"), "green"),
     **dict.fromkeys(("进行中", "运行中", "running"), "blue"),
     **dict.fromkeys(("待确认", "部分确认", "待审核", "待核对", "修改后再审", "状态不明", "unknown"), "orange"),
     **dict.fromkeys(("失败", "异常", "不通过", "failed"), "red"),
-    **dict.fromkeys(("未开始", "排队中", "不采用", "未记录", "不适用", "待完成", "queued"), "gray"),
+    **dict.fromkeys(("未开始", "排队中", "不采用", "未送审", "已被替换／归档", "已结束未采用", "未记录", "不适用", "待完成", "queued"), "gray"),
 }
 STATUS_FIELDS = {"状态", "当前状态", "确认状态", "画风确认状态", "画幅确认状态", "适配确认状态", "执行状态", "真实执行状态", "技术检查结论", "文件核对结论",
                  "agent 技术审查结论", "agent 内容审查状态", "agent 初审结论", "agent初审结论", "agent 画面初审结论", "用户采用状态", "用户决定"}
@@ -51,6 +51,9 @@ def image_review_fields(chunk, source, legacy_state, user_state):
     """Display record-based delivery; retain historical review formats unchanged."""
     waiting = re.match(r"^(待确认|待审核)(?=$|[。；，\s])", user_state)
     pending_label = waiting.group(1) if waiting else ""
+    reason = field(chunk, "用户决定原因与依据")
+    user_fields = {"userHtml": status_markup(user_state, source),
+                   "userReasonHtml": inline(reason, source) if reason != "未记录" else ""}
     file_check = field(chunk, "文件核对结论")
     vision = field(chunk, "看图调用状态")
     if file_check != "未记录" or vision != "未记录":
@@ -59,7 +62,7 @@ def image_review_fields(chunk, source, legacy_state, user_state):
                 "visionAuthorized": bool(re.match(r"^已按授权查看(?=$|[。；，\s])", vision)),
                 "visionScopeHtml": inline(field(chunk, "看图授权及限定范围"), source),
                 "visionFindingsHtml": inline(field(chunk, "授权查看的发现"), source),
-                "userHtml": status_markup(user_state, source),
+                **user_fields,
                 "pending": bool(waiting), "pendingLabel": pending_label}
     technical = field(chunk, "agent 技术审查结论")
     content = field(chunk, "agent 内容审查状态")
@@ -70,7 +73,7 @@ def image_review_fields(chunk, source, legacy_state, user_state):
             "contentHtml": status_markup(content, source),
             "contentFindingsHtml": inline(findings, source),
             "agentHtml": status_markup(legacy_state, source),
-            "userHtml": status_markup(user_state, source),
+            **user_fields,
             "pending": bool(waiting), "pendingLabel": pending_label}
 
 

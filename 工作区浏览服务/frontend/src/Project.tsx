@@ -157,7 +157,7 @@ function CandidateMedia({ items, revision, wide }: { items: RecordData[]; revisi
   }
   const order = ['人物上半身正面肖像图', '人物多视角参考图', '服装参考图', '角色多视角参考图'];
   const types = [...order.filter(type => grouped.has(type)), ...[...grouped.keys()].filter(type => !order.includes(type))];
-  return items.length ? <div className="asset-candidate-types">{types.map(type => <CandidateTypeGroup key={type} type={type} items={grouped.get(type)!} revision={revision} wide={wide} />)}</div> : <p className="muted">暂无已登记图片。</p>;
+  return items.length ? <div className="asset-candidate-types">{types.map(type => <CandidateTypeGroup key={type} type={type} items={[...grouped.get(type)!].reverse()} revision={revision} wide={wide} />)}</div> : <p className="muted">暂无已登记图片。</p>;
 }
 function CandidateTypeGroup({ type, items, revision, wide }: { type: string; items: RecordData[]; revision: number; wide: boolean }) {
   const [open, setOpen] = useState(false);

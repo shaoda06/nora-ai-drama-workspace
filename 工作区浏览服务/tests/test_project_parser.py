@@ -545,6 +545,25 @@ class ProjectParserTests(unittest.TestCase):
                     self.assertIn(decision.split("；")[0].split("。")[0],
                                   result["userHtml"])
 
+    def test_candidate_decision_reason_is_separate_safe_and_not_a_pending_state(self):
+        records = [("people", self.person_fixture()[1]),
+                   ("props", self.prop_fixture()), ("scenes", self.scene_fixture()[1])]
+        for _, record in records:
+            text = re.sub(r"- 用户采用状态：[^\n]*",
+                          "- 用户采用状态：已结束未采用\n"
+                          "- 用户决定原因与依据：历史曾待确认；用户结束比较 <script>bad</script>",
+                          record.read_text())
+            record.write_text(text)
+        data = portal.build_data(self.root)
+        for group, _ in records:
+            candidate = data[group][0]["candidates"][0]
+            self.assertIn("已结束未采用", candidate["userHtml"])
+            self.assertNotIn("用户结束比较", candidate["userHtml"])
+            self.assertIn("用户结束比较", candidate["userReasonHtml"])
+            self.assertNotIn("<script>", candidate["userReasonHtml"])
+            self.assertFalse(candidate["pending"])
+            self.assertEqual(data[group][0]["pendingCount"], 0)
+
     def test_authorized_analysis_does_not_override_user_decision(self):
         chunk = ("- 文件核对结论：通过\n- 看图调用状态：已按授权查看\n"
                  "- 看图授权及限定范围：用户要求看左侧视格\n"
