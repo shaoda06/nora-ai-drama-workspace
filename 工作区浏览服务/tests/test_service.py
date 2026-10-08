@@ -29,6 +29,32 @@ class ServiceTests(unittest.TestCase):
         self.override.stop()
         self.temp.cleanup()
 
+    def test_people_voice_uses_card_voice_field_and_existing_formal_audio(self):
+        people = self.project / '03-人物资料'
+        people.mkdir()
+        rows = []
+        for number, voice in [('CH001', '[音色](../../07-参考音频/正式素材/RA001-音色.wav)'),
+                              ('CH002', '[音色](../../07-参考音频/正式素材/不存在.wav)'),
+                              ('CH003', '待确认')]:
+            folder = people / (number + '-人物')
+            folder.mkdir()
+            (folder / (number + '-人物资料卡.md')).write_text(
+                '# 人物资料卡\n\n## 5. 语言与声音特征\n'
+                '- 说话声音参考音频（可选）：' + voice + '\n'
+                '## 9. 其他备注\n[历史音频](../../07-参考音频/正式素材/RA001-音色.wav)\n', encoding='utf-8')
+            rows.append(f'| {number} | 人物 | 配角 | [资料卡]({number}-人物/{number}-人物资料卡.md) |')
+        (people / '人物索引.md').write_text(
+            '| 人物编号 | 姓名 | 人物定位 | 资料卡入口 |\n| --- | --- | --- | --- |\n' + '\n'.join(rows), encoding='utf-8')
+        audio = self.project / '07-参考音频/正式素材/RA001-音色.wav'
+        audio.parent.mkdir(parents=True)
+        audio.write_bytes(b'audio fixture')
+        items = self.client.get('/api/projects/示例项目/sections/03-人物资料').json()['items']
+        self.assertEqual(items[0]['voice']['kind'], 'audio')
+        self.assertTrue(items[0]['voice']['url'].startswith('/api/projects/'))
+        self.assertEqual(items[0]['voice']['key'], '07-参考音频/正式素材/RA001-音色.wav')
+        self.assertIsNone(items[1]['voice'])
+        self.assertIsNone(items[2]['voice'])
+
     def test_production_titles_from_current_outline_and_existing_directories(self):
         outlines = self.project / '06-分集大纲'
         outlines.mkdir()

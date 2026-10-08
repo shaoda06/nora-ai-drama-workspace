@@ -696,11 +696,16 @@ def build_data(project, *, web_episode_navigation=False):
         # The current registry determines which images are eligible as covers.
         cover = next((a for a in formal if a["media"] and a["approved"] and a["coverApplicable"] and a["type"] == "人物上半身正面肖像图"),
                      next((a for a in formal if a["media"] and a["approved"] and a["coverApplicable"] and a["type"] == "角色多视角参考图"), None))
+        voice_field = re.search(r"^- 说话声音参考音频（可选）：(.*?)(?=^- \S|^## |\Z)",
+                                texts.get(card_key, ""), re.M | re.S)
+        voice = next((media for link in markdown_links(voice_field[1], card_key)
+                      if link["key"].startswith("07-参考音频/正式素材/")
+                      and (media := file_entry(project / link["key"])) and media["kind"] == "audio"), None) if voice_field else None
         people.append({"id": number, "name": row["姓名"], "role": row["人物定位"],
                        "stages": [name for name in stage_names if any(a["stage"] == name for a in formal)],
                        "candidateStages": stage_names if len(stage_names) > 1 else [],
                        "card": card, "cardKey": card_key, "formal": formal, "candidates": candidates,
-                       "cover": cover, "recordKey": record_key if record else None,
+                       "cover": cover, "voice": voice, "recordKey": record_key if record else None,
                        "pendingCount": sum(c["pending"] for c in candidates), "groups": person_groups})
     prop_groups = collect_groups(PROPS)
     prop_index = PROPS + "/道具索引.md"

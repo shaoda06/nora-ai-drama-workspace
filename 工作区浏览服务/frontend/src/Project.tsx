@@ -16,6 +16,7 @@ import { SyncNotification } from './components/SyncNotification';
 import { EpisodeProduction } from './components/EpisodeProduction';
 import { AssetMediaCard } from './components/AssetMediaCard';
 import { useRefreshState } from './refreshPosition';
+import { useNotify } from './components/Notifications';
 
 export default function Project() {
   const controlsRoot = useContext(HeaderControlsContext);
@@ -77,11 +78,11 @@ export default function Project() {
 function SectionPane({ project, section, revision, active, episode, onEpisodeChange }: { project: string; section: string; revision: number; active: boolean; episode: string | null; onEpisodeChange: (episode: string | null) => void }) {
   const query = useQuery({ queryKey: ['section', project, section, revision], queryFn: () => get<RecordData>(`${projectUrl(project)}/sections/${encodeURIComponent(section)}`), enabled: active, placeholderData: previous => previous });
   const statistics = section === '09-剧集制作' && !episode ? query.data?.statistics : undefined;
-  return <section className="panel" hidden={!active}>{statistics && <div className="production-statistics" aria-label="剧集制作统计"><span>共 <strong>{statistics.total}</strong> 集</span><span>未开始 <strong>{statistics.notStarted}</strong> 集</span><span>进行中 <strong>{statistics.running}</strong> 集</span><span>已完成 <strong>{statistics.completed}</strong> 集</span></div>}<Result page loading={active && query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} />{query.data && (section !== '09-剧集制作' || active) && <Section value={query.data} project={project} section={section} revision={revision} episode={episode} onEpisodeChange={onEpisodeChange} />}</section>;
+  return <section className="panel" hidden={!active}>{statistics && <div className="production-statistics" aria-label="剧集制作统计"><span>共 <strong>{statistics.total}</strong> 集</span><span>未开始 <strong>{statistics.notStarted}</strong> 集</span><span>进行中 <strong>{statistics.running}</strong> 集</span><span>已完成 <strong>{statistics.completed}</strong> 集</span></div>}<Result page loading={active && query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} />{query.data && (section !== '09-剧集制作' || active) && <Section value={query.data} project={project} section={section} revision={revision} active={active} episode={episode} onEpisodeChange={onEpisodeChange} />}</section>;
 }
-function Section({ value, project, section, revision, episode, onEpisodeChange }: { value: RecordData; project: string; section: string; revision: number; episode: string | null; onEpisodeChange: (episode: string | null) => void }) {
+function Section({ value, project, section, revision, active, episode, onEpisodeChange }: { value: RecordData; project: string; section: string; revision: number; active: boolean; episode: string | null; onEpisodeChange: (episode: string | null) => void }) {
   if (section === '09-剧集制作') return <EpisodeProduction project={project} items={value.children} selected={episode} onSelect={onEpisodeChange} revision={revision} />;
-  if (value.kind === 'people' || value.kind === 'scenes' || value.kind === 'props') return <Assets value={value} project={project} revision={revision} />;
+  if (value.kind === 'people' || value.kind === 'scenes' || value.kind === 'props') return <Assets value={value} project={project} revision={revision} active={active} />;
   if ('exists' in value) return value.exists ? <Document value={value} /> : <><p className="muted">尚无正式文档。</p><Groups groups={value.groups} /></>;
   return <Catalogue value={value} section={section} />;
 }
@@ -96,18 +97,39 @@ function Catalogue({ value, section }: { value: RecordData; section: string }) {
     {!all.length && <p className="muted">暂无资料。</p>}<FileTree key={section} items={matched.slice((page - 1) * 36, page * 36)} />
     <Pagination page={page} total={matched.length} change={setPage} /><Groups groups={value.groups} /></>;
 }
-function Assets({ value, project, revision }: { value: RecordData; project: string; revision: number }) {
+function Assets({ value, project, revision, active }: { value: RecordData; project: string; revision: number; active: boolean }) {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<string | null>(null);
   const [tab, setTab] = useState('资料卡');
+  const audio = useRef<HTMLAudioElement>(null);
+  const voiceId = useRef<string | null>(null);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const notify = useNotify();
+  useEffect(() => {
+    if (!active || selected) audio.current?.pause();
+    return () => { audio.current?.pause(); };
+  }, [active, selected]);
+  const playVoice = (item: RecordData) => {
+    const player = audio.current!;
+    if (voiceId.current === item.id && !player.paused) { player.pause(); return; }
+    player.pause();
+    voiceId.current = item.id;
+    player.src = item.voice.url + `?v=${revision}`;
+    void player.play().catch(error => {
+      if (error.name !== 'AbortError') notify('音色播放失败，请稍后重试。', 'error');
+    });
+  };
   const detail = useQuery({ queryKey: ['asset', project, value.kind, selected, revision], queryFn: () => get<RecordData>(`${projectUrl(project)}/assets/${value.kind}/${encodeURIComponent(selected!)}`), enabled: !!selected, placeholderData: (previous, query) => query?.queryKey[3] === selected ? previous : undefined });
   const matched = value.items.filter((item: RecordData) => `${item.id} ${item.name} ${item.role}`.toLowerCase().includes(search.toLowerCase()));
   return <>
+    {value.kind === 'people' && <audio ref={audio} preload="none" onPlay={() => setPlayingId(voiceId.current)} onPause={() => setPlayingId(null)} onEnded={() => setPlayingId(null)} />}
     <div hidden={!!selected}><div className="toolbar"><SearchField label="搜索资料" placeholder="搜索编号、名称" value={search} onChange={setSearch} /><span className="muted">共{matched.length}项</span></div>
       <div className="grid">{matched.map((item: RecordData) => <article className="asset-card" key={item.id}>
         <button className="cover" onClick={() => { setSelected(item.id); setTab('资料卡'); }}>{item.cover?.media ? <img loading="lazy" src={item.cover.media.url + `?v=${revision}`} alt={item.name} /> : <span>{item.id}</span>}</button>
-        <h3>{item.id} · {item.name}</h3><p>{item.role}</p><div className="asset-card-status"><span>资料卡状态：</span><Rich html={item.statusHtml} /></div><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
-        <button onClick={() => { setSelected(item.id); setTab('资料卡'); }}>查看详情</button> {item.pendingCount > 0 && <button className="pending" onClick={() => { setSelected(item.id); setTab('候选与审阅'); }}>留存待确认／待审核 {item.pendingCount}</button>}
+        <div className="asset-card-heading"><h3 title={`${item.id} · ${item.name}`}>{item.id} · {item.name}</h3>{value.kind === 'people' && <button className="voice-preview" disabled={!item.voice} aria-label={!item.voice ? `${item.name}暂无音色` : `${playingId === item.id ? '暂停' : '播放'}${item.name}音色`} title={!item.voice ? '暂无音色' : playingId === item.id ? '暂停音色' : '试听音色'} aria-pressed={playingId === item.id} onClick={() => playVoice(item)}>{playingId === item.id ? 'Ⅱ' : '▶'}</button>}</div>
+        <p className="asset-card-role" title={item.role}>{item.role}</p>
+        <div className="asset-card-footer"><div className="asset-card-status"><span>资料卡状态：</span><Rich html={item.statusHtml} /></div><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
+        <button onClick={() => { setSelected(item.id); setTab('资料卡'); }}>查看详情</button></div> {item.pendingCount > 0 && <button className="pending" onClick={() => { setSelected(item.id); setTab('候选与审阅'); }}>留存待确认／待审核 {item.pendingCount}</button>}
       </article>)}</div><Groups groups={value.groups} /></div>
     {selected && <><button onClick={() => setSelected(null)}>← 返回列表</button><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关记录'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
       <div hidden={tab !== '资料卡'}><Document key={detail.data.id} value={detail.data.card} /></div>
