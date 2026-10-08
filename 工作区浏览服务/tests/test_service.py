@@ -561,6 +561,22 @@ class ServiceTests(unittest.TestCase):
                          [('人物资料卡', '待确认'), ('EP001 制作', '进行中')])
         self.assertEqual(path.read_text(encoding='utf-8'), progress)
 
+    def test_phase_lists_preserve_document_links_and_escape_other_html(self):
+        progress = ('| 阶段名称 | 对应会话入口 | 当前状态 | 成果入口 | 待决事项 | 下一步 |\n'
+                    '| --- | --- | --- | --- | --- | --- |\n'
+                    '| 项目基本定位 | 会话 | 进行中 | 定位 | - 地理待定<br>- 核对[画风正文v11](00-项目定位/项目基本定位.md#画风与美术实现正文) | - 检查<script>内容</script> |\n')
+        (self.project / '项目进度.md').write_text(progress, encoding='utf-8')
+        data = self.store.get('示例项目')['data']
+        stage = data['active'][0]
+        self.assertTrue(stage['pendingHtml'].startswith('<ul><li>地理待定</li><li>核对<a '))
+        self.assertIn('data-doc="00-项目定位/项目基本定位.md"', stage['pendingHtml'])
+        self.assertIn('#%E7%94%BB', stage['pendingHtml'])
+        self.assertEqual(stage['nextHtml'], '<ul><li>检查&lt;script&gt;内容&lt;/script&gt;</li></ul>')
+        document = data['documents']['项目进度.md']['html']
+        self.assertIn(stage['pendingHtml'], document)
+        self.assertIn(stage['nextHtml'], document)
+        self.assertEqual(parser.phase_list('旧说明；保留原意', parser.PROGRESS), '<ul><li>旧说明；保留原意</li></ul>')
+
     def test_document_header_preserves_extra_fields_and_source_links(self):
         source = ('# 项目定位\n\n- 项目名称或代号：示例项目\n- 文档版本：v03\n'
                   '- 更新日期：2026-10-06\n- 确认状态：部分确认；旧限定说明。\n'

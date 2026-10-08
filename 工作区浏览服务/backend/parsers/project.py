@@ -144,6 +144,11 @@ def cells(line):
     return [part.strip().replace(r"\|", "|") for part in re.split(r"(?<!\\)\|", line.strip().strip("|"))]
 
 
+def phase_list(text, source):
+    items = [re.sub(r"^-\s+", "", item.strip()) for item in text.split("<br>")]
+    return "<ul>" + "".join("<li>" + inline(item, source) + "</li>" for item in items) + "</ul>"
+
+
 def slug(text):
     return re.sub(r"[^\w\u3400-\u9fff -]", "", text.lower()).replace(" ", "-")
 
@@ -213,6 +218,7 @@ def markdown(text, source):
         if separator < len(lines) and "|" in line and re.fullmatch(
                 r"\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*", lines[separator]):
             headers = cells(line)
+            progress_table = headers == ["阶段名称", "对应会话入口", "当前状态", "成果入口", "待决事项", "下一步"]
             i = separator + 1
             rows = []
             while i < len(lines):
@@ -222,9 +228,10 @@ def markdown(text, source):
                 if "|" not in lines[i]:
                     break
                 row = cells(lines[i])
-                anchor = ' id="phase-' + slug(row[0]) + '"' if headers == ["阶段名称", "对应会话入口", "当前状态", "成果入口", "待决事项", "下一步"] else ""
+                anchor = ' id="phase-' + slug(row[0]) + '"' if progress_table else ""
                 rows.append("<tr" + anchor + ">" + "".join("<td>" + (
                     status_markup(c, source) if j < len(headers) and headers[j] in STATUS_FIELDS
+                    else phase_list(c, source) if progress_table and j in (4, 5)
                     else inline(c, source)) + "</td>" for j, c in enumerate(row)) + "</tr>")
                 i += 1
             out.append('<div class="table-scroll"><table><thead><tr>'
@@ -500,8 +507,8 @@ def build_data(project, *, web_episode_navigation=False):
     if position is None:
         warnings.append("尚未形成正式定位，不以草稿代替。")
     rows = phase_rows(progress or "")
-    active = [dict(row, anchor="phase-" + slug(row["name"]), statusHtml=status_markup(row["status"], PROGRESS), pendingHtml=inline(row["pending"], PROGRESS),
-                   nextHtml=inline(row["next"], PROGRESS))
+    active = [dict(row, anchor="phase-" + slug(row["name"]), statusHtml=status_markup(row["status"], PROGRESS), pendingHtml=phase_list(row["pending"], PROGRESS),
+                   nextHtml=phase_list(row["next"], PROGRESS))
               for row in rows if row["status"] in ("进行中", "待确认")]
     if progress and not rows:
         warnings.append("项目进度表格式未识别，请打开原记录核对；不推断当前阶段。")
