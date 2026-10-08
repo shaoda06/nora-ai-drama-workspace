@@ -46,7 +46,7 @@ export function Original({ url, label = '原文件' }: { url?: string; label?: s
 export function FileLink({ item, showOriginal = true }: { item: FileItem; showOriginal?: boolean }) {
   const preview = useContext(PreviewContext);
   const target = item.kind === 'reference' && item.media ? { ...item.media, name: item.name, prompts: item.prompts } : item;
-  return <div className="file"><button className="link" onClick={() => preview(target)}>{item.name}</button><div className="file-actions">{showOriginal && <Original url={target.url} />}{item.statusHtml ? <Rich html={item.statusHtml} /> : null}</div></div>;
+  return <div className="file"><button className="link" onClick={() => preview(target)}>{item.name}</button><div className="file-actions">{item.statusHtml ? <Rich html={item.statusHtml} /> : <span className="status-badge status-gray">未知</span>}{showOriginal && <Original url={target.url} />}</div></div>;
 }
 export function FileTree({ items, showOriginal = true }: { items: FileItem[]; showOriginal?: boolean }) {
   const materials = items.filter(item => item.name.startsWith('素材/'));
