@@ -88,3 +88,5 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .app-update-notice{position:fixed;left:0;right:0;bottom:var(--site-footer-height);z-index:31;margin:0;padding:8px 16px;border-top:1px solid var(--line);background:white;color:var(--muted);font-size:12px;text-align:center;overflow-wrap:anywhere}
 .asset-media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:18px;align-items:start}.asset-media-card{min-width:0;border:1px solid var(--line);border-radius:8px;padding:22px;overflow-wrap:anywhere}.asset-media-card>h3{font-size:15px;margin:0 0 18px}.asset-media-item+.asset-media-item{margin-top:22px;padding-top:22px;border-top:1px solid var(--line)}
 .episode-scene-header{display:flex;align-items:center;gap:16px}.episode-scene-header>.tabs{margin:0;min-width:0;flex:1}.episode-script-link{margin-left:auto;flex:none;text-decoration:underline;text-underline-offset:3px;font-size:13px}.episode-script-link:hover{background:none}.scene-workspace-tabs{margin-top:20px}.segment-scroll{padding-bottom:20px;border-bottom:1px solid var(--line)}
+
+.cover.character-cover-image{background:white}
