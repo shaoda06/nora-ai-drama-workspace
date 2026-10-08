@@ -96,3 +96,4 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .asset-media-item>.cover{height:260px;flex-shrink:0}
 
 .asset-media-field{margin:4px 0}.asset-media-field>.field-label{margin-right:8px}.asset-media-item>.cover{margin-bottom:6px}
+.asset-candidate-type+.asset-candidate-type{margin-top:16px}.asset-candidate-type>summary{padding:12px 0;font-weight:600;color:var(--green);border-bottom:1px solid var(--line);overflow-wrap:anywhere}.asset-candidate-type>.asset-media-grid{margin-top:16px}

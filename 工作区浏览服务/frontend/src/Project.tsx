@@ -140,13 +140,31 @@ function Assets({ value, project, revision, active, asset, onAssetChange }: { va
         <div className="asset-card-footer"><div className="asset-card-status"><span>资料卡状态：</span><Rich html={item.statusHtml} /></div><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
         <button onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('资料卡'); }}>查看详情</button></div> {item.pendingCount > 0 && <button className="pending" onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('候选与审阅'); }}>留存待确认／待审核 {item.pendingCount}</button>}
       </article>)}</div><Groups groups={value.groups} /></div>
-    {selected && <><button onClick={() => onAssetChange(null)}>← 返回列表</button><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关记录'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
+    {selected && <><button onClick={() => onAssetChange(null)}>← 返回列表</button><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关文件'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
       <div hidden={tab !== '资料卡'}><Document key={detail.data.id} value={detail.data.card} /></div>
       <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} formal /></div>
-      <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <AssetMedia items={detail.data.candidates} revision={revision} />}</div>
-      <div hidden={tab !== '相关记录'}>{detail.data.recordKey && <FileTree items={[{ kind: 'markdown', name: '完整生成记录', key: detail.data.recordKey, url: `${projectUrl(project)}/files/${detail.data.recordKey}` }]} />}<Groups groups={detail.data.groups} /></div>
+      <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <CandidateMedia key={selected} items={detail.data.candidates} revision={revision} />}</div>
+      <div hidden={tab !== '相关文件'}>{detail.data.recordKey && !detail.data.groups.some((group: RecordData) => group.files.some((file: FileItem) => file.key === detail.data.recordKey)) && <FileTree items={[{ kind: 'markdown', name: '完整生成记录', key: detail.data.recordKey, url: `${projectUrl(project)}/files/${detail.data.recordKey}` }]} />}<FileTree items={detail.data.groups.map((group: RecordData) => ({ kind: 'group', ...group }))} /></div>
     </>}</>}
   </>;
+}
+function CandidateMedia({ items, revision }: { items: RecordData[]; revision: number }) {
+  const grouped = new Map<string, RecordData[]>();
+  for (const item of items) {
+    const type = item.type === '人物多视角参考图（人物本体六视图）' ? '人物多视角参考图' : item.type || '未填写图片类型';
+    if (!grouped.has(type)) grouped.set(type, []);
+    grouped.get(type)!.push(item);
+  }
+  const order = ['人物上半身正面肖像图', '人物多视角参考图', '服装参考图', '角色多视角参考图'];
+  const types = [...order.filter(type => grouped.has(type)), ...[...grouped.keys()].filter(type => !order.includes(type))];
+  return items.length ? <div className="asset-candidate-types">{types.map((type, index) => <CandidateTypeGroup key={type} type={type} items={grouped.get(type)!} revision={revision} initialOpen={index === 0} />)}</div> : <p className="muted">暂无已登记图片。</p>;
+}
+function CandidateTypeGroup({ type, items, revision, initialOpen }: { type: string; items: RecordData[]; revision: number; initialOpen: boolean }) {
+  const [open, setOpen] = useState(initialOpen);
+  return <details className="asset-candidate-type" name="asset-candidate-type" open={open} onToggle={event => setOpen(event.currentTarget.open)}>
+    <summary>{type}<span className="muted">（{items.length}张）</span></summary>
+    {open && <AssetMedia items={items} revision={revision} />}
+  </details>;
 }
 function AssetMedia({ items, revision, formal = false }: { items: RecordData[]; revision: number; formal?: boolean }) {
   const grouped: Record<string, RecordData[]> = {};
