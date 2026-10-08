@@ -15,6 +15,14 @@ class ProjectParserTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.addCleanup(self.temp.cleanup)
 
+    def test_process_file_status_only_shows_recorded_confirmation(self):
+        self.put("00-项目定位/其他资料/工作稿/参考图-工作稿.md", "# 工作稿\n\n## 生成记录\n原记录")
+        self.put("00-项目定位/其他资料/工作稿/已确认稿.md", "# 工作稿\n- 确认状态：已确认\n\n原记录")
+        files = portal.build_data(self.root)["groups"][0]["files"]
+        by_name = {item["name"]: item for item in files}
+        self.assertEqual(by_name["参考图-工作稿.md"]["statusHtml"], "")
+        self.assertIn("已确认", by_name["已确认稿.md"]["statusHtml"])
+
     def test_work_draft_categories_do_not_create_legacy_groups(self):
         self.put("00-项目定位/其他资料/工作稿/项目基本定位-工作稿.md", "# 工作稿\n草稿")
         self.put("00-项目定位/其他资料/工作稿/素材/样例.png", "image")

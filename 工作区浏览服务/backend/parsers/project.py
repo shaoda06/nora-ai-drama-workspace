@@ -468,7 +468,8 @@ def build_data(project, *, web_episode_navigation=False):
         item = {"kind": kind, "name": path.name, "key": key, "url": quote(key, safe="/-._~")}
         if kind == "document":
             text = read(key)
-            item["statusHtml"] = status_markup(field(text, "确认状态"), key)
+            confirmation = field(text, "确认状态")
+            item["statusHtml"] = status_markup(confirmation, key) if confirmation != "未记录" else ""
         elif kind == "text":
             read_plain(key)
         elif kind == "video":

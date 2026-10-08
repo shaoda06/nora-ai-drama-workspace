@@ -157,10 +157,10 @@ function CandidateMedia({ items, revision }: { items: RecordData[]; revision: nu
   }
   const order = ['人物上半身正面肖像图', '人物多视角参考图', '服装参考图', '角色多视角参考图'];
   const types = [...order.filter(type => grouped.has(type)), ...[...grouped.keys()].filter(type => !order.includes(type))];
-  return items.length ? <div className="asset-candidate-types">{types.map((type, index) => <CandidateTypeGroup key={type} type={type} items={grouped.get(type)!} revision={revision} initialOpen={index === 0} />)}</div> : <p className="muted">暂无已登记图片。</p>;
+  return items.length ? <div className="asset-candidate-types">{types.map(type => <CandidateTypeGroup key={type} type={type} items={grouped.get(type)!} revision={revision} />)}</div> : <p className="muted">暂无已登记图片。</p>;
 }
-function CandidateTypeGroup({ type, items, revision, initialOpen }: { type: string; items: RecordData[]; revision: number; initialOpen: boolean }) {
-  const [open, setOpen] = useState(initialOpen);
+function CandidateTypeGroup({ type, items, revision }: { type: string; items: RecordData[]; revision: number }) {
+  const [open, setOpen] = useState(false);
   return <details className="asset-candidate-type" name="asset-candidate-type" open={open} onToggle={event => setOpen(event.currentTarget.open)}>
     <summary>{type}<span className="muted">（{items.length}张）</span></summary>
     {open && <AssetMedia items={items} revision={revision} />}
