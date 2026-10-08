@@ -430,6 +430,44 @@ class ProjectParserTests(unittest.TestCase):
             asset = next(a for a in owner["formal"] if "v01" in a["versionHtml"])
             self.assertEqual(unquote(asset["recordUrl"]), owner["recordKey"] + "#生成记录-001")
 
+    def test_adopted_generation_is_formal_only_across_all_asset_kinds(self):
+        records = [self.person_fixture()[1], self.prop_fixture(), self.scene_fixture()[1]]
+        for record in records:
+            text = record.read_text().replace("| v01 |", "| v01／生成001 |")
+            generation = text[text.index("### 生成记录-001"):]
+            record.write_text(text + "\n" + generation.replace("生成记录-001", "生成记录-002"))
+        data = portal.build_data(self.root)
+        for group in ("people", "props", "scenes"):
+            owner = data[group][0]
+            self.assertEqual([c["generation"] for c in owner["candidates"]], ["生成记录-002"])
+            self.assertEqual(owner["pendingCount"], 1)
+            self.assertTrue(any(a["version"] == "v01／生成001" for a in owner["formal"]))
+            self.assertIn("生成记录-001", (self.root / owner["recordKey"]).read_text())
+
+    def test_completed_adoption_matches_approval_when_generation_number_missing(self):
+        record = self.person_fixture()[1]
+        record.write_text(record.read_text().replace("用户采用状态：待确认。", "用户采用状态：已采用"))
+        owner = portal.build_data(self.root)["people"][0]
+        self.assertEqual(owner["candidates"], [])
+        self.assertTrue(owner["formal"][0]["approved"])
+        (self.root / owner["formal"][0]["media"]["key"]).unlink()
+        self.assertEqual(len(portal.build_data(self.root)["people"][0]["candidates"]), 1)
+
+    def test_approval_alone_or_missing_formal_file_keeps_candidate(self):
+        records = [self.person_fixture("待确认")[1], self.prop_fixture("待确认"), self.scene_fixture("待确认")[1]]
+        for record in records:
+            record.write_text(record.read_text().replace("| v01 |", "| v01／生成001 |"))
+        data = portal.build_data(self.root)
+        for group in ("people", "props", "scenes"):
+            self.assertEqual(len(data[group][0]["candidates"]), 1)
+        for review in self.root.glob("*/审阅记录/*.md"):
+            review.write_text(review.read_text().replace("待确认", "批准采用"))
+        for image in self.root.glob("*/*/参考图/*.png"):
+            image.unlink()
+        data = portal.build_data(self.root)
+        for group in ("people", "props", "scenes"):
+            self.assertEqual(len(data[group][0]["candidates"]), 1)
+
     def person_fixture(self, decision="批准采用。"):
         base = "03-人物资料"
         self.put(base + "/人物索引.md", "# 人物索引\n| 人物编号 | 姓名 | 人物定位 | 资料卡入口 |\n"

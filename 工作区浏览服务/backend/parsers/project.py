@@ -52,7 +52,7 @@ def image_review_fields(chunk, source, legacy_state, user_state):
     waiting = re.match(r"^(待确认|待审核)(?=$|[。；，\s])", user_state)
     pending_label = waiting.group(1) if waiting else ""
     reason = field(chunk, "用户决定原因与依据")
-    user_fields = {"userHtml": status_markup(user_state, source),
+    user_fields = {"userDecision": user_state, "userHtml": status_markup(user_state, source),
                    "userReasonHtml": inline(reason, source) if reason != "未记录" else ""}
     file_check = field(chunk, "文件核对结论")
     vision = field(chunk, "看图调用状态")
@@ -75,6 +75,17 @@ def image_review_fields(chunk, source, legacy_state, user_state):
             "agentHtml": status_markup(legacy_state, source),
             **user_fields,
             "pending": bool(waiting), "pendingLabel": pending_label}
+
+
+def exclude_formal_candidates(candidates, formal):
+    adopted = {asset["recordUrl"] for asset in formal
+               if asset["media"] and asset["approved"] and asset["recordUrl"]}
+    reviews = {review["url"] for asset in formal
+               if asset["media"] and asset["approved"] and "#" not in (asset["recordUrl"] or "")
+               for review in asset["reviews"]}
+    return [candidate for candidate in candidates if candidate["recordUrl"] not in adopted
+            and not (re.match(r"^已采用(?:$|[。；，\s])", candidate["userDecision"])
+                     and any(review["url"] in reviews for review in candidate["reviews"]))]
 
 
 def field_markup(text, source):
@@ -695,6 +706,7 @@ def build_data(project, *, web_episode_navigation=False):
                                    "media": image, "reviews": reviews, "generation": name,
                                    "recordUrl": quote(record_key, safe="/-._~") + "#" + quote(name),
                                    **image_review_fields(chunk, record_key, agent_state, user_state)})
+        candidates = exclude_formal_candidates(candidates, formal)
         person_groups = [{"name": group["name"], "files": [f for f in group["files"]
                           if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]}
                          for group in people_groups]
@@ -778,6 +790,7 @@ def build_data(project, *, web_episode_navigation=False):
                                    "recordUrl": quote(record_key, safe="/-._~") + "#" + quote(name),
                                    **image_review_fields(chunk, record_key, agent_state, user_state)})
         formal.extend(directory_assets(record_key, number, "prop", formal, formal_folder))
+        candidates = exclude_formal_candidates(candidates, formal)
         prop_related = [{"name": group["name"], "files": [f for f in group["files"]
                           if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]}
                          for group in prop_groups]
@@ -828,6 +841,7 @@ def build_data(project, *, web_episode_navigation=False):
                 is_environment = False
             asset = {"scene": True, "type": "场次环境图" if is_environment else "辅助／既有参考图",
                      "state": entry["最初制作场次"] + (" · " + entry["视图编号与名称"] if entry.get("视图编号与名称") else ""), "scope": scope, "media": media,
+                     "version": entry["采用的候选版本"],
                      "versionHtml": inline(entry["采用的候选版本"], record_key),
                            "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
                      "sourceHtml": inline(entry.get("来源参考图及版本", "未记录"), record_key),
@@ -878,6 +892,7 @@ def build_data(project, *, web_episode_navigation=False):
         # Formal directory files are confirmed assets; records enrich their metadata.
         for asset in directory_assets(record_key, number, "scene", formal + auxiliary, formal_folder):
             (formal if asset["type"] == "场次环境图" else auxiliary).append(asset)
+        candidates = exclude_formal_candidates(candidates, formal + auxiliary)
         legacy = []
         related = [{"name": group["name"], "files": [f for f in group["files"]
                    if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]} for group in scene_groups]

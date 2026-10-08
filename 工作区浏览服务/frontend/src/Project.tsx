@@ -14,7 +14,8 @@ import { Pagination } from './components/Pagination';
 import { FooterSyncContext, HeaderControlsContext } from './components/AppShell';
 import { SyncNotification } from './components/SyncNotification';
 import { EpisodeProduction } from './components/EpisodeProduction';
-import { AssetMediaCard } from './components/AssetMediaCard';
+import { AssetMedia } from './components/AssetMedia';
+import { AssetCandidateMedia } from './components/AssetCandidateMedia';
 import { useRefreshState } from './refreshPosition';
 import { useNotify } from './components/Notifications';
 
@@ -142,30 +143,9 @@ function Assets({ value, project, revision, active, asset, onAssetChange }: { va
       </article>)}</div><Groups groups={value.groups} /></div>
     {selected && <><button onClick={() => onAssetChange(null)}>← 返回列表</button><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关文件'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
       <div hidden={tab !== '资料卡'}><Document key={detail.data.id} value={detail.data.card} /></div>
-      <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} formal wide={value.kind !== 'people'} /></div>
-      <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <CandidateMedia key={selected} items={detail.data.candidates} revision={revision} wide={value.kind !== 'people'} />}</div>
+      <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} formal /></div>
+      <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <AssetCandidateMedia key={selected} items={detail.data.candidates} revision={revision} />}</div>
       <div hidden={tab !== '相关文件'}>{detail.data.recordKey && !detail.data.groups.some((group: RecordData) => group.files.some((file: FileItem) => file.key === detail.data.recordKey)) && <FileTree items={[{ kind: 'markdown', name: '完整生成记录', key: detail.data.recordKey, url: `${projectUrl(project)}/files/${detail.data.recordKey}` }]} />}<FileTree items={detail.data.groups.map((group: RecordData) => ({ kind: 'group', ...group }))} /></div>
     </>}</>}
   </>;
-}
-function CandidateMedia({ items, revision, wide }: { items: RecordData[]; revision: number; wide: boolean }) {
-  const grouped = new Map<string, RecordData[]>();
-  for (const item of items) {
-    const type = item.type === '人物多视角参考图（人物本体六视图）' ? '人物多视角参考图' : item.type || '未填写图片类型';
-    if (!grouped.has(type)) grouped.set(type, []);
-    grouped.get(type)!.push(item);
-  }
-  const order = ['人物上半身正面肖像图', '人物多视角参考图', '服装参考图', '角色多视角参考图'];
-  const types = [...order.filter(type => grouped.has(type)), ...[...grouped.keys()].filter(type => !order.includes(type))];
-  return items.length ? <div className="asset-candidate-types">{types.map(type => <CandidateTypeGroup key={type} type={type} items={[...grouped.get(type)!].reverse()} revision={revision} wide={wide} />)}</div> : <p className="muted">暂无已登记图片。</p>;
-}
-function CandidateTypeGroup({ type, items, revision, wide }: { type: string; items: RecordData[]; revision: number; wide: boolean }) {
-  const [open, setOpen] = useState(false);
-  return <details className="asset-candidate-type" name="asset-candidate-type" open={open} onToggle={event => setOpen(event.currentTarget.open)}>
-    <summary>{type}<span className="muted">（{items.length}张）</span></summary>
-    {open && <AssetMedia items={items} revision={revision} wide={wide} />}
-  </details>;
-}
-function AssetMedia({ items, revision, formal = false, wide = false }: { items: RecordData[]; revision: number; formal?: boolean; wide?: boolean }) {
-  return items.length ? <div className={`asset-media-grid${wide ? ' asset-media-grid-wide' : ''}`}>{items.map(item => <AssetMediaCard key={item.media?.key || item.recordUrl} title={[item.stage, item.type, item.state, item.costume].filter(Boolean).join(' · ') || '参考图'} item={item} revision={revision} formal={formal} />)}</div> : <p className="muted">暂无已登记图片。</p>;
 }

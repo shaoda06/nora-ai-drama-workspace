@@ -103,6 +103,5 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .file>.link{min-width:0;text-align:left}.file-actions{display:flex;align-items:baseline;justify-content:flex-end;gap:12px;flex-shrink:0;margin-left:auto}.file-actions>a{font-size:12px;white-space:nowrap}.file-actions>.prose{margin:0}.file-actions>.prose p{margin:0}.file-actions .status-badge{white-space:nowrap}
 
 .asset-list-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr))}
-.asset-media-grid-wide{grid-template-columns:repeat(auto-fill,minmax(min(100%,480px),1fr))}
 .asset-media-card>h3{height:3.4em;line-height:1.7;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
 .asset-card-status{min-height:26px}.asset-card-status>span{white-space:nowrap}.asset-card-status>.prose,.asset-card-status>.prose p{margin:0}
