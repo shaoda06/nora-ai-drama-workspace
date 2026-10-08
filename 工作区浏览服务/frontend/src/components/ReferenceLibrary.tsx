@@ -23,7 +23,7 @@ export function ReferenceLibrary({ value, revision, active, asset, onAssetChange
   const button = (item: FileItem) => <AudioPreviewButton name={item.name} enabled={!!item.media} playing={preview.playingId === item.key} progress={preview.currentId === item.key ? preview.progress : 0} onClick={() => preview.toggle(item.key!, item.media!.url!)} />;
   return <>{audio && preview.player}{selected ? <>
     <div className="reference-detail-heading"><h2>{selected.name}</h2>{audio && button(selected)}</div>
-    {selected.media ? audio ? <p className="muted">点击标题旁的播放按钮试听。</p> : <video ref={video} className="reference-video" controls preload="metadata" src={selected.media.url + `?v=${revision}`} /> : <p className="muted">索引关联的媒体文件不存在。</p>}
+    {selected.media ? !audio && <video ref={video} className="reference-video" controls preload="metadata" src={selected.media.url + `?v=${revision}`} /> : <p className="muted">索引关联的媒体文件不存在。</p>}
     <dl className="reference-details">
       <dt>文件名：</dt><dd>{selected.media?.name || '文件未就绪'} <Original url={selected.media?.url} label="媒体原文件" /></dd>
       <dt>批准状态：</dt><dd><Rich html={selected.approvalHtml} /></dd>
