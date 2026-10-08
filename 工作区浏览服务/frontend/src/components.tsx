@@ -46,7 +46,7 @@ export function Original({ url, label = '原文件' }: { url?: string; label?: s
 export function FileLink({ item, showOriginal = true }: { item: FileItem; showOriginal?: boolean }) {
   const preview = useContext(PreviewContext);
   const target = item.kind === 'reference' && item.media ? { ...item.media, name: item.name, prompts: item.prompts } : item;
-  return <div className="file"><button className="link" onClick={() => preview(target)}>{item.name}</button>{showOriginal && <Original url={target.url} />}</div>;
+  return <div className="file"><button className="link" onClick={() => preview(target)}>{item.name}</button><div className="file-actions">{showOriginal && <Original url={target.url} />}{item.statusHtml ? <Rich html={item.statusHtml} /> : null}</div></div>;
 }
 export function FileTree({ items, showOriginal = true }: { items: FileItem[]; showOriginal?: boolean }) {
   const materials = items.filter(item => item.name.startsWith('素材/'));
@@ -55,7 +55,7 @@ export function FileTree({ items, showOriginal = true }: { items: FileItem[]; sh
   }] : items;
   return <div className="tree">{entries.map(item => item.kind === 'group' || item.children || item.files ?
     <Folder key={item.key || item.name} item={item} showOriginal={showOriginal} /> :
-    <div key={item.key || item.name}><FileLink item={item} showOriginal={showOriginal} />{item.summary && <p className="muted">{item.summary}</p>}<Rich html={item.statusHtml} /><Rich html={(item as RecordData).sourceHtml} />{(item as RecordData).duration && <p className="muted">实测时长：{(item as RecordData).duration}</p>}</div>)}</div>;
+    <div key={item.key || item.name}><FileLink item={item} showOriginal={showOriginal} />{item.summary && <p className="muted">{item.summary}</p>}<Rich html={(item as RecordData).sourceHtml} />{(item as RecordData).duration && <p className="muted">实测时长：{(item as RecordData).duration}</p>}</div>)}</div>;
 }
 function Folder({ item, showOriginal = true }: { item: FileItem; showOriginal?: boolean }) {
   const [open, setOpen] = useState(false);

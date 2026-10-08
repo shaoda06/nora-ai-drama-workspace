@@ -167,10 +167,5 @@ function CandidateTypeGroup({ type, items, revision }: { type: string; items: Re
   </details>;
 }
 function AssetMedia({ items, revision, formal = false }: { items: RecordData[]; revision: number; formal?: boolean }) {
-  const grouped: Record<string, RecordData[]> = {};
-  for (const item of items) {
-    const label = [item.stage, item.type, item.state, item.costume].filter(Boolean).join(' · ') || '参考图';
-    (grouped[label] ||= []).push(item);
-  }
-  return items.length ? <div className="asset-media-grid">{Object.entries(grouped).map(([name, assets]) => <AssetMediaCard key={name} title={name} items={assets} revision={revision} formal={formal} />)}</div> : <p className="muted">暂无已登记图片。</p>;
+  return items.length ? <div className="asset-media-grid">{items.map(item => <AssetMediaCard key={item.media?.key || item.recordUrl} title={[item.stage, item.type, item.state, item.costume].filter(Boolean).join(' · ') || '参考图'} item={item} revision={revision} formal={formal} />)}</div> : <p className="muted">暂无已登记图片。</p>;
 }

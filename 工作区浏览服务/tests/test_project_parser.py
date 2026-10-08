@@ -16,12 +16,23 @@ class ProjectParserTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
 
     def test_process_file_status_only_shows_recorded_confirmation(self):
-        self.put("00-项目定位/其他资料/工作稿/参考图-工作稿.md", "# 工作稿\n\n## 生成记录\n原记录")
+        self.put("00-项目定位/其他资料/工作稿/参考图-工作稿.md", "# 工作稿\n- 当前稿版本：v01\n- 当前状态及待办：等待本批审核\n\n## 生成记录\n原记录")
         self.put("00-项目定位/其他资料/工作稿/已确认稿.md", "# 工作稿\n- 确认状态：已确认\n\n原记录")
         files = portal.build_data(self.root)["groups"][0]["files"]
         by_name = {item["name"]: item for item in files}
         self.assertEqual(by_name["参考图-工作稿.md"]["statusHtml"], "")
         self.assertIn("已确认", by_name["已确认稿.md"]["statusHtml"])
+
+    def test_record_document_preview_has_no_invented_confirmation(self):
+        source = "00-项目定位/其他资料/工作稿/参考图-工作稿.md"
+        text = "# 工作稿\n- 当前稿版本：v01\n- 当前状态及待办：等待本批审核\n\n## 生成记录\n原记录"
+        self.put(source, text)
+        doc = portal.build_data(self.root)["documents"][source]
+        self.assertEqual(doc["confirmationHtml"], "")
+        self.assertEqual(doc["meta"], {})
+        self.assertIn("等待本批审核", doc["headerHtml"])
+        self.assertIn("原记录", doc["contentHtml"])
+        self.assertNotIn("未记录", doc["headerHtml"])
 
     def test_work_draft_categories_do_not_create_legacy_groups(self):
         self.put("00-项目定位/其他资料/工作稿/项目基本定位-工作稿.md", "# 工作稿\n草稿")

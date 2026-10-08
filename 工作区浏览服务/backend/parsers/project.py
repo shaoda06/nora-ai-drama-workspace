@@ -325,10 +325,11 @@ def document_header(text, source):
     intro, main = body[:start.start()], body[start.start():]
     if not intro.strip():
         return {}
-    meta = {key: field(intro, key) for key in ("文档版本", "更新日期", "确认状态")}
+    meta = {key: field(intro, key) for key in ("文档版本", "更新日期", "确认状态")
+            if re.search(r"^-[ \t]*" + re.escape(key) + r"[:：]", intro, re.M)}
     return {"headerHtml": markdown(intro, source),
             "contentHtml": markdown((title[0] if title else "") + main, source),
-            "meta": meta, "confirmationHtml": status_markup(meta["确认状态"], source)}
+            "meta": meta, "confirmationHtml": status_markup(meta["确认状态"], source) if "确认状态" in meta else ""}
 
 
 def table_records(text, required):
