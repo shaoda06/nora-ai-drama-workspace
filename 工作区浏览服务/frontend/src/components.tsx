@@ -49,7 +49,11 @@ export function FileLink({ item, showOriginal = true }: { item: FileItem; showOr
   return <div className="file"><button className="link" onClick={() => preview(target)}>{item.name}</button>{showOriginal && <Original url={target.url} />}</div>;
 }
 export function FileTree({ items, showOriginal = true }: { items: FileItem[]; showOriginal?: boolean }) {
-  return <div className="tree">{items.map(item => item.kind === 'group' || item.children || item.files ?
+  const materials = items.filter(item => item.name.startsWith('素材/'));
+  const entries = materials.length ? [...items.filter(item => !item.name.startsWith('素材/')), {
+    kind: 'group', name: '素材', files: materials.map(item => ({ ...item, name: item.name.slice('素材/'.length) })),
+  }] : items;
+  return <div className="tree">{entries.map(item => item.kind === 'group' || item.children || item.files ?
     <Folder key={item.key || item.name} item={item} showOriginal={showOriginal} /> :
     <div key={item.key || item.name}><FileLink item={item} showOriginal={showOriginal} />{item.summary && <p className="muted">{item.summary}</p>}<Rich html={item.statusHtml} /><Rich html={(item as RecordData).sourceHtml} />{(item as RecordData).duration && <p className="muted">实测时长：{(item as RecordData).duration}</p>}</div>)}</div>;
 }
