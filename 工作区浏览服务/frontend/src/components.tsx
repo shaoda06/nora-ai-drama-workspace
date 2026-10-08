@@ -49,10 +49,19 @@ export function FileLink({ item, showOriginal = true }: { item: FileItem; showOr
   return <div className="file"><button className="link" onClick={() => preview(target)}>{item.name}</button><div className="file-actions">{item.statusHtml ? <Rich html={item.statusHtml} /> : <span className="status-badge status-gray">未知</span>}{showOriginal && <Original url={target.url} />}</div></div>;
 }
 export function FileTree({ items, showOriginal = true }: { items: FileItem[]; showOriginal?: boolean }) {
-  const materials = items.filter(item => item.name.startsWith('素材/'));
-  const entries = materials.length ? [...items.filter(item => !item.name.startsWith('素材/')), {
-    kind: 'group', name: '素材', files: materials.map(item => ({ ...item, name: item.name.slice('素材/'.length) })),
-  }] : items;
+  const entries: FileItem[] = [];
+  const folders = new Map<string, FileItem>();
+  for (const item of items) {
+    const separator = item.name.indexOf('/');
+    if (separator < 0 || item.kind === 'group' || item.children || item.files) { entries.push(item); continue; }
+    const name = item.name.slice(0, separator);
+    if (!folders.has(name)) {
+      const folder: FileItem = { kind: 'group', name, files: [] };
+      folders.set(name, folder);
+      entries.push(folder);
+    }
+    folders.get(name)!.files!.push({ ...item, name: item.name.slice(separator + 1) });
+  }
   return <div className="tree">{entries.map(item => item.kind === 'group' || item.children || item.files ?
     <Folder key={item.key || item.name} item={item} showOriginal={showOriginal} /> :
     <div key={item.key || item.name}><FileLink item={item} showOriginal={showOriginal} />{item.summary && <p className="muted">{item.summary}</p>}<Rich html={(item as RecordData).sourceHtml} />{(item as RecordData).duration && <p className="muted">实测时长：{(item as RecordData).duration}</p>}</div>)}</div>;

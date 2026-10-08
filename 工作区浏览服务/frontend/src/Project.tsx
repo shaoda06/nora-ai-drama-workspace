@@ -133,7 +133,7 @@ function Assets({ value, project, revision, active, asset, onAssetChange }: { va
   return <>
     {value.kind === 'people' && <audio ref={audio} preload="none" onPlay={() => setPlayingId(voiceId.current)} onPause={() => setPlayingId(null)} onTimeUpdate={event => { const player = event.currentTarget; if (player.duration > 0) setVoiceProgress(player.currentTime / player.duration); }} onEnded={() => { setPlayingId(null); setVoiceProgress(0); }} />}
     <div hidden={!!selected}><div className="toolbar"><SearchField label="搜索资料" placeholder="搜索编号、名称" value={search} onChange={setSearch} /><span className="muted">共{matched.length}项</span></div>
-      <div className="grid">{matched.map((item: RecordData) => <article className="asset-card" key={item.id}>
+      <div className="grid asset-list-grid">{matched.map((item: RecordData) => <article className="asset-card" key={item.id}>
         <button className={value.kind === 'people' && item.cover?.media ? 'cover character-cover-image' : 'cover'} onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('资料卡'); }}>{item.cover?.media ? <img loading="lazy" src={item.cover.media.url + `?v=${revision}`} alt={item.name} /> : <span>{item.id}</span>}</button>
         <div className="asset-card-heading"><h3 title={`${item.id} · ${item.name}`}>{item.id} · {item.name}</h3>{value.kind === 'people' && <button className="voice-preview" disabled={!item.voice} aria-label={!item.voice ? `${item.name}暂无音色` : `${playingId === item.id ? '暂停' : '播放'}${item.name}音色`} title={!item.voice ? '暂无音色' : playingId === item.id ? '暂停音色' : '试听音色'} aria-pressed={playingId === item.id} onClick={() => playVoice(item)}>{playingId === item.id ? 'Ⅱ' : '▶'}<svg className="voice-progress" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="6" pathLength="100" strokeDasharray="100" strokeDashoffset={100 * (1 - (voiceId.current === item.id ? voiceProgress : 0))} /></svg></button>}</div>
         <p className="asset-card-role" title={item.role}>{item.role}</p>
@@ -142,13 +142,13 @@ function Assets({ value, project, revision, active, asset, onAssetChange }: { va
       </article>)}</div><Groups groups={value.groups} /></div>
     {selected && <><button onClick={() => onAssetChange(null)}>← 返回列表</button><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关文件'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
       <div hidden={tab !== '资料卡'}><Document key={detail.data.id} value={detail.data.card} /></div>
-      <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} formal /></div>
-      <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <CandidateMedia key={selected} items={detail.data.candidates} revision={revision} />}</div>
+      <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} formal wide={value.kind !== 'people'} /></div>
+      <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <CandidateMedia key={selected} items={detail.data.candidates} revision={revision} wide={value.kind !== 'people'} />}</div>
       <div hidden={tab !== '相关文件'}>{detail.data.recordKey && !detail.data.groups.some((group: RecordData) => group.files.some((file: FileItem) => file.key === detail.data.recordKey)) && <FileTree items={[{ kind: 'markdown', name: '完整生成记录', key: detail.data.recordKey, url: `${projectUrl(project)}/files/${detail.data.recordKey}` }]} />}<FileTree items={detail.data.groups.map((group: RecordData) => ({ kind: 'group', ...group }))} /></div>
     </>}</>}
   </>;
 }
-function CandidateMedia({ items, revision }: { items: RecordData[]; revision: number }) {
+function CandidateMedia({ items, revision, wide }: { items: RecordData[]; revision: number; wide: boolean }) {
   const grouped = new Map<string, RecordData[]>();
   for (const item of items) {
     const type = item.type === '人物多视角参考图（人物本体六视图）' ? '人物多视角参考图' : item.type || '未填写图片类型';
@@ -157,15 +157,15 @@ function CandidateMedia({ items, revision }: { items: RecordData[]; revision: nu
   }
   const order = ['人物上半身正面肖像图', '人物多视角参考图', '服装参考图', '角色多视角参考图'];
   const types = [...order.filter(type => grouped.has(type)), ...[...grouped.keys()].filter(type => !order.includes(type))];
-  return items.length ? <div className="asset-candidate-types">{types.map(type => <CandidateTypeGroup key={type} type={type} items={grouped.get(type)!} revision={revision} />)}</div> : <p className="muted">暂无已登记图片。</p>;
+  return items.length ? <div className="asset-candidate-types">{types.map(type => <CandidateTypeGroup key={type} type={type} items={grouped.get(type)!} revision={revision} wide={wide} />)}</div> : <p className="muted">暂无已登记图片。</p>;
 }
-function CandidateTypeGroup({ type, items, revision }: { type: string; items: RecordData[]; revision: number }) {
+function CandidateTypeGroup({ type, items, revision, wide }: { type: string; items: RecordData[]; revision: number; wide: boolean }) {
   const [open, setOpen] = useState(false);
   return <details className="asset-candidate-type" name="asset-candidate-type" open={open} onToggle={event => setOpen(event.currentTarget.open)}>
     <summary>{type}<span className="muted">（{items.length}张）</span></summary>
-    {open && <AssetMedia items={items} revision={revision} />}
+    {open && <AssetMedia items={items} revision={revision} wide={wide} />}
   </details>;
 }
-function AssetMedia({ items, revision, formal = false }: { items: RecordData[]; revision: number; formal?: boolean }) {
-  return items.length ? <div className="asset-media-grid">{items.map(item => <AssetMediaCard key={item.media?.key || item.recordUrl} title={[item.stage, item.type, item.state, item.costume].filter(Boolean).join(' · ') || '参考图'} item={item} revision={revision} formal={formal} />)}</div> : <p className="muted">暂无已登记图片。</p>;
+function AssetMedia({ items, revision, formal = false, wide = false }: { items: RecordData[]; revision: number; formal?: boolean; wide?: boolean }) {
+  return items.length ? <div className={`asset-media-grid${wide ? ' asset-media-grid-wide' : ''}`}>{items.map(item => <AssetMediaCard key={item.media?.key || item.recordUrl} title={[item.stage, item.type, item.state, item.costume].filter(Boolean).join(' · ') || '参考图'} item={item} revision={revision} formal={formal} />)}</div> : <p className="muted">暂无已登记图片。</p>;
 }

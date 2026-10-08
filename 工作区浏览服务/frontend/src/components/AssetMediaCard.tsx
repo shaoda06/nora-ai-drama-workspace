@@ -10,7 +10,7 @@ export function AssetMediaCard({ title, item, revision, formal = false }: { titl
       }}>{formal ? '生成记录' : item.generation}</a> : null;
   const version = formal ? item.version?.match(/v\d+(?:\.\d+)*/i)?.[0] : item.version || item.media?.key.match(/(?:候选|草稿)-(v\d+(?:\.\d+)*)/i)?.[1];
   return <article className="asset-media-card">
-    <h3>{title}</h3>
+    <h3 title={title}>{title}</h3>
     <div className="asset-media-item">
       {item.media ? <button className="cover" onClick={() => preview(item.media)}><img className="reference" loading="lazy" src={item.media.url + `?v=${revision}`} alt={item.media.name} /></button> : <p className="muted">已登记，图片文件缺失。</p>}
       {version ? <p className="asset-media-field"><span className="field-label">{formal ? '采用版本' : '版本'}</span>{version}</p> : null}
