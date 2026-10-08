@@ -91,7 +91,8 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 
 .cover.character-cover-image{background:white}
 
-.asset-media-status{display:flex;align-items:center;gap:8px;margin:4px 0}.asset-media-status>.field-label,.asset-media-status>.prose p{margin:0}
+.asset-media-html-field{display:flex;align-items:flex-start;gap:8px;margin:4px 0}.asset-media-html-field>.field-label{flex:none;margin:0;padding-top:2px}.asset-media-html-field>.prose{flex:1;min-width:0}.asset-media-html-field>.prose p{margin:0}
+.dialog-body .prose :is(h2,h3,h4,h5,h6){scroll-margin-top:80px}
 
 .asset-media-item>.cover{height:260px;flex-shrink:0}
 
