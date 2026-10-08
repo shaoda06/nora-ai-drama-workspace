@@ -197,6 +197,76 @@ class GenerationContextTests(unittest.TestCase):
                 self.assertEqual(client.get(first['references']['segment'][0]['url']).text, '提交时本组原图')
                 self.assertEqual([(shot['id'], shot['duration']) for shot in second['shots']], [('EP001-SH002', 3)])
 
+    def test_workflow_revision_reuses_materials_and_rejects_changed_input(self):
+        root, workflow, mapping = self.automatic_task(selected=(0,))
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        old = json.loads((root / '输入映射.json').read_text(encoding='utf-8'))['generation_contexts'][0]
+        revised = root.with_name('EP001-C001-P001-R005-一采')
+        mapping['segments'][0].update(round='R005', local_execution_dir=str(revised),
+            materials_from={'mapping': str((root / '输入映射.json').relative_to(self.project)), 'identity': old['identity']})
+        mapping['storyboard_file'] = old['storyboard']['file']
+        workflow['105001']['inputs']['seed'] = 1234
+        self.write(str((revised / '输入映射.json').relative_to(self.project)), json.dumps(mapping))
+        writer.prepare_generation_context(self.project, revised, workflow, 'video-first-pass')
+        saved = json.loads((revised / '输入映射.json').read_text(encoding='utf-8'))['generation_contexts'][0]
+        self.assertEqual(saved['identity'], 'EP001-C001-P001-R005-一采')
+        for key in ('storyboard', 'prompts', 'references'):
+            self.assertEqual(saved[key], old[key])
+        self.assertFalse((revised / '输入素材').exists())
+        self.assertFalse((revised / '分镜脚本.md').exists())
+        self.write('图片/公共.png', '已被替换的输入')
+        with self.assertRaisesRegex(ValueError, '不可覆盖'):
+            writer.prepare_generation_context(self.project, revised, workflow, 'video-first-pass')
+
+    def test_same_revision_retry_keeps_context_and_old_mapping(self):
+        root, workflow, mapping = self.automatic_task(selected=(0,))
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        original = (root / '输入映射.json').read_bytes()
+        old = json.loads(original)['generation_contexts'][0]
+        retry = root / '执行-20261008-220000'
+        mapping['segments'][0].update(local_execution_dir=str(retry), materials_from={
+            'mapping': str((root / '输入映射.json').relative_to(self.project)), 'identity': old['identity']})
+        mapping['storyboard_file'] = old['storyboard']['file']
+        self.write(str((retry / '输入映射.json').relative_to(self.project)), json.dumps(mapping))
+        writer.prepare_generation_context(self.project, retry, workflow, 'video-first-pass')
+        self.assertEqual((root / '输入映射.json').read_bytes(), original)
+        self.assertEqual(json.loads((retry / '输入映射.json').read_text())['generation_contexts'], [old])
+        self.assertEqual(len(self.videos()), 1)
+
+    def test_same_revision_stages_have_separate_status_and_approval(self):
+        self.add_run('R000')
+        self.add_run('R000', '二采', 'EP001-C001-P001-R000-一采')
+        record = self.episode + '/其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md'
+        self.write(record, '## 1. 当前选定结果\n| 处理阶段 | 当前选定文件 | R编号 | 人工批准依据 |\n'
+            '| --- | --- | --- | --- |\n| 一采 | [视频](../候选视频/EP001-C001-P001-R000-一采.mp4) | R000 | 人工批准 |\n'
+            '## 2. 修订版各阶段与采用记录\n### R000-一采\n- 处理阶段：一采\n- 任务状态：成功\n- 用户决定：批准采用\n'
+            '### R000-二采\n- 处理阶段：二采\n- 任务状态：运行中\n- 用户决定：待审核\n')
+        videos = {video['stage']: video for video in self.videos()}
+        self.assertEqual(videos['一采']['taskStatus'], '成功')
+        self.assertTrue(videos['一采']['approved'])
+        self.assertEqual(videos['二采']['taskStatus'], '运行中')
+        self.assertFalse(videos['二采']['approved'])
+
+    def test_conflicting_retry_context_is_not_silently_selected(self):
+        context, root, _ = self.add_run('R000')
+        context['prompts']['english'] = context['prompts']['chinese']
+        self.write(root + '/执行-20261008-220000/输入映射.json', json.dumps({'generation_contexts': [context]}))
+        with self.assertRaisesRegex(ValueError, '关联重复'):
+            self.videos()
+
+    def test_same_revision_replacement_retains_reviewed_file_bytes(self):
+        _, _, candidate = self.add_run('R000')
+        path = self.project / candidate
+        before = path.stat()
+        revision = str(before.st_mtime_ns) + '-' + str(before.st_size)
+        archive = self.project / (self.episode + '/其他资料/历史版本/' + path.stem + '-替换前-20261008-220000.mp4')
+        archive.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, archive)
+        path.write_text('同R补做后的新文件', encoding='utf-8')
+        store = ProjectStore(self.project.parent)
+        self.assertEqual(store.file('示例项目', candidate, revision).read_bytes(), archive.read_bytes())
+        self.assertNotEqual(store.file('示例项目', candidate).read_bytes(), archive.read_bytes())
+
     def test_selection_and_disabled_common_inputs_follow_actual_api(self):
         root, workflow, _ = self.automatic_task(selected=(1,), common_enabled=False)
         writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')

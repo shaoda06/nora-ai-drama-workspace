@@ -95,7 +95,8 @@ class ProjectStore:
                 if revision == str(stat.st_mtime_ns) + '-' + str(stat.st_size):
                     return path
             history = root / '09-剧集制作' / identity[1] / '其他资料/历史版本'
-            for archive in history.glob(path.stem + '-运行中取回-*' + path.suffix):
+            for archive in [*history.glob(path.stem + '-运行中取回-*' + path.suffix),
+                            *history.glob(path.stem + '-替换前-*' + path.suffix)]:
                 if archive.is_file() and archive.resolve().is_relative_to(root):
                     stat = archive.stat()
                     if revision == str(stat.st_mtime_ns) + '-' + str(stat.st_size):

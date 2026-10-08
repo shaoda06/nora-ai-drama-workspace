@@ -269,6 +269,17 @@ def field(text, name):
     return match.group(1).strip() if match else "未记录"
 
 
+def video_record_body(text, run, stage):
+    """Read the revision's stage, with legacy execution headings supported."""
+    for heading in (run + '-' + stage, run):
+        suffix = r"[ \t]*" if heading != run else r"(?!\d)[^\n]*"
+        match = re.search(r"^### " + re.escape(heading) + suffix + r"\n(.*?)(?=^### |^## |\Z)", text, re.M | re.S)
+        if match and (field(match[1], '处理阶段').startswith(stage)
+                      or heading == run and field(match[1], '处理阶段') == '未记录'):
+            return match[1]
+    return ""
+
+
 def intro_markup(text):
     """List approval clauses without editing source words, punctuation, or links."""
     rendered = markdown(text, POSITION)
@@ -1023,7 +1034,7 @@ def build_data(project, *, web_episode_navigation=False):
                     identity = context["identity"]
                     if not re.fullmatch(re.escape(episode.name) + r"-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)", identity):
                         raise ValueError(item["key"] + "：生成资料身份格式不正确")
-                    if identity in generation_contexts:
+                    if identity in generation_contexts and generation_contexts[identity] != context:
                         raise ValueError("生成资料关联重复：" + identity)
                     generation_contexts[identity] = context
         children = file_tree(files, root, episode.name)["children"]
@@ -1090,9 +1101,8 @@ def build_data(project, *, web_episode_navigation=False):
                 current_results = re.search(r"^## 1\. 当前选定结果\s*\n(.*?)(?=^## |\Z)", record, re.M | re.S)
                 approved_keys = set()
                 for adopted in table_records(current_results[1] if current_results else "", ("处理阶段", "当前选定文件", "R编号", "人工批准依据")):
-                    run_entry = re.search(r"^### " + re.escape(adopted["R编号"]) + r"(?!\d)[^\n]*\n(.*?)(?=^### |^## |\Z)", record, re.M | re.S)
-                    if (run_entry and re.match(r"^批准采用(?:$|[。；，\s])", field(run_entry[1], "用户决定"))
-                            and field(run_entry[1], "处理阶段").startswith(adopted["处理阶段"])):
+                    run_body = video_record_body(record, adopted["R编号"], adopted["处理阶段"])
+                    if re.match(r"^批准采用(?:$|[。；，\s])", field(run_body, "用户决定")):
                         approved_keys.update(link["key"] for link in markdown_links(adopted["当前选定文件"], record_key)
                             if re.fullmatch(re.escape(segment_identity + "-" + adopted["R编号"] + "-" + adopted["处理阶段"])
                                             + r"\.(?:mp4|webm|mov)", Path(link["key"]).name))
@@ -1109,16 +1119,14 @@ def build_data(project, *, web_episode_navigation=False):
                     if Path(item["key"]).parent.as_posix() in folders:
                         stat = (project / item["key"]).stat()
                         revision = str(stat.st_mtime_ns) + "-" + str(stat.st_size)
-                        entry = re.search(r"^### " + re.escape(take[1]) + r"(?!\d)[^\n]*\n(.*?)(?=^### |^## |\Z)", record, re.M | re.S)
-                        body = entry[1] if entry else ""
+                        body = video_record_body(record, take[1], take[2])
                         task_body = body
                         for link in markdown_links(field(body, "共同任务证据与状态入口"), record_key):
                             anchor = unquote(urlsplit(link["url"]).fragment)
                             if (link["key"].endswith("-视频制作-工作稿.md")
-                                    and re.fullmatch(r"r\d{3,}", anchor, re.I)):
+                                    and re.fullmatch(r"r\d{3,}(?:-(?:一采|二采|后处理))?", anchor, re.I)):
                                 owner = read(link["key"]) or ""
-                                task_entry = re.search(r"^### " + anchor.upper() + r"(?!\d)[^\n]*\n(.*?)(?=^### |^## |\Z)", owner, re.M | re.S)
-                                task_body = task_entry[1] if task_entry else ""
+                                task_body = video_record_body(owner, anchor.split('-')[0].upper(), take[2])
                                 break
                         videos.append({"key": item["key"], "url": item["url"], "run": take[1], "stage": take[2],
                                        "approved": item["key"] in approved_keys, "fileRevision": revision,

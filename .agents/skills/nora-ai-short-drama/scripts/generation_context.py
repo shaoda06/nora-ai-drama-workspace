@@ -40,12 +40,11 @@ def prepare_generation_context(project, record, workflow, task_type):
         indices = sorted(timeline['runSelection']) if timeline.get('runSelectEnabled', False) else list(range(len(groups)))
         if len(mapping['segments']) != len(groups) or mapping['selected_indices'] != indices or not indices:
             raise ValueError('输入映射的原组序或执行范围与实际API不一致')
-        storyboard = inside(f"09-剧集制作/{scene.split('-')[0]}/03-分镜脚本/{scene}-场次分镜.md")
+        storyboard = inside(mapping.get('storyboard_file') or f"09-剧集制作/{scene.split('-')[0]}/03-分镜脚本/{scene}-场次分镜.md")
         text = storyboard.read_text(encoding='utf-8-sig')
         version = re.search(r'^- 文档版本[：:][ \t]*(.+)$', text, re.M)
         if not version or version[1].strip().rstrip('。') != mapping['scene_storyboard_version'].rstrip('。'):
             raise ValueError('当次分镜版本与输入映射不一致')
-        script = snapshot(record / '分镜脚本.md', storyboard.read_bytes())
         uploads = {item['input_path']: item for item in mapping['uploads']}
         common = timeline['global']
         if not common['taskType'].startswith('r2v') or timeline['editMode'] != 'segment' or 'r2v_groups' in inputs or 'i2v_groups' in inputs:
@@ -54,7 +53,7 @@ def prepare_generation_context(project, record, workflow, task_type):
         if inputs['global_prompt'] != common['prompt']:
             raise ValueError('实际节点的公共提示词与时间线不一致')
 
-        def references(group):
+        def references(group, reused):
             result = {'common': [], 'segment': []}
             for field, file_field, label in (('refs', 'imageFile', 'Picture'), ('refVideos', 'videoFile', 'Video'), ('refAudios', 'audioFile', 'Audio')):
                 public = list(common.get(field, [])) if common_enabled else []
@@ -69,9 +68,12 @@ def prepare_generation_context(project, record, workflow, task_type):
                 for scope, items in (('common', [item for item in public if item['index'] not in local_slots]), ('segment', local)):
                     for item in sorted(items, key=lambda item: item['index']):
                         original = inside(uploads[item[file_field]]['file'])
-                        result[scope].append({'file': snapshot(record / '输入素材' / original.name, original.read_bytes()),
-                                              'label': f"<{label} {item['index'] + 1}>",
-                                              'original_file': original.relative_to(project).as_posix()})
+                        slot = f"<{label} {item['index'] + 1}>"
+                        prior = next((ref for ref in reused.get(scope, []) if ref['label'] == slot), None)
+                        target = inside(prior['file']) if prior else record / '输入素材' / original.name
+                        result[scope].append({'file': snapshot(target, original.read_bytes()),
+                                              'label': slot,
+                                              'original_file': prior.get('original_file', original.relative_to(project).as_posix()) if prior else original.relative_to(project).as_posix()})
             return result
     else:
         indices = mapping['selected_indices']
@@ -90,20 +92,31 @@ def prepare_generation_context(project, record, workflow, task_type):
         if stage != '后处理':
             group = groups[index]
             directory = inside(segment['local_execution_dir'])
-            if directory.name != identity:
+            if directory.name != identity and not (directory.parent.name == identity and re.fullmatch(r'执行-\d{8}-\d{6}', directory.name)):
                 raise ValueError('本段执行附件目录与执行身份不一致')
             prompt = '\n\n'.join(part.strip() for part in
                                   ([common['prompt'], group['prompt']] if common_enabled else [group['prompt']]) if part.strip())
-            english_file = directory / '模型提示词.txt'
+            reused = None
+            if segment.get('materials_from'):
+                origin = segment['materials_from']
+                if not re.fullmatch(re.escape(segment['segment']) + r'-R\d{3,}-(一采|二采)', origin['identity']):
+                    raise ValueError('复用资料必须来自同一分段的明确版本')
+                old = json.loads(inside(origin['mapping']).read_text(encoding='utf-8-sig'))
+                reused = next(item for item in old['generation_contexts'] if item['identity'] == origin['identity'])
+            english_file = inside(reused['prompts']['english']) if reused else directory / '模型提示词.txt'
             if english_file.exists() and english_file.read_text(encoding='utf-8-sig').strip() != prompt:
                 raise ValueError('已有冻结英文与本次实际API提示词不一致')
             english = snapshot(english_file, english_file.read_bytes() if english_file.exists() else prompt.encode('utf-8'))
             prompts = {'english': english}
-            chinese = directory / '中文提示词参考版.txt'
+            chinese = inside(reused['prompts']['chinese']) if reused and 'chinese' in reused['prompts'] else directory / '中文提示词参考版.txt'
             if chinese.is_file():
                 prompts['chinese'] = chinese.relative_to(project).as_posix()
-            context.update(storyboard={'file': script, 'version': mapping['scene_storyboard_version'].rstrip('。')},
-                           prompts=prompts, references=references(group))
+            script_file = snapshot(inside(reused['storyboard']['file']) if reused else record / '分镜脚本.md', storyboard.read_bytes())
+            refs = references(group, reused['references'] if reused else {})
+            if reused and {scope: [item['label'] for item in refs[scope]] for scope in refs} != {scope: [item['label'] for item in reused['references'][scope]] for scope in refs}:
+                raise ValueError('复用资料的实际素材槽位与来源不一致')
+            context.update(storyboard={'file': script_file, 'version': mapping['scene_storyboard_version'].rstrip('。')},
+                           prompts=prompts, references=refs)
         contexts.append(context)
     if 'generation_contexts' in mapping and mapping['generation_contexts'] != contexts:
         raise ValueError('已有当次资料关联与本次API不一致，不能改写同一执行身份')
