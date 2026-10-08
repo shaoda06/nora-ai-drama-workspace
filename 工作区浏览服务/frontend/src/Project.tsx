@@ -104,6 +104,7 @@ function Assets({ value, project, revision, active }: { value: RecordData; proje
   const audio = useRef<HTMLAudioElement>(null);
   const voiceId = useRef<string | null>(null);
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [voiceProgress, setVoiceProgress] = useState(0);
   const notify = useNotify();
   useEffect(() => {
     if (!active || selected) audio.current?.pause();
@@ -113,8 +114,11 @@ function Assets({ value, project, revision, active }: { value: RecordData; proje
     const player = audio.current!;
     if (voiceId.current === item.id && !player.paused) { player.pause(); return; }
     player.pause();
-    voiceId.current = item.id;
-    player.src = item.voice.url + `?v=${revision}`;
+    if (voiceId.current !== item.id || player.ended) {
+      voiceId.current = item.id;
+      setVoiceProgress(0);
+      player.src = item.voice.url + `?v=${revision}`;
+    }
     void player.play().catch(error => {
       if (error.name !== 'AbortError') notify('音色播放失败，请稍后重试。', 'error');
     });
@@ -122,11 +126,11 @@ function Assets({ value, project, revision, active }: { value: RecordData; proje
   const detail = useQuery({ queryKey: ['asset', project, value.kind, selected, revision], queryFn: () => get<RecordData>(`${projectUrl(project)}/assets/${value.kind}/${encodeURIComponent(selected!)}`), enabled: !!selected, placeholderData: (previous, query) => query?.queryKey[3] === selected ? previous : undefined });
   const matched = value.items.filter((item: RecordData) => `${item.id} ${item.name} ${item.role}`.toLowerCase().includes(search.toLowerCase()));
   return <>
-    {value.kind === 'people' && <audio ref={audio} preload="none" onPlay={() => setPlayingId(voiceId.current)} onPause={() => setPlayingId(null)} onEnded={() => setPlayingId(null)} />}
+    {value.kind === 'people' && <audio ref={audio} preload="none" onPlay={() => setPlayingId(voiceId.current)} onPause={() => setPlayingId(null)} onTimeUpdate={event => { const player = event.currentTarget; if (player.duration > 0) setVoiceProgress(player.currentTime / player.duration); }} onEnded={() => { setPlayingId(null); setVoiceProgress(0); }} />}
     <div hidden={!!selected}><div className="toolbar"><SearchField label="搜索资料" placeholder="搜索编号、名称" value={search} onChange={setSearch} /><span className="muted">共{matched.length}项</span></div>
       <div className="grid">{matched.map((item: RecordData) => <article className="asset-card" key={item.id}>
         <button className="cover" onClick={() => { setSelected(item.id); setTab('资料卡'); }}>{item.cover?.media ? <img loading="lazy" src={item.cover.media.url + `?v=${revision}`} alt={item.name} /> : <span>{item.id}</span>}</button>
-        <div className="asset-card-heading"><h3 title={`${item.id} · ${item.name}`}>{item.id} · {item.name}</h3>{value.kind === 'people' && <button className="voice-preview" disabled={!item.voice} aria-label={!item.voice ? `${item.name}暂无音色` : `${playingId === item.id ? '暂停' : '播放'}${item.name}音色`} title={!item.voice ? '暂无音色' : playingId === item.id ? '暂停音色' : '试听音色'} aria-pressed={playingId === item.id} onClick={() => playVoice(item)}>{playingId === item.id ? 'Ⅱ' : '▶'}</button>}</div>
+        <div className="asset-card-heading"><h3 title={`${item.id} · ${item.name}`}>{item.id} · {item.name}</h3>{value.kind === 'people' && <button className="voice-preview" disabled={!item.voice} aria-label={!item.voice ? `${item.name}暂无音色` : `${playingId === item.id ? '暂停' : '播放'}${item.name}音色`} title={!item.voice ? '暂无音色' : playingId === item.id ? '暂停音色' : '试听音色'} aria-pressed={playingId === item.id} onClick={() => playVoice(item)}>{playingId === item.id ? 'Ⅱ' : '▶'}<svg className="voice-progress" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="6" pathLength="100" strokeDasharray="100" strokeDashoffset={100 * (1 - (voiceId.current === item.id ? voiceProgress : 0))} /></svg></button>}</div>
         <p className="asset-card-role" title={item.role}>{item.role}</p>
         <div className="asset-card-footer"><div className="asset-card-status"><span>资料卡状态：</span><Rich html={item.statusHtml} /></div><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
         <button onClick={() => { setSelected(item.id); setTab('资料卡'); }}>查看详情</button></div> {item.pendingCount > 0 && <button className="pending" onClick={() => { setSelected(item.id); setTab('候选与审阅'); }}>留存待确认／待审核 {item.pendingCount}</button>}
