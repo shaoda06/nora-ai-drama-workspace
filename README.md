@@ -35,7 +35,7 @@
 
 ### 短剧流程技能
 
-流程依赖、可选参考、准确获取来源、使用边界及安装方式统一读取[主技能依赖章节](.agents/skills/nora-ai-short-drama/SKILL.md#适用平台与技能依赖)。随包的三个ComfyUI适配版保留各自 `LICENSE`；第三方技能许可不由本仓库MIT许可证重新授权。
+流程依赖的使用条件与边界读取[主技能依赖入口](.agents/skills/nora-ai-short-drama/SKILL.md#适用平台与技能依赖)；准确获取来源、版本与许可读取[依赖获取资料](.agents/skills/nora-ai-short-drama/维护规范.md#6-依赖获取与适配资料)。随包的三个ComfyUI适配版保留各自 `LICENSE`；第三方技能许可不由本仓库MIT许可证重新授权。
 
 ### 本工作区技能与风格资源
 
