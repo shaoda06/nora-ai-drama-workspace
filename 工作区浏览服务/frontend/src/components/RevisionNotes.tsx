@@ -11,7 +11,7 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
   const buffer = useRef<HTMLTextAreaElement>(null);
   const [insertMessage, setInsertMessage] = useState('');
   const tenths = Math.floor(time * 10);
-  const timestamp = `${String(Math.floor(tenths / 600)).padStart(2, '0')}.${String(Math.floor(tenths / 10) % 60).padStart(2, '0')}.${tenths % 10}秒`;
+  const timestamp = `${String(Math.floor(tenths / 600)).padStart(2, '0')}.${String(Math.floor(tenths / 10) % 60).padStart(2, '0')}.${tenths % 10}秒：`;
   const data = useSceneNotes(scope.project, scope.episode, scope.scene);
   const identity = { segment, stage: current.stage, run: current.run };
   const key = noteKey(identity);
