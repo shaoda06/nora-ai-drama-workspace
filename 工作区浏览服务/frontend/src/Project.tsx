@@ -142,17 +142,17 @@ function Assets({ value, project, revision, active, asset, onAssetChange }: { va
       </article>)}</div><Groups groups={value.groups} /></div>
     {selected && <><button onClick={() => onAssetChange(null)}>← 返回列表</button><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><h2>{detail.data.id} · {detail.data.name}</h2><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关记录'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
       <div hidden={tab !== '资料卡'}><Document key={detail.data.id} value={detail.data.card} /></div>
-      <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} /></div>
+      <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} formal /></div>
       <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <AssetMedia items={detail.data.candidates} revision={revision} />}</div>
       <div hidden={tab !== '相关记录'}>{detail.data.recordKey && <FileTree items={[{ kind: 'markdown', name: '完整生成记录', key: detail.data.recordKey, url: `${projectUrl(project)}/files/${detail.data.recordKey}` }]} />}<Groups groups={detail.data.groups} /></div>
     </>}</>}
   </>;
 }
-function AssetMedia({ items, revision }: { items: RecordData[]; revision: number }) {
+function AssetMedia({ items, revision, formal = false }: { items: RecordData[]; revision: number; formal?: boolean }) {
   const grouped: Record<string, RecordData[]> = {};
   for (const item of items) {
     const label = [item.stage, item.type, item.state, item.costume].filter(Boolean).join(' · ') || '参考图';
     (grouped[label] ||= []).push(item);
   }
-  return items.length ? <div className="asset-media-grid">{Object.entries(grouped).map(([name, assets]) => <AssetMediaCard key={name} title={name} items={assets} revision={revision} />)}</div> : <p className="muted">暂无已登记图片。</p>;
+  return items.length ? <div className="asset-media-grid">{Object.entries(grouped).map(([name, assets]) => <AssetMediaCard key={name} title={name} items={assets} revision={revision} formal={formal} />)}</div> : <p className="muted">暂无已登记图片。</p>;
 }
