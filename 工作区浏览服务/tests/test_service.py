@@ -476,6 +476,32 @@ class ServiceTests(unittest.TestCase):
         style = self.client.get('/api/krea2/styles/' + first['items'][0]['id']).json()
         self.assertEqual(self.client.get('/api/krea2/files/' + style['folder'] + '/positive.txt').text, style['prompt'])
 
+    def test_krea_management_retains_origin_and_payload_boundaries(self):
+        token = main.krea2.updater.TOKEN
+        payload = {'source': 'clio', 'action': 'check'}
+        with patch.object(main.krea2.updater, 'start_job') as job:
+            for origin in (None, 'null', 'http://localhost:1', 'https://localhost:8780'):
+                headers = {'X-Krea-Token': token}
+                if origin is not None:
+                    headers['Origin'] = origin
+                self.assertEqual(self.client.post('/api/krea2/action', headers=headers, json=payload).status_code, 403)
+            for referer, site in ((None, 'same-origin'), ('http://localhost:1/', 'same-origin'),
+                                  ('http://localhost:8780.evil.invalid/', 'same-origin'),
+                                  ('http://localhost:8780/', None), ('http://localhost:8780/', 'same-site'),
+                                  ('http://localhost:8780/', 'cross-site')):
+                headers = {'Origin': 'http://localhost', 'X-Krea-Token': token}
+                if referer is not None:
+                    headers['Referer'] = referer
+                if site is not None:
+                    headers['Sec-Fetch-Site'] = site
+                self.assertEqual(self.client.post('/api/krea2/action', headers=headers, json=payload).status_code, 403)
+            headers = {'Origin': 'http://localhost:8780', 'X-Krea-Token': token}
+            self.assertEqual(self.client.post('/api/krea2/action', headers=headers,
+                                             json=dict(payload, extra='x' * 4096)).status_code, 413)
+            for invalid in (dict(payload, action='unknown'), dict(payload, source='unknown')):
+                self.assertEqual(self.client.post('/api/krea2/action', headers=headers, json=invalid).status_code, 422)
+            job.assert_not_called()
+
     def test_generation_record_urls_use_project_endpoint_and_keep_fragment(self):
         result = main.view({'recordUrl': '03-test%5C记录.md#生成记录-001', 'sourceUrl': 'https://example.com/source'}, '示例项目')
         self.assertEqual(result['recordUrl'], '/api/projects/%E7%A4%BA%E4%BE%8B%E9%A1%B9%E7%9B%AE/files/03-test/记录.md#生成记录-001')

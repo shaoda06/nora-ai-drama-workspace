@@ -8,7 +8,7 @@ import unittest
 from unittest.mock import patch
 import zipfile
 
-spec = importlib.util.spec_from_file_location('updater', Path(__file__).with_name('server.py'))
+spec = importlib.util.spec_from_file_location('updater', Path(__file__).with_name('updater.py'))
 u = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(u)
 
@@ -31,7 +31,6 @@ class UpdatesTest(unittest.TestCase):
                                      category=source, category_name=source, image=None, prompt='old ' + source,
                                      negative_prompt=''))
         u.write_json(u.RES / 'catalog.json', {'styles': self.entries, 'categories': []})
-        (u.RES / 'catalog.js').write_text('old catalog')
         u.write_json(u.RES / 'versions.json', {'ray': {'revision': 'unchanged'}})
 
     def tearDown(self):
@@ -59,6 +58,43 @@ class UpdatesTest(unittest.TestCase):
         u.restore('clio')
         self.assertEqual((u.RES / 'krea2_styles/new/positive.txt').read_text(), 'new')
 
+    def test_ray_update_restore_preserves_clio_and_does_not_need_offline_index(self):
+        stage = u.WORK / 'ray-stage'
+        folder = stage / 'Krea2_moodboard/new'
+        folder.mkdir(parents=True)
+        (folder / 'positive.txt').write_text('new ray')
+        info = {'styles': [dict(self.entries[1], prompt='new ray', folder='Krea2_moodboard/new')],
+                'categories': [], 'version': {'revision': 'new ray'}}
+        u.write_json(stage / 'library.json', info)
+        u.commit_library('ray', stage, info)
+        self.assertEqual(u.versions()['ray']['revision'], 'new ray')
+        u.restore('ray')
+        self.assertEqual((u.RES / 'Krea2_moodboard/old/positive.txt').read_text(), 'old ray')
+        self.assertEqual(u.versions()['ray']['revision'], 'unchanged')
+        self.assertEqual((u.RES / 'krea2_styles/old/positive.txt').read_text(), 'old clio')
+        self.assertEqual(next(s for s in u.catalog()['styles'] if s['library'] == 'krea2_styles'), self.entries[0])
+        self.assertFalse((u.RES / 'catalog.js').exists())
+
+    def test_version_write_failure_restores_catalog_resources_and_previous_backup(self):
+        stage, info = self.incoming()
+        previous = u.WORK / 'previous-clio'
+        previous.mkdir()
+        (previous / 'keep.txt').write_text('existing backup')
+        originals = {name: (u.RES / name).read_bytes() for name in ['catalog.json', 'versions.json']}
+        write = u.write_json
+        def failing(path, data):
+            if path == u.RES / 'versions.json':
+                raise OSError('simulated version write failure')
+            return write(path, data)
+        with patch.object(u, 'write_json', side_effect=failing), self.assertRaises(OSError):
+            u.commit_library('clio', stage, info)
+        for name, data in originals.items():
+            self.assertEqual((u.RES / name).read_bytes(), data)
+        self.assertEqual((u.RES / 'krea2_styles/old/positive.txt').read_text(), 'old clio')
+        self.assertEqual((u.RES / 'Krea2_moodboard/old/positive.txt').read_text(), 'old ray')
+        self.assertEqual((previous / 'keep.txt').read_text(), 'existing backup')
+        self.assertTrue((stage / 'krea2_styles/new/positive.txt').is_file())
+
     def test_failed_write_rolls_back_and_keeps_prepared_data(self):
         stage, info = self.incoming()
         write = u.write_json
@@ -82,6 +118,8 @@ class UpdatesTest(unittest.TestCase):
         self.assertEqual(u.catalog()['styles'], self.entries)
 
     def test_download_progress_with_and_without_total(self):
+        # A fresh unified-service installation has no updater work directory yet.
+        u.WORK.rmdir()
         payload = b'x' * (2 * 1024 * 1024)
         for source, length in [('clio', str(len(payload))), ('ray', '')]:
             with self.subTest(source=source):

@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
-"""Krea local gallery and two-source updater. Python 3.9+, standard library only."""
-import argparse
-import errno
+"""Two-source resource updater used by the workspace browser service."""
 import json
-import mimetypes
 from pathlib import Path, PurePosixPath
 import re
 import secrets
@@ -11,17 +8,13 @@ import shutil
 import tempfile
 import threading
 import traceback
-import urllib.parse
 import urllib.request
-import webbrowser
 import zipfile
 from datetime import datetime, timezone
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = Path(__file__).resolve().parent.parent
 RES = ROOT / 'Krea2_风格资源'
 WORK = ROOT / 'Krea2_更新工具' / 'work'
-HTML = ROOT / 'index.html'
 SOURCES = {'clio': 'krea2_styles', 'ray': 'Krea2_moodboard'}
 RAY = 'https://civitai.com/models/2856809/ray-style-switching-extension'
 REPO = 'https://github.com/lumenastrum/clio-style-preview'
@@ -219,6 +212,7 @@ def build_library(source, archive, stage, meta):
 
 
 def prepare(source):
+    WORK.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix='prepare-', dir=WORK))
     try:
         meta = fetch_meta(source)
@@ -268,7 +262,7 @@ def commit_library(source, incoming, info):
     write_json(backup / 'library.json', {'styles': [s for s in current['styles'] if s['library'] == lib],
                'categories': [c for c in current['categories'] if c['library'] == lib], 'version': state.get(source)})
     originals = {name: (RES / name).read_bytes() if (RES / name).exists() else None
-                 for name in ['catalog.json', 'catalog.js', 'versions.json']}
+                 for name in ['catalog.json', 'versions.json']}
     retired = WORK / ('retired-' + secrets.token_hex(6))
     moved = False
     try:
@@ -282,8 +276,6 @@ def commit_library(source, incoming, info):
         else:
             state[source] = dict(info['version'], installed_at=now(), count=len(info['styles']))
         write_json(RES / 'catalog.json', current)
-        (RES / 'catalog.js.tmp').write_text('window.STYLE_CATALOG = ' + json.dumps(current, ensure_ascii=False) + ';\n', encoding='utf-8')
-        (RES / 'catalog.js.tmp').replace(RES / 'catalog.js')
         write_json(RES / 'versions.json', state)
     except Exception:
         if moved:
@@ -356,112 +348,3 @@ def start_job(action, source):
             SOURCE_STATUS[source] = JOB.copy()
             LOCK.release()
     threading.Thread(target=run, daemon=True).start()
-
-
-class Handler(BaseHTTPRequestHandler):
-    def log_message(self, fmt, *args):
-        if len(args) < 2 or str(args[1]) != '200':
-            super().log_message(fmt, *args)
-
-    def send_data(self, code, data, content_type='application/json; charset=utf-8'):
-        self.send_response(code)
-        self.send_header('Content-Type', content_type)
-        self.send_header('Cache-Control', 'no-store')
-        self.send_header('X-Content-Type-Options', 'nosniff')
-        self.send_header('Content-Length', str(len(data)))
-        self.end_headers()
-        self.wfile.write(data)
-
-    def json(self, data, code=200):
-        self.send_data(code, json.dumps(data, ensure_ascii=False).encode())
-
-    def valid_host(self):
-        return self.headers.get('Host') == f'127.0.0.1:{self.server.server_port}'
-
-    def do_GET(self):
-        if not self.valid_host():
-            return self.json({'error': '仅允许本机地址'}, 403)
-        path = urllib.parse.unquote(urllib.parse.urlsplit(self.path).path)
-        if path == '/api/state':
-            data = catalog()
-            state = versions()
-            self.json({'app': 'krea-local-gallery', 'token': TOKEN, 'job': JOB.copy(), 'sources': {s: {
-                'status': JOB.copy() if JOB['source'] == s else SOURCE_STATUS[s].copy(),
-                'local': state.get(s), 'count': sum(x['library'] == lib for x in data['styles']),
-                'remote': REMOTE.get(s), 'plan': {k: v for k, v in PLANS.get(s, {}).items() if k != 'stage'},
-                'restore': (WORK / ('previous-' + s)).exists()} for s, lib in SOURCES.items()}})
-            return
-        target = HTML if path in ('/', '/' + HTML.name) else (ROOT / path.lstrip('/')).resolve()
-        allowed = target == HTML or target in (RES / 'catalog.js', RES / 'catalog.json')
-        allowed = allowed or any((RES / lib) in target.parents for lib in SOURCES.values())
-        if not allowed or not target.is_file():
-            return self.json({'error': '找不到文件'}, 404)
-        self.send_data(200, target.read_bytes(), mimetypes.guess_type(target.name)[0] or 'application/octet-stream')
-
-    def do_POST(self):
-        expected = f'http://127.0.0.1:{self.server.server_port}'
-        if not self.valid_host():
-            return self.json({'error': '访问地址不匹配，请使用 ' + expected}, 403)
-        origin = self.headers.get('Origin')
-        # This browser sends a loopback Origin without its port. Accept that
-        # specific form only with an exact Referer origin and same-origin fetch.
-        referer = urllib.parse.urlsplit(self.headers.get('Referer', ''))
-        port_stripped_local = (
-            origin == 'http://127.0.0.1'
-            and self.headers.get('Sec-Fetch-Site') == 'same-origin'
-            and (referer.scheme, referer.netloc) == ('http', f'127.0.0.1:{self.server.server_port}')
-        )
-        if origin != expected and not port_stripped_local:
-            return self.json({'error': '浏览器请求来源不匹配，请从 ' + expected + ' 打开页面'}, 403)
-        if self.headers.get('X-Krea-Token') != TOKEN:
-            return self.json({'error': '页面操作凭证已失效，请关闭更新面板后重新打开'}, 403)
-        try:
-            path = urllib.parse.urlsplit(self.path)
-            length = int(self.headers.get('Content-Length', '0'))
-            if path.path == '/api/action':
-                if length <= 0 or length > 4096:
-                    raise ValueError('请求为空或超过 4096 字节。')
-                data = json.loads(self.rfile.read(length))
-                if data.get('action') not in ('check', 'prepare', 'apply', 'restore', 'discard'):
-                    raise ValueError('未知操作。')
-                start_job(data['action'], data['source'])
-            else:
-                return self.json({'error': '找不到接口'}, 404)
-            self.json({'ok': True}, 202)
-        except (ValueError, KeyError) as error:
-            self.json({'error': str(error)}, 400)
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--port', type=int, default=8876)
-    parser.add_argument('--no-browser', action='store_true')
-    args = parser.parse_args()
-    WORK.mkdir(parents=True, exist_ok=True)
-    url = f'http://127.0.0.1:{args.port}/'
-    try:
-        server = ThreadingHTTPServer(('127.0.0.1', args.port), Handler)
-    except OSError as error:
-        if error.errno != errno.EADDRINUSE:
-            raise
-        if remote_json(url + 'api/state').get('app') != 'krea-local-gallery':
-            raise RuntimeError('端口已被其他程序占用。') from error
-        print('风格库服务已运行：' + url)
-        if not args.no_browser:
-            webbrowser.open(url)
-        return
-    print('Krea2 风格库：' + url + '\n保持此窗口开启；按 Ctrl+C 停止服务。', flush=True)
-    if not args.no_browser:
-        webbrowser.open(url)
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        if JOB['running']:
-            print('等待当前资源操作完成后关闭…', flush=True)
-            with LOCK:
-                pass
-        server.server_close()
-
-
-if __name__ == '__main__':
-    main()

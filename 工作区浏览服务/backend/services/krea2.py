@@ -2,7 +2,7 @@ import importlib.util
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2] / 'Krea2风格库'
-spec = importlib.util.spec_from_file_location('workspace_krea_updater', ROOT / 'Krea2_更新工具/server.py')
+spec = importlib.util.spec_from_file_location('workspace_krea_updater', ROOT / 'Krea2_更新工具/updater.py')
 updater = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(updater)
 
