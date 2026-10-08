@@ -90,3 +90,5 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .episode-scene-header{display:flex;align-items:center;gap:16px}.episode-scene-header>.tabs{margin:0;min-width:0;flex:1}.episode-script-link{margin-left:auto;flex:none;text-decoration:underline;text-underline-offset:3px;font-size:13px}.episode-script-link:hover{background:none}.scene-workspace-tabs{margin-top:20px}.segment-scroll{padding-bottom:20px;border-bottom:1px solid var(--line)}
 
 .cover.character-cover-image{background:white}
+
+.asset-media-status{display:flex;align-items:center;gap:8px;margin:9px 0}.asset-media-status>.field-label,.asset-media-status>.prose p{margin:0}
