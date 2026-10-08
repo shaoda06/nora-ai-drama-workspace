@@ -68,6 +68,12 @@ python3 comfyui_client.py status --url 'http://SERVER:8188' \
 
 `data.files`列出返回文件的node_id/output_key/index及原始文件信息；不替agent选择输出。agent核对本次预期节点及具体文件后再下载。原始任务history保留于返回JSON。网络故障是工具错误，不把任务标成失败。不自动等待、定时或启动下一阶段。
 
+### 只读诊断与重启证据
+
+CLI的status已查询history／queue，诊断不要为保存响应重复调用。其他只读核对复用本模块的`Client(url, timeout)`：`client.json(route)`读取JSON，`with client.open(route) as response`读取有界原始日志／响应头；不提供data时为GET，不写另一套HTTP通信。保存当轮返回和本地观察时间，重复错误沿用既有证据。具体次数、间隔及判定由[监控规范](../流程规范/ComfyUI-任务监控规范.md#31-异常检查与连接恢复)维护，客户端自身不循环或判断是否补做。
+
+`/system_stats`是连通性／设备快照，没有本工具保证的进程ID、启动时间或每次启动变化的实例标识；相同GPU、版本、URL不能证明同一实例或发生重启。`/internal/logs/raw`及`/vhs/getpath`属于执行端可选接口，仅在实际已确认可用时读取；目录列表限任务已绑定绝对目录，不扫描猜目录。原始日志读取限定大小（例如最多1 MiB），接口缺失如实报告，不安装节点、修改服务或臆造启动标识接口。没有直接进程证据时，按[视频恢复规则](../流程规范/ComfyUI-任务监控规范.md#51-后端故障后的视频接续)核对组合证据，不能由客户端的请求成功代替业务判定。
+
 ### download：明确指定文件
 
 ```sh
