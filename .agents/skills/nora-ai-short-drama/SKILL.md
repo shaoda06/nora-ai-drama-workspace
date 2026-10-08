@@ -31,11 +31,11 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 | `find-skills` | 发现缺少的专用技能；调用要求见[辅助技能](#辅助技能的条件调用) | GitHub：[vercel-labs/skills](https://github.com/vercel-labs/skills)，目录 [`skills/find-skills`](https://github.com/vercel-labs/skills/tree/main/skills/find-skills) |
 | `vercel-react-best-practices` | React／Next.js工具开发与审阅；调用要求见[辅助技能](#辅助技能的条件调用) | GitHub：[vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)，目录 [`skills/react-best-practices`](https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices) |
 | `fastapi` | FastAPI工具开发与审阅；调用要求见[辅助技能](#辅助技能的条件调用) | GitHub：[fastapi/fastapi](https://github.com/fastapi/fastapi)，目录 [`fastapi/.agents/skills/fastapi`](https://github.com/fastapi/fastapi/tree/master/fastapi/.agents/skills/fastapi) |
-| `short-drama-write` | 剧本与对白写作的方法补充：人物目标、策略、回应、声音差异及可表演性；协作边界见下方规则，不接管项目流程与格式 | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-write`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-write) |
-| `humanizer-zh` | 已有中文文本的局部表达润色：空话、重复、拗口及模板句；保留剧情事实、人物声音与必要解释，协作边界见下方规则 | GitHub：[op7418/Humanizer-zh](https://github.com/op7418/Humanizer-zh)，技能目录为[仓库根目录](https://github.com/op7418/Humanizer-zh/tree/main)，入口为 `SKILL.md` |
-| `dialogue` | 剧本初稿或实质性修订后、送审前诊断人物声音、接话、说明性对白与情绪节奏，再由本轮编写者订正 | GitHub：[jwynia/agent-skills](https://github.com/jwynia/agent-skills)，目录 [`skills/creative/fiction/character/dialogue`](https://github.com/jwynia/agent-skills/tree/main/skills/creative/fiction/character/dialogue) |
-| `short-drama-storyboard` | 场次分镜新写或实质性修订前，补充镜头选择、切镜、对白覆盖与站位接续方法 | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-storyboard`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-storyboard) |
-| `short-drama-review` | 剧本、场次分镜与视频提示词文本交付前，按当前阶段选用审查方法，融入既有自检与订正 | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-review`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-review) |
+| `short-drama-write` | 剧本与对白方法；[阶段调用](references/流程规范/短剧开发流程规范.md#3-扩写本集故事剧本并明确场次需求)、[协作边界](#外部技能协作与规则优先级) | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-write`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-write) |
+| `humanizer-zh` | 中文表达润色；[准备文档](references/流程规范/短剧开发流程规范.md#第一部分全剧准备)、[剧本调用](references/流程规范/短剧开发流程规范.md#3-扩写本集故事剧本并明确场次需求)及[协作边界](#外部技能协作与规则优先级) | GitHub：[op7418/Humanizer-zh](https://github.com/op7418/Humanizer-zh)，技能目录为[仓库根目录](https://github.com/op7418/Humanizer-zh/tree/main)，入口为 `SKILL.md` |
+| `dialogue` | 对白诊断；[交付前调用](references/流程规范/短剧开发流程规范.md#文本交付前的自检与订正)、[协作边界](#外部技能协作与规则优先级) | GitHub：[jwynia/agent-skills](https://github.com/jwynia/agent-skills)，目录 [`skills/creative/fiction/character/dialogue`](https://github.com/jwynia/agent-skills/tree/main/skills/creative/fiction/character/dialogue) |
+| `short-drama-storyboard` | 分镜方法；[阶段调用](references/流程规范/短剧开发流程规范.md#4-整理场次分镜并划分视频生成分段)、[协作边界](#外部技能协作与规则优先级) | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-storyboard`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-storyboard) |
+| `short-drama-review` | 文本审查方法；[交付前调用](references/流程规范/短剧开发流程规范.md#文本交付前的自检与订正)、[协作边界](#外部技能协作与规则优先级) | GitHub：[zenstory-ai/drama-skills](https://github.com/zenstory-ai/drama-skills)，目录 [`skills/short-drama-review`](https://github.com/zenstory-ai/drama-skills/tree/main/skills/short-drama-review) |
 | `skill-creator` | 技能维护、扩展及可移植性验证 | Codex Desktop自带；按名称发现系统技能，不另附副本 |
 | `screenwriting-master`（山音超级编剧大师，可选参考） | 仅在用户明确要求调用或查阅山音方法时读取；不因一般编剧任务自动加载，不作为本流程的必需依赖 | GitHub：[Shanyin-ai/shanyin-screenwriting-master](https://github.com/Shanyin-ai/shanyin-screenwriting-master)；仓库根目录安装包 `screenwriting-master（Claude&GPT通用）.skill`，解包后的技能目录为 `screenwriting-master/`，入口为其中的 `SKILL.md` |
 
@@ -43,7 +43,7 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 
 山音技能保持独立安装；在Codex中于其 `agents/openai.yaml` 设置 `policy.allow_implicit_invocation: false`，不以 `config.toml` 完全禁用来替代。其他平台使用对应的仅显式调用机制；无法保证时说明限制。仅查阅方法不代表执行整套山音流程；不覆盖本技能已经确认的流程、模板与项目设定。需采用不同流程时先明确适用范围，缺少该可选技能不阻塞常规短剧任务。
 
-2026-10-08新增安装来源：`dialogue` 取自上述仓库提交 [`e02ec7e`](https://github.com/jwynia/agent-skills/tree/e02ec7e226a6e4f8419fd3b88a1d8e472d421b32/skills/creative/fiction/character/dialogue)，保留其 `SKILL.md` 中的MIT声明（该提交未提供独立许可证文件）；`short-drama-storyboard` 与 `short-drama-review` 取自上述仓库提交 [`c2426e0`](https://github.com/zenstory-ai/drama-skills/tree/c2426e03c0e7722bebcc6a488b6658dc38c65ac3/skills)，各自保留完整技能目录及仓库MIT许可证。此处记录来源版本，不自动追随上游更新。
+依赖来源版本：`dialogue` 取自上述仓库提交 [`e02ec7e`](https://github.com/jwynia/agent-skills/tree/e02ec7e226a6e4f8419fd3b88a1d8e472d421b32/skills/creative/fiction/character/dialogue)，保留其 `SKILL.md` 中的MIT声明（该提交未提供独立许可证文件）；`short-drama-storyboard` 与 `short-drama-review` 取自上述仓库提交 [`c2426e0`](https://github.com/zenstory-ai/drama-skills/tree/c2426e03c0e7722bebcc6a488b6658dc38c65ac3/skills)，各自保留完整技能目录及仓库MIT许可证。此处记录来源版本，不自动追随上游更新。
 
 ### 外部技能协作与规则优先级
 
@@ -56,6 +56,8 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 5. 未被上述依据规定的通用写作建议。
 
 用户要求改变已确认的核心剧情、人物或视觉方向时，沿用本流程的影响说明与确认要求；已有明确授权则按其范围处理。同层冲突先核对规则真源与具体适用范围，仍不能判断时说明冲突及影响，由用户决定。真实模型、接口和素材容量限制属于执行条件，不能靠规则优先级绕过。
+
+外部技能提到的其他技能或转交流程不自动加入本流程。已登记技能按本入口的任务条件选用；未登记项先核对当前任务是否确需及与本流程的关系，按依赖发现规则处理，不因外部推荐递归加载、安装技能或新增制作与审批阶段。
 
 `short-drama-write` 只补充场景因果、人物策略和对白手艺；其目录、场景编号、生产标签、配置、正文模板及配套解析脚本不替代本流程的规定，也不取消已有制作前检查、记录和审批。对白与场景的删改以[逐集制作规范第2节](references/流程规范/逐集内容制作规范.md#2-本集故事剧本)为准，保留观众理解核心因果所需的交流、有效的直接表达、沉默与余韵，不把“能演的不说”或“每句必须承担冲突”当作统一删减标准。
 
@@ -90,59 +92,13 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 1. 三个ComfyUI技能以本文件依赖表链接的 `dependencies/{技能名}/SKILL.md` 为本流程唯一现行入口；它们随工作区提供，不再次复制安装，不因发现全局同名版本切换。关联脚本和参考资料均从所选入口解析。同名旧安装需要整理时先比较并保存独有内容，未经授权不删除其他位置的安装。平台未自动列出嵌套技能时，按表中明确路径读取；若平台不支持该方式，报告能力限制，不静默创建另一套可编辑真源。
 2. 其他依赖先从当前平台按名称发现并读取实际入口，已有可用安装则复用，不自动覆盖或升级；需要查找缺少的专用技能时，按[辅助技能的条件调用](#辅助技能的条件调用)使用 `find-skills`。缺失且本次任务需要时按表中来源获取完整技能目录及必需资源；许可证位于仓库根目录时也须保留。以 `.skill` 包发布的解包取得技能目录。不要安装仓库内无关技能或Hook。
 3. 除非用户明确指定其他安装范围或目录，新增依赖默认安装到当前工作区 `.agents/skills/{技能名}/`。工作区指包含工作区级 `AGENTS.md`、`projects/` 和主技能的根目录，不是某部短剧的项目目录；有多重工作区且归属不明时先确认。随包真源不适用重复安装。安装后核对入口可读取及平台发现状态；山音采用仅显式调用策略。
-4. Codex Desktop的 `skill-creator` 使用内置入口；其他平台若无此技能，说明技能维护阶段缺少依赖。来源不可访问或安装能力缺失时，报告具体缺项及受影响阶段，无关策划可继续。按需补齐依赖，不要求项目初始化时安装所有技能。依赖获取不授权安装ComfyUI节点、模型或更改服务器，也不等于ComfyUI已具备运行条件。
-
-随包inventory的缓存由使用时生成，不包含在分发包中；缓存位置按上述指定的 `comfyui-inventory` 真源入口读取，不能假定在相邻的 `comfyui-api` 目录。项目执行地址仍以下方项目配置为准，显式传入工具，依赖自身的默认地址不能覆盖项目配置。
+4. Codex Desktop的 `skill-creator` 使用内置入口；其他平台若无此技能，说明技能维护阶段缺少依赖。来源不可访问或安装能力缺失时，说明具体缺项及受影响操作。方法补充技能缺失不阻塞本流程已有的创作能力；缺少技术执行能力时停止依赖该能力的操作，无关策划可继续；未实际读取或应用的技能不得声称已用。按需补齐依赖，不要求项目初始化时安装所有技能。依赖获取不授权安装ComfyUI节点、模型或更改服务器，也不等于ComfyUI已具备运行条件。
 
 使用者须提供支持配套工作流的ComfyUI环境；本技能不安装模型、节点或服务端依赖。保留执行规范要求的只读核对；错误如实报告，不自动替换模型、修改服务环境或用远端工作流覆盖本地基准。
 
-## 项目 ComfyUI 配置
+## ComfyUI服务与任务提交
 
-本节是项目服务配置、选端和任务地址绑定的唯一规则入口。每个项目独立维护根目录 `comfyui-config.json`，不跨项目继承。配置包含以下四项：
-
-```json
-{
-  "enable-multi-remote": false,
-  "remote-urls": ["http://127.0.0.1:8188"],
-  "busy-pending-threshold": 2,
-  "default-only-task-types": ["video-first-pass", "video-second-pass", "video-postprocess"]
-}
-```
-
-- `enable-multi-remote`：是否启用自动多远端分流，初始为false。关闭时自动选端只使用地址列表第一项，不检查备用端，不因默认端忙或离线自动开启；用户明确指定远端按下方指定规则执行。
-- `remote-urls`：非空HTTP／HTTPS地址数组，按优先级排列，第一项为默认端。地址不重复，不含凭据、查询参数或片段；任务分配按下方选端规则执行。
-- `busy-pending-threshold`：正整数，初始为2；远端 `queue_pending` 数量达到门槛即视为忙。按队列任务条目计数，不按输出图片张数计数；`queue_running` 不计入等待数量，视频生成另按下方占用规则判断。
-- `default-only-task-types`：自动选端只使用默认端的任务类型名单，包含一采 `video-first-pass`、二采 `video-second-pass` 和视频后处理 `video-postprocess`；读取缺项的旧名单时仍将这三类限定在默认端，运行时不改写文件。类型与执行阶段的对应填写见[统一提交工具说明](references/comfyui-scripts/README.md#nora统一分配与提交)。增加其他例外或调整门槛由用户确认，不自行把所有高负载任务加入名单。
-
-初始化检查已有配置：合法则复用，不擅自覆盖；缺少时询问实际服务地址或有序地址列表，并告知默认地址 `http://127.0.0.1:8188`。用户确认默认地址后才使用上述内容；未回答不视为同意。`127.0.0.1` 指执行脚本的机器。配置不保存时区、模型、节点、库存或运行状态。只含 `remote-url` 的旧配置按单远端、关闭分流解释；获授权整理时转为上述格式并完整保留实际地址，不在运行时自动改写其他项目。
-
-### 新任务的选端与提交
-
-所有会话的新任务使用[统一分配与提交入口](references/comfyui-scripts/README.md#nora统一分配与提交)，包括开关关闭的单远端任务。先完成当前执行授权、审批依赖及候选远端能力／素材核对，再逐个调用；不直接绕过入口向各端批量提交。
-
-视频一采、二采和视频后处理默认只用地址列表第一项，忙时等待，不自动分流；备用端仅自动分担图片生成／图像编辑及图片超分。用户明确指定某远端时，使用统一入口的 `--target-url` 限定该地址，并在既有输入映射或执行记录注明用户指定依据；该端须已配置、能力及素材已核对，忙或不可用时不改投其他端。候选地址只是能力范围，不等于用户指定。指定规则也适用于其他任务，不自动开启分流开关。
-
-正式确认工作流的两轮使用同一执行端和导演台节点ID；用户指定备用端执行一采时，该批次返修及二采沿用原指定端。临时要求换端续做时先处理来源缓存问题，不把MP4当作潜变量缓存。阶段、来源及缓存核对统一执行[H3人工审核与接续](references/生成规范/ComfyUI-H3视频执行规范.md#5-人工审核与轻量记录)及[导演台缓存规范](references/生成规范/ComfyUI-MiniMaxH3导演台节点使用规范.md#75-缓存检查与清理接口)，不在调度工具凭Refine连接猜本轮阶段。同一地址仅说明缓存位置相同，不证明节点ID、具体版本和生成输入匹配。
-
-远端的 `queue_running` 或 `queue_pending` 中只要有视频一采或二采，就在调度时视为队列已满，不再向该端追加任何新任务，直到这些视频生成任务离开运行及等待队列。按实际队列中的工作流识别，包括其他会话或网页手动提交的配套视频工作流；无法读取任务类型时按状态不明处理。图片生成、图片超分和视频后处理继续按等待数量门槛判断；此处只判断队列是否忙，不扩大任务允许选用的远端范围。已在该端排队的任务继续原有执行，不取消、不插队、不迁移。
-
-未明确指定远端的普通任务开启分流后按列表顺序选择可连接、已确认能够执行本次工作流及素材、未被视频生成占用且等待数量低于门槛的第一台远端。不合格或状态不明的远端不当作空闲。未明确指定远端时，例外任务以及关闭分流时仅检查默认端。每个任务重新判断，不轮流平均分配，不把整批一次性塞进同一队列；所有候选端忙或不可用时保留本地待提交，后续单轮检查再尝试，不记为已排队／已失败，不新增独立待提交台账。等待中的例外任务不阻塞其他已具备条件的任务。
-
-统一入口以本技能 `state/comfyui-dispatch.lock` 的操作系统文件锁串行完成选端、必要上传与一次提交；另一会话遇到锁占用稍后重查，不另造提交入口。锁仅协调使用同一技能安装的本机进程，不控制其他机器或ComfyUI网页手动提交。参考素材在选中远端实际上传或核对已有路径后才提交，不照搬其他远端上传路径。一次POST开始后不因错误或超时向后续端重发，防重复及异常核对沿用固定通信工具。分流不改变工作流、模型、参数或制作／审批顺序；二采例外不代表二采方案已经批准可执行。
-
-### 已授权待提交任务的推进
-
-仅因远端忙而尚未提交、执行授权及准备资料齐备的任务，在原会话既有任务清单或生成记录中记为待提交，保存准备资料入口、授权范围、任务类型、用户指定依据（如有）、等待原因及最近分配检查时间；不另建调度台账，不填虚构prompt ID，不计为排队或失败。等待审核、等待执行授权、缓存问题及提交结果不明分别处理，不纳入可继续提交范围。
-
-原会话按[待提交跟进方式与间隔](references/流程规范/ComfyUI-任务监控规范.md#11-待提交跟进方式与间隔)继续推进；每轮先处理已提交任务，再逐个调用统一入口处理具备条件的待提交任务。取得真实ID后才转入已提交监控；默认端例外或用户指定端忙，不阻塞其他符合分配条件的任务。提交证据已存在时核对原任务，不换目录重提。准备资料变化后先按原授权和审批条件核对，不沿用过期准备。
-
-队列忙时继续等待；所有候选端不可达、能力缺失或状态不明时报告问题并请求方向，不无限重连。还有可继续提交的待提交任务时，不因已提交任务全部结束就结束批次跟进；只剩等待审核、待授权或需用户决定的问题时停止自动提交跟进。监控不扩大授权，不自行进入二采、后处理或下一场次。
-
-### 已提交任务的地址与恢复
-
-任务在现有执行记录中绑定实际服务地址、任务ID及对应提交证据；选端结果及能力核对注明于既有生成／执行记录，不另维护一份调度状态库。查询、取回和恢复优先读取该任务提交尝试中的真实地址，再显式传给固定工具的 `--url`；不从当前地址列表第一项覆盖旧任务地址。旧记录缺少地址时核对当时请求、上传或响应依据，无法确定先沟通，不猜测。
-
-调整开关、顺序或备用列表只影响尚未提交任务，不取消、移动或重提旧任务；关闭分流后继续跟踪原备用端任务。停止监控不等于取消生成。对已提交任务服务不可达、提交状态不明或失败的处理执行[监控与异常规则](references/流程规范/ComfyUI-任务监控规范.md)，不自动更换执行地址。
+初始化项目服务、准备或提交生成任务时，按[服务配置与任务提交规范](references/流程规范/ComfyUI-服务配置与任务提交规范.md)读取对应章节；已提交任务的查询、取回及恢复读取其中的[任务地址规则](references/流程规范/ComfyUI-服务配置与任务提交规范.md#已提交任务的地址与恢复)，监控方式另按任务监控入口。纯创作、提示词讨论和普通文本修订不加载服务配置与提交细则。
 
 ## 使用流程
 
@@ -165,7 +121,7 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 
 | 本次任务 | 必读入口与阶段边界 |
 | --- | --- |
-| 项目定位、主旨与简介、故事大纲 | [开发流程](references/流程规范/短剧开发流程规范.md)第2–4节中的对应阶段；世界观统一维护于《主旨与简介.md》，后续确认的新规则回写，不另维护一套 |
+| 项目定位、主旨与简介、故事大纲 | 分别读取[项目定位](references/流程规范/短剧开发流程规范.md#1-确定项目基本定位)、[主旨与简介](references/流程规范/短剧开发流程规范.md#3-主旨与简介)、[故事大纲](references/流程规范/短剧开发流程规范.md#4-故事大纲)；世界观统一维护于《主旨与简介.md》 |
 | 人物资料卡 | 开发流程第5节：人物索引＋逐人物九章资料卡；参考图不作为本阶段完成条件 |
 | 道具资料卡、基础图、虚拟界面及状态参考图 | 开发流程第6、8.3节及[道具规范](references/素材规范/道具资料与参考图规范.md)；05道具资料卡维护设计，09道具参考图制作基础、已确认虚拟界面及所需状态图，逐集会话提出实际需求 |
 | 全剧分集大纲 | 开发流程第7节：同一阶段会话完成全剧分集索引及逐集大纲，不按集拆会话 |
@@ -210,19 +166,7 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 - 实际生成前读取[项目七类图片默认种子](references/生成规范/Qwen-Image-2.1-提示词规范.md#26-项目七类图片默认种子)及项目定位中的种子表，按该规则区分任务适用分支并核对实际输入；已批准图片及历史记录不受新默认值影响。
 - 实际生成分别完整读取[文生图执行规范](references/生成规范/ComfyUI-文生图执行规范.md)或[图生图执行规范](references/生成规范/ComfyUI-图生图执行规范.md)，按任务配置参考图、参数及画布。用户另有明确指定时按其选择处理，连续性及验收仍按开发流程第8节。
 
-所有ComfyUI执行、查询与取回同时读取 `comfyui-api` 和[固定工具说明](references/comfyui-scripts/README.md)，新任务通过上方配置章节的统一入口分配并提交；通信复用 `references/comfyui-scripts/comfyui_client.py` 的upload／submit／status／download，不逐任务重写通信代码，不使用会重写审批状态的旧执行器，也不修改comfyui-api技能本身。工具故障或缺口先报告并集中修复；额外只读核对按相关技能处理，不静默另写临时替代工具。
-
-agent准备最终API JSON、素材顺序、参数和保存路径；脚本只负责通信和技术证据，不决定业务参数、审核或候选／选定，不内置监控调度。每次逻辑提交沿用固定证据位置，保留“提交尝试”附件；提交不明先核对，不换目录绕过防重。附件沿用现行命名，不另建管理体系。
-
-### 执行前检查与复用
-
-本节适用于文生图、图生图及H3一采／二采／后处理；复用的是服务能力依据，不是上一任务的提交结论。多个候选远端的库存分别指定保存位置并核对source_url，不用同一个缓存反复覆盖后当作多端能力证明；具体刷新仍使用inventory的现有--output参数。
-
-- **能力依据可复用。** 读取 `comfyui-inventory` 的已有库存，核对 `source_url`、`last_updated`、`complete` 和 `errors`。来源与本次候选远端一致、完整且满足该技能的时效要求，没有已知环境变化，并覆盖本次所需节点、模型及接口定义时，直接据此核对任务，不为每张图或每段视频重复刷新。新会话也可复用满足条件的已有库存，不只凭会话记忆或旧任务成功结论。
-- **按触发条件重查。** 库存缺失、过期、不完整、服务地址变化、已知节点／模型／接口更新、依赖缺失或与工作流冲突，以及用户要求刷新时，按inventory规则刷新。工作流新增／更换依赖、扩展动态输入或切换处理阶段时，先核对变化涉及的能力；已有有效库存覆盖且一致则复用，否则只读补查相关定义，按inventory规则需要刷新库存时执行。接口、加载或类型错误使相关旧结论失效，按实际错误核对，不因普通画面初审失败全量刷新。
-- **逐任务仍须核对。** 每次读取本项目服务配置，分别核对允许选用远端上的本次API节点、模型选择、必填输入、连接与输出类型，并检查实际素材及版本、上传路径、标签顺序、参数范围、数量／尺寸／时长、输出位置、执行授权与审批依赖。依赖未变也不能跳过这份任务副本检查；返修及批次内各任务同样执行。
-- **不复用瞬时状态。** 连通性、当前队列、任务进展和可用显存不由旧库存证明；连接、监控及异常处理继续按comfyui-api和固定监控模板执行。缓存刷新失败如实报告，不把旧缓存当作实时核对成功，不自动重提任务或修改服务器。
-- **沿用已有记录。** 在现有生成／执行记录中注明使用的库存入口、核对时间及复用／补查结论，不新增缓存服务、哈希门槛、独立预检台账或工具代码。能力核对不证明权重必可加载、资源必够用或画面质量通过；输出仍按既有验收和审批规则处理。
+所有ComfyUI执行、查询与取回读取依赖表指定的 `comfyui-api`、[固定工具说明](references/comfyui-scripts/README.md)及[服务配置与任务提交规范](references/流程规范/ComfyUI-服务配置与任务提交规范.md)的对应章节。执行前的库存复用与逐任务核对由该规范维护；出现异常时使用 `comfyui-troubleshooter`，不以诊断代替修复授权。
 
 ## ComfyUI任务监控
 
@@ -251,7 +195,7 @@ agent准备最终API JSON、素材顺序、参数和保存路径；脚本只负�
 ## 项目初始化与接续
 
 - 工作区本地媒体依赖与初始化入口见[README的FFmpeg初始化与运行](../../../README.md#ffmpeg初始化与运行)；按该入口使用本机调用记录。
-- 新项目初始化按[开发流程第2节](references/流程规范/短剧开发流程规范.md#2-创建项目目录)及[会话规范第3节](references/流程规范/会话与进度管理规范.md#3-主控与阶段的接续)执行；ComfyUI配置按本文件对应章节询问、创建或复用。
+- 新项目初始化按[开发流程第2节](references/流程规范/短剧开发流程规范.md#2-创建项目目录)及[会话规范第3节](references/流程规范/会话与进度管理规范.md#3-主控与阶段的接续)执行；ComfyUI配置按[项目配置规则](references/流程规范/ComfyUI-服务配置与任务提交规范.md#项目-comfyui-配置)询问、创建或复用。
 - 旧项目按磁盘实际成果、已确认内容及实际入口接续；迁移、改名须另获授权，不重做已完成阶段、不批量补建历史空会话、不创建第二份当前进度。
 
 ## 完成标准
