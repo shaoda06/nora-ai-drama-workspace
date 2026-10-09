@@ -1,4 +1,6 @@
 .local-queue-card{background:white;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.local-queue-card[data-dragging=true]{opacity:.55;cursor:grabbing}
+.local-queue-drag-handle{flex:none;border:0;background:transparent;padding:0;color:var(--muted);font-size:18px;line-height:1;cursor:grab;user-select:none;touch-action:none}
 .local-queue-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px}
 .local-queue-card-identity{display:flex;align-items:center;gap:8px;min-width:0}
 .local-queue-card-source{flex:none;padding:2px 8px;border-radius:5px;background:#eaf3ee;color:var(--green);font-weight:600;white-space:nowrap}
@@ -7,7 +9,7 @@
 .local-queue-card-status{flex:none;white-space:nowrap;color:#976316}
 .local-queue-card-status[data-status=paused]{color:var(--muted)}
 .local-queue-card-status[data-status=completed]{color:var(--green)}
-.local-queue-card-body{display:flex;align-items:center;gap:16px;margin-top:10px}
+.local-queue-card-body{display:flex;align-items:flex-end;gap:16px;margin-top:10px}
 .local-queue-card-description{flex:1;min-width:0}
 .local-queue-card h2{font-size:15px;line-height:1.5;margin:0}
 .local-queue-card-session{font-size:11px;color:var(--muted);margin:4px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

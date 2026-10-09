@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { taskTypeLabels } from './TaskCard';
 import './LocalQueueCard.css';
 
@@ -11,10 +12,34 @@ export interface LocalQueueTask {
   source_session_name: string;
 }
 
-export function LocalQueueCard({ task }: { task: LocalQueueTask }) {
-  return <section className="local-queue-card">
+export function LocalQueueCard({ task, onReorder }: {
+  task: LocalQueueTask; onReorder?: (sourceId: string, targetId: string) => void;
+}) {
+  const [dragging, setDragging] = useState(false);
+  useEffect(() => {
+    if (!dragging || !onReorder) return;
+    const move = (event: PointerEvent) => {
+      const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('.local-queue-card');
+      if (target) onReorder(task.id, target.dataset.localTaskId!);
+    };
+    const end = () => setDragging(false);
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerup', end);
+    document.addEventListener('pointercancel', end);
+    return () => {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', end);
+      document.removeEventListener('pointercancel', end);
+    };
+  }, [dragging, onReorder, task.id]);
+  return <section className="local-queue-card" data-local-task-id={task.id} data-dragging={dragging}>
     <div className="local-queue-card-top">
       <div className="local-queue-card-identity">
+        {onReorder && <button type="button" className="local-queue-drag-handle" title="拖动卡片调整排队顺序" aria-label="拖动排序"
+          onPointerDown={event => {
+            event.preventDefault();
+            setDragging(true);
+          }}>⠿</button>}
         <span className="local-queue-card-source">本机提交</span>
         <span className="local-queue-card-project" title={task.project}>{task.project}</span>
         <span className="local-queue-card-type">{taskTypeLabels[task.task_type]}</span>
