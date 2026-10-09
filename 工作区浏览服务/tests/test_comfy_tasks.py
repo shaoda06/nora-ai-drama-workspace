@@ -117,6 +117,36 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.store.rows['task']['state']['status'], 'collection_failed')
         self.assertEqual(self.store.rows['task']['state']['collected'], 0)
 
+    async def test_start_timestamp_is_remote_event_time_and_survives_restart(self):
+        self.seed()
+        self.store.record_start('task', {'timestamp': 1791567518669})
+        expected = '2026-10-09T17:38:38.669000+00:00'
+        self.assertEqual(self.store.rows['task']['state']['started_at'], expected)
+        self.store.record_start('task', {'timestamp': 1791567618669})
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        self.assertEqual(self.store.rows['task']['state']['started_at'], expected)
+
+    async def test_history_recovers_only_matching_start_and_queue_does_not_invent_one(self):
+        self.seed()
+        with patch.object(t.client, 'status', return_value={'state': 'running', 'history': None, 'queue': {}}):
+            await self.store.reconcile('task')
+        self.assertIsNone(self.store.rows['task']['state'].get('started_at'))
+        result = {'state': 'failed', 'history': {'status': {'messages': [
+            ['execution_start', {'prompt_id': 'other-task', 'timestamp': 1}],
+            ['execution_start', {'prompt_id': 'real-id', 'timestamp': 1791567518669}]]}}, 'files': []}
+        with patch.object(t.client, 'status', return_value=result), patch.object(self.store, 'notify', AsyncMock()):
+            await self.store.reconcile('task')
+        self.assertEqual(self.store.rows['task']['state']['started_at'], '2026-10-09T17:38:38.669000+00:00')
+
+    async def test_source_session_title_uses_registered_thread_without_messaging(self):
+        self.seed()
+        result = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'title': '制作会话'}})}]}
+        with patch.object(self.store, 'desktop_call', AsyncMock(return_value=result)) as desktop:
+            await self.store.read_session_name('task')
+        desktop.assert_awaited_once_with(self.data, 'read')
+        self.assertEqual(self.store.public()['tasks'][0]['source_session_name'], '制作会话')
+
     async def test_failed_task_is_not_downloaded(self):
         self.seed()
         with patch.object(t.client, 'status', return_value={'state': 'failed', 'history': {}, 'files': []}), patch.object(t.client, 'download') as download:

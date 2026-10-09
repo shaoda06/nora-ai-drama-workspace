@@ -9,6 +9,7 @@ export interface LocalTask {
   progress: { value: number; max: number } | null;
   error: string | null; collected: number; expected: number;
   created_at: string; started_at?: string | null;
+  source_session_name?: string;
   director_progress?: { segment: number; segment_total: number; phase_label: string };
   segment_warning?: string | null;
 }
@@ -27,6 +28,11 @@ export const taskTypeLabels = { image: '图片生成', 'image-upscale': '图片�
 function clockText(seconds: number) {
   const pad = (value: number) => String(value).padStart(2, '0');
   return `${pad(Math.floor(seconds / 3600))}小时:${pad(Math.floor(seconds / 60) % 60)}分钟:${pad(seconds % 60)}秒`;
+}
+
+function localDateTime(date: Date) {
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 export function TaskCard({ task }: { task: Task }) {
@@ -59,12 +65,15 @@ export function TaskCard({ task }: { task: Task }) {
       </div>
     </> : <>
       <div className="comfy-local-title">
-        <h2>{task.title}</h2>
+        <div className="comfy-task-description">
+          <h2>{task.title}</h2>
+          <p className="comfy-task-session" title={task.source_session_name}>来源会话：{task.source_session_name || '会话名称暂不可用'}</p>
+        </div>
         <div className="comfy-task-timing">
           {queued && submitted ? <>
-            <time dateTime={task.created_at}>提交时间：{clockText(submitted.getHours() * 3600 + submitted.getMinutes() * 60 + submitted.getSeconds())}</time>
+            <time dateTime={task.created_at}>提交时间：{localDateTime(submitted)}</time>
             <span>等待时长：{clockText(Math.max(0, Math.floor((now - submitted.getTime()) / 1000)))}</span>
-          </> : <span>运行时长：{task.started_at ? clockText(Math.max(0, Math.floor((now - new Date(task.started_at).getTime()) / 1000))) : '待获取开始时间'}</span>}
+          </> : <span title={task.started_at ? undefined : '未保存该任务的执行开始事件，提交时间包含排队等待，不能作为运行开始时间'}>运行时长：{task.started_at ? clockText(Math.max(0, Math.floor((now - new Date(task.started_at).getTime()) / 1000))) : '开始时间未记录'}</span>}
         </div>
       </div>
       <details className="comfy-task-details"><summary>任务详情</summary>

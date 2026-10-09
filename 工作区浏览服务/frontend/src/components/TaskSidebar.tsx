@@ -13,7 +13,7 @@ interface RemoteNode {
 const nodeConnectionLabels = { connecting: '正在连接', connected: '已连接', reconnecting: '连接中断，正在自动重连' };
 
 export function TaskSidebar() {
-  const [open, setOpen] = useState(() => localStorage.getItem('nora-task-sidebar') === 'open');
+  const [open, setOpen] = useState(false);
   const [tasks, setTasks] = useState<(Task | LocalQueueTask)[]>([]);
   const [localCategory, setLocalCategory] = useState<LocalQueueTask['status']>('queued');
   const [nodes, setNodes] = useState<RemoteNode[]>([]);
@@ -62,7 +62,7 @@ export function TaskSidebar() {
   return <aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
       aria-label={open ? '收起任务进度' : '展开任务进度'} onClick={() => {
-        setOpen(!open); localStorage.setItem('nora-task-sidebar', open ? 'closed' : 'open');
+        setOpen(!open);
       }}><span aria-hidden="true">{open ? '‹' : '›'}</span><span className="comfy-rail-label">任务进度</span><span className="comfy-rail-count">{active}</span></button>
     <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
       <section className="comfy-queue" aria-label="远端队列">

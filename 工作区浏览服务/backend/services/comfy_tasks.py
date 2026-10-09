@@ -1,6 +1,7 @@
 """Persistent ComfyUI monitoring; browser clients only receive public snapshots."""
 import argparse
 import asyncio
+from datetime import datetime, timezone
 import importlib.util
 import json
 import logging
@@ -71,6 +72,7 @@ class TaskStore:
                      for key, payload, state in self.db.execute('SELECT id, payload, state FROM tasks')}
         self.workers = {}
         self.notifiers = {}
+        self.session_readers = {}
         self.notification_locks = {}
         self.client = client
         self.subscribers = set()
@@ -207,6 +209,7 @@ class TaskStore:
             await socket.close()
             raise
         self.save(key, prompt_id=result['prompt_id'], status='queued')
+        self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
         self.workers[key] = asyncio.create_task(self.watch(key, socket))
         return {**result, 'monitor': 'browser', 'monitor_id': key}
 
@@ -238,11 +241,13 @@ class TaskStore:
                 if state['notification'] in ('waiting', 'waiting_connection', 'waiting_idle'):
                     self.workers[key] = asyncio.create_task(self.notify(key))
             else:
+                if not state.get('source_session_name'):
+                    self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
                 self.workers[key] = asyncio.create_task(self.watch(key))
 
     async def close(self):
         await self.remote_queues.close()
-        tasks = [*self.workers.values(), *self.notifiers.values()]
+        tasks = [*self.workers.values(), *self.notifiers.values(), *self.session_readers.values()]
         for task in tasks:
             task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)
@@ -254,6 +259,11 @@ class TaskStore:
         result = await asyncio.to_thread(client.status, client.Client(data.url, data.timeout),
                                          argparse.Namespace(prompt_id=state['prompt_id']))
         remote_state = result['state']
+        if not state.get('started_at'):
+            for event, payload in (result.get('history') or {}).get('status', {}).get('messages', []):
+                if event == 'execution_start' and payload.get('prompt_id') == state['prompt_id'] and 'timestamp' in payload:
+                    self.record_start(key, payload)
+                    break
         if remote_state in ('success', 'failed'):
             history = Path(data.record_dir) / data.history_name
             if not history.exists():
@@ -372,7 +382,8 @@ class TaskStore:
                         if payload.get('prompt_id') != state['prompt_id']:
                             continue
                         if event == 'execution_start':
-                            self.save(key, status='running', started_at=state.get('started_at') or client.now())
+                            self.record_start(key, payload)
+                            self.save(key, status='running')
                             if data.segment_plan:
                                 await self.probe_segments(key, begin=True, force=True)
                         elif event == 'progress':
@@ -431,6 +442,23 @@ class TaskStore:
         else:
             runtime['failures'] = 0
             self.save(key, segment_warning=None)
+
+    def record_start(self, key, payload):
+        if not self.rows[key]['state'].get('started_at'):
+            started_at = (datetime.fromtimestamp(payload['timestamp'] / 1000, timezone.utc).isoformat()
+                          if 'timestamp' in payload else client.now())
+            self.save(key, started_at=started_at)
+
+    async def read_session_name(self, key):
+        try:
+            result = await self.desktop_call(self.rows[key]['input'], 'read')
+            response = json.loads(next(item['text'] for item in result['content'] if item['type'] == 'text'))
+            title = response['thread']['title']
+            if not isinstance(title, str) or not title.strip():
+                raise ValueError('来源会话没有有效标题')
+            self.save(key, source_session_name=title)
+        except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, StopIteration) as error:
+            logger.warning('ComfyUI task %s source session lookup failed: %s', key, error)
 
     async def desktop_call(self, data, operation, prompt=''):
         bridge = Path(__file__).resolve().parents[2] / 'scripts/codex_task_bridge.mjs'
