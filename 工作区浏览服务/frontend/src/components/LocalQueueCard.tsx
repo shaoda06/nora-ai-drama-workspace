@@ -13,8 +13,8 @@ export interface LocalQueueTask {
   source_session_name: string;
 }
 
-export function LocalQueueCard({ task, onReorder }: {
-  task: LocalQueueTask; onReorder?: (sourceId: string, targetId: string) => void;
+export function LocalQueueCard({ task, position, onReorder }: {
+  task: LocalQueueTask; position?: number; onReorder?: (sourceId: string, targetId: string) => void;
 }) {
   const cardRef = useRef<HTMLElement>(null);
   const floatingRef = useRef<HTMLElement>(null);
@@ -63,7 +63,7 @@ export function LocalQueueCard({ task, onReorder }: {
         <span className="local-queue-card-project" title={task.project}>{task.project}</span>
         <span className="local-queue-card-type">{taskTypeLabels[task.task_type]}</span>
       </div>
-      <strong className="local-queue-card-status" data-status={task.status}>{localQueueStates[task.status]}</strong>
+      <strong className="local-queue-card-status" data-status={task.status}>{localQueueStates[task.status]}{task.status === 'queued' && ` #${position}`}</strong>
     </div>
     <div className="local-queue-card-body">
       <div className="local-queue-card-description">
@@ -71,9 +71,10 @@ export function LocalQueueCard({ task, onReorder }: {
         <p className="local-queue-card-session" title={task.source_session_name}>来源会话：{task.source_session_name}</p>
       </div>
       <div className="local-queue-card-actions" aria-label="本地任务操作" title="样式预览，尚未接入实际调度">
-        <button type="button" disabled>暂停</button>
         <button type="button" disabled>立即提交</button>
         <button type="button" disabled>插队</button>
+        <button type="button" disabled>暂停</button>
+        <button type="button" disabled>取消</button>
       </div>
     </div>
   </>;

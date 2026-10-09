@@ -75,7 +75,8 @@ export function TaskSidebar() {
         </div>
         <div className="comfy-queue-body" key={localCategory}>
           {localTasks.length === 0 && <p className="comfy-empty">暂无{localQueueStates[localCategory]}任务</p>}
-          <div className="comfy-task-items">{localTasks.map(task => <LocalQueueCard key={task.id} task={task}
+          <div className="comfy-task-items">{localTasks.map((task, index) => <LocalQueueCard key={task.id} task={task}
+            position={task.status === 'queued' ? index + 1 : undefined}
             onReorder={task.status === 'queued' ? reorderLocal : undefined} />)}</div>
         </div>
       </section>
