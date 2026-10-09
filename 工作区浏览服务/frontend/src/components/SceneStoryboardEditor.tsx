@@ -5,7 +5,7 @@ import { Dialog, Rich } from '../components';
 import { CopyButton } from './CopyButton';
 import type { NoteScope } from './RevisionNotes';
 
-type Row = { key: string; kind: 'segment' | 'shot' | 'field' | 'separator' | 'text'; html: string; text: string; label?: string; editable?: boolean };
+type Row = { key: string; kind: 'segment' | 'shot' | 'field' | 'separator' | 'text'; html: string; text: string; label?: string; editable?: boolean; segmentIndex?: number };
 
 function StoryboardField({ row, value, onChange }: { row: Row; value: string; onChange: (text: string) => void }) {
   const input = useRef<HTMLSpanElement>(null);
@@ -35,11 +35,11 @@ function inlineMarkdown(node: Node): string {
 }
 
 export function SceneStoryboardEditor({ scope, segments }: { scope: NoteScope; segments: NonNullable<FileItem['segments']>[string] }) {
-  const rows = useMemo(() => segments.flatMap(segment => {
+  const rows = useMemo(() => segments.flatMap((segment, segmentIndex) => {
     const document = new DOMParser().parseFromString(segment.scriptHtml, 'text/html');
     const elements = Array.from(document.body.children);
     let shot = '';
-    return [{ key: segment.id, kind: 'segment', html: '', text: `分段 ${segment.id}` } as Row, ...elements.flatMap((element, index): Row[] => {
+    return [{ key: segment.id, kind: 'segment', html: '', text: `分段 ${segment.id}`, segmentIndex } as Row, ...elements.flatMap((element, index): Row[] => {
       if (element.tagName === 'TABLE') return [];
       if (element.tagName === 'HR') return index === elements.length - 1 ? [] : [{ key: `${segment.id}/${index}`, kind: 'separator', html: '', text: '' }];
       if (element.tagName === 'H4') {
@@ -92,7 +92,7 @@ export function SceneStoryboardEditor({ scope, segments }: { scope: NoteScope; s
     <div className="scene-revision-layout" style={{ '--revision-rows': rows.length + 1 } as CSSProperties}>
       {[false, true].map(editable => <section className="scene-revision-pane" aria-label={editable ? '修改场次分镜正文' : '当前场次分镜正文'} key={String(editable)}>
         <div className="scene-revision-heading"><strong>{editable ? '修改内容' : '原文'}</strong>{editable && <button disabled={!changed} onClick={exportStoryboard}>导出分镜</button>}</div>
-        {rows.map(row => <div className={`scene-revision-row scene-revision-${row.kind}${row.editable ? ' scene-revision-editable' : ''}`} key={row.key}>
+        {rows.map(row => <div className={`scene-revision-row scene-revision-${row.kind}${row.editable ? ' scene-revision-editable' : ''}`} key={row.key} style={row.kind === 'segment' ? { '--segment-index': row.segmentIndex } as CSSProperties : undefined}>
           {row.kind === 'segment' ? <h3>{row.text}</h3> : row.kind === 'separator' ? <hr /> : editable && row.editable ? <StoryboardField row={row} value={draft[row.key] ?? row.text} onChange={text => edit(row, text)} /> : <Rich html={row.html} />}
         </div>)}
       </section>)}
