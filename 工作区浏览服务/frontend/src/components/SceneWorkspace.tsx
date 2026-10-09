@@ -80,10 +80,9 @@ export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope
         {storyboard.data && <Document value={storyboard.data} />}
       </>}
     </div> : view === 'dialogue' ? <div className="scene-revision-layout">
-      <section className="scene-revision-pane" aria-label="当前场次分镜正文">
+      {['当前场次分镜正文', '对照场次分镜正文'].map(label => <section className="scene-revision-pane" aria-label={label} key={label}>
         {segments.map(item => <div className="scene-revision-segment" key={item.id}><h3>分段 {item.id}</h3><Rich html={item.scriptHtml} /></div>)}
-      </section>
-      <section className="scene-revision-pane" aria-label="分镜修改预留区域" />
+      </section>)}
     </div> : null}
   </div></>;
 }

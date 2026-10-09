@@ -91,8 +91,7 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 
 .cover.character-cover-image{background:white}
 
-.scene-revision-layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:20px}.scene-revision-pane{min-width:0;min-height:420px;max-height:70vh;overflow-y:auto;border:1px solid var(--line);border-radius:8px;padding:20px}.scene-revision-segment+ .scene-revision-segment{margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}.scene-revision-segment>h3{margin:0 0 16px;color:var(--green)}.scene-revision-segment .prose>h4:first-child{margin-top:0}@media(max-width:700px){.scene-revision-layout{grid-template-columns:minmax(0,1fr);gap:20px}}
-.scene-revision-pane:first-child{max-height:none;overflow:visible}
+.scene-revision-layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:20px}.scene-revision-pane{min-width:0;min-height:420px;border:1px solid var(--line);border-radius:8px;padding:20px}.scene-revision-segment+ .scene-revision-segment{margin-top:24px;padding-top:20px;border-top:3px solid var(--green)}.scene-revision-segment>h3{margin:0 0 16px;color:var(--green)}.scene-revision-segment .prose>h4:first-child{margin-top:0}.scene-revision-segment .prose>hr:last-child{display:none}@media(max-width:700px){.scene-revision-layout{grid-template-columns:minmax(0,1fr);gap:20px}}
 
 .asset-media-html-field{display:flex;align-items:baseline;gap:8px;margin:4px 0}.asset-media-html-field>.field-label{flex:none;margin:0}.asset-media-html-field>.prose{flex:1;min-width:0}.asset-media-html-field>.prose p{margin:0}
 .dialog-body .prose :is(h2,h3,h4,h5,h6){scroll-margin-top:80px}
