@@ -1205,8 +1205,11 @@ def build_data(project, *, web_episode_navigation=False):
     for key, digest in sources.items():
         if hashlib.sha256((project / key).read_bytes()).hexdigest() != digest:
             raise SourceChangedError("Source changed while reading; rerun: " + key)
+    progress_name = field(progress or "", "项目名称或代号")
+    if progress_name == "未记录":
+        progress_name = field(progress or "", "项目名称")
     return {
-        "project": field(progress or "", "项目名称") if field(progress or "", "项目名称") != "未记录" else project.name,
+        "project": progress_name if progress_name != "未记录" else project.name,
         "builtAt": datetime.now().astimezone().isoformat(timespec="seconds"),
         "progressUpdated": field(progress or "", "更新时间"), "active": active,
         "directories": directories, "documents": documents, "groups": groups, "story": story, "outline": outline,

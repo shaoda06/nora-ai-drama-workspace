@@ -820,6 +820,23 @@ class ProjectParserTests(unittest.TestCase):
         self.assertEqual([n["name"] for n in film["children"]],
                          ["成片索引.md", "EP001-C001-成片说明.md", "选定", "候选", "审阅记录", "执行记录", "其他附件"])
 
+    def test_progress_uses_current_template_project_name_without_new_timestamp(self):
+        template = (Path(__file__).resolve().parents[2] / ".agents/skills/nora-ai-short-drama"
+                    / "references/模板/项目进度模板.md").read_text(encoding="utf-8")
+        self.assertIn("- 项目名称或代号：", template)
+        self.put("项目进度.md", template.replace("- 项目名称或代号：待确认", "- 项目名称或代号：模板项目"))
+        data = portal.build_data(self.root)
+        self.assertEqual(data["project"], "模板项目")
+        self.assertEqual(data["progressUpdated"], "未记录")
+
+    def test_progress_legacy_project_name_and_timestamp_remain_readable(self):
+        self.put("项目进度.md", "# 项目进度\n- 项目名称：旧项目\n- 更新时间：2026-10-03\n")
+        data = portal.build_data(self.root)
+        self.assertEqual(data["project"], "旧项目")
+        self.assertEqual(data["progressUpdated"], "2026-10-03")
+        self.put("项目进度.md", "# 项目进度\n- 项目名称：旧项目\n- 项目名称或代号：新项目\n")
+        self.assertEqual(portal.build_data(self.root)["project"], "新项目")
+
     def test_integrated_scene_storyboard_links_work_without_separate_scripts(self):
         root = "09-剧集制作/EP001"
         self.put("项目进度.md", "# 项目进度\n\n- 项目名称：测试项目\n- 更新时间：2026-10-03\n\n"
