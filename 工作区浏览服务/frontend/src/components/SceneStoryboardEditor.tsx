@@ -71,7 +71,7 @@ export function SceneStoryboardEditor({ scope, segments }: { scope: NoteScope; s
       {[false, true].map(editable => <section className="scene-revision-pane" aria-label={editable ? '修改场次分镜正文' : '当前场次分镜正文'} key={String(editable)}>
         <div className="scene-revision-heading"><strong>{editable ? '修改内容' : '原文'}</strong>{editable && <button onClick={exportStoryboard}>导出分镜</button>}</div>
         {rows.map(row => <div className={`scene-revision-row scene-revision-${row.kind}`} key={row.key}>
-          {row.kind === 'segment' ? <h3>{row.text}</h3> : row.kind === 'separator' ? <hr /> : editable && row.editable ? <label>
+          {row.kind === 'segment' ? <h3>{row.text}</h3> : row.kind === 'separator' ? <hr /> : editable && row.editable ? <label className="scene-revision-editor">
             {row.label && <strong>{row.label}：</strong>}
             <textarea aria-label={`${row.key.split('/').slice(0, 2).join(' ')} ${row.label || '正文'}`} value={draft[row.key] ?? row.text} onChange={event => edit(row, event.target.value)} />
           </label> : <Rich html={row.html} />}
