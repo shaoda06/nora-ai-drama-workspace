@@ -67,14 +67,15 @@ export function TaskCard({ task }: { task: Task }) {
         </div>
       </div>
       <details className="comfy-task-details"><summary>任务详情</summary>
-      {task.node && <p>当前阶段：{task.node}</p>}
-      {task.director_progress && <p>本轮第 {task.director_progress.segment} / {task.director_progress.segment_total} 段
-        · {task.director_progress.phase_label}</p>}
+      {task.node && <p>当前节点：{task.node}</p>}
       {task.progress && task.progress.max > 0 && <div className="comfy-progress">
-        <div className="comfy-progress-label"><span>当前阶段采样</span><strong>{task.progress.value} / {task.progress.max} 步</strong></div>
-        <progress aria-label="当前节点步数" value={task.progress.value} max={task.progress.max} />
+        <div className="comfy-progress-label"><span>当前节点进度</span><strong>{task.progress.value} / {task.progress.max}</strong></div>
+        <progress aria-label="当前节点进度" value={task.progress.value} max={task.progress.max} />
       </div>}
-      {task.expected > 0 && <p className="comfy-task-collected">成果取回 <strong>{task.collected} / {task.expected}</strong></p>}
+      {task.director_progress && <div className="comfy-director-progress">
+        <span>当前分段：第 {task.director_progress.segment} / {task.director_progress.segment_total} 段</span>
+        <span>已取回：<strong>{task.collected} / {task.director_progress.segment_total} 段</strong></span>
+      </div>}
       </details>
       {task.connection === 'reconnecting' && <p className="comfy-task-warning">远端连接恢复中，进度可能滞后</p>}
       {task.error && <p className="comfy-task-warning">{task.error}</p>}
