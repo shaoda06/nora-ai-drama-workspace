@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TaskCard, type Task } from './TaskCard';
 import { LocalQueueCard, localQueueStates, type LocalQueueTask } from './LocalQueueCard';
 import './TaskSidebar.css';
@@ -34,7 +34,7 @@ export function TaskSidebar() {
   const visibleTasks = nodeTasks.filter(task => activeStates.has(task.status));
   const nodeRunning = nodeTasks.filter(task => task.status === 'running').length;
   const nodeQueued = nodeTasks.filter(task => task.status === 'queued').length;
-  function reorderLocal(sourceId: string, targetId: string) {
+  const reorderLocal = useCallback((sourceId: string, targetId: string) => {
     setTasks(current => {
       const sourceIndex = current.findIndex(task => task.id === sourceId && 'queue' in task && task.queue === 'local' && task.status === 'queued');
       const targetIndex = current.findIndex(task => task.id === targetId && 'queue' in task && task.queue === 'local' && task.status === 'queued');
@@ -44,7 +44,7 @@ export function TaskSidebar() {
       reordered.splice(targetIndex, 0, moved);
       return reordered;
     });
-  }
+  }, []);
   return <aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
       aria-label={open ? '收起任务进度' : '展开任务进度'} onClick={() => {

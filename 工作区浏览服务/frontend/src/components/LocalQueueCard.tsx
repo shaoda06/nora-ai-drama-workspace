@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { taskTypeLabels } from './TaskCard';
 import './LocalQueueCard.css';
 
@@ -15,31 +16,49 @@ export interface LocalQueueTask {
 export function LocalQueueCard({ task, onReorder }: {
   task: LocalQueueTask; onReorder?: (sourceId: string, targetId: string) => void;
 }) {
-  const [dragging, setDragging] = useState(false);
+  const cardRef = useRef<HTMLElement>(null);
+  const floatingRef = useRef<HTMLElement>(null);
+  const [drag, setDrag] = useState<{
+    pointerId: number; offsetX: number; offsetY: number;
+    left: number; top: number; width: number; height: number;
+  } | null>(null);
   useEffect(() => {
-    if (!dragging || !onReorder) return;
+    if (!drag || !onReorder) return;
+    let left = drag.left;
+    let top = drag.top;
+    let dropping = false;
+    let landing: Animation | undefined;
     const move = (event: PointerEvent) => {
+      if (event.pointerId !== drag.pointerId || dropping) return;
+      left = event.clientX - drag.offsetX;
+      top = event.clientY - drag.offsetY;
+      floatingRef.current!.style.transform = `translate(${left}px, ${top}px) scale(1.015)`;
       const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('.local-queue-card');
       if (target) onReorder(task.id, target.dataset.localTaskId!);
     };
-    const end = () => setDragging(false);
+    const end = (event: PointerEvent) => {
+      if (event.pointerId !== drag.pointerId || dropping) return;
+      dropping = true;
+      const destination = cardRef.current!.getBoundingClientRect();
+      landing = floatingRef.current!.animate([
+        { transform: `translate(${left}px, ${top}px) scale(1.015)` },
+        { transform: `translate(${destination.left}px, ${destination.top}px) scale(1)`, boxShadow: '0 0 0 rgba(20, 58, 48, 0)' },
+      ], { duration: 180, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' });
+      landing.onfinish = () => setDrag(null);
+    };
     document.addEventListener('pointermove', move);
     document.addEventListener('pointerup', end);
     document.addEventListener('pointercancel', end);
     return () => {
+      landing?.cancel();
       document.removeEventListener('pointermove', move);
       document.removeEventListener('pointerup', end);
       document.removeEventListener('pointercancel', end);
     };
-  }, [dragging, onReorder, task.id]);
-  return <section className="local-queue-card" data-local-task-id={task.id} data-dragging={dragging}>
+  }, [drag, onReorder, task.id]);
+  const content = <>
     <div className="local-queue-card-top">
       <div className="local-queue-card-identity">
-        {onReorder && <button type="button" className="local-queue-drag-handle" title="拖动卡片调整排队顺序" aria-label="拖动排序"
-          onPointerDown={event => {
-            event.preventDefault();
-            setDragging(true);
-          }}>⠿</button>}
         <span className="local-queue-card-source">本机提交</span>
         <span className="local-queue-card-project" title={task.project}>{task.project}</span>
         <span className="local-queue-card-type">{taskTypeLabels[task.task_type]}</span>
@@ -57,5 +76,19 @@ export function LocalQueueCard({ task, onReorder }: {
         <button type="button" disabled>插队</button>
       </div>
     </div>
-  </section>;
+  </>;
+  return <>
+    <section ref={cardRef} className="local-queue-card" data-local-task-id={task.id}
+      data-sortable={!!onReorder} data-dragging={!!drag}
+      onPointerDown={event => {
+        if (!onReorder || drag || event.button !== 0 || (event.target as HTMLElement).closest('button')) return;
+        event.preventDefault();
+        const rect = event.currentTarget.getBoundingClientRect();
+        setDrag({ pointerId: event.pointerId, offsetX: event.clientX - rect.left, offsetY: event.clientY - rect.top,
+          left: rect.left, top: rect.top, width: rect.width, height: rect.height });
+      }}>{content}</section>
+    {drag && createPortal(<section ref={floatingRef} className="local-queue-card local-queue-card-floating"
+      aria-hidden="true" style={{ width: drag.width, height: drag.height,
+        transform: `translate(${drag.left}px, ${drag.top}px) scale(1.015)` }}>{content}</section>, document.body)}
+  </>;
 }
