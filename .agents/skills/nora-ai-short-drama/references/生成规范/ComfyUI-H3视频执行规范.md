@@ -1,6 +1,6 @@
 # ComfyUI-H3视频执行规范
 
-版本：v1.54；更新日期：2026-10-08。
+版本：v1.55；更新日期：2026-10-09。
 
 本规范管理视频工作流的填写、执行与记录。制作顺序及审批读取[开发流程第二部分第7节](../流程规范/短剧开发流程规范.md#7-生成视频验收与衔接修改)；提示词正文读取[逐集内容制作规范](../流程规范/逐集内容制作规范.md)及 `h3-prompt-writing`。准备资料、实际任务和人工审核按[逐集目录规范](../流程规范/逐集目录与资产管理规范.md)保存，不把技术成功写成内容获批。
 
@@ -24,7 +24,7 @@
 
 | 阶段 | 画布 | API | API节点数 |
 | --- | --- | --- | ---: |
-| 正式一采确认与二采 | [画布](../comfyui-workflow/Minimax-H3-导演台-视频生成.workflow.json) | [API](../comfyui-workflow/Minimax-H3-导演台-视频生成.api.json) | 14 |
+| 正式一采确认与二采 | [画布](../comfyui-workflow/Minimax-H3-导演台-视频生成.workflow.json) | [API](../comfyui-workflow/Minimax-H3-导演台-视频生成.api.json) | 16 |
 | SelfLift备用 | [画布](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-SelfLift-备用.workflow.json) | [API](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-SelfLift-备用.api.json) | 13 |
 | 旧版仅一采（追溯／恢复） | [画布](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅一采.workflow.json) | [API](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅一采.api.json) | 13 |
 | 旧版独立二采（追溯／恢复） | [画布](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅二采.workflow.json) | [API](../comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅二采.api.json) | 41（26＋15可选加载器） |
@@ -44,7 +44,7 @@ python3 -B "/技能实际安装目录/nora-ai-short-drama/scripts/workflow_basel
 
 可选 `--directory "/待检查工作流目录"`，扫描指定目录及其直属 `非正式工作流/`，不扫描其他子目录。默认检查该技能的 `references/comfyui-workflow/`；直接指定非正式目录时只检查其中配对。普通任务准备无需重跑整套检查。不使用 `-O`。
 
-输出每套配对一行JSON和PASS；退出0后还须核对实际覆盖了目标。当前主目录与非正式目录各5套，共10套配对；正式一采确认与二采为14个API节点，以403报告为唯一执行输出入口，校验实际控件保存值、固定种子的画布控制值、全部启用的执行节点（含预览输出）、子图内被外部输入覆盖的控件保存值，以及公共正文、尺寸、总帧数、根时间线与编辑工作区的对应持久化内容、选择状态。工作区可以是原生序列化后的精简快照，不要求与根对象完整相等，比较范围读取[导演台状态同步规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#5-时长帧数与编辑状态同步)。保留二采的15个可选加载器检查147种合法参考数量组合。不同结构的一采与二采不以同号节点强行比较，也不据静态通过宣称两者已可衔接。
+输出每套配对一行JSON和PASS；退出0后还须核对实际覆盖了目标。当前主目录与非正式目录各5套，共10套配对；正式一采确认与二采为16个API节点，以403报告为唯一执行输出入口，校验实际控件保存值、固定种子的画布控制值、全部启用的执行节点（含预览输出）、子图内被外部输入覆盖的控件保存值，以及公共正文、尺寸、总帧数、根时间线与编辑工作区的对应持久化内容、选择状态。工作区可以是原生序列化后的精简快照，不要求与根对象完整相等，比较范围读取[导演台状态同步规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#5-时长帧数与编辑状态同步)。保留二采的15个可选加载器检查147种合法参考数量组合。不同结构的一采与二采不以同号节点强行比较，也不据静态通过宣称两者已可衔接。
 
 修改校验工具后运行：
 
@@ -67,21 +67,24 @@ python3 -B -m unittest discover -s "/技能实际安装目录/nora-ai-short-dram
 | TE | 405：0.08 / 0.1 / 0.9 / mcs=2 / device=auto / mode=8-step LoRA，启用 |
 | 编码器 | 38：qwen3vl_32b_minimax_h3_int8_convrot.safetensors，type=minimax，device=default |
 | 视频 / 音频VAE | 36：minimax_h3_video_vae_int8_convrot.safetensors；37：minimax_h3_audio_vae_fp32.safetensors |
-| 尺寸及帧率 | 502控件、timeline根字段及output统一1024×576、24fps；output为fixed尺寸模式、严格16:9、32对齐，实际约0.59MP（megapixels控件为0.6）；ref_max_size / refMaxSize=864，参考图策略max |
+| 尺寸及帧率 | 502控件、timeline根字段及output统一1024×576、24fps；output为fixed尺寸模式、严格16:9、32对齐，实际约0.59MP（megapixels控件为0.6）；ref_max_size / refMaxSize=864；各组refImageSize="1536"，限制参考图片最长边1536 |
 | 采样 | Euler，CFG=1；261为Beta12步，289按8分割；前段SIGMAS连502，一采噪声表末尾归零后实际报告9步；后段SIGMAS连407，二采4步。502的steps/scheduler显示不覆盖外部SIGMAS |
 | Shift | 502 shift_video=12，shift_audio=3 |
-| 性能控件 | clear_vram_between_segments=true，precise_segment_memory=true；clear_vram_before_refine=false，clear_vram_before_face_refine=false，cache_frames_codec=raw |
+| 性能控件 | clear_vram_between_segments=true，precise_segment_memory=true；clear_vram_before_refine=true，clear_vram_before_face_refine=false，cache_frames_codec=raw |
 | 连续设置 | continue；重绘0.1；前段末尾22帧；keep_tail=true。实际衔接选择按导演台节点使用规范第6节 |
+| 二采模型分块 | 408：MiniMaxLowVRAMAttention，head_chunks=4；409：MiniMaxChunkFeedForward，chunks=4、seq_threshold=4096；只接二采模型支路 |
 | Refine | 407：upscale / h3_latent / minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors / Euler / passes=1 / seed_mode=inherit / megapixels=1.265625 / width=1536 / height=864；跟随一采比例，目标1536×864；confirm_first_pass=true；skip_fl2v=true；时间与空间分块关闭 |
-| 导出 | 默认output.exportMode=segments；导演台逐组MP4为完整交付来源，按[导演台输出规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#731-导出方式与逐组文件)核对；不连接264/408，403报告为执行输出节点，404仅为画布说明 |
+| 导出 | 默认output.exportMode=segments；导演台逐组MP4为完整交付来源，按[导演台输出规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#731-导出方式与逐组文件)核对；403报告为执行输出节点，404仅为画布说明 |
 
-模型链为192 → 406 → 58 → 128 → 53 → 405；405同时接261和502。58接管H3主干注意力；通用节点的加入不表示叠加两次加速。`allow_compile`仅允许参与编译，不是节点总开关；`disabled`直接传递模型。407连接502.refine；没有SelfLift、FaceRefine或语义桥连接。一采实际9步加二采4步，不能把调度器显示12步登记成两轮实际总步数。
+模型链为192 → 406 → 58 → 128 → 53 → 405；405直接接261和502；二采独立支路为405 → 408 → 409 → 407.refine_model。执行端须提供上述两个分块节点及对应参数接口，不用Refine的时间／空间分块开关替代模型分块。58接管H3主干注意力；通用节点的加入不表示叠加两次加速。`allow_compile`仅允许参与编译，不是节点总开关；`disabled`直接传递模型。407连接502.refine；没有SelfLift、FaceRefine或语义桥连接。一采实际9步加二采4步，不能把调度器显示12步登记成两轮实际总步数。
 
 Refine当前实现始终跟随一采比例，以 `megapixels × 1024²` 计算像素量，再将宽高对齐32；仅填写width/height不会覆盖这一计算。1024×576配合megapixels=1.265625得到1536×864，两阶段均为严格16:9。画布保存的MP数值与API一致。
 
-执行端须具备已验证的PR207兼容适配：段间清理先清空预取队列，再按阶段保留／卸载模型，并支持 `precise_segment_memory`。精确调度按模型权重大小与物理内存总量的比例选择策略，不是按当前内存占用率决定；工作流显式保存两个开启值，不依赖新节点默认值。节点缺少该接口时先报告兼容性问题，不静默删掉参数或自动覆盖插件。
+参考图片尺寸由各组 `refImageSize="1536"` 控制，保持原比例；该设置与生成画布尺寸及 `ref_max_size / refMaxSize` 分开，不通过修改后者替代。正式基准各组与output回退值均保存1536；准备、新增、复制或导入任务分组时逐组落实，并同步根时间线及对应编辑工作区。插件“新增分组”会生成自己的尺寸值，不能宣称仅修改基准JSON就改变了插件默认行为；手动画布可复制已设1536的组，新增空组则须选择1536。
 
-当前配套运行条件为保留DynamicVRAM及原 `--disable-pinned-memory`，在原启动参数上追加 `--vram-headroom 2`（额外预留2GiB）。启动参数与运行模式不属于工作流JSON，执行前核对实际服务状态；准备任务不附带重启或修改启动器的授权。现有适用性验证范围限于两段缓存二采；其他分辨率与长视频须另核对运行条件，不将该条件作为异常根因已经确认的依据。
+执行端的清理实现须在模型GC／卸载前清空动态显存预取队列，按阶段保留／卸载模型，并支持 `precise_segment_memory`。精确调度按模型权重大小与物理内存总量的比例选择策略，不是按当前内存占用率决定。节点缺少所需接口时报告兼容性问题，不静默删掉参数、覆盖插件或更改启动配置。
+
+基准更新用于后续新任务，不自动改写已有任务副本、请求或批准来源。参考图策略属于一采缓存输入；已有一采接续二采时按[制作变更时的缓存保护](ComfyUI-MiniMaxH3导演台节点使用规范.md#751-制作变更时的缓存保护)及第5节保留来源配置并核对缓存，不套用新基准导致重新一采。
 
 后处理准备与提交前按[开发流程第二部分第7节](../流程规范/短剧开发流程规范.md#7-生成视频验收与衔接修改)核对整场开始条件、指定来源及执行授权；每个后处理任务使用该P选定的二采原文件，固定输出1920×1080、30fps：节点1为target dimensions、width=1920、height=1080、quality=ULTRA；节点12为RAFT光流、target_fps=30、scene_cut_threshold=0.15、batch_size=1。source_fps连接源视频实际fps，节点16的frame_rate连接插帧返回fps，audio连接源视频原音轨；保持播放速度和音画同步，不用改变播放帧率代替插帧。取回后核对实际尺寸、帧率及来源，再交用户人工审核。插件使用已安装且接口兼容的版本，不固定或自动升级版本；缺少节点、模型或RAFT缓存权重时报告实际错误，不安装或替换方法。
 
@@ -120,7 +123,7 @@ R的分配、阶段转换及同配置补做读取[视频修订编号与执行过
 服务配置、选端与恢复地址执行[项目ComfyUI配置](../流程规范/ComfyUI-服务配置与任务提交规范.md#项目-comfyui-配置)。新任务使用统一分配入口；upload/submit/status/download继续复用[固定工具](../comfyui-scripts/README.md)与comfyui-api技能，不向远端发布基准。
 
 1. **准备**：从正式基准制作本次副本，替换全部业务占位符，保存组与EP/C/P映射、获批资料版本、完整模型正文、实际素材、种子和输出范围。冻结任务按[逐集目录规范第4节](../流程规范/逐集目录与资产管理规范.md#4-视频执行输出审核与采用)保存，05不维护运行流水。
-2. **核对**：按[执行前检查与复用](../流程规范/ComfyUI-服务配置与任务提交规范.md#执行前检查与复用)使用有效库存或补查节点定义；检查正式画布14个有效节点、实际模型及参数、素材身份和数量/时长、标签、时间线与输出位置；按[模型提示词长度规则](../流程规范/逐集内容制作规范.md#模型提示词长度)核对各分段最终正文并记录结果；按[逐集资料包交付核对](../流程规范/逐集内容制作规范.md#交付核对)检查实际输入版本与公共＋本组最终正文，保存核对结论和未解决项。不能用UI注册或上传成功证明全组合可运行。
+2. **核对**：按[执行前检查与复用](../流程规范/ComfyUI-服务配置与任务提交规范.md#执行前检查与复用)使用有效库存或补查节点定义；检查正式画布16个有效节点、实际模型及参数、素材身份和数量/时长、标签、时间线与输出位置；按[模型提示词长度规则](../流程规范/逐集内容制作规范.md#模型提示词长度)核对各分段最终正文并记录结果；按[逐集资料包交付核对](../流程规范/逐集内容制作规范.md#交付核对)检查实际输入版本与公共＋本组最终正文，保存核对结论和未解决项。不能用UI注册或上传成功证明全组合可运行。
 3. **提交**：仅在本次生成已获授权后，通过统一入口提交一次，记录实际服务地址和真实prompt_id。入口按[生成版本的资料关联](../流程规范/逐集目录与资产管理规范.md#生成版本的资料关联)在POST前自动保存当次资料及网页读取关联；准备字段及失败处理见[视频资料自动保存](../comfyui-scripts/README.md#视频资料自动保存)，不另加每轮手工关联步骤。记录目录和防重文件沿用既定规则；响应不明先查队列/history，不另换目录重提。
 4. **跟进**：使用status及[监控模板](../模板/ComfyUI-任务监控提示词模板.md)，history为空不等于完成。原生分段MP4的提前取回执行[运行中逐段取回与收尾](ComfyUI-MiniMaxH3导演台节点使用规范.md#732-运行中逐段取回与收尾)，任务仍按实际状态跟进，不因此提前进入下一阶段。失败使用comfyui-troubleshooter，不自动安装、重启、清队列或替换模型。
 
