@@ -17,6 +17,7 @@ from pydantic import BaseModel, Field
 from websockets.asyncio.client import connect
 from websockets.exceptions import WebSocketException
 from backend.services import comfy_segments as segments
+from backend.services.comfy_nodes import RemoteQueues, initial_state
 
 logger = logging.getLogger(__name__)
 SEGMENT_CHECK_INTERVAL = 30
@@ -74,8 +75,9 @@ class TaskStore:
         self.client = client
         self.subscribers = set()
         self.token = secrets.token_urlsafe(32)
+        self.remote_queues = RemoteQueues(client, self.remote_urls, self.publish)
 
-    def public(self):
+    def remote_urls(self):
         remote_urls = []
         for path in sorted((self.workspace / 'projects').glob('*/comfyui-config.json')):
             config = client.strict_json(path.read_bytes())
@@ -83,6 +85,9 @@ class TaskStore:
                 remote_url = client.Client(url, 30).url
                 if remote_url not in remote_urls:
                     remote_urls.append(remote_url)
+        return remote_urls
+
+    def public(self):
         return {'tasks': sorted(({**{key: ([{field: item.get(field) for field in ('identity', 'index', 'check', 'path', 'error')}
                                         for item in value.values()] if key == 'segments' else value) for key, value in row['state'].items()
                                  if key not in ('client_id', 'segment_monitor', 'notices')},
@@ -90,8 +95,13 @@ class TaskStore:
                                  'notification_unknown': sum(item['delivery'] == 'delivery_unknown' for item in row['state'].get('notices', []))}
                                 for row in self.rows.values()),
                                 key=lambda item: item['created_at'], reverse=True),
-                'remote_nodes': [{'url': url, 'name': '默认节点' if index == 0 else f'备用{index}'}
-                                 for index, url in enumerate(remote_urls)]}
+                'remote_nodes': [{'url': url, 'name': '默认节点' if index == 0 else f'备用{index}',
+                                  **self.remote_queues.states.get(url, initial_state())}
+                                 for index, url in enumerate(self.remote_urls())]}
+
+    def publish(self):
+        for event in self.subscribers:
+            event.set()
 
     def save(self, key, **changes):
         row = self.rows[key]
@@ -99,8 +109,7 @@ class TaskStore:
         self.db.execute('INSERT INTO tasks VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET state=excluded.state',
                         (key, row['input'].model_dump_json(), json.dumps(row['state'], ensure_ascii=False)))
         self.db.commit()
-        for event in self.subscribers:
-            event.set()
+        self.publish()
 
     def validate(self, data):
         project = Path(data.project).resolve(strict=True)
@@ -232,6 +241,7 @@ class TaskStore:
                 self.workers[key] = asyncio.create_task(self.watch(key))
 
     async def close(self):
+        await self.remote_queues.close()
         tasks = [*self.workers.values(), *self.notifiers.values()]
         for task in tasks:
             task.cancel()

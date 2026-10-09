@@ -3,9 +3,14 @@ import { TaskCard, type Task } from './TaskCard';
 import { LocalQueueCard, localQueueStates, type LocalQueueTask } from './LocalQueueCard';
 import './TaskSidebar.css';
 
-interface RemoteNode { url: string; name: string }
+interface RemoteNode {
+  url: string; name: string; connection: 'connecting' | 'connected' | 'reconnecting';
+  queue: { prompt_id: string; status: 'running' | 'queued'; queue_position: number | null }[];
+  running_count: number | null; queued_count: number | null; updated_at: string | null;
+  error: string | null; queue_error: string | null;
+}
 
-const activeStates = new Set(['submitting', 'queued', 'running', 'collecting']);
+const nodeConnectionLabels = { connecting: '正在连接', connected: '已连接', reconnecting: '连接中断，正在自动重连' };
 
 export function TaskSidebar() {
   const [open, setOpen] = useState(() => localStorage.getItem('nora-task-sidebar') === 'open');
@@ -25,15 +30,24 @@ export function TaskSidebar() {
     source.onerror = () => setConnection('reconnecting');
     return () => source.close();
   }, []);
-  const active = tasks.filter(task => activeStates.has(task.status)).length;
   const selectedNode = nodes.find(node => node.url === selectedUrl) ?? nodes[0];
   const allLocalTasks = tasks.filter((task): task is LocalQueueTask => 'queue' in task && task.queue === 'local');
   const localTasks = allLocalTasks.filter(task => task.status === localCategory);
-  const nodeTasks = tasks.filter((task): task is Task => !('queue' in task && task.queue === 'local'))
-    .filter(task => task.remote_url === selectedNode?.url);
-  const visibleTasks = nodeTasks.filter(task => activeStates.has(task.status));
-  const nodeRunning = nodeTasks.filter(task => task.status === 'running').length;
-  const nodeQueued = nodeTasks.filter(task => task.status === 'queued').length;
+  const registered = new Map(tasks.filter((task): task is Task => !('queue' in task && task.queue === 'local'))
+    .filter(task => task.source !== 'external' && task.remote_url === selectedNode?.url && task.prompt_id)
+    .map(task => [task.prompt_id, task]));
+  const visibleTasks: Task[] = (selectedNode?.queue ?? []).map(entry => {
+    const local = registered.get(entry.prompt_id);
+    return local ? { ...local, status: entry.status } : {
+      source: 'external', id: `${selectedNode.url}:${entry.prompt_id}`, remote_url: selectedNode.url, ...entry,
+    };
+  });
+  const active = nodes.reduce((count, node) => count + (node.running_count ?? 0) + (node.queued_count ?? 0), 0)
+    + allLocalTasks.filter(task => task.status === 'queued').length;
+  const nodeWarning = connection !== 'connected' ? '后台连接恢复中，远端队列数据可能滞后'
+    : selectedNode?.connection === 'reconnecting' ? selectedNode.updated_at
+      ? '远端连接中断，显示上次队列，正在自动重连' : '远端暂未连接，正在自动重连'
+    : selectedNode?.queue_error;
   const reorderLocal = useCallback((sourceId: string, targetId: string) => {
     setTasks(current => {
       const sourceIndex = current.findIndex(task => task.id === sourceId && 'queue' in task && task.queue === 'local' && task.status === 'queued');
@@ -54,15 +68,19 @@ export function TaskSidebar() {
       <section className="comfy-queue" aria-label="远端队列">
       <div className="comfy-task-heading"><strong>远端队列</strong></div>
       <div className="comfy-node-heading"><nav className="underline-tabs comfy-node-tabs" aria-label="远端节点">
-        {nodes.map((node, index) => <button key={node.url} aria-current={node.url === selectedNode?.url ? 'page' : undefined}
-          onClick={() => setSelectedUrl(node.url)}><span className="comfy-node-dot" data-preview={index === 0 ? 'connected' : 'disconnected'}
-            aria-hidden="true" title="连接状态样式示意，尚未接入监控" />{node.name}</button>)}
+        {nodes.map(node => <button key={node.url} aria-current={node.url === selectedNode?.url ? 'page' : undefined}
+          onClick={() => setSelectedUrl(node.url)} title={connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复'}>
+          <span className="comfy-node-dot" data-connection={connection === 'connected' ? node.connection : 'connecting'}
+            aria-hidden="true" />{node.name}</button>)}
       </nav>
       <div className="comfy-node-counts" aria-label="当前节点任务数量">
-        <span>进行中 <strong>{nodeRunning}</strong></span><span>队列中 <strong>{nodeQueued}</strong></span>
+        <span>进行中 <strong>{selectedNode?.running_count ?? '—'}</strong></span><span>队列中 <strong>{selectedNode?.queued_count ?? '—'}</strong></span>
       </div></div>
       <div className="comfy-queue-body" key={selectedNode?.url}>
-      {visibleTasks.length === 0 && <p className="comfy-empty">{connection === 'connected' ? '该节点暂无已登记任务' : '等待任务状态…'}</p>}
+      {nodeWarning && <p className="comfy-task-warning" role="status">{nodeWarning}</p>}
+      {visibleTasks.length === 0 && <p className="comfy-empty">{!selectedNode ? '暂无配置的远端节点'
+        : !selectedNode.updated_at ? selectedNode.connection === 'reconnecting' ? '尚未获取到远端队列' : '正在读取远端队列…'
+        : '该节点暂无队列任务'}</p>}
       <div className="comfy-task-items">{visibleTasks.map(task => <TaskCard key={task.id} task={task} />)}</div>
       </div>
       </section>

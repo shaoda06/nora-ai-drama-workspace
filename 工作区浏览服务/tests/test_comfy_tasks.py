@@ -216,15 +216,21 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.seed()
         self.store.save('task', node='H3')
         snapshot = self.store.public()
-        self.assertEqual(snapshot['remote_nodes'], [
+        self.assertEqual([{'url': node['url'], 'name': node['name']} for node in snapshot['remote_nodes']], [
             {'url': url, 'name': name} for url, name in zip(urls, ['默认节点', '备用1', '备用2', '备用3'])])
+        self.assertTrue(all(node['running_count'] is None and node['updated_at'] is None
+                            for node in snapshot['remote_nodes']))
         self.assertEqual(snapshot['tasks'][0]['remote_url'], urls[1])
         self.assertEqual(snapshot['tasks'][0]['node'], 'H3')
 
     async def test_public_nodes_include_idle_legacy_config(self):
         (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-url': self.data.url + '/'}))
-        self.assertEqual(self.store.public(), {'tasks': [], 'remote_nodes': [
-            {'url': self.data.url, 'name': '默认节点'}]})
+        snapshot = self.store.public()
+        self.assertEqual(snapshot['tasks'], [])
+        self.assertEqual(snapshot['remote_nodes'][0], {
+            'url': self.data.url, 'name': '默认节点', 'connection': 'connecting',
+            'queue': [], 'running_count': None, 'queued_count': None,
+            'updated_at': None, 'error': None, 'queue_error': None})
 
     async def test_foreign_events_are_ignored_and_terminal_event_wakes_once(self):
         self.seed()

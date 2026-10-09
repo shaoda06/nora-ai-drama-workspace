@@ -39,6 +39,7 @@ async def lifespan(app):
     (TOOL / 'runtime/task-service.json').write_text(
         json.dumps({'url': f'http://127.0.0.1:{port}', 'token': tasks.token}), encoding='utf-8')
     await tasks.start()
+    await tasks.remote_queues.start()
     try:
         yield
     finally:

@@ -4,6 +4,7 @@ import './TaskCard.css';
 export interface LocalTask {
   source?: 'local';
   id: string; project: string; title: string; task_type: keyof typeof taskTypeLabels;
+  prompt_id: string | null;
   status: string; connection: string; node: string | null; remote_url: string;
   progress: { value: number; max: number } | null;
   error: string | null; collected: number; expected: number;
