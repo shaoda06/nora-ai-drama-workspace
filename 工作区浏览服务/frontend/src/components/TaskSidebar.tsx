@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TaskCard, type Task } from './TaskCard';
+import { LocalQueueCard, localQueueStates, type LocalQueueTask } from './LocalQueueCard';
 import './TaskSidebar.css';
 
 interface RemoteNode { url: string; name: string }
@@ -8,7 +9,8 @@ const activeStates = new Set(['submitting', 'queued', 'running', 'collecting']);
 
 export function TaskSidebar() {
   const [open, setOpen] = useState(() => localStorage.getItem('nora-task-sidebar') === 'open');
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<(Task | LocalQueueTask)[]>([]);
+  const [localCategory, setLocalCategory] = useState<LocalQueueTask['status']>('queued');
   const [nodes, setNodes] = useState<RemoteNode[]>([]);
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const [connection, setConnection] = useState<'loading' | 'connected' | 'reconnecting'>('loading');
@@ -25,8 +27,10 @@ export function TaskSidebar() {
   }, []);
   const active = tasks.filter(task => activeStates.has(task.status)).length;
   const selectedNode = nodes.find(node => node.url === selectedUrl) ?? nodes[0];
-  const localTasks = tasks.filter(task => task.source !== 'external' && task.queue === 'local' && task.status === 'queued');
-  const nodeTasks = tasks.filter(task => task.remote_url === selectedNode?.url && (task.source === 'external' || task.queue !== 'local'));
+  const localTasks = tasks.filter((task): task is LocalQueueTask => 'queue' in task && task.queue === 'local')
+    .filter(task => task.status === localCategory);
+  const nodeTasks = tasks.filter((task): task is Task => !('queue' in task && task.queue === 'local'))
+    .filter(task => task.remote_url === selectedNode?.url);
   const visibleTasks = nodeTasks.filter(task => activeStates.has(task.status));
   return <aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
@@ -47,9 +51,15 @@ export function TaskSidebar() {
       </div>
       </section>
       <section className="comfy-queue" aria-label="本地队列">
-        <div className="comfy-task-heading"><strong>本地队列</strong></div>
-        <div className="comfy-queue-body">
-          <div className="comfy-task-items">{localTasks.map(task => <TaskCard key={task.id} task={task} />)}</div>
+        <div className="comfy-task-heading comfy-local-heading"><strong>本地队列</strong>
+          <nav className="underline-tabs comfy-local-tabs" aria-label="本地任务分类">
+            {(Object.keys(localQueueStates) as LocalQueueTask['status'][]).map(status => <button key={status}
+              aria-current={localCategory === status ? 'page' : undefined} onClick={() => setLocalCategory(status)}>{localQueueStates[status]}</button>)}
+          </nav>
+        </div>
+        <div className="comfy-queue-body" key={localCategory}>
+          {localTasks.length === 0 && <p className="comfy-empty">暂无{localQueueStates[localCategory]}任务</p>}
+          <div className="comfy-task-items">{localTasks.map(task => <LocalQueueCard key={task.id} task={task} />)}</div>
         </div>
       </section>
     </div>

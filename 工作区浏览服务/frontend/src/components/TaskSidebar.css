@@ -13,6 +13,8 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-queue+.comfy-queue{border-top:2px solid var(--line)}
 .comfy-queue-body{flex:1;min-height:0;overflow-y:auto}
 .comfy-task-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:18px;font-size:16px}
+.comfy-local-heading{justify-content:flex-start;flex-wrap:wrap;gap:6px 18px}
+.comfy-local-tabs{gap:18px;font-size:13px;white-space:nowrap}
 .comfy-node-tabs{flex:none;overflow-x:auto;white-space:nowrap;margin-bottom:14px}
 .comfy-node-tabs>button{flex:none;display:inline-flex;align-items:center;gap:6px}
 .comfy-node-dot{width:8px;height:8px;flex:none;border-radius:50%;background:#49a879}

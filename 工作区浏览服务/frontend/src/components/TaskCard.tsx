@@ -3,8 +3,7 @@ import './TaskCard.css';
 
 export interface LocalTask {
   source?: 'local';
-  queue?: 'local' | 'remote';
-  id: string; project: string; title: string; task_type: keyof typeof stages;
+  id: string; project: string; title: string; task_type: keyof typeof taskTypeLabels;
   status: string; connection: string; node: string | null; remote_url: string;
   progress: { value: number; max: number } | null;
   error: string | null; collected: number; expected: number;
@@ -21,7 +20,7 @@ export interface ExternalTask {
 
 export type Task = LocalTask | ExternalTask;
 
-const stages = { image: '图片生成', 'image-upscale': '图片超分',
+export const taskTypeLabels = { image: '图片生成', 'image-upscale': '图片超分',
   'video-first-pass': '视频一采', 'video-second-pass': '视频二采', 'video-postprocess': '视频后处理' } as const;
 
 function clockText(seconds: number) {
@@ -31,7 +30,6 @@ function clockText(seconds: number) {
 
 export function TaskCard({ task }: { task: Task }) {
   const external = task.source === 'external';
-  const localQueue = task.source !== 'external' && task.queue === 'local';
   const queued = task.status === 'queued' || task.status === 'submitting';
   const [now, setNow] = useState(Date.now);
   useEffect(() => {
@@ -46,7 +44,7 @@ export function TaskCard({ task }: { task: Task }) {
         <span className="comfy-task-source">{external ? '其他设备提交' : '本机提交'}</span>
         {task.source !== 'external' && <>
           <span className="comfy-task-project" title={task.project}>{task.project}</span>
-          <span className="comfy-task-type">{stages[task.task_type]}</span>
+          <span className="comfy-task-type">{taskTypeLabels[task.task_type]}</span>
         </>}
       </div>
       <strong className="comfy-task-status" data-status={queued ? 'queued' : 'running'}>
@@ -63,12 +61,12 @@ export function TaskCard({ task }: { task: Task }) {
         <h2>{task.title}</h2>
         <div className="comfy-task-timing">
           {queued && submitted ? <>
-            <time dateTime={task.created_at}>{localQueue ? '入队时间' : '提交时间'}：{clockText(submitted.getHours() * 3600 + submitted.getMinutes() * 60 + submitted.getSeconds())}</time>
+            <time dateTime={task.created_at}>提交时间：{clockText(submitted.getHours() * 3600 + submitted.getMinutes() * 60 + submitted.getSeconds())}</time>
             <span>等待时长：{clockText(Math.max(0, Math.floor((now - submitted.getTime()) / 1000)))}</span>
           </> : <span>运行时长：{task.started_at ? clockText(Math.max(0, Math.floor((now - new Date(task.started_at).getTime()) / 1000))) : '待获取开始时间'}</span>}
         </div>
       </div>
-      {!localQueue && <details className="comfy-task-details"><summary>任务详情</summary>
+      <details className="comfy-task-details"><summary>任务详情</summary>
       {task.node && <p>当前节点：{task.node}</p>}
       {task.progress && task.progress.max > 0 && <div className="comfy-progress">
         <div className="comfy-progress-label"><span>当前节点进度</span><strong>{task.progress.value} / {task.progress.max}</strong></div>
@@ -78,7 +76,7 @@ export function TaskCard({ task }: { task: Task }) {
         <span>当前分段：第 {task.director_progress.segment} / {task.director_progress.segment_total} 段</span>
         <span>已取回：<strong>{task.collected} / {task.director_progress.segment_total} 段</strong></span>
       </div>}
-      </details>}
+      </details>
       {task.connection === 'reconnecting' && <p className="comfy-task-warning">远端连接恢复中，进度可能滞后</p>}
       {task.error && <p className="comfy-task-warning">{task.error}</p>}
       {task.segment_warning && <p className="comfy-task-warning">{task.segment_warning}</p>}
