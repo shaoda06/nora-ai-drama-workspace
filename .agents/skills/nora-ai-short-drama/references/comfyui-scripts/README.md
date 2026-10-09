@@ -161,7 +161,7 @@ python3 /实际技能目录/scripts/comfyui_dispatch.py \
 | `--output-plan` | browser模式必填，JSON数组，结构见下方；文件放在该任务既定执行附件内 |
 | `--segment-plan` | 原生H3分段导出的browser任务必填；JSON对象绑定director_node、report_node、output_root，组序及本地目标从既有输入映射读取 |
 | `--history-name` | 终态完整响应的单个文件名，默认执行结果.json；图片任务传入规定的任务前缀，不能与其他附件名重复 |
-| `--task-title` | 全局进度栏显示的任务名称，默认采用record-dir目录名；建议填写对象、阶段和生成序号 |
+| `--task-title` | 全局进度栏显示的任务名称；Agent按[任务显示标题规则](../流程规范/ComfyUI-服务配置与任务提交规范.md#任务显示标题)显式填写。工具未填写时默认采用record-dir目录名 |
 | `--thread-id` | 已获准通知的目标会话ID，默认真实CODEX_THREAD_ID；指定其他会话须有用户授权，不覆盖模型／思考等级 |
 
 ### 浏览服务监控接入
