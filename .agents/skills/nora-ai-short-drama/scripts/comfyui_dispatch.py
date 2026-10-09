@@ -89,6 +89,12 @@ def dispatch(args):
         raise ValueError('浏览服务监控需要--output-plan；无可自动取回输出时显式提供空数组JSON')
     workflow = client.strict_json(Path(args.workflow).read_bytes())
     client.validate_workflow(workflow)
+    if args.segment_plan and args.monitor != 'browser':
+        raise ValueError('--segment-plan由浏览服务统一处理，不用于legacy模式')
+    if args.monitor == 'browser' and any(node['class_type'] == 'MiniMaxH3Director'
+            and client.strict_json(node['inputs']['timeline_data']).get('output', {}).get('exportMode') == 'segments'
+            for node in workflow.values()) and not args.segment_plan:
+        raise ValueError('原生H3分段任务需要--segment-plan；由浏览服务逐段取回，不另开旧监控')
     if (any(node['class_type'] in VIDEO_GENERATION_NODES for node in workflow.values()) and
             args.task_type not in VIDEO_TASK_TYPES):
         raise client.ClientError('invalid_task_type', 'H3 generation requires a first-pass or second-pass task type')
@@ -193,7 +199,8 @@ def parser():
     p.add_argument('--response-name', default='response.json', help='Actual submission response filename')
     p.add_argument('--timeout', type=float, default=30, help='Seconds per network operation, not task duration; no retries')
     p.add_argument('--monitor', choices=('browser', 'legacy'), default='browser', help='browser: hand off submit/monitor/download to running workspace service (default); legacy: explicit original polling/heartbeat path')
-    p.add_argument('--output-plan', help='JSON array of explicit output selectors and absolute local targets; required for browser mode, [] delegates collection to the original thread')
+    p.add_argument('--output-plan', help='JSON array of explicit output selectors and absolute local targets; required for browser mode; H3 segments use [] plus --segment-plan')
+    p.add_argument('--segment-plan', help='Native H3 segments JSON with director_node, report_node and verified output_root; per-segment targets come from 输入映射.json')
     p.add_argument('--history-name', default='执行结果.json', help='Terminal history evidence filename inside record-dir; use the project-required prefix for image tasks')
     p.add_argument('--task-title', help='Human-readable title shown in the global read-only task sidebar; defaults to record directory name')
     p.add_argument('--thread-id', help='Authorized destination Codex thread; defaults to genuine CODEX_THREAD_ID; never changes model settings')

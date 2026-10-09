@@ -158,6 +158,7 @@ python3 /实际技能目录/scripts/comfyui_dispatch.py \
 | `--timeout` | 每次网络操作超时秒数，默认30；不是生成或排队时限 |
 | `--monitor` | 默认browser：由已启动的工作区浏览服务提交与监控；legacy：明确使用原有会话轮询／heartbeat，不静默切换 |
 | `--output-plan` | browser模式必填，JSON数组，结构见下方；文件放在该任务既定执行附件内 |
+| `--segment-plan` | 原生H3分段导出的browser任务必填；JSON对象绑定director_node、report_node、output_root，组序及本地目标从既有输入映射读取 |
 | `--history-name` | 终态完整响应的单个文件名，默认执行结果.json；图片任务传入规定的任务前缀，不能与其他附件名重复 |
 | `--task-title` | 全局进度栏显示的任务名称，默认采用record-dir目录名；建议填写对象、阶段和生成序号 |
 | `--thread-id` | 已获准通知的目标会话ID，默认真实CODEX_THREAD_ID；指定其他会话须有用户授权，不覆盖模型／思考等级 |
@@ -180,7 +181,25 @@ python3 /实际技能目录/scripts/comfyui_dispatch.py \
 ]
 ```
 
-node_id、output_key及从0开始的index明确选择该任务history输出；path为项目内尚不存在的绝对文件路径，按专项规则命名，不能写入执行附件；response_name为该任务执行附件内单个下载证据文件名，必须与请求及其他附件名不同。后台不自行挑选输出、不改名、不覆盖已有文件、不写审批记录。无法确定标准history输出或需要原生导演台专项取回时，文件内容显式为`[]`，后台终态后通知原会话核对和取回；不以空映射冒充已取回。需要原生导演台运行中逐段取回时，显式选择legacy模式，按监控规范执行，不使用终态通知代替该要求。
+node_id、output_key及从0开始的index明确选择该任务history输出；path为项目内尚不存在的绝对文件路径，按专项规则命名，不能写入执行附件；response_name为该任务执行附件内单个下载证据文件名，必须与请求及其他附件名不同。后台不自行挑选输出、不改名、不覆盖已有文件、不写审批记录。其他无法确定标准history输出的任务可显式为`[]`，后台终态后通知原会话核对取回；不以空映射冒充已取回。原生H3分段导出使用`[]`并同时登记下方segment-plan；后台拒绝缺少分段计划的原生分段任务，不静默转用旧监控。
+
+原生H3分段导出的`--segment-plan`文件放在本轮既定执行附件，内容如下；节点ID及output根目录必须依据实际任务和远端配置核实，不照抄示例：
+
+```json
+{
+  "director_node": "502",
+  "report_node": "403",
+  "output_root": "E:/实际ComfyUI目录/output"
+}
+```
+
+report_node必须实际连接该导演台report输出（槽位5）。后台复用已有`输入映射.json`中的selected_indices及segments，保留原始零起始组序，读取segment、round、local_execution_dir；不压缩未选组。首次取回落各P执行附件，沿用真实远端文件名，下载凭据为`取回响应-001.json`起递增；完整文件发布到现有候选目录及固定EP/C/P/R/阶段文件名。下载SHA256沿用通信客户端的已有凭据。后续核对副本采用`收尾取回-002.mp4`等未占用名称，相同内容不重复发布，改写文件留在执行附件等待原会话按目录规范处理批准与替换。只保存本轮必要保存日志条目，不保存整份远端日志。
+
+```powershell
+python /实际技能目录/scripts/comfyui_dispatch.py --project /实际项目目录 --task-type video-first-pass --workflow /实际附件目录/工作流.api.json --eligible-url http://实际服务器:8188 --record-dir /实际附件目录 --output-plan /实际附件目录/空输出映射.json --segment-plan /实际附件目录/分段取回映射.json
+```
+
+空输出映射文件内容为`[]`。segment-plan只用于browser模式；后台支持原生segments导出，一采读取`_pre.mp4`，二采读取本轮正式MP4，不收取缓存、预览、一采对照或精修中间轮次。运行中只认绑定本轮目录的真实保存事件；无法绑定时留在同一后台等待最终报告。首次接入先核对远端`/internal/logs/raw`提供entries数组及t／m字段；接口不可用在POST前失败，不产生已提交任务。WS进度、补查频率、通知及断线处理统一执行[监控规范](../流程规范/ComfyUI-任务监控规范.md#1-监控方式与间隔)。
 
 后台先连接WebSocket，再用同一个client_id提交。成功标准仍是dispatch_state=accepted及真实prompt_id；额外返回monitor=browser、monitor_id。服务不可达、参数错误或缺少Codex上下文时命令失败；已发生POST但结果不明时核对原提交证据及全局状态，不自动重试、换目录或降级重提。成功返回后后台负责监听；不要再为同一任务安排轮询或heartbeat。关闭网页不会停后台，重启后按原ID核对，通知状态及异常处理遵循[任务监控规范](../流程规范/ComfyUI-任务监控规范.md#1-监控方式与间隔)。
 

@@ -26,6 +26,7 @@ def submit(args, workflow, url):
     payload.update(project=str(project), record_dir=str(Path(args.record_dir).resolve()),
         workflow=workflow, url=url, title=args.task_title or Path(args.record_dir).name,
         outputs=json.loads(Path(args.output_plan).read_text('utf-8')),
+        segment_plan=json.loads(Path(args.segment_plan).read_text('utf-8')) if args.segment_plan else None,
         thread_id=args.thread_id or caller,
         desktop={'node': node, 'server': str(max(servers, key=lambda path: path.stat().st_mtime)),
                  'pipe': pipe, 'caller_thread': caller})

@@ -70,7 +70,7 @@ class DispatchTests(unittest.TestCase):
         result = argparse.Namespace(project=str(self.root), workflow=str(self.path), task_type='image',
             record_dir=str(self.root / name), eligible_url=[A, B, C], target_url=None, uploads=None, timeout=30,
             attempt_name='submit-attempt.json', request_name='request.json', response_name='response.json',
-            monitor='legacy', output_plan=None, task_title=None, thread_id=None, history_name='执行结果.json')
+            monitor='legacy', output_plan=None, segment_plan=None, task_title=None, thread_id=None, history_name='执行结果.json')
         for key, value in overrides.items():
             setattr(result, key, value)
         return result
@@ -86,6 +86,14 @@ class DispatchTests(unittest.TestCase):
     def test_browser_mode_requires_explicit_output_plan_before_remote_access(self):
         with self.assertRaises(ValueError):
             d.dispatch(self.args(monitor='browser'))
+        self.assertEqual(self.calls, [])
+
+    def test_native_browser_mode_requires_segment_registration_before_network(self):
+        self.workflow = {'502': {'class_type': 'MiniMaxH3Director', 'inputs': {
+            'timeline_data': json.dumps({'output': {'exportMode': 'segments'}})}}}
+        self.path.write_text(json.dumps(self.workflow))
+        with self.assertRaisesRegex(ValueError, 'segment-plan'):
+            d.dispatch(self.args(monitor='browser', output_plan='empty.json', task_type='video-first-pass'))
         self.assertEqual(self.calls, [])
 
     def test_running_and_one_pending_still_use_default(self):

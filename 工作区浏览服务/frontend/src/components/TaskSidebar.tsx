@@ -6,6 +6,10 @@ interface Task {
   status: string; connection: string; node: string | null;
   progress: { value: number; max: number } | null;
   error: string | null; notification: string; collected: number; expected: number; updated_at: string;
+  director_progress?: { segment: number; segment_total: number; timeline_segment: number; phase_label: string };
+  segment_warning?: string | null;
+  notification_unknown?: number;
+  segments?: { identity: string; index: number; check: string; error: string | null }[];
 }
 
 const states: Record<string, string> = {
@@ -46,14 +50,22 @@ export function TaskSidebar() {
       <div className="comfy-task-items">{tasks.map(task => <section className="comfy-task" key={task.id}>
         <div className="comfy-task-top"><span>{task.project}</span><strong data-status={task.status}>{states[task.status] || task.status}</strong></div>
         <h2>{task.title}</h2><p>{stages[task.task_type] || task.task_type}{task.node ? ` · 当前节点 ${task.node}` : ''}</p>
+        {task.director_progress && <p>本轮第 {task.director_progress.segment} / {task.director_progress.segment_total} 段
+          · 原组序 {task.director_progress.timeline_segment} · {task.director_progress.phase_label}</p>}
         {task.progress && task.progress.max > 0 && <div className="comfy-progress">
           <progress aria-label="当前节点步数" value={task.progress.value} max={task.progress.max} />
           <span>当前节点：{task.progress.value} / {task.progress.max} 步</span>
         </div>}
         {task.connection === 'reconnecting' && <p className="comfy-task-warning">远端连接恢复中，进度可能滞后</p>}
         {task.error && <p className="comfy-task-warning">{task.error}</p>}
+        {task.segment_warning && <p className="comfy-task-warning">{task.segment_warning}</p>}
         {task.expected > 0 && <p>成果取回：{task.collected} / {task.expected}</p>}
+        {task.segments && <ul className="comfy-segments">{task.segments.map(segment => <li key={segment.identity}>
+          <strong>{segment.identity}</strong><span>{segment.check}</span>
+          {segment.error && <span className="comfy-task-warning">{segment.error}</span>}
+        </li>)}</ul>}
         <p className="comfy-notification">{notifications[task.notification] || task.notification}</p>
+        {!!task.notification_unknown && <p className="comfy-task-warning">另有 {task.notification_unknown} 条事件送达未确认，请在原会话核对</p>}
         <time dateTime={task.updated_at}>更新于 {new Date(task.updated_at).toLocaleString('zh-CN')}</time>
       </section>)}</div>
     </div>

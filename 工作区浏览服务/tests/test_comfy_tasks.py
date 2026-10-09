@@ -142,6 +142,53 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual([call.args[1] for call in bridge.await_args_list], ['read', 'read', 'send'])
         self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
 
+    async def test_busy_thread_coalesces_segments_replacement_and_terminal_in_one_message(self):
+        self.seed('running')
+        reads = 0
+        async def bridge(data, operation, prompt=''):
+            nonlocal reads
+            if operation == 'read':
+                reads += 1
+                if reads == 1:
+                    self.store.queue_notice('task', 'segment:P002:1', 'segment', 'P002已取回')
+                    self.store.queue_notice('task', 'replacement:P001:2', 'replacement', 'P001改写待核对')
+                    self.store.save('task', status='completed')
+                    self.store.queue_notice('task', 'terminal', 'terminal', '整轮结束')
+                return {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'active' if reads == 1 else 'idle'}}})}]}
+            for text in ('P001已取回', 'P002已取回', 'P001改写待核对', '整轮结束'):
+                self.assertIn(text, prompt)
+            return {'isError': False}
+        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=bridge)) as call, patch.object(t.asyncio, 'sleep', AsyncMock()):
+            self.store.queue_notice('task', 'segment:P001:1', 'segment', 'P001已取回')
+            await self.store.notifiers['task']
+            self.store.queue_notice('task', 'terminal', 'terminal', '整轮结束')
+            self.assertEqual(sum(item.args[1] == 'send' for item in call.await_args_list), 1)
+        self.assertTrue(all(item['delivery'] == 'sent' for item in self.store.rows['task']['state']['notices']))
+
+    async def test_multiple_delivery_batches_and_uncertain_event_are_not_resent_after_restart(self):
+        self.seed('running')
+        idle = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'idle'}}})}]}
+        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[idle, OSError('lost reply'), idle, {}])) as call, patch.object(t.asyncio, 'sleep', AsyncMock()):
+            self.store.queue_notice('task', 'segment:P001:1', 'segment', 'P001已取回')
+            await self.store.notifiers['task']
+            self.store.queue_notice('task', 'segment:P002:1', 'segment', 'P002已取回')
+            await self.store.notifiers['task']
+            self.assertEqual(sum(item.args[1] == 'send' for item in call.await_args_list), 2)
+            self.assertNotIn('P001已取回', call.await_args_list[-1].args[2])
+            self.assertEqual(self.store.public()['tasks'][0]['notification_unknown'], 1)
+        self.store.save('task', status='completed')
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        with patch.object(self.store, 'desktop_call', AsyncMock()) as call:
+            await self.store.start()
+            await asyncio.sleep(0)
+            call.assert_not_awaited()
+
+    async def test_progress_and_short_disconnect_do_not_enqueue_attention(self):
+        self.seed('running')
+        self.store.save('task', progress={'value': 1, 'max': 9}, connection='reconnecting')
+        self.assertNotIn('notices', self.store.rows['task']['state'])
+
     async def test_paths_and_remote_endpoint_are_checked(self):
         self.data.outputs[0].path = str(self.root / 'escape.png')
         with self.assertRaises(ValueError):
