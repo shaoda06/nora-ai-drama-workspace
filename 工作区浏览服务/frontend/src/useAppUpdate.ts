@@ -9,7 +9,7 @@ export const APP_VERSION = __APP_VERSION__;
 interface Service { version: string; ready: boolean; environment: string }
 
 function canRefresh() {
-  const editing = document.activeElement?.matches('input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, [contenteditable="true"]');
+  const editing = document.activeElement?.matches('input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, [contenteditable="true"], [contenteditable="plaintext-only"]');
   const playing = [...document.querySelectorAll<HTMLMediaElement>('video, audio')].some(media => !media.paused && !media.ended);
   return !editing && !playing && !document.querySelector('dialog[open]') && !hasUnsavedNotes();
 }

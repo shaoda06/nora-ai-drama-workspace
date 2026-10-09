@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { FileItem } from '../api';
 import { Dialog, Rich } from '../components';
@@ -6,6 +6,21 @@ import { CopyButton } from './CopyButton';
 import type { NoteScope } from './RevisionNotes';
 
 type Row = { key: string; kind: 'segment' | 'shot' | 'field' | 'separator' | 'text'; html: string; text: string; label?: string; editable?: boolean };
+
+function StoryboardField({ row, value, onChange }: { row: Row; value: string; onChange: (text: string) => void }) {
+  const input = useRef<HTMLSpanElement>(null);
+  const name = `${row.key.split('/').slice(0, 2).join(' ')} ${row.label || '正文'}`;
+  useLayoutEffect(() => {
+    if (input.current!.innerText !== value) input.current!.textContent = value;
+  }, [value]);
+  return <div className="scene-revision-editor" onClick={event => {
+    if (event.target === event.currentTarget || (event.target as HTMLElement).tagName === 'STRONG') input.current!.focus();
+  }}>
+    {value !== row.text && <button className="scene-revision-restore" aria-label={`还原 ${name}`} onClick={() => onChange(row.text)}>还原</button>}
+    {row.label && <><strong>{row.label}</strong>：</>}
+    <span ref={input} className="scene-revision-input" role="textbox" aria-label={name} aria-multiline="true" contentEditable="plaintext-only" suppressContentEditableWarning onInput={event => onChange(event.currentTarget.innerText)} />
+  </div>;
+}
 
 function inlineMarkdown(node: Node): string {
   if (node.nodeType === Node.TEXT_NODE) return node.textContent!;
@@ -51,36 +66,40 @@ export function SceneStoryboardEditor({ scope, segments }: { scope: NoteScope; s
     sessionStorage.setItem(storageKey, JSON.stringify(next));
     setDraft(next);
   };
-  const exportStoryboard = () => setExportText(`# ${scope.episode}-${scope.scene}-场次分镜（修改稿）\n\n## 1. 镜头正文\n\n` + rows.map(row => {
-    if (row.kind === 'segment') return `### ${row.text}`;
-    if (row.kind === 'shot') return `#### ${row.text}`;
-    if (row.kind === 'separator') return '---';
-    const text = draft[row.key] ?? row.text;
-    return row.label ? `**${row.label}**：${text}` : text;
-  }).join('\n\n') + '\n');
+  const changed = rows.some(row => row.editable && draft[row.key] !== undefined && draft[row.key] !== row.text);
+  const exportStoryboard = () => {
+    const content: string[] = [];
+    let segment = '', shot = '', writtenSegment = '', writtenShot = '';
+    for (const row of rows) {
+      if (row.kind === 'segment') segment = row.text;
+      if (row.kind === 'shot') shot = row.text;
+      if (!row.editable || draft[row.key] === undefined || draft[row.key] === row.text) continue;
+      if (segment !== writtenSegment) { content.push(segment); writtenSegment = segment; }
+      if (shot !== writtenShot) { content.push(shot); writtenShot = shot; }
+      content.push(row.label ? `${row.label}：${draft[row.key].trimEnd()}` : draft[row.key].trimEnd());
+    }
+    setExportText(`以下是我对${scope.episode}-${scope.scene}-场次分镜的修改意见：\n\`\`\`\n${content.join('\n\n').replace(/\n{3,}/g, '\n\n')}\n\`\`\``);
+  };
   const download = () => {
     const url = URL.createObjectURL(new Blob([exportText!], { type: 'text/markdown;charset=utf-8' }));
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${scope.episode}-${scope.scene}-场次分镜-修改稿.md`;
+    link.download = `${scope.episode}-${scope.scene}-场次分镜-修改意见.md`;
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
   return <>
     <div className="scene-revision-layout" style={{ '--revision-rows': rows.length + 1 } as CSSProperties}>
       {[false, true].map(editable => <section className="scene-revision-pane" aria-label={editable ? '修改场次分镜正文' : '当前场次分镜正文'} key={String(editable)}>
-        <div className="scene-revision-heading"><strong>{editable ? '修改内容' : '原文'}</strong>{editable && <button onClick={exportStoryboard}>导出分镜</button>}</div>
-        {rows.map(row => <div className={`scene-revision-row scene-revision-${row.kind}`} key={row.key}>
-          {row.kind === 'segment' ? <h3>{row.text}</h3> : row.kind === 'separator' ? <hr /> : editable && row.editable ? <label className="scene-revision-editor">
-            {row.label && <strong>{row.label}：</strong>}
-            <textarea aria-label={`${row.key.split('/').slice(0, 2).join(' ')} ${row.label || '正文'}`} value={draft[row.key] ?? row.text} onChange={event => edit(row, event.target.value)} />
-          </label> : <Rich html={row.html} />}
+        <div className="scene-revision-heading"><strong>{editable ? '修改内容' : '原文'}</strong>{editable && <button disabled={!changed} onClick={exportStoryboard}>导出分镜</button>}</div>
+        {rows.map(row => <div className={`scene-revision-row scene-revision-${row.kind}${row.editable ? ' scene-revision-editable' : ''}`} key={row.key}>
+          {row.kind === 'segment' ? <h3>{row.text}</h3> : row.kind === 'separator' ? <hr /> : editable && row.editable ? <StoryboardField row={row} value={draft[row.key] ?? row.text} onChange={text => edit(row, text)} /> : <Rich html={row.html} />}
         </div>)}
       </section>)}
     </div>
     {exportText !== null && <Dialog title={`${scope.episode} · ${scope.scene} 导出分镜`} close={() => setExportText(null)}>
       <div className="revision-export-actions"><CopyButton label="复制" text={exportText} /><button onClick={download}>下载 Markdown</button></div>
-      <textarea className="revision-notes-export" aria-label="导出分镜文本" readOnly value={exportText} />
+      <textarea className="revision-notes-export scene-revision-export" aria-label="导出分镜文本" readOnly value={exportText} />
     </Dialog>}
   </>;
 }
