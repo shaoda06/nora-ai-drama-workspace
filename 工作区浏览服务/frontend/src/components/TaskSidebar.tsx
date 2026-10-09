@@ -37,15 +37,16 @@ export function TaskSidebar() {
     return () => source.close();
   }, []);
   const active = tasks.filter(task => activeStates.has(task.status)).length;
+  const completed = tasks.filter(task => task.status === 'completed').length;
   return <aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
       aria-label={open ? '收起任务进度' : '展开任务进度'} onClick={() => {
         setOpen(!open); localStorage.setItem('nora-task-sidebar', open ? 'closed' : 'open');
       }}><span aria-hidden="true">{open ? '‹' : '›'}</span><span className="comfy-rail-label">任务进度</span><span className="comfy-rail-count">{active}</span></button>
     <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
-      <div className="comfy-task-heading"><strong>生成任务</strong><span>{active} 项进行中</span></div>
-      <p className="comfy-stream-status" role="status">{connection === 'loading' ? '正在连接进度服务…' :
-        connection === 'reconnecting' ? '进度连接中断，正在重连；保留上次状态' : '实时状态 · 仅查看'}</p>
+      <div className="comfy-task-heading"><strong>生成任务</strong><div className="comfy-task-counts">
+        <span>{active} 项进行中</span><span>{completed} 项已完成</span>
+      </div></div>
       {tasks.length === 0 && <p className="comfy-empty">{connection === 'connected' ? '暂无已登记任务' : '等待任务状态…'}</p>}
       <div className="comfy-task-items">{tasks.map(task => <section className="comfy-task" key={task.id}>
         <div className="comfy-task-top"><span>{task.project}</span><strong data-status={task.status}>{states[task.status] || task.status}</strong></div>

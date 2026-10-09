@@ -12,9 +12,8 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-rail-label{writing-mode:vertical-rl;letter-spacing:4px;font-size:13px;font-weight:600}
 .comfy-rail-count{font-size:12px;background:white;border-radius:20px;min-width:24px;padding:1px 4px}
 .comfy-task-content{flex:1;min-width:0;overflow-y:auto;padding:20px 14px}
-.comfy-task-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:16px}
-.comfy-task-heading>span,.comfy-stream-status{font-size:11px;color:var(--muted)}
-.comfy-stream-status{margin:8px 0 18px}
+.comfy-task-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:18px;font-size:16px}
+.comfy-task-counts{display:flex;flex-direction:column;align-items:flex-end;font-size:13px;line-height:1.5;color:var(--muted);white-space:nowrap}
 .comfy-empty{color:var(--muted);font-size:13px;padding:22px 0}
 .comfy-task-items{display:flex;flex-direction:column;gap:12px}
 .comfy-task{background:white;border:1px solid var(--line);border-radius:9px;padding:13px;overflow-wrap:anywhere;font-size:12px}
