@@ -57,7 +57,7 @@ export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope
     setAutoPlay(true);
   };
   return <>
-    <div className="scene-workspace-tabs"><UnderlineTabs label="场次内容" items={[{ value: 'segments', label: '分段制作' }, { value: 'storyboard', label: '场次分镜' }]} selected={view} onChange={value => { setAutoPlay(false); setView(value); }} /></div>
+    <div className="scene-workspace-tabs"><UnderlineTabs label="场次内容" items={[{ value: 'segments', label: '分段制作' }, { value: 'storyboard', label: '场次分镜' }, { value: 'dialogue', label: '台词修改' }, { value: 'downloads', label: '资源下载' }]} selected={view} onChange={value => { setAutoPlay(false); setView(value); }} /></div>
     <div className="episode-scene-content" aria-label={scene ? `场次 ${scene} 内容` : '场次内容'}>
     {view === 'segments' ? <>
     {segments.some((item, index) => index > 0 && Number(item.id.slice(1)) < Number(segments[index - 1].id.slice(1))) && <p className="segment-order-note muted">分段按分镜索引中的剧情顺序排列，编号保留原标识。</p>}
@@ -74,11 +74,11 @@ export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope
       onSelectionChange={value => { setAutoPlay(false); setError(''); setSelections(previous => ({ ...previous, [segment]: value })); }}
       playbackControl={<div className="scene-review-actions"><label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>{notesExport.control}</div>} />}
     {notesExport.dialog}
-    </> : <div className="scene-storyboard">
+    </> : view === 'storyboard' ? <div className="scene-storyboard">
       {!scene ? <p className="muted">本集尚无场次分镜。</p> : <>
         <Result loading={storyboard.isPending} error={storyboard.error} retry={storyboard.refetch} retrying={storyboard.isFetching} />
         {storyboard.data && <Document value={storyboard.data} />}
       </>}
-    </div>}
+    </div> : null}
   </div></>;
 }
