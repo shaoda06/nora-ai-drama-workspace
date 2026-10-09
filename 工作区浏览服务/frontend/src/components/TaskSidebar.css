@@ -13,9 +13,10 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-queue+.comfy-queue{border-top:2px solid var(--line)}
 .comfy-queue-body{flex:1;min-height:0;overflow-y:auto}
 .comfy-task-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:18px;font-size:16px}
-.comfy-task-counts{display:flex;flex-direction:column;align-items:flex-end;font-size:13px;line-height:1.5;color:var(--muted);white-space:nowrap}
 .comfy-node-tabs{flex:none;overflow-x:auto;white-space:nowrap;margin-bottom:14px}
-.comfy-node-tabs>button{flex:none}
+.comfy-node-tabs>button{flex:none;display:inline-flex;align-items:center;gap:6px}
+.comfy-node-dot{width:8px;height:8px;flex:none;border-radius:50%;background:#49a879}
+.comfy-node-dot[data-preview=disconnected]{background:#c65b55}
 .comfy-empty{color:var(--muted);font-size:13px;padding:22px 0}
 .comfy-task-items{display:flex;flex-direction:column;gap:12px}
 @media(max-width:700px){.comfy-sidebar[data-open=true]{width:100vw}}

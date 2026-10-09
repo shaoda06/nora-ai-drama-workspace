@@ -27,8 +27,6 @@ export function TaskSidebar() {
   const selectedNode = nodes.find(node => node.url === selectedUrl) ?? nodes[0];
   const nodeTasks = tasks.filter(task => task.remote_url === selectedNode?.url);
   const visibleTasks = nodeTasks.filter(task => activeStates.has(task.status));
-  const nodeActive = visibleTasks.filter(task => activeStates.has(task.status)).length;
-  const nodeCompleted = nodeTasks.filter(task => task.status === 'completed').length;
   return <aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
       aria-label={open ? '收起任务进度' : '展开任务进度'} onClick={() => {
@@ -36,12 +34,11 @@ export function TaskSidebar() {
       }}><span aria-hidden="true">{open ? '‹' : '›'}</span><span className="comfy-rail-label">任务进度</span><span className="comfy-rail-count">{active}</span></button>
     <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
       <section className="comfy-queue" aria-label="远端队列">
-      <div className="comfy-task-heading"><strong>远端队列</strong><div className="comfy-task-counts">
-        <span>{nodeActive} 项进行中</span><span>{nodeCompleted} 项已完成</span>
-      </div></div>
+      <div className="comfy-task-heading"><strong>远端队列</strong></div>
       <nav className="underline-tabs comfy-node-tabs" aria-label="远端节点">
-        {nodes.map(node => <button key={node.url} aria-current={node.url === selectedNode?.url ? 'page' : undefined}
-          onClick={() => setSelectedUrl(node.url)}>{node.name}</button>)}
+        {nodes.map((node, index) => <button key={node.url} aria-current={node.url === selectedNode?.url ? 'page' : undefined}
+          onClick={() => setSelectedUrl(node.url)}><span className="comfy-node-dot" data-preview={index === 0 ? 'connected' : 'disconnected'}
+            aria-hidden="true" title="连接状态样式示意，尚未接入监控" />{node.name}</button>)}
       </nav>
       <div className="comfy-queue-body" key={selectedNode?.url}>
       {visibleTasks.length === 0 && <p className="comfy-empty">{connection === 'connected' ? '该节点暂无已登记任务' : '等待任务状态…'}</p>}
