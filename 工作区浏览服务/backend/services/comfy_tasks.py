@@ -76,12 +76,22 @@ class TaskStore:
         self.token = secrets.token_urlsafe(32)
 
     def public(self):
+        remote_urls = []
+        for path in sorted((self.workspace / 'projects').glob('*/comfyui-config.json')):
+            config = client.strict_json(path.read_bytes())
+            for url in config.get('remote-urls', [config.get('remote-url')]):
+                remote_url = client.Client(url, 30).url
+                if remote_url not in remote_urls:
+                    remote_urls.append(remote_url)
         return {'tasks': sorted(({**{key: ([{field: item.get(field) for field in ('identity', 'index', 'check', 'path', 'error')}
                                         for item in value.values()] if key == 'segments' else value) for key, value in row['state'].items()
                                  if key not in ('client_id', 'segment_monitor', 'notices')},
+                                 'remote_url': client.Client(row['input'].url, row['input'].timeout).url,
                                  'notification_unknown': sum(item['delivery'] == 'delivery_unknown' for item in row['state'].get('notices', []))}
                                 for row in self.rows.values()),
-                                key=lambda item: item['created_at'], reverse=True)}
+                                key=lambda item: item['created_at'], reverse=True),
+                'remote_nodes': [{'url': url, 'name': '默认节点' if index == 0 else f'备用{index}'}
+                                 for index, url in enumerate(remote_urls)]}
 
     def save(self, key, **changes):
         row = self.rows[key]

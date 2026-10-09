@@ -17,6 +17,8 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-queue-body{flex:1;min-height:0;overflow-y:auto}
 .comfy-task-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:18px;font-size:16px}
 .comfy-task-counts{display:flex;flex-direction:column;align-items:flex-end;font-size:13px;line-height:1.5;color:var(--muted);white-space:nowrap}
+.comfy-node-tabs{flex:none;overflow-x:auto;white-space:nowrap;margin-bottom:14px}
+.comfy-node-tabs>button{flex:none}
 .comfy-empty{color:var(--muted);font-size:13px;padding:22px 0}
 .comfy-task-items{display:flex;flex-direction:column;gap:12px}
 .comfy-task{background:white;border:1px solid var(--line);border-radius:9px;padding:13px;overflow-wrap:anywhere;font-size:12px}

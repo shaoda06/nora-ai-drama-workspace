@@ -205,6 +205,27 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn('real-caller', raw)
         self.assertNotIn('server.mjs', raw)
 
+    async def test_public_nodes_follow_config_order_and_task_remote(self):
+        urls = ['http://comfy.invalid:8188', 'http://comfy.invalid:8189',
+                'http://comfy.invalid:8190', 'http://comfy.invalid:8191']
+        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': urls}))
+        second_project = self.root / 'projects/另一项目'
+        second_project.mkdir()
+        (second_project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': urls}))
+        self.data.url = urls[1] + '/'
+        self.seed()
+        self.store.save('task', node='H3')
+        snapshot = self.store.public()
+        self.assertEqual(snapshot['remote_nodes'], [
+            {'url': url, 'name': name} for url, name in zip(urls, ['默认节点', '备用1', '备用2', '备用3'])])
+        self.assertEqual(snapshot['tasks'][0]['remote_url'], urls[1])
+        self.assertEqual(snapshot['tasks'][0]['node'], 'H3')
+
+    async def test_public_nodes_include_idle_legacy_config(self):
+        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-url': self.data.url + '/'}))
+        self.assertEqual(self.store.public(), {'tasks': [], 'remote_nodes': [
+            {'url': self.data.url, 'name': '默认节点'}]})
+
     async def test_foreign_events_are_ignored_and_terminal_event_wakes_once(self):
         self.seed()
         socket = AsyncMock()
@@ -317,7 +338,7 @@ class ApiBoundaryTests(unittest.TestCase):
                 self.assertEqual(api.post('/api/internal/comfy/submit', json=data,
                     headers={'origin': 'http://localhost', 'x-nora-task-token': store.token}).status_code, 403)
                 snapshot = api.get('/api/comfy/tasks').json()
-                self.assertEqual(snapshot, {'tasks': []})
+                self.assertEqual(snapshot, {'tasks': [], 'remote_nodes': []})
                 self.assertEqual(api.delete('/api/comfy/tasks').status_code, 405)
             finally:
                 api.close()

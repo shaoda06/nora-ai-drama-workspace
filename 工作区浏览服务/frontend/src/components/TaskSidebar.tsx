@@ -3,7 +3,7 @@ import './TaskSidebar.css';
 
 interface Task {
   id: string; project: string; title: string; task_type: string; prompt_id: string | null;
-  status: string; connection: string; node: string | null;
+  status: string; connection: string; node: string | null; remote_url: string;
   progress: { value: number; max: number } | null;
   error: string | null; notification: string; collected: number; expected: number; updated_at: string;
   director_progress?: { segment: number; segment_total: number; timeline_segment: number; phase_label: string };
@@ -11,6 +11,8 @@ interface Task {
   notification_unknown?: number;
   segments?: { identity: string; index: number; check: string; error: string | null }[];
 }
+
+interface RemoteNode { url: string; name: string }
 
 const states: Record<string, string> = {
   submitting: '正在提交', queued: '排队中', running: '执行中', collecting: '正在取回',
@@ -26,18 +28,25 @@ const activeStates = new Set(['submitting', 'queued', 'running', 'collecting']);
 export function TaskSidebar() {
   const [open, setOpen] = useState(() => localStorage.getItem('nora-task-sidebar') === 'open');
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [nodes, setNodes] = useState<RemoteNode[]>([]);
+  const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const [connection, setConnection] = useState<'loading' | 'connected' | 'reconnecting'>('loading');
   useEffect(() => {
     const source = new EventSource('/api/comfy/events');
     source.addEventListener('tasks', event => {
-      setTasks(JSON.parse((event as MessageEvent).data).tasks);
+      const snapshot = JSON.parse((event as MessageEvent).data);
+      setTasks(snapshot.tasks);
+      setNodes(snapshot.remote_nodes);
       setConnection('connected');
     });
     source.onerror = () => setConnection('reconnecting');
     return () => source.close();
   }, []);
   const active = tasks.filter(task => activeStates.has(task.status)).length;
-  const completed = tasks.filter(task => task.status === 'completed').length;
+  const selectedNode = nodes.find(node => node.url === selectedUrl) ?? nodes[0];
+  const visibleTasks = tasks.filter(task => task.remote_url === selectedNode?.url);
+  const nodeActive = visibleTasks.filter(task => activeStates.has(task.status)).length;
+  const nodeCompleted = visibleTasks.filter(task => task.status === 'completed').length;
   return <aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
       aria-label={open ? '收起任务进度' : '展开任务进度'} onClick={() => {
@@ -46,11 +55,15 @@ export function TaskSidebar() {
     <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
       <section className="comfy-queue" aria-label="远端队列">
       <div className="comfy-task-heading"><strong>远端队列</strong><div className="comfy-task-counts">
-        <span>{active} 项进行中</span><span>{completed} 项已完成</span>
+        <span>{nodeActive} 项进行中</span><span>{nodeCompleted} 项已完成</span>
       </div></div>
-      <div className="comfy-queue-body">
-      {tasks.length === 0 && <p className="comfy-empty">{connection === 'connected' ? '暂无已登记任务' : '等待任务状态…'}</p>}
-      <div className="comfy-task-items">{tasks.map(task => <section className="comfy-task" key={task.id}>
+      <nav className="underline-tabs comfy-node-tabs" aria-label="远端节点">
+        {nodes.map(node => <button key={node.url} aria-current={node.url === selectedNode?.url ? 'page' : undefined}
+          onClick={() => setSelectedUrl(node.url)}>{node.name}</button>)}
+      </nav>
+      <div className="comfy-queue-body" key={selectedNode?.url}>
+      {visibleTasks.length === 0 && <p className="comfy-empty">{connection === 'connected' ? '该节点暂无已登记任务' : '等待任务状态…'}</p>}
+      <div className="comfy-task-items">{visibleTasks.map(task => <section className="comfy-task" key={task.id}>
         <div className="comfy-task-top"><span>{task.project}</span><strong data-status={task.status}>{states[task.status] || task.status}</strong></div>
         <h2>{task.title}</h2><p>{stages[task.task_type] || task.task_type}{task.node ? ` · 当前节点 ${task.node}` : ''}</p>
         {task.director_progress && <p>本轮第 {task.director_progress.segment} / {task.director_progress.segment_total} 段
