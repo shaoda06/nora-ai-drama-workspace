@@ -68,7 +68,7 @@ class DispatchTests(unittest.TestCase):
 
     def args(self, name='first', **overrides):
         result = argparse.Namespace(project=str(self.root), workflow=str(self.path), task_type='image',
-            record_dir=str(self.root / name), eligible_url=[A, B, C], target_url=None, uploads=None, timeout=30,
+            record_dir=str(self.root / name), eligible_url=[A, B, C], target_url=None, allow_queue=False, uploads=None, timeout=30,
             attempt_name='submit-attempt.json', request_name='request.json', response_name='response.json',
             monitor='legacy', output_plan=None, segment_plan=None, task_title=None, thread_id=None, history_name='执行结果.json')
         for key, value in overrides.items():
@@ -130,6 +130,27 @@ class DispatchTests(unittest.TestCase):
                     self.assertEqual(result['dispatch_state'], 'deferred')
                     self.assertEqual([(url, route) for url, route, _ in self.calls], [(A, '/queue')])
                     self.assertFalse((self.root / 'first').exists())
+
+    def test_authorized_queue_override_keeps_default_and_posts_once(self):
+        self.queues[A] = {'queue_pending': [[0, 'waiting', {'1': {'class_type': 'MiniMaxH3Director', 'inputs': {}}}]] * 2,
+                          'queue_running': [[0, 'running', {'1': {'class_type': 'MiniMaxH3Director', 'inputs': {}}}]]}
+        args = self.args(task_type='video-first-pass', allow_queue=True)
+        result = d.dispatch(args)
+        self.assertEqual(result['url'], A)
+        self.assertTrue(result['checks'][0]['allow_queue'])
+        with self.assertRaises(d.client.ClientError) as caught:
+            d.dispatch(args)
+        self.assertEqual(caught.exception.code, 'submission_guard')
+        self.assertEqual(sum(route == '/prompt' for _, route, _ in self.calls), 1)
+        self.assertFalse(any(url != A for url, _, _ in self.calls))
+
+    def test_queue_override_does_not_submit_with_unknown_queue(self):
+        self.queues[A] = d.client.ClientError('transport_error', 'offline')
+        result = d.dispatch(self.args(task_type='video-first-pass', allow_queue=True))
+        self.assertEqual(result['dispatch_state'], 'deferred')
+        self.assertEqual(result['checks'][0]['state'], 'unknown')
+        self.assertFalse((self.root / 'first').exists())
+        self.assertFalse(any(route == '/prompt' for _, route, _ in self.calls))
 
     def test_only_image_tasks_overflow_to_backup(self):
         for kind in ('image', 'image-upscale'):

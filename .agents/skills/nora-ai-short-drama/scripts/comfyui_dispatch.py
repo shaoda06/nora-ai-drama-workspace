@@ -150,11 +150,11 @@ def dispatch(args):
                 continue
             check = {'url': url, 'pending': len(queue['queue_pending']),
                      'running': len(queue['queue_running']), 'video_jobs': videos}
-            if videos or check['pending'] >= config['busy-pending-threshold']:
+            if not args.allow_queue and (videos or check['pending'] >= config['busy-pending-threshold']):
                 checks.append({**check, 'state': 'busy',
                                'reason': 'video_generation' if videos else 'pending_threshold'})
                 continue
-            checks.append({**check, 'state': 'selected'})
+            checks.append({**check, 'state': 'selected', 'allow_queue': args.allow_queue})
             for item in uploads:
                 response_path = record / item['response-name']
                 # Reserve the response before upload; never re-upload an ambiguous attempt.
@@ -190,6 +190,7 @@ def parser():
     p.add_argument('--project', required=True, help='Project root containing comfyui-config.json; relative to cwd')
     p.add_argument('--task-type', required=True, choices=TASK_TYPES, help='Authorized task stage; video passes and postprocessing default to the first endpoint')
     p.add_argument('--target-url', help='Use only this endpoint when explicitly selected by the user; no fallback, still checks eligibility and queue')
+    p.add_argument('--allow-queue', action='store_true', help='Only when explicitly authorized: submit despite existing video jobs or pending threshold; still checks reachability, eligibility and submission evidence')
     p.add_argument('--workflow', required=True, help='Prepared API JSON; unchanged except declared uploaded input paths')
     p.add_argument('--eligible-url', action='append', required=True, help='Repeat for each endpoint whose nodes/models and existing inputs were verified')
     p.add_argument('--uploads', help='Optional JSON array of local files and loader bindings; paths relative to cwd')
