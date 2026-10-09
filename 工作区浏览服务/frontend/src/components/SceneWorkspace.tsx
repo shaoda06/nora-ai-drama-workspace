@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { get, projectUrl } from '../api';
 import type { FileItem, RecordData } from '../api';
-import { Document, Result, Rich } from '../components';
+import { Document, Result } from '../components';
 import { UnderlineTabs } from './UnderlineTabs';
 import { latestVideo } from './SegmentVideo';
 import { SegmentWorkspace } from './SegmentWorkspace';
@@ -11,6 +11,7 @@ import { useRevisionNotesExport } from './RevisionNotes';
 import { useSceneVideoCache } from './useSceneVideoCache';
 import type { NoteScope } from './RevisionNotes';
 import { useRefreshState } from '../refreshPosition';
+import { SceneStoryboardEditor } from './SceneStoryboardEditor';
 
 type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
@@ -79,10 +80,6 @@ export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope
         <Result loading={storyboard.isPending} error={storyboard.error} retry={storyboard.refetch} retrying={storyboard.isFetching} />
         {storyboard.data && <Document value={storyboard.data} />}
       </>}
-    </div> : view === 'dialogue' ? <div className="scene-revision-layout">
-      {['当前场次分镜正文', '对照场次分镜正文'].map(label => <section className="scene-revision-pane" aria-label={label} key={label}>
-        {segments.map(item => <div className="scene-revision-segment" key={item.id}><h3>分段 {item.id}</h3><Rich html={item.scriptHtml} /></div>)}
-      </section>)}
-    </div> : null}
+    </div> : view === 'dialogue' ? <SceneStoryboardEditor key={positionKey} scope={scope} segments={segments} /> : null}
   </div></>;
 }
