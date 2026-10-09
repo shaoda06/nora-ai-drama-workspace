@@ -15,9 +15,7 @@ export interface LocalTask {
 export interface ExternalTask {
   source: 'external';
   id: string; prompt_id: string; remote_url: string; status: string;
-  created_at: string; queue_position: number | null;
-  outputs_count?: number;
-  error?: string;
+  queue_position: number | null;
 }
 
 export type Task = LocalTask | ExternalTask;
@@ -42,16 +40,10 @@ export function TaskCard({ task }: { task: Task }) {
       </strong>
     </div>
     {task.source === 'external' ? <>
-      <h2>任务 <code>{task.prompt_id.slice(0, 8)}</code></h2>
-      <dl className="comfy-task-facts">
-        <div><dt>提交时间</dt><dd><time dateTime={task.created_at}>{new Date(task.created_at).toLocaleString('zh-CN')}</time></dd></div>
-        {task.queue_position !== null && <div><dt>排队位置</dt><dd>第 {task.queue_position} 位</dd></div>}
-        {task.outputs_count !== undefined && <div><dt>生成结果</dt><dd>{task.outputs_count} 个</dd></div>}
-      </dl>
-      {task.error && <p className="comfy-task-warning">{task.error}</p>}
-      <details className="comfy-task-details"><summary>任务详情</summary>
-        <p className="comfy-task-id">任务ID：<code>{task.prompt_id}</code></p>
-      </details>
+      <div className="comfy-external-title">
+        <h2><code>{task.prompt_id}</code></h2>
+        {task.queue_position !== null && <span className="comfy-task-position" aria-label="队列位置">第 {task.queue_position} 位</span>}
+      </div>
     </> : <>
       <p className="comfy-task-project">{task.project} · {stages[task.task_type] || task.task_type}</p>
       <h2>{task.title}</h2>

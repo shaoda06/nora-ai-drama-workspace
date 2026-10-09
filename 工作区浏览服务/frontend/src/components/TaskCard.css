@@ -15,10 +15,9 @@
 .comfy-progress progress{display:block;width:100%;height:7px;accent-color:var(--green);margin-top:6px}
 .comfy-task-collected{font-size:12px;color:var(--muted)}
 .comfy-task-collected strong{color:var(--green);margin-left:8px}
-.comfy-task-facts{display:grid;gap:8px;margin:14px 0}
-.comfy-task-facts>div{display:flex;justify-content:space-between;gap:16px}
-.comfy-task-facts dt{color:var(--muted);flex:none}
-.comfy-task-facts dd{margin:0;text-align:right}
+.comfy-external-title{display:flex;align-items:baseline;gap:12px;margin-top:10px}
+.comfy-external-title h2{flex:1;min-width:0;margin:0}
+.comfy-task-position{flex:none;white-space:nowrap;color:var(--muted);font-size:12px}
 .comfy-task-details{margin-top:12px;border-top:1px solid var(--line);padding-top:9px;font-size:12px}
 .comfy-task-details summary{cursor:pointer;color:var(--green)}
 .comfy-task-updated{display:block;font-size:11px;color:var(--muted);margin-top:10px}
