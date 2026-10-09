@@ -32,6 +32,9 @@ export function TaskSidebar() {
   }, []);
   const selectedNode = nodes.find(node => node.url === selectedUrl) ?? nodes[0];
   const allLocalTasks = tasks.filter((task): task is LocalQueueTask => 'queue' in task && task.queue === 'local');
+  const localCounts = { queued: allLocalTasks.filter(task => task.status === 'queued').length,
+    paused: allLocalTasks.filter(task => task.status === 'paused').length,
+    completed: allLocalTasks.filter(task => task.status === 'completed').length };
   const localTasks = allLocalTasks.filter(task => task.status === localCategory);
   const registered = new Map(tasks.filter((task): task is Task => !('queue' in task && task.queue === 'local'))
     .filter(task => task.source !== 'external' && task.remote_url === selectedNode?.url && task.prompt_id)
@@ -42,8 +45,6 @@ export function TaskSidebar() {
       source: 'external', id: `${selectedNode.url}:${entry.prompt_id}`, remote_url: selectedNode.url, ...entry,
     };
   });
-  const active = nodes.reduce((count, node) => count + (node.running_count ?? 0) + (node.queued_count ?? 0), 0)
-    + allLocalTasks.filter(task => task.status === 'queued').length;
   const nodeWarning = connection !== 'connected' ? '后台连接恢复中，远端队列数据可能滞后'
     : selectedNode?.connection === 'reconnecting' ? selectedNode.updated_at
       ? '远端连接中断，显示上次队列，正在自动重连' : '远端暂未连接，正在自动重连'
@@ -63,7 +64,18 @@ export function TaskSidebar() {
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
       aria-label={open ? '收起任务进度' : '展开任务进度'} onClick={() => {
         setOpen(!open);
-      }}><span aria-hidden="true">{open ? '‹' : '›'}</span><span className="comfy-rail-label">任务进度</span><span className="comfy-rail-count">{active}</span></button>
+      }}><span aria-hidden="true">{open ? '‹' : '›'}</span><span className="comfy-rail-label">任务进度</span>
+      <span className="comfy-rail-summary">
+        {nodes.length === 0 && <span className="comfy-rail-group"><strong>远端节点</strong><span className="comfy-rail-values">正在读取</span></span>}
+        {nodes.map(node => <span className="comfy-rail-group" key={node.url}
+          title={`${node.name}：${connection === 'connected' ? nodeConnectionLabels[node.connection] : '后台连接恢复中'}${node.queue_error ? '，队列数据可能滞后' : ''}`}>
+          <strong>{node.name}</strong>
+          <span className="comfy-rail-values"><span>进行中 <b>{node.running_count ?? '—'}</b></span><span>队列中 <b>{node.queued_count ?? '—'}</b></span></span>
+        </span>)}
+        <span className="comfy-rail-group"><strong>本地队列</strong><span className="comfy-rail-values">
+          {(Object.keys(localQueueStates) as LocalQueueTask['status'][]).map(status => <span key={status}>{localQueueStates[status]} <b>{localCounts[status]}</b></span>)}
+        </span></span>
+      </span></button>
     <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
       <section className="comfy-queue" aria-label="远端队列">
       <div className="comfy-task-heading"><strong>远端队列</strong></div>
@@ -88,7 +100,7 @@ export function TaskSidebar() {
         <div className="comfy-task-heading comfy-local-heading"><strong>本地队列</strong>
           <nav className="underline-tabs comfy-local-tabs" aria-label="本地任务分类">
             {(Object.keys(localQueueStates) as LocalQueueTask['status'][]).map(status => <button key={status}
-              aria-current={localCategory === status ? 'page' : undefined} onClick={() => setLocalCategory(status)}>{localQueueStates[status]}（{allLocalTasks.filter(task => task.status === status).length}）</button>)}
+              aria-current={localCategory === status ? 'page' : undefined} onClick={() => setLocalCategory(status)}>{localQueueStates[status]}（{localCounts[status]}）</button>)}
           </nav>
         </div>
         <div className="comfy-queue-body" key={localCategory}>
