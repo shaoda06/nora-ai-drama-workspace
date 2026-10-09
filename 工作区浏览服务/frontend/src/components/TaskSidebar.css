@@ -4,9 +4,6 @@ body:has(>.page-loading-screen)>#root:has(.workspace-with-tasks){display:block}
 body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-sidebar{position:fixed;z-index:35;inset:0 auto var(--site-footer-height) 0;width:var(--task-sidebar-width);background:#f8faf7;border-right:1px solid var(--line);display:flex;flex-direction:row-reverse;overflow:hidden}
 .comfy-sidebar[data-open=true]{width:max(640px,33.333333vw);box-shadow:8px 0 25px #25352f20}
-.comfy-segments{list-style:none;padding:0;margin:10px 0;display:grid;gap:8px;font-size:12px}
-.comfy-segments li{display:grid;gap:3px;border-top:1px solid var(--line);padding-top:8px;overflow-wrap:anywhere}
-.comfy-segments strong{font-weight:500}
 .comfy-sidebar-toggle{width:40px;flex:none;border:0;border-left:1px solid var(--line);border-radius:0;padding:20px 4px;display:flex;align-items:center;flex-direction:column;gap:18px;background:#edf3ee;color:var(--green)}
 .comfy-sidebar-toggle>span:first-child{font-size:28px;line-height:1}
 .comfy-rail-label{writing-mode:vertical-rl;letter-spacing:4px;font-size:13px;font-weight:600}
@@ -21,13 +18,4 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-node-tabs>button{flex:none}
 .comfy-empty{color:var(--muted);font-size:13px;padding:22px 0}
 .comfy-task-items{display:flex;flex-direction:column;gap:12px}
-.comfy-task{background:white;border:1px solid var(--line);border-radius:9px;padding:13px;overflow-wrap:anywhere;font-size:12px}
-.comfy-task-top{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px}
-.comfy-task-top>strong{color:var(--green);white-space:nowrap}
-.comfy-task-top>strong[data-status=failed],.comfy-task-top>strong[data-status=collection_failed]{color:#a23b34}
-.comfy-task h2{font-size:14px;line-height:1.5;margin:8px 0}
-.comfy-task p{margin:6px 0}
-.comfy-progress progress{width:100%;height:7px;accent-color:var(--green)}
-.comfy-progress>span,.comfy-notification,.comfy-task time{font-size:11px;color:var(--muted)}
-.comfy-task .comfy-task-warning{color:#976316;font-size:11px}
 @media(max-width:700px){.comfy-sidebar[data-open=true]{width:100vw}}

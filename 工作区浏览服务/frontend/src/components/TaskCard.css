@@ -1,0 +1,29 @@
+.comfy-task{background:white;border:1px solid var(--line);border-radius:10px;padding:16px;overflow-wrap:anywhere;font-size:13px;line-height:1.6}
+.comfy-task-top{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px}
+.comfy-task-source{padding:2px 8px;border-radius:5px;background:#eaf3ee;color:var(--green);font-weight:600}
+.comfy-task[data-source=external] .comfy-task-source{background:#f0f2f3;color:#626f76}
+.comfy-task-status{color:var(--green);white-space:nowrap}
+.comfy-task-status[data-status=queued]{color:#976316}
+.comfy-task-status[data-status=failed],.comfy-task-status[data-status=collection_failed]{color:#a23b34}
+.comfy-task h2{font-size:15px;line-height:1.5;margin:10px 0}
+.comfy-task p{margin:6px 0}
+.comfy-task .comfy-task-project{color:var(--muted);font-size:12px;margin-top:12px}
+.comfy-task code{font-size:12px;font-family:Consolas,monospace}
+.comfy-progress{margin:12px 0}
+.comfy-progress-label{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted)}
+.comfy-progress-label strong{color:var(--green)}
+.comfy-progress progress{display:block;width:100%;height:7px;accent-color:var(--green);margin-top:6px}
+.comfy-task-collected{font-size:12px;color:var(--muted)}
+.comfy-task-collected strong{color:var(--green);margin-left:8px}
+.comfy-task-facts{display:grid;gap:8px;margin:14px 0}
+.comfy-task-facts>div{display:flex;justify-content:space-between;gap:16px}
+.comfy-task-facts dt{color:var(--muted);flex:none}
+.comfy-task-facts dd{margin:0;text-align:right}
+.comfy-task-details{margin-top:12px;border-top:1px solid var(--line);padding-top:9px;font-size:12px}
+.comfy-task-details summary{cursor:pointer;color:var(--green)}
+.comfy-task-updated{display:block;font-size:11px;color:var(--muted);margin-top:10px}
+.comfy-task .comfy-task-warning{color:#976316;font-size:12px}
+.comfy-notification{color:var(--muted);font-size:11px}
+.comfy-segments{list-style:none;padding:0;margin:10px 0;display:grid;gap:8px;font-size:12px}
+.comfy-segments li{display:grid;gap:3px;border-top:1px solid var(--line);padding-top:8px;overflow-wrap:anywhere}
+.comfy-segments strong{font-weight:500}
