@@ -1,0 +1,1314 @@
+{
+  "id": "5ffa62de-e11a-4745-9830-d9429827a09b",
+  "revision": 3,
+  "last_node_id": 502,
+  "last_link_id": 30,
+  "nodes": [
+    {
+      "id": 192,
+      "type": "UNETLoader",
+      "pos": [
+        4.518746871513446,
+        163.15279587806526
+      ],
+      "size": [
+        430,
+        90
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "unet_name",
+          "name": "unet_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "unet_name"
+          },
+          "link": null
+        },
+        {
+          "label": "weight_dtype",
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "widget": {
+            "name": "weight_dtype"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "模型",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            22
+          ]
+        }
+      ],
+      "title": "01｜原模型 · Hybrid INT8",
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors",
+        "default"
+      ],
+      "widgets_values_named": {
+        "unet_name": "minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors",
+        "weight_dtype": "default"
+      },
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 58,
+      "type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
+      "pos": [
+        4.518746871513446,
+        439.2695462370812
+      ],
+      "size": [
+        430,
+        65
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "label": "model",
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "title": "MiniMaxH3MemoryEfficientSageAttentionPatch",
+      "properties": {
+        "Node name for S&R": "MiniMaxH3MemoryEfficientSageAttentionPatch"
+      },
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 128,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        4.518746871513446,
+        555.1437099736415
+      ],
+      "size": [
+        430,
+        90
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "模型",
+          "name": "model",
+          "type": "MODEL",
+          "link": 2
+        },
+        {
+          "label": "lora_name",
+          "name": "lora_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "lora_name"
+          },
+          "link": null
+        },
+        {
+          "label": "strength_model",
+          "name": "strength_model",
+          "type": "FLOAT",
+          "widget": {
+            "name": "strength_model"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "模型",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "title": "128｜角色去油 LoRA · Mystic 0.5",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "MysticXXX_MMH3-V1.safetensors",
+        0.5000000000000001
+      ],
+      "widgets_values_named": {
+        "lora_name": "MysticXXX_MMH3-V1.safetensors",
+        "strength_model": 0.5000000000000001
+      },
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 53,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        4.518746871513446,
+        699.5360804757493
+      ],
+      "size": [
+        430,
+        90
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "模型",
+          "name": "model",
+          "type": "MODEL",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "label": "模型",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            21
+          ]
+        }
+      ],
+      "title": "04｜原 LoRA · Turbo v4 1.0",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors",
+        1.0000000000000002
+      ],
+      "widgets_values_named": {
+        "lora_name": "minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors",
+        "strength_model": 1.0000000000000002
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 38,
+      "type": "CLIPLoader",
+      "pos": [
+        515.5626202591537,
+        1140.9587701465653
+      ],
+      "size": [
+        430,
+        110
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "clip_name",
+          "name": "clip_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "clip_name"
+          },
+          "link": null
+        },
+        {
+          "label": "type",
+          "name": "type",
+          "type": "COMBO",
+          "widget": {
+            "name": "type"
+          },
+          "link": null
+        },
+        {
+          "label": "device",
+          "name": "device",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "device"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "CLIP",
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "title": "05｜Qwen3-VL 编码器 · INT8 ConvRot · GPU默认设备",
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "minimax",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "type": "minimax",
+        "device": "default"
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 36,
+      "type": "VAELoader",
+      "pos": [
+        515.5626202591537,
+        900.5168992726809
+      ],
+      "size": [
+        430,
+        65
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "vae_name",
+          "name": "vae_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "vae_name"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "VAE",
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "title": "06｜原视频 VAE · INT8",
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "minimax_h3_video_vae_int8_convrot.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 37,
+      "type": "VAELoader",
+      "pos": [
+        515.5626202591537,
+        1020.8996047616406
+      ],
+      "size": [
+        430,
+        65
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "vae_name",
+          "name": "vae_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "vae_name"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "VAE",
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "title": "07｜原音频 VAE · FP32",
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "minimax_h3_audio_vae_fp32.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 261,
+      "type": "BasicScheduler",
+      "pos": [
+        4.518746871513446,
+        1145.3199651811292
+      ],
+      "size": [
+        430,
+        130
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "模型",
+          "name": "model",
+          "type": "MODEL",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "label": "Sigmas",
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "title": "08｜原 Beta 噪声表 · 12步",
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "beta",
+        12,
+        1
+      ],
+      "widgets_values_named": {
+        "scheduler": "beta",
+        "steps": 12,
+        "denoise": 1
+      },
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 289,
+      "type": "SplitSigmas",
+      "pos": [
+        515.5626202591537,
+        1303.8118660784812
+      ],
+      "size": [
+        430,
+        95
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "Sigmas",
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 5
+        },
+        {
+          "label": "step",
+          "name": "step",
+          "type": "INT",
+          "widget": {
+            "name": "step"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "high_sigmas",
+          "name": "high_sigmas",
+          "type": "SIGMAS",
+          "links": [
+            16
+          ]
+        },
+        {
+          "label": "low_sigmas",
+          "name": "low_sigmas",
+          "type": "SIGMAS",
+          "links": [
+            23
+          ]
+        }
+      ],
+      "title": "09｜SIGMAS分段 · 一采9步 / 二采4步",
+      "properties": {
+        "Node name for S&R": "SplitSigmas"
+      },
+      "widgets_values": [
+        8
+      ],
+      "widgets_values_named": {
+        "step": 8
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 502,
+      "type": "MiniMaxH3Director",
+      "pos": [
+        1080,
+        180
+      ],
+      "size": [
+        1050,
+        2350
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 6
+        },
+        {
+          "name": "video_vae",
+          "type": "VAE",
+          "link": 8
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 9
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 7
+        },
+        {
+          "name": "i2v_groups",
+          "shape": 7,
+          "type": "MMX_DIR_GROUP",
+          "link": null
+        },
+        {
+          "name": "r2v_groups",
+          "shape": 7,
+          "type": "MMX_DIR_GROUP",
+          "link": null
+        },
+        {
+          "name": "semantic_bridge",
+          "shape": 7,
+          "type": "MMX_DIR_SEMANTIC_BRIDGE",
+          "link": null
+        },
+        {
+          "name": "selflift",
+          "shape": 7,
+          "type": "MMX_DIR_SELFLIFT",
+          "link": null
+        },
+        {
+          "name": "refine",
+          "shape": 7,
+          "type": "MMX_DIR_REFINE",
+          "link": 24
+        },
+        {
+          "name": "face_refine",
+          "shape": 7,
+          "type": "MMX_DIR_FACE_REFINE",
+          "link": null
+        },
+        {
+          "name": "sigmas",
+          "shape": 7,
+          "type": "SIGMAS",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "shape": 6,
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "audio",
+          "shape": 6,
+          "type": "AUDIO",
+          "links": []
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "source_images",
+          "shape": 6,
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "report",
+          "type": "STRING",
+          "links": [
+            20
+          ]
+        },
+        {
+          "name": "images_pre_refine",
+          "shape": 6,
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "images_pre_face_refine",
+          "shape": 6,
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "title": "502｜去油版导演台 · 一采确认与二采",
+      "properties": {
+        "Node name for S&R": "MiniMaxH3Director"
+      },
+      "widgets_values": [
+        "r2v — 参考主体生视频(Reference to Video)",
+        "subject_definitions:\n{{填写公共素材标签与主体定义；与本组实际合并后的Picture/Audio/Video标签逐一对应}}",
+        "采样设置",
+        1,
+        7503308486466147,
+        "fixed",
+        24,
+        1024,
+        576,
+        864,
+        984,
+        "{\"version\":5,\"editMode\":\"segment\",\"timelineMode\":\"prompt_batch\",\"totalFrames\":984,\"frameRate\":24,\"width\":1024,\"height\":576,\"refMaxSize\":864,\"runSelectEnabled\":false,\"runSelection\":[],\"videoClips\":[],\"global\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"subject_definitions:\\n{{填写公共素材标签与主体定义；与本组实际合并后的Picture/Audio/Video标签逐一对应}}\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":true,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}},\"output\":{\"mode\":\"fixed\",\"aspectRatio\":\"16:9 (宽屏)\",\"megapixels\":0.6,\"multiple\":32,\"longEdge\":1024,\"width\":1024,\"height\":576,\"maxExportFrames\":0,\"exportMode\":\"segments\",\"audioMode\":\"generate\",\"exportSourceImages\":false,\"exportPreFaceRefine\":false,\"refImageSize\":\"1536\",\"continuityEnabled\":true,\"continuityOverlapFrames\":22,\"continuityMode\":\"continue\",\"continuityRedraw\":0.1,\"continuityKeepTail\":true},\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":277,\"frameCount\":277,\"durationSec\":11,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-002\",\"start\":277,\"length\":362,\"frameCount\":362,\"durationSec\":15,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-003\",\"start\":639,\"length\":345,\"frameCount\":345,\"durationSec\":14,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"keyframes\":[],\"durationSec\":40,\"video\":{\"fileName\":\"\",\"frames\":[],\"type\":\"input\",\"subfolder\":\"\",\"sourceFrameCount\":984,\"deletedSourceRanges\":[],\"frameMap\":[]},\"gen\":{\"defaultFrameCount\":124},\"liveTaePreview\":false,\"batchDetailMode\":\"solo\",\"batchWorkspaces\":{\"r2v\":{\"selectedIndex\":0,\"editMode\":\"segment\",\"runSelectEnabled\":false,\"runSelection\":[],\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":277,\"frameCount\":277,\"durationSec\":11,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-002\",\"start\":277,\"length\":362,\"frameCount\":362,\"durationSec\":15,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-003\",\"start\":639,\"length\":345,\"frameCount\":345,\"durationSec\":14,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"globalCommon\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"subject_definitions:\\n{{填写公共素材标签与主体定义；与本组实际合并后的Picture/Audio/Video标签逐一对应}}\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":true,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}}}}}",
+        "高级采样",
+        8,
+        "euler",
+        "beta",
+        12,
+        3,
+        false,
+        false,
+        "性能",
+        true,
+        true,
+        false,
+        "raw",
+        true,
+        ""
+      ],
+      "widgets_values_named": {
+        "task_type": "r2v — 参考主体生视频(Reference to Video)",
+        "global_prompt": "subject_definitions:\n{{填写公共素材标签与主体定义；与本组实际合并后的Picture/Audio/Video标签逐一对应}}",
+        "bd_grp_sample": "采样设置",
+        "cfg": 1,
+        "seed": 7503308486466147,
+        "control_after_generate": "fixed",
+        "frame_rate": 24,
+        "width": 1024,
+        "height": 576,
+        "ref_max_size": 864,
+        "total_frames": 984,
+        "timeline_data": "{\"version\":5,\"editMode\":\"segment\",\"timelineMode\":\"prompt_batch\",\"totalFrames\":984,\"frameRate\":24,\"width\":1024,\"height\":576,\"refMaxSize\":864,\"runSelectEnabled\":false,\"runSelection\":[],\"videoClips\":[],\"global\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"subject_definitions:\\n{{填写公共素材标签与主体定义；与本组实际合并后的Picture/Audio/Video标签逐一对应}}\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":true,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}},\"output\":{\"mode\":\"fixed\",\"aspectRatio\":\"16:9 (宽屏)\",\"megapixels\":0.6,\"multiple\":32,\"longEdge\":1024,\"width\":1024,\"height\":576,\"maxExportFrames\":0,\"exportMode\":\"segments\",\"audioMode\":\"generate\",\"exportSourceImages\":false,\"exportPreFaceRefine\":false,\"refImageSize\":\"1536\",\"continuityEnabled\":true,\"continuityOverlapFrames\":22,\"continuityMode\":\"continue\",\"continuityRedraw\":0.1,\"continuityKeepTail\":true},\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":277,\"frameCount\":277,\"durationSec\":11,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-002\",\"start\":277,\"length\":362,\"frameCount\":362,\"durationSec\":15,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-003\",\"start\":639,\"length\":345,\"frameCount\":345,\"durationSec\":14,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"keyframes\":[],\"durationSec\":40,\"video\":{\"fileName\":\"\",\"frames\":[],\"type\":\"input\",\"subfolder\":\"\",\"sourceFrameCount\":984,\"deletedSourceRanges\":[],\"frameMap\":[]},\"gen\":{\"defaultFrameCount\":124},\"liveTaePreview\":false,\"batchDetailMode\":\"solo\",\"batchWorkspaces\":{\"r2v\":{\"selectedIndex\":0,\"editMode\":\"segment\",\"runSelectEnabled\":false,\"runSelection\":[],\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":277,\"frameCount\":277,\"durationSec\":11,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-002\",\"start\":277,\"length\":362,\"frameCount\":362,\"durationSec\":15,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}},{\"id\":\"segment-003\",\"start\":639,\"length\":345,\"frameCount\":345,\"durationSec\":14,\"prompt\":\"{{填写本分段summary、retention_analysis、detailed_description、overall_soundscape及non_diegetic_music；与公共subject_definitions组成完整H3正文}}\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":true,\"refImageSize\":\"1536\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"globalCommon\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"subject_definitions:\\n{{填写公共素材标签与主体定义；与本组实际合并后的Picture/Audio/Video标签逐一对应}}\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":true,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}}}}}",
+        "bd_grp_advanced": "高级采样",
+        "steps": 8,
+        "sampler": "euler",
+        "scheduler": "beta",
+        "shift_video": 12,
+        "shift_audio": 3,
+        "export_source_images": false,
+        "export_pre_face_refine": false,
+        "bd_grp_perf": "性能",
+        "clear_vram_between_segments": true,
+        "clear_vram_before_refine": true,
+        "clear_vram_before_face_refine": false,
+        "cache_frames_codec": "raw",
+        "precise_segment_memory": true,
+        "minimax_director_ui": ""
+      }
+    },
+    {
+      "id": 403,
+      "type": "PreviewAny",
+      "pos": [
+        2230,
+        870
+      ],
+      "size": [
+        720,
+        480
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 20
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "title": "12｜导演台执行报告",
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 404,
+      "type": "Note",
+      "pos": [
+        3060,
+        1100
+      ],
+      "size": [
+        650,
+        760
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "去油版｜使用条件与填写说明",
+      "properties": {
+        "text": "Minimax-H3-导演台-视频生成-去油版\n仅用户明确指定时使用；128保留Mystic LoRA 0.5，用于角色去油。默认制作入口为标准版。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n使用分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据并驱动执行，404提供填写说明。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
+      },
+      "widgets_values": [
+        "Minimax-H3-导演台-视频生成-去油版\n仅用户明确指定时使用；128保留Mystic LoRA 0.5，用于角色去油。默认制作入口为标准版。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n使用分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据并驱动执行，404提供填写说明。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
+      ],
+      "widgets_values_named": {
+        "text": "Minimax-H3-导演台-视频生成-去油版\n仅用户明确指定时使用；128保留Mystic LoRA 0.5，用于角色去油。默认制作入口为标准版。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n使用分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据并驱动执行，404提供填写说明。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 405,
+      "type": "TESpeedMiniMaxH3",
+      "pos": [
+        4.518746871513446,
+        844.3430355899711
+      ],
+      "size": [
+        430,
+        250
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 21
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            4,
+            6,
+            28
+          ]
+        }
+      ],
+      "title": "405｜TE-Speed · 8步模式 · auto",
+      "properties": {
+        "Node name for S&R": "TESpeedMiniMaxH3"
+      },
+      "widgets_values": [
+        0.08,
+        0.1,
+        0.9,
+        2,
+        "auto",
+        "8-step LoRA"
+      ],
+      "widgets_values_named": {
+        "processing_control_value": 0.08,
+        "processing_percent_1": 0.1,
+        "processing_percent_2": 0.9,
+        "mcs": 2,
+        "device": "auto",
+        "mode": "8-step LoRA"
+      },
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 406,
+      "type": "PathchSageAttentionKJ",
+      "pos": [
+        4.518746871513446,
+        303.8625788490315
+      ],
+      "size": [
+        430,
+        82
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 22
+        },
+        {
+          "label": "sage_attention",
+          "name": "sage_attention",
+          "type": "COMBO",
+          "widget": {
+            "name": "sage_attention"
+          },
+          "link": null
+        },
+        {
+          "label": "allow_compile",
+          "name": "allow_compile",
+          "shape": 7,
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "allow_compile"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "MODEL",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PathchSageAttentionKJ",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "auto",
+        false
+      ],
+      "widgets_values_named": {
+        "sage_attention": "auto",
+        "allow_compile": false
+      }
+    },
+    {
+      "id": 407,
+      "type": "MiniMaxH3DirectorRefine",
+      "pos": [
+        660,
+        1540
+      ],
+      "size": [
+        360,
+        640
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "refine_model",
+          "type": "MODEL",
+          "shape": 7,
+          "link": 30
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "shape": 7,
+          "link": 23
+        },
+        {
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "shape": 7,
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "refine",
+          "type": "MMX_DIR_REFINE",
+          "links": [
+            24
+          ]
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "links": []
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3DirectorRefine",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": [
+        "upscale",
+        "h3_latent",
+        "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors",
+        "euler",
+        1,
+        "inherit",
+        0,
+        "fixed",
+        "跟随导演台",
+        1.265625,
+        1536,
+        864,
+        true,
+        true,
+        false,
+        false,
+        2,
+        128
+      ],
+      "widgets_values_named": {
+        "mode": "upscale",
+        "upscale_method": "h3_latent",
+        "latent_upscale_model": "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors",
+        "sampler": "euler",
+        "passes": 1,
+        "seed_mode": "inherit",
+        "seed": 0,
+        "control_after_generate": "fixed",
+        "aspect_ratio": "跟随导演台",
+        "megapixels": 1.265625,
+        "width": 1536,
+        "height": 864,
+        "skip_fl2v": true,
+        "confirm_first_pass": true,
+        "enable_latent_chunking": false,
+        "enable_tiling": false,
+        "tile_count": 2,
+        "tile_overlap": 128
+      },
+      "title": "407｜Refine二采 · 后4步 · 1536×864 · 一采确认开启"
+    },
+    {
+      "id": 408,
+      "type": "MiniMaxLowVRAMAttention",
+      "pos": [
+        0,
+        1540
+      ],
+      "size": [
+        450,
+        120
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 28
+        },
+        {
+          "name": "head_chunks",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "head_chunks"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            29
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "408｜二采注意力头分组 · 4组",
+      "properties": {
+        "Node name for S&R": "MiniMaxLowVRAMAttention"
+      },
+      "widgets_values": [
+        4
+      ],
+      "widgets_values_named": {
+        "head_chunks": 4
+      },
+      "color": "#233",
+      "bgcolor": "#344"
+    },
+    {
+      "id": 409,
+      "type": "MiniMaxChunkFeedForward",
+      "pos": [
+        0,
+        1760
+      ],
+      "size": [
+        450,
+        138
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 29
+        },
+        {
+          "name": "chunks",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "chunks"
+          }
+        },
+        {
+          "name": "seq_threshold",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seq_threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            30
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "409｜二采前馈分块 · 4块",
+      "properties": {
+        "Node name for S&R": "MiniMaxChunkFeedForward"
+      },
+      "widgets_values": [
+        4,
+        4096
+      ],
+      "widgets_values_named": {
+        "chunks": 4,
+        "seq_threshold": 4096
+      },
+      "color": "#233",
+      "bgcolor": "#344"
+    }
+  ],
+  "links": [
+    [
+      1,
+      406,
+      0,
+      58,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      58,
+      0,
+      128,
+      0,
+      "MODEL"
+    ],
+    [
+      3,
+      128,
+      0,
+      53,
+      0,
+      "MODEL"
+    ],
+    [
+      4,
+      405,
+      0,
+      261,
+      0,
+      "MODEL"
+    ],
+    [
+      5,
+      261,
+      0,
+      289,
+      0,
+      "SIGMAS"
+    ],
+    [
+      6,
+      405,
+      0,
+      502,
+      0,
+      "MODEL"
+    ],
+    [
+      7,
+      38,
+      0,
+      502,
+      3,
+      "CLIP"
+    ],
+    [
+      8,
+      36,
+      0,
+      502,
+      1,
+      "VAE"
+    ],
+    [
+      9,
+      37,
+      0,
+      502,
+      2,
+      "VAE"
+    ],
+    [
+      20,
+      502,
+      5,
+      403,
+      0,
+      "STRING"
+    ],
+    [
+      16,
+      289,
+      0,
+      502,
+      10,
+      "SIGMAS"
+    ],
+    [
+      21,
+      53,
+      0,
+      405,
+      0,
+      "MODEL"
+    ],
+    [
+      22,
+      192,
+      0,
+      406,
+      0,
+      "MODEL"
+    ],
+    [
+      23,
+      289,
+      1,
+      407,
+      1,
+      "SIGMAS"
+    ],
+    [
+      24,
+      407,
+      0,
+      502,
+      8,
+      "MMX_DIR_REFINE"
+    ],
+    [
+      28,
+      405,
+      0,
+      408,
+      0,
+      "MODEL"
+    ],
+    [
+      29,
+      408,
+      0,
+      409,
+      0,
+      "MODEL"
+    ],
+    [
+      30,
+      409,
+      0,
+      407,
+      0,
+      "MODEL"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "A｜原模型、LoRA、编码器与噪声表",
+      "bounding": [
+        -17.54659796775967,
+        78.65837936121454,
+        1013.2966052179222,
+        1365.0034836488094
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "B｜导演台内部编辑：公共素材与分段",
+      "bounding": [
+        1040,
+        75,
+        1120,
+        2500
+      ],
+      "color": "#8b6654",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "C｜导演台分段导出报告",
+      "bounding": [
+        2190,
+        75,
+        820,
+        2050
+      ],
+      "color": "#6c5b8d",
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "D｜二采模型分块与Refine",
+      "bounding": [
+        -20,
+        1450,
+        1050,
+        810
+      ],
+      "color": "#487f68",
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "E｜一采审核与填写说明",
+      "bounding": [
+        3030,
+        70,
+        720,
+        1900
+      ],
+      "color": "#6c5b8d",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6830134553650707,
+      "offset": [
+        1048.9148086117975,
+        172.33263152558115
+      ]
+    },
+    "frontendVersion": "1.53.6",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "extensions": {
+    "seed_widgets": {
+      "402": 4
+    }
+  },
+  "version": 0.4,
+  "seed_widgets": {
+    "502": 4
+  }
+}

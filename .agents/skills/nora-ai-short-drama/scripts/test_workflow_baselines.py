@@ -16,10 +16,22 @@ RETAINED = BASELINES / "非正式工作流"
 class BaselineTests(unittest.TestCase):
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
-        self.assertEqual(len(results), 10)
+        self.assertEqual(len(results), 11)
         h3 = [r for r in results if r["optional_references"]]
         self.assertEqual(len(h3), 1)
         self.assertTrue(all(r["reference_combinations"] == 147 for r in h3))
+
+    def test_video_variants_differ_only_by_optional_lora(self):
+        standard = json.loads((BASELINES / "Minimax-H3-导演台-视频生成-标准版.api.json").read_text(encoding="utf-8"))
+        deoiled = json.loads((BASELINES / "Minimax-H3-导演台-视频生成-去油版.api.json").read_text(encoding="utf-8"))
+        self.assertNotIn("128", standard)
+        self.assertEqual(deoiled["128"]["class_type"], "LoraLoaderModelOnly")
+        self.assertEqual(deoiled["128"]["inputs"]["model"], ["58", 0])
+        self.assertEqual(deoiled["53"]["inputs"]["model"], ["128", 0])
+        self.assertEqual(standard["53"]["inputs"]["model"], ["58", 0])
+        deoiled.pop("128")
+        deoiled["53"]["inputs"]["model"] = ["58", 0]
+        self.assertEqual(wb.semantic(standard), wb.semantic(deoiled))
 
     def test_retained_pairs_can_be_checked_directly(self):
         results = wb.verify(RETAINED)
@@ -28,7 +40,7 @@ class BaselineTests(unittest.TestCase):
 
     def test_confirmation_pair_requires_report_output(self):
         with tempfile.TemporaryDirectory() as tmp:
-            name = "Minimax-H3-导演台-视频生成"
+            name = "Minimax-H3-导演台-视频生成-标准版"
             for suffix in ("workflow", "api"):
                 source = BASELINES / f"{name}.{suffix}.json"
                 Path(tmp, source.name).write_bytes(source.read_bytes())

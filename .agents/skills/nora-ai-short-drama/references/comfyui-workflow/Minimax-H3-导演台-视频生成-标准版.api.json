@@ -35,27 +35,13 @@
       "title": "MiniMaxH3MemoryEfficientSageAttentionPatch"
     }
   },
-  "128": {
-    "class_type": "LoraLoaderModelOnly",
-    "inputs": {
-      "lora_name": "MysticXXX_MMH3-V1.safetensors",
-      "strength_model": 0.5000000000000001,
-      "model": [
-        "58",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "03｜原 LoRA · Mystic 0.5"
-    }
-  },
   "53": {
     "class_type": "LoraLoaderModelOnly",
     "inputs": {
       "lora_name": "minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors",
       "strength_model": 1.0000000000000002,
       "model": [
-        "128",
+        "58",
         0
       ]
     },
@@ -226,7 +212,7 @@
       ]
     },
     "_meta": {
-      "title": "502｜导演台 · 一采确认与二采"
+      "title": "502｜标准版导演台 · 一采确认与二采"
     }
   },
   "403": {
