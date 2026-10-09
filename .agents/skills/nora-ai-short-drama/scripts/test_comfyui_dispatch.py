@@ -69,10 +69,24 @@ class DispatchTests(unittest.TestCase):
     def args(self, name='first', **overrides):
         result = argparse.Namespace(project=str(self.root), workflow=str(self.path), task_type='image',
             record_dir=str(self.root / name), eligible_url=[A, B, C], target_url=None, uploads=None, timeout=30,
-            attempt_name='submit-attempt.json', request_name='request.json', response_name='response.json')
+            attempt_name='submit-attempt.json', request_name='request.json', response_name='response.json',
+            monitor='legacy', output_plan=None, task_title=None, thread_id=None, history_name='执行结果.json')
         for key, value in overrides.items():
             setattr(result, key, value)
         return result
+
+    def test_browser_mode_hands_selected_workflow_to_service_without_direct_post(self):
+        args = self.args(monitor='browser', output_plan='explicit-plan.json')
+        with patch.object(d.browser_tasks, 'submit', return_value={'prompt_id': 'service-id', 'monitor': 'browser'}) as handoff:
+            result = d.dispatch(args)
+        self.assertEqual(result['prompt_id'], 'service-id')
+        handoff.assert_called_once_with(args, self.workflow, A)
+        self.assertFalse(any(route == '/prompt' for _, route, _ in self.calls))
+
+    def test_browser_mode_requires_explicit_output_plan_before_remote_access(self):
+        with self.assertRaises(ValueError):
+            d.dispatch(self.args(monitor='browser'))
+        self.assertEqual(self.calls, [])
 
     def test_running_and_one_pending_still_use_default(self):
         self.queues[A] = (1, 1)

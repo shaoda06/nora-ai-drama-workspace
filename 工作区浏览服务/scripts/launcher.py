@@ -49,7 +49,7 @@ def start():
             raise RuntimeError(f'{PORT}端口已被其他程序占用；未停止该程序。请查看工作区浏览服务/README.md。') from error
     RUNTIME.mkdir(exist_ok=True)
     python = ROOT / '.venv/Scripts/python.exe' if os.name == 'nt' else ROOT / '.venv/bin/python'
-    environment = {**os.environ, 'NORA_WORKSPACE': str(WORKSPACE), 'NORA_SERVICE_ENV': ENVIRONMENT}
+    environment = {**os.environ, 'NORA_WORKSPACE': str(WORKSPACE), 'NORA_SERVICE_ENV': ENVIRONMENT, 'NORA_SERVICE_PORT': str(PORT)}
     with (RUNTIME / 'server.log').open('ab') as output:
         process = subprocess.Popen([str(python), '-m', 'uvicorn', 'backend.main:app', '--host', '0.0.0.0', '--port', str(PORT)],
                                    cwd=ROOT, env=environment, stdout=output, stderr=output, stdin=subprocess.DEVNULL,

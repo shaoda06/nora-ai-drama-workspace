@@ -1,4 +1,8 @@
 from pathlib import Path
+from contextlib import asynccontextmanager
+from collections.abc import AsyncIterable
+import asyncio
+import secrets
 from typing import Annotated, Any, Literal
 import json
 import re
@@ -8,11 +12,14 @@ from urllib.parse import quote, urlsplit
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse
+from fastapi.sse import EventSourceResponse, ServerSentEvent
 from pydantic import BaseModel
 
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
 from backend.services import krea2
+from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
+from websockets.exceptions import WebSocketException
 from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes
 
 TOOL = Path(__file__).resolve().parent.parent
@@ -22,7 +29,59 @@ store = ProjectStore(WORKSPACE / 'projects')
 revision_notes = RevisionNotes()
 VERSION = json.loads((TOOL / 'frontend/package.json').read_text('utf-8'))['version']
 FRONTEND_RELEASE = TOOL / 'frontend/dist/release.json'
-app = FastAPI(title='Nora工作区浏览服务', version=VERSION, docs_url=None, redoc_url=None)
+@asynccontextmanager
+async def lifespan(app):
+    tasks = TaskStore(TOOL / 'runtime', WORKSPACE)
+    app.state.comfy_tasks = tasks
+    config_path = TOOL / 'runtime/service.json'
+    config = json.loads(config_path.read_text('utf-8-sig')) if config_path.is_file() else {}
+    port = int(os.environ.get('NORA_SERVICE_PORT', config.get('port', 8782)))
+    (TOOL / 'runtime/task-service.json').write_text(
+        json.dumps({'url': f'http://127.0.0.1:{port}', 'token': tasks.token}), encoding='utf-8')
+    await tasks.start()
+    try:
+        yield
+    finally:
+        await tasks.close()
+
+
+app = FastAPI(title='Nora工作区浏览服务', version=VERSION, docs_url=None, redoc_url=None, lifespan=lifespan)
+
+
+@app.get('/api/comfy/tasks')
+async def comfy_tasks(request: Request) -> dict[str, Any]:
+    return request.app.state.comfy_tasks.public()
+
+
+@app.get('/api/comfy/events', response_class=EventSourceResponse)
+async def comfy_events(request: Request) -> AsyncIterable[ServerSentEvent]:
+    tasks = request.app.state.comfy_tasks
+    event = asyncio.Event()
+    tasks.subscribers.add(event)
+    try:
+        yield ServerSentEvent(data=tasks.public(), event='tasks')
+        while True:
+            await event.wait()
+            event.clear()
+            yield ServerSentEvent(data=tasks.public(), event='tasks')
+    finally:
+        tasks.subscribers.remove(event)
+
+
+@app.post('/api/internal/comfy/submit')
+async def comfy_submit(request: Request, data: TaskInput) -> dict[str, Any]:
+    tasks = request.app.state.comfy_tasks
+    # Local agent only. No token/connection metadata is returned to browser readers.
+    if (request.client.host not in ('127.0.0.1', '::1') or request.headers.get('origin') is not None
+            or not secrets.compare_digest(request.headers.get('x-nora-task-token', ''), tasks.token)):
+        raise HTTPException(403, '仅允许本机Agent通过专用凭证提交')
+    try:
+        result = await tasks.submit(data)
+    except (ValueError, OSError, RuntimeError, WebSocketException) as error:
+        raise HTTPException(409, str(error)) from error
+    except comfy_client.ClientError as error:
+        raise HTTPException(409, {'code': error.code, 'message': str(error), **error.details}) from error
+    return result
 
 
 @app.middleware('http')

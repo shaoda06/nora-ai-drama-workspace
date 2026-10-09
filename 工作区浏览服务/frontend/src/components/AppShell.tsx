@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { APP_VERSION, useAppUpdate } from '../useAppUpdate';
 import { restoreRefreshScroll } from '../refreshPosition';
 import { Notifications } from './Notifications';
+import { TaskSidebar } from './TaskSidebar';
 
 export const HeaderControlsContext = createContext<HTMLElement | null>(null);
 export const FooterSyncContext = createContext<HTMLElement | null>(null);
@@ -32,6 +33,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
   useEffect(() => restoreRefreshScroll(main.current!), []);
   return <Notifications><HeaderControlsContext.Provider value={controlsRoot}><FooterSyncContext.Provider value={syncRoot}>
+    <div className="workspace-with-tasks"><TaskSidebar />
     <header className="site-header" ref={header}>
       <div className="header-main"><Link className="brand" to="/">Nora工作台</Link>
         <div className="header-controls" ref={setControlsRoot} /></div>
@@ -45,6 +47,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="app-bottom-tools">
       {backTop && <button className="back-top" onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}>↑ 返回顶部</button>}
       {pending && <p className="app-update-notice" role="status">页面已有更新，将在编辑或播放结束后自动刷新。</p>}
+    </div>
     </div>
   </FooterSyncContext.Provider></HeaderControlsContext.Provider></Notifications>;
 }

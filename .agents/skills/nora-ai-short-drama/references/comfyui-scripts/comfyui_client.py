@@ -164,11 +164,11 @@ def validate_workflow(workflow):
                               node_id=node_id)
 
 
-def submit(client, args, workflow=None):
+def submit(client, args, workflow=None, client_id=None):
     if workflow is None:
         workflow = strict_json(Path(args.workflow).read_bytes())
     validate_workflow(workflow)
-    payload = {"prompt": workflow, "client_id": str(uuid.uuid4())}
+    payload = {"prompt": workflow, "client_id": client_id or str(uuid.uuid4())}
     request_bytes = encoded(payload)
     record = Path(args.record_dir).absolute()
     record.mkdir(parents=True, exist_ok=True)

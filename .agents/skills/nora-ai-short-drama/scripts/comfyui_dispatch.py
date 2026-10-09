@@ -10,6 +10,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'comfyui-scripts'))
 import comfyui_client as client
 from generation_context import prepare_generation_context
+import browser_tasks
 
 TASK_TYPES = ('image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess')
 VIDEO_TASK_TYPES = ('video-first-pass', 'video-second-pass')
@@ -84,6 +85,8 @@ def video_job_count(queue):
 
 
 def dispatch(args):
+    if args.monitor == 'browser' and not args.output_plan:
+        raise ValueError('浏览服务监控需要--output-plan；无可自动取回输出时显式提供空数组JSON')
     workflow = client.strict_json(Path(args.workflow).read_bytes())
     client.validate_workflow(workflow)
     if (any(node['class_type'] in VIDEO_GENERATION_NODES for node in workflow.values()) and
@@ -170,7 +173,8 @@ def dispatch(args):
                 except KeyError as exc:
                     raise ValueError('生成资料输入映射或API缺少字段：' + str(exc)) from exc
             # Once a POST is attempted, errors propagate: never try the next endpoint.
-            result = client.submit(remote, args, workflow=workflow)
+            result = (browser_tasks.submit(args, workflow, url) if args.monitor == 'browser'
+                      else client.submit(remote, args, workflow=workflow))
             return {'dispatch_state': 'accepted', 'url': url, 'checks': checks, **result}
         return {'dispatch_state': 'deferred', 'reason': 'no_eligible_available_endpoint', 'checks': checks}
 
@@ -188,6 +192,11 @@ def parser():
     p.add_argument('--request-name', default='request.json', help='Actual request evidence filename')
     p.add_argument('--response-name', default='response.json', help='Actual submission response filename')
     p.add_argument('--timeout', type=float, default=30, help='Seconds per network operation, not task duration; no retries')
+    p.add_argument('--monitor', choices=('browser', 'legacy'), default='browser', help='browser: hand off submit/monitor/download to running workspace service (default); legacy: explicit original polling/heartbeat path')
+    p.add_argument('--output-plan', help='JSON array of explicit output selectors and absolute local targets; required for browser mode, [] delegates collection to the original thread')
+    p.add_argument('--history-name', default='执行结果.json', help='Terminal history evidence filename inside record-dir; use the project-required prefix for image tasks')
+    p.add_argument('--task-title', help='Human-readable title shown in the global read-only task sidebar; defaults to record directory name')
+    p.add_argument('--thread-id', help='Authorized destination Codex thread; defaults to genuine CODEX_THREAD_ID; never changes model settings')
     return p
 
 
