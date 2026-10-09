@@ -154,6 +154,71 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('主旨正文保留。', story.json()['bodyHtml'])
         self.assertEqual(script.read_bytes(), source)
 
+    def test_latest_pending_episode_documents_are_available_for_review(self):
+        episode = self.project / '09-剧集制作/EP001'
+        formal = episode / '02-剧集剧本/EP001-本集剧本.md'
+        formal.parent.mkdir(parents=True)
+        formal.write_text('# 正式剧本\n- 文档版本：v10\n- 确认状态：已确认\n\n'
+                          '## 1. 故事剧本正文\n### EP001-C009\n旧正文。\n', encoding='utf-8')
+        source = formal.read_bytes()
+        work = episode / '其他资料/工作稿'
+        work.mkdir(parents=True)
+        (work / 'EP001-本集剧本-工作稿.md').write_text(
+            '# 剧本工作稿\n- 当前稿版本：v11\n\n## 1. 当前内容\n'
+            '### 最新剧本v11\n- 文档版本：v11\n- 确认状态：待审核\n\n'
+            '#### 1. 故事剧本正文\n##### EP001-C001\n新正文。\n'
+            '## 2. 讨论与修改\n### 历史v99\n- 文档版本：v99\n旧讨论。\n', encoding='utf-8')
+        boards = episode / '03-分镜脚本'
+        boards.mkdir()
+        (boards / 'EP001-C001-场次分镜.md').write_text(
+            '# 旧分镜\n- 文档版本：v07\n\n## 1. 镜头正文\n### 分段 P001\n#### EP001-SH001\n旧镜头。\n', encoding='utf-8')
+        (work / 'EP001-C001-场次分镜-工作稿.md').write_text(
+            '# 分镜工作稿\n\n## 1. 当前内容\n### 新分镜v08\n'
+            '- 文档版本：v08\n- 确认状态：待审核\n\n#### 1. 镜头正文\n'
+            '##### 分段 P001\n###### EP001-SH001\n新镜头。\n## 2. 讨论与修改\n旧镜头讨论。\n', encoding='utf-8')
+        index = '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n| EP001-C001 | EP001-C001-P001 | {} |\n'
+        old_index = boards / 'EP001-分镜索引.md'
+        new_index = work / 'EP001-分镜索引-工作稿.md'
+        old_index.write_text('# 索引\n- 文档版本：v02\n\n' + index.format(11), encoding='utf-8')
+        new_index.write_text('# 索引工作稿\n- 当前稿版本：v02\n\n## 1. 当前内容\n'
+                             '### 新索引\n- 确认状态：待审核\n\n' + index.format(10)
+                             + '\n## 2. 讨论与修改\n旧索引。\n', encoding='utf-8')
+        os.utime(old_index, (1_700_000_000, 1_700_000_000))
+        os.utime(new_index, (1_700_000_001, 1_700_000_001))
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        script = data['script']
+        self.assertTrue(script['key'].endswith('本集剧本-工作稿.md'))
+        self.assertTrue(script['url'].startswith('/api/projects/'))
+        self.assertEqual(script['doc']['meta'], {'文档版本': 'v11', '确认状态': '待审核'})
+        self.assertIn('新正文', script['doc']['contentHtml'])
+        self.assertNotIn('旧讨论', script['doc']['html'])
+        self.assertEqual(data['scenes'], ['C001'])
+        self.assertEqual(data['storyboards']['C001']['doc']['meta']['文档版本'], 'v08')
+        self.assertEqual(data['segments']['C001'][0]['duration'], 10)
+        self.assertIn('新镜头', data['segments']['C001'][0]['scriptHtml'])
+        self.assertNotIn('旧镜头', data['segments']['C001'][0]['scriptHtml'])
+        self.assertEqual(formal.read_bytes(), source)
+
+    def test_episode_latest_version_selection_supports_draft_only_and_newer_formal(self):
+        work = self.project / '09-剧集制作/EP001/其他资料/工作稿'
+        work.mkdir(parents=True)
+        draft = work / 'EP001-本集剧本-工作稿.md'
+        draft.write_text('# 工作稿\n\n## 1. 当前内容\n### 新稿\n- 文档版本：v02\n'
+                         '- 确认状态：待审核\n\n#### 1. 故事剧本正文\n##### EP001-C001\n草稿正文。\n', encoding='utf-8')
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual(data['scenes'], ['C001'])
+        self.assertTrue(data['script']['key'].endswith('工作稿.md'))
+        formal = self.project / '09-剧集制作/EP001/02-剧集剧本/EP001-本集剧本.md'
+        formal.parent.mkdir()
+        formal.write_text('# 正式稿\n- 文档版本：v03\n- 确认状态：已确认\n\n'
+                          '## 1. 故事剧本正文\n### EP001-C002\n正式新正文。\n', encoding='utf-8')
+        os.utime(draft, (1_900_000_000, 1_900_000_000))
+        self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual(data['scenes'], ['C002'])
+        self.assertTrue(data['script']['key'].endswith('/02-剧集剧本/EP001-本集剧本.md'))
+        self.assertEqual(data['script']['doc']['meta']['文档版本'], 'v03')
+
     def test_segments_use_current_index_and_match_story_scenes(self):
         episode = self.project / '09-剧集制作/EP001'
         (episode / '02-剧集剧本').mkdir(parents=True)

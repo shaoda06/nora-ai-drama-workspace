@@ -432,6 +432,29 @@ def build_data(project, *, web_episode_navigation=False):
             text, notice = "", "文件不是有效的UTF-8文本，无法页内预览；请打开原文件。"
         text_previews[relative] = {"text": text, "notice": notice}
 
+    def latest_episode_document(formal_key, work_key):
+        candidates = []
+        for key in (formal_key, work_key):
+            text = read(key)
+            if text is None:
+                continue
+            work_version = field(re.split(r"^##[ \t]", text, maxsplit=1, flags=re.M)[0], "当前稿版本")
+            if key == work_key:
+                current = re.search(r"^##[ \t]+1\.[ \t]*当前内容[ \t]*\n(.*?)(?=^##[ \t]|\Z)", text, re.M | re.S)
+                if current:
+                    text = re.sub(r"^#{3,6}(?= )", lambda match: match[0][2:], current[1].strip(), flags=re.M)
+            version = field(text, "文档版本")
+            if version == "未记录":
+                version = work_version
+            number = re.fullmatch(r"v(\d+)[。.]?", version, re.I)
+            candidates.append((int(number[1]) if number else -1, (project / key).stat().st_mtime_ns, key, text))
+        if not candidates:
+            return None, ""
+        _, _, key, text = max(candidates)
+        doc = {"title": next((line[2:] for line in text.splitlines() if line.startswith("# ")), Path(key).stem),
+               "html": markdown(text, key), "url": quote(key, safe="/-._~"), **document_header(text, key)}
+        return {"kind": "document", "name": doc["title"], "key": key, "url": doc["url"], "doc": doc}, text
+
     def video_prompts(key):
         match = re.fullmatch(
             r"09-剧集制作/(EP\d+)/06-生成结果/(C\d+)-场次结果/(P\d+)-分段结果/"
@@ -1102,23 +1125,38 @@ def build_data(project, *, web_episode_navigation=False):
             "statusHtml": status_markup(state if web_episode_navigation else raw_status or "未记录", PROGRESS),
             "note": "等待审阅也属于进行中；整集完成以项目进度为准。"})
         if web_episode_navigation:
-            script = read(production + "/" + number + "/02-剧集剧本/" + number + "-本集剧本.md") or ""
+            episode_root = production + "/" + number
+            work_root = episode_root + "/其他资料/工作稿/"
+            episode_node["script"], script = latest_episode_document(
+                episode_root + "/02-剧集剧本/" + number + "-本集剧本.md", work_root + number + "-本集剧本-工作稿.md")
             script_body = re.search(r"^##[ \t]+1\.[ \t]*故事剧本正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)", script, re.M | re.S)
             episode_node["scenes"] = list(dict.fromkeys(re.findall(
                 r"^###[ \t]+" + re.escape(number) + r"-(C\d{3,})[ \t]*$",
                 script_body[1] if script_body else "", re.M)))
             episode_node["segments"] = {scene: [] for scene in episode_node["scenes"]}
-            storyboard_index = production + "/" + number + "/03-分镜脚本/" + number + "-分镜索引.md"
-            for row in table_records(read(storyboard_index) or "", ("场次", "分段", "分段计划时长（秒）")):
+            episode_node["storyboards"] = {}
+            storyboard_texts = {}
+            for scene in episode_node["scenes"]:
+                identity = number + "-" + scene + "-场次分镜"
+                item, text = latest_episode_document(episode_root + "/03-分镜脚本/" + identity + ".md",
+                                                     work_root + identity + "-工作稿.md")
+                if item:
+                    episode_node["storyboards"][scene] = item
+                    storyboard_texts[scene] = text
+            index_item, storyboard_index_text = latest_episode_document(episode_root + "/03-分镜脚本/" + number + "-分镜索引.md",
+                                                            work_root + number + "-分镜索引-工作稿.md")
+            storyboard_index = index_item["key"] if index_item else episode_root + "/03-分镜脚本/" + number + "-分镜索引.md"
+            for row in table_records(storyboard_index_text, ("场次", "分段", "分段计划时长（秒）")):
                 identity = re.fullmatch(re.escape(number) + r"-(C\d{3,})-(P\d{3,})", row["分段"])
                 if not identity or identity[1] not in episode_node["segments"] or row["场次"] != number + "-" + identity[1]:
                     continue
                 duration = row["分段计划时长（秒）"]
                 if not re.fullmatch(r"\d+(?:\.\d+)?", duration) or float(duration) <= 0:
                     raise ValueError(storyboard_index + "：" + row["分段"] + "的分段计划时长必须为正数秒")
-                storyboard_source = production + "/" + number + "/03-分镜脚本/" + number + "-" + identity[1] + "-场次分镜.md"
+                storyboard_item = episode_node["storyboards"].get(identity[1])
+                storyboard_source = storyboard_item["key"] if storyboard_item else episode_root + "/03-分镜脚本/" + number + "-" + identity[1] + "-场次分镜.md"
                 shots = re.search(r"^##[ \t]+1\.[ \t]*镜头正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)",
-                                  read(storyboard_source) or "", re.M | re.S)
+                                  storyboard_texts.get(identity[1], ""), re.M | re.S)
                 segment_script = re.search(r"^###[ \t]+分段[ \t]+" + re.escape(identity[2])
                                            + r"[ \t]*\n.*?(?=^###[ \t]|\Z)", shots[1], re.M | re.S) if shots else None
                 shot_body = re.search(r"^####[ \t]+", segment_script[0], re.M) if segment_script else None

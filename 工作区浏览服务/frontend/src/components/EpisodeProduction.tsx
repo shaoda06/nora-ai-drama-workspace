@@ -21,7 +21,7 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
   useEffect(() => {
     if (selected && !current) onSelect(null);
   }, [selected, current, onSelect]);
-  const script = current?.children?.find(item => item.name === '02-剧集剧本')?.children?.find(item => item.name === `${current.name}-本集剧本.md`);
+  const script = current?.script;
   const scenes = current?.scenes || [];
   const selectedScene = scenes.includes(scene) ? scene : scenes[0] || '';
   const segments = current?.segments?.[selectedScene] || [];
@@ -38,7 +38,7 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
       {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
       <button className="link episode-script-link" disabled={!script} title={script ? undefined : '本集剧本尚未建立'} onClick={() => preview(script!)}>查看本集剧本</button>
     </div>
-    <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} revision={revision} directorFiles={directorFiles || []} />
+    <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} revision={revision} directorFiles={directorFiles || []} storyboardDocument={current.storyboards?.[selectedScene]?.doc} />
   </div> : <>
     <div ref={cards} className="episode-grid">{items.slice((page - 1) * 36, page * 36).map(item => <EpisodeButton key={item.key} item={item} onSelect={open} />)}</div>
     {!items.length && <p className="muted">尚无剧集制作目录。</p>}

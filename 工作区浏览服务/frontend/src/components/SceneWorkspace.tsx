@@ -17,12 +17,12 @@ import { SceneDownloads } from './SceneDownloads';
 type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
 
-export function SceneWorkspace({ scope, segments, revision, directorFiles }: { scope: NoteScope; segments: Segments; revision: number; directorFiles: FileItem[] }) {
+export function SceneWorkspace({ scope, segments, revision, directorFiles, storyboardDocument }: { scope: NoteScope; segments: Segments; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData }) {
   const { scene } = scope;
   const positionKey = `scene/${scope.project}/${scope.episode}/${scene}`;
   const [view, setView] = useRefreshState(positionKey + '/view', 'segments');
   const storyboardPath = `09-剧集制作/${scope.episode}/03-分镜脚本/${scope.episode}-${scene}-场次分镜.md`;
-  const storyboard = useQuery({ queryKey: ['document', scope.project, storyboardPath, revision], queryFn: () => get<RecordData>(`${projectUrl(scope.project)}/document?path=${encodeURIComponent(storyboardPath)}`), enabled: view === 'storyboard' && !!scene, placeholderData: previous => previous });
+  const storyboard = useQuery({ queryKey: ['document', scope.project, storyboardPath, revision], queryFn: () => get<RecordData>(`${projectUrl(scope.project)}/document?path=${encodeURIComponent(storyboardPath)}`), enabled: view === 'storyboard' && !!scene && !storyboardDocument, placeholderData: previous => previous });
   const notesExport = useRevisionNotesExport(scope, segments);
   const videoCache = useSceneVideoCache(segments.flatMap(item => {
     const video = latestVideo(item.videos);
@@ -78,8 +78,8 @@ export function SceneWorkspace({ scope, segments, revision, directorFiles }: { s
     {notesExport.dialog}
     </> : view === 'storyboard' ? <div className="scene-storyboard">
       {!scene ? <p className="muted">本集尚无场次分镜。</p> : <>
-        <Result loading={storyboard.isPending} error={storyboard.error} retry={storyboard.refetch} retrying={storyboard.isFetching} />
-        {storyboard.data && <Document value={storyboard.data} />}
+        {!storyboardDocument && <Result loading={storyboard.isPending} error={storyboard.error} retry={storyboard.refetch} retrying={storyboard.isFetching} />}
+        {(storyboardDocument || storyboard.data) && <Document value={storyboardDocument || storyboard.data!} />}
       </>}
     </div> : view === 'dialogue' ? <SceneStoryboardEditor key={positionKey} scope={scope} segments={segments} /> : <SceneDownloads files={directorFiles} />}
   </div></>;
