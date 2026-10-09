@@ -44,9 +44,11 @@ export function TaskSidebar() {
         setOpen(!open); localStorage.setItem('nora-task-sidebar', open ? 'closed' : 'open');
       }}><span aria-hidden="true">{open ? '‹' : '›'}</span><span className="comfy-rail-label">任务进度</span><span className="comfy-rail-count">{active}</span></button>
     <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
-      <div className="comfy-task-heading"><strong>生成任务</strong><div className="comfy-task-counts">
+      <section className="comfy-queue" aria-label="远端队列">
+      <div className="comfy-task-heading"><strong>远端队列</strong><div className="comfy-task-counts">
         <span>{active} 项进行中</span><span>{completed} 项已完成</span>
       </div></div>
+      <div className="comfy-queue-body">
       {tasks.length === 0 && <p className="comfy-empty">{connection === 'connected' ? '暂无已登记任务' : '等待任务状态…'}</p>}
       <div className="comfy-task-items">{tasks.map(task => <section className="comfy-task" key={task.id}>
         <div className="comfy-task-top"><span>{task.project}</span><strong data-status={task.status}>{states[task.status] || task.status}</strong></div>
@@ -69,6 +71,12 @@ export function TaskSidebar() {
         {!!task.notification_unknown && <p className="comfy-task-warning">另有 {task.notification_unknown} 条事件送达未确认，请在原会话核对</p>}
         <time dateTime={task.updated_at}>更新于 {new Date(task.updated_at).toLocaleString('zh-CN')}</time>
       </section>)}</div>
+      </div>
+      </section>
+      <section className="comfy-queue" aria-label="本地队列">
+        <div className="comfy-task-heading"><strong>本地队列</strong></div>
+        <div className="comfy-queue-body" />
+      </section>
     </div>
   </aside>;
 }
