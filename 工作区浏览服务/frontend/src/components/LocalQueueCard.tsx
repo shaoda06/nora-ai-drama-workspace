@@ -70,12 +70,12 @@ export function LocalQueueCard({ task, position, onReorder }: {
         <h2>{task.title}</h2>
         <p className="local-queue-card-session" title={task.source_session_name}>来源会话：{task.source_session_name}</p>
       </div>
-      <div className="local-queue-card-actions" aria-label="本地任务操作" title="样式预览，尚未接入实际调度">
+      {task.status !== 'completed' && <div className="local-queue-card-actions" aria-label="本地任务操作" title="样式预览，尚未接入实际调度">
         <button type="button" disabled>立即提交</button>
         <button type="button" disabled>插队</button>
-        <button type="button" disabled>暂停</button>
+        <button type="button" disabled>{task.status === 'paused' ? '恢复' : '暂停'}</button>
         <button type="button" disabled>取消</button>
-      </div>
+      </div>}
     </div>
   </>;
   return <>
