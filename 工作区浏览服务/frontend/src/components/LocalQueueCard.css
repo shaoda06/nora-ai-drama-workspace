@@ -21,4 +21,8 @@ body:has(.local-queue-card-floating){cursor:grabbing}
 .local-queue-card-actions{display:flex;flex:none;gap:6px}
 .local-queue-card-actions>button{padding:4px 8px;font-size:11px;line-height:1.6;border:1px solid var(--line);border-radius:5px;background:#f8faf7;color:var(--green);white-space:nowrap;opacity:1}
 .local-queue-card-actions>button:disabled{opacity:1}
+.local-queue-card-actions>button[data-tone=green]{background:#e3f2e9;color:#247a48;border-color:#b8d8c4}
+.local-queue-card-actions>button[data-tone=blue]{background:#e6effa;color:#386fb0;border-color:#bdcee4}
+.local-queue-card-actions>button[data-tone=orange]{background:#fff1dc;color:#a26916;border-color:#e4c99b}
+.local-queue-card-actions>button[data-tone=red]{background:#fae6e3;color:#ac493b;border-color:#e1bbb4}
 @media(max-width:700px){.local-queue-card-body{flex-wrap:wrap;gap:10px}.local-queue-card-description{flex-basis:100%}}
