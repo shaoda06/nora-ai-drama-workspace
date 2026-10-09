@@ -141,8 +141,7 @@ class SegmentTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_start_checkpoint_excludes_old_run_and_later_binds_only_new_run(self):
         self.log(1, 'MiniMax H3 Director segment mp4 run dir: E:/Comfy/output/minimax_seg_export/old')
-        await s.scan(self.store, 'task', begin=True)
-        # Explicitly reset to model the first execution_start for a newly queued task.
+        self.log(2, '\x1b[32m[INFO]\x1b[0m Prompt executed in 00:12:10\n')
         runtime = self.store.rows['task']['state']['segment_monitor']
         runtime.update(started=False, run_dir=None)
         await s.scan(self.store, 'task', begin=True)
@@ -153,6 +152,52 @@ class SegmentTests(unittest.IsolatedAsyncioTestCase):
         self.saved(7, index=2, pre=False)  # Wrong stage.
         await s.scan(self.store, 'task')
         self.assertEqual(self.downloads, [('seg_0000_pre.mp4', 'minimax_seg_export/run001')])
+
+    async def test_buffered_run_and_save_are_collected_when_start_is_processed_late(self):
+        runtime = self.store.rows['task']['state']['segment_monitor']
+        runtime['started'] = False
+        self.log(1, 'MiniMax H3 Director segment mp4 run dir: E:/Comfy/output/minimax_seg_export/run001')
+        self.saved(2)
+        await s.scan(self.store, 'task', begin=True)
+        self.assertEqual(self.downloads, [('seg_0000_pre.mp4', 'minimax_seg_export/run001')])
+        self.assertEqual(runtime['run_evidence']['t'], '2026-10-09T01:00:01')
+        await s.scan(self.store, 'task', begin=True)
+        self.assertEqual(len(self.downloads), 1)
+
+    async def test_delayed_start_excludes_all_queued_predecessors_and_collects_current_run(self):
+        runtime = self.store.rows['task']['state']['segment_monitor']
+        runtime['started'] = False
+        for second, run in ((1, 'foreign1'), (4, 'foreign2')):
+            self.log(second, f'MiniMax H3 Director segment mp4 run dir: E:/Comfy/output/minimax_seg_export/{run}')
+            self.saved(second + 1, run=run)
+            self.log(second + 2, '[INFO] Prompt executed in 12.34 seconds\n')
+        self.log(7, 'MiniMax H3 Director segment mp4 run dir: E:/Comfy/output/minimax_seg_export/run001')
+        self.saved(8)
+        await s.scan(self.store, 'task', begin=True)
+        self.assertEqual(self.downloads, [('seg_0000_pre.mp4', 'minimax_seg_export/run001')])
+
+    async def test_missing_run_binding_recovers_retained_logs_after_restart(self):
+        self.log(1, '[INFO] Prompt executed in 12.34 seconds\n')
+        self.log(2, 'MiniMax H3 Director segment mp4 run dir: E:/Comfy/output/minimax_seg_export/run001')
+        self.saved(3)
+        self.store.rows['task']['state']['segment_monitor']['cursor'] = '2026-10-09T01:00:04'
+        self.store.save('task')
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        with patch.object(self.store, 'client_for', return_value=self.remote), patch.object(self.store, 'notify', AsyncMock()):
+            await s.scan(self.store, 'task')
+            await s.scan(self.store, 'task')
+        self.assertEqual(self.downloads, [('seg_0000_pre.mp4', 'minimax_seg_export/run001')])
+
+    async def test_queue_advancing_during_log_read_cannot_bind_or_download_next_job(self):
+        self.log(1, 'MiniMax H3 Director segment mp4 run dir: E:/Comfy/output/minimax_seg_export/foreign')
+        self.saved(2, run='foreign')
+        self.remote.json.side_effect = [
+            {'queue_running': [[0, 'real-id']]}, {'entries': self.entries},
+            {'queue_running': [[0, 'next-id']]}]
+        await s.scan(self.store, 'task', begin=True)
+        self.assertEqual(self.downloads, [])
+        self.assertIsNone(self.store.rows['task']['state']['segment_monitor']['run_dir'])
 
     async def test_two_new_run_dirs_are_ambiguous_and_not_downloaded(self):
         for i in (1, 2):
@@ -336,13 +381,14 @@ class SegmentTests(unittest.IsolatedAsyncioTestCase):
             payload = await request.json()
             self.assertIn('client_id', payload)
             saved['posts'] += 1
+            # Both log lines arrive before the POST response and buffered start event.
+            self.log(1, 'MiniMax H3 Director segment mp4 run dir: E:/Comfy/output/minimax_seg_export/run001')
+            self.saved(2)
+            saved['entries'] = self.entries.copy()
+            await saved['socket'].send_json({'type': 'execution_start', 'data': {'prompt_id': 'wire-native'}})
             async def generate():
-                await saved['socket'].send_json({'type': 'execution_start', 'data': {'prompt_id': 'wire-native'}})
                 await asyncio.wait_for(checkpoint.wait(), 3)
                 await saved['socket'].send_json({'type': 'executing', 'data': {'prompt_id': 'wire-native', 'node': '502'}})
-                self.log(1, 'MiniMax H3 Director segment mp4 run dir: E:/Comfy/output/minimax_seg_export/run001')
-                self.saved(2)
-                saved['entries'] = self.entries.copy()
                 for _ in range(100):
                     await saved['socket'].send_json({'type': 'minimax_director_progress', 'data': {
                         'node_id': '502', 'segment': 1, 'segment_total': 2, 'timeline_segment': 1,
@@ -368,7 +414,7 @@ class SegmentTests(unittest.IsolatedAsyncioTestCase):
         try:
             with patch.object(self.store, 'probe_segments', probe), patch.object(t, 'SEGMENT_CHECK_INTERVAL', .01):
                 result = await self.store.submit(self.data)
-                await asyncio.wait_for(self.store.workers[result['monitor_id']], 6)
+                await asyncio.wait_for(self.store.workers[result['monitor_id']], 10)
             self.assertEqual(saved['posts'], 1)
             self.assertTrue(saved['downloaded_while_running'])
             self.assertEqual(first_target.read_bytes(), b'wire-native-media')

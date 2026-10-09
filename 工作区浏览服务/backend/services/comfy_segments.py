@@ -19,6 +19,7 @@ class SegmentPlan(BaseModel):
 
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
 RUN = re.compile(r'MiniMax H3 Director segment mp4 run dir: (.+)')
+COMPLETED = re.compile(r'^(?:\[\w+\] )?Prompt executed in (?:\d+(?:\.\d+)? seconds|\d+:\d{2}:\d{2})\s*$')
 SAVED = re.compile(r'MiniMax H3 Director segment #(\d+) (first-pass )?mp4 saved: (.+)')
 REPORT = re.compile(r'^Segment (\d+)(?:/\d+)?: (一采 mp4|mp4) (saved|updated after continuity trim) → (.+)$', re.M)
 
@@ -95,7 +96,7 @@ def digest(path):
 
 
 async def scan(store, key, *, begin=False, terminal=False):
-    """An execution-start checkpoint excludes preceding jobs in the same queue."""
+    """Bind the serial worker's current run without skipping buffered start logs."""
     row = store.rows[key]
     data, state = row['input'], row['state']
     remote = store.client_for(data)
@@ -106,14 +107,24 @@ async def scan(store, key, *, begin=False, terminal=False):
     logs = await asyncio.to_thread(remote.json, '/internal/logs/raw')
     entries = logs['entries']
     runtime = state['segment_monitor']
+    if not terminal and not runtime['run_dir']:
+        # The queue can advance while GET logs is in flight. Never bind the next job.
+        queue = await asyncio.to_thread(remote.json, '/queue')
+        if [item[1] for item in queue['queue_running']] != [state['prompt_id']]:
+            return
     if begin and not runtime['started']:
-        runtime['cursor'] = max((item['t'] for item in entries), default=runtime['cursor'])
         runtime['started'] = True
         store.save(key)
-        return
     if not runtime['started']:
         return  # A missed start cannot safely identify a new run directory from global logs.
     fresh = [item for item in entries if item['t'] > runtime['cursor']]
+    if not runtime['run_dir']:
+        # ComfyUI logs this after task_done and before starting the next queued prompt.
+        # Everything after the last completion belongs to the verified running job.
+        # Unlike wall-clock conversion, this also works with remote naive timestamps.
+        completed = [i for i, item in enumerate(entries) if COMPLETED.fullmatch(ANSI.sub('', item['m']).strip())]
+        if completed:
+            fresh = entries[completed[-1] + 1:]
     runs = [RUN.search(ANSI.sub('', item['m'])) for item in fresh]
     runs = list(dict.fromkeys(match[1].strip() for match in runs if match))
     if runs and not terminal:
@@ -122,6 +133,8 @@ async def scan(store, key, *, begin=False, terminal=False):
         # Validate the real directory using a placeholder only for containment, never download it.
         remote_file(data.segment_plan.output_root, runs[0].rstrip('/\\') + '/validation.mp4')
         runtime['run_dir'] = runs[0]
+        runtime['run_evidence'] = next({'t': item['t'], 'm': ANSI.sub('', item['m'])}
+            for item in fresh if RUN.search(ANSI.sub('', item['m'])))
     selected = {item['index']: item for item in targets(data)}
     for entry in fresh:
         match = SAVED.search(ANSI.sub('', entry['m']))
@@ -145,7 +158,7 @@ async def scan(store, key, *, begin=False, terminal=False):
         item['save_evidence'] = {'t': entry['t'], 'm': ANSI.sub('', entry['m'])}
         item['save_version'] = entry['t']
     if fresh:
-        runtime['cursor'] = max(item['t'] for item in fresh)
+        runtime['cursor'] = max(runtime['cursor'], max(item['t'] for item in fresh))
     store.save(key)
     for target in selected.values():
         item = state['segments'][str(target['index'])]
