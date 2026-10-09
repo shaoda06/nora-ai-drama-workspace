@@ -1,5 +1,7 @@
 .comfy-task{background:white;border:1px solid var(--line);border-radius:10px;padding:16px;overflow-wrap:anywhere;font-size:13px;line-height:1.6}
 .comfy-task-top{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:11px}
+.comfy-task-identity{display:flex;align-items:center;gap:8px;min-width:0}
+.comfy-task-source,.comfy-task-type{flex:none;white-space:nowrap}
 .comfy-task-source{padding:2px 8px;border-radius:5px;background:#eaf3ee;color:var(--green);font-weight:600}
 .comfy-task[data-source=external] .comfy-task-source{background:#f0f2f3;color:#626f76}
 .comfy-task-status{color:var(--green);white-space:nowrap}
@@ -7,7 +9,8 @@
 .comfy-task-status[data-status=failed],.comfy-task-status[data-status=collection_failed]{color:#a23b34}
 .comfy-task h2{font-size:15px;line-height:1.5;margin:10px 0}
 .comfy-task p{margin:6px 0}
-.comfy-task .comfy-task-project{color:var(--muted);font-size:12px;margin-top:12px}
+.comfy-task-project{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}
+.comfy-task-type{color:var(--muted)}
 .comfy-task code{font-size:12px;font-family:Consolas,monospace}
 .comfy-progress{margin:12px 0}
 .comfy-progress-label{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--muted)}
@@ -20,9 +23,4 @@
 .comfy-task-position{flex:none;white-space:nowrap;color:var(--muted);font-size:12px}
 .comfy-task-details{margin-top:12px;border-top:1px solid var(--line);padding-top:9px;font-size:12px}
 .comfy-task-details summary{cursor:pointer;color:var(--green)}
-.comfy-task-updated{display:block;font-size:11px;color:var(--muted);margin-top:10px}
 .comfy-task .comfy-task-warning{color:#976316;font-size:12px}
-.comfy-notification{color:var(--muted);font-size:11px}
-.comfy-segments{list-style:none;padding:0;margin:10px 0;display:grid;gap:8px;font-size:12px}
-.comfy-segments li{display:grid;gap:3px;border-top:1px solid var(--line);padding-top:8px;overflow-wrap:anywhere}
-.comfy-segments strong{font-weight:500}
