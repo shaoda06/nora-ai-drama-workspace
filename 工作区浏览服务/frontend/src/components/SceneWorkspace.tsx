@@ -12,11 +12,12 @@ import { useSceneVideoCache } from './useSceneVideoCache';
 import type { NoteScope } from './RevisionNotes';
 import { useRefreshState } from '../refreshPosition';
 import { SceneStoryboardEditor } from './SceneStoryboardEditor';
+import { SceneDownloads } from './SceneDownloads';
 
 type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
 
-export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope; segments: Segments; revision: number }) {
+export function SceneWorkspace({ scope, segments, revision, directorFiles }: { scope: NoteScope; segments: Segments; revision: number; directorFiles: FileItem[] }) {
   const { scene } = scope;
   const positionKey = `scene/${scope.project}/${scope.episode}/${scene}`;
   const [view, setView] = useRefreshState(positionKey + '/view', 'segments');
@@ -80,6 +81,6 @@ export function SceneWorkspace({ scope, segments, revision }: { scope: NoteScope
         <Result loading={storyboard.isPending} error={storyboard.error} retry={storyboard.refetch} retrying={storyboard.isFetching} />
         {storyboard.data && <Document value={storyboard.data} />}
       </>}
-    </div> : view === 'dialogue' ? <SceneStoryboardEditor key={positionKey} scope={scope} segments={segments} /> : null}
+    </div> : view === 'dialogue' ? <SceneStoryboardEditor key={positionKey} scope={scope} segments={segments} /> : <SceneDownloads files={directorFiles} />}
   </div></>;
 }

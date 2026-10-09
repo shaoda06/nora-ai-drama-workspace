@@ -37,12 +37,14 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="header-controls" ref={setControlsRoot} /></div>
     </header>
     <main ref={main} className={location.pathname.startsWith('/projects/') ? 'project-page' : undefined}>{children}</main>
-    {pending && <p className="app-update-notice" role="status">页面已有更新，将在编辑或播放结束后自动刷新。</p>}
     <footer className="site-footer">
       <span className="service-dot">{development ? '开发环境 · 共用正式资料' : '服务运行中'}</span>
       <Link className="history-link" to="/history">版本与开发记录 · v{APP_VERSION}</Link>
       <span className="footer-sync"><span ref={setSyncRoot} />{!location.pathname.startsWith('/projects/') && '上次同步：—'}</span>
     </footer>
-    {backTop && <button className="back-top" onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}>↑ 返回顶部</button>}
+    <div className="app-bottom-tools">
+      {backTop && <button className="back-top" onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}>↑ 返回顶部</button>}
+      {pending && <p className="app-update-notice" role="status">页面已有更新，将在编辑或播放结束后自动刷新。</p>}
+    </div>
   </FooterSyncContext.Provider></HeaderControlsContext.Provider></Notifications>;
 }
