@@ -231,17 +231,21 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         socket = AsyncMock()
         socket.recv.side_effect = [
             b'preview',
+            json.dumps({'type': 'execution_start', 'data': {'prompt_id': 'other-user'}}),
             json.dumps({'type': 'progress', 'data': {'prompt_id': 'other-user', 'value': 99, 'max': 100}}),
+            json.dumps({'type': 'execution_start', 'data': {'prompt_id': 'real-id'}}),
             json.dumps({'type': 'executing', 'data': {'prompt_id': 'real-id', 'node': '1'}}),
             json.dumps({'type': 'progress', 'data': {'prompt_id': 'real-id', 'value': 3, 'max': 20}}),
             json.dumps({'type': 'execution_success', 'data': {'prompt_id': 'real-id'}})]
         async def reconcile(key):
             if self.store.rows[key]['state'].get('progress'):
                 self.assertEqual(self.store.rows[key]['state']['progress'], {'value': 3, 'max': 20})
+                self.assertEqual(self.store.rows[key]['state']['started_at'], '2026-10-09T08:30:00+00:00')
+                self.assertNotEqual(self.store.rows[key]['state']['started_at'], self.store.rows[key]['state']['created_at'])
                 self.store.save(key, status='completed')
                 return True
             return False
-        with patch.object(self.store, 'reconcile', reconcile), patch.object(self.store, 'notify', AsyncMock()) as notify:
+        with patch.object(self.store, 'reconcile', reconcile), patch.object(self.store, 'notify', AsyncMock()) as notify, patch.object(t.client, 'now', return_value='2026-10-09T08:30:00+00:00'):
             await self.store.watch('task', socket)
             notify.assert_awaited_once_with('task')
             socket.close.assert_awaited_once()

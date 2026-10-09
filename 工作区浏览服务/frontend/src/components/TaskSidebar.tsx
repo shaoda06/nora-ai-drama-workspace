@@ -25,9 +25,10 @@ export function TaskSidebar() {
   }, []);
   const active = tasks.filter(task => activeStates.has(task.status)).length;
   const selectedNode = nodes.find(node => node.url === selectedUrl) ?? nodes[0];
-  const visibleTasks = tasks.filter(task => task.remote_url === selectedNode?.url);
+  const nodeTasks = tasks.filter(task => task.remote_url === selectedNode?.url);
+  const visibleTasks = nodeTasks.filter(task => activeStates.has(task.status));
   const nodeActive = visibleTasks.filter(task => activeStates.has(task.status)).length;
-  const nodeCompleted = visibleTasks.filter(task => task.status === 'completed').length;
+  const nodeCompleted = nodeTasks.filter(task => task.status === 'completed').length;
   return <aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
       aria-label={open ? '收起任务进度' : '展开任务进度'} onClick={() => {

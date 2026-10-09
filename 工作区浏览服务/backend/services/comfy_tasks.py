@@ -180,7 +180,7 @@ class TaskStore:
             'id': key, 'project': project.name, 'title': data.title, 'task_type': data.task_type,
             'prompt_id': None, 'client_id': client_id, 'status': 'submitting', 'connection': 'connected',
             'progress': None, 'node': None, 'error': None, 'notification': 'waiting',
-            'created_at': client.now(), 'updated_at': client.now(), 'collected': 0, 'expected': len(data.outputs)}}
+            'created_at': client.now(), 'started_at': None, 'updated_at': client.now(), 'collected': 0, 'expected': len(data.outputs)}}
         self.save(key)
         if data.segment_plan:
             self.save(key, expected=len(segments.targets(data)), segments={str(item['index']): {
@@ -361,8 +361,10 @@ class TaskStore:
                             continue
                         if payload.get('prompt_id') != state['prompt_id']:
                             continue
-                        if event == 'execution_start' and data.segment_plan:
-                            await self.probe_segments(key, begin=True, force=True)
+                        if event == 'execution_start':
+                            self.save(key, status='running', started_at=state.get('started_at') or client.now())
+                            if data.segment_plan:
+                                await self.probe_segments(key, begin=True, force=True)
                         elif event == 'progress':
                             self.save(key, status='running', progress={'value': payload['value'], 'max': payload['max']})
                         elif event == 'executing' and payload.get('node') is not None:
