@@ -41,7 +41,7 @@ export function TaskCard({ task }: { task: Task }) {
     </div>
     {task.source === 'external' ? <>
       <div className="comfy-external-title">
-        <h2><code>{task.prompt_id}</code></h2>
+        <h2>任务ID：<code>{task.prompt_id}</code></h2>
         {task.queue_position !== null && <span className="comfy-task-position" aria-label="队列位置">第 {task.queue_position} 位</span>}
       </div>
     </> : <>
