@@ -901,6 +901,37 @@ class ProjectParserTests(unittest.TestCase):
         self.put(record, text)
         return record, text
 
+    def test_unselected_video_candidates_do_not_warn_or_become_approved(self):
+        for state in ('未选定', '尚未选定', '未采用', '尚未采用'):
+            for decision in ('待审核。', '批准采用。'):
+                with self.subTest(state=state, decision=decision):
+                    record, text = self.video_approval_fixture()
+                    for folder, stage in [('01-一采', '一采'), ('02-二采', '二采'), ('03-后处理', '后处理')]:
+                        name = f'EP001-C001-P001-R001-{stage}.mp4'
+                        old = f'09-剧集制作/EP001/其他资料/阶段采用视频/{folder}/C001-场次/{name}'
+                        new = f'09-剧集制作/EP001/其他资料/候选视频/{name}'
+                        self.put(new, 'fixture')
+                        (self.root / old).unlink()
+                        text = text.replace(f'../阶段采用视频/{folder}/C001-场次/{name}', f'../候选视频/{name}')
+                        text = text.replace(f'| {stage} | [视频]', f'| {stage} | {state}；[视频]')
+                    text = text.replace('- 决定：批准采用。', '- 决定：' + decision)
+                    self.put(record, text)
+                    data = portal.build_data(self.root, web_episode_navigation=True)
+                    videos = data['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos']
+                    self.assertEqual(len(videos), 3)
+                    self.assertTrue(all(not video['approved'] for video in videos))
+                    self.assertFalse(any('当前选定记录的批准依据' in warning for warning in data['warnings']))
+
+    def test_selected_video_without_approval_still_warns(self):
+        record, text = self.video_approval_fixture()
+        text = text.replace('[批准](#审阅-r001-一采-001)', '无', 1)
+        text = text[:text.index('## 4. 审阅区')]
+        self.put(record, text)
+        data = portal.build_data(self.root, web_episode_navigation=True)
+        videos = data['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos']
+        self.assertFalse(next(video for video in videos if video['stage'] == '一采')['approved'])
+        self.assertTrue(any('EP001-C001-P001-R001-一采.mp4：当前选定记录的批准依据' in warning for warning in data['warnings']))
+
     def test_video_approval_follows_exact_review_for_each_stage(self):
         self.video_approval_fixture()
         data = portal.build_data(self.root, web_episode_navigation=True)
@@ -926,12 +957,16 @@ class ProjectParserTests(unittest.TestCase):
                 start = text.index('### 审阅-R001-一采-001')
                 text = text[:start] + text[start:].replace('EP001-C001-P001-R001-一采.mp4', wrong, 1)
                 self.put(record, text)
-                episode = portal.build_data(self.root, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]
+                data = portal.build_data(self.root, web_episode_navigation=True)
+                episode = data['catalogues']['09-剧集制作']['children'][0]
                 self.assertFalse(next(v for v in episode['segments']['C001'][0]['videos'] if v['stage'] == '一采')['approved'])
+                self.assertTrue(any('批准依据' in warning for warning in data['warnings']))
         record, text = self.video_approval_fixture()
         self.put(record, text.replace('#审阅-r001-一采-001', '#审阅-r001-一采-不存在', 1))
-        episode = portal.build_data(self.root, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]
+        data = portal.build_data(self.root, web_episode_navigation=True)
+        episode = data['catalogues']['09-剧集制作']['children'][0]
         self.assertFalse(next(v for v in episode['segments']['C001'][0]['videos'] if v['stage'] == '一采')['approved'])
+        self.assertTrue(any('批准依据' in warning for warning in data['warnings']))
 
     def test_legacy_video_execution_headings_match_stage_instead_of_first_same_run(self):
         text = ('### R005-后处理\n- 处理阶段：后处理。\n- 实测时长及数值来源：后处理\n'

@@ -1224,6 +1224,8 @@ def build_data(project, *, web_episode_navigation=False):
                 current_results = re.search(r"^## 1\. 当前选定结果\s*\n(.*?)(?=^## |\Z)", record, re.M | re.S)
                 approved_keys = set()
                 for adopted in table_records(current_results[1] if current_results else "", ("处理阶段", "当前选定文件", "R编号", "人工批准依据")):
+                    if re.match(r"^(?:未选定|尚未选定|未采用|尚未采用)(?:$|[；;，,。：:\s])", adopted["当前选定文件"]):
+                        continue
                     for link in markdown_links(adopted["当前选定文件"], record_key):
                         name = Path(link['key']).name
                         if not re.fullmatch(re.escape(segment_identity + '-' + adopted['R编号'] + '-' + adopted['处理阶段'])
