@@ -6,7 +6,7 @@
 
 1. 获取整个工作区，使用支持本地文件与技能的agent打开根目录。推荐Codex Desktop；其他平台需自行提供相应的会话和监控能力。
 2. agent先读取根目录 [AGENTS.md](AGENTS.md)，再按任务使用 [Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md) 或 [Krea2技能](.agents/skills/krea2-style-library/SKILL.md)。
-3. 发起新短剧时，告知题材、素材和目标，由技能按阶段创建项目。三个ComfyUI适配技能已随主技能提供，是本工作区直接使用的真源，不重复复制安装。其余依赖按主技能的[来源与获取规则](.agents/skills/nora-ai-short-drama/SKILL.md#适用平台与技能依赖)按需补齐。
+3. 发起新短剧时，告知题材、素材和目标，由技能按阶段创建项目。三个ComfyUI适配技能已随主技能提供，是本工作区直接使用的真源，不重复复制安装。其余依赖按主技能的[来源与获取规则](.agents/skills/nora-ai-short-drama/references/流程规范/技能依赖与协作规范.md#适用平台与技能依赖)按需补齐。
 4. 新增外部技能默认安装到本工作区 `.agents/skills/{技能名}/`，已有可用安装复用。该工作区是本README所在目录，不是某部短剧的项目目录。当前独立安装的外部技能按 `.gitignore` 排除；新增技能默认可被Git发现，提交前核对来源、许可及是否需要随模板提供。
 5. 初始化项目工作区时，按下方[FFmpeg初始化与运行](#ffmpeg初始化与运行)落实媒体处理依赖；服务地址询问及配置按[主技能的项目ComfyUI配置](.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#项目-comfyui-配置)执行。
 
@@ -35,7 +35,7 @@
 
 ### 短剧流程技能
 
-流程依赖的使用条件与边界读取[主技能依赖入口](.agents/skills/nora-ai-short-drama/SKILL.md#适用平台与技能依赖)；准确获取来源、版本与许可读取[依赖获取资料](.agents/skills/nora-ai-short-drama/维护规范.md#6-依赖获取与适配资料)。随包的三个ComfyUI适配版保留各自 `LICENSE`；第三方技能许可不由本仓库MIT许可证重新授权。
+流程依赖的使用条件与边界读取[主技能依赖入口](.agents/skills/nora-ai-short-drama/references/流程规范/技能依赖与协作规范.md#适用平台与技能依赖)；准确获取来源、版本与许可读取[依赖获取资料](.agents/skills/nora-ai-short-drama/维护规范.md#6-依赖获取与适配资料)。随包的三个ComfyUI适配版保留各自 `LICENSE`；第三方技能许可不由本仓库MIT许可证重新授权。
 
 ### 本工作区技能与风格资源
 
