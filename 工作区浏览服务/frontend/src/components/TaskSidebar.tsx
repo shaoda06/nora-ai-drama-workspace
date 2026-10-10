@@ -66,15 +66,9 @@ export function TaskSidebar() {
         setOpen(!open);
       }}><span aria-hidden="true">{open ? '‹' : '›'}</span><span className="comfy-rail-label">任务进度</span>
       <span className="comfy-rail-summary">
-        {nodes.length === 0 && <span className="comfy-rail-group"><strong>远端节点</strong><span className="comfy-rail-values">正在读取</span></span>}
-        {nodes.map(node => <span className="comfy-rail-group" key={node.url}
-          title={`${node.name}：${connection === 'connected' ? nodeConnectionLabels[node.connection] : '后台连接恢复中'}${node.queue_error ? '，队列数据可能滞后' : ''}`}>
-          <strong>{node.name}</strong>
-          <span className="comfy-rail-values"><span>进行中 <b>{node.running_count ?? '—'}</b></span><span>队列中 <b>{node.queued_count ?? '—'}</b></span></span>
-        </span>)}
-        <span className="comfy-rail-group"><strong>本地队列</strong><span className="comfy-rail-values">
-          {(Object.keys(localQueueStates) as LocalQueueTask['status'][]).map(status => <span key={status}>{localQueueStates[status]} <b>{localCounts[status]}</b></span>)}
-        </span></span>
+        <span className="comfy-rail-values">
+          {(Object.keys(localQueueStates) as LocalQueueTask['status'][]).map(status => <span key={status}>{status === 'queued' ? '队列中' : localQueueStates[status]} <b>{localCounts[status]}</b></span>)}
+        </span>
       </span></button>
     <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
       <section className="comfy-queue" aria-label="远端队列">
