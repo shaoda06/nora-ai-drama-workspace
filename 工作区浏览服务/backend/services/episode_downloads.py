@@ -12,11 +12,38 @@ STAGES = {'后处理': '03-后处理', '二采': '02-二采', '一采': '01-一�
 KINDS = {'videos': '正式版视频', 'director': '导演包', 'canvas': '画布'}
 
 
-def resources(store, name, episode, data):
+def indexed_episode(episode, data):
     selected = next((item for item in data['catalogues']['09-剧集制作']['children']
                      if item['name'] == episode), None)
     if selected is None:
         raise FileNotFoundError('剧集不存在')
+    return selected
+
+
+def scene_videos(store, name, episode, scene, data):
+    selected = indexed_episode(episode, data)
+    if scene not in selected['scenes']:
+        raise FileNotFoundError('场次不存在')
+    segments = selected['segments'][scene]
+    if not segments or any(not issue.get('scene') or issue['scene'] == scene
+                           for issue in selected.get('productionIssues', [])):
+        raise ValueError('本场分段资料尚未齐备')
+    files = []
+    for segment in segments:
+        videos = [video for video in segment['videos'] if video['stage'] == '后处理' and video['approved']]
+        if len(videos) != 1:
+            raise ValueError('本场尚未全部批准后处理正式版')
+        video = videos[0]
+        path = store.file(name, video['key'])
+        stat = path.stat()
+        if video['fileRevision'] != str(stat.st_mtime_ns) + '-' + str(stat.st_size):
+            raise ValueError('正式版文件已变化，请等待页面同步后重新下载')
+        files.append((path, Path(video['key']).name))
+    return files
+
+
+def resources(store, name, episode, data):
+    selected = indexed_episode(episode, data)
     result = {stage: {kind: [] for kind in KINDS} for stage in STAGES}
     for scene, segments in selected['segments'].items():
         for segment in segments:
