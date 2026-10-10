@@ -180,7 +180,10 @@ class GenerationContextTests(unittest.TestCase):
         self.assertEqual({key: mapping[key] for key in before}, before)
         self.assertEqual([context['identity'] for context in mapping['generation_contexts']],
                          ['EP001-C001-P001-R004-一采', 'EP001-C001-P002-R003-一采'])
-        self.write(self.episode + '/03-分镜脚本/EP001-C001-场次分镜.md', self.storyboard('v99', '后来新版'))
+        self.write(self.episode + '/03-分镜脚本/EP001-C001-场次分镜.md',
+                   self.storyboard('v99', '后来新版').replace('### 分段 P002',
+                       '**起始画面**：新版开镜。\n\n**结束画面**：新版切走。\n\n'
+                       '**转场方式**：新版切点。\n\n### 分段 P002'))
         self.write('图片/公共.png', '后来更新原图')
         with patch.object(main, 'store', ProjectStore(self.project.parent)):
             with TestClient(main.app) as client:
@@ -188,6 +191,10 @@ class GenerationContextTests(unittest.TestCase):
                 first, second = [segment['videos'][0]['context'] for segment in segments]
                 self.assertIn('当次第一段', first['scriptHtml'])
                 self.assertNotIn('后来新版', first['scriptHtml'])
+                for label in ('起始画面', '结束画面', '转场方式'):
+                    self.assertNotIn('<strong>' + label + '</strong>', first['scriptHtml'])
+                    self.assertTrue(all('<strong>' + label + '</strong>' not in shot['html']
+                                        for shot in first['shots']))
                 self.assertIn('第二段原文', second['scriptHtml'])
                 self.assertEqual(first['prompts']['english'], '实际公共正文\n\n第一段实际英文')
                 self.assertEqual(second['prompts']['chinese'], '当次中文2')

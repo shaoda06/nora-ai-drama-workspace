@@ -1667,6 +1667,41 @@ class ProjectParserTests(unittest.TestCase):
         self.assertIn("<strong>重点</strong>", rendered)
         self.assertIn("&lt;b&gt;原文&lt;/b&gt;", rendered)
 
+    def test_latest_pending_storyboard_preserves_independent_boundary_fields(self):
+        episode = "09-剧集制作/EP001"
+        formal = episode + "/03-分镜脚本/EP001-C001-场次分镜.md"
+        work = episode + "/其他资料/工作稿/EP001-C001-场次分镜-工作稿.md"
+        self.put(episode + "/02-剧集剧本/EP001-本集剧本.md",
+                 "## 1. 故事剧本正文\n### EP001-C001\n场次。")
+        self.put(episode + "/03-分镜脚本/EP001-分镜索引.md",
+                 "| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n"
+                 "| EP001-C001 | EP001-C001-P001 | 3 |")
+        old = ("# 场次分镜\n- 文档版本：v10\n## 1. 镜头正文\n"
+               "### 分段 P001\n#### EP001-SH001\n**镜号**：EP001-SH001\n"
+               "**时间**：00:00-00:03\n**时长**：3秒\n**情绪/动作**：旧版动作。\n")
+        self.put(formal, old)
+        fields = {"起始画面": "手已伸向木柄，袋仍在左手。",
+                  "结束画面": "袋在泥地，双手已握柄。",
+                  "转场方式": "动作匹配切至SH004，接起身中的同一次动作。"}
+        current = old.replace("v10", "v11").replace("旧版动作。", "新版动作。")
+        current += "\n" + "\n\n".join("**" + label + "**：" + value for label, value in fields.items())
+        self.put(work, "# 工作稿\n- 当前稿版本：v11\n\n## 1. 当前内容\n"
+                 + re.sub(r"^#{1,4}(?= )", lambda m: "##" + m[0], current, flags=re.M)
+                 + "\n\n## 2. 修订记录\n历史说明不应混入正文。")
+        data = portal.build_data(self.root, web_episode_navigation=True)
+        item = data["catalogues"]["09-剧集制作"]["children"][0]
+        board = item["storyboards"]["C001"]
+        self.assertEqual(board["key"], work)
+        self.assertIn("v11", board["doc"]["headerHtml"])
+        segment = item["segments"]["C001"][0]
+        for label, value in fields.items():
+            expected = "<strong>" + label + "</strong>：" + value
+            self.assertIn(expected, board["doc"]["html"])
+            self.assertIn(expected, segment["scriptHtml"])
+            self.assertNotIn("<strong>" + label + "</strong>", data["documents"][formal]["html"])
+        self.assertNotIn("历史说明", board["doc"]["html"])
+        self.assertEqual((self.root / formal).read_text("utf-8"), old)
+
     def test_storyboard_place_labels_and_segment_shot_navigation(self):
         source = "09-剧集制作/EP001/03-分镜脚本/EP001-C001-场次分镜.md"
         text = ("- 文档版本：v13\n- 确认状态：批准采用；沿原批准\n\n"
