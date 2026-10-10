@@ -43,9 +43,14 @@ class EpisodeDownloadTests(unittest.TestCase):
         relative = f'09-剧集制作/EP001/06-阶段采用视频/{episode_downloads.STAGES[stage]}/{scene}-场次/{filename}'
         path = self.source(relative, (stage + scene + number).encode())
         stat = path.stat()
-        self.episode['segments'][scene].append({'id': number, 'videos': [{
+        segments = self.episode['segments'][scene]
+        segment = next((item for item in segments if item['id'] == number), None)
+        if segment is None:
+            segment = {'id': number, 'videos': []}
+            segments.append(segment)
+        segment['videos'].append({
             'approved': approved, 'stage': stage, 'key': relative,
-            'fileRevision': str(stat.st_mtime_ns) + '-' + str(stat.st_size)}]})
+            'fileRevision': str(stat.st_mtime_ns) + '-' + str(stat.st_size)})
         return scene + '-场次/' + filename, path.read_bytes()
 
     def archive(self, stage, kind):
@@ -53,14 +58,16 @@ class EpisodeDownloadTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200, response.text[:200] if response.status_code != 200 else '')
         self.assertEqual(response.headers['content-type'], 'application/zip')
         self.assertEqual(int(response.headers['content-length']), len(response.content))
-        self.assertIn('示例项目-EP001-' + stage, unquote(response.headers['content-disposition']))
+        self.assertIn('示例项目-第1集-正式版视频.zip', unquote(response.headers['content-disposition']))
         with ZipFile(BytesIO(response.content)) as bundle:
             return {item.filename: bundle.read(item) for item in bundle.infolist()}
 
     def test_videos_include_all_scenes_only_approved_and_selected_stage(self):
         expected = {}
         for stage in episode_downloads.STAGES:
-            expected[stage] = dict([self.video(stage, 'C001', 'P001'), self.video(stage, 'C002', 'P002')])
+            first = self.video(stage, 'C001', 'P001')[1]
+            second = self.video(stage, 'C002', 'P002')[1]
+            expected[stage] = {'第1场-第1段-正式版.mp4': first, '第2场-第1段-正式版.mp4': second}
             self.video(stage, 'C001', 'P003', approved=False)
         self.source('09-剧集制作/EP001/06-阶段采用视频/01-一采/C001-场次/未选定.mp4', b'unselected')
         self.source('09-剧集制作/EP002/06-阶段采用视频/01-一采/C001-场次/EP002-C001-P001-R001-一采.mp4', b'other episode')
@@ -200,11 +207,41 @@ class EpisodeDownloadTests(unittest.TestCase):
         expected = expected[-1:] + expected[:-1]
         response = self.completed_download()
         self.assertEqual(response.status_code, 200)
-        self.assertIn('示例项目-EP001-后处理-正式版视频.zip', unquote(response.headers['content-disposition']))
+        self.assertIn('示例项目-第1集-正式版视频.zip', unquote(response.headers['content-disposition']))
         self.assertEqual(int(response.headers['content-length']), len(response.content))
         with ZipFile(BytesIO(response.content)) as bundle:
-            self.assertEqual(bundle.namelist(), [member for member, _ in expected])
+            self.assertEqual(bundle.namelist(), ['第1场-第1段-正式版.mp4', '第2场-第1段-正式版.mp4',
+                                               '第2场-第2段-正式版.mp4', '第2场-第3段-正式版.mp4'])
             self.assertEqual([bundle.read(member) for member in bundle.namelist()], [content for _, content in expected])
+        stage_files = self.archive('后处理', 'videos')
+        self.assertEqual(list(stage_files), ['第1场-第1段-正式版.mp4', '第2场-第1段-正式版.mp4',
+                                            '第2场-第2段-正式版.mp4', '第2场-第3段-正式版.mp4'])
+
+    def test_segment_order_is_preserved_when_earlier_videos_are_unapproved(self):
+        for number in ('P001', 'P002', 'P003', 'P004', 'P005'):
+            self.video('二采', 'C001', number, approved=False)
+        original, content = self.video('二采', 'C001', 'P012')
+        self.assertEqual(self.archive('二采', 'videos'), {'第1场-第6段-正式版.mp4': content})
+        source = next(self.project.rglob(Path(original).name))
+        self.assertEqual(source.read_bytes(), content)
+        self.assertIn('P012', source.name)
+
+    def test_original_video_extension_is_preserved(self):
+        self.video('一采', 'C001', 'P001')
+        video = self.episode['segments']['C001'][0]['videos'][0]
+        path = self.project / video['key']
+        moved = path.rename(path.with_suffix('.mov'))
+        video['key'] = moved.relative_to(self.project).as_posix()
+        self.assertEqual(list(self.archive('一采', 'videos')), ['第1场-第1段-正式版.mov'])
+
+    def test_stage_zip_rejects_duplicate_formal_video_names(self):
+        self.video('二采', 'C001', 'P001')
+        segment = self.episode['segments']['C001'][0]
+        segment['videos'].append(dict(segment['videos'][0]))
+        response = self.client.get(self.url + '/二采/videos')
+        self.assertEqual(response.status_code, 409)
+        self.assertIn('同一分段存在多个正式版', response.json()['detail'])
+        self.assertEqual(list((self.root / 'downloads').iterdir()), [])
 
     def test_completed_download_requires_finished_episode_and_every_scene(self):
         self.assertEqual(self.completed_download().status_code, 409)

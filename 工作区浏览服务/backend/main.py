@@ -17,7 +17,7 @@ from pydantic import BaseModel
 
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
-from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response, clear_downloads
+from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response, clear_downloads, video_archive_name
 from backend.services import krea2
 from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
 from backend.services.task_details import task_detail
@@ -334,7 +334,7 @@ def asset(name: str, kind: Literal['people', 'scenes', 'props'], identity: str) 
 def completed_episode_download(name: str, episode: Episode):
     try:
         files = completed_episode_videos(store, name, episode, entry(name)['data'])
-        return zip_response(files, name + '-' + episode + '-后处理-正式版视频.zip')
+        return zip_response(files, video_archive_name(name, episode))
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except ValueError as error:
@@ -364,9 +364,11 @@ def episode_download(name: str, episode: Episode, stage: Literal['一采', '二�
         files = episode_resources(store, name, episode, entry(name)['data'])[stage][kind]
         if not files:
             raise FileNotFoundError('本集该阶段没有可下载的' + KINDS[kind])
-        return zip_response(files, name + '-' + episode + '-' + stage + '-' + KINDS[kind] + '.zip')
+        return zip_response(files, video_archive_name(name, episode))
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
+    except ValueError as error:
+        raise HTTPException(409, str(error)) from error
 
 
 @app.get('/api/projects/{name}/document')
