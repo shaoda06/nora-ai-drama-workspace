@@ -254,6 +254,103 @@ class FinalizeTests(unittest.TestCase):
                              ['共同正文\n\nP001 <Picture 1>', '另一公共正文\n\nP002 <Picture 1>'])
             self.assertEqual([g['refs'][0]['index'] for g in t['segments']], [0, 0])
 
+    def test_existing_review_column_shared_receipt_and_summary(self):
+        self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
+        item = self.plan['items'][1]
+        receipt = self.extra / '执行附件/分段取回/取回响应.json'
+        self.put(receipt, tool.adopt.load(Path(item['receipt'])))
+        item['receipt'] = str(receipt)
+        mapping = tool.adopt.load(Path(item['mapping']))
+        with self.assertRaisesRegex(ValueError, '明确关联'):
+            self.run_plan()
+        mapping['segments'][0]['download_receipt'] = str(receipt)
+        mapping['segments'][0]['final_output'] = {'remote': mapping['segments'][0].pop('remote')}
+        self.put(Path(item['mapping']), mapping)
+        draft = self.extra / '工作稿/EP001-C001-P002-视频制作-工作稿.md'
+        self.put(draft, draft.read_text(encoding='utf-8').replace('| [审核]', '| [执行](#执行-r001)；[审核]'))
+        summary = self.extra / '工作稿/EP001-分镜索引-工作稿.md'
+        self.put(summary, '# 现有分镜索引汇总\n')
+        self.plan['summary'] = str(summary)
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'completed')
+        self.assertIn('定稿留档完成', summary.read_text(encoding='utf-8'))
+
+    def test_restore_canvas_from_matching_widget_copy_without_changing_source(self):
+        self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
+        for i, item in enumerate(self.plan['items']):
+            canvas = tool.adopt.load(Path(item['canvas']))
+            node = next(n for n in canvas['nodes'] if n['type'] == 'MiniMaxH3Director')
+            position = list(node['widgets_values_named']).index('seed')
+            if i == 0:
+                node['widgets_values_named']['seed'] += 1
+            else:
+                node['widgets_values'][position] += 1
+            self.put(Path(item['canvas']), canvas)
+            self.originals[Path(item['canvas'])] = Path(item['canvas']).read_bytes()
+        result = self.run_plan()
+        self.assertTrue(all(s['restoration'] for s in result['sources']))
+        for item in self.plan['items']:
+            self.assertEqual(Path(item['canvas']).read_bytes(), self.originals[Path(item['canvas'])])
+        canvas = tool.adopt.load(Path(self.plan['items'][0]['canvas']))
+        node = next(n for n in canvas['nodes'] if n['type'] == 'MiniMaxH3Director')
+        node['widgets_values'][list(node['widgets_values_named']).index('seed')] += 2
+        self.put(Path(self.plan['items'][0]['canvas']), canvas)
+        with self.assertRaisesRegex(ValueError, '无法依据实际API恢复'):
+            self.run_plan()
+
+    def test_post_upload_path_restored_only_with_exact_request_and_upload(self):
+        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
+        self.plan['stage'] = '后处理'
+        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
+        item = self.plan['items'][0]
+        folder = Path(item['mapping']).parent
+        request = tool.adopt.load(folder / '请求.json')
+        loader = next(n for n in request['prompt'].values() if n['class_type'] == 'LoadVideo')
+        loader['inputs']['file'] = 'uploaded/' + loader['inputs']['file']
+        mapping = tool.adopt.load(Path(item['mapping']))
+        mapping['uploads'][0]['input_path'] = loader['inputs']['file']
+        self.put(folder / '请求.json', request)
+        self.put(Path(item['mapping']), mapping)
+        result = self.run_plan()
+        self.assertTrue(result['sources'][0]['restoration'])
+        for field in ('api', 'canvas'):
+            self.assertEqual(Path(item[field]).read_bytes(), self.originals[Path(item[field])])
+        model = next(n for n in request['prompt'].values() if n['class_type'] == 'RTXVideoSuperResolution')
+        model['inputs']['scale'] = 999
+        self.put(folder / '请求.json', request)
+        with self.assertRaisesRegex(ValueError, '实际获批任务'):
+            self.run_plan()
+
+    def test_authorized_configuration_batches_full_coverage_and_resume(self):
+        self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
+        item = self.plan['items'][1]
+        api = tool.adopt.load(Path(item['api']))
+        node = next(n for n in api.values() if n['class_type'] == 'MiniMaxH3Director')
+        node['inputs']['seed'] += 1
+        canvas = tool.adopt.load(Path(item['canvas']))
+        stored = next(n for n in canvas['nodes'] if n['type'] == 'MiniMaxH3Director')
+        stored['widgets_values_named']['seed'] = node['inputs']['seed']
+        stored['widgets_values'] = list(stored['widgets_values_named'].values())
+        self.put(Path(item['api']), api)
+        self.put(Path(item['canvas']), canvas)
+        self.put(Path(item['mapping']).parent / '请求.json', {'prompt': api})
+        self.plan['configuration_batches'] = [{'name': p, 'parts': ['EP001-C001-' + p]} for p in ('P001', 'P002')]
+        with self.assertRaisesRegex(ValueError, '明确授权'):
+            self.run_plan()
+        self.plan['configuration_batch_authorization'] = '用户允许按实际配置分批留档'
+        preview = self.run_plan(False)
+        self.assertEqual(len(preview['batches']), 2)
+        self.assertFalse(NativeClient.calls)
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'completed')
+        self.assertEqual(len(list(self.ep.rglob('*.zip'))), 2)
+        self.assertEqual(len(NativeClient.calls), 4)
+        self.run_plan()
+        self.assertEqual(len(NativeClient.calls), 4)
+        self.plan['configuration_batches'][1]['parts'] = ['EP001-C001-P001']
+        with self.assertRaisesRegex(ValueError, '唯一归属'):
+            self.run_plan()
+
     def test_record_failure_recovers_without_second_export(self):
         self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
         original = tool.replace_file
