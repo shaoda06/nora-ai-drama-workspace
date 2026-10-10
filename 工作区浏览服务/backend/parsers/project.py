@@ -1196,6 +1196,7 @@ def build_data(project, *, web_episode_navigation=False):
         title_match = re.search(r"^(?:-[ \t]*)?本集题名[:：][ \t]*([^。\n]+)",
                                read(outline_root + "/" + number + "-分集大纲.md") or "", re.M)
         episode_node.update({"title": title_match[1].strip() if title_match else "",
+            "productionComplete": state == "已完成",
             "statusHtml": status_markup(state if web_episode_navigation else raw_status or "未记录", PROGRESS),
             "note": "等待审阅也属于进行中；整集完成以项目进度为准。"})
         if web_episode_navigation:

@@ -20,25 +20,27 @@ def indexed_episode(episode, data):
     return selected
 
 
-def scene_videos(store, name, episode, scene, data):
+def completed_episode_videos(store, name, episode, data):
     selected = indexed_episode(episode, data)
-    if scene not in selected['scenes']:
-        raise FileNotFoundError('场次不存在')
-    segments = selected['segments'][scene]
-    if not segments or any(not issue.get('scene') or issue['scene'] == scene
-                           for issue in selected.get('productionIssues', [])):
-        raise ValueError('本场分段资料尚未齐备')
+    if not selected['productionComplete']:
+        raise ValueError('本集制作尚未完成')
+    if not selected['scenes'] or selected.get('productionIssues'):
+        raise ValueError('本集分段资料尚未齐备')
     files = []
-    for segment in segments:
-        videos = [video for video in segment['videos'] if video['stage'] == '后处理' and video['approved']]
-        if len(videos) != 1:
-            raise ValueError('本场尚未全部批准后处理正式版')
-        video = videos[0]
-        path = store.file(name, video['key'])
-        stat = path.stat()
-        if video['fileRevision'] != str(stat.st_mtime_ns) + '-' + str(stat.st_size):
-            raise ValueError('正式版文件已变化，请等待页面同步后重新下载')
-        files.append((path, Path(video['key']).name))
+    for scene in selected['scenes']:
+        segments = selected['segments'][scene]
+        if not segments:
+            raise ValueError('本集分段资料尚未齐备')
+        for segment in segments:
+            videos = [video for video in segment['videos'] if video['stage'] == '后处理' and video['approved']]
+            if len(videos) != 1:
+                raise ValueError('本集尚未全部批准后处理正式版')
+            video = videos[0]
+            path = store.file(name, video['key'])
+            stat = path.stat()
+            if video['fileRevision'] != str(stat.st_mtime_ns) + '-' + str(stat.st_size):
+                raise ValueError('正式版文件已变化，请等待页面同步后重新下载')
+            files.append((path, scene + '-场次/' + Path(video['key']).name))
     return files
 
 

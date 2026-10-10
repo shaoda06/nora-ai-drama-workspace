@@ -121,6 +121,7 @@ class ServiceTests(unittest.TestCase):
         data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
         self.assertEqual(data['statistics'], {'total': 4, 'completed': 1, 'notStarted': 1, 'running': 2})
         self.assertEqual([item['name'] for item in data['children']], ['EP001', 'EP002', 'EP003', 'EP004'])
+        self.assertEqual([item['productionComplete'] for item in data['children']], [True, False, False, False])
         self.assertIn('未开始', data['children'][2]['statusHtml'])
         self.assertIn('进行中', data['children'][3]['statusHtml'])
         self.assertNotIn('已完成', data['children'][3]['statusHtml'])

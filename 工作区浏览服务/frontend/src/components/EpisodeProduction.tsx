@@ -31,8 +31,12 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
   const selectedScene = scenes.includes(scene) ? scene : scenes[0] || '';
   const segments = current?.segments?.[selectedScene] || [];
   const issues = (current?.productionIssues || []).filter(issue => !issue.scene || issue.scene === selectedScene);
-  const sceneComplete = issues.length === 0 && segments.length > 0 && segments.every(item =>
-    item.videos.filter(video => video.stage === '后处理' && video.approved).length === 1);
+  const episodeComplete = current?.productionComplete && !current.productionIssues?.length && scenes.length > 0 && scenes.every(id => {
+    const sceneSegments = current.segments?.[id] || [];
+    return sceneSegments.length > 0 && sceneSegments.every(item =>
+      item.videos.filter(video => video.stage === '后处理' && video.approved).length === 1);
+  });
+  const segmentCount = scenes.reduce((count, id) => count + (current?.segments?.[id]?.length || 0), 0);
   const emptyMessage = issues.length > 0 ? '请先修正上方提示的文件结构，保存后页面会重新读取资料。'
     : !script ? '本集剧本尚未建立，请先准备本集剧本，再整理场次分镜和分段计划。'
     : '本场尚无分段计划，请先完善本集分镜索引。';
@@ -45,9 +49,9 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
     onSelect(name);
   };
   return current ? <div className="episode-detail">
-    {breadcrumbActions && sceneComplete && createPortal(<a className="stage-download-link" download
-      href={`${projectUrl(project)}/episodes/${current.name}/scenes/${selectedScene}/download`}
-      title={`下载${current.name} ${selectedScene}的${segments.length}段后处理正式版视频`}>打包下载本场</a>, breadcrumbActions)}
+    {breadcrumbActions && episodeComplete && createPortal(<a className="stage-download-link" download
+      href={`${projectUrl(project)}/episodes/${current.name}/download`}
+      title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理正式版视频`}>打包下载本集内容</a>, breadcrumbActions)}
     <div className="episode-scene-header">
       {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
       <button className="link episode-script-link" disabled={!script} title={script ? undefined : '本集剧本尚未建立'} onClick={() => preview(script!)}>查看本集剧本</button>

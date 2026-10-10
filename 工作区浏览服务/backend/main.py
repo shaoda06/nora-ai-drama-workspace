@@ -17,7 +17,7 @@ from pydantic import BaseModel
 
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
-from backend.services.episode_downloads import KINDS, resources as episode_resources, scene_videos, zip_response
+from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response
 from backend.services import krea2
 from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
 from websockets.exceptions import WebSocketException
@@ -309,11 +309,11 @@ def asset(name: str, kind: Literal['people', 'scenes', 'props'], identity: str) 
     raise HTTPException(404, '资料卡不存在')
 
 
-@app.get('/api/projects/{name}/episodes/{episode}/scenes/{scene}/download')
-def scene_download(name: str, episode: Episode, scene: Scene):
+@app.get('/api/projects/{name}/episodes/{episode}/download')
+def completed_episode_download(name: str, episode: Episode):
     try:
-        files = scene_videos(store, name, episode, scene, entry(name)['data'])
-        return zip_response(files, name + '-' + episode + '-' + scene + '-后处理-正式版视频.zip')
+        files = completed_episode_videos(store, name, episode, entry(name)['data'])
+        return zip_response(files, name + '-' + episode + '-后处理-正式版视频.zip')
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except ValueError as error:

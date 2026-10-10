@@ -19,7 +19,7 @@ class EpisodeDownloadTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.project = self.root / '示例项目'
         self.project.mkdir()
-        self.episode = {'name': 'EP001', 'scenes': ['C001', 'C002'],
+        self.episode = {'name': 'EP001', 'productionComplete': True, 'scenes': ['C001', 'C002'],
                         'segments': {'C001': [], 'C002': []}}
         data = {'catalogues': {'09-剧集制作': {'children': [self.episode]}}}
         for override in (patch.object(main, 'store', ProjectStore(self.root)),
@@ -125,61 +125,72 @@ class EpisodeDownloadTests(unittest.TestCase):
             self.archive('一采', 'videos')
         self.assertTrue(archive.closed)
 
-    def scene_download(self, scene='C001'):
-        return self.client.get(self.url.replace('/downloads', '/scenes/' + scene + '/download'))
+    def completed_download(self):
+        return self.client.get(self.url.replace('/downloads', '/download'))
 
-    def test_scene_zip_is_complete_current_scene_in_storyboard_order(self):
+    def test_completed_zip_contains_all_scenes_in_script_and_storyboard_order(self):
         expected = [self.video('后处理', 'C001', number) for number in ('P005', 'P012', 'P006')]
-        self.video('后处理', 'C002', 'P001')
+        expected += [self.video('后处理', 'C002', 'P001')]
         segment = self.episode['segments']['C001'][0]
-        candidate = dict(segment['videos'][0], approved=False, key='候选视频.mp4')
-        segment['videos'].append(candidate)
-        response = self.scene_download()
+        segment['videos'].append(dict(segment['videos'][0], approved=False, key='候选视频.mp4'))
+        # Script order is authoritative, even when dictionary insertion order differs.
+        self.episode['scenes'] = ['C002', 'C001']
+        expected = expected[-1:] + expected[:-1]
+        response = self.completed_download()
         self.assertEqual(response.status_code, 200)
-        self.assertIn('示例项目-EP001-C001-后处理-正式版视频.zip', unquote(response.headers['content-disposition']))
+        self.assertIn('示例项目-EP001-后处理-正式版视频.zip', unquote(response.headers['content-disposition']))
         self.assertEqual(int(response.headers['content-length']), len(response.content))
         with ZipFile(BytesIO(response.content)) as bundle:
-            self.assertEqual(bundle.namelist(), [Path(member).name for member, _ in expected])
+            self.assertEqual(bundle.namelist(), [member for member, _ in expected])
             self.assertEqual([bundle.read(member) for member in bundle.namelist()], [content for _, content in expected])
 
-    def test_scene_does_not_download_empty_partial_or_unapproved_results(self):
-        self.assertEqual(self.scene_download().status_code, 409)
+    def test_completed_download_requires_finished_episode_and_every_scene(self):
+        self.assertEqual(self.completed_download().status_code, 409)
         self.video('后处理', 'C001', 'P001')
-        self.video('后处理', 'C001', 'P002', approved=False)
-        self.assertEqual(self.scene_download().status_code, 409)
-        self.episode['segments']['C001'][1]['videos'][0].update(approved=True, stage='二采')
-        self.assertEqual(self.scene_download().status_code, 409)
-        self.episode['segments']['C001'][1]['videos'][0]['stage'] = '后处理'
-        self.assertEqual(self.scene_download().status_code, 200)
+        self.assertEqual(self.completed_download().status_code, 409)
+        self.video('后处理', 'C002', 'P001', approved=False)
+        self.assertEqual(self.completed_download().status_code, 409)
+        video = self.episode['segments']['C002'][0]['videos'][0]
+        video.update(approved=True, stage='二采')
+        self.assertEqual(self.completed_download().status_code, 409)
+        video['stage'] = '后处理'
+        self.episode['productionComplete'] = False
+        self.assertEqual(self.completed_download().status_code, 409)
+        self.episode['productionComplete'] = True
+        self.assertEqual(self.completed_download().status_code, 200)
+        self.episode['scenes'] = []
+        self.assertEqual(self.completed_download().status_code, 409)
 
-    def test_scene_rejects_ambiguous_approval_and_index_issues(self):
+    def test_completed_download_rejects_ambiguous_approval_and_any_scene_issue(self):
         self.video('后处理', 'C001', 'P001')
+        self.video('后处理', 'C002', 'P001')
         segment = self.episode['segments']['C001'][0]
         segment['videos'].append(dict(segment['videos'][0]))
-        self.assertEqual(self.scene_download().status_code, 409)
+        self.assertEqual(self.completed_download().status_code, 409)
         segment['videos'].pop()
         self.episode['productionIssues'] = [{'scene': 'C002', 'message': 'other scene'}]
-        self.assertEqual(self.scene_download().status_code, 200)
+        self.assertEqual(self.completed_download().status_code, 409)
         self.episode['productionIssues'] = [{'message': 'index invalid'}]
-        self.assertEqual(self.scene_download().status_code, 409)
+        self.assertEqual(self.completed_download().status_code, 409)
 
-    def test_scene_missing_or_changed_file_does_not_return_partial_or_history_zip(self):
+    def test_completed_download_missing_or_changed_file_does_not_return_partial_or_history_zip(self):
         self.video('后处理', 'C001', 'P001')
-        self.video('后处理', 'C001', 'P002')
-        video = self.episode['segments']['C001'][1]['videos'][0]
+        self.video('后处理', 'C002', 'P001')
+        video = self.episode['segments']['C002'][0]['videos'][0]
         path = self.project / video['key']
         path.write_bytes(b'changed')
-        self.assertEqual(self.scene_download().status_code, 409)
+        self.assertEqual(self.completed_download().status_code, 409)
         path.unlink()
-        self.assertEqual(self.scene_download().status_code, 404)
+        self.assertEqual(self.completed_download().status_code, 404)
 
-    def test_scene_validates_request_and_project_file_boundary(self):
-        self.assertEqual(self.scene_download('invalid').status_code, 422)
-        self.assertEqual(self.scene_download('C003').status_code, 404)
+    def test_completed_download_validates_request_and_project_file_boundary(self):
+        self.assertEqual(self.client.get(self.url.replace('EP001/downloads', 'invalid/download')).status_code, 422)
+        self.assertEqual(self.client.get(self.url.replace('EP001/downloads', 'EP002/download')).status_code, 404)
         self.video('后处理', 'C001', 'P001')
-        self.episode['segments']['C001'][0]['videos'][0]['key'] = '../outside.mp4'
+        self.video('后处理', 'C002', 'P001')
+        self.episode['segments']['C002'][0]['videos'][0]['key'] = '../outside.mp4'
         (self.root / 'outside.mp4').write_bytes(b'outside')
-        self.assertEqual(self.scene_download().status_code, 404)
+        self.assertEqual(self.completed_download().status_code, 404)
 
 
 if __name__ == '__main__':
