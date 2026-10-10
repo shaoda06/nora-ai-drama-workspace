@@ -17,6 +17,7 @@ from pydantic import BaseModel
 
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
+from backend.services.episode_downloads import KINDS, resources as episode_resources, zip_response
 from backend.services import krea2
 from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
 from websockets.exceptions import WebSocketException
@@ -306,6 +307,29 @@ def asset(name: str, kind: Literal['people', 'scenes', 'props'], identity: str) 
         if item['id'] == identity:
             return view(item, name)
     raise HTTPException(404, '资料卡不存在')
+
+
+@app.get('/api/projects/{name}/episodes/{episode}/downloads')
+def episode_download_list(name: str, episode: Episode) -> dict[str, Any]:
+    try:
+        files = episode_resources(store, name, episode, entry(name)['data'])
+    except FileNotFoundError as error:
+        raise HTTPException(404, str(error)) from error
+    prefix = '/api/projects/' + quote(name, safe='') + '/episodes/' + episode + '/downloads/'
+    return {stage: {kind: {'count': len(items), 'url': prefix + quote(stage, safe='') + '/' + kind if items else None}
+                    for kind, items in groups.items()} for stage, groups in files.items()}
+
+
+@app.get('/api/projects/{name}/episodes/{episode}/downloads/{stage}/{kind}')
+def episode_download(name: str, episode: Episode, stage: Literal['一采', '二采', '后处理'],
+                     kind: Literal['videos', 'director', 'canvas']):
+    try:
+        files = episode_resources(store, name, episode, entry(name)['data'])[stage][kind]
+        if not files:
+            raise FileNotFoundError('本集该阶段没有可下载的' + KINDS[kind])
+        return zip_response(files, name + '-' + episode + '-' + stage + '-' + KINDS[kind] + '.zip')
+    except FileNotFoundError as error:
+        raise HTTPException(404, str(error)) from error
 
 
 @app.get('/api/projects/{name}/document')
