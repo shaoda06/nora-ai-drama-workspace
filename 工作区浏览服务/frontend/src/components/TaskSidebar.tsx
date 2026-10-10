@@ -53,6 +53,8 @@ export function TaskSidebar() {
     paused: localRows.filter(task => category(task) === 'paused').length,
     history: localRows.filter(task => category(task) === 'history').length };
   const localTasks = localRows.filter(task => category(task) === localCategory);
+  if (localCategory === 'history') localTasks.sort((a, b) =>
+    new Date(b.ended_at || b.created_at).getTime() - new Date(a.ended_at || a.created_at).getTime());
   const localPositions = new Map(localTasks.filter(task => task.status === 'local_queued' || task.status === 'queued')
     .map((task, index) => [task.id, index + 1]));
   const registered = new Map(tasks.filter((task): task is Task => !('queue' in task && task.queue === 'local'))

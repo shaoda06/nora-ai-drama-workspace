@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { taskTypeLabels } from './TaskCard';
+import { clockText, localDateTime, taskTypeLabels } from './TaskCard';
 import './LocalQueueCard.css';
 
 export const localQueueStates = { queued: '排队中', paused: '暂停中', history: '历史' } as const;
@@ -16,6 +16,7 @@ export interface LocalQueueTask {
   status: string; category?: keyof typeof localQueueStates;
   source_session_name?: string; error?: string | null; notification?: string;
   queue_position?: number | null; collected?: number; expected?: number;
+  created_at: string; started_at?: string | null; ended_at?: string | null;
 }
 
 export function LocalQueueCard({ task, position, onReorder, onAction, busy, onDragStart, onDragEnd }: {
@@ -23,6 +24,10 @@ export function LocalQueueCard({ task, position, onReorder, onAction, busy, onDr
   onAction?: (id: string, action: string) => void; busy?: boolean;
   onDragStart?: (id: string) => Promise<boolean>; onDragEnd?: () => void;
 }) {
+  const history = task.category === 'history';
+  const ended = task.ended_at ? new Date(task.ended_at) : null;
+  const elapsed = ended && task.started_at
+    ? Math.max(0, Math.floor((ended.getTime() - new Date(task.started_at).getTime()) / 1000)) : null;
   const cardRef = useRef<HTMLElement>(null);
   const floatingRef = useRef<HTMLElement>(null);
   const [drag, setDrag] = useState<{
@@ -78,7 +83,7 @@ export function LocalQueueCard({ task, position, onReorder, onAction, busy, onDr
     <div className="local-queue-card-body">
       <div className="local-queue-card-description">
         <h2>{task.title}</h2>
-        <p className="local-queue-card-session" title={task.source_session_name}>来源会话：{task.source_session_name || '会话名称暂不可用'}</p>
+        {!history && <p className="local-queue-card-session" title={task.source_session_name}>来源会话：{task.source_session_name || '会话名称暂不可用'}</p>}
       </div>
       {['local_queued', 'queued', 'paused'].includes(task.status) && <div className="local-queue-card-actions" aria-label="本地任务操作">
         <button type="button" data-tone="green" disabled={busy || !onAction} onClick={() => onAction?.(task.id, 'immediate')}>立即提交</button>
@@ -88,7 +93,12 @@ export function LocalQueueCard({ task, position, onReorder, onAction, busy, onDr
         <button type="button" data-tone="red" disabled={busy || !onAction} onClick={() => onAction?.(task.id, 'cancel')}>取消</button>
       </div>}
     </div>
-    {task.category === 'history' && task.expected !== undefined && <p className="local-queue-card-session">成果保存：{task.collected} / {task.expected}</p>}
+    {history && <div className="local-queue-card-history">
+      <p className="local-queue-card-session" title={task.source_session_name}>来源会话：{task.source_session_name || '会话名称暂不可用'}</p>
+      <time dateTime={task.ended_at || undefined}>{['completed', 'collecting', 'collection_failed'].includes(task.status) ? '完成时间' : '结束时间'}：{ended ? localDateTime(ended) : '未记录'}</time>
+      <p className="local-queue-card-session">成果保存：{task.expected !== undefined ? `${task.collected} / ${task.expected}` : '未记录'}</p>
+      <span title="从执行开始到执行结束，不含排队等待">任务耗时：{elapsed !== null ? clockText(elapsed) : '未记录'}</span>
+    </div>}
     {task.error && <p className="local-queue-card-error">{task.error}</p>}
     {task.notification && ['waiting_connection', 'waiting_idle', 'delivery_unknown', 'sending'].includes(task.notification) && <p className="local-queue-card-session">
       通知：{task.notification === 'delivery_unknown' ? '送达状态不明，等待确认' : '等待发送'}</p>}

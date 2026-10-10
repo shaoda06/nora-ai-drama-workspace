@@ -26,12 +26,12 @@ export type Task = LocalTask | ExternalTask;
 export const taskTypeLabels = { image: '图片生成', 'image-upscale': '图片超分',
   'video-first-pass': '视频一采', 'video-second-pass': '视频二采', 'video-postprocess': '视频后处理' } as const;
 
-function clockText(seconds: number) {
+export function clockText(seconds: number) {
   const pad = (value: number) => String(value).padStart(2, '0');
   return `${pad(Math.floor(seconds / 3600))}小时:${pad(Math.floor(seconds / 60) % 60)}分钟:${pad(seconds % 60)}秒`;
 }
 
-function localDateTime(date: Date) {
+export function localDateTime(date: Date) {
   const pad = (value: number) => String(value).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
