@@ -21,6 +21,7 @@ from backend.services.episode_downloads import KINDS, resources as episode_resou
 from backend.services import krea2
 from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
 from backend.services.task_details import task_detail
+from backend.services.task_history import task_history
 from websockets.exceptions import WebSocketException
 from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes
 
@@ -53,8 +54,16 @@ app = FastAPI(title='Nora工作区浏览服务', version=VERSION, docs_url=None,
 
 
 @app.get('/api/comfy/tasks')
-async def comfy_tasks(request: Request) -> dict[str, Any]:
-    return request.app.state.comfy_tasks.public()
+async def comfy_tasks(request: Request, include_history: bool = True) -> dict[str, Any]:
+    return request.app.state.comfy_tasks.public(include_history=include_history)
+
+
+@app.get('/api/comfy/history')
+async def comfy_history(request: Request, url: str, q: str = '',
+                        result: Literal['all', 'completed', 'abnormal', 'cancelled'] = 'all',
+                        offset: Annotated[int, Query(ge=0)] = 0,
+                        limit: Annotated[int, Query(ge=1, le=100)] = 20) -> dict[str, Any]:
+    return task_history(request.app.state.comfy_tasks, url, q, result, offset, limit)
 
 
 @app.get('/api/comfy/tasks/{key}/detail')
@@ -68,16 +77,16 @@ async def comfy_task_detail(key: str, request: Request) -> dict[str, Any]:
 
 
 @app.get('/api/comfy/events', response_class=EventSourceResponse)
-async def comfy_events(request: Request) -> AsyncIterable[ServerSentEvent]:
+async def comfy_events(request: Request, include_history: bool = True) -> AsyncIterable[ServerSentEvent]:
     tasks = request.app.state.comfy_tasks
     event = asyncio.Event()
     tasks.subscribers.add(event)
     try:
-        yield ServerSentEvent(data=tasks.public(), event='tasks')
+        yield ServerSentEvent(data=tasks.public(include_history=include_history), event='tasks')
         while True:
             await event.wait()
             event.clear()
-            yield ServerSentEvent(data=tasks.public(), event='tasks')
+            yield ServerSentEvent(data=tasks.public(include_history=include_history), event='tasks')
     finally:
         tasks.subscribers.remove(event)
 

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { TaskCard, type Task } from './TaskCard';
 import { LocalQueueCard, localQueueStates, type LocalQueueTask } from './LocalQueueCard';
 import { TaskDetailDialog } from './TaskDetailDialog';
+import { TaskHistory } from './TaskHistory';
 import './TaskSidebar.css';
 
 interface RemoteNode {
@@ -26,10 +27,12 @@ export function TaskSidebar() {
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState('');
   const [nodes, setNodes] = useState<RemoteNode[]>([]);
+  const [counts, setCounts] = useState<Record<string, { queued: number; paused: number; history: number }>>({});
+  const [historyUpdates, setHistoryUpdates] = useState<Record<string, string | null>>({});
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const [connection, setConnection] = useState<'loading' | 'connected' | 'reconnecting'>('loading');
   useEffect(() => {
-    const source = new EventSource('/api/comfy/events');
+    const source = new EventSource('/api/comfy/events?include_history=false');
     source.addEventListener('tasks', event => {
       const snapshot = JSON.parse((event as MessageEvent).data);
       setTasks(snapshot.tasks);
@@ -39,6 +42,8 @@ export function TaskSidebar() {
         setLocalRows(incoming);
       }
       setNodes(snapshot.remote_nodes);
+      setCounts(snapshot.local_counts);
+      setHistoryUpdates(snapshot.history_updated_at);
       setConnection('connected');
     });
     source.onerror = () => setConnection('reconnecting');
@@ -53,12 +58,8 @@ export function TaskSidebar() {
   const category = (task: LocalQueueTask): keyof typeof localQueueStates => task.category ??
     (task.status === 'queued' || task.status === 'local_queued' ? 'queued' : task.status === 'paused' ? 'paused' : 'history');
   const nodeRows = localRows.filter(task => task.remote_url === selectedNode?.url);
-  const localCounts = { queued: nodeRows.filter(task => category(task) === 'queued').length,
-    paused: nodeRows.filter(task => category(task) === 'paused').length,
-    history: nodeRows.filter(task => category(task) === 'history').length };
+  const localCounts = counts[selectedNode?.url] ?? { queued: 0, paused: 0, history: 0 };
   const localTasks = nodeRows.filter(task => category(task) === localCategory);
-  if (localCategory === 'history') localTasks.sort((a, b) =>
-    new Date(b.ended_at || b.created_at).getTime() - new Date(a.ended_at || a.created_at).getTime());
   const localPositions = new Map(localTasks.filter(task => task.status === 'local_queued' || task.status === 'queued')
     .map((task, index) => [task.id, index + 1]));
   const registered = new Map(tasks.filter((task): task is Task => !('queue' in task && task.queue === 'local'))
@@ -81,12 +82,14 @@ export function TaskSidebar() {
     return data;
   }, []);
   const reload = useCallback(async () => {
-    const response = await fetch('/api/comfy/tasks');
+    const response = await fetch('/api/comfy/tasks?include_history=false');
     if (!response.ok) throw new Error('任务列表刷新失败');
     const snapshot = await response.json();
     localRef.current = snapshot.local_tasks;
     setLocalRows(snapshot.local_tasks);
     setTasks(snapshot.tasks);
+    setCounts(snapshot.local_counts);
+    setHistoryUpdates(snapshot.history_updated_at);
     return snapshot.local_tasks as LocalQueueTask[];
   }, []);
   const action = useCallback(async (id: string, operation: string) => {
@@ -194,6 +197,8 @@ export function TaskSidebar() {
               onClick={() => setLocalCategory(status)}>{localQueueStates[status]}（{localCounts[status]}）</button>)}
           </nav>
         </div>
+        {localCategory === 'history' && selectedNode ? <TaskHistory key={selectedNode.url} url={selectedNode.url}
+          updatedAt={historyUpdates[selectedNode.url]} total={localCounts.history} onDetails={setDetailId} /> :
         <div className="comfy-queue-body" key={`${selectedNode?.url}:${localCategory}`}>
           {actionError && <p className="comfy-task-warning" role="alert">{actionError}</p>}
           {localTasks.length === 0 && <p className="comfy-empty">暂无{localQueueStates[localCategory]}任务</p>}
@@ -201,10 +206,10 @@ export function TaskSidebar() {
             position={localPositions.get(task.id)}
             busy={busy || dragToken.current !== null} onAction={action} onTransfer={transfer} onDragStart={startDrag} onDragEnd={endDrag} onDetails={setDetailId}
             onReorder={task.status === 'local_queued' ? reorderLocal : undefined} />)}</div>
-        </div>
+        </div>}
       </section>
     </div>
   </aside>{detailId && <TaskDetailDialog key={detailId} id={detailId}
-    updatedAt={localRows.find(task => task.id === detailId)?.updated_at}
+    updatedAt={historyUpdates[selectedNode?.url] ?? undefined}
     nodes={nodes} close={() => setDetailId(null)} />}</>;
 }

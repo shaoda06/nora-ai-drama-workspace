@@ -106,7 +106,7 @@ class TaskStore(LocalQueue, TaskNotifications):
         config = client.strict_json((Path(data.project) / 'comfyui-config.json').read_bytes())
         return [client.Client(url, data.timeout).url for url in config.get('remote-urls', [config.get('remote-url')])]
 
-    def public(self):
+    def public(self, include_history=True):
         snapshot = {'tasks': sorted(({**{key: ([{field: item.get(field) for field in ('identity', 'index', 'check', 'path', 'error')}
                                         for item in value.values()] if key == 'segments' else value) for key, value in row['state'].items()
                                  if key not in ('client_id', 'segment_monitor', 'notices')},
@@ -138,6 +138,16 @@ class TaskStore(LocalQueue, TaskNotifications):
                                                for index, url in enumerate(projects[row['input'].project]) if url != task['remote_url']],
                           'queue_position': order.index(task['id']) + 1 if task['id'] in order else None})
         snapshot['local_tasks'] = sorted(local, key=lambda task: (task['category'] != 'queued', task.get('queue_order', 0)))
+        if not include_history:
+            snapshot['local_counts'] = {node['url']: {category: sum(task['remote_url'] == node['url'] and task['category'] == category
+                                                                   for task in local)
+                                                     for category in ('queued', 'paused', 'history')}
+                                        for node in snapshot['remote_nodes']}
+            snapshot['history_updated_at'] = {node['url']: max((task.get('updated_at') or task['created_at'] for task in local
+                                                               if task['remote_url'] == node['url'] and task['category'] == 'history'), default=None)
+                                             for node in snapshot['remote_nodes']}
+            snapshot['tasks'] = [task for task in snapshot['tasks'] if task['status'] not in TERMINAL and task['status'] != 'collecting']
+            snapshot['local_tasks'] = [task for task in snapshot['local_tasks'] if task['category'] != 'history']
         return snapshot
 
     def publish(self):

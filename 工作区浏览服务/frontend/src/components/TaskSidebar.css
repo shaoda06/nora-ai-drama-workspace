@@ -29,4 +29,10 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-node-dot[data-connection=reconnecting]{background:#c65b55}
 .comfy-empty{color:var(--muted);font-size:13px;padding:22px 0}
 .comfy-task-items{display:flex;flex-direction:column;gap:12px}
+.comfy-history{display:flex;flex-direction:column;flex:1;min-height:0}
+.comfy-history-controls{display:flex;gap:8px;margin-bottom:12px;flex:none}
+.comfy-history-controls input{flex:1;width:0;min-width:0;padding:7px 10px;font-size:12px}
+.comfy-history-controls select{flex:none;width:auto;padding:7px 9px;font-size:12px}
+.comfy-history-footer{display:flex;justify-content:center;align-items:center;gap:16px;padding:18px 0 8px;color:var(--muted);font-size:12px}
+.comfy-history-footer button{padding:5px 12px;font-size:12px}
 @media(max-width:700px){.comfy-sidebar[data-open=true]{width:100%}.comfy-node-heading{flex-wrap:wrap;gap:6px}.comfy-node-counts{margin-left:auto}}
