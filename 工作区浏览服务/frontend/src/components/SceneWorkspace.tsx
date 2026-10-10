@@ -17,7 +17,7 @@ import { SceneDownloads } from './SceneDownloads';
 type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
 
-export function SceneWorkspace({ scope, segments, revision, directorFiles, storyboardDocument }: { scope: NoteScope; segments: Segments; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData }) {
+export function SceneWorkspace({ scope, segments, emptyMessage, revision, directorFiles, storyboardDocument }: { scope: NoteScope; segments: Segments; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData }) {
   const { scene } = scope;
   const positionKey = `scene/${scope.project}/${scope.episode}/${scene}`;
   const [view, setView] = useRefreshState(positionKey + '/view', 'segments');
@@ -62,6 +62,7 @@ export function SceneWorkspace({ scope, segments, revision, directorFiles, story
     <div className="scene-workspace-tabs"><UnderlineTabs label="场次内容" items={[{ value: 'segments', label: '分段制作' }, { value: 'storyboard', label: '场次分镜' }, { value: 'dialogue', label: '分镜修改' }, { value: 'downloads', label: '资源下载' }]} selected={view} onChange={value => { setAutoPlay(false); setView(value); }} /></div>
     <div className="episode-scene-content" aria-label={scene ? `场次 ${scene} 内容` : '场次内容'}>
     {view === 'segments' ? <>
+    {segments.length === 0 ? <div className="scene-empty" role="status"><h3>{scene ? '暂无可显示的分段' : '暂无可显示的场次'}</h3><p className="muted">{emptyMessage}</p></div> : null}
     {segments.some((item, index) => index > 0 && Number(item.id.slice(1)) < Number(segments[index - 1].id.slice(1))) && <p className="segment-order-note muted">分段按分镜索引中的剧情顺序排列，编号保留原标识。</p>}
     {segments.length > 0 && <div className="segment-scroll"><div className="segment-strip" role="group" aria-label="本场分段" style={{ '--segment-columns': segments.map(item => `minmax(0, ${item.duration}fr)`).join(' ') } as CSSProperties}>
       {segments.map(item => <button key={item.id} aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} title={`${item.id} · 计划时长 ${item.duration}秒`} aria-pressed={item.id === segment} onClick={() => { setAutoPlay(false); setSegment(item.id); setError(''); }}><span>{item.id}</span><span>{item.duration}秒</span></button>)}

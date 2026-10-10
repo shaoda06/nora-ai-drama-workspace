@@ -116,3 +116,5 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .phase-progress-meta{display:flex;align-items:center;justify-content:space-between;gap:16px}.phase-progress-status{display:flex;align-items:center;gap:8px}.phase-progress-status .prose{margin:0}.phase-progress-meta>a{flex-shrink:0}.phase-progress>.prose li+li{margin-top:8px}
 
 .scene-downloads{margin-top:20px}.scene-downloads>h3{margin:0 0 16px}.director-pack-list{display:grid;gap:16px}.director-pack-card{border:1px solid var(--line);border-radius:8px;padding:18px;overflow-wrap:anywhere}.director-pack-card h4{margin:0 0 14px}.director-pack-actions{display:flex;flex-wrap:wrap;gap:12px 24px}
+
+.episode-data-issues{margin:18px 0;overflow-wrap:anywhere}.episode-data-issues ul{margin:8px 0 0;padding-left:22px}.episode-data-issues li+li{margin-top:8px}.episode-data-issues .link{text-align:left;overflow-wrap:anywhere}.scene-empty{padding:24px 0}

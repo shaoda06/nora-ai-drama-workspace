@@ -280,6 +280,62 @@ class ServiceTests(unittest.TestCase):
         self.assertTrue(data['script']['key'].endswith('/02-剧集剧本/EP001-本集剧本.md'))
         self.assertEqual(data['script']['doc']['meta']['文档版本'], 'v03')
 
+    def test_episode_structure_issues_identify_script_and_index_without_hiding_valid_data(self):
+        episode = self.project / '09-剧集制作/EP001'
+        script = episode / '02-剧集剧本/EP001-本集剧本.md'
+        script.parent.mkdir(parents=True)
+        script.write_text('# 本集剧本\n### 1. 故事剧本正文\n### EP001-C001\n正文。\n', encoding='utf-8')
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual(data['scenes'], [])
+        self.assertEqual(data['productionIssues'][0]['key'], '09-剧集制作/EP001/02-剧集剧本/EP001-本集剧本.md')
+        self.assertIn('二级标题', data['productionIssues'][0]['message'])
+        script.write_text('# 本集剧本\n## 1. 故事剧本正文\n### EP001-C001\n正文。\n', encoding='utf-8')
+        index = episode / '03-分镜脚本/EP001-分镜索引.md'
+        index.parent.mkdir()
+        index.write_text('# 分镜索引\n| 场次 | 分段 | 时长 |\n| --- | --- | --- |\n'
+                         '| EP001-C001 | EP001-C001-P001 | 10 |\n', encoding='utf-8')
+        self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual(data['scenes'], ['C001'])
+        self.assertEqual(data['segments']['C001'], [])
+        self.assertEqual(data['productionIssues'][0]['key'], '09-剧集制作/EP001/03-分镜脚本/EP001-分镜索引.md')
+        self.assertIn('分段计划时长（秒）', data['productionIssues'][0]['message'])
+        index.write_text('# 分镜索引\n| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+                         '| EP001-C001 | EP001-C001-P001 | 10 |\n'
+                         '| EP001-C001 | EP001-C002-P002 | 11 |\n', encoding='utf-8')
+        self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual([item['id'] for item in data['segments']['C001']], ['P001'])
+        self.assertIn('不匹配', data['productionIssues'][0]['message'])
+
+    def test_episode_storyboard_structure_issues_have_scene_and_source(self):
+        episode = self.project / '09-剧集制作/EP001'
+        script = episode / '02-剧集剧本/EP001-本集剧本.md'
+        script.parent.mkdir(parents=True)
+        script.write_text('# 本集剧本\n## 1. 故事剧本正文\n### EP001-C001\n正文。\n', encoding='utf-8')
+        board = episode / '03-分镜脚本/EP001-C001-场次分镜.md'
+        board.parent.mkdir()
+        board.write_text('# 场次分镜\n### 1. 镜头正文\n### 分段 P001\n镜头。\n', encoding='utf-8')
+        index = board.parent / 'EP001-分镜索引.md'
+        index.write_text('| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+                         '| EP001-C001 | EP001-C001-P001 | 10 |\n', encoding='utf-8')
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual(len(data['segments']['C001']), 1)
+        issue = data['productionIssues'][0]
+        self.assertTrue(issue['key'].endswith('EP001-C001-场次分镜.md'))
+        self.assertEqual(issue['scene'], 'C001')
+        self.assertIn('1. 镜头正文', issue['message'])
+        board.write_text('# 场次分镜\n## 1. 镜头正文\n### 分段 P002\n#### EP001-SH001\n镜头。\n', encoding='utf-8')
+        self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertIn('分段 P001', data['productionIssues'][0]['message'])
+
+    def test_unstarted_episode_has_no_structure_error(self):
+        (self.project / '09-剧集制作/EP001').mkdir(parents=True)
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual(data['scenes'], [])
+        self.assertEqual(data['productionIssues'], [])
+
     def test_segments_use_current_index_and_match_story_scenes(self):
         episode = self.project / '09-剧集制作/EP001'
         (episode / '02-剧集剧本').mkdir(parents=True)

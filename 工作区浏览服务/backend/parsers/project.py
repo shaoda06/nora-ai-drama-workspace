@@ -1161,12 +1161,16 @@ def build_data(project, *, web_episode_navigation=False):
         if web_episode_navigation:
             episode_root = production + "/" + number
             work_root = episode_root + "/其他资料/工作稿/"
+            issues = episode_node["productionIssues"] = []
             episode_node["script"], script = latest_episode_document(
                 episode_root + "/02-剧集剧本/" + number + "-本集剧本.md", work_root + number + "-本集剧本-工作稿.md")
             script_body = re.search(r"^##[ \t]+1\.[ \t]*故事剧本正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)", script, re.M | re.S)
             episode_node["scenes"] = list(dict.fromkeys(re.findall(
                 r"^###[ \t]+" + re.escape(number) + r"-(C\d{3,})[ \t]*$",
                 script_body[1] if script_body else "", re.M)))
+            if episode_node["script"] and not episode_node["scenes"]:
+                issues.append({"key": episode_node["script"]["key"], "message":
+                    "缺少二级标题“1. 故事剧本正文”（##），或该章中没有三级场次标题（### " + number + "-C001）。"})
             episode_node["segments"] = {scene: [] for scene in episode_node["scenes"]}
             episode_node["storyboards"] = {}
             storyboard_texts = {}
@@ -1177,12 +1181,21 @@ def build_data(project, *, web_episode_navigation=False):
                 if item:
                     episode_node["storyboards"][scene] = item
                     storyboard_texts[scene] = text
+                    if not re.search(r"^##[ \t]+1\.[ \t]*镜头正文[ \t]*$", text, re.M):
+                        issues.append({"key": item["key"], "scene": scene,
+                                       "message": "缺少二级标题“1. 镜头正文”（##），无法读取本场镜头。"})
             index_item, storyboard_index_text = latest_episode_document(episode_root + "/03-分镜脚本/" + number + "-分镜索引.md",
                                                             work_root + number + "-分镜索引-工作稿.md")
             storyboard_index = index_item["key"] if index_item else episode_root + "/03-分镜脚本/" + number + "-分镜索引.md"
-            for row in table_records(storyboard_index_text, ("场次", "分段", "分段计划时长（秒）")):
+            index_rows = table_records(storyboard_index_text, ("场次", "分段", "分段计划时长（秒）"))
+            if index_item and not index_rows:
+                issues.append({"key": storyboard_index,
+                               "message": "没有可读取的分段表。表头须包含“场次”“分段”“分段计划时长（秒）”，并填写完整数据行。"})
+            for row in index_rows:
                 identity = re.fullmatch(re.escape(number) + r"-(C\d{3,})-(P\d{3,})", row["分段"])
                 if not identity or identity[1] not in episode_node["segments"] or row["场次"] != number + "-" + identity[1]:
+                    issues.append({"key": storyboard_index,
+                                   "message": "分段“" + row["分段"] + "”与场次“" + row["场次"] + "”不匹配，或该场次未在本集剧本中定义。"})
                     continue
                 duration = row["分段计划时长（秒）"]
                 if not re.fullmatch(r"\d+(?:\.\d+)?", duration) or float(duration) <= 0:
@@ -1193,6 +1206,9 @@ def build_data(project, *, web_episode_navigation=False):
                                   storyboard_texts.get(identity[1], ""), re.M | re.S)
                 segment_script = re.search(r"^###[ \t]+分段[ \t]+" + re.escape(identity[2])
                                            + r"[ \t]*\n.*?(?=^###[ \t]|\Z)", shots[1], re.M | re.S) if shots else None
+                if shots and not segment_script:
+                    issues.append({"key": storyboard_source, "scene": identity[1],
+                                   "message": "镜头正文中缺少三级标题“分段 " + identity[2] + "”（###），无法关联该段镜头。"})
                 shot_body = re.search(r"^####[ \t]+", segment_script[0], re.M) if segment_script else None
                 script_text = segment_script[0][shot_body.start():] if shot_body else ""
                 script_text = re.sub(r"(^####[ \t]+(EP\d+-SH\d+)[ \t]*\n)\s*\*\*镜号\*\*[：:][ \t]*\2[ \t]*(?=\n|$)",

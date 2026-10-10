@@ -25,6 +25,10 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
   const scenes = current?.scenes || [];
   const selectedScene = scenes.includes(scene) ? scene : scenes[0] || '';
   const segments = current?.segments?.[selectedScene] || [];
+  const issues = (current?.productionIssues || []).filter(issue => !issue.scene || issue.scene === selectedScene);
+  const emptyMessage = issues.length > 0 ? '请先修正上方提示的文件结构，保存后页面会重新读取资料。'
+    : !script ? '本集剧本尚未建立，请先准备本集剧本，再整理场次分镜和分段计划。'
+    : '本场尚无分段计划，请先完善本集分镜索引。';
   let directorFiles = current?.children;
   for (const folder of ['其他资料', '阶段采用视频', '01-一采', selectedScene + '-场次', '导演包']) {
     directorFiles = directorFiles?.find(item => item.name === folder)?.children;
@@ -38,7 +42,14 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
       {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
       <button className="link episode-script-link" disabled={!script} title={script ? undefined : '本集剧本尚未建立'} onClick={() => preview(script!)}>查看本集剧本</button>
     </div>
-    <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} revision={revision} directorFiles={directorFiles || []} storyboardDocument={current.storyboards?.[selectedScene]?.doc} />
+    {issues.length > 0 ? <div className="notice episode-data-issues" role="alert">
+      <strong>制作资料需要修正</strong>
+      <ul>{issues.map((issue, index) => <li key={index}>
+        <button className="link" title={issue.key} onClick={() => preview({ kind: 'document', key: issue.key, name: issue.key.split('/').pop()! })}>{issue.key.split('/').pop()}</button>：{issue.message}
+      </li>)}</ul>
+    </div> : null}
+    {selectedScene ? <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} storyboardDocument={current.storyboards?.[selectedScene]?.doc} />
+      : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
   </div> : <>
     <div ref={cards} className="episode-grid">{items.slice((page - 1) * 36, page * 36).map(item => <EpisodeButton key={item.key} item={item} onSelect={open} />)}</div>
     {!items.length && <p className="muted">尚无剧集制作目录。</p>}
