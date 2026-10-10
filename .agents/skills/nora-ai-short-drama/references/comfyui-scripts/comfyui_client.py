@@ -101,7 +101,7 @@ class Client:
             except (ValueError, UnicodeError):
                 body = raw.decode("utf-8", errors="replace")
             raise ClientError("http_error", "Server rejected or failed the HTTP request",
-                              http_status=exc.code, response=body) from exc
+                              http_status=exc.code, response=body, retry_after=exc.headers.get("Retry-After")) from exc
         except (urllib.error.URLError, OSError, http.client.HTTPException) as exc:
             raise ClientError("transport_error", str(exc)) from exc
 
@@ -274,7 +274,13 @@ def download(client, args):
             digest, count = hashlib.sha256(), 0
             with tempfile.NamedTemporaryFile(dir=target.parent, prefix=".comfy-download-", delete=False) as out:
                 temp_path = Path(out.name)
-                while block := response.read(CHUNK):
+                while True:
+                    try:
+                        block = response.read(CHUNK)
+                    except (OSError, http.client.HTTPException) as exc:
+                        raise ClientError("transport_error", str(exc), operation="download_read") from exc
+                    if not block:
+                        break
                     out.write(block)
                     digest.update(block)
                     count += len(block)

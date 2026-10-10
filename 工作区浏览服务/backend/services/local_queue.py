@@ -371,7 +371,8 @@ class LocalQueue:
         if key not in self.rows or self.rows[key]['state']['status'] != 'collection_failed':
             raise ValueError('只有取回失败的任务可以重试取回')
         state = self.rows[key]['state']
-        self.save(key, status='collecting', error=None, collection_attempt=state.get('collection_attempt', 1) + 1)
+        self.save(key, status='collecting', error=None, collection_attempt=state.get('collection_attempt', 1) + 1,
+                  collection_auto_retry=0, collection_next_retry_at=None, collection_retry_stop=None, collection_errors=[])
         self.record(key, 'collection_retry', 'accepted')
         self.workers[key] = asyncio.create_task(self.collect_saved(key))
         return {'local_task_id': key, 'status': 'collecting'}

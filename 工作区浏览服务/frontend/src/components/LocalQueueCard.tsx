@@ -19,6 +19,14 @@ export interface LocalQueueTask {
   remote_url: string; can_transfer?: boolean;
   transfer_targets?: { url: string; name: string }[];
   created_at: string; updated_at?: string; started_at?: string | null; ended_at?: string | null;
+  collection_auto_retry?: number | null; collection_next_retry_at?: string | null;
+}
+
+export function collectionStatus(task: Pick<LocalQueueTask, 'status' | 'collection_auto_retry' | 'collection_next_retry_at'>) {
+  if (task.status === 'collecting' && (task.collection_auto_retry || task.collection_next_retry_at)) {
+    return `取回重试中 · ${(task.collection_auto_retry || 0) + (task.collection_next_retry_at ? 1 : 0)}/3`;
+  }
+  return statusLabels[task.status] || task.status;
 }
 
 export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer, busy, onDragStart, onDragEnd, onDetails }: {
@@ -82,7 +90,7 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
         <span className="local-queue-card-project" title={task.project}>{task.project}</span>
         <span className="local-queue-card-type">{taskTypeLabels[task.task_type]}</span>
       </div>
-      <strong className="local-queue-card-status" data-status={task.status}>{statusLabels[task.status] || task.status}{position !== undefined && ` #${position}`}</strong>
+      <strong className="local-queue-card-status" data-status={task.status}>{collectionStatus(task)}{position !== undefined && ` #${position}`}</strong>
     </div>
     <div className="local-queue-card-body">
       <div className="local-queue-card-description">
@@ -114,6 +122,8 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
       <span title="从执行开始到执行结束，不含排队等待">任务耗时：{elapsed !== null ? clockText(elapsed) : '未记录'}</span>
     </div>}
     {task.error && <p className="local-queue-card-error">{task.error}</p>}
+    {task.status === 'collecting' && task.collection_next_retry_at && <p className="local-queue-card-session">
+      下次重试：{localDateTime(new Date(task.collection_next_retry_at))}:{String(new Date(task.collection_next_retry_at).getSeconds()).padStart(2, '0')}</p>}
     {task.notification && ['waiting_connection', 'waiting_idle', 'delivery_unknown', 'sending'].includes(task.notification) && <p className="local-queue-card-session">
       通知：{task.notification === 'delivery_unknown' ? '送达状态不明，等待确认' : '等待发送'}</p>}
   </>;

@@ -6,6 +6,7 @@ from pathlib import Path, PureWindowsPath, PurePosixPath
 import re
 
 from pydantic import BaseModel, Field
+from backend.services.collection_retry import failure
 
 
 class SegmentTarget(BaseModel):
@@ -130,12 +131,14 @@ async def finish(store, key, result):
                     filename=source['filename'], subfolder=source['subfolder'], type='output', output=str(candidate), sha256=None))
                 store.client.write_new(receipt_path, {'time': store.client.now(), 'prompt_id': state['prompt_id'],
                                                      'identity': target['identity'], 'data': downloaded})
+                store.record(key, 'download', 'success', path=str(candidate), remote=source, receipt=str(receipt_path),
+                             attempt=state.get('collection_attempt', 1))
             item.update(remote=source, path=str(candidate), check='已取回', error=None)
             collected += 1
-            store.record(key, 'download', 'success', path=str(candidate), remote=source, receipt=str(receipt_path))
         except (store.client.ClientError, OSError, ValueError, KeyError) as error:
             item.update(error=str(error), check='取回失败')
-            problems.append(target['identity'] + '：' + str(error))
-            store.record(key, 'download', 'failed', identity=target['identity'], error=str(error))
+            issue = failure(error, store.client.ClientError, identity=target['identity'])
+            problems.append(issue)
+            store.record(key, 'download', 'failed', **issue, attempt=state.get('collection_attempt', 1))
         store.save(key, collected=collected)
     return problems

@@ -300,7 +300,9 @@ python "实际技能目录/scripts/browser_tasks.py" ack --notification-id 通�
 
 ### 后台取回重试
 
-仅用于后台状态为 `collection_failed` 的原任务。按[异常处理与授权](../流程规范/ComfyUI-任务监控规范.md#31-异常检查与连接恢复)核对后，用原本地任务ID请求：
+后台在整项生成成功后取回全部成果；暂时性下载故障最多自动重试3次，间隔10、30、60秒，HTTP 429遵从有效Retry-After。自动重试期间保持 `collecting`，不重复唤醒Agent；达到上限或发现资料、HTTP权限／缺项、本机文件等不可重试问题后，才进入 `collection_failed` 并通知。次数、等待时间、每轮原因及成功凭据持久保存，后台重启接续原周期，详见[异常处理与授权](../流程规范/ComfyUI-任务监控规范.md#31-异常检查与连接恢复)。
+
+以下入口仅用于后台状态为 `collection_failed` 的原任务。Agent核对并处理原因后，用原本地任务ID请求新一轮取回（重新获得最多3次自动重试）：
 
 ```sh
 python "实际技能目录/scripts/browser_tasks.py" retry-collection --task-id 本地任务UUID

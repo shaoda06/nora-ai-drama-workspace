@@ -21,7 +21,8 @@ def task_history(store, url, search='', result='all', offset=0, limit=20):
     rows.sort(key=lambda row: (datetime.fromisoformat(row['state'].get('ended_at') or row['state']['created_at']).timestamp(),
                                row['state']['created_at'], row['state']['id']), reverse=True)
     fields = ('id', 'project', 'title', 'task_type', 'status', 'source_session_name', 'created_at', 'updated_at',
-              'started_at', 'ended_at', 'error', 'notification', 'collected', 'expected')
+              'started_at', 'ended_at', 'error', 'notification', 'collected', 'expected',
+              'collection_auto_retry', 'collection_next_retry_at')
     items = [{**{field: row['state'][field] for field in fields if field in row['state']},
               'remote_url': row['input'].url.rstrip('/'), 'queue': 'local', 'category': 'history'}
              for row in rows[offset:offset + limit]]

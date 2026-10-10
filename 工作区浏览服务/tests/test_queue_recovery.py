@@ -105,9 +105,15 @@ class RecoveryTests(unittest.IsolatedAsyncioTestCase):
             self.data.url = remote_url
             with patch.object(self.store, 'notify', AsyncMock()), patch.object(t.client, 'status', return_value=result), \
                     patch.object(t.client, 'submit') as submit:
-                await self.store.reconcile('task')
+                real_sleep = asyncio.sleep
+                async def skip_retry_wait(seconds):
+                    await real_sleep(0)
+                with patch.object(t.asyncio, 'sleep', skip_retry_wait):
+                    await self.store.reconcile('task')
                 self.assertEqual(self.store.rows['task']['state']['status'], 'collection_failed')
                 self.assertEqual(self.store.rows['task']['state']['collected'], 3)
+                self.assertEqual(self.store.rows['task']['state']['collection_auto_retry'], 3)
+                self.assertEqual(calls, [1, 1, 1, 4, 4, 4, 4])
                 originals = [Path(item.path).stat().st_mtime_ns for item in self.data.segment_plan.targets[:3]]
                 await self.store.close()
                 self.restart()
@@ -119,12 +125,12 @@ class RecoveryTests(unittest.IsolatedAsyncioTestCase):
                     await asyncio.wait_for(self.store.workers['task'], 10)
                 state = self.store.rows['task']['state']
                 self.assertEqual((state['status'], state['collected'], state['prompt_id']), ('completed', 7, 'real-id'))
-                self.assertEqual(calls, [1, 1, 1, 2, 2, 2, 2])
+                self.assertEqual(calls, [1, 1, 1, 5, 5, 5, 5])
                 self.assertEqual(originals, [Path(item.path).stat().st_mtime_ns for item in self.data.segment_plan.targets[:3]])
                 for i, item in enumerate(self.data.segment_plan.targets):
                     self.assertEqual(Path(item.path).read_bytes(), f'segment-{i}'.encode())
                 events = json.loads((self.record / '后台过程记录.json').read_text('utf8'))
-                self.assertEqual(sum(item['stage'] == 'download' and item['result'] == 'failed' for item in events), 4)
+                self.assertEqual(sum(item['stage'] == 'download' and item['result'] == 'failed' for item in events), 16)
                 self.assertTrue(any(item['stage'] == 'collection_retry' for item in events))
                 submit.assert_not_called()
 
@@ -167,17 +173,19 @@ class RecoveryTests(unittest.IsolatedAsyncioTestCase):
         self.data.url = f'http://127.0.0.1:{server.sockets[0].getsockname()[1]}'
         (self.record / self.data.history_name).write_text(json.dumps({'data': result}), 'utf8')
         try:
-            with patch.object(self.store, 'notify', AsyncMock()), patch.object(t.client, 'submit') as submit:
-                await self.store.finish_collection('task', result)
-                self.assertEqual(self.store.rows['task']['state']['status'], 'collection_failed')
+            output = Path(self.data.outputs[0].path)
+            async def waiting(seconds):
+                self.assertAlmostEqual(seconds, 10, delta=.3)
+                self.assertEqual(self.store.rows['task']['state']['status'], 'collecting')
                 self.assertIn('content length mismatch', self.store.rows['task']['state']['error'])
-                output = Path(self.data.outputs[0].path)
                 self.assertFalse(output.exists())
                 self.assertFalse(list(output.parent.glob('.comfy-download-*')))
-                await self.store.retry_collection('task')
-                await asyncio.wait_for(self.store.workers['task'], 5)
+            with patch.object(self.store, 'notify', AsyncMock()), patch.object(t.client, 'submit') as submit, \
+                    patch.object(t.asyncio, 'sleep', waiting):
+                await self.store.finish_collection('task', result)
                 self.assertEqual(output.read_bytes(), b'0123456789')
                 self.assertEqual(self.store.rows['task']['state']['status'], 'completed')
+                self.assertEqual(self.store.rows['task']['state']['collection_auto_retry'], 1)
                 self.assertEqual(len(calls), 2)
                 submit.assert_not_called()
         finally:

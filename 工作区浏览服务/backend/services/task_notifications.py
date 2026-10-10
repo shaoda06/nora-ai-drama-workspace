@@ -57,7 +57,9 @@ class TaskNotifications:
                 f'当前状态：{state["status"]}；远端ID：{state.get("prompt_id")}；'
                 f'成果：{state["collected"]}/{state["expected"]}\n'
                 f'失败阶段：{state.get("failure_stage") or "无"}；原因：{state.get("error") or "预期成果已保存"}\n'
-                f'已保存成果：{json.dumps(paths, ensure_ascii=False)}\n'
+                + (f'取回累计尝试：{state["collection_attempt"]}轮；本轮自动重试：{state.get("collection_auto_retry", 0)}/3；'
+                   f'停止原因：{state.get("collection_retry_stop") or "无"}\n' if state.get('collection_attempt') else '')
+                + f'已保存成果：{json.dumps(paths, ensure_ascii=False)}\n'
                 f'记录位置：{data.record_dir}（后台任务状态.json、后台过程记录.json）\n'
                 + ('此前问题通知已被最新结果替代，完整经过见过程记录。\n' if any(item['delivery'] == 'superseded' for item in state.get('notices', [])) else '')
                 + ('可用本地任务ID请求重试取回，无需重新生成。\n' if state['status'] == 'collection_failed' else ''))

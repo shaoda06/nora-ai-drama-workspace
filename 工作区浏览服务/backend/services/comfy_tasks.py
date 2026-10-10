@@ -1,7 +1,7 @@
 """Persistent ComfyUI monitoring; browser clients only receive public snapshots."""
 import argparse
 import asyncio
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import importlib.util
 import json
 import logging
@@ -22,6 +22,7 @@ from backend.services import comfy_segments as segments
 from backend.services.comfy_nodes import RemoteQueues, initial_state
 from backend.services.local_queue import LocalQueue, LOCAL, TERMINAL
 from backend.services.task_notifications import TaskNotifications
+from backend.services.collection_retry import DELAYS, failure
 
 logger = logging.getLogger(__name__)
 SKILL = Path(__file__).resolve().parents[3] / '.agents/skills/nora-ai-short-drama'
@@ -382,18 +383,45 @@ class TaskStore(LocalQueue, TaskNotifications):
                           if event in ('execution_error', 'execution_interrupted')), 'ComfyUI确认执行失败；详情见执行结果.json')
             self.save(key, status='failed', error=error, ended_at=client.now(), progress=None, failure_stage='execution')
             return
-        self.save(key, status='collecting', error=None, progress=None, ended_at=client.now(), phase='collection', failure_stage=None)
-        self.record(key, 'collection', 'started')
-        try:
-            if data.segment_plan:
-                problems = await segments.finish(self, key, result)
-                self.save(key, status='collection_failed' if problems else 'completed', failure_stage='collection' if problems else None,
-                          error='；'.join(problems) if problems else None)
-            else:
-                await self.collect(key, result)
-        except (client.ClientError, OSError, ValueError) as error:
-            self.save(key, status='collection_failed', error=str(error), failure_stage='collection')
-        self.record(key, 'collection', state['status'], error=state.get('error'), collected=state['collected'])
+        self.save(key, status='collecting', progress=None, ended_at=state.get('ended_at') or client.now(), phase='collection',
+                  collection_attempt=state.get('collection_attempt', 1), collection_auto_retry=state.get('collection_auto_retry', 0))
+        while True:
+            if state.get('collection_next_retry_at'):
+                remaining = (datetime.fromisoformat(state['collection_next_retry_at']) - datetime.now(timezone.utc)).total_seconds()
+                if remaining > 0:
+                    await asyncio.sleep(remaining)
+                self.save(key, collection_next_retry_at=None, collection_auto_retry=state['collection_auto_retry'] + 1,
+                          collection_attempt=state['collection_attempt'] + 1)
+                self.record(key, 'collection_retry', 'started', attempt=state['collection_attempt'],
+                            auto_retry=state['collection_auto_retry'])
+            self.save(key, error=None, failure_stage=None)
+            self.record(key, 'collection', 'started', attempt=state['collection_attempt'])
+            try:
+                problems = await segments.finish(self, key, result) if data.segment_plan else await self.collect(key, result)
+            except (client.ClientError, OSError, ValueError, KeyError) as error:
+                problems = [failure(error, client.ClientError)]
+            if not problems:
+                self.save(key, status='completed', error=None, failure_stage=None, collection_errors=[],
+                          collection_next_retry_at=None, collection_retry_stop=None)
+                self.record(key, 'collection', 'completed', collected=state['collected'], attempt=state['collection_attempt'])
+                return
+            message = '；'.join((item.get('path') or item.get('identity') or '成果取回') + '：' + item['error'] for item in problems)
+            self.record(key, 'collection', 'attempt_failed', error=message, failures=problems,
+                        collected=state['collected'], attempt=state['collection_attempt'])
+            retries = state['collection_auto_retry']
+            retryable = all(item['retryable'] for item in problems)
+            if not retryable or retries == len(DELAYS):
+                self.save(key, status='collection_failed', error=message, failure_stage='collection', collection_errors=problems,
+                          collection_next_retry_at=None, collection_retry_stop='exhausted' if retryable else 'requires_attention')
+                self.record(key, 'collection', 'collection_failed', error=message, attempt=state['collection_attempt'],
+                            auto_retry=retries, stop=state['collection_retry_stop'])
+                return
+            delay = max([DELAYS[retries], *(item.get('retry_after_seconds', 0) for item in problems)])
+            due = (datetime.now(timezone.utc) + timedelta(seconds=delay)).isoformat()
+            self.save(key, error=message, failure_stage='collection', collection_errors=problems,
+                      collection_next_retry_at=due, collection_retry_stop=None)
+            self.record(key, 'collection_retry', 'scheduled', error=message, auto_retry=retries + 1,
+                        delay_seconds=delay, next_retry_at=due, attempt=state['collection_attempt'])
 
     async def collect(self, key, result):
         data, state = self.rows[key]['input'], self.rows[key]['state']
@@ -422,16 +450,17 @@ class TaskStore(LocalQueue, TaskNotifications):
                         argparse.Namespace(filename=identity['filename'], subfolder=identity['subfolder'],
                                            type=identity['type'], output=output.path, sha256=None))
                     client.write_new(response, {'time': client.now(), 'data': downloaded})
-                    self.record(key, 'download', 'success', path=output.path, remote=identity, receipt=str(response))
+                    self.record(key, 'download', 'success', path=output.path, remote=identity, receipt=str(response),
+                                attempt=state.get('collection_attempt', 1))
                 collected += 1
                 saved_outputs.append(output.path)
                 self.save(key, collected=collected, saved_outputs=saved_outputs.copy())
             except (client.ClientError, OSError, ValueError, KeyError) as error:
-                problems.append(f'{output.path}：{error}')
-                self.record(key, 'download', 'failed', path=output.path, error=str(error))
-        self.save(key, status='collection_failed' if problems else 'completed', collected=collected, saved_outputs=saved_outputs,
-                  failure_stage='collection' if problems else None,
-                  error='；'.join(problems) if problems else None)
+                issue = failure(error, client.ClientError, path=output.path)
+                problems.append(issue)
+                self.record(key, 'download', 'failed', **issue, attempt=state.get('collection_attempt', 1))
+        self.save(key, collected=collected, saved_outputs=saved_outputs)
+        return problems
 
     async def watch(self, key, socket=None):
         data, state = self.rows[key]['input'], self.rows[key]['state']

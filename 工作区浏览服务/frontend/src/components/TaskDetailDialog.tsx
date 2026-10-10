@@ -2,13 +2,14 @@ import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Dialog } from '../components';
 import { clockText, localDateTime, taskTypeLabels } from './TaskCard';
-import { statusLabels } from './LocalQueueCard';
+import { collectionStatus } from './LocalQueueCard';
 import './TaskDetailDialog.css';
 
 interface Event {
   id: number; time: string; stage: string; result: string; error?: string;
   source_url?: string; target_url?: string; url?: string; position?: number;
   path?: string; file?: string; identity?: string; collected?: number; notification_id?: string;
+  attempt?: number; auto_retry?: number; delay_seconds?: number; next_retry_at?: string;
 }
 interface Detail {
   summary: {
@@ -18,6 +19,8 @@ interface Detail {
     collected_at: string | null; failure_stage: string | null; error: string | null;
     collected: number; expected: number; notification: string;
     dispatch_attempt: number | null; preparation_attempt: number | null;
+    collection_attempt: number | null; collection_auto_retry: number | null;
+    collection_next_retry_at: string | null; collection_retry_stop: string | null;
   };
   events: Event[];
   outputs: { path: string; name: string; identity: string | null; available: boolean; bytes: number | null;
@@ -33,7 +36,8 @@ const stages: Record<string, string> = { enqueue: '登记入队', transfer: '转
 const results: Record<string, string> = { accepted: '已接受', started: '开始', success: '成功', completed: '完成',
   running: '执行中', queued: '远端排队中', failed: '失败', collection_failed: '取回失败', rejected: '被拒绝',
   unknown: '结果待核对', pending: '等待发送', sent: '已发送', acknowledged: 'Agent 已确认', saved: '已保存',
-  checked: '已检查', waiting_remote: '等待远端空闲', resume_local: '恢复本地任务', reconnecting: '正在重连', protocol_error: '响应解析失败' };
+  checked: '已检查', waiting_remote: '等待远端空闲', resume_local: '恢复本地任务', reconnecting: '正在重连', protocol_error: '响应解析失败',
+  scheduled: '等待自动重试', attempt_failed: '本轮取回失败' };
 const notices: Record<string, string> = { not_required: '无需通知', waiting: '等待发送', waiting_idle: '等待会话空闲',
   waiting_connection: '等待会话连接', sending: '正在发送', sent: '已发送，等待 Agent 确认',
   acknowledged: 'Agent 已确认', delivery_unknown: '送达状态待核对' };
@@ -69,7 +73,7 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close }: {
     {summary && data && <>
       <div className="task-detail-title"><div><p>{summary.project} · {taskTypeLabels[summary.task_type]}</p>
         <h3>{summary.title}</h3><p>来源会话：{summary.source_session_name || '未记录'}</p></div>
-        <strong data-status={summary.status}>{statusLabels[summary.status] || summary.status}</strong></div>
+        <strong data-status={summary.status}>{collectionStatus(summary)}</strong></div>
       {summary.error && <section className="task-detail-problem"><h4>当前问题 · {stages[summary.failure_stage || ''] || summary.failure_stage || '阶段未记录'}</h4>
         <p>{summary.error}</p><p>成果保存：{summary.collected} / {summary.expected}</p></section>}
       <dl className="task-detail-summary">
@@ -80,6 +84,12 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close }: {
           <div key={label}><dt>{label}</dt><dd>{date(value)}</dd></div>)}
         <div><dt>生成耗时（不含排队、取回）</dt><dd>{duration === null ? '未记录' : clockText(duration)}</dd></div>
       </dl>
+      {summary.collection_attempt !== null && summary.collection_attempt !== undefined && <section><h4>取回重试</h4>
+        <p>取回累计尝试：{summary.collection_attempt} 轮 · 本轮已自动重试：{summary.collection_auto_retry || 0} / 3 次</p>
+        {summary.status === 'collecting' && summary.collection_next_retry_at && <p>下次重试：{date(summary.collection_next_retry_at)}</p>}
+        {summary.collection_retry_stop === 'exhausted' && <p>自动重试次数已用完，交由 Agent 处理。</p>}
+        {summary.collection_retry_stop === 'requires_attention' && <p>当前错误需要核对资料或文件，已停止自动重试，交由 Agent 处理。</p>}
+      </section>}
       <section><h4>成果 <span>{summary.collected} / {summary.expected} 已保存</span></h4>
         <p className="task-detail-muted">任务完成后取回全部成果，按入队时指定的本机路径保存。</p>
         {data.outputs.length === 0 ? <p className="task-detail-muted">未登记成果目标。</p> : <ul className="task-detail-outputs">
@@ -95,6 +105,8 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close }: {
         {timeline.length === 0 ? <p className="task-detail-muted">这项旧任务没有过程记录。</p> : <ol className="task-detail-timeline">
           {timeline.map(event => <li key={event.id} data-failed={!!event.error}><time dateTime={event.time}>{date(event.time)}</time>
             <p><b>{stages[event.stage] || event.stage}</b><span>{results[event.result] || event.result}</span></p>
+            {event.attempt !== undefined && <p>取回第 {event.attempt} 轮{event.auto_retry !== undefined && ` · 自动重试 ${event.auto_retry} / 3`}</p>}
+            {event.next_retry_at && <p>下次重试：{date(event.next_retry_at)}</p>}
             {event.source_url && event.target_url && <p>{node(event.source_url)} → {node(event.target_url)}</p>}
             {event.position !== undefined && <p>本地排位 #{event.position}</p>}
             {(event.identity || event.file || event.path) && <p className="task-detail-path">{event.identity || event.file || event.path}</p>}

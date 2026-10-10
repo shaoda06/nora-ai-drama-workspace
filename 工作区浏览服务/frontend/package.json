@@ -1,6 +1,6 @@
 {
   "name": "nora-workspace-browser",
-  "version": "0.6.15",
+  "version": "0.6.16",
   "private": true,
   "type": "module",
   "scripts": {"dev":"vite --host 127.0.0.1", "build":"tsc -b && vite build"},
