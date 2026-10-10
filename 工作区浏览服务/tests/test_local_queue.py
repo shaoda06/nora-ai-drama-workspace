@@ -195,6 +195,32 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, '素材已不同'):
             await self.store.prepare(key)
 
+    async def test_director_upload_updates_root_editor_and_actual_file_metadata(self):
+        key = await self.add('导演台')
+        data = self.store.rows[key]['input']
+        source = self.project / 'reference.png'
+        source.write_bytes(b'picture')
+        media = {'imageFile': 'planned.png', 'fileName': 'planned.png', 'subfolder': 'planned', 'type': 'input', 'index': 0}
+        data.workflow['1']['class_type'] = 'MiniMaxH3Director'
+        data.workflow['1']['inputs']['timeline_data'] = json.dumps({
+            'global': {'refs': [media]}, 'segments': [{'refs': [media]}],
+            'batchWorkspaces': {'r2v': {'globalCommon': {'refs': [media]}, 'segments': [{'refs': [media]}]}}})
+        data.uploads = [{'file': str(source), 'node': '1', 'input': 'timeline_data', 'subfolder': 'task',
+                         'response-name': f'upload-{scope}.json', 'json-path': path}
+                        for scope, path in [('common', ['global', 'refs', 0, 'imageFile']),
+                                            ('segment', ['segments', 0, 'refs', 0, 'imageFile'])]]
+        uploaded = {'input_path': 'actual/renamed.png', 'sha256': hashlib.sha256(b'picture').hexdigest(),
+                    'remote': {'name': 'renamed.png', 'subfolder': 'actual', 'type': 'input'}}
+        with patch.object(t.client, 'upload', return_value=uploaded):
+            workflow = await self.store.prepare(key)
+        timeline = json.loads(workflow['1']['inputs']['timeline_data'])
+        editor = timeline['batchWorkspaces']['r2v']
+        for root, mirrored in [(timeline['global'], editor['globalCommon']), (timeline['segments'][0], editor['segments'][0])]:
+            self.assertEqual(root['refs'], mirrored['refs'])
+            self.assertEqual(root['refs'][0], {**media, 'imageFile': 'actual/renamed.png',
+                                               'fileName': 'renamed.png', 'subfolder': 'actual'})
+        self.assertIn('planned.png', data.workflow['1']['inputs']['timeline_data'])
+
     async def test_invalid_upload_or_reserved_receipt_names_fail_at_boundary(self):
         self.data.uploads = [{'file': 'broken'}]
         with self.assertRaisesRegex(ValueError, '上传映射'):

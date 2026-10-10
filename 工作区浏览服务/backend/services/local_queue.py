@@ -181,6 +181,17 @@ class LocalQueue:
                         parent = parent[part]
                     parent[item['json-path'][-1]]  # Require an existing field; do not invent timeline structure.
                     parent[item['json-path'][-1]] = uploaded['input_path']
+                    if (workflow[item['node']]['class_type'] == 'MiniMaxH3Director'
+                            and item['input'] == 'timeline_data'):
+                        path = item['json-path']
+                        workspace = document['batchWorkspaces']['r2v']
+                        editor = workspace['globalCommon'] if path[0] == 'global' else workspace['segments'][path[1]]
+                        for part in path[1:-1] if path[0] == 'global' else path[2:-1]:
+                            editor = editor[part]
+                        editor[path[-1]] = uploaded['input_path']
+                        remote = uploaded['remote']
+                        for media in (parent, editor):
+                            media.update(fileName=remote['name'], subfolder=remote['subfolder'], type=remote['type'])
                 except (KeyError, IndexError, TypeError) as error:
                     raise ValueError('素材JSON字段路径不匹配：' + str(item['json-path'])) from error
                 inputs[item['input']] = json.dumps(document, ensure_ascii=False, allow_nan=False)
@@ -188,6 +199,11 @@ class LocalQueue:
                 inputs[item['input']] = uploaded['input_path']
             uploaded_materials[uploaded['input_path']] = {'input_path': uploaded['input_path'], 'file': str(source)}
         if data.task_type.startswith('video-'):
+            from backend.services.director_uploads import save_uploaded_workflow
+            self.save(key, phase='upload_binding')
+            await asyncio.to_thread(save_uploaded_workflow, data.project, Path(data.record_dir), data.workflow, workflow,
+                                    uploaded_materials)
+            self.record(key, 'upload_binding', 'success')
             self.save(key, phase='generation_context')
             await asyncio.to_thread(self.generation_context.prepare_generation_context,
                                     data.project, Path(data.record_dir), workflow, data.task_type, uploaded_materials)
