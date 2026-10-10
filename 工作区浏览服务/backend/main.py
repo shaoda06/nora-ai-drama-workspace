@@ -77,12 +77,98 @@ async def comfy_submit(request: Request, data: TaskInput) -> dict[str, Any]:
             or not secrets.compare_digest(request.headers.get('x-nora-task-token', ''), tasks.token)):
         raise HTTPException(403, '仅允许本机Agent通过专用凭证提交')
     try:
-        result = await tasks.submit(data)
+        result = await tasks.enqueue(data)
     except (ValueError, OSError, RuntimeError, WebSocketException) as error:
         raise HTTPException(409, str(error)) from error
     except comfy_client.ClientError as error:
         raise HTTPException(409, {'code': error.code, 'message': str(error), **error.details}) from error
     return result
+
+
+class QueueAction(BaseModel):
+    action: Literal['immediate', 'insert', 'pause', 'resume', 'cancel']
+
+
+class QueueOrder(BaseModel):
+    ids: list[str]
+    token: str
+
+
+class DragInput(BaseModel):
+    token: str | None = None
+    release: bool = False
+
+
+def queue_write(request: Request):
+    if not local_write_request(request):
+        raise HTTPException(403, '仅允许工作台同源管理操作')
+
+
+def agent_request(request: Request):
+    tasks = request.app.state.comfy_tasks
+    if (request.client.host not in ('127.0.0.1', '::1') or request.headers.get('origin') is not None
+            or not secrets.compare_digest(request.headers.get('x-nora-task-token', ''), tasks.token)):
+        raise HTTPException(403, '仅允许本机Agent通过专用凭证调用')
+    return tasks
+
+
+@app.post('/api/comfy/tasks/{key}/action')
+async def local_task_action(key: str, data: QueueAction, request: Request) -> dict[str, Any]:
+    queue_write(request)
+    try:
+        return request.app.state.comfy_tasks.task_action(key, data.action)
+    except ValueError as error:
+        raise HTTPException(409, str(error)) from error
+
+
+@app.post('/api/comfy/drag')
+async def local_queue_drag(data: DragInput, request: Request) -> dict[str, Any]:
+    queue_write(request)
+    try:
+        return request.app.state.comfy_tasks.drag(data.token, data.release)
+    except ValueError as error:
+        raise HTTPException(409, str(error)) from error
+
+
+@app.put('/api/comfy/order')
+async def local_queue_order(data: QueueOrder, request: Request) -> dict[str, Any]:
+    queue_write(request)
+    try:
+        request.app.state.comfy_tasks.reorder(data.ids, data.token)
+        return request.app.state.comfy_tasks.public()
+    except ValueError as error:
+        raise HTTPException(409, str(error)) from error
+
+
+@app.get('/api/internal/comfy/tasks/{key}')
+async def agent_task_status(key: str, request: Request) -> dict[str, Any]:
+    tasks = agent_request(request)
+    if key not in tasks.rows:
+        raise HTTPException(404, '任务不存在')
+    return next(item for item in tasks.public()['tasks'] if item['id'] == key) | {
+        'record_dir': tasks.rows[key]['input'].record_dir}
+
+
+@app.post('/api/internal/comfy/tasks/{key}/retry-collection')
+async def agent_retry_collection(key: str, request: Request) -> dict[str, Any]:
+    tasks = agent_request(request)
+    try:
+        return await tasks.retry_collection(key)
+    except ValueError as error:
+        raise HTTPException(409, str(error)) from error
+
+
+class NoticeReceipt(BaseModel):
+    thread_id: str
+
+
+@app.post('/api/internal/comfy/notifications/{batch_id}/ack')
+async def agent_notice_ack(batch_id: str, data: NoticeReceipt, request: Request) -> dict[str, Any]:
+    tasks = agent_request(request)
+    try:
+        return tasks.acknowledge(batch_id, data.thread_id)
+    except ValueError as error:
+        raise HTTPException(409, str(error)) from error
 
 
 @app.middleware('http')

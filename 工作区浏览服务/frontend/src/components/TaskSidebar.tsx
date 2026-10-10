@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { TaskCard, type Task } from './TaskCard';
 import { LocalQueueCard, localQueueStates, type LocalQueueTask } from './LocalQueueCard';
 import './TaskSidebar.css';
@@ -15,7 +15,13 @@ const nodeConnectionLabels = { connecting: '正在连接', connected: '已连接
 export function TaskSidebar() {
   const [open, setOpen] = useState(false);
   const [tasks, setTasks] = useState<(Task | LocalQueueTask)[]>([]);
-  const [localCategory, setLocalCategory] = useState<LocalQueueTask['status']>('queued');
+  const [localCategory, setLocalCategory] = useState<keyof typeof localQueueStates>('queued');
+  const [localRows, setLocalRows] = useState<LocalQueueTask[]>([]);
+  const localRef = useRef<LocalQueueTask[]>([]);
+  const dragToken = useRef<string | null>(null);
+  const dragTimer = useRef<number | undefined>(undefined);
+  const [busy, setBusy] = useState(false);
+  const [actionError, setActionError] = useState('');
   const [nodes, setNodes] = useState<RemoteNode[]>([]);
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const [connection, setConnection] = useState<'loading' | 'connected' | 'reconnecting'>('loading');
@@ -24,18 +30,31 @@ export function TaskSidebar() {
     source.addEventListener('tasks', event => {
       const snapshot = JSON.parse((event as MessageEvent).data);
       setTasks(snapshot.tasks);
+      const incoming: LocalQueueTask[] = snapshot.local_tasks ?? snapshot.tasks.filter((task: Task | LocalQueueTask) => 'queue' in task);
+      if (!dragToken.current) {
+        localRef.current = incoming;
+        setLocalRows(incoming);
+      }
       setNodes(snapshot.remote_nodes);
       setConnection('connected');
     });
     source.onerror = () => setConnection('reconnecting');
-    return () => source.close();
+    return () => {
+      source.close();
+      window.clearInterval(dragTimer.current);
+      if (dragToken.current) void fetch('/api/comfy/drag', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: dragToken.current, release: true }) });
+    };
   }, []);
   const selectedNode = nodes.find(node => node.url === selectedUrl) ?? nodes[0];
-  const allLocalTasks = tasks.filter((task): task is LocalQueueTask => 'queue' in task && task.queue === 'local');
-  const localCounts = { queued: allLocalTasks.filter(task => task.status === 'queued').length,
-    paused: allLocalTasks.filter(task => task.status === 'paused').length,
-    completed: allLocalTasks.filter(task => task.status === 'completed').length };
-  const localTasks = allLocalTasks.filter(task => task.status === localCategory);
+  const category = (task: LocalQueueTask): keyof typeof localQueueStates => task.category ??
+    (task.status === 'queued' || task.status === 'local_queued' ? 'queued' : task.status === 'paused' ? 'paused' : 'history');
+  const localCounts = { queued: localRows.filter(task => category(task) === 'queued').length,
+    paused: localRows.filter(task => category(task) === 'paused').length,
+    history: localRows.filter(task => category(task) === 'history').length };
+  const localTasks = localRows.filter(task => category(task) === localCategory);
+  const localPositions = new Map(localTasks.filter(task => task.status === 'local_queued' || task.status === 'queued')
+    .map((task, index) => [task.id, index + 1]));
   const registered = new Map(tasks.filter((task): task is Task => !('queue' in task && task.queue === 'local'))
     .filter(task => task.source !== 'external' && task.remote_url === selectedNode?.url && task.prompt_id)
     .map(task => [task.prompt_id, task]));
@@ -49,16 +68,76 @@ export function TaskSidebar() {
     : selectedNode?.connection === 'reconnecting' ? selectedNode.updated_at
       ? '远端连接中断，显示上次队列，正在自动重连' : '远端暂未连接，正在自动重连'
     : selectedNode?.queue_error;
+  const write = useCallback(async (path: string, value: unknown, method = 'POST') => {
+    const response = await fetch(path, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(value) });
+    const data = await response.json();
+    if (!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail));
+    return data;
+  }, []);
+  const reload = useCallback(async () => {
+    const response = await fetch('/api/comfy/tasks');
+    if (!response.ok) throw new Error('任务列表刷新失败');
+    const snapshot = await response.json();
+    localRef.current = snapshot.local_tasks;
+    setLocalRows(snapshot.local_tasks);
+    setTasks(snapshot.tasks);
+    return snapshot.local_tasks as LocalQueueTask[];
+  }, []);
+  const action = useCallback(async (id: string, operation: string) => {
+    setBusy(true); setActionError('');
+    try { await write(`/api/comfy/tasks/${id}/action`, { action: operation }); await reload(); }
+    catch (error) { setActionError((error as Error).message); }
+    finally { setBusy(false); }
+  }, [write, reload]);
+  const startDrag = useCallback(async (id: string) => {
+    if (dragToken.current) return false;
+    setActionError('');
+    try {
+      const result = await write('/api/comfy/drag', {});
+      dragToken.current = result.token;
+      const fresh = await reload();
+      if (!fresh.some(task => task.id === id && task.status === 'local_queued')) {
+        await write('/api/comfy/drag', { token: result.token, release: true });
+        dragToken.current = null;
+        throw new Error('这项任务已经开始提交，请选择其他排队任务');
+      }
+      dragTimer.current = window.setInterval(() => {
+        void write('/api/comfy/drag', { token: dragToken.current }).catch(error => setActionError(error.message));
+      }, 5000);
+      return true;
+    } catch (error) {
+      if (dragToken.current) {
+        try { await write('/api/comfy/drag', { token: dragToken.current, release: true }); }
+        catch (releaseError) { setActionError((releaseError as Error).message); }
+        dragToken.current = null;
+      }
+      setActionError((error as Error).message); return false;
+    }
+  }, [write, reload]);
+  const endDrag = useCallback(async () => {
+    const token = dragToken.current;
+    if (!token) return;
+    setBusy(true);
+    try { await write('/api/comfy/order', { token, ids: localRef.current.filter(task => task.status === 'local_queued').map(task => task.id) }, 'PUT'); }
+    catch (error) { setActionError((error as Error).message); }
+    finally {
+      window.clearInterval(dragTimer.current);
+      try { await write('/api/comfy/drag', { token, release: true }); }
+      catch (error) { setActionError((error as Error).message); }
+      dragToken.current = null;
+      try { await reload(); } catch (error) { setActionError((error as Error).message); }
+      setBusy(false);
+    }
+  }, [write, reload]);
   const reorderLocal = useCallback((sourceId: string, targetId: string) => {
-    setTasks(current => {
-      const sourceIndex = current.findIndex(task => task.id === sourceId && 'queue' in task && task.queue === 'local' && task.status === 'queued');
-      const targetIndex = current.findIndex(task => task.id === targetId && 'queue' in task && task.queue === 'local' && task.status === 'queued');
-      if (sourceIndex === -1 || targetIndex === -1 || sourceIndex === targetIndex) return current;
-      const reordered = [...current];
-      const [moved] = reordered.splice(sourceIndex, 1);
-      reordered.splice(targetIndex, 0, moved);
-      return reordered;
-    });
+    const current = localRef.current;
+    const source = current.findIndex(task => task.id === sourceId && task.status === 'local_queued');
+    const target = current.findIndex(task => task.id === targetId && task.status === 'local_queued');
+    if (source === -1 || target === -1 || source === target) return;
+    const next = [...current];
+    const [moved] = next.splice(source, 1); next.splice(target, 0, moved);
+    localRef.current = next;
+    setLocalRows(next);
   }, []);
   return <aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
@@ -67,7 +146,7 @@ export function TaskSidebar() {
       }}><span aria-hidden="true">{open ? '‹' : '›'}</span><span className="comfy-rail-label">任务进度</span>
       <span className="comfy-rail-summary">
         <span className="comfy-rail-values">
-          {(Object.keys(localQueueStates) as LocalQueueTask['status'][]).map(status => <span key={status}>{status === 'queued' ? '队列中' : localQueueStates[status]} <b>{localCounts[status]}</b></span>)}
+          {(Object.keys(localQueueStates) as (keyof typeof localQueueStates)[]).map(status => <span key={status}>{status === 'queued' ? '队列中' : localQueueStates[status]} <b>{localCounts[status]}</b></span>)}
         </span>
       </span></button>
     <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
@@ -93,15 +172,18 @@ export function TaskSidebar() {
       <section className="comfy-queue" aria-label="本地队列">
         <div className="comfy-task-heading comfy-local-heading"><strong>本地队列</strong>
           <nav className="underline-tabs comfy-local-tabs" aria-label="本地任务分类">
-            {(Object.keys(localQueueStates) as LocalQueueTask['status'][]).map(status => <button key={status}
-              aria-current={localCategory === status ? 'page' : undefined} onClick={() => setLocalCategory(status)}>{localQueueStates[status]}（{localCounts[status]}）</button>)}
+            {(Object.keys(localQueueStates) as (keyof typeof localQueueStates)[]).map(status => <button key={status}
+              aria-current={localCategory === status ? 'page' : undefined} disabled={busy || dragToken.current !== null}
+              onClick={() => setLocalCategory(status)}>{localQueueStates[status]}（{localCounts[status]}）</button>)}
           </nav>
         </div>
         <div className="comfy-queue-body" key={localCategory}>
+          {actionError && <p className="comfy-task-warning" role="alert">{actionError}</p>}
           {localTasks.length === 0 && <p className="comfy-empty">暂无{localQueueStates[localCategory]}任务</p>}
-          <div className="comfy-task-items">{localTasks.map((task, index) => <LocalQueueCard key={task.id} task={task}
-            position={task.status === 'queued' ? index + 1 : undefined}
-            onReorder={task.status === 'queued' ? reorderLocal : undefined} />)}</div>
+          <div className="comfy-task-items">{localTasks.map(task => <LocalQueueCard key={task.id} task={task}
+            position={localPositions.get(task.id)}
+            busy={busy} onAction={action} onDragStart={startDrag} onDragEnd={endDrag}
+            onReorder={task.status === 'local_queued' ? reorderLocal : undefined} />)}</div>
         </div>
       </section>
     </div>

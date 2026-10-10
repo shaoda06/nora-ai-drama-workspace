@@ -7,7 +7,7 @@ import re
 STAGES = {'video-first-pass': '一采', 'video-second-pass': '二采', 'video-postprocess': '后处理'}
 
 
-def prepare_generation_context(project, record, workflow, task_type):
+def prepare_generation_context(project, record, workflow, task_type, uploaded_materials=None):
     project, record = Path(project).resolve(), Path(record).resolve()
     mapping_file = record / '输入映射.json'
     mapping = json.loads(mapping_file.read_text(encoding='utf-8-sig'))
@@ -46,6 +46,7 @@ def prepare_generation_context(project, record, workflow, task_type):
         if not version or version[1].strip().rstrip('。') != mapping['scene_storyboard_version'].rstrip('。'):
             raise ValueError('当次分镜版本与输入映射不一致')
         uploads = {item['input_path']: item for item in mapping['uploads']}
+        uploads.update(uploaded_materials or {})
         common = timeline['global']
         if not common['taskType'].startswith('r2v') or timeline['editMode'] != 'segment' or 'r2v_groups' in inputs or 'i2v_groups' in inputs:
             raise ValueError('自动资料保存仅用于现行原生r2v导演台分组，不可按原生组记录外部输入')

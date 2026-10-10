@@ -197,6 +197,19 @@ class GenerationContextTests(unittest.TestCase):
                 self.assertEqual(client.get(first['references']['segment'][0]['url']).text, '提交时本组原图')
                 self.assertEqual([(shot['id'], shot['duration']) for shot in second['shots']], [('EP001-SH002', 3)])
 
+    def test_backend_actual_upload_path_keeps_original_local_material(self):
+        root, workflow, before = self.automatic_task()
+        inputs = workflow['105001']['inputs']
+        timeline = json.loads(inputs['timeline_data'])
+        timeline['global']['refs'][0]['imageFile'] = 'new-server/renamed.png'
+        inputs['timeline_data'] = json.dumps(timeline)
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass',
+            {'new-server/renamed.png': {'file': str(self.project / '图片/公共.png')}})
+        mapping = json.loads((root / '输入映射.json').read_text('utf-8'))
+        self.assertEqual(mapping['uploads'], before['uploads'])
+        reference = mapping['generation_contexts'][0]['references']['common'][0]
+        self.assertEqual((self.project / reference['file']).read_text('utf-8'), '提交时公共原图')
+
     def test_workflow_revision_reuses_materials_and_rejects_changed_input(self):
         root, workflow, mapping = self.automatic_task(selected=(0,))
         writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')

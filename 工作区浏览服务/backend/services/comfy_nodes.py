@@ -48,6 +48,8 @@ class RemoteQueues:
         while True:
             await asyncio.sleep(CONFIG_INTERVAL)
             await self.sync()
+            await asyncio.gather(*(self.refresh(url) for url, state in tuple(self.states.items())
+                                   if state['connection'] == 'connected'))
 
     async def close(self):
         workers = [*self.workers.values()]
@@ -95,14 +97,14 @@ class RemoteQueues:
                 async with connect(ws_url, open_timeout=10, ping_interval=20, ping_timeout=20,
                                    close_timeout=5, max_size=2**22) as socket:
                     connected_at = monotonic()
-                    self.update(url, connection='connected', error=None)
+                    self.update(url, connection='connecting', error=None)
                     await self.refresh(url)
+                    self.update(url, connection='connected', error=None)
                     while True:
                         try:
                             raw = await asyncio.wait_for(socket.recv(), 30)
                         except asyncio.TimeoutError:
-                            if self.states[url]['queue_error']:
-                                await self.refresh(url)
+                            await self.refresh(url)
                             continue
                         if not isinstance(raw, str):
                             continue

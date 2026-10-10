@@ -9,6 +9,7 @@ export interface LocalTask {
   progress: { value: number; max: number } | null;
   error: string | null; collected: number; expected: number;
   created_at: string; started_at?: string | null;
+  submitted_at?: string;
   source_session_name?: string;
   director_progress?: { segment: number; segment_total: number; phase_label: string };
   segment_warning?: string | null;
@@ -44,7 +45,7 @@ export function TaskCard({ task }: { task: Task }) {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, [external]);
-  const submitted = task.source !== 'external' ? new Date(task.created_at) : null;
+  const submitted = task.source !== 'external' ? new Date(task.submitted_at || task.created_at) : null;
   return <section className="comfy-task" data-source={external ? 'external' : 'local'}>
     <div className="comfy-task-top">
       <div className="comfy-task-identity">
@@ -71,7 +72,7 @@ export function TaskCard({ task }: { task: Task }) {
         </div>
         <div className="comfy-task-timing">
           {queued && submitted ? <>
-            <time dateTime={task.created_at}>提交时间：{localDateTime(submitted)}</time>
+            <time dateTime={task.submitted_at || task.created_at}>提交时间：{localDateTime(submitted)}</time>
             <span>等待时长：{clockText(Math.max(0, Math.floor((now - submitted.getTime()) / 1000)))}</span>
           </> : <span title={task.started_at ? undefined : '未保存该任务的执行开始事件，提交时间包含排队等待，不能作为运行开始时间'}>运行时长：{task.started_at ? clockText(Math.max(0, Math.floor((now - new Date(task.started_at).getTime()) / 1000))) : '开始时间未记录'}</span>}
         </div>
@@ -84,7 +85,7 @@ export function TaskCard({ task }: { task: Task }) {
       </div>}
       {task.director_progress && <div className="comfy-director-progress">
         <span>当前分段：第 {task.director_progress.segment} / {task.director_progress.segment_total} 段</span>
-        <span>已取回：<strong>{task.collected} / {task.director_progress.segment_total} 段</strong></span>
+        <span>{task.director_progress.phase_label}</span>
       </div>}
       </details>
       {task.connection === 'reconnecting' && <p className="comfy-task-warning">远端连接恢复中，进度可能滞后</p>}

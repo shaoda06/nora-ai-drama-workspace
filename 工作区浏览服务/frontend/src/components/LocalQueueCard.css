@@ -20,13 +20,15 @@ body:has(.local-queue-card-floating){cursor:grabbing}
 .local-queue-card-session{font-size:11px;color:var(--muted);margin:4px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .local-queue-card-actions{display:flex;flex:none;gap:6px}
 .local-queue-card-actions>button{padding:4px 8px;font-size:11px;line-height:1.6;border:1px solid var(--line);border-radius:5px;background:#f8faf7;color:var(--green);white-space:nowrap;opacity:1;transition:background-color .15s,border-color .15s}
-.local-queue-card-actions>button:disabled{opacity:1}
+.local-queue-card-actions>button:disabled{opacity:.55;cursor:wait}
 .local-queue-card-actions>button[data-tone=green]{background:#e3f2e9;color:#247a48;border-color:#b8d8c4}
 .local-queue-card-actions>button[data-tone=blue]{background:#e6effa;color:#386fb0;border-color:#bdcee4}
 .local-queue-card-actions>button[data-tone=orange]{background:#fff1dc;color:#a26916;border-color:#e4c99b}
 .local-queue-card-actions>button[data-tone=red]{background:#fae6e3;color:#ac493b;border-color:#e1bbb4}
-.local-queue-card-actions>button[data-tone=green]:hover{background:#cce7d7;border-color:#247a48}
-.local-queue-card-actions>button[data-tone=blue]:hover{background:#cfdef3;border-color:#386fb0}
-.local-queue-card-actions>button[data-tone=orange]:hover{background:#ffe1ad;border-color:#a26916}
-.local-queue-card-actions>button[data-tone=red]:hover{background:#f2ccc6;border-color:#ac493b}
+.local-queue-card-actions>button[data-tone=green]:hover:not(:disabled){background:#cce7d7;border-color:#247a48}
+.local-queue-card-actions>button[data-tone=blue]:hover:not(:disabled){background:#cfdef3;border-color:#386fb0}
+.local-queue-card-actions>button[data-tone=orange]:hover:not(:disabled){background:#ffe1ad;border-color:#a26916}
+.local-queue-card-actions>button[data-tone=red]:hover:not(:disabled){background:#f2ccc6;border-color:#ac493b}
 @media(max-width:700px){.local-queue-card-body{flex-wrap:wrap;gap:10px}.local-queue-card-description{flex-basis:100%}}
+
+.local-queue-card-error{font-size:12px;color:#ac493b;margin:8px 0 0;white-space:pre-wrap;max-height:100px;overflow:auto}

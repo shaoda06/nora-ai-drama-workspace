@@ -135,13 +135,19 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.store.rows['task']['state']['status'], 'completed')
         self.assertEqual(json.loads((self.record / '执行结果.json').read_text('utf-8'))['data']['history'], result['history'])
         self.assertTrue((self.record / '取回响应.json').is_file())
+        self.assertEqual(self.store.rows['task']['state']['saved_outputs'], [self.data.outputs[0].path])
 
     async def test_missing_output_is_not_reported_as_downloaded(self):
         self.seed()
+        old_file = Path(self.data.outputs[0].path)
+        old_file.parent.mkdir()
+        old_file.write_bytes(b'previous execution')
         with patch.object(t.client, 'status', return_value={'state': 'success', 'history': {}, 'files': []}):
             await self.store.reconcile('task')
         self.assertEqual(self.store.rows['task']['state']['status'], 'collection_failed')
         self.assertEqual(self.store.rows['task']['state']['collected'], 0)
+        self.assertIn('已保存成果：[]', self.store.notification_text('task'))
+        self.assertEqual(old_file.read_bytes(), b'previous execution')
 
     async def test_start_timestamp_is_remote_event_time_and_survives_restart(self):
         self.seed()
@@ -198,47 +204,42 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual([call.args[1] for call in bridge.await_args_list], ['read', 'read', 'send'])
         self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
 
-    async def test_busy_thread_coalesces_segments_replacement_and_terminal_in_one_message(self):
-        self.seed('running')
-        reads = 0
-        async def bridge(data, operation, prompt=''):
-            nonlocal reads
-            if operation == 'read':
-                reads += 1
-                if reads == 1:
-                    self.store.queue_notice('task', 'segment:P002:1', 'segment', 'P002已取回')
-                    self.store.queue_notice('task', 'replacement:P001:2', 'replacement', 'P001改写待核对')
-                    self.store.save('task', status='completed')
-                    self.store.queue_notice('task', 'terminal', 'terminal', '整轮结束')
-                return {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'active' if reads == 1 else 'idle'}}})}]}
-            for text in ('P001已取回', 'P002已取回', 'P001改写待核对', '整轮结束'):
-                self.assertIn(text, prompt)
-            return {'isError': False}
-        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=bridge)) as call, patch.object(t.asyncio, 'sleep', AsyncMock()):
-            self.store.queue_notice('task', 'segment:P001:1', 'segment', 'P001已取回')
-            await self.store.notifiers['task']
-            self.store.queue_notice('task', 'terminal', 'terminal', '整轮结束')
-            self.assertEqual(sum(item.args[1] == 'send' for item in call.await_args_list), 1)
-        self.assertTrue(all(item['delivery'] == 'sent' for item in self.store.rows['task']['state']['notices']))
-
-    async def test_multiple_delivery_batches_and_uncertain_event_are_not_resent_after_restart(self):
-        self.seed('running')
+    async def test_pending_failure_is_superseded_by_success(self):
+        self.seed('collection_failed')
         idle = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'idle'}}})}]}
-        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[idle, OSError('lost reply'), idle, {}])) as call, patch.object(t.asyncio, 'sleep', AsyncMock()):
-            self.store.queue_notice('task', 'segment:P001:1', 'segment', 'P001已取回')
+        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[idle, {}])) as call, patch.object(t.asyncio, 'sleep', AsyncMock()):
+            self.store.queue_notice('task', 'issue', 'attention', '旧取回失败')
+            self.store.save('task', status='completed', error=None, collection_attempt=2)
+            self.store.queue_notice('task', 'terminal', 'terminal', '现在成功')
             await self.store.notifiers['task']
-            self.store.queue_notice('task', 'segment:P002:1', 'segment', 'P002已取回')
+            sent = call.await_args_list[-1].args[2]
+            self.assertIn('completed', sent)
+            self.assertNotIn('旧取回失败', sent)
+            self.assertEqual(sum(item.args[1] == 'send' for item in call.await_args_list), 1)
+        self.assertEqual([item['delivery'] for item in self.store.rows['task']['state']['notices']], ['superseded', 'sent'])
+
+    async def test_same_source_tasks_merge_and_acknowledge_unknown_delivery(self):
+        self.seed('completed')
+        self.store.rows['second'] = {'input': self.data.model_copy(update={'record_dir': str(self.record / 'second')}),
+                                     'state': {**self.store.rows['task']['state'], 'id': 'second'}}
+        self.store.save('second')
+        idle = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'idle'}}})}]}
+        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[idle, OSError('reply lost')])) as call, patch.object(t.asyncio, 'sleep', AsyncMock()):
+            self.store.queue_notice('task', 'terminal', 'terminal', '完成')
+            self.store.queue_notice('second', 'terminal', 'terminal', '完成')
             await self.store.notifiers['task']
-            self.assertEqual(sum(item.args[1] == 'send' for item in call.await_args_list), 2)
-            self.assertNotIn('P001已取回', call.await_args_list[-1].args[2])
-            self.assertEqual(self.store.public()['tasks'][0]['notification_unknown'], 1)
-        self.store.save('task', status='completed')
-        await self.store.close()
-        self.store = t.TaskStore(self.root / 'runtime', self.root)
-        with patch.object(self.store, 'desktop_call', AsyncMock()) as call:
-            await self.store.start()
-            await asyncio.sleep(0)
-            call.assert_not_awaited()
+            await self.store.notifiers['second']
+            self.assertEqual(sum(item.args[1] == 'send' for item in call.await_args_list), 1)
+            self.assertIn('本地任务ID：task', call.await_args_list[-1].args[2])
+            self.assertIn('本地任务ID：second', call.await_args_list[-1].args[2])
+            batch = self.store.rows['task']['state']['notices'][0]['batch_id']
+            self.assertEqual(self.store.rows['second']['state']['notification'], 'delivery_unknown')
+            with self.assertRaises(ValueError):
+                self.store.acknowledge(batch, 'another-thread')
+            self.store.acknowledge(batch, self.data.thread_id)
+            self.assertEqual(self.store.rows['second']['state']['notification'], 'acknowledged')
+            await self.store.notify('task')
+            self.assertEqual(call.await_count, 2)
 
     async def test_progress_and_short_disconnect_do_not_enqueue_attention(self):
         self.seed('running')
@@ -356,7 +357,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             return {'prompt_id': 'wire-id'}
         @remote.get('/queue')
         def queue():
-            return {'queue_pending': [[0, 'wire-id']], 'queue_running': []}
+            return {'queue_pending': [[0, 'wire-id']] if saved['posts'] and not saved['completed'] else [], 'queue_running': []}
         @remote.get('/history/wire-id')
         def history():
             return {'wire-id': {'status': {'completed': True, 'status_str': 'success'}, 'outputs': {
@@ -376,7 +377,10 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [url]}))
         try:
             with patch.object(self.store, 'notify', AsyncMock()) as notify:
-                result = await self.store.submit(self.data)
+                result = await self.store.enqueue(self.data)
+                self.store.remote_queues.states[url] = {'connection': 'connected', 'queue': [],
+                    'running_count': 0, 'queued_count': 0, 'updated_at': t.client.now(), 'queue_error': None}
+                await self.store.dispatch_once()
                 await asyncio.wait_for(self.store.workers[result['monitor_id']], 5)
                 self.assertEqual(saved['posts'], 1)
                 self.assertEqual(Path(self.data.outputs[0].path).read_bytes(), b'wire-media')
@@ -389,6 +393,26 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
 
 
 class ApiBoundaryTests(unittest.TestCase):
+    def test_queue_writes_require_same_origin_and_agent_receipts_require_token(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store = t.TaskStore(Path(folder), Path(folder))
+            main.app.state.comfy_tasks = store
+            api = TestClient(main.app, base_url='http://127.0.0.1', client=('127.0.0.1', 1234))
+            try:
+                self.assertEqual(api.post('/api/comfy/drag', json={}).status_code, 403)
+                self.assertEqual(api.post('/api/comfy/drag', json={}, headers={'origin': 'http://evil.invalid'}).status_code, 403)
+                result = api.post('/api/comfy/drag', json={}, headers={'origin': 'http://127.0.0.1'})
+                self.assertEqual(result.status_code, 200)
+                token = result.json()['token']
+                with patch.object(store, 'reorder') as reorder:
+                    self.assertEqual(api.put('/api/comfy/order', json={'token': token, 'ids': []},
+                        headers={'origin': 'http://127.0.0.1'}).status_code, 200)
+                    reorder.assert_called_once_with([], token)
+                self.assertEqual(api.post('/api/internal/comfy/tasks/missing/retry-collection', json={}).status_code, 403)
+                self.assertEqual(api.get('/api/internal/comfy/tasks/missing', headers={'x-nora-task-token': store.token}).status_code, 404)
+            finally:
+                api.close()
+                store.db.close()
     def test_browser_cannot_submit_even_from_loopback(self):
         with tempfile.TemporaryDirectory() as folder:
             store = t.TaskStore(Path(folder), Path(folder))
@@ -404,7 +428,7 @@ class ApiBoundaryTests(unittest.TestCase):
                 self.assertEqual(api.post('/api/internal/comfy/submit', json=data,
                     headers={'origin': 'http://localhost', 'x-nora-task-token': store.token}).status_code, 403)
                 snapshot = api.get('/api/comfy/tasks').json()
-                self.assertEqual(snapshot, {'tasks': [], 'remote_nodes': []})
+                self.assertEqual(snapshot, {'tasks': [], 'remote_nodes': [], 'local_tasks': []})
                 self.assertEqual(api.delete('/api/comfy/tasks').status_code, 405)
             finally:
                 api.close()

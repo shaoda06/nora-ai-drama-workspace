@@ -1,0 +1,205 @@
+"""Local queue actions, restart and race handling without real ComfyUI jobs."""
+import asyncio
+import json
+import hashlib
+from pathlib import Path
+import unittest
+import uuid
+from unittest.mock import AsyncMock, patch
+
+from tests import test_comfy_tasks as base
+from backend.services import comfy_tasks as t
+
+
+class QueueTests(unittest.IsolatedAsyncioTestCase):
+    async def asyncSetUp(self):
+        await base.TaskTests.asyncSetUp(self)
+        self.title_patch = patch.object(self.store, 'read_session_name', AsyncMock())
+        self.title_patch.start()
+
+    async def asyncTearDown(self):
+        self.title_patch.stop()
+        await base.TaskTests.asyncTearDown(self)
+
+    async def add(self, name):
+        data = self.data.model_copy(deep=True)
+        data.record_dir = str(self.record.parent / name)
+        data.title = name
+        data.outputs[0].path = str(self.project / '候选' / (name + '.png'))
+        result = await self.store.enqueue(data)
+        return result['local_task_id']
+
+    def node(self, running=0, queued=0):
+        self.store.remote_queues.states[self.data.url] = {
+            'connection': 'connected', 'queue': [], 'running_count': running, 'queued_count': queued,
+            'updated_at': t.client.now(), 'error': None, 'queue_error': None}
+
+    async def test_enqueue_has_uuid_and_no_upload_or_remote_post(self):
+        with patch.object(t.client, 'submit') as submit, patch.object(t.client, 'upload') as upload:
+            key = await self.add('第一项')
+            self.assertEqual(uuid.UUID(key).version, 4)
+            submit.assert_not_called()
+            upload.assert_not_called()
+        self.assertEqual(self.store.public()['local_tasks'][0]['queue_position'], 1)
+        self.assertTrue((Path(self.store.rows[key]['input'].record_dir) / '后台过程记录.json').is_file())
+
+    async def test_same_enqueue_recovers_id_but_changed_payload_is_rejected(self):
+        key = await self.add('第一项')
+        duplicate = await self.store.enqueue(self.store.rows[key]['input'])
+        self.assertEqual(duplicate['local_task_id'], key)
+        reconnected = self.store.rows[key]['input'].model_copy(deep=True)
+        reconnected.desktop.pipe = 'fresh-pipe'
+        self.assertEqual((await self.store.enqueue(reconnected))['local_task_id'], key)
+        self.assertEqual(self.store.rows[key]['input'].desktop.pipe, 'fresh-pipe')
+        changed = self.store.rows[key]['input'].model_copy(update={'title': '另一任务'})
+        with self.assertRaises(ValueError):
+            await self.store.enqueue(changed)
+
+    async def test_pause_insert_resume_cancel_and_order_survive_restart(self):
+        one, two = await self.add('一'), await self.add('二')
+        self.store.task_action(one, 'pause')
+        self.assertEqual(self.store.ordered(), [two])
+        self.store.task_action(one, 'insert')
+        self.assertEqual(self.store.ordered(), [one, two])
+        self.store.task_action(one, 'pause')
+        self.store.task_action(one, 'resume')
+        self.assertEqual(self.store.ordered(), [two, one])
+        self.store.task_action(two, 'cancel')
+        self.assertEqual(next(item for item in self.store.public()['local_tasks'] if item['id'] == two)['category'], 'history')
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        with patch.object(self.store, 'watch', AsyncMock()) as watch:
+            await self.store.start()
+            self.assertEqual(self.store.ordered(), [one])
+            self.assertEqual(self.store.rows[two]['state']['status'], 'cancelled')
+            watch.assert_not_awaited()
+
+    async def test_drag_stops_dispatch_and_atomically_saves_full_order(self):
+        one, two = await self.add('一'), await self.add('二')
+        self.node()
+        token = self.store.drag()['token']
+        with patch.object(self.store, 'submit', AsyncMock()) as submit:
+            await self.store.dispatch_once()
+            submit.assert_not_awaited()
+        self.store.reorder([two, one], token)
+        self.assertEqual(self.store.ordered(), [two, one])
+        with self.assertRaises(ValueError):
+            self.store.reorder([two], token)
+        self.store.drag(token, release=True)
+        self.assertFalse(self.store.active_drag())
+        self.store.drag_leases['expired'] = 0
+        self.assertFalse(self.store.active_drag())
+
+    async def test_normal_waits_but_paused_immediate_ignores_remote_busy(self):
+        key = await self.add('一')
+        self.node(running=1, queued=3)
+        with patch.object(self.store, 'submit', AsyncMock()) as submit:
+            await self.store.dispatch_once()
+            submit.assert_not_awaited()
+        self.store.task_action(key, 'pause')
+        self.store.task_action(key, 'immediate')
+        with patch.object(self.store, 'submit', AsyncMock()) as submit, patch.object(self.store.remote_queues, 'refresh', AsyncMock()):
+            await self.store.dispatch_once()
+            submit.assert_awaited_once()
+            self.assertEqual(submit.await_args.kwargs['key'], key)
+        with self.assertRaises(ValueError):
+            self.store.task_action(key, 'cancel')
+
+    async def test_competing_remote_submit_before_final_check_keeps_task_local(self):
+        key = await self.add('一')
+        self.node()
+        async def refresh(url):
+            self.node(running=1)
+        with patch.object(self.store.remote_queues, 'refresh', refresh), patch.object(self.store, 'submit', AsyncMock()) as submit:
+            await self.store.dispatch_once()
+            submit.assert_not_awaited()
+        self.assertEqual(self.store.rows[key]['state']['status'], 'local_queued')
+
+    async def test_missing_material_pauses_with_record_without_blocking_next(self):
+        key = await self.add('坏任务')
+        self.store.rows[key]['input'].uploads = [{'file': str(self.project / 'missing.png'), 'node': '1',
+            'input': 'seed', 'subfolder': '', 'response-name': 'upload.json'}]
+        await self.add('好任务')
+        self.node()
+        with patch.object(self.store, 'notify', AsyncMock()), patch.object(self.store.remote_queues, 'refresh', AsyncMock()), patch.object(self.store, 'submit', AsyncMock()) as submit:
+            await self.store.dispatch_once()
+            self.assertEqual(self.store.rows[key]['state']['status'], 'paused')
+            await self.store.dispatch_once()
+            submit.assert_awaited_once()
+        events = json.loads((Path(self.store.rows[key]['input'].record_dir) / '后台过程记录.json').read_text('utf-8'))
+        self.assertIn('missing.png', events[-2]['message'] if 'message' in events[-2] else str(events))
+
+    async def test_retry_collection_uses_saved_terminal_result_never_posts(self):
+        key = await self.add('一')
+        row = self.store.rows[key]
+        self.store.save(key, status='collection_failed', prompt_id='original')
+        result = {'state': 'success', 'history': {}, 'files': []}
+        (Path(row['input'].record_dir) / row['input'].history_name).write_text(json.dumps({'data': result}))
+        with patch.object(self.store, 'finish_collection', AsyncMock()) as collect, patch.object(t.client, 'submit') as submit, patch.object(self.store, 'notify', AsyncMock()):
+            await self.store.retry_collection(key)
+            with self.assertRaises(ValueError):
+                await self.store.retry_collection(key)
+            await self.store.workers[key]
+            collect.assert_awaited_once_with(key, result)
+            submit.assert_not_called()
+
+    async def test_unknown_old_task_does_not_block_independent_new_task(self):
+        old = await self.add('旧任务')
+        new = await self.add('新任务')
+        self.store.save(old, status='running', prompt_id='lost')
+        self.node()
+        with patch.object(t.client, 'status', return_value={'state': 'unknown', 'history': None, 'queue': {}}), \
+                patch.object(self.store, 'notify', AsyncMock()), patch.object(self.store.remote_queues, 'refresh', AsyncMock()), \
+                patch.object(self.store, 'submit', AsyncMock()) as submit:
+            await self.store.dispatch_once()
+            self.assertEqual(self.store.rows[old]['state']['status'], 'needs_attention')
+            self.assertEqual(submit.await_args.kwargs['key'], new)
+
+    async def test_blank_title_and_changed_primary_are_rejected(self):
+        self.data.title = '  '
+        with self.assertRaises(ValueError):
+            await self.store.enqueue(self.data)
+        self.data.title = '合法'
+        key = await self.add('一')
+        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': ['http://different.invalid']}))
+        with self.assertRaises(ValueError):
+            await self.store.prepare(key)
+
+    async def test_pause_or_insert_clears_force_submission(self):
+        key = await self.add('一')
+        self.store.task_action(key, 'immediate')
+        self.store.task_action(key, 'pause')
+        self.store.task_action(key, 'resume')
+        self.assertFalse(self.store.rows[key]['state']['immediate'])
+        self.store.task_action(key, 'immediate')
+        self.store.task_action(key, 'insert')
+        self.assertFalse(self.store.rows[key]['state']['immediate'])
+
+    async def test_upload_replaces_json_field_with_actual_name_without_changing_original(self):
+        key = await self.add('一')
+        data = self.store.rows[key]['input']
+        source = self.project / 'reference.png'
+        source.write_bytes(b'picture')
+        data.workflow['1']['inputs']['timeline_data'] = json.dumps({'global': {'refs': [{'imageFile': 'planned.png'}]}})
+        data.uploads = [{'file': str(source), 'node': '1', 'input': 'timeline_data', 'subfolder': 'task',
+            'response-name': 'upload.json', 'json-path': ['global', 'refs', 0, 'imageFile']}]
+        uploaded = {'input_path': 'task/renamed.png', 'sha256': hashlib.sha256(b'picture').hexdigest(),
+                    'remote': {'name': 'renamed.png', 'subfolder': 'task', 'type': 'input'}}
+        with patch.object(t.client, 'upload', return_value=uploaded) as upload:
+            workflow = await self.store.prepare(key)
+            await self.store.prepare(key)
+            upload.assert_called_once()
+        self.assertEqual(json.loads(workflow['1']['inputs']['timeline_data'])['global']['refs'][0]['imageFile'], 'task/renamed.png')
+        self.assertIn('planned.png', data.workflow['1']['inputs']['timeline_data'])
+        source.write_bytes(b'changed')
+        with self.assertRaisesRegex(ValueError, '素材已不同'):
+            await self.store.prepare(key)
+
+    async def test_invalid_upload_or_reserved_receipt_names_fail_at_boundary(self):
+        self.data.uploads = [{'file': 'broken'}]
+        with self.assertRaisesRegex(ValueError, '上传映射'):
+            await self.store.enqueue(self.data)
+        self.data.uploads = []
+        self.data.response_name = '后台任务状态.json'
+        with self.assertRaisesRegex(ValueError, '不能重复'):
+            await self.store.enqueue(self.data)

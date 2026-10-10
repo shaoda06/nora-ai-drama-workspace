@@ -8,7 +8,7 @@
 - 上述已有能力必须复用此脚本，不按任务新写 Python／shell／内联 HTTP 实现。准备 API JSON、整理业务记录和审核仍由 agent 完成。发现脚本缺陷先报告并集中修复，缺少接口则明确缺口后处理，不悄悄回退成一套临时执行器。
 - 只处理当前获得授权的任务；不启动下一阶段、不自动重试提交、不管理定时器、不操作队列删除／中断／卸载／服务器配置。
 - 不决定项目路径、命名、审批或归档，不生成或维护项目工作稿，不移动候选至选定。图片由agent核对文件与执行记录后交用户审核，默认不调用看图能力或自动重试；批准后超分沿用对应专项规则。视频直接交人工审核。
-- 五个命令相互独立。已有远端素材可以复用；新本地素材先上传，agent 再把返回路径写入 API JSON。接口验证／节点发现等不在这些命令内的只读操作仍可按对应技能执行。
+- 五个命令相互独立。已有远端素材可以复用；新本地素材由后台上传并把实际返回路径写入声明的API输入。接口验证／节点发现等不在这些命令内的只读操作仍可按对应技能执行。
 
 ## 调用
 
@@ -125,93 +125,66 @@ Nora任务准备、查询和取回时，读取[监控规范的精简留档规则
 
 ## Nora统一分配与提交
 
-入口：[comfyui_dispatch.py](../../scripts/comfyui_dispatch.py)，Python 3.9+标准库。项目新任务使用此入口；配置字段、主节点提交和任务地址绑定以[项目服务配置](../流程规范/ComfyUI-服务配置与任务提交规范.md#项目-comfyui-配置)为准。本节只维护调用接口。脚本在单次调用中读取配置并向主节点上传；默认交给工作区浏览服务提交、监听和取回，显式legacy模式直接复用submit。不生成提示词、不审批素材、不刷新库存、不创建heartbeat，不等待生成或空位、不循环重试。
-
-调用前准备最终API副本，并核对主节点的节点、模型、接口与素材。通过单个 `--eligible-url` 提供本次已核对的主节点地址，必须与项目地址列表第一项一致；这不是脚本自行发现的能力保证。API已有上传路径时，须核实这些路径在主节点可用；本地素材可通过下方上传映射绑定，不能照搬其他节点的文件名。
+入口：[comfyui_dispatch.py](../../scripts/comfyui_dispatch.py)。Agent调用此入口登记后台本地队列，不向远端上传或提交，不等待生成。项目配置及调度、按钮语义读取[服务配置与任务提交规范](../流程规范/ComfyUI-服务配置与任务提交规范.md)。上方comfyui_client.py为后台复用的通信模块，普通Agent任务不直接调用upload／submit／download绕过队列。
 
 ```sh
-python3 /实际技能目录/scripts/comfyui_dispatch.py \
-  --project '/实际项目目录' --task-type image \
-  --workflow '/实际附件目录/本任务-工作流.json' \
-  --eligible-url 'http://已核对主节点:8188' \
-  --record-dir '/实际附件目录' \
-  --attempt-name '本任务-提交尝试.json' \
-  --request-name '本任务-请求.json' \
-  --response-name '本任务-提交响应.json' \
-  --history-name '本任务-执行结果.json' \
-  --output-plan '/实际附件目录/成果取回映射.json'
+python /实际技能目录/scripts/comfyui_dispatch.py \
+  --project /实际项目目录 --task-type image \
+  --workflow /实际执行附件/本任务-工作流.json \
+  --record-dir /实际执行附件 --task-title 'CH001 · 首次生成' \
+  --attempt-name 本任务-提交尝试.json --request-name 本任务-请求.json \
+  --response-name 本任务-提交响应.json --history-name 本任务-执行结果.json \
+  --output-plan /实际执行附件/成果取回映射.json
 ```
-
-所有路径以调用时工作目录解析，建议使用绝对路径。完整参数可用 `python3 /实际技能目录/scripts/comfyui_dispatch.py --help` 查询：
 
 | 参数 | 含义 |
 | --- | --- |
-| `--project` | 含项目配置的根目录；必填 |
-| `--task-type` | 当前获授权阶段；必填，采用下表固定值 |
-| `--workflow` | 最终API节点JSON，必填；只在内存替换声明上传的输入路径，原文件不改写；实际请求保存完整最终图 |
-| `--eligible-url` | 已核对能力及现有素材的主节点地址；必填，只传一次，必须与项目列表第一项一致 |
-| `--uploads` | 可选本地素材上传映射JSON；省略时不上传，API中的远端路径必须已核实 |
-| `--record-dir` | 本任务既定证据目录，必填；视频任务先准备输入映射，提交入口自动保存当次资料，不另建调度台账 |
-| `--attempt-name`、`--request-name`、`--response-name` | 单个证据文件名；默认沿用通用submit的三个名称，实际项目传入既定命名 |
-| `--timeout` | 每次网络操作超时秒数，默认30；不是生成或排队时限 |
-| `--monitor` | 默认browser：由已启动的工作区浏览服务提交与监控；legacy：明确使用原有会话轮询／heartbeat，不静默切换 |
-| `--output-plan` | browser模式必填，JSON数组，结构见下方；文件放在该任务既定执行附件内 |
-| `--segment-plan` | 原生H3分段导出的browser任务必填；JSON对象绑定director_node、report_node、output_root，组序及本地目标从既有输入映射读取 |
-| `--history-name` | 终态完整响应的单个文件名，默认执行结果.json；图片任务传入规定的任务前缀，不能与其他附件名重复 |
-| `--task-title` | 全局进度栏显示的任务名称；Agent按[任务显示标题规则](../流程规范/ComfyUI-服务配置与任务提交规范.md#任务显示标题)显式填写。工具未填写时默认采用record-dir目录名 |
-| `--thread-id` | 已获准通知的目标会话ID，默认真实CODEX_THREAD_ID；指定其他会话须有用户授权，不覆盖模型／思考等级 |
+| --project、--workflow、--record-dir | 项目根目录、最终API副本、既定执行附件；必填，建议绝对路径 |
+| --task-type | image、image-upscale、video-first-pass、video-second-pass、video-postprocess，按实际获授权阶段 |
+| --task-title | 必填非空标题，格式由Agent遵守[标题规则](../流程规范/ComfyUI-服务配置与任务提交规范.md#任务显示标题)，后台不补目录名 |
+| --eligible-url | 可选已核对主节点地址，提供时须与项目第一项一致 |
+| --uploads | 可选本机素材与节点输入绑定JSON，后台准备时实际上传 |
+| --output-plan | 必填JSON数组，普通输出明确节点、字段、序号和本机目标；导演台使用空数组及segment-plan |
+| --segment-plan | 原生H3分段必填，含导演台、报告节点、核实output根目录及每个选中组的显式本机目标 |
+| --attempt-name、--request-name、--response-name、--history-name | 各种证据的单个文件名，不能重复或占用后台任务状态.json、后台过程记录.json |
+| --timeout | 单次网络操作超时，默认30秒，不是排队或生成时限 |
+| --monitor | 仅支持browser，服务缺失时报告接入问题，不回退legacy |
+| --thread-id | 默认真实CODEX_THREAD_ID；通知其他会话须有用户授权 |
 
 ### 浏览服务监控接入
 
-完整工作区先按[服务README](../../../../../工作区浏览服务/README.md#日常启动)启动浏览服务，再在Codex执行环境中调用统一入口。后台依赖浏览服务已有的Python虚拟环境、websockets；桌面通知使用Node及本机已安装的codex-app-tools适配器。启动服务不要求继承Codex环境：提交入口将本次真实连接上下文交给后台，仅保存在被忽略的runtime目录，不写入项目证据或网页。专用提交接口只接受本机Agent凭证，不向浏览页面提供操作入口。复制技能到其他环境时，不携带runtime、本机连接、数据库或项目资料；显式选择legacy模式。
+先启动[浏览服务](../../../../../工作区浏览服务/README.md#日常启动)，在真实Codex执行环境调用入口。Node、已安装桌面适配器、CODEX_THREAD_ID及CODEX_APP_TOOLS_PIPE_PATH用于来源会话通知，不伪造。连接上下文只存本机runtime，不暴露到项目证据或网页。专用接口接受本机Agent凭证，不接受浏览器Origin。SQLite、runtime及本机连接不随技能分享；缺少完整工作区后台时不能执行这条入队流程。
 
-调用前从实际API及预期结果确定取回身份，创建`--output-plan`指定的JSON文件：
-
-```json
-[
-  {
-    "node_id": "实际保存节点ID",
-    "output_key": "images",
-    "index": 0,
-    "path": "C:/实际工作区/projects/实际项目/规定的候选目录/实际文件.png",
-    "response_name": "本任务-取回响应.json"
-  }
-]
-```
-
-node_id、output_key及从0开始的index明确选择该任务history输出；path为项目内尚不存在的绝对文件路径，按专项规则命名，不能写入执行附件；response_name为该任务执行附件内单个下载证据文件名，必须与请求及其他附件名不同。后台不自行挑选输出、不改名、不覆盖已有文件、不写审批记录。其他无法确定标准history输出的任务可显式为`[]`，后台终态后通知原会话核对取回；不以空映射冒充已取回。原生H3分段导出使用`[]`并同时登记下方segment-plan；后台拒绝缺少分段计划的原生分段任务，不静默转用旧监控。
-
-原生H3分段导出的`--segment-plan`文件放在本轮既定执行附件，内容如下；节点ID及output根目录必须依据实际任务和远端配置核实，不照抄示例：
+普通成果映射示例：
 
 ```json
-{
-  "director_node": "502",
-  "report_node": "403",
-  "output_root": "E:/实际ComfyUI目录/output"
-}
+[{"node_id":"实际保存节点ID","output_key":"images","index":0,
+  "path":"C:/工作区/projects/项目/候选/CH001-本次版本.png",
+  "response_name":"本任务-取回响应.json"}]
 ```
 
-report_node必须实际连接该导演台report输出（槽位5）。后台复用已有`输入映射.json`中的selected_indices及segments，保留原始零起始组序，读取segment、round、local_execution_dir；不压缩未选组。首次取回落各P执行附件，沿用真实远端文件名，下载凭据为`取回响应-001.json`起递增；完整文件发布到现有候选目录及固定EP/C/P/R/阶段文件名。下载SHA256沿用通信客户端的已有凭据。后续核对副本采用`收尾取回-002.mp4`等未占用名称，相同内容不重复发布，改写文件留在执行附件等待原会话按目录规范处理批准与替换。只保存本轮必要保存日志条目，不保存整份远端日志。
+path是Agent指定的项目内绝对路径及文件名，不是远端路径，不放执行附件。节点、output_key和从0开始的index选择真实结果；后台完成后再从history取得远端filename／subfolder／type。普通任务不得空映射；导演台原生分段使用output-plan空数组并提供如下segment-plan。文件名与路径须换成真实项目值：
 
-```powershell
-python /实际技能目录/scripts/comfyui_dispatch.py --project /实际项目目录 --task-type video-first-pass --workflow /实际附件目录/工作流.api.json --eligible-url http://实际服务器:8188 --record-dir /实际附件目录 --output-plan /实际附件目录/空输出映射.json --segment-plan /实际附件目录/分段取回映射.json
+```json
+{"director_node":"502","report_node":"403","output_root":"E:/实际ComfyUI/output",
+ "targets":[{"index":0,
+  "path":"C:/工作区/projects/项目/09-剧集制作/EP001/其他资料/候选视频/EP001-C001-P001-R000-一采.mp4",
+  "response_name":"P001-最终取回.json"}]}
 ```
 
-空输出映射文件内容为`[]`。segment-plan只用于browser模式；后台支持原生segments导出，一采读取`_pre.mp4`，二采读取本轮正式MP4，不收取缓存、预览、一采对照或精修中间轮次。运行中只认绑定本轮目录的真实保存事件；无法绑定时留在同一后台等待最终报告。首次接入先核对远端`/internal/logs/raw`提供entries数组及t／m字段；接口不可用在POST前失败，不产生已提交任务。WS进度、补查频率、通知及断线处理统一执行[监控规范](../流程规范/ComfyUI-任务监控规范.md#1-监控方式与间隔)。
+targets必须逐一对应输入映射selected_indices，保留原始组序，不压缩未选组。report_node必须连接director_node的report槽位5；output_root按远端实际配置核实。后台只从成功任务最终报告取回正式分段，不用运行日志或猜测目录，不覆盖已有文件。
 
-后台先连接WebSocket，再用同一个client_id提交。成功标准仍是dispatch_state=accepted及真实prompt_id；额外返回monitor=browser、monitor_id。服务不可达、参数错误或缺少Codex上下文时命令失败；已发生POST但结果不明时核对原提交证据及全局状态，不自动重试、换目录或降级重提。成功返回后后台负责监听；不要再为同一任务安排轮询或heartbeat。关闭网页不会停后台，重启后按原ID核对，通知状态及异常处理遵循[任务监控规范](../流程规范/ComfyUI-任务监控规范.md#1-监控方式与间隔)。
+入队成功返回dispatch_state=enqueued、local_task_id（UUID4）、monitor_id及status=local_queued；此时还没有远端prompt_id。对同一执行附件、相同入队资料重复登记返回原ID；资料不同拒绝，不能改目录绕过原任务。后台真正提交后保存远端ID和实际请求。完成、失败、重启与通知规则读取[任务监控规范](../流程规范/ComfyUI-任务监控规范.md)。
 
-后台使用同一通信模块的submit/status/download，保留原有防重、终态分类、下载防覆盖及传输完整性检查。终态证据默认保存为record-dir内`执行结果.json`，图片任务通过`--history-name`传入规定前缀，各项取回响应采用登记名称。网页只展示运行状态，项目正式业务记录由收到通知的原会话维护。存在待通知但桌面连接已失效时，用户回到原会话读取证据接续；不凭通知状态判断素材已审核。
+Agent结果处理接口（均使用本机内部凭证）：
 
-| `task-type` | 执行阶段 |
-| --- | --- |
-| `image` | 原生图片生成或图像编辑 |
-| `image-upscale` | 图片超分 |
-| `video-first-pass` | 视频一采 |
-| `video-second-pass` | 视频二采 |
-| `video-postprocess` | 视频超分插帧后处理 |
+```sh
+python /实际技能目录/scripts/browser_tasks.py status --task-id 本地UUID
+python /实际技能目录/scripts/browser_tasks.py retry-collection --task-id 本地UUID
+python /实际技能目录/scripts/browser_tasks.py ack --notification-id 通知批次UUID
+```
 
-视频阶段按真实业务轮次填写；配套H3生成图误填为image或video-postprocess时，脚本在联网前拒绝。工作流两轮共用Refine节点，不凭节点存在自动判断一采／二采；提交前阶段核对按[项目选端规则](../流程规范/ComfyUI-服务配置与任务提交规范.md#新任务的选端与提交)执行。所有新任务提交到主节点；旧任务来源地址及缓存按[项目服务配置](../流程规范/ComfyUI-服务配置与任务提交规范.md#项目-comfyui-配置)核对，不改投备用节点。
+retry-collection只允许取回失败任务，复用原终态结果和成功下载凭据，不上传素材、不重新生成。收到通知先ack，再读后台任务状态.json、后台过程记录.json及实际附件；ack要求当前真实来源会话。
 
 ### 视频资料自动保存
 
@@ -233,7 +206,7 @@ python /实际技能目录/scripts/comfyui_dispatch.py --project /实际项目�
 }
 ```
 
-映射中的本地路径以项目根目录解析，也可使用项目内绝对路径；不得越出项目。`uploads` 指已完成并核实的真实上传映射，`input_path` 分别与API的 `imageFile`、`videoFile`、`audioFile` 对应，复用旧上传也须记录本轮真实本地输入版本。它与下方 `--uploads` 的节点输入上传接口不同，不能相互替代。正式一采／二采沿用原生r2v导演台，公共开关 `global.commonEnabled` 显式填写；API实际选择状态、公共／本组正文及三类素材槽位决定保存内容。按 `refs`、`refVideos`、`refAudios` 依次保存图片、视频、音频，各类型按index排序且编号独立；本组同类型同槽位覆盖的公共素材不记作本段实际输入，公共开关关闭时不保存公共素材或正文。既有单视频 `referenceVideo` 兼容为视频index 0，存在原生同槽位时采用原生项，与[节点实际输入规则](../生成规范/ComfyUI-MiniMaxH3导演台节点使用规范.md)一致。
+映射中的本地路径以项目根目录解析，也可使用项目内绝对路径；不得越出项目。`uploads` 记录已有远端素材的本机来源映射；本轮新上传素材由后台依据下方上传绑定及实际响应补充到资料保存模块，`input_path` 分别与API的 `imageFile`、`videoFile`、`audioFile` 对应，复用旧上传也须记录本轮真实本地输入版本。它与下方 `--uploads` 的节点输入上传接口不同，不能相互替代。正式一采／二采沿用原生r2v导演台，公共开关 `global.commonEnabled` 显式填写；API实际选择状态、公共／本组正文及三类素材槽位决定保存内容。按 `refs`、`refVideos`、`refAudios` 依次保存图片、视频、音频，各类型按index排序且编号独立；本组同类型同槽位覆盖的公共素材不记作本段实际输入，公共开关关闭时不保存公共素材或正文。既有单视频 `referenceVideo` 兼容为视频index 0，存在原生同槽位时采用原生项，与[节点实际输入规则](../生成规范/ComfyUI-MiniMaxH3导演台节点使用规范.md)一致。
 
 二采在每个实际执行组中另填 `source`，指向同P获批来源的完整执行身份；二采保存自己的当次输入并保留来源。后处理只需场次、实际组序及含 `segment`、`round`、`source` 的分段项，来源为本次实际使用的完整执行身份，不另生成空提示词或参考素材。
 
@@ -241,7 +214,7 @@ python /实际技能目录/scripts/comfyui_dispatch.py --project /实际项目�
 
 每个 `segments` 项可选填写 `materials_from: {"mapping": "项目内原输入映射.json", "identity": "EP001-C001-P001-R000-一采"}`，引用同分段原关联的分镜、提示词与实际参考素材。工具按当前实际输入逐项核对正文、文件字节与槽位后引用旧冻结文件，差异时报错，不冒充沿用；新工作流/API仍单独保存。若素材有修改，不填写整套复用字段，按新输入冻结。复用不继承视频批准，也不递归推断最新资料。
 
-统一入口核对主节点后、POST前核对并保存：正式场次分镜版本须与映射一致，全文冻结为共同目录 `分镜脚本.md`；各P的实际公共＋本组英文保存为其执行目录 `模型提示词.txt`；实际图片、视频和音频参考素材冻结于共同目录 `输入素材/`；已有当次 `中文提示词参考版.txt` 关联读取，没有时如实缺项，不现场补译。最后自动补齐共同映射的 `generation_contexts`、记录时间与依据，保留原字段值。缺文件、映射不符或试图覆盖不同冻结资料时退出1且不发送生成POST；同一准备输入重复检查不改写快照。保存资料不代表服务器已经接受任务，仍以提交结果的真实prompt_id为准。
+后台轮到任务、完成素材上传后，在POST前核对并保存：正式场次分镜版本须与映射一致，全文冻结为共同目录 `分镜脚本.md`；各P的实际公共＋本组英文保存为其执行目录 `模型提示词.txt`；实际图片、视频和音频参考素材冻结于共同目录 `输入素材/`；已有当次 `中文提示词参考版.txt` 关联读取，没有时如实缺项，不现场补译。最后自动补齐共同映射的 `generation_contexts`、记录时间与依据，保留原字段值。缺文件、映射不符或试图覆盖不同冻结资料时暂停任务并保存原因，不发送生成POST；同一准备输入重复检查不改写快照。保存资料不代表服务器已经接受任务，仍以提交结果的真实prompt_id为准。
 
 图片任务不执行视频资料保存。原任务的防重复提交检查继续生效；已有历史缺项按业务规则核实证据后补记，不通过重新提交或从现行文档猜测恢复。
 
@@ -263,11 +236,11 @@ python /实际技能目录/scripts/comfyui_dispatch.py --project /实际项目�
 
 节点编号、输入名及上传来源按实际API填写。向主节点上传后使用真实返回的input_path连接；响应保存在record-dir内，成功响应的url必须与主节点一致才可复用。上传状态不明、响应为空或失败时停止并核对，不自动重复上传；原上传证据不覆盖。映射属于生成前准备或技术执行附件，不改变现有生成／审阅记录模板。此映射不是视频模型的Picture／Audio／Video标签表，业务标签仍须按既有规范核对。
 
-标准输出为JSON。退出0且 `data.dispatch_state` 为 `accepted` 表示取得真实prompt_id，`data.url` 为项目主节点地址。工具不再返回按队列忙碌判断的deferred结果或候选端checks。接口异常、配置错误或本地互斥锁被占用时退出1，读取error；锁占用表示本次尚未提交，不是远端生成失败。将真实提交结论写入既有生成／执行记录。
+标准输出为JSON。退出0且data.dispatch_state为enqueued表示本地入队成功，保存local_task_id；不代表远端已经接受或任务完成。接口或配置错误退出1，先查询后台记录，不自动重试远端POST。
 
 工作流仍按本次声明的任务类型校验；原生H3任务继续核对阶段、输入映射及分段计划，不读取远端其他任务的工作流判断是否可提交。
 
-一次调用最多提交一次POST；POST结果不明仍保留原提交证据，不重复提交。后续status、download沿用上方命令，从submit-attempt或项目对应“提交尝试”附件的url读取实际服务。脚本不提供绕过已有证据、强行重试或修改远端队列的参数。
+后续查询、取回重试及通知确认使用上方browser_tasks.py接口；后台负责原远端地址、提交证据和防重复。
 
 调度回归测试使用模拟响应及临时目录，不连接服务器、不生成媒体：
 
@@ -275,4 +248,14 @@ python /实际技能目录/scripts/comfyui_dispatch.py --project /实际项目�
 python3 -B -m unittest discover -s '/实际技能目录/scripts' -p 'test_comfyui_dispatch.py' -v
 ```
 
-退出0并报告OK表示通过。覆盖各任务类型主节点提交、旧单地址配置读取、主节点能力核对范围、本地互斥、主节点素材上传、地址绑定和提交不明时不重复POST；真实节点兼容性仍需实际任务验证。通用通信函数的修改同时运行上方通信回归测试。
+退出0并报告OK表示通过。Agent入口测试覆盖纯入队、主节点配置、素材绑定、本地ID和不访问远端；后台队列、通知及取回测试在工作区浏览服务/tests维护。真实模型兼容性仍需实际任务验证。
+
+导演台素材藏在timeline_data JSON内时，上传映射可加json-path数组；每个组件为字段名或数组下标，绑定必须已经存在。例如：
+
+```json
+[{"file":"C:/项目/素材/参考.png","node":"502","input":"timeline_data",
+  "subfolder":"本次任务","response-name":"上传-001.json",
+  "json-path":["global","refs",0,"imageFile"]}]
+```
+
+后台使用实际返回的input_path替换这一字段，保持原工作流副本和大整数种子。新上传素材的本机来源同时交给资料冻结模块；已有远端素材仍按输入映射uploads核对来源。

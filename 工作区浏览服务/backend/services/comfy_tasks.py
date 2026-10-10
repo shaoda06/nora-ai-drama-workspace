@@ -13,19 +13,24 @@ import subprocess
 import time
 from urllib.parse import urlencode, urlsplit, urlunsplit
 import uuid
+from typing import Literal
 
 from pydantic import BaseModel, Field
 from websockets.asyncio.client import connect
 from websockets.exceptions import WebSocketException
 from backend.services import comfy_segments as segments
 from backend.services.comfy_nodes import RemoteQueues, initial_state
+from backend.services.local_queue import LocalQueue, LOCAL, TERMINAL
+from backend.services.task_notifications import TaskNotifications
 
 logger = logging.getLogger(__name__)
-SEGMENT_CHECK_INTERVAL = 30
 SKILL = Path(__file__).resolve().parents[3] / '.agents/skills/nora-ai-short-drama'
 spec = importlib.util.spec_from_file_location('nora_comfy_client', SKILL / 'references/comfyui-scripts/comfyui_client.py')
 client = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(client)
+context_spec = importlib.util.spec_from_file_location('nora_generation_context', SKILL / 'scripts/generation_context.py')
+generation_context = importlib.util.module_from_spec(context_spec)
+context_spec.loader.exec_module(generation_context)
 
 
 class OutputTarget(BaseModel):
@@ -46,7 +51,7 @@ class DesktopConnection(BaseModel):
 class TaskInput(BaseModel):
     project: str
     title: str
-    task_type: str
+    task_type: Literal['image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess']
     url: str
     workflow: dict
     record_dir: str
@@ -59,14 +64,18 @@ class TaskInput(BaseModel):
     thread_id: str
     desktop: DesktopConnection
     segment_plan: segments.SegmentPlan | None = None
+    uploads: list[dict] = Field(default_factory=list)
+    source_session_name: str = ''
 
 
-class TaskStore:
+class TaskStore(LocalQueue, TaskNotifications):
     def __init__(self, runtime: Path, workspace: Path):
         self.runtime, self.workspace = runtime, workspace.resolve()
         runtime.mkdir(parents=True, exist_ok=True)
         self.db = sqlite3.connect(runtime / 'comfy-tasks.sqlite')
         self.db.execute('CREATE TABLE IF NOT EXISTS tasks (id TEXT PRIMARY KEY, payload TEXT NOT NULL, state TEXT NOT NULL)')
+        self.db.execute('CREATE TABLE IF NOT EXISTS task_events (id INTEGER PRIMARY KEY, task_id TEXT NOT NULL, event TEXT NOT NULL)')
+        self.db.execute('CREATE TABLE IF NOT EXISTS notification_batches (id TEXT PRIMARY KEY, thread_id TEXT NOT NULL, task_ids TEXT NOT NULL, payload TEXT NOT NULL, state TEXT NOT NULL)')
         self.db.commit()
         self.rows = {key: {'input': TaskInput.model_validate_json(payload), 'state': json.loads(state)}
                      for key, payload, state in self.db.execute('SELECT id, payload, state FROM tasks')}
@@ -74,7 +83,10 @@ class TaskStore:
         self.notifiers = {}
         self.session_readers = {}
         self.notification_locks = {}
+        self.reconcile_locks = {}
         self.client = client
+        self.generation_context = generation_context
+        self.queue_init()
         self.subscribers = set()
         self.token = secrets.token_urlsafe(32)
         self.remote_queues = RemoteQueues(client, self.remote_urls, self.publish)
@@ -90,30 +102,53 @@ class TaskStore:
         return remote_urls
 
     def public(self):
-        return {'tasks': sorted(({**{key: ([{field: item.get(field) for field in ('identity', 'index', 'check', 'path', 'error')}
+        snapshot = {'tasks': sorted(({**{key: ([{field: item.get(field) for field in ('identity', 'index', 'check', 'path', 'error')}
                                         for item in value.values()] if key == 'segments' else value) for key, value in row['state'].items()
                                  if key not in ('client_id', 'segment_monitor', 'notices')},
-                                 'remote_url': client.Client(row['input'].url, row['input'].timeout).url,
+                                 'remote_url': row['input'].url.rstrip('/'),
                                  'notification_unknown': sum(item['delivery'] == 'delivery_unknown' for item in row['state'].get('notices', []))}
                                 for row in self.rows.values()),
                                 key=lambda item: item['created_at'], reverse=True),
                 'remote_nodes': [{'url': url, 'name': '默认节点' if index == 0 else f'备用{index}',
                                   **self.remote_queues.states.get(url, initial_state())}
                                  for index, url in enumerate(self.remote_urls())]}
+        local = []
+        order = self.ordered()
+        for task in snapshot['tasks']:
+            status = task['status']
+            if status in LOCAL or status in ('preparing', 'submitting'):
+                category = 'paused' if status == 'paused' else 'queued'
+            elif status in TERMINAL or status == 'collecting':
+                category = 'history'
+            else:
+                continue
+            local.append({**task, 'queue': 'local', 'category': category,
+                          'queue_position': order.index(task['id']) + 1 if task['id'] in order else None})
+        snapshot['local_tasks'] = sorted(local, key=lambda task: (task['category'] != 'queued', task.get('queue_order', 0)))
+        return snapshot
 
     def publish(self):
+        self.dispatch_event.set()
         for event in self.subscribers:
             event.set()
 
     def save(self, key, **changes):
         row = self.rows[key]
         row['state'].update(changes, updated_at=client.now())
-        self.db.execute('INSERT INTO tasks VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET state=excluded.state',
-                        (key, row['input'].model_dump_json(), json.dumps(row['state'], ensure_ascii=False)))
+        self.persist(key)
         self.db.commit()
+        if self.db.execute('SELECT 1 FROM task_events WHERE task_id=? LIMIT 1', (key,)).fetchone():
+            self.write_records(key)
         self.publish()
 
+    def persist(self, key):
+        row = self.rows[key]
+        self.db.execute('INSERT INTO tasks VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload,state=excluded.state',
+                        (key, row['input'].model_dump_json(), json.dumps(row['state'], ensure_ascii=False)))
+
     def validate(self, data):
+        if not data.title.strip():
+            raise ValueError('任务标题不能为空')
         project = Path(data.project).resolve(strict=True)
         if project.parent != self.workspace / 'projects':
             raise ValueError('任务必须属于当前工作区projects下的项目')
@@ -124,8 +159,21 @@ class TaskStore:
         record = Path(data.record_dir).resolve()
         if not record.is_relative_to(project):
             raise ValueError('执行附件必须位于所属项目内')
-        names = [data.attempt_name, data.request_name, data.response_name, data.history_name]
+        for item in data.uploads:
+            required = {'file', 'node', 'input', 'subfolder', 'response-name'}
+            if not required.issubset(item) or set(item) - required - {'json-path'} or not all(isinstance(item[name], str) for name in required):
+                raise ValueError('上传映射字段不完整或类型不正确')
+            if 'json-path' in item and (not isinstance(item['json-path'], list) or not item['json-path']
+                                       or any(type(part) not in (str, int) for part in item['json-path'])):
+                raise ValueError('JSON素材绑定必须提供字段路径数组')
+        names = [data.attempt_name, data.request_name, data.response_name, data.history_name,
+                 '后台任务状态.json', '后台过程记录.json']
         names += [output.response_name for output in data.outputs]
+        names += [item['response-name'] for item in data.uploads]
+        if data.segment_plan:
+            names += [item.response_name for item in data.segment_plan.targets]
+        elif not data.outputs:
+            raise ValueError('必须登记预期成果保存映射')
         for name in names:
             client.remote_path(name, filename=True)
         if len(names) != len(set(names)):
@@ -147,10 +195,15 @@ class TaskStore:
         if not data.thread_id or not data.desktop.caller_thread:
             raise ValueError('缺少真实会话身份')
         client.validate_workflow(data.workflow)
+        for item in data.uploads:
+            if (item['node'] not in data.workflow or item['input'] not in data.workflow[item['node']]['inputs']
+                    or not Path(item['file']).is_absolute()):
+                raise ValueError('上传映射必须绑定已有输入并使用本机绝对路径')
+            client.remote_path(item['subfolder'])
         native_segments = [node for node in data.workflow.values() if node['class_type'] == 'MiniMaxH3Director'
             and json.loads(node['inputs']['timeline_data']).get('output', {}).get('exportMode') == 'segments']
         if native_segments and not data.segment_plan:
-            raise ValueError('原生H3分段任务必须登记segment-plan，不能仅等终态处理')
+            raise ValueError('原生H3分段任务必须登记segment-plan以对应最终成果')
         if data.segment_plan:
             try:
                 segments.validate(data)
@@ -163,101 +216,116 @@ class TaskStore:
     def client_for(self, data):
         return client.Client(data.url, data.timeout)
 
-    def queue_notice(self, key, event_id, kind, message):
-        state = self.rows[key]['state']
-        notices = state.setdefault('notices', [])
-        if any(item['id'] == event_id for item in notices):
-            return
-        notices.append({'id': event_id, 'kind': kind, 'message': message, 'delivery': 'pending'})
-        self.save(key, notification='waiting_idle')
-        if key not in self.notifiers or self.notifiers[key].done():
-            self.notifiers[key] = asyncio.create_task(self.notify(key))
-
     def ws_url(self, data, client_id):
         parts = urlsplit(data.url)
         return urlunsplit(('wss' if parts.scheme == 'https' else 'ws', parts.netloc,
                            parts.path + '/ws', urlencode({'clientId': client_id}), ''))
 
-    async def submit(self, data):
-        project = self.validate(data)
+    async def submit(self, data, *, key=None, workflow=None):
+        if key is None:
+            project = self.validate(data)
+            key = str(uuid.uuid4())
+            self.rows[key] = {'input': data, 'state': {
+                'id': key, 'project': project.name, 'title': data.title, 'task_type': data.task_type,
+                'prompt_id': None, 'client_id': str(uuid.uuid4()), 'status': 'submitting',
+                'connection': 'connecting', 'progress': None, 'node': None, 'error': None,
+                'notification': 'waiting', 'created_at': client.now(), 'started_at': None,
+                'collected': 0, 'expected': len(data.outputs)}}
+        state = self.rows[key]['state']
+        if state.get('prompt_id'):
+            raise ValueError('任务已有远端ID，不能重新提交')
         record = Path(data.record_dir)
         if any((record / name).exists() for name in (data.attempt_name, data.request_name, data.response_name)):
-            raise client.ClientError('submission_guard', '已有提交证据，不得再次提交')
-        client_id, key = str(uuid.uuid4()), str(uuid.uuid4())
-        log_cursor = await segments.baseline(self, data) if data.segment_plan else None
-        # The WebSocket is open before the only POST; fast/cached completions stay buffered.
-        socket = await connect(self.ws_url(data, client_id), open_timeout=data.timeout, max_size=2**22)
-        self.rows[key] = {'input': data, 'state': {
-            'id': key, 'project': project.name, 'title': data.title, 'task_type': data.task_type,
-            'prompt_id': None, 'client_id': client_id, 'status': 'submitting', 'connection': 'connected',
-            'progress': None, 'node': None, 'error': None, 'notification': 'waiting',
-            'created_at': client.now(), 'started_at': None, 'updated_at': client.now(), 'collected': 0, 'expected': len(data.outputs)}}
-        self.save(key)
-        if data.segment_plan:
-            self.save(key, expected=len(segments.targets(data)), segments={str(item['index']): {
-                'identity': item['identity'], 'index': item['index'], 'check': '未取回', 'versions': [], 'error': None}
-                for item in segments.targets(data)}, segment_monitor={
-                    'cursor': log_cursor, 'started': False, 'run_dir': None, 'last_probe': 0, 'failures': 0})
+            raise client.ClientError('submission_guard', '已有提交证据，不能重新提交')
+        self.save(key, status='submitting', phase='submit', failure_stage=None, dispatch_attempt=state.get('dispatch_attempt', 0) + 1)
+        socket = await connect(self.ws_url(data, state['client_id']), open_timeout=data.timeout,
+                               ping_interval=20, ping_timeout=20, max_size=2**22)
+        self.record(key, 'submit', 'started')
         try:
-            result = await asyncio.to_thread(client.submit, client.Client(data.url, data.timeout),
-                argparse.Namespace(**data.model_dump()), workflow=data.workflow, client_id=client_id)
+            result = await asyncio.to_thread(client.submit, self.client_for(data),
+                argparse.Namespace(**data.model_dump()), workflow=workflow or data.workflow, client_id=state['client_id'])
         except (client.ClientError, OSError, ValueError) as error:
             rejected = isinstance(error, client.ClientError) and error.code == 'submission_rejected'
-            self.save(key, status='rejected' if rejected else 'submission_unknown', error=str(error))
-            if not rejected:
-                self.queue_notice(key, 'submission_unknown', 'attention', '提交结果未确认；核对原提交证据，不自动重新提交')
+            self.save(key, status='rejected' if rejected else 'submission_unknown', error=str(error), failure_stage='submit')
+            self.record(key, 'submit', 'rejected' if rejected else 'unknown', error=str(error))
+            self.queue_notice(key, 'submission_issue', 'attention', str(error))
             await socket.close()
             raise
-        self.save(key, prompt_id=result['prompt_id'], status='queued')
+        self.save(key, prompt_id=result['prompt_id'], status='queued', submitted_at=client.now(), connection='connected', immediate=False)
+        self.record(key, 'submit', 'accepted', prompt_id=result['prompt_id'])
         self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
         self.workers[key] = asyncio.create_task(self.watch(key, socket))
-        return {**result, 'monitor': 'browser', 'monitor_id': key}
+        return {**result, 'monitor': 'browser', 'monitor_id': key, 'local_task_id': key}
 
     async def start(self):
         for key, row in self.rows.items():
             state = row['state']
-            if state['status'] == 'rejected':
-                continue
-            if state['notification'] == 'sending':
-                self.save(key, notification='delivery_unknown')
             for notice in state.get('notices', []):
                 if notice['delivery'] == 'sending':
                     notice['delivery'] = 'delivery_unknown'
-            self.save(key)
-            if any(notice['delivery'] == 'pending' for notice in state.get('notices', [])):
+            if state['notification'] == 'sending':
+                self.save(key, notification='delivery_unknown')
+            if any(item['delivery'] == 'pending' for item in state.get('notices', [])):
                 self.notifiers[key] = asyncio.create_task(self.notify(key))
-            if not state['prompt_id']:
-                # A response may have been saved immediately before a service crash.
+            if state['status'] in LOCAL or state['status'] == 'cancelled':
+                continue
+            if state['status'] == 'preparing':
+                self.save(key, status='local_queued')
+                self.record(key, 'restart', 'resume_local')
+                continue
+            if not state.get('prompt_id'):
                 response = Path(row['input'].record_dir) / row['input'].response_name
                 if response.is_file():
                     result = client.strict_json(response.read_bytes())
                     if result.get('prompt_id'):
                         self.save(key, prompt_id=result['prompt_id'], status='queued')
-                if not state['prompt_id']:
-                    self.save(key, status='submission_unknown', error='提交未确认；核对原提交证据，不自动重提')
-                    self.queue_notice(key, 'submission_unknown', 'attention', state['error'])
+                if not state.get('prompt_id'):
+                    if state['status'] not in TERMINAL:
+                        self.save(key, status='submission_unknown', error='提交未确认；保留原证据，不自动重提')
+                        self.queue_notice(key, 'submission_issue', 'attention', state['error'])
                     continue
-            if state['status'] in ('completed', 'failed', 'needs_attention', 'collection_failed'):
-                if state['notification'] in ('waiting', 'waiting_connection', 'waiting_idle'):
-                    self.workers[key] = asyncio.create_task(self.notify(key))
+            if state['status'] in TERMINAL:
+                if not state.get('notices') and state['notification'] in ('waiting', 'waiting_idle', 'waiting_connection'):
+                    self.notifiers[key] = asyncio.create_task(self.notify(key))
+                continue
+            if state['status'] == 'collecting':
+                self.workers[key] = asyncio.create_task(self.collect_saved(key))
             else:
-                if not state.get('source_session_name'):
-                    self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
                 self.workers[key] = asyncio.create_task(self.watch(key))
+            if not state.get('source_session_name'):
+                self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
+        for batch_id, in self.db.execute("SELECT id FROM notification_batches WHERE state IN ('sending','delivery_unknown')"):
+            self.db.execute('UPDATE notification_batches SET state=? WHERE id=?', ('delivery_unknown', batch_id))
+            self.notifiers['ack:' + batch_id] = asyncio.create_task(self.wait_ack(batch_id))
+        self.db.commit()
+        self.scheduler = asyncio.create_task(self.schedule())
 
     async def close(self):
         await self.remote_queues.close()
         tasks = [*self.workers.values(), *self.notifiers.values(), *self.session_readers.values()]
+        if self.scheduler is not None:
+            tasks.append(self.scheduler)
         for task in tasks:
             task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)
         self.db.close()
 
     async def reconcile(self, key):
+        async with self.reconcile_locks.setdefault(key, asyncio.Lock()):
+            if self.rows[key]['state']['status'] in TERMINAL:
+                return True
+            return await self.reconcile_remote(key)
+
+    async def reconcile_remote(self, key):
         row = self.rows[key]
         data, state = row['input'], row['state']
-        result = await asyncio.to_thread(client.status, client.Client(data.url, data.timeout),
-                                         argparse.Namespace(prompt_id=state['prompt_id']))
+        history = Path(data.record_dir) / data.history_name
+        saved = client.strict_json(history.read_bytes())['data'] if history.is_file() else None
+        result = saved if saved and saved.get('state') in ('success', 'failed') else await asyncio.to_thread(
+            client.status, self.client_for(data), argparse.Namespace(prompt_id=state['prompt_id']))
+        if result['state'] == 'unknown':
+            # One additional read avoids treating a queue-to-history transition as disappearance.
+            result = await asyncio.to_thread(client.status, self.client_for(data), argparse.Namespace(prompt_id=state['prompt_id']))
         remote_state = result['state']
         if not state.get('started_at'):
             for event, payload in (result.get('history') or {}).get('status', {}).get('messages', []):
@@ -265,150 +333,128 @@ class TaskStore:
                     self.record_start(key, payload)
                     break
         if remote_state in ('success', 'failed'):
-            history = Path(data.record_dir) / data.history_name
             if not history.exists():
                 client.write_new(history, {'time': client.now(), 'data': result})
-            if data.segment_plan:
-                if state['segment_monitor']['run_dir']:
-                    try:
-                        await segments.scan(self, key, terminal=True)
-                    except (client.ClientError, OSError, ValueError, KeyError, TypeError) as error:
-                        self.save(key, segment_warning='收尾日志补查不可用，按最终报告核对：' + str(error))
-                problems = await segments.finish(self, key, result)
-                if remote_state == 'failed':
-                    self.save(key, status='failed', error='ComfyUI确认执行失败；已取回分段保留，缺项见分段状态', progress=None)
-                elif problems:
-                    self.save(key, status='collection_failed', error='；'.join(problems), progress=None)
-                elif any(item['check'] == '新文件已取回，待替换核对' for item in state['segments'].values()):
-                    self.save(key, status='needs_attention', error='改写后的新文件已取回，需原会话按旧批准关系完成留存与替换', progress=None)
-                else:
-                    self.save(key, status='completed', error=None, progress=None)
-            elif remote_state == 'failed':
-                self.save(key, status='failed', error='ComfyUI确认执行失败；详情见终态附件', progress=None)
-            else:
-                self.save(key, status='collecting', error=None, progress=None)
-                try:
-                    await self.collect(key, result)
-                except (client.ClientError, OSError, ValueError) as error:
-                    logger.warning('ComfyUI task %s collection failed: %s', key, error)
-                    self.save(key, status='collection_failed', error=str(error))
-            self.queue_notice(key, 'terminal', 'terminal', f'整轮状态：{state["status"]}；{state.get("error") or "预期成果已取回"}')
+            self.record(key, 'execution', remote_state, evidence=str(history))
+            await self.finish_collection(key, result)
+            self.queue_notice(key, 'terminal', 'terminal', state.get('error') or '预期成果已保存')
             return True
         if remote_state == 'unknown':
-            self.save(key, status='needs_attention', error='history及queue均无法确认任务；停止自动处理，请核对原任务')
-            self.queue_notice(key, 'terminal', 'terminal', state['error'])
+            self.save(key, status='needs_attention', error='队列与历史均无法确认任务；状态待核对，不自动重提')
+            self.record(key, 'reconcile', 'unknown', prompt_id=state['prompt_id'])
+            self.queue_notice(key, 'terminal', 'attention', state['error'])
             return True
+        if state['status'] != remote_state:
+            self.record(key, 'execution', remote_state)
         self.save(key, status=remote_state, error=None)
         return False
 
-    async def collect(self, key, result):
-        row = self.rows[key]
-        data = row['input']
-        if not data.outputs:
-            self.save(key, status='needs_attention', error='生成已成功；未配置自动取回映射，需原会话按专项规则核对输出')
+    async def finish_collection(self, key, result):
+        data, state = self.rows[key]['input'], self.rows[key]['state']
+        if result['state'] == 'failed':
+            messages = (result.get('history') or {}).get('status', {}).get('messages', [])
+            error = next((json.dumps(payload, ensure_ascii=False) for event, payload in messages
+                          if event in ('execution_error', 'execution_interrupted')), 'ComfyUI确认执行失败；详情见执行结果.json')
+            self.save(key, status='failed', error=error, ended_at=client.now(), progress=None, failure_stage='execution')
             return
+        self.save(key, status='collecting', error=None, progress=None, ended_at=client.now(), phase='collection', failure_stage=None)
+        self.record(key, 'collection', 'started')
+        try:
+            if data.segment_plan:
+                problems = await segments.finish(self, key, result)
+                self.save(key, status='collection_failed' if problems else 'completed', failure_stage='collection' if problems else None,
+                          error='；'.join(problems) if problems else None)
+            else:
+                await self.collect(key, result)
+        except (client.ClientError, OSError, ValueError) as error:
+            self.save(key, status='collection_failed', error=str(error), failure_stage='collection')
+        self.record(key, 'collection', state['status'], error=state.get('error'), collected=state['collected'])
+
+    async def collect(self, key, result):
+        data, state = self.rows[key]['input'], self.rows[key]['state']
+        if not data.outputs:
+            raise ValueError('生成成功但没有配置成果取回映射')
+        problems = []
+        collected = 0
+        saved_outputs = []
         for output in data.outputs:
-            matching = [item['file'] for item in result['files'] if
-                        (item['node_id'], item['output_key'], item['index']) ==
-                        (output.node_id, output.output_key, output.index)]
-            if len(matching) != 1:
-                raise ValueError(f'预期输出未确认：节点{output.node_id}/{output.output_key}/{output.index}')
-            identity = matching[0]
-            response = Path(data.record_dir) / output.response_name
-            if response.exists():
-                previous = client.strict_json(response.read_bytes())['data']
-                if (previous['remote'] != {name: identity[name] for name in ('filename', 'subfolder', 'type')}
-                        or previous['path'] != str(Path(output.path).absolute())
-                        or not Path(output.path).is_file()
-                        or Path(output.path).stat().st_size != previous['bytes']):
-                    raise ValueError('已有下载证据与当前文件不一致，需原会话核对')
-                continue
-            downloaded = await asyncio.to_thread(client.download, client.Client(data.url, data.timeout),
-                argparse.Namespace(filename=identity['filename'], subfolder=identity['subfolder'],
-                                   type=identity['type'], output=output.path, sha256=None))
-            client.write_new(response, {'time': client.now(), 'data': downloaded})
-            self.save(key, collected=self.rows[key]['state']['collected'] + 1)
-        self.save(key, status='completed', collected=len(data.outputs), error=None)
+            try:
+                matching = [item['file'] for item in result['files'] if
+                            (item['node_id'], item['output_key'], item['index']) ==
+                            (output.node_id, output.output_key, output.index)]
+                if len(matching) != 1:
+                    raise ValueError(f'预期输出未确认：节点{output.node_id}/{output.output_key}/{output.index}')
+                identity = matching[0]
+                response = Path(data.record_dir) / output.response_name
+                if response.exists():
+                    previous = client.strict_json(response.read_bytes())['data']
+                    if (previous['remote'] != {name: identity[name] for name in ('filename', 'subfolder', 'type')}
+                            or previous['path'] != str(Path(output.path).absolute())
+                            or not Path(output.path).is_file() or Path(output.path).stat().st_size != previous['bytes']):
+                        raise ValueError('已有下载证据与当前文件不一致，不覆盖文件')
+                else:
+                    downloaded = await asyncio.to_thread(client.download, self.client_for(data),
+                        argparse.Namespace(filename=identity['filename'], subfolder=identity['subfolder'],
+                                           type=identity['type'], output=output.path, sha256=None))
+                    client.write_new(response, {'time': client.now(), 'data': downloaded})
+                    self.record(key, 'download', 'success', path=output.path, remote=identity, receipt=str(response))
+                collected += 1
+                saved_outputs.append(output.path)
+                self.save(key, collected=collected, saved_outputs=saved_outputs.copy())
+            except (client.ClientError, OSError, ValueError, KeyError) as error:
+                problems.append(f'{output.path}：{error}')
+                self.record(key, 'download', 'failed', path=output.path, error=str(error))
+        self.save(key, status='collection_failed' if problems else 'completed', collected=collected, saved_outputs=saved_outputs,
+                  failure_stage='collection' if problems else None,
+                  error='；'.join(problems) if problems else None)
 
     async def watch(self, key, socket=None):
-        row = self.rows[key]
-        data, state = row['input'], row['state']
-        disconnected_since = None
+        data, state = self.rows[key]['input'], self.rows[key]['state']
         try:
-            while True:
+            while state['status'] not in TERMINAL:
                 try:
                     if socket is None:
-                        socket = await connect(self.ws_url(data, state['client_id']), open_timeout=data.timeout, max_size=2**22)
+                        socket = await connect(self.ws_url(data, state['client_id']), open_timeout=data.timeout,
+                                               ping_interval=20, ping_timeout=20, max_size=2**22)
                     self.save(key, connection='connected')
                     if await self.reconcile(key):
                         break
-                    disconnected_since = None
-                    if data.segment_plan:
-                        await self.probe_segments(key, force=True)
-                    last_reconcile = time.monotonic()
-                    while True:
-                        if data.segment_plan:
-                            await self.probe_segments(key)
-                        if time.monotonic() - last_reconcile >= 300:
+                    while state['status'] not in TERMINAL:
+                        try:
+                            raw = await asyncio.wait_for(socket.recv(), 30)
+                        except asyncio.TimeoutError:
                             if await self.reconcile(key):
                                 break
-                            last_reconcile = time.monotonic()
-                        try:
-                            delay = max(.01, SEGMENT_CHECK_INTERVAL - (time.monotonic() - state['segment_monitor']['last_probe'])) if data.segment_plan else 300
-                            raw = await asyncio.wait_for(socket.recv(), delay)
-                        except asyncio.TimeoutError:
-                            if data.segment_plan:
-                                await self.probe_segments(key)
-                            if not data.segment_plan or time.monotonic() - last_reconcile >= 300:
-                                if await self.reconcile(key):
-                                    break
-                                last_reconcile = time.monotonic()
                             continue
                         if not isinstance(raw, str):
-                            continue  # Binary preview frames are not task completion evidence.
+                            continue
                         message = json.loads(raw)
                         event, payload = message['type'], message['data']
-                        if event == 'minimax_director_progress' and data.segment_plan:
-                            if (payload.get('prompt_id', state['prompt_id']) == state['prompt_id']
-                                    and str(payload.get('node_id')) == data.segment_plan.director_node
-                                    and state.get('node') == data.segment_plan.director_node
-                                    and state['segment_monitor']['started']):
-                                previous = state.get('director_progress')
-                                current = {field: payload[field] for field in ('segment', 'segment_total', 'timeline_segment', 'phase', 'phase_label')}
-                                self.save(key, director_progress=current)
-                                if previous != current:
-                                    await self.probe_segments(key)
-                            continue
-                        if payload.get('prompt_id') != state['prompt_id']:
+                        director_event = (event == 'minimax_director_progress' and data.segment_plan
+                                          and str(payload.get('node_id')) == data.segment_plan.director_node
+                                          and state.get('node') == data.segment_plan.director_node)
+                        if payload.get('prompt_id') != state['prompt_id'] and not (director_event and not payload.get('prompt_id')):
                             continue
                         if event == 'execution_start':
                             self.record_start(key, payload)
                             self.save(key, status='running')
-                            if data.segment_plan:
-                                await self.probe_segments(key, begin=True, force=True)
+                            self.record(key, 'execution', 'running')
                         elif event == 'progress':
                             self.save(key, status='running', progress={'value': payload['value'], 'max': payload['max']})
                         elif event == 'executing' and payload.get('node') is not None:
                             self.save(key, status='running', node=str(payload['node']), progress=None)
+                        elif event == 'minimax_director_progress' and data.segment_plan:
+                            current = {field: payload[field] for field in ('segment', 'segment_total', 'phase_label')}
+                            if current != state.get('director_progress'):
+                                self.save(key, director_progress=current)
+                                self.record(key, 'director', 'progress', **current)
                         elif event in ('execution_success', 'execution_error', 'execution_interrupted') or (
                                 event == 'executing' and payload.get('node') is None):
                             if await self.reconcile(key):
                                 break
-                        if data.segment_plan:
-                            await self.probe_segments(key)
-                        if time.monotonic() - last_reconcile >= 300:
-                            if await self.reconcile(key):
-                                break
-                            last_reconcile = time.monotonic()
-                    if state['status'] in ('completed', 'failed', 'needs_attention', 'collection_failed'):
-                        break
                 except (OSError, WebSocketException, client.ClientError, asyncio.TimeoutError) as error:
-                    logger.warning('ComfyUI task %s connection interrupted: %s', key, type(error).__name__)
-                    self.save(key, connection='reconnecting', error='连接中断，正在恢复；不代表生成失败')
-                    if disconnected_since is None:
-                        disconnected_since = time.monotonic()
-                    elif time.monotonic() - disconnected_since >= 300:
-                        self.queue_notice(key, 'connection_issue', 'attention', '连接持续无法恢复，请核对原任务；后台仍在重连，不重新提交')
+                    self.save(key, connection='reconnecting', error='连接中断，后台正在重连核对，不代表生成失败')
+                    self.record(key, 'connection', 'reconnecting', error=str(error))
                     if socket is not None:
                         await socket.close()
                         socket = None
@@ -416,6 +462,7 @@ class TaskStore:
         except (ValueError, KeyError, TypeError) as error:
             logger.exception('ComfyUI task %s protocol error', key)
             self.save(key, status='needs_attention', error='远端消息或证据格式异常：' + str(error))
+            self.record(key, 'execution', 'protocol_error', error=str(error))
             self.queue_notice(key, 'terminal', 'attention', state['error'])
         finally:
             if socket is not None:
@@ -425,23 +472,6 @@ class TaskStore:
             await self.notifiers[key]
         else:
             await self.notify(key)
-
-    async def probe_segments(self, key, *, begin=False, force=False):
-        state = self.rows[key]['state']
-        runtime = state['segment_monitor']
-        if not force and time.monotonic() - runtime['last_probe'] < SEGMENT_CHECK_INTERVAL:
-            return
-        runtime['last_probe'] = time.monotonic()
-        try:
-            await segments.scan(self, key, begin=begin)
-        except (client.ClientError, OSError, ValueError, KeyError, TypeError) as error:
-            runtime['failures'] += 1
-            self.save(key, segment_warning='逐段查询或取回未完成，保留已有成果并等待补查：' + str(error))
-            if runtime['failures'] >= 3:
-                self.queue_notice(key, 'segment_issue', 'attention', state['segment_warning'])
-        else:
-            runtime['failures'] = 0
-            self.save(key, segment_warning=None)
 
     def record_start(self, key, payload):
         if not self.rows[key]['state'].get('started_at'):
@@ -476,51 +506,3 @@ class TaskStore:
                 raise OSError('Codex拒绝本次会话操作')
             return result
         return await asyncio.to_thread(call)
-
-    async def notify(self, key):
-        # A task can report several collected segments while its monitor keeps running.
-        lock = self.notification_locks.setdefault(key, asyncio.Lock())
-        async with lock:
-            row = self.rows[key]
-            data, state = row['input'], row['state']
-            if not state.get('notices'):
-                if state['notification'] in ('sent', 'sending', 'delivery_unknown'):
-                    return
-                state['notices'] = [{'id': 'terminal', 'kind': 'terminal',
-                    'message': f"整轮状态：{state['status']}；执行附件：{data.record_dir}", 'delivery': 'pending'}]
-                self.save(key)
-            while any(item['delivery'] == 'pending' for item in state['notices']):
-                # Briefly coalesce adjacent saves, including the final segment and terminal result.
-                await asyncio.sleep(2)
-                try:
-                    result = await self.desktop_call(data, 'read')
-                    response = json.loads(next(item['text'] for item in result['content'] if item['type'] == 'text'))
-                    status = response['thread']['status']['type']
-                except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, StopIteration):
-                    self.save(key, notification='waiting_connection')
-                    await asyncio.sleep(30)
-                    continue
-                if status not in ('idle', 'notLoaded'):
-                    self.save(key, notification='waiting_idle')
-                    await asyncio.sleep(15)
-                    continue
-                pending = [item for item in state['notices'] if item['delivery'] == 'pending']
-                details = '\n'.join(f"事件 {item['id']}：{item['message']}" for item in pending)
-                prompt = (f'ComfyUI任务通知。任务ID：{key}；项目：{state["project"]}；任务：{data.title}；'
-                    f'prompt_id：{state["prompt_id"]}；当前状态：{state["status"]}。\n'
-                    f'共同执行附件：{data.record_dir}\n{details}\n'
-                    '请核对事件是否已处理、现有授权和下载凭据，再按主技能监控及目录规范维护原业务记录并展示。'
-                    '运行中取回不代表整轮完成；新改写文件先核对旧批准、当前选定及下游影响，按专项规则留旧换新，不能沿用旧批准。'
-                    '传输成功不代表素材获批；不得因此提交新任务、启动下一阶段、重提未知任务或创建重复监控。')
-                for item in pending:
-                    item['delivery'] = 'sending'
-                self.save(key, notification='sending')
-                try:
-                    await self.desktop_call(data, 'send', prompt)
-                except (OSError, subprocess.TimeoutExpired, ValueError):
-                    delivery = 'delivery_unknown'
-                else:
-                    delivery = 'sent'
-                for item in pending:
-                    item['delivery'] = delivery
-                self.save(key, notification=delivery)
