@@ -275,7 +275,8 @@ def section(name: str, section: str) -> dict[str, Any]:
                               '05-道具资料': ('props', 'propGroups', 'propIndex')}[section]
         result = {'kind': key, 'indexKey': data[index], 'groups': data[groups], 'items': [
             {k: item[k] for k in ('id', 'name', 'role', 'cover', 'pendingCount')} |
-            {'statusHtml': item['card']['confirmationHtml'], 'formalCount': len(item['formal']) + len(item.get('auxiliary', [])),
+            {'statusHtml': item['card']['confirmationHtml'], 'formalCount': sum(
+                bool(asset['media']) and asset['approved'] for asset in item['formal'] + item.get('auxiliary', [])),
              'candidateCount': len(item['candidates'])} |
             ({'voice': item['voice']} if key == 'people' else {}) for item in data[key]]}
     elif section in data['catalogues']:

@@ -83,7 +83,8 @@ class ProjectParserTests(unittest.TestCase):
             self.assertEqual(asset["recordKey"], new_key)
             self.assertIsNotNone(asset["cover"])
             self.assertTrue(asset["cover"]["approved"])
-            self.assertEqual(asset["pendingCount"], 1)
+            # The exact approved review overrides the stale waiting summary.
+            self.assertEqual(asset["pendingCount"], 0 if collection == "people" else 1)
             self.assertIn("/其他资料/工作稿/素材/", asset["candidates"][0]["media"]["key"])
             self.assertIn("/参考图/", asset["cover"]["media"]["key"])
             with self.subTest(stage=stage):
@@ -94,6 +95,112 @@ class ProjectParserTests(unittest.TestCase):
                     work.write_text(broken)
                     self.data = portal.build_data(self.root)
                     self.assertIsNone(self.data[collection][0]["cover"])
+
+    def test_image_formal_approval_accepts_explicit_legacy_aliases(self):
+        self.person_fixture()
+        self.prop_fixture()
+        self.scene_fixture()
+        for decision_field in ("- 决定：批准采用。", "- 结论：已批准"):
+            for review in self.root.glob("*/审阅记录/*.md"):
+                review.write_text("# 审阅\n## 4. 用户确认\n" + decision_field, encoding="utf-8")
+            data = portal.build_data(self.root)
+            for kind in ("people", "props", "scenes"):
+                with self.subTest(kind=kind, decision=decision_field):
+                    self.assertTrue(all(a["approved"] for a in data[kind][0]["formal"]))
+                    self.assertIsNotNone(data[kind][0]["cover"])
+
+    def test_bold_record_field_labels_keep_image_approval(self):
+        self.person_fixture()
+        self.prop_fixture()
+        self.scene_fixture()
+        for review in self.root.glob("*/审阅记录/*.md"):
+            review.write_text(review.read_text().replace("- 结论：", "- **结论**："))
+        data = portal.build_data(self.root)
+        for kind in ("people", "props", "scenes"):
+            self.assertTrue(all(a["approved"] for a in data[kind][0]["formal"]))
+        self.assertEqual(portal.field("- **决定**：批准采用。", "决定"), "批准采用。")
+
+    def test_image_linked_review_overrides_stale_waiting_but_preserves_disposal(self):
+        records = [("people", self.person_fixture()[1], "CH001-审阅-001.md"),
+                   ("props", self.prop_fixture(), "PR001-基础-审阅.md"),
+                   ("scenes", self.scene_fixture()[1], "SC001-审阅-001.md")]
+        for kind, record, review_name in records:
+            review = record.parent.parent.parent / "审阅记录" / review_name
+            target = Path(os.path.relpath(record, review.parent)).as_posix()
+            if kind != "people":
+                record.write_text(record.read_text() + f"\n- 审阅记录入口：[审阅](../../审阅记录/{review_name})\n")
+            for decision in ("批准采用", "修改后再审", "不采用"):
+                review.write_text("# 审阅\n## 1. 审阅对象\n"
+                                  f"- 对应生成记录：[生成]({target}#生成记录-001)\n"
+                                  "## 4. 用户确认\n- 结论：" + decision, encoding="utf-8")
+                owner = portal.build_data(self.root)[kind][0]
+                with self.subTest(kind=kind, decision=decision):
+                    self.assertEqual(owner["pendingCount"], 0)
+                    self.assertEqual(owner["candidates"][0]["userDecision"], decision)
+            record.write_text(record.read_text().replace("用户采用状态：待确认", "用户采用状态：已结束未采用"))
+            review.write_text(review.read_text().replace("不采用", "待确认"))
+            candidate = portal.build_data(self.root)[kind][0]["candidates"][0]
+            self.assertEqual(candidate["userDecision"].rstrip("。"), "已结束未采用")
+            self.assertFalse(candidate["pending"])
+
+    def test_image_formal_approval_rejects_other_generation(self):
+        records = [("people", self.person_fixture()[1]), ("props", self.prop_fixture()),
+                   ("scenes", self.scene_fixture()[1])]
+        for _, record in records:
+            record.write_text(record.read_text().replace("| v01 |", "| v01／生成001 |"))
+        for review in self.root.glob("*/审阅记录/*.md"):
+            review.write_text(review.read_text() + "\n## 1. 审阅对象\n- 对应生成记录：[另一轮](生成记录.md#生成记录-002)\n")
+        data = portal.build_data(self.root)
+        for kind, _ in records:
+            with self.subTest(kind=kind):
+                asset = next(a for a in data[kind][0]["formal"] if a["version"].startswith("v01"))
+                self.assertFalse(asset["approved"])
+                self.assertIn("待核对", asset["statusHtml"])
+        self.assertTrue(any("图片批准依据" in w for w in data["warnings"]))
+
+    def test_image_same_generation_number_in_other_record_is_not_approval(self):
+        _, record = self.person_fixture()
+        record.write_text(record.read_text().replace("| v01 |", "| v01／生成001 |"))
+        review = self.root / "03-人物资料/审阅记录/CH001-审阅-001.md"
+        review.write_text(review.read_text() + "\n## 1. 审阅对象\n"
+                          "- 对应生成记录：[其他人物](../CH002-其他/参考图/生成记录.md#生成记录-001)\n")
+        data = portal.build_data(self.root)
+        self.assertFalse(data["people"][0]["formal"][0]["approved"])
+        self.assertIn("待核对", data["people"][0]["formal"][0]["statusHtml"])
+
+    def test_image_same_generation_does_not_approve_other_output(self):
+        _, record = self.person_fixture()
+        record.write_text(record.read_text().replace(
+            "- 输出候选文件：[v01](../../过程稿/CH001-肖像-草稿-v01.png)",
+            "- 输出候选文件：[v01](../../过程稿/CH001-肖像-草稿-v01.png) [v02](../../过程稿/CH001-肖像-草稿-v02.png)"))
+        self.put("03-人物资料/过程稿/CH001-肖像-草稿-v02.png", "second output")
+        review = self.root / "03-人物资料/审阅记录/CH001-审阅-001.md"
+        review.write_text("# 审阅\n## 1. 审阅对象\n"
+                          "- 对应生成记录：[生成](../CH001-小林/参考图/生成记录.md#生成记录-001)\n"
+                          "## 4. 用户确认\n- 结论：批准采用\n"
+                          "- 批准的具体候选：[v01](../过程稿/CH001-肖像-草稿-v01.png)\n")
+        candidates = portal.build_data(self.root)["people"][0]["candidates"]
+        self.assertEqual([c["userDecision"] for c in candidates], ["批准采用", "审核结果待核对"])
+
+    def test_image_formal_approval_rejects_other_candidate_version(self):
+        self.prop_fixture()
+        review = self.root / "05-道具资料/审阅记录/PR001-基础-审阅.md"
+        review.write_text(review.read_text() + "\n- 批准的具体候选：[v02](../过程稿/PR001-基础-道具参考图-草稿-v02.png)\n")
+        owner = portal.build_data(self.root)["props"][0]
+        base = next(a for a in owner["formal"] if a["state"] == "基础")
+        self.assertFalse(base["approved"])
+        self.assertEqual(owner["cover"]["state"], "破损")
+
+    def test_image_formal_approval_preserves_documented_save_rename(self):
+        self.prop_fixture()
+        review = self.root / "05-道具资料/审阅记录/PR001-基础-审阅.md"
+        review.write_text(review.read_text() +
+                          "\n- 批准的具体候选：[v01](../过程稿/PR001-旧名字-草稿-v01.png)\n"
+                          "## 5. 采用与后续影响\n"
+                          "- 正式保存位置：[正式](../PR001-盒子/参考图/PR001-基础-道具参考图.png)\n")
+        owner = portal.build_data(self.root)["props"][0]
+        base = next(a for a in owner["formal"] if a["state"] == "基础")
+        self.assertTrue(base["approved"])
 
     def test_position_style_sample_preserves_confirmation_and_relative_image(self):
         text = ('### 画风与美术实现正文\n\n```text\n固定风格正文\n```\n\n'

@@ -29,6 +29,26 @@ class ServiceTests(unittest.TestCase):
         self.override.stop()
         self.temp.cleanup()
 
+    def test_formal_image_count_requires_approval_and_existing_media(self):
+        data = {}
+        for group in ('people', 'props', 'scenes'):
+            prefix = {'people': 'people', 'props': 'prop', 'scenes': 'scene'}[group]
+            data[prefix + 'Index'] = group + '.md'
+            data[prefix + 'Groups'] = []
+            data[group] = [{'id': '001', 'name': '测试', 'role': '资产', 'cover': None,
+                            'pendingCount': 0, 'voice': None, 'card': {'confirmationHtml': '已确认'},
+                            'formal': [{'media': {'key': 'approved.png'}, 'approved': True},
+                                       {'media': {'key': 'rejected.png'}, 'approved': False},
+                                       {'media': None, 'approved': True}],
+                            'auxiliary': [{'media': {'key': 'aux.png'}, 'approved': True}],
+                            'candidates': []}]
+        with patch.object(main, 'entry', return_value={'data': data}):
+            for section in ('03-人物资料', '04-场景资料', '05-道具资料'):
+                with self.subTest(section=section):
+                    response = self.client.get('/api/projects/示例项目/sections/' + section)
+                    self.assertEqual(response.status_code, 200)
+                    self.assertEqual(response.json()['items'][0]['formalCount'], 2)
+
     def test_people_voice_uses_card_voice_field_and_existing_formal_audio(self):
         people = self.project / '03-人物资料'
         people.mkdir()

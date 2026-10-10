@@ -47,8 +47,13 @@ def status_markup(value, source):
 
 
 
-def image_review_fields(chunk, source, legacy_state, user_state):
+def image_review_fields(chunk, source, legacy_state, user_state, review_decision=""):
     """Display record-based delivery; retain historical review formats unchanged."""
+    # Disposal (adopted, replaced or closed) is distinct from the review decision.
+    if re.match(r"^(待确认|待审核|未记录)(?=$|[。；，\s])", user_state) and review_decision:
+        user_state = review_decision
+    elif re.match(r"^已采用(?=$|[。；，\s])", user_state) and re.match(r"^(不采用|修改后再审)(?=$|[。；，\s])", review_decision):
+        user_state = review_decision
     waiting = re.match(r"^(待确认|待审核)(?=$|[。；，\s])", user_state)
     pending_label = waiting.group(1) if waiting else ""
     reason = field(chunk, "用户决定原因与依据")
@@ -286,7 +291,8 @@ def markdown(text, source):
 
 
 def field(text, name):
-    match = re.search(r"^-[ \t]*" + re.escape(name) + r"[:：][ \t]*([^\n]*)$", text, re.M)
+    label = re.escape(name)
+    match = re.search(r"^-[ \t]*(?:" + label + r"|\*\*" + label + r"\*\*)[:：][ \t]*([^\n]*)$", text, re.M)
     return match.group(1).strip() if match else "未记录"
 
 
@@ -651,21 +657,63 @@ def build_data(project, *, web_episode_navigation=False):
         # Old execution-only approvals remain readable; new records link their review.
         return bool(re.match(r'^批准采用(?:$|[。；，\s])', field(body, '用户决定')))
 
-    def asset_review_metadata(reviews):
+    def asset_review_metadata(reviews, generation_url="", candidate_key="", *, formal_key="", adopted_version="", warn=True):
         purposes, applicability, decisions = [], [], []
+        matched = True
+        bound = False
+        generation = unquote(urlsplit(generation_url).fragment)
+        generation_key = unquote(urlsplit(generation_url).path)
         for review in reviews:
             section = review_section(review, "4. 用户确认")
             decision = field(section, "结论")
             if decision == "未记录":
                 decision = field(section, "决定")
+            if re.match(r"^已批准(?:$|[。；，\s])", decision):
+                decision = "批准采用" + decision.removeprefix("已批准")
             decisions.append(decision)
+            scope = review_section(review, None)
+            recorded_generations = markdown_links(field(scope, "对应生成记录"), review["key"])
+            recorded_generations += markdown_links(field(scope, "来源生成记录"), review["key"])
+            targets = [(link["key"], unquote(urlsplit(link["url"]).fragment)) for link in recorded_generations]
+            anchor = unquote(urlsplit(review["url"]).fragment)
+            if not targets and (m := re.match(r"^审阅-(生成记录-\d+)-\d+$", anchor)):
+                targets = [(review["key"], m[1])]
+            if generation and targets and (generation_key, generation) not in targets:
+                matched = False
+            if generation and (generation_key, generation) in targets:
+                bound = True
+            if candidate_key or formal_key:
+                candidate_links = []
+                for label in ("批准的具体候选", "对应具体候选", "本轮候选文件及版本", "具体候选文件及版本", "候选文件及版本"):
+                    candidate_links = markdown_links(field(scope, label), review["key"])
+                    if candidate_links:
+                        break
+                if candidate_links:
+                    if candidate_key:
+                        matched = matched and any(link["key"] == candidate_key for link in candidate_links)
+                    elif re.match(r"^(CH|SC|PR)\d{3,}-", Path(formal_key).name):
+                        saved = markdown_links(field(scope, "正式保存位置") + "\n" + field(scope, "正式文件入口"), review["key"])
+                        documented_save = any(link["key"] == formal_key for link in saved)
+                        files = [link["key"] for link in candidate_links
+                                 if documented_save or re.sub(r"-(?:草稿|候选)-v\d+(?:\.\d+)*(?:-超分-\d+)?$", "", Path(link["key"]).stem) == Path(formal_key).stem]
+                        if (version := re.search(r"v\d+(?:\.\d+)*", adopted_version, re.I)) and any(re.search(r"-(?:草稿|候选)-v\d", Path(key).stem) for key in files):
+                            files = [key for key in files if re.search(r"-(?:草稿|候选)-" + re.escape(version[0]) + r"(?:-超分-\d+)?$", Path(key).stem, re.I)]
+                        matched = matched and bool(files)
+                    bound = True
             section = review_section(review, "5. 采用与后续影响")
             purposes.append(field(section, "留存用途"))
             applicability.append(field(section, "当前制作适用性"))
+        approved = matched and bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
+        if warn and generation_url and not approved:
+            warnings.append(f'{unquote(generation_url)}：图片批准依据缺失、不匹配或尚未批准，请核对对应审阅记录。')
         return {
+            "approved": approved,
+            "reviewDecision": ("；".join(decisions) if matched else "审核结果待核对") if warn or bound else "",
+            "statusHtml": "<br>".join(status_markup(d, reviews[0]["key"]) for d in decisions)
+                          if matched and decisions else status_markup("审核结果待核对", ""),
             "retentionPurpose": "；".join(purposes) or "未记录",
             "applicability": "；".join(applicability) or "待核对（未记录）",
-            "reviewRecognized": bool(decisions) and all(re.match(r"^(待确认|待审核|批准采用|修改后再审|不采用|不通过)(?:$|[。；，\s])", d) for d in decisions),
+            "reviewRecognized": matched and bool(decisions) and all(re.match(r"^(待确认|待审核|批准采用|修改后再审|不采用|不通过)(?:$|[。；，\s])", d) for d in decisions),
             "coverApplicable": not any(re.match(r"^(不适用|待核对)(?:$|[。；，：\s])", a) for a in applicability),
         }
 
@@ -732,10 +780,8 @@ def build_data(project, *, web_episode_navigation=False):
             if media and any(p in (*GROUPS, *LEGACY_GROUPS) for p in Path(media["key"]).parts):
                 media = None
             reviews = markdown_links(entry["审阅记录"], record_key)
-            decisions = []
-            for review in reviews:
-                decisions.append(field(review_section(review, "4. 用户确认"), "结论"))
-            approved = bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
+            record_url = formal_record_url(entry["采用的候选版本"], record, record_key)
+            review_data = asset_review_metadata(reviews, record_url, formal_key=links[0]["key"] if links else "", adopted_version=entry["采用的候选版本"])
             stage = ""
             if links:
                 parent = Path(links[0]["key"]).parent
@@ -745,11 +791,9 @@ def build_data(project, *, web_episode_navigation=False):
                            "stage": stage,
                            "costume": entry["服装状态"], "version": entry["采用的候选版本"],
                            "versionHtml": inline(entry["采用的候选版本"], record_key),
-                           "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
+                           "recordUrl": record_url,
                            "scope": entry.get("适用范围", "未记录"), "media": media,
-                           "reviews": reviews, "approved": approved, **asset_review_metadata(reviews),
-                           "statusHtml": "<br>".join(status_markup(d, record_key) for d in decisions)
-                           or status_markup("未记录", record_key)})
+                           "reviews": reviews, **review_data})
         for match in re.finditer(r"^### (生成记录-\d+)\s*\n(.*?)(?=^### |\Z)", record, re.M | re.S):
             name, chunk = match.group(1), match.group(2)
             # Code fences can contain arbitrary prompts, not management fields.
@@ -769,7 +813,8 @@ def build_data(project, *, web_episode_navigation=False):
                                    "costume": field(chunk, "服装状态").rstrip("。"),
                                    "media": image, "reviews": reviews, "generation": name,
                                    "recordUrl": quote(record_key, safe="/-._~") + "#" + quote(name),
-                                   **image_review_fields(chunk, record_key, agent_state, user_state)})
+                                   **image_review_fields(chunk, record_key, agent_state, user_state,
+                                       asset_review_metadata(reviews, quote(record_key, safe="/-._~") + "#" + name, image["key"], warn=False)["reviewDecision"])})
         candidates = exclude_formal_candidates(candidates, formal)
         person_groups = [{"name": group["name"], "files": [f for f in group["files"]
                           if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]}
@@ -821,18 +866,14 @@ def build_data(project, *, web_episode_navigation=False):
             if media and Path(media["key"]).parent != Path(formal_folder):
                 media = None
             reviews = markdown_links(entry["审阅记录"], record_key)
-            decisions = []
-            for review in reviews:
-                decisions.append(field(review_section(review, "4. 用户确认"), "结论"))
-            approved = bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
+            record_url = formal_record_url(entry["采用的候选版本"], record, record_key)
+            review_data = asset_review_metadata(reviews, record_url, formal_key=links[0]["key"] if links else "", adopted_version=entry["采用的候选版本"])
             formal.append({"prop": True, "type": "道具参考图", "state": entry["状态名"], "version": entry["采用的候选版本"],
                            "versionHtml": inline(entry["采用的候选版本"], record_key),
-                           "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
+                           "recordUrl": record_url,
                            "scope": entry.get("适用范围", "未记录"), "media": media,
                            "sourceHtml": inline(entry.get("来源参考图及版本", "未记录"), record_key),
-                           "reviews": reviews, "approved": approved, **asset_review_metadata(reviews),
-                           "statusHtml": "<br>".join(status_markup(d, record_key) for d in decisions)
-                           or status_markup("未记录", record_key)})
+                           "reviews": reviews, **review_data})
         for match in re.finditer(r"^### (生成记录-\d+)\s*\n(.*?)(?=^### |\Z)", record, re.M | re.S):
             name, chunk = match.group(1), match.group(2)
             # Code fences can contain arbitrary prompts, not management fields.
@@ -852,7 +893,8 @@ def build_data(project, *, web_episode_navigation=False):
                                    "scope": field(chunk, "本次目标、保留与变化"),
                                    "media": image, "reviews": reviews, "generation": name,
                                    "recordUrl": quote(record_key, safe="/-._~") + "#" + quote(name),
-                                   **image_review_fields(chunk, record_key, agent_state, user_state)})
+                                   **image_review_fields(chunk, record_key, agent_state, user_state,
+                                       asset_review_metadata(reviews, quote(record_key, safe="/-._~") + "#" + name, image["key"], warn=False)["reviewDecision"])})
         formal.extend(directory_assets(record_key, number, "prop", formal, formal_folder))
         candidates = exclude_formal_candidates(candidates, formal)
         prop_related = [{"name": group["name"], "files": [f for f in group["files"]
@@ -894,10 +936,8 @@ def build_data(project, *, web_episode_navigation=False):
             if media and (Path(media["key"]).parent != Path(formal_folder)):
                 media = None
             reviews = markdown_links(entry["审阅记录"], record_key)
-            decisions = []
-            for review in reviews:
-                decisions.append(field(review_section(review, "4. 用户确认"), "结论"))
-            approved = bool(decisions) and all(re.match(r"^批准采用(?:$|[。；，\s])", d) for d in decisions)
+            record_url = formal_record_url(entry["采用的候选版本"], record, record_key)
+            review_data = asset_review_metadata(reviews, record_url, formal_key=links[0]["key"] if links else "", adopted_version=entry["采用的候选版本"])
             scope = entry["场景状态与适用条件"]
             # Only an explicit scene-origin filename qualifies as an episode environment.
             is_environment = bool(links and re.fullmatch(re.escape(number) + r"-EP\d{3,}-C\d{3,}(?:-V\d{3,})?-场景参考图\.(?:png|jpg|jpeg|webp)", Path(links[0]["key"]).name))
@@ -907,10 +947,9 @@ def build_data(project, *, web_episode_navigation=False):
                      "state": entry["最初制作场次"] + (" · " + entry["视图编号与名称"] if entry.get("视图编号与名称") else ""), "scope": scope, "media": media,
                      "version": entry["采用的候选版本"],
                      "versionHtml": inline(entry["采用的候选版本"], record_key),
-                           "recordUrl": formal_record_url(entry["采用的候选版本"], record, record_key),
+                           "recordUrl": record_url,
                      "sourceHtml": inline(entry.get("来源参考图及版本", "未记录"), record_key),
-                     "reviews": reviews, "approved": approved, **asset_review_metadata(reviews),
-                     "statusHtml": "<br>".join(status_markup(d, record_key) for d in decisions) or status_markup("未记录", record_key)}
+                     "reviews": reviews, **review_data}
             (formal if is_environment else auxiliary).append(asset)
         for match in re.finditer(r"^### (生成记录-\d+)\s*\n(.*?)(?=^### |\Z)", record, re.M | re.S):
             name, chunk = match.group(1), match.group(2)
@@ -952,8 +991,9 @@ def build_data(project, *, web_episode_navigation=False):
                                    "scope": field(chunk, "本场次需求与状态"), "media": media,
                                    "reviews": reviews, "generation": name,
                                    "recordUrl": quote(record_key, safe="/-._~") + "#" + quote(name),
-                                   **image_review_fields(chunk, record_key, agent_state, user_state)})
-        # Formal directory files are confirmed assets; records enrich their metadata.
+                                   **image_review_fields(chunk, record_key, agent_state, user_state,
+                                       asset_review_metadata(reviews, quote(record_key, safe="/-._~") + "#" + name, media["key"], warn=False)["reviewDecision"])})
+        # Directory discovery preserves viewable files without granting approval.
         for asset in directory_assets(record_key, number, "scene", formal + auxiliary, formal_folder):
             (formal if asset["type"] == "场次环境图" else auxiliary).append(asset)
         candidates = exclude_formal_candidates(candidates, formal + auxiliary)
