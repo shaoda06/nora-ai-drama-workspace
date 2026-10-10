@@ -294,10 +294,14 @@ def video_record_body(text, run, stage):
     """Read the revision's stage, with legacy execution headings supported."""
     for heading in (run + '-' + stage, run):
         suffix = r"[ \t]*" if heading != run else r"(?!\d)[^\n]*"
-        match = re.search(r"^### " + re.escape(heading) + suffix + r"\n(.*?)(?=^### |^## |\Z)", text, re.M | re.S)
-        if match and (field(match[1], '处理阶段').startswith(stage)
-                      or heading == run and field(match[1], '处理阶段') == '未记录'):
-            return match[1]
+        for match in re.finditer(r"^### (" + re.escape(heading) + suffix + r")\n(.*?)(?=^### |^## |\Z)", text, re.M | re.S):
+            recorded_stage = field(match[2], '处理阶段')
+            if recorded_stage.startswith(stage):
+                return match[2]
+            if recorded_stage == '未记录':
+                heading_stage = next((name for name in ('后处理', '二采', '一采') if name in match[1]), '')
+                if heading_stage == stage or match[1].strip() == run and stage == '一采':
+                    return match[2]
     return ""
 
 
@@ -621,9 +625,31 @@ def build_data(project, *, web_episode_navigation=False):
         elif review["key"].endswith("-工作稿.md"):
             # A work document can contain different decisions for different outputs.
             return ""
+        if heading is None:
+            return text
         match = re.search(r"^(#{2,6}) " + re.escape(heading)
                           + r"\s*\n(.*?)(?=^#{1,6} |\Z)", text, re.M | re.S)
         return match.group(2) if match else ""
+
+    def video_adoption_approved(adopted, record, record_key, video_name):
+        body = video_record_body(record, adopted['R编号'], adopted['处理阶段'])
+        reviews = markdown_links(adopted['人工批准依据'], record_key)
+        if not reviews:
+            reviews = markdown_links(adopted.get('来源任务', '') + '\n'
+                                     + field(body, '人工审阅记录入口') + '\n'
+                                     + field(body, '用户决定'), record_key)
+        for review in reviews:
+            fragment = unquote(urlsplit(review['url']).fragment)
+            if not fragment.startswith('审阅-') and '审阅' not in Path(review['key']).stem:
+                continue
+            section = review_section(review, None)
+            decision = field(section, '决定')
+            outputs = '\n'.join(field(section, name) for name in (
+                '对应具体输出', '被审具体输出文件及R编号／版本', '具体输出', '被审具体输出', '采用文件'))
+            exact_output = re.search(r'(?<![\w-])' + re.escape(video_name) + r'(?![\w.-])', outputs)
+            return bool(exact_output and re.match(r'^(?:批准采用(?:$|[。；，\s])|通过并采用(?:$|[。；，\s]|本轮|P\d))', decision))
+        # Old execution-only approvals remain readable; new records link their review.
+        return bool(re.match(r'^批准采用(?:$|[。；，\s])', field(body, '用户决定')))
 
     def asset_review_metadata(reviews):
         purposes, applicability, decisions = [], [], []
@@ -1182,11 +1208,15 @@ def build_data(project, *, web_episode_navigation=False):
                 current_results = re.search(r"^## 1\. 当前选定结果\s*\n(.*?)(?=^## |\Z)", record, re.M | re.S)
                 approved_keys = set()
                 for adopted in table_records(current_results[1] if current_results else "", ("处理阶段", "当前选定文件", "R编号", "人工批准依据")):
-                    run_body = video_record_body(record, adopted["R编号"], adopted["处理阶段"])
-                    if re.match(r"^批准采用(?:$|[。；，\s])", field(run_body, "用户决定")):
-                        approved_keys.update(link["key"] for link in markdown_links(adopted["当前选定文件"], record_key)
-                            if re.fullmatch(re.escape(segment_identity + "-" + adopted["R编号"] + "-" + adopted["处理阶段"])
-                                            + r"\.(?:mp4|webm|mov)", Path(link["key"]).name))
+                    for link in markdown_links(adopted["当前选定文件"], record_key):
+                        name = Path(link['key']).name
+                        if not re.fullmatch(re.escape(segment_identity + '-' + adopted['R编号'] + '-' + adopted['处理阶段'])
+                                            + r'\.(?:mp4|webm|mov)', name):
+                            continue
+                        if video_adoption_approved(adopted, record, record_key, name):
+                            approved_keys.add(link['key'])
+                        else:
+                            warnings.append(f'{name}：当前选定记录的批准依据缺失、不匹配或尚未批准，请核对对应审阅记录。')
                 for item in episode_videos.get(number, []):
                     take = re.fullmatch(re.escape(segment_identity) + r"-(R\d{3,})-(一采|二采|后处理)\.(?:mp4|webm|mov)", item["name"])
                     if not take:

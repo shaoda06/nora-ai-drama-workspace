@@ -875,6 +875,80 @@ class ProjectParserTests(unittest.TestCase):
         scene_group = next(child for child in storyboard_group["children"] if child["name"] == "C001-场次分镜")
         self.assertEqual([child["key"] for child in scene_group["children"]], [scene])
 
+    def video_approval_fixture(self):
+        root = '09-剧集制作/EP001'
+        identity = 'EP001-C001-P001'
+        self.put(root + '/02-剧集剧本/EP001-本集剧本.md',
+                 '# 剧本\n## 1. 故事剧本正文\n### EP001-C001\n办公室。')
+        self.put(root + '/03-分镜脚本/EP001-C001-场次分镜.md',
+                 '# 分镜\n## 1. 镜头正文\n### EP001-C001-P001\n镜头。')
+        self.put(root + '/03-分镜脚本/EP001-分镜索引.md',
+                 '# 索引\n| 分段 | 场次 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+                 '| EP001-C001-P001 | EP001-C001 | 3 |')
+        record = root + '/其他资料/工作稿/' + identity + '-视频制作-工作稿.md'
+        table = '| 处理阶段 | 当前选定文件 | R编号 | 来源任务 | 人工批准依据 |\n| --- | --- | --- | --- | --- |\n'
+        bodies, reviews = [], []
+        for folder, stage in [('01-一采', '一采'), ('02-二采', '二采'), ('03-后处理', '后处理')]:
+            name = f'{identity}-R001-{stage}.mp4'
+            link = f'../阶段采用视频/{folder}/C001-场次/{name}'
+            self.put(f'{root}/其他资料/阶段采用视频/{folder}/C001-场次/{name}', 'fixture')
+            table += f'| {stage} | [视频]({link}) | R001 | 原任务 | [批准](#审阅-r001-{stage}-001) |\n'
+            # An old pending execution summary must not override the actual later review.
+            bodies.append(f'### R001-{stage}\n- 处理阶段：{stage}\n- 用户决定：待审核。\n')
+            reviews.append(f'### 审阅-R001-{stage}-001\n#### 3. 人工审核决定\n'
+                           f'- 决定：批准采用。\n- 对应具体输出：[视频]({link})。\n')
+        text = '# 工作稿\n## 1. 当前选定结果\n' + table + '\n## 2. 修订版各阶段与采用记录\n' + '\n'.join(bodies) + '\n## 4. 审阅区\n' + '\n'.join(reviews)
+        self.put(record, text)
+        return record, text
+
+    def test_video_approval_follows_exact_review_for_each_stage(self):
+        self.video_approval_fixture()
+        data = portal.build_data(self.root, web_episode_navigation=True)
+        episode = data['catalogues']['09-剧集制作']['children'][0]
+        videos = episode['segments']['C001'][0]['videos']
+        self.assertEqual({v['stage'] for v in videos if v['approved']}, {'一采', '二采', '后处理'})
+        self.assertFalse(any('批准依据' in warning for warning in data['warnings']))
+
+    def test_video_approval_rejects_wrong_identity_or_unapproved_linked_review(self):
+        for replacement in ['待审核。', '不采用。', '批准采用／修改后再审／不采用']:
+            with self.subTest(decision=replacement):
+                record, text = self.video_approval_fixture()
+                text = text.replace('- 用户决定：待审核。', '- 用户决定：批准采用。')
+                text = text.replace('- 决定：批准采用。', '- 决定：' + replacement, 1)
+                self.put(record, text)
+                data = portal.build_data(self.root, web_episode_navigation=True)
+                episode = data['catalogues']['09-剧集制作']['children'][0]
+                self.assertFalse(next(v for v in episode['segments']['C001'][0]['videos'] if v['stage'] == '一采')['approved'])
+                self.assertTrue(any('批准依据' in warning for warning in data['warnings']))
+        for wrong in ['EP001-C001-P001-R002-一采.mp4', 'EP001-C001-P001-R001-二采.mp4', 'EP001-C001-P002-R001-一采.mp4']:
+            with self.subTest(output=wrong):
+                record, text = self.video_approval_fixture()
+                start = text.index('### 审阅-R001-一采-001')
+                text = text[:start] + text[start:].replace('EP001-C001-P001-R001-一采.mp4', wrong, 1)
+                self.put(record, text)
+                episode = portal.build_data(self.root, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]
+                self.assertFalse(next(v for v in episode['segments']['C001'][0]['videos'] if v['stage'] == '一采')['approved'])
+        record, text = self.video_approval_fixture()
+        self.put(record, text.replace('#审阅-r001-一采-001', '#审阅-r001-一采-不存在', 1))
+        episode = portal.build_data(self.root, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]
+        self.assertFalse(next(v for v in episode['segments']['C001'][0]['videos'] if v['stage'] == '一采')['approved'])
+
+    def test_legacy_video_execution_headings_match_stage_instead_of_first_same_run(self):
+        text = ('### R005-后处理\n- 处理阶段：后处理。\n- 实测时长及数值来源：后处理\n'
+                '### R005鞋子取景返修一采\n- 实测时长及数值来源：一采\n'
+                '### R005-标准版二采\n- 实测时长及数值来源：二采\n')
+        for stage in ('一采', '二采', '后处理'):
+            self.assertEqual(portal.field(portal.video_record_body(text, 'R005', stage), '实测时长及数值来源'), stage)
+
+    def test_legacy_execution_only_approval_and_linked_legacy_adoption_remain_readable(self):
+        record, text = self.video_approval_fixture()
+        text = text.replace('[批准](#审阅-r001-一采-001)', '用户当时明确批准')
+        text = text.replace('- 用户决定：待审核。', '- 用户决定：批准采用。', 1)
+        text = text.replace('- 决定：批准采用。', '- 决定：通过并采用本轮视频。')
+        self.put(record, text)
+        episode = portal.build_data(self.root, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]
+        self.assertTrue(all(v['approved'] for v in episode['segments']['C001'][0]['videos']))
+
     def test_production_navigation_retains_segments_stages_and_candidate_selection(self):
         root = "09-剧集制作/EP001"
         self.put(root + "/03-分镜脚本/C001-场次分镜/EP001-C001-场次分镜.md", "# 场次分镜")
