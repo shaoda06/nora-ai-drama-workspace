@@ -19,6 +19,7 @@ export function TaskSidebar() {
   const [localRows, setLocalRows] = useState<LocalQueueTask[]>([]);
   const localRef = useRef<LocalQueueTask[]>([]);
   const dragToken = useRef<string | null>(null);
+  const dragUrl = useRef<string | null>(null);
   const dragTimer = useRef<number | undefined>(undefined);
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState('');
@@ -49,10 +50,11 @@ export function TaskSidebar() {
   const selectedNode = nodes.find(node => node.url === selectedUrl) ?? nodes[0];
   const category = (task: LocalQueueTask): keyof typeof localQueueStates => task.category ??
     (task.status === 'queued' || task.status === 'local_queued' ? 'queued' : task.status === 'paused' ? 'paused' : 'history');
-  const localCounts = { queued: localRows.filter(task => category(task) === 'queued').length,
-    paused: localRows.filter(task => category(task) === 'paused').length,
-    history: localRows.filter(task => category(task) === 'history').length };
-  const localTasks = localRows.filter(task => category(task) === localCategory);
+  const nodeRows = localRows.filter(task => task.remote_url === selectedNode?.url);
+  const localCounts = { queued: nodeRows.filter(task => category(task) === 'queued').length,
+    paused: nodeRows.filter(task => category(task) === 'paused').length,
+    history: nodeRows.filter(task => category(task) === 'history').length };
+  const localTasks = nodeRows.filter(task => category(task) === localCategory);
   if (localCategory === 'history') localTasks.sort((a, b) =>
     new Date(b.ended_at || b.created_at).getTime() - new Date(a.ended_at || a.created_at).getTime());
   const localPositions = new Map(localTasks.filter(task => task.status === 'local_queued' || task.status === 'queued')
@@ -91,14 +93,22 @@ export function TaskSidebar() {
     catch (error) { setActionError((error as Error).message); }
     finally { setBusy(false); }
   }, [write, reload]);
+  const transfer = useCallback(async (id: string, url: string) => {
+    setBusy(true); setActionError('');
+    try { await write(`/api/comfy/tasks/${id}/transfer`, { url }); await reload(); }
+    catch (error) { setActionError((error as Error).message); }
+    finally { setBusy(false); }
+  }, [write, reload]);
   const startDrag = useCallback(async (id: string) => {
     if (dragToken.current) return false;
-    setActionError('');
+    setBusy(true); setActionError('');
     try {
-      const result = await write('/api/comfy/drag', {});
+      const url = selectedNode!.url;
+      const result = await write('/api/comfy/drag', { url });
       dragToken.current = result.token;
+      dragUrl.current = url;
       const fresh = await reload();
-      if (!fresh.some(task => task.id === id && task.status === 'local_queued')) {
+      if (!fresh.some(task => task.id === id && task.status === 'local_queued' && task.remote_url === url)) {
         await write('/api/comfy/drag', { token: result.token, release: true });
         dragToken.current = null;
         throw new Error('这项任务已经开始提交，请选择其他排队任务');
@@ -113,28 +123,30 @@ export function TaskSidebar() {
         catch (releaseError) { setActionError((releaseError as Error).message); }
         dragToken.current = null;
       }
+      dragUrl.current = null;
       setActionError((error as Error).message); return false;
-    }
-  }, [write, reload]);
+    } finally { setBusy(false); }
+  }, [write, reload, selectedNode?.url]);
   const endDrag = useCallback(async () => {
     const token = dragToken.current;
     if (!token) return;
     setBusy(true);
-    try { await write('/api/comfy/order', { token, ids: localRef.current.filter(task => task.status === 'local_queued').map(task => task.id) }, 'PUT'); }
+    try { await write('/api/comfy/order', { token, ids: localRef.current.filter(task => task.status === 'local_queued' && task.remote_url === dragUrl.current).map(task => task.id) }, 'PUT'); }
     catch (error) { setActionError((error as Error).message); }
     finally {
       window.clearInterval(dragTimer.current);
       try { await write('/api/comfy/drag', { token, release: true }); }
       catch (error) { setActionError((error as Error).message); }
       dragToken.current = null;
+      dragUrl.current = null;
       try { await reload(); } catch (error) { setActionError((error as Error).message); }
       setBusy(false);
     }
   }, [write, reload]);
   const reorderLocal = useCallback((sourceId: string, targetId: string) => {
     const current = localRef.current;
-    const source = current.findIndex(task => task.id === sourceId && task.status === 'local_queued');
-    const target = current.findIndex(task => task.id === targetId && task.status === 'local_queued');
+    const source = current.findIndex(task => task.id === sourceId && task.status === 'local_queued' && task.remote_url === dragUrl.current);
+    const target = current.findIndex(task => task.id === targetId && task.status === 'local_queued' && task.remote_url === dragUrl.current);
     if (source === -1 || target === -1 || source === target) return;
     const next = [...current];
     const [moved] = next.splice(source, 1); next.splice(target, 0, moved);
@@ -156,7 +168,8 @@ export function TaskSidebar() {
       <div className="comfy-task-heading"><strong>远端队列</strong></div>
       <div className="comfy-node-heading"><nav className="underline-tabs comfy-node-tabs" aria-label="远端节点">
         {nodes.map(node => <button key={node.url} aria-current={node.url === selectedNode?.url ? 'page' : undefined}
-          onClick={() => setSelectedUrl(node.url)} title={connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复'}>
+          disabled={busy || dragToken.current !== null}
+          onClick={() => { setSelectedUrl(node.url); setActionError(''); }} title={connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复'}>
           <span className="comfy-node-dot" data-connection={connection === 'connected' ? node.connection : 'connecting'}
             aria-hidden="true" />{node.name}</button>)}
       </nav>
@@ -179,12 +192,12 @@ export function TaskSidebar() {
               onClick={() => setLocalCategory(status)}>{localQueueStates[status]}（{localCounts[status]}）</button>)}
           </nav>
         </div>
-        <div className="comfy-queue-body" key={localCategory}>
+        <div className="comfy-queue-body" key={`${selectedNode?.url}:${localCategory}`}>
           {actionError && <p className="comfy-task-warning" role="alert">{actionError}</p>}
           {localTasks.length === 0 && <p className="comfy-empty">暂无{localQueueStates[localCategory]}任务</p>}
           <div className="comfy-task-items">{localTasks.map(task => <LocalQueueCard key={task.id} task={task}
             position={localPositions.get(task.id)}
-            busy={busy} onAction={action} onDragStart={startDrag} onDragEnd={endDrag}
+            busy={busy || dragToken.current !== null} onAction={action} onTransfer={transfer} onDragStart={startDrag} onDragEnd={endDrag}
             onReorder={task.status === 'local_queued' ? reorderLocal : undefined} />)}</div>
         </div>
       </section>

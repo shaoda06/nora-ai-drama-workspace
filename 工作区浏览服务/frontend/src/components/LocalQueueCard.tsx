@@ -16,12 +16,15 @@ export interface LocalQueueTask {
   status: string; category?: keyof typeof localQueueStates;
   source_session_name?: string; error?: string | null; notification?: string;
   queue_position?: number | null; collected?: number; expected?: number;
+  remote_url: string; can_transfer?: boolean;
+  transfer_targets?: { url: string; name: string }[];
   created_at: string; started_at?: string | null; ended_at?: string | null;
 }
 
-export function LocalQueueCard({ task, position, onReorder, onAction, busy, onDragStart, onDragEnd }: {
+export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer, busy, onDragStart, onDragEnd }: {
   task: LocalQueueTask; position?: number; onReorder?: (sourceId: string, targetId: string) => void;
   onAction?: (id: string, action: string) => void; busy?: boolean;
+  onTransfer?: (id: string, url: string) => void;
   onDragStart?: (id: string) => Promise<boolean>; onDragEnd?: () => void;
 }) {
   const history = task.category === 'history';
@@ -91,6 +94,13 @@ export function LocalQueueCard({ task, position, onReorder, onAction, busy, onDr
         <button type="button" data-tone={task.status === 'paused' ? 'green' : 'orange'} disabled={busy || !onAction}
           onClick={() => onAction?.(task.id, task.status === 'paused' ? 'resume' : 'pause')}>{task.status === 'paused' ? '恢复' : '暂停'}</button>
         <button type="button" data-tone="red" disabled={busy || !onAction} onClick={() => onAction?.(task.id, 'cancel')}>取消</button>
+        {!!task.transfer_targets?.length && <select aria-label="转移任务" value=""
+          disabled={busy || !task.can_transfer || !onTransfer}
+          title={task.can_transfer ? '移入目标节点队尾，暂停任务保持暂停' : '任务已开始准备，不能转移'}
+          onChange={event => onTransfer?.(task.id, event.target.value)}>
+          <option value="" disabled>转移到…</option>
+          {task.transfer_targets.map(node => <option key={node.url} value={node.url}>{node.name}</option>)}
+        </select>}
       </div>}
     </div>
     {history && <div className="local-queue-card-history">
@@ -107,7 +117,7 @@ export function LocalQueueCard({ task, position, onReorder, onAction, busy, onDr
     <section ref={cardRef} className="local-queue-card" data-local-task-id={task.id}
       data-sortable={!!onReorder} data-dragging={!!drag}
       onPointerDown={async event => {
-        if (!onReorder || busy || drag || event.button !== 0 || (event.target as HTMLElement).closest('button')) return;
+        if (!onReorder || busy || drag || event.button !== 0 || (event.target as HTMLElement).closest('button, select')) return;
         event.preventDefault();
         const rect = event.currentTarget.getBoundingClientRect();
         const pointerId = event.pointerId, clientX = event.clientX, clientY = event.clientY;

@@ -395,6 +395,9 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
 class ApiBoundaryTests(unittest.TestCase):
     def test_queue_writes_require_same_origin_and_agent_receipts_require_token(self):
         with tempfile.TemporaryDirectory() as folder:
+            project = Path(folder) / 'projects/test'
+            project.mkdir(parents=True)
+            (project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': ['http://comfy.invalid:8188']}))
             store = t.TaskStore(Path(folder), Path(folder))
             main.app.state.comfy_tasks = store
             api = TestClient(main.app, base_url='http://127.0.0.1', client=('127.0.0.1', 1234))

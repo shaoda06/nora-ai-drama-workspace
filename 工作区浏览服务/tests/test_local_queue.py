@@ -87,7 +87,7 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
             self.store.reorder([two], token)
         self.store.drag(token, release=True)
         self.assertFalse(self.store.active_drag())
-        self.store.drag_leases['expired'] = 0
+        self.store.drag_leases['expired'] = {'url': self.data.url, 'expires': 0}
         self.assertFalse(self.store.active_drag())
 
     async def test_normal_waits_but_paused_immediate_ignores_remote_busy(self):

@@ -101,6 +101,10 @@ class TaskStore(LocalQueue, TaskNotifications):
                     remote_urls.append(remote_url)
         return remote_urls
 
+    def project_urls(self, data):
+        config = client.strict_json((Path(data.project) / 'comfyui-config.json').read_bytes())
+        return [client.Client(url, data.timeout).url for url in config.get('remote-urls', [config.get('remote-url')])]
+
     def public(self):
         snapshot = {'tasks': sorted(({**{key: ([{field: item.get(field) for field in ('identity', 'index', 'check', 'path', 'error')}
                                         for item in value.values()] if key == 'segments' else value) for key, value in row['state'].items()
@@ -113,7 +117,8 @@ class TaskStore(LocalQueue, TaskNotifications):
                                   **self.remote_queues.states.get(url, initial_state())}
                                  for index, url in enumerate(self.remote_urls())]}
         local = []
-        order = self.ordered()
+        orders = {node['url']: self.ordered(node['url']) for node in snapshot['remote_nodes']}
+        projects = {}
         for task in snapshot['tasks']:
             status = task['status']
             if status in LOCAL or status in ('preparing', 'submitting'):
@@ -122,13 +127,22 @@ class TaskStore(LocalQueue, TaskNotifications):
                 category = 'history'
             else:
                 continue
+            row = self.rows[task['id']]
+            order = orders.get(task['remote_url'], [])
+            if row['input'].project not in projects:
+                projects[row['input'].project] = self.project_urls(row['input'])
             local.append({**task, 'queue': 'local', 'category': category,
+                          'can_transfer': self.can_transfer(task['id']),
+                          'transfer_targets': [{'url': url, 'name': '默认节点' if index == 0 else f'备用{index}'}
+                                               for index, url in enumerate(projects[row['input'].project]) if url != task['remote_url']],
                           'queue_position': order.index(task['id']) + 1 if task['id'] in order else None})
         snapshot['local_tasks'] = sorted(local, key=lambda task: (task['category'] != 'queued', task.get('queue_order', 0)))
         return snapshot
 
     def publish(self):
         self.dispatch_event.set()
+        for event in self.dispatch_events.values():
+            event.set()
         for event in self.subscribers:
             event.set()
 
@@ -302,7 +316,7 @@ class TaskStore(LocalQueue, TaskNotifications):
 
     async def close(self):
         await self.remote_queues.close()
-        tasks = [*self.workers.values(), *self.notifiers.values(), *self.session_readers.values()]
+        tasks = [*self.workers.values(), *self.notifiers.values(), *self.session_readers.values(), *self.dispatch_workers.values()]
         if self.scheduler is not None:
             tasks.append(self.scheduler)
         for task in tasks:

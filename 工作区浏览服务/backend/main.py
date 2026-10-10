@@ -97,6 +97,11 @@ class QueueOrder(BaseModel):
 class DragInput(BaseModel):
     token: str | None = None
     release: bool = False
+    url: str | None = None
+
+
+class TransferInput(BaseModel):
+    url: str
 
 
 def queue_write(request: Request):
@@ -121,12 +126,21 @@ async def local_task_action(key: str, data: QueueAction, request: Request) -> di
         raise HTTPException(409, str(error)) from error
 
 
+@app.post('/api/comfy/tasks/{key}/transfer')
+async def local_task_transfer(key: str, data: TransferInput, request: Request) -> dict[str, Any]:
+    queue_write(request)
+    try:
+        return request.app.state.comfy_tasks.transfer(key, data.url)
+    except (ValueError, comfy_client.ClientError) as error:
+        raise HTTPException(409, str(error)) from error
+
+
 @app.post('/api/comfy/drag')
 async def local_queue_drag(data: DragInput, request: Request) -> dict[str, Any]:
     queue_write(request)
     try:
-        return request.app.state.comfy_tasks.drag(data.token, data.release)
-    except ValueError as error:
+        return request.app.state.comfy_tasks.drag(data.token, data.release, data.url)
+    except (ValueError, comfy_client.ClientError) as error:
         raise HTTPException(409, str(error)) from error
 
 
