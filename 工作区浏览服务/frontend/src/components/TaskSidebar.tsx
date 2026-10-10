@@ -164,15 +164,15 @@ export function TaskSidebar() {
         </span>
       </span></button>
     <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
-      <section className="comfy-queue" aria-label="远端队列">
-      <div className="comfy-task-heading"><strong>远端队列</strong></div>
       <div className="comfy-node-heading"><nav className="underline-tabs comfy-node-tabs" aria-label="远端节点">
         {nodes.map(node => <button key={node.url} aria-current={node.url === selectedNode?.url ? 'page' : undefined}
           disabled={busy || dragToken.current !== null}
           onClick={() => { setSelectedUrl(node.url); setActionError(''); }} title={connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复'}>
           <span className="comfy-node-dot" data-connection={connection === 'connected' ? node.connection : 'connecting'}
             aria-hidden="true" />{node.name}</button>)}
-      </nav>
+      </nav></div>
+      <section className="comfy-queue" aria-label="远端队列">
+      <div className="comfy-task-heading"><strong>远端</strong>
       <div className="comfy-node-counts" aria-label="当前节点任务数量">
         <span>进行中 <strong>{selectedNode?.running_count ?? '—'}</strong></span><span>队列中 <strong>{selectedNode?.queued_count ?? '—'}</strong></span>
       </div></div>
@@ -185,7 +185,7 @@ export function TaskSidebar() {
       </div>
       </section>
       <section className="comfy-queue" aria-label="本地队列">
-        <div className="comfy-task-heading comfy-local-heading"><strong>本地队列</strong>
+        <div className="comfy-task-heading comfy-local-heading"><strong>本地</strong>
           <nav className="underline-tabs comfy-local-tabs" aria-label="本地任务分类">
             {(Object.keys(localQueueStates) as (keyof typeof localQueueStates)[]).map(status => <button key={status}
               aria-current={localCategory === status ? 'page' : undefined} disabled={busy || dragToken.current !== null}
