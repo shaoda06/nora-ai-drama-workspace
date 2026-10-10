@@ -50,6 +50,18 @@ class DispatchTests(unittest.TestCase):
         self.args.eligible_url='http://backup.invalid:8188'
         with self.assertRaises(ValueError): d.dispatch(self.args)
 
+    def test_start_paused_is_explicit_and_keeps_primary_handoff(self):
+        params = ['--project', str(self.root), '--task-type', 'image', '--workflow', str(self.path),
+                  '--record-dir', str(self.root / 'record'), '--task-title', 'CH001 · 转移实测',
+                  '--output-plan', 'targets.json']
+        self.assertFalse(d.parser().parse_args(params).start_paused)
+        args = d.parser().parse_args([*params, '--start-paused'])
+        with patch.object(d.browser_tasks, 'submit', return_value={'status': 'paused'}) as handoff:
+            result = d.dispatch(args)
+        self.assertTrue(handoff.call_args.args[0].start_paused)
+        self.assertEqual(handoff.call_args.args[2], 'http://main.invalid:8188')
+        self.assertEqual(result['status'], 'paused')
+
     def test_nonempty_ordered_primary_and_legacy_config(self):
         self.assertEqual(d.load_config(self.root,30)['remote-urls'][0],'http://main.invalid:8188')
         (self.root/'comfyui-config.json').write_text(json.dumps({'remote-url':'http://main.invalid:8188'}))

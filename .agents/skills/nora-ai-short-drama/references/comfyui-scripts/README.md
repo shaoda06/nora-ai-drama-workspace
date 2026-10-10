@@ -225,6 +225,7 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 | --attempt-name、--request-name、--response-name、--history-name | 各种证据的单个文件名，不能重复或占用后台任务状态.json、后台过程记录.json |
 | --timeout | 单次网络操作超时，默认30秒，不是排队或生成时限 |
 | --monitor | 仅支持browser，服务缺失时报告接入问题，不回退legacy |
+| --start-paused | 可选，仅在已授权手动转移等需要先暂停的操作中使用；登记时直接为paused，恢复前不上传或提交；默认不传，自动排队 |
 | --thread-id | 默认真实CODEX_THREAD_ID；通知其他会话须有用户授权 |
 
 ### 浏览服务监控接入
@@ -250,7 +251,7 @@ path是Agent指定的项目内绝对路径及文件名，不是远端路径，�
 
 targets必须逐一对应输入映射selected_indices，保留原始组序，不压缩未选组。report_node必须连接director_node的report槽位5；output_root按远端实际配置核实。后台只从成功任务最终报告取回正式分段，不用运行日志或猜测目录，不覆盖已有文件。
 
-入队成功返回dispatch_state=enqueued、local_task_id（UUID4）、monitor_id及status=local_queued；此时还没有远端prompt_id。对同一执行附件、相同入队资料重复登记返回原ID；资料不同拒绝，不能改目录绕过原任务。后台真正提交后保存远端ID和实际请求。完成、失败、重启与通知规则读取[任务监控规范](../流程规范/ComfyUI-任务监控规范.md)。
+入队成功返回dispatch_state=enqueued、local_task_id（UUID4）、monitor_id及status=local_queued（使用--start-paused时为paused）；此时还没有远端prompt_id。对同一执行附件、相同入队资料重复登记返回原ID；资料不同拒绝，不能改目录绕过原任务。后台真正提交后保存远端ID和实际请求。完成、失败、重启与通知规则读取[任务监控规范](../流程规范/ComfyUI-任务监控规范.md)。
 
 Agent结果处理接口（均使用本机内部凭证）：
 

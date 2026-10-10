@@ -70,6 +70,38 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
         self.store.task_action(a, 'insert')
         self.assertEqual(self.store.ordered(self.backup), [a, b])
 
+    async def test_start_paused_prevents_idle_dispatch_until_transferred_and_resumed(self):
+        self.data.start_paused = True
+        original = self.data.model_copy(deep=True)
+        result = await self.store.enqueue(self.data)
+        key = result['local_task_id']
+        self.assertEqual(result['status'], 'paused')
+        self.node(self.primary)
+        self.node(self.backup)
+        with patch.object(self.store, 'prepare', AsyncMock(return_value=self.data.workflow)) as prepare, \
+                patch.object(self.store.remote_queues, 'refresh', AsyncMock()), \
+                patch.object(self.store, 'submit', AsyncMock()) as submit:
+            await self.store.dispatch_once()
+            prepare.assert_not_awaited()
+            self.store.transfer(key, self.backup)
+            await self.store.dispatch_once()
+            submit.assert_not_awaited()
+            self.assertEqual((await self.store.enqueue(original))['local_task_id'], key)
+            self.store.task_action(key, 'resume')
+            await self.store.dispatch_once()
+            submit.assert_awaited_once()
+            self.assertEqual(submit.await_args.args[0].url, self.backup)
+            self.assertEqual(submit.await_args.kwargs['key'], key)
+
+    async def test_start_paused_survives_restart(self):
+        self.data.start_paused = True
+        key = (await self.store.enqueue(self.data))['local_task_id']
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        self.assertEqual(self.store.rows[key]['state']['status'], 'paused')
+        self.assertTrue(self.store.rows[key]['input'].start_paused)
+        self.assertEqual(self.store.ordered(self.primary), [])
+
     async def test_transfer_rejects_other_project_node_and_started_tasks(self):
         key = await self.add('a')
         other = self.root / 'projects/other'

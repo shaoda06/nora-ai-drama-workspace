@@ -66,6 +66,7 @@ class TaskInput(BaseModel):
     segment_plan: segments.SegmentPlan | None = None
     uploads: list[dict] = Field(default_factory=list)
     source_session_name: str = ''
+    start_paused: bool = False
 
 
 class TaskStore(LocalQueue, TaskNotifications):

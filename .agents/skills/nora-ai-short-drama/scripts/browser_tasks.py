@@ -24,7 +24,7 @@ def submit(args, workflow, url, uploads=None):
     payload = {name: getattr(args, name) for name in
                ('project', 'task_type', 'record_dir', 'attempt_name', 'request_name', 'response_name', 'history_name', 'timeout')}
     payload.update(project=str(project), record_dir=str(Path(args.record_dir).resolve()),
-        workflow=workflow, url=url, title=args.task_title, uploads=uploads or [],
+        workflow=workflow, url=url, title=args.task_title, uploads=uploads or [], start_paused=args.start_paused,
         outputs=json.loads(Path(args.output_plan).read_text('utf-8')),
         segment_plan=json.loads(Path(args.segment_plan).read_text('utf-8')) if args.segment_plan else None,
         thread_id=args.thread_id or caller,

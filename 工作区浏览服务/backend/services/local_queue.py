@@ -74,7 +74,7 @@ class LocalQueue:
         now = self.client.now()
         self.rows[key] = {'input': data, 'state': {
             'id': key, 'project': project.name, 'title': data.title, 'task_type': data.task_type,
-            'prompt_id': None, 'client_id': str(uuid.uuid4()), 'status': 'local_queued',
+            'prompt_id': None, 'client_id': str(uuid.uuid4()), 'status': 'paused' if data.start_paused else 'local_queued',
             'queue_order': self.next_order(data.url.rstrip('/')), 'enqueued_url': data.url,
             'connection': 'waiting', 'progress': None, 'node': None,
             'error': None, 'notification': 'waiting', 'created_at': now, 'started_at': None,
@@ -83,7 +83,7 @@ class LocalQueue:
         self.save(key)
         self.record(key, 'enqueue', 'accepted')
         self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
-        return {'local_task_id': key, 'monitor_id': key, 'monitor': 'browser', 'status': 'local_queued'}
+        return {'local_task_id': key, 'monitor_id': key, 'monitor': 'browser', 'status': self.rows[key]['state']['status']}
 
     def active_drag(self, url=None):
         now = time.monotonic()

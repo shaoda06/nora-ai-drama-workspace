@@ -68,6 +68,7 @@ def parser():
     p.add_argument('--response-name', default='response.json', help='Actual submission response filename')
     p.add_argument('--timeout', type=float, default=30, help='Seconds per network operation, not task duration; no retries')
     p.add_argument('--monitor', choices=('browser',), default='browser', help='Persistent backend queue; Agent does not upload or submit remotely')
+    p.add_argument('--start-paused', action='store_true', help='Register paused for an authorized manual transfer; default is automatic local queueing, with no remote submission until resumed')
     p.add_argument('--output-plan', help='JSON array of explicit output selectors and absolute local targets; required for browser mode; H3 segments use [] plus --segment-plan')
     p.add_argument('--segment-plan', help='Native H3 segments JSON with director_node, report_node and verified output_root; targets explicitly specify index, absolute path and response_name for every selected segment')
     p.add_argument('--history-name', default='执行结果.json', help='Terminal history evidence filename inside record-dir; use the project-required prefix for image tasks')
