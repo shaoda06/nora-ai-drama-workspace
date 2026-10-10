@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TaskCard, type Task } from './TaskCard';
 import { LocalQueueCard, localQueueStates, type LocalQueueTask } from './LocalQueueCard';
+import { TaskDetailDialog } from './TaskDetailDialog';
 import './TaskSidebar.css';
 
 interface RemoteNode {
@@ -14,6 +15,7 @@ const nodeConnectionLabels = { connecting: '正在连接', connected: '已连接
 
 export function TaskSidebar() {
   const [open, setOpen] = useState(false);
+  const [detailId, setDetailId] = useState<string | null>(null);
   const [tasks, setTasks] = useState<(Task | LocalQueueTask)[]>([]);
   const [localCategory, setLocalCategory] = useState<keyof typeof localQueueStates>('queued');
   const [localRows, setLocalRows] = useState<LocalQueueTask[]>([]);
@@ -153,7 +155,7 @@ export function TaskSidebar() {
     localRef.current = next;
     setLocalRows(next);
   }, []);
-  return <aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
+  return <><aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
       aria-label={open ? '收起任务进度' : '展开任务进度'} onClick={() => {
         setOpen(!open);
@@ -197,10 +199,12 @@ export function TaskSidebar() {
           {localTasks.length === 0 && <p className="comfy-empty">暂无{localQueueStates[localCategory]}任务</p>}
           <div className="comfy-task-items">{localTasks.map(task => <LocalQueueCard key={task.id} task={task}
             position={localPositions.get(task.id)}
-            busy={busy || dragToken.current !== null} onAction={action} onTransfer={transfer} onDragStart={startDrag} onDragEnd={endDrag}
+            busy={busy || dragToken.current !== null} onAction={action} onTransfer={transfer} onDragStart={startDrag} onDragEnd={endDrag} onDetails={setDetailId}
             onReorder={task.status === 'local_queued' ? reorderLocal : undefined} />)}</div>
         </div>
       </section>
     </div>
-  </aside>;
+  </aside>{detailId && <TaskDetailDialog key={detailId} id={detailId}
+    updatedAt={localRows.find(task => task.id === detailId)?.updated_at}
+    nodes={nodes} close={() => setDetailId(null)} />}</>;
 }

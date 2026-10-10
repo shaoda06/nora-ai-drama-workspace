@@ -4,7 +4,7 @@ import { clockText, localDateTime, taskTypeLabels } from './TaskCard';
 import './LocalQueueCard.css';
 
 export const localQueueStates = { queued: '排队中', paused: '暂停中', history: '历史' } as const;
-const statusLabels: Record<string, string> = { local_queued: '排队中', queued: '排队中', paused: '暂停中',
+export const statusLabels: Record<string, string> = { local_queued: '排队中', queued: '排队中', paused: '暂停中',
   preparing: '准备提交', submitting: '提交中', collecting: '取回中', completed: '已完成',
   failed: '生成失败', rejected: '提交被拒绝', collection_failed: '取回失败',
   needs_attention: '状态待核对', submission_unknown: '提交结果待核对', cancelled: '已取消' };
@@ -18,13 +18,14 @@ export interface LocalQueueTask {
   queue_position?: number | null; collected?: number; expected?: number;
   remote_url: string; can_transfer?: boolean;
   transfer_targets?: { url: string; name: string }[];
-  created_at: string; started_at?: string | null; ended_at?: string | null;
+  created_at: string; updated_at?: string; started_at?: string | null; ended_at?: string | null;
 }
 
-export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer, busy, onDragStart, onDragEnd }: {
+export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer, busy, onDragStart, onDragEnd, onDetails }: {
   task: LocalQueueTask; position?: number; onReorder?: (sourceId: string, targetId: string) => void;
   onAction?: (id: string, action: string) => void; busy?: boolean;
   onTransfer?: (id: string, url: string) => void;
+  onDetails?: (id: string) => void;
   onDragStart?: (id: string) => Promise<boolean>; onDragEnd?: () => void;
 }) {
   const history = task.category === 'history';
@@ -112,6 +113,8 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
     {task.error && <p className="local-queue-card-error">{task.error}</p>}
     {task.notification && ['waiting_connection', 'waiting_idle', 'delivery_unknown', 'sending'].includes(task.notification) && <p className="local-queue-card-session">
       通知：{task.notification === 'delivery_unknown' ? '送达状态不明，等待确认' : '等待发送'}</p>}
+    {history && onDetails && <div className="local-queue-card-detail"><button type="button"
+      aria-label={`查看${task.title}详情`} onClick={() => onDetails(task.id)}>详情 →</button></div>}
   </>;
   return <>
     <section ref={cardRef} className="local-queue-card" data-local-task-id={task.id}

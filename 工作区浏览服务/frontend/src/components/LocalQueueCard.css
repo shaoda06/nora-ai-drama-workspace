@@ -38,3 +38,6 @@ body:has(.local-queue-card-floating){cursor:grabbing}
 @media(max-width:700px){.local-queue-card-body{flex-wrap:wrap;gap:10px}.local-queue-card-description{flex-basis:100%}}
 
 .local-queue-card-error{font-size:12px;color:#ac493b;margin:8px 0 0;white-space:pre-wrap;max-height:100px;overflow:auto}
+.local-queue-card-detail { display: flex; justify-content: flex-end; margin-top: 8px; }
+.local-queue-card-detail button { background: transparent; border: 0; color: var(--green); padding: 3px 0 3px 12px; cursor: pointer; font: inherit; font-size: 12px; }
+.local-queue-card-detail button:hover { text-decoration: underline; }

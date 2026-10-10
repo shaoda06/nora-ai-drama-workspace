@@ -20,6 +20,7 @@ from backend.services.projects import ProjectStore
 from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response
 from backend.services import krea2
 from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
+from backend.services.task_details import task_detail
 from websockets.exceptions import WebSocketException
 from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes
 
@@ -53,6 +54,16 @@ app = FastAPI(title='Nora工作区浏览服务', version=VERSION, docs_url=None,
 @app.get('/api/comfy/tasks')
 async def comfy_tasks(request: Request) -> dict[str, Any]:
     return request.app.state.comfy_tasks.public()
+
+
+@app.get('/api/comfy/tasks/{key}/detail')
+async def comfy_task_detail(key: str, request: Request) -> dict[str, Any]:
+    if key not in request.app.state.comfy_tasks.rows:
+        raise HTTPException(404, '任务不存在')
+    try:
+        return await task_detail(request.app.state.comfy_tasks, key)
+    except (OSError, ValueError, KeyError) as error:
+        raise HTTPException(503, '任务详情读取失败：' + str(error)) from error
 
 
 @app.get('/api/comfy/events', response_class=EventSourceResponse)
