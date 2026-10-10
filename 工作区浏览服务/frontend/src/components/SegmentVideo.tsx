@@ -8,7 +8,14 @@ export const candidateLabel = (number: number) => {
     ? (number < 20 ? '' : digits[Math.floor(number / 10)]) + '十' + (number % 10 ? digits[number % 10] : '') : number);
 };
 
-export const latestVideo = (items: VideoItem[]) => items.reduce<VideoItem | undefined>((latest, item) => !latest || Number(item.run.slice(1)) > Number(latest.run.slice(1)) ? item : latest, undefined);
+export const latestVideo = (items: VideoItem[]) => {
+  const stages = ['一采', '二采', '后处理'];
+  return items.reduce<VideoItem | undefined>((latest, item) => {
+    if (!latest) return item;
+    const revision = Number(item.run.slice(1)) - Number(latest.run.slice(1));
+    return revision > 0 || (revision === 0 && stages.indexOf(item.stage) > stages.indexOf(latest.stage)) ? item : latest;
+  }, undefined);
+};
 
 export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource }: {
   current?: VideoItem; onTimeChange: (time: number) => void; autoPlay?: boolean;
