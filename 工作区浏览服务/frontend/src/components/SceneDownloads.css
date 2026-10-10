@@ -10,4 +10,5 @@
 .stage-download-bundle{background:var(--green);border-color:var(--green);color:white}
 .stage-download-bundle:hover{background:#1d5d51;color:white}
 .stage-download-actions{display:flex;flex-wrap:wrap;gap:12px}
+.stage-download-actions .stage-download-link{max-width:100%;overflow-wrap:anywhere}
 @media(max-width:700px){.stage-downloads{gap:28px}.stage-download-section{padding-bottom:28px}}

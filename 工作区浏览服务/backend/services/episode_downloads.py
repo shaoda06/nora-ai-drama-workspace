@@ -1,15 +1,14 @@
 """Download selected approved videos and stage-specific director files."""
 from contextlib import ExitStack
 from pathlib import Path
-from tempfile import TemporaryFile
-from urllib.parse import quote
+from tempfile import NamedTemporaryFile
 from zipfile import ZIP_STORED, ZipFile
 
-from fastapi.responses import StreamingResponse
-from starlette.background import BackgroundTask
+from fastapi.responses import FileResponse
 
 STAGES = {'后处理': '03-后处理', '二采': '02-二采', '一采': '01-一采'}
 KINDS = {'videos': '正式版视频', 'director': '导演包', 'canvas': '画布'}
+DOWNLOAD_DIRECTORY = Path(__file__).resolve().parents[2] / 'runtime' / 'downloads'
 
 
 def indexed_episode(episode, data):
@@ -71,17 +70,33 @@ def resources(store, name, episode, data):
     return result
 
 
+class VideoZipResponse(FileResponse):
+    """Remove the request's ZIP after sending, failure, or cancellation."""
+
+    async def __call__(self, scope, receive, send):
+        try:
+            await super().__call__(scope, receive, send)
+        finally:
+            Path(self.path).unlink()
+
+
+def clear_downloads():
+    """Called once at service startup, before it accepts download requests."""
+    DOWNLOAD_DIRECTORY.mkdir(parents=True, exist_ok=True)
+    for path in DOWNLOAD_DIRECTORY.glob('videos-*.zip'):
+        path.unlink()
+
+
 def zip_response(files, filename):
-    # Media and director packs are already compressed. Keep their original bytes.
+    # Videos are already compressed. Keep their original bytes.
+    DOWNLOAD_DIRECTORY.mkdir(parents=True, exist_ok=True)
     with ExitStack() as stack:
-        archive = stack.enter_context(TemporaryFile())
-        with ZipFile(archive, 'w', compression=ZIP_STORED) as bundle:
-            for path, member in files:
-                bundle.write(path, member)
-        archive.seek(0, 2)
-        size = archive.tell()
-        archive.seek(0)
-        cleanup = stack.pop_all()
-    return StreamingResponse(iter(lambda: archive.read(1024 * 1024), b''), media_type='application/zip',
-                             headers={'Content-Disposition': "attachment; filename*=UTF-8''" + quote(filename),
-                                      'Content-Length': str(size)}, background=BackgroundTask(cleanup.close))
+        with NamedTemporaryFile(dir=DOWNLOAD_DIRECTORY, prefix='videos-', suffix='.zip', delete=False) as archive:
+            path = Path(archive.name)
+        stack.callback(path.unlink)
+        with ZipFile(path, 'w', compression=ZIP_STORED) as bundle:
+            for source, member in files:
+                bundle.write(source, member)
+        response = VideoZipResponse(archive.name, media_type='application/zip', filename=filename)
+        stack.pop_all()
+    return response

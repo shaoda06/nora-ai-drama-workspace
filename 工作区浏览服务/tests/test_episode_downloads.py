@@ -1,3 +1,4 @@
+import asyncio
 from io import BytesIO
 from pathlib import Path
 import tempfile
@@ -23,7 +24,8 @@ class EpisodeDownloadTests(unittest.TestCase):
                         'segments': {'C001': [], 'C002': []}}
         data = {'catalogues': {'09-剧集制作': {'children': [self.episode]}}}
         for override in (patch.object(main, 'store', ProjectStore(self.root)),
-                         patch.object(main, 'entry', return_value={'data': data})):
+                         patch.object(main, 'entry', return_value={'data': data}),
+                         patch.object(episode_downloads, 'DOWNLOAD_DIRECTORY', self.root / 'downloads')):
             override.start()
             self.addCleanup(override.stop)
         self.client = TestClient(main.app)
@@ -68,7 +70,7 @@ class EpisodeDownloadTests(unittest.TestCase):
                 self.assertEqual(manifest[stage]['videos']['count'], 2)
                 self.assertEqual(self.archive(stage, 'videos'), expected[stage])
 
-    def test_director_and_canvas_are_separate_stage_specific_archives(self):
+    def test_director_and_canvas_download_original_files_without_outer_zip(self):
         expected = {stage: {'director': {}, 'canvas': {}} for stage in episode_downloads.STAGES}
         for stage, folder in episode_downloads.STAGES.items():
             for scene in self.episode['scenes']:
@@ -76,13 +78,24 @@ class EpisodeDownloadTests(unittest.TestCase):
                     filename = f'EP001-{scene}-P001-{stage}定稿' + suffix
                     path = self.source(f'09-剧集制作/EP001/06-阶段采用视频/{folder}/{scene}-场次/导演包/{filename}',
                                        (stage + scene + kind).encode())
-                    expected[stage][kind][scene + '-场次/导演包/' + filename] = path.read_bytes()
+                    expected[stage][kind][filename] = path.read_bytes()
             self.source(f'09-剧集制作/EP001/06-阶段采用视频/{folder}/C001-场次/导演包/EP002-C001-导演包.mmxpack.zip', b'wrong episode')
             self.source(f'09-剧集制作/EP001/06-阶段采用视频/{folder}/C003-场次/导演包/EP001-C003-导演包.mmxpack.zip', b'not indexed')
+        manifest = self.client.get(self.url).json()
         for stage in episode_downloads.STAGES:
             for kind in ('director', 'canvas'):
                 with self.subTest(stage=stage, kind=kind):
-                    self.assertEqual(self.archive(stage, kind), expected[stage][kind])
+                    resource = manifest[stage][kind]
+                    self.assertIsNone(resource['url'])
+                    self.assertEqual(resource['count'], 2)
+                    self.assertEqual([file['name'] for file in resource['files']], list(expected[stage][kind]))
+                    for file in resource['files']:
+                        response = self.client.get(file['url'])
+                        self.assertEqual(response.status_code, 200)
+                        self.assertEqual(response.content, expected[stage][kind][file['name']])
+                        self.assertIn(file['name'], unquote(response.headers['content-disposition']))
+                    self.assertEqual(self.client.get(self.url + '/' + stage + '/' + kind).status_code, 422)
+        self.assertFalse((self.root / 'downloads').exists())
 
     def test_empty_stage_has_no_link_and_does_not_reuse_first_pass(self):
         self.source('09-剧集制作/EP001/06-阶段采用视频/01-一采/C001-场次/导演包/EP001-C001-定稿-导演包.mmxpack.zip', b'first pass')
@@ -90,13 +103,15 @@ class EpisodeDownloadTests(unittest.TestCase):
         self.assertEqual(manifest['一采']['director']['count'], 1)
         for stage in ('后处理', '二采'):
             for kind in episode_downloads.KINDS:
-                self.assertEqual(manifest[stage][kind], {'count': 0, 'url': None})
-                self.assertEqual(self.client.get(self.url + '/' + stage + '/' + kind).status_code, 404)
+                self.assertEqual(manifest[stage][kind], {'count': 0, 'url': None, 'files': []})
+                self.assertEqual(self.client.get(self.url + '/' + stage + '/' + kind).status_code, 404 if kind == 'videos' else 422)
 
     def test_legacy_stage_directory_is_read_without_copying_files(self):
         relative = '09-剧集制作/EP001/其他资料/阶段采用视频/02-二采/C001-场次/导演包/EP001-C001-定稿.workflow.json'
         self.source(relative, b'legacy canvas')
-        self.assertEqual(self.archive('二采', 'canvas'), {'C001-场次/导演包/EP001-C001-定稿.workflow.json': b'legacy canvas'})
+        resource = self.client.get(self.url).json()['二采']['canvas']
+        self.assertEqual(resource['files'][0]['name'], 'EP001-C001-定稿.workflow.json')
+        self.assertEqual(self.client.get(resource['files'][0]['url']).content, b'legacy canvas')
         self.assertFalse((self.project / '09-剧集制作/EP001/06-阶段采用视频').exists())
 
     def test_invalid_request_and_missing_episode(self):
@@ -118,12 +133,59 @@ class EpisodeDownloadTests(unittest.TestCase):
                                                        'key': '../outside.mp4', 'fileRevision': ''}]}]
         self.assertEqual(self.client.get(self.url + '/一采/videos').status_code, 404)
 
-    def test_temporary_archive_is_closed_after_download(self):
+    def test_video_archive_uses_dedicated_directory_and_is_removed_after_sending(self):
         self.video('一采', 'C001', 'P001')
-        archive = tempfile.TemporaryFile()
-        with patch.object(episode_downloads, 'TemporaryFile', return_value=archive):
-            self.archive('一采', 'videos')
-        self.assertTrue(archive.closed)
+        self.archive('一采', 'videos')
+        self.assertTrue((self.root / 'downloads').is_dir())
+        self.assertEqual(list((self.root / 'downloads').iterdir()), [])
+
+    def test_zip_creation_error_removes_partial_file(self):
+        with self.assertRaises(FileNotFoundError):
+            episode_downloads.zip_response([(self.root / 'missing.mp4', 'missing.mp4')], 'test.zip')
+        self.assertEqual(list((self.root / 'downloads').iterdir()), [])
+
+    def test_sending_error_removes_file(self):
+        source = self.source('original.mp4', b'original bytes')
+        response = episode_downloads.zip_response([(source, source.name)], 'test.zip')
+        self.assertEqual(Path(response.path).parent, self.root / 'downloads')
+        self.assertTrue(Path(response.path).exists())
+
+        async def send(message):
+            raise OSError('client disconnected')
+
+        with self.assertRaises(OSError):
+            asyncio.run(response({'type': 'http', 'method': 'GET', 'headers': []}, None, send))
+        self.assertFalse(Path(response.path).exists())
+        self.assertEqual(source.read_bytes(), b'original bytes')
+
+    def test_request_cancellation_removes_file(self):
+        source = self.source('original.mp4', b'original bytes')
+        response = episode_downloads.zip_response([(source, source.name)], 'test.zip')
+
+        async def cancel_transfer():
+            sending = asyncio.Event()
+
+            async def send(message):
+                if message['type'] == 'http.response.body':
+                    sending.set()
+                    await asyncio.Event().wait()
+
+            task = asyncio.create_task(response({'type': 'http', 'method': 'GET', 'headers': []}, None, send))
+            await sending.wait()
+            task.cancel()
+            with self.assertRaises(asyncio.CancelledError):
+                await task
+
+        asyncio.run(cancel_transfer())
+        self.assertFalse(Path(response.path).exists())
+
+    def test_startup_clears_only_service_video_packages(self):
+        directory = self.root / 'downloads'
+        directory.mkdir()
+        (directory / 'videos-interrupted.zip').write_bytes(b'interrupted')
+        (directory / 'keep.txt').write_bytes(b'keep')
+        episode_downloads.clear_downloads()
+        self.assertEqual([path.name for path in directory.iterdir()], ['keep.txt'])
 
     def completed_download(self):
         return self.client.get(self.url.replace('/downloads', '/download'))

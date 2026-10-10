@@ -17,7 +17,7 @@ from pydantic import BaseModel
 
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
-from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response
+from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response, clear_downloads
 from backend.services import krea2
 from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
 from backend.services.task_details import task_detail
@@ -33,6 +33,7 @@ VERSION = json.loads((TOOL / 'frontend/package.json').read_text('utf-8'))['versi
 FRONTEND_RELEASE = TOOL / 'frontend/dist/release.json'
 @asynccontextmanager
 async def lifespan(app):
+    clear_downloads()
     tasks = TaskStore(TOOL / 'runtime', WORKSPACE)
     app.state.comfy_tasks = tasks
     config_path = TOOL / 'runtime/service.json'
@@ -338,13 +339,18 @@ def episode_download_list(name: str, episode: Episode) -> dict[str, Any]:
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     prefix = '/api/projects/' + quote(name, safe='') + '/episodes/' + episode + '/downloads/'
-    return {stage: {kind: {'count': len(items), 'url': prefix + quote(stage, safe='') + '/' + kind if items else None}
+    file_prefix = '/api/projects/' + quote(name, safe='') + '/files/'
+    return {stage: {kind: {'count': len(items),
+                         'url': prefix + quote(stage, safe='') + '/videos' if kind == 'videos' and items else None,
+                         'files': [] if kind == 'videos' else [
+                             {'name': path.name, 'url': file_prefix + quote(path.relative_to(store.project(name)).as_posix(), safe='/') + '?download=true'}
+                             for path, _ in items]}
                     for kind, items in groups.items()} for stage, groups in files.items()}
 
 
 @app.get('/api/projects/{name}/episodes/{episode}/downloads/{stage}/{kind}')
 def episode_download(name: str, episode: Episode, stage: Literal['一采', '二采', '后处理'],
-                     kind: Literal['videos', 'director', 'canvas']):
+                     kind: Literal['videos']):
     try:
         files = episode_resources(store, name, episode, entry(name)['data'])[stage][kind]
         if not files:
@@ -365,12 +371,13 @@ def document(name: str, path: Annotated[str, Query()]) -> dict[str, Any]:
 
 
 @app.get('/api/projects/{name}/files/{path:path}')
-def project_file(name: str, path: str, v: str | None = None):
+def project_file(name: str, path: str, v: str | None = None, download: bool = False):
     try:
         target = store.file(name, path, v)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
-    return FileResponse(target)
+    return FileResponse(target, filename=target.name if download else None,
+                        media_type='application/octet-stream' if download else None)
 
 
 @app.get('/api/projects/{name}/revision-notes/{episode}/{scene}')
