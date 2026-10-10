@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply an explicit human video approval to files and existing project records, offline."""
+"""离线落实用户对具体视频的批准：移动文件并更新现有采用和审核记录。"""
 import argparse
 import hashlib
 import json
@@ -36,11 +36,12 @@ def load(path):
 def check_file(path, receipt):
     if not path.is_file() or path.stat().st_size != receipt['bytes']:
         raise ValueError(f'文件缺失或长度不符合取回凭据：{path}')
-    # Reuse the download's existing digest; do not create a new approval hash scheme.
-    with path.open('rb') as video:
-        digest = hashlib.file_digest(video, 'sha256').hexdigest()
-    if digest != receipt['sha256']:
-        raise ValueError(f'文件字节与取回凭据不符，不能继承批准：{path}')
+    # Reuse an existing digest; local edits need not invent a download hash.
+    if receipt.get('sha256'):
+        with path.open('rb') as video:
+            digest = hashlib.file_digest(video, 'sha256').hexdigest()
+        if digest != receipt['sha256']:
+            raise ValueError(f'文件字节与取回凭据不符，不能继承批准：{path}')
 
 
 def section(text, heading):
@@ -61,6 +62,21 @@ def field(text, name, value):
     if matches:
         return re.sub(pattern, lambda _: replacement, text, count=1, flags=re.M)
     return text.rstrip() + '\n' + replacement + '\n\n'
+
+
+def render_review(heading, values, decision_time, basis, scope):
+    template = Path(__file__).resolve().parents[1] / 'references' / '模板' / '视频人工审阅区模板.md'
+    fenced = re.search(r'```markdown\n(.*?)\n```', template.read_text(encoding='utf-8-sig'), re.S)
+    if not fenced:
+        raise ValueError('审阅模板缺少固定 Markdown 正文')
+    text = re.sub(r'^### .*', '### ' + heading, fenced[1], count=1)
+    for name, value in values.items():
+        if name == '来源任务或执行记录入口':
+            name = re.search(r'^- (来源任务[^：\n]*)：', text, re.M)[1]
+        text = field(text, name, value)
+    cells = [decision_time, scope, basis]
+    row = '| ' + ' | '.join(cell.replace('|', '\\|').replace('\n', '<br>') for cell in cells) + ' |\n'
+    return text.replace('| --- | --- | --- |\n', '| --- | --- | --- |\n' + row, 1)
 
 
 def selected_row(text, stage):
@@ -109,6 +125,7 @@ def adoption(args):
         raise ValueError('批准对象重复')
     stamp = client.now()
     basis = plan['approval_text'].strip().replace('\n', '<br>')
+    decision_time = plan.get('approval_time', '实际决定时间未记录；登记时间：' + stamp)
     texts, original, maps, moves, results, episodes = {}, {}, {}, [], [], set()
 
     def read_text(path):
@@ -146,12 +163,26 @@ def adoption(args):
         if identity not in [context['identity'] for context in contexts]:
             raise ValueError(f'输入映射未关联本次批准对象：{identity}')
         prompt = mapped.get('prompt_id')
-        if not prompt:
+        local_edit = mapped.get('local_edit')
+        if local_edit is not None:
+            if not isinstance(local_edit, dict) or not all(local_edit.get(key) for key in ('tool', 'source', 'source_file', 'parameters')):
+                raise ValueError('本地修改映射须记录实际工具、来源身份、来源文件和参数')
+            context = next(context for context in contexts if context['identity'] == identity)
+            if context.get('source') != local_edit['source']:
+                raise ValueError('本地修改来源与生成资料关联不一致')
+            local_path(root, local_edit['source_file'])
+            if prompt:
+                raise ValueError('本地修改不能套用来源生成任务的 prompt ID')
+        elif not prompt:
             raise ValueError(f'请指定实际执行的输入映射，不用父级旧请求代替：{mapping}')
         receipt_path = local_path(root, item['receipt'])
         receipt_document = load(receipt_path)
         receipt = receipt_document.get('data', receipt_document)
-        if not isinstance(receipt.get('bytes'), int) or not re.fullmatch(r'[0-9a-f]{64}', receipt.get('sha256', '')):
+        if local_edit is not None and receipt_path == mapping:
+            receipt = mapped['output']
+        if not isinstance(receipt.get('bytes'), int) or receipt['bytes'] <= 0:
+            raise ValueError(f'缺少实际输出的完整长度记录：{receipt_path}')
+        if (local_edit is None or receipt.get('sha256')) and not re.fullmatch(r'[0-9a-f]{64}', receipt.get('sha256', '')):
             raise ValueError(f'缺少固定下载工具的完整字节凭据：{receipt_path}')
         # The agent specifies the actual receipt; mapping and receipt must belong to this execution.
         if not receipt_path.is_relative_to(mapping.parent):
@@ -168,10 +199,12 @@ def adoption(args):
             raise ValueError('取回凭据的远端文件不符合映射中的本段输出')
         if output.get('bytes') is not None and output['bytes'] != receipt['bytes']:
             raise ValueError('取回凭据长度不符合本段输出记录')
-        filename = identity + '.mp4'
+        filename = Path(item['source']).name if item.get('source') else identity + '.mp4'
         source = local_path(root, item.get('source', extra / '候选视频' / filename))
-        if source.name != filename:
+        if source.stem != identity or not source.suffix:
             raise ValueError('采用源文件须已按具体 EP/C/P/R/阶段命名')
+        if local_edit is not None and (local_path(root, receipt['path']) != source or local_path(root, output['path']) != source):
+            raise ValueError('本地修改的输出凭据与批准文件不一致')
         target = local_path(root, extra / '阶段采用视频' / STAGES[stage] / f'{scene}-场次' / filename)
         data = read_text(draft)
         start, end, row = selected_row(data, stage)
@@ -185,12 +218,16 @@ def adoption(args):
         already = approved_row(data, row, filename) and link(draft, target) in row
         adoptions = mapped.get('adoptions', [])
         existing = [a for a in adoptions if a.get('identity') == identity and a.get('selected_path')
-                    and local_path(root, a['selected_path']) == target]
+                    and a.get('prompt_id') == prompt and a.get('bytes') == receipt['bytes']]
         if already and existing:
+            if local_path(root, existing[0]['selected_path']) != target:
+                existing[0]['selected_path'] = str(target)
+                mapped['adoption_updated_at'] = stamp
             sync_related(item, mapping, prompt, existing[0])
             results.append({'identity': identity, 'state': 'already_adopted', 'selected_path': str(target)})
             continue
-        old_links = re.findall(r'\]\(([^)#]+\.mp4)\)', row)
+        old_links = [url for url in re.findall(r'\]\(([^)#]+\.[A-Za-z0-9]+)\)', row)
+                     if IDENTITY.fullmatch(Path(url).stem)]
         if old_links:
             old = local_path(root, draft.parent / old_links[0].replace('%20', ' '))
             if old != target:
@@ -198,13 +235,13 @@ def adoption(args):
                 later = list(STAGES)[list(STAGES).index(stage) + 1:]
                 for later_stage in later:
                     _, _, downstream = selected_row(data, later_stage)
-                    if '.mp4)' in downstream:
+                    if any(IDENTITY.fullmatch(Path(url).stem) for url in re.findall(r'\]\(([^)#]+\.[A-Za-z0-9]+)\)', downstream)):
                         raise ValueError(f'{identity}更换采用会影响已选定{later_stage}，须先明确下游处置')
                 previous = local_path(root, extra / '候选视频' / old.name)
                 if not old.is_file() or previous.exists():
                     raise ValueError(f'旧采用文件缺失或退回候选时冲突：{old}')
                 moves.append((old, previous))
-                data = data.replace(link(draft, old), link(draft, previous))
+                data = data.replace('](' + link(draft, old) + ')', '](' + link(draft, previous) + ')')
         heading = item.get('execution_heading', revision + '-' + stage)
         a, b = section(data, heading)
         body = data[a:b]
@@ -217,33 +254,44 @@ def adoption(args):
         body = field(body, '人工审阅记录入口', reference)
         body = field(body, '用户决定', '见' + reference + '。')
         body = field(body, '输出当前入口及取回／展示情况', f'[已采用文件]({link(draft, target)})；文件身份按[取回凭据]({link(draft, receipt_path)})核对。')
+        body = field(body, '取回核对状态', '本次输出凭据与实际文件核对通过，已采用；人工决定见审阅入口。')
         body = field(body, '用户采用的具体输出、批准范围、时间与依据', '见' + reference + '。')
-        body += (f'\n#### 位置变化及替代关系（{stamp}）\n\n'
-                 '| 原位置 | 新位置 | 时间 | 用户决定／移动依据 | 替代关系及需同步的下游入口 |\n'
-                 '| --- | --- | --- | --- | --- |\n')
+        movement_header = ('| 原位置 | 新位置 | 时间 | 用户决定／移动依据 | 替代关系及需同步的下游入口 |\n'
+                           '| --- | --- | --- | --- | --- |\n')
+        if movement_header not in body:
+            body += '\n#### 位置变化及替代关系\n\n' + movement_header
+        movement_rows = ''
         for old, new in moves:
-            if old.name.endswith(f'-{stage}.mp4') and (old == source or old_links and old.name in row):
-                body += f'| {link(draft, old)} | [文件]({link(draft, new)}) | {stamp} | {reference} | 原批准历史保留；当前关联见选定表 |\n'
+            if old.stem.endswith(f'-{stage}') and (old == source or old_links and old.name in row):
+                movement_rows += f'| {link(draft, old)} | [文件]({link(draft, new)}) | {stamp} | {reference} | 原批准历史保留；当前关联见选定表 |\n'
+        body = body.replace(movement_header, movement_header + movement_rows, 1)
         data = data[:a] + body + '\n' + data[b:]
         start, end, _ = selected_row(data, stage)
-        new_row = f'| {stage} | [当前采用文件]({link(draft, target)}) | {revision} | {prompt} | {reference} |'
+        source_task = prompt or f'[本地修改记录]({link(draft, mapping)})'
+        new_row = f'| {stage} | [当前采用文件]({link(draft, target)}) | {revision} | {source_task} | {reference} |'
         data = data[:start] + new_row + data[end:]
-        data = data.replace(link(draft, source), link(draft, target))
+        data = data.replace('](' + link(draft, source) + ')', '](' + link(draft, target) + ')')
         # Insert into the existing review area without adding a parallel approval ledger.
-        review_text = (f'\n### {review}\n\n#### 1. 审阅对象\n\n'
-                       f'- 所属分段／场次／整集：{ep}-{scene}-{part}\n- 处理阶段或成片类型：{stage}\n'
-                       f'- 被审具体输出文件及R编号／版本：[{filename}]({link(draft, target)})；{revision}\n'
-                       f'- 来源任务、执行记录或成片说明入口：[{identity}]({link(draft, mapping)})；prompt {prompt}\n'
-                       f'- agent取回及展示入口：[取回凭据]({link(draft, receipt_path)})\n\n'
-                       '#### 2. 用户反馈\n\n'
-                       f'- 用户原话：{basis}\n\n#### 3. 人工审核决定\n\n'
-                       f'- 决定：批准采用\n- 对应具体输出：[{filename}]({link(draft, target)})\n'
-                       f'- 批准或要求修改的范围：本次明确指定的 {identity} 视频文件\n'
-                       f'- 决定时间与依据：{plan.get("approval_time", stamp)}；用户原话：{basis}\n'
-                       f'- 记录更新时间：{stamp}\n\n#### 4. 采用与后续处理\n\n'
-                       f'- 当前候选／选定入口：[当前采用文件]({link(draft, target)})\n'
-                       f'- 移动或替代关系及对应记录入口：[执行章节](#{heading.lower()})\n'
-                       '- 用户要求的后续处理及授权范围：本工具只落实上述采用；后续执行沿用已有明确授权。\n')
+        scope = item.get('approval_scope', f'本次明确指定的 {identity} 视频文件')
+        if not isinstance(scope, str) or not scope.strip():
+            raise ValueError('approval_scope 须填写实际批准范围')
+        scope = scope.strip().replace('\n', '<br>')
+        review_text = render_review(review, {
+            '所属分段／场次／整集': f'{ep}-{scene}-{part}',
+            '处理阶段或成片类型': stage,
+            '被审具体输出文件及R编号／版本': f'[{filename}]({link(draft, target)})；{revision}',
+            '来源任务或执行记录入口': f'[{identity}]({link(draft, mapping)})；{source_task}',
+            'agent取回及展示入口': f'[实际输出凭据]({link(draft, receipt_path)})；' + item.get('review_entry', '网页审核入口未记录'),
+            '决定': '批准采用',
+            '对应具体输出': f'[{filename}]({link(draft, target)})',
+            '批准或要求修改的范围': scope,
+            '决定时间与依据': decision_time + '；用户原话：' + basis,
+            '当前候选／选定入口': f'[当前采用文件]({link(draft, target)})',
+            '移动或替代关系及对应记录入口': f'[执行章节](#{heading.lower()})',
+            '用户要求的后续处理及授权范围': '本工具只落实上述采用；后续执行沿用已有明确授权。',
+            '受影响的分段、场次或整集版本及处理决定': '本次仅更新所列阶段选定入口；其他阶段不变，更换上游已有下游选定时停止。',
+            '其他补充': '采用登记时间：' + stamp,
+        }, decision_time, basis, scope)
         area = re.search(r'^## \d+\. 审阅区\s*$', data, re.M)
         if not area:
             raise ValueError('工作稿缺少审阅区，请先按现有模板规范化')
@@ -254,7 +302,7 @@ def adoption(args):
         data = re.sub(r'^- 当前状态及待办：[^\n]*', lambda _: f'- 当前状态及待办：{revision}{stage}已批准采用；其他阶段及下游状态见选定表和执行记录。', data, count=1, flags=re.M)
         texts[draft] = data
         record = {'identity': identity, 'recorded_at': stamp, 'source_path': str(source),
-                  'selected_path': str(target), 'basis': plan['approval_text'],
+                  'selected_path': str(target), 'basis': plan['approval_text'], 'approval_scope': scope,
                   'segment_review': draft.name + '#' + review.lower(), 'prompt_id': prompt,
                   'bytes': receipt['bytes'], 'receipt': str(receipt_path)}
         mapped['adoptions'] = [a for a in adoptions if a.get('identity') != identity] + [record]
@@ -293,7 +341,7 @@ def adoption(args):
             text = texts.get(draft, draft.read_text(encoding='utf-8-sig'))
             for stage in STAGES:
                 _, _, row = selected_row(text, stage)
-                name = re.search(r'(EP\d{3}-C\d{3}-P\d{3}-R\d{3}-' + stage + r'\.mp4)', row)
+                name = re.search(r'(EP\d{3}-C\d{3}-P\d{3}-R\d{3}-' + stage + r'\.[A-Za-z0-9]+)', row)
                 if name and approved_row(text, row, name[0]):
                     counts[stage] += 1
     changed_maps = [str(path) for path, value in maps.items() if load(path) != value]
@@ -328,7 +376,7 @@ def adoption(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--project', required=True, help='短剧项目根目录；所有计划路径相对本目录解析，或用目录内绝对路径')
-    parser.add_argument('--plan', required=True, help='采用计划 JSON（项目内）；列明身份、实际映射、取回凭据、用户原话和记录定点更新')
+    parser.add_argument('--plan', required=True, help='采用计划 JSON；相对路径按项目根解析，列明身份、实际映射、输出凭据、用户原话和记录定点更新')
     parser.add_argument('--apply', action='store_true', help='执行移动和记录更新；省略时只读预览，不联网，不提交生成')
     args = parser.parse_args()
     try:

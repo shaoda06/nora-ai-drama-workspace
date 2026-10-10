@@ -105,6 +105,108 @@ class AdoptionTests(unittest.TestCase):
         self.assertFalse(second_target.exists())
         self.assertEqual(result['selected_approved_counts']['一采'], 1)
 
+    def test_template_scope_unknown_time_and_movement_origin(self):
+        item, draft, source, target = self.item()
+        item['approval_scope'] = '接受本段现有画面；音频缺陷保留'
+        item['review_entry'] = '[网页审核](http://localhost/review)'
+        movement = ('#### 位置变化及替代关系\n\n'
+                    '| 原位置 | 新位置 | 时间 | 用户决定／移动依据 | 替代关系及需同步的下游入口 |\n'
+                    '| --- | --- | --- | --- | --- |\n')
+        self.put(draft, draft.read_text(encoding='utf-8').replace('## 4. 审阅区',
+                 '- 取回核对状态：未取回\n\n' + movement + '\n## 4. 审阅区'))
+        self.run_plan()
+        text = draft.read_text(encoding='utf-8')
+        self.assertIn('- 批准或要求修改的范围：' + item['approval_scope'], text)
+        self.assertIn('实际决定时间未记录；登记时间：', text)
+        self.assertIn('| 反馈时间／依据 |', text)
+        self.assertIn('- 受影响的分段、场次或整集版本及处理决定：', text)
+        self.assertIn('- 其他补充：采用登记时间：', text)
+        self.assertIn(item['review_entry'], text)
+        self.assertNotIn('- 取回核对状态：未取回', text)
+        self.assertEqual(text.count('#### 位置变化及替代关系'), 1)
+        self.assertIn('| ' + tool.link(draft, source) + ' | [文件](' + tool.link(draft, target) + ')', text)
+        self.assertEqual(tool.load(Path(item['mapping']))['adoptions'][0]['approval_scope'], item['approval_scope'])
+
+    def test_actual_decision_time_is_preserved(self):
+        _, draft, _, _ = self.item()
+        self.plan['approval_time'] = '2026-10-09T12:10:00+08:00'
+        self.run_plan()
+        self.assertIn('- 决定时间与依据：2026-10-09T12:10:00+08:00；', draft.read_text(encoding='utf-8'))
+
+    def test_actual_non_mp4_extension_is_preserved(self):
+        item, draft, source, target = self.item()
+        actual = source.with_suffix('.mov')
+        source.rename(actual)
+        item['source'] = str(actual)
+        result = self.run_plan()
+        self.assertTrue(target.with_suffix('.mov').exists())
+        self.assertFalse(target.exists())
+        self.assertEqual(result['selected_approved_counts']['一采'], 1)
+        self.assertIn(actual.name, draft.read_text(encoding='utf-8'))
+        self.assertEqual(self.run_plan()['items'][0]['state'], 'already_adopted')
+
+    def test_existing_approval_after_directory_move_only_updates_mapping(self):
+        item, draft, _, target = self.item()
+        self.run_plan()
+        text = draft.read_bytes()
+        mapping = Path(item['mapping'])
+        mapped = tool.load(mapping)
+        recorded = mapped['adoptions'][0]['recorded_at']
+        mapped['adoptions'][0]['selected_path'] = str(self.extra / '旧采用目录' / target.name)
+        self.write_json(mapping, mapped)
+        self.plan['record_updates'] = []
+        result = self.run_plan()
+        self.assertEqual(result['items'][0]['state'], 'already_adopted')
+        self.assertEqual(result['moves'], [])
+        self.assertEqual(draft.read_bytes(), text)
+        adopted = tool.load(mapping)['adoptions'][0]
+        self.assertEqual(adopted['selected_path'], str(target))
+        self.assertEqual(adopted['recorded_at'], recorded)
+
+    def local_item(self):
+        item, draft, source, target = self.item(revision='R002')
+        mapping = Path(item['mapping'])
+        mapped = tool.load(mapping)
+        origin = 'EP001-C001-P001-R001-一采'
+        del mapped['prompt_id']
+        mapped['generation_contexts'][0]['source'] = origin
+        mapped['local_edit'] = {'tool': 'ffmpeg', 'source': origin,
+                                'source_file': '09-剧集制作/EP001/其他资料/候选视频/' + origin + '.mp4',
+                                'parameters': ['-an']}
+        mapped['output'] = mapped.pop('outputs')[0]
+        del mapped['output']['sha256']
+        del mapped['output']['remote']
+        self.write_json(mapping, mapped)
+        item['receipt'] = str(mapping)
+        return item, draft, source, target
+
+    def test_local_edit_without_comfy_prompt_or_hash_uses_real_record(self):
+        item, draft, source, target = self.local_item()
+        self.run_plan()
+        self.assertFalse(source.exists())
+        self.assertTrue(target.exists())
+        text = draft.read_text(encoding='utf-8')
+        self.assertIn('[本地修改记录]', text)
+        self.assertNotIn('prompt None', text)
+        self.assertNotIn('sha256', tool.load(Path(item['mapping']))['output'])
+        self.assertEqual(self.run_plan()['items'][0]['state'], 'already_adopted')
+
+    def test_local_edit_mismatched_source_and_output_stop_before_move(self):
+        item, _, source, target = self.local_item()
+        mapping = Path(item['mapping'])
+        mapped = tool.load(mapping)
+        mapped['local_edit']['source'] = '错误来源'
+        self.write_json(mapping, mapped)
+        with self.assertRaisesRegex(ValueError, '来源与生成资料关联'):
+            self.run_plan()
+        mapped['local_edit']['source'] = mapped['generation_contexts'][0]['source']
+        mapped['output']['path'] = str(source.with_name('other.mp4'))
+        self.write_json(mapping, mapped)
+        with self.assertRaisesRegex(ValueError, '凭据与批准文件'):
+            self.run_plan()
+        self.assertFalse(target.exists())
+        self.assertTrue(source.exists())
+
     def test_preflight_missing_later_file_leaves_first_untouched(self):
         _, draft, source, target = self.item()
         _, _, second, _ = self.item('P002')
