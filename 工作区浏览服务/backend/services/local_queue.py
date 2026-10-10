@@ -240,7 +240,8 @@ class LocalQueue:
                     parent[item['json-path'][-1]]  # Require an existing field; do not invent timeline structure.
                     parent[item['json-path'][-1]] = uploaded['input_path']
                     if (workflow[item['node']]['class_type'] == 'MiniMaxH3Director'
-                            and item['input'] == 'timeline_data'):
+                            and item['input'] == 'timeline_data'
+                            and item['json-path'][0] in ('global', 'segments')):
                         path = item['json-path']
                         workspace = document['batchWorkspaces']['r2v']
                         editor = workspace['globalCommon'] if path[0] == 'global' else workspace['segments'][path[1]]
