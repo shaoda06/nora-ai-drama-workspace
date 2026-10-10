@@ -441,16 +441,24 @@ def build_data(project, *, web_episode_navigation=False):
             work_version = field(re.split(r"^##[ \t]", text, maxsplit=1, flags=re.M)[0], "当前稿版本")
             if key == work_key:
                 current = re.search(r"^##[ \t]+1\.[ \t]*当前内容[ \t]*\n(.*?)(?=^##[ \t]|\Z)", text, re.M | re.S)
-                if current:
-                    text = re.sub(r"^#{3,6}(?= )", lambda match: match[0][2:], current[1].strip(), flags=re.M)
+                if not current:
+                    continue
+                text = re.sub(r"^#{3,6}(?= )", lambda match: match[0][2:], current[1].strip(), flags=re.M)
+                # Adopted worklogs can contain only a formal-document link and notes.
+                if not re.search(r"^#[ \t]+", text, re.M):
+                    continue
             version = field(text, "文档版本")
+            # Matching document versions use the formal text; a worklog-only version
+            # is a separate draft counter, so retain its existing recency selection.
+            prefer_formal = key == formal_key or version == "未记录"
             if version == "未记录":
                 version = work_version
             number = re.fullmatch(r"v(\d+)[。.]?", version, re.I)
-            candidates.append((int(number[1]) if number else -1, (project / key).stat().st_mtime_ns, key, text))
+            candidates.append((int(number[1]) if number else -1, prefer_formal,
+                               (project / key).stat().st_mtime_ns, key, text))
         if not candidates:
             return None, ""
-        _, _, key, text = max(candidates)
+        _, _, _, key, text = max(candidates)
         doc = {"title": next((line[2:] for line in text.splitlines() if line.startswith("# ")), Path(key).stem),
                "html": markdown(text, key), "url": quote(key, safe="/-._~"), **document_header(text, key)}
         return {"kind": "document", "name": doc["title"], "key": key, "url": doc["url"], "doc": doc}, text

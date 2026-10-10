@@ -199,6 +199,67 @@ class ServiceTests(unittest.TestCase):
         self.assertNotIn('旧镜头', data['segments']['C001'][0]['scriptHtml'])
         self.assertEqual(formal.read_bytes(), source)
 
+    def test_approved_episode_work_copies_use_same_version_formal_content(self):
+        episode = self.project / '09-剧集制作/EP001'
+        work = episode / '其他资料/工作稿'
+        work.mkdir(parents=True)
+        script = episode / '02-剧集剧本/EP001-本集剧本.md'
+        script.parent.mkdir()
+        script.write_text('# 本集剧本\n- 文档版本：v08\n- 确认状态：已确认\n\n'
+                          '## 1. 故事剧本正文\n### EP001-C001\n正式正文。\n', encoding='utf-8')
+        boards = episode / '03-分镜脚本'
+        boards.mkdir()
+        storyboard = boards / 'EP001-C001-场次分镜.md'
+        storyboard.write_text('# 场次分镜\n- 文档版本：v23\n- 确认状态：已确认\n\n'
+                              '## 1. 镜头正文\n### 分段 P001\n#### EP001-SH001\n正式镜头。\n', encoding='utf-8')
+        (boards / 'EP001-分镜索引.md').write_text(
+            '# 分镜索引\n- 文档版本：v09\n\n'
+            '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+            '| EP001-C001 | EP001-C001-P001 | 10 |\n', encoding='utf-8')
+        original = {file: file.read_bytes() for file in (script, storyboard)}
+        for file, version, content in (
+            (script, 'v08', '##### 1. 故事剧本正文\n##### EP001-C001\n留存正文。\n'),
+            (storyboard, 'v23', '##### 1. 镜头正文\n##### 分段 P001\n###### EP001-SH001\n留存镜头。\n'),
+        ):
+            draft = work / (file.stem + '-工作稿.md')
+            draft.write_text('# 工作稿\n\n## 1. 当前内容\n### 留存正文\n'
+                             '- 文档版本：' + version + '\n- 确认状态：C001全场当前版本均已由用户批准采用\n\n'
+                             + content, encoding='utf-8')
+            os.utime(file, (1_700_000_000, 1_700_000_000))
+            os.utime(draft, (1_700_000_001, 1_700_000_001))
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual(data['scenes'], ['C001'])
+        self.assertTrue(data['script']['key'].endswith('/02-剧集剧本/EP001-本集剧本.md'))
+        self.assertTrue(data['storyboards']['C001']['key'].endswith('/03-分镜脚本/EP001-C001-场次分镜.md'))
+        self.assertEqual(len(data['segments']['C001']), 1)
+        self.assertIn('正式镜头', data['segments']['C001'][0]['scriptHtml'])
+        for file, content in original.items():
+            self.assertEqual(file.read_bytes(), content)
+
+    def test_episode_reference_only_worklog_does_not_replace_formal_index(self):
+        episode = self.project / '09-剧集制作/EP001'
+        script = episode / '02-剧集剧本/EP001-本集剧本.md'
+        script.parent.mkdir(parents=True)
+        script.write_text('# 本集剧本\n## 1. 故事剧本正文\n### EP001-C001\n正文。\n', encoding='utf-8')
+        index = episode / '03-分镜脚本/EP001-分镜索引.md'
+        index.parent.mkdir()
+        index.write_text('# 分镜索引\n- 文档版本：v03\n\n'
+                         '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+                         '| EP001-C001 | EP001-C001-P002 | 15 |\n'
+                         '| EP001-C001 | EP001-C001-P001 | 10 |\n', encoding='utf-8')
+        work = episode / '其他资料/工作稿/EP001-分镜索引-工作稿.md'
+        work.parent.mkdir(parents=True)
+        work.write_text('# 工作稿\n- 当前稿版本：v04\n\n## 1. 当前内容\n'
+                        '已同步的正式段表：[分镜索引v03](../../03-分镜脚本/EP001-分镜索引.md)。\n\n'
+                        '#### 当前审批与准备安排\n| 顺序 | 当前状态 |\n| --- | --- |\n| 1 | 已批准采用 |\n'
+                        '## 2. 讨论与修改\n### 历史正文\n- 文档版本：v99\n', encoding='utf-8')
+        source = work.read_bytes()
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual(data['scenes'], ['C001'])
+        self.assertEqual([(item['id'], item['duration']) for item in data['segments']['C001']],
+                         [('P002', 15), ('P001', 10)])
+        self.assertEqual(work.read_bytes(), source)
+
     def test_episode_latest_version_selection_supports_draft_only_and_newer_formal(self):
         work = self.project / '09-剧集制作/EP001/其他资料/工作稿'
         work.mkdir(parents=True)
