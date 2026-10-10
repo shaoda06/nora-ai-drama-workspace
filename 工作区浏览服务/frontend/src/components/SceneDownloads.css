@@ -11,4 +11,7 @@
 .stage-download-actions{display:grid;gap:12px;margin-top:12px}
 .stage-download-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px}
 .stage-download-message{font-size:13px}
+.stage-download-link[aria-busy=true]{opacity:1;cursor:wait}
+.download-spinner{display:inline-block;width:16px;height:16px;border-width:2px;border-color:#ffffff66;border-top-color:white;vertical-align:-3px;margin-right:8px}
+.download-failed{color:#a23b34}
 @media(max-width:700px){.stage-downloads{gap:28px}.stage-download-section{padding-bottom:28px}}

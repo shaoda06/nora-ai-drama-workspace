@@ -9,6 +9,7 @@ import { SceneWorkspace } from './SceneWorkspace';
 import { useRefreshState } from '../refreshPosition';
 import { BreadcrumbActionsContext } from './Breadcrumbs';
 import { projectUrl } from '../api';
+import { DownloadButton } from './DownloadButton';
 import './SceneDownloads.css';
 
 export function EpisodeProduction({ project, items, selected, onSelect, revision }: { project: string; items: FileItem[]; selected: string | null; onSelect: (episode: string | null) => void; revision: number }) {
@@ -49,9 +50,9 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
     onSelect(name);
   };
   return current ? <div className="episode-detail">
-    {breadcrumbActions && episodeComplete && createPortal(<a className="stage-download-link" download
-      href={`${projectUrl(project)}/episodes/${current.name}/download`}
-      title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理正式版视频`}>打包下载本集内容</a>, breadcrumbActions)}
+    {breadcrumbActions && episodeComplete && createPortal(<DownloadButton key={current.name} pack
+      url={`${projectUrl(project)}/episodes/${current.name}/download`} label="打包下载本集内容"
+      title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理正式版视频`} />, breadcrumbActions)}
     <div className="episode-scene-header">
       {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
       <button className="link episode-script-link" disabled={!script} title={script ? undefined : '本集剧本尚未建立'} onClick={() => preview(script!)}>查看本集剧本</button>
