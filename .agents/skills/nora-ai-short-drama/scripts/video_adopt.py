@@ -205,7 +205,7 @@ def adoption(args):
             raise ValueError('采用源文件须已按具体 EP/C/P/R/阶段命名')
         if local_edit is not None and (local_path(root, receipt['path']) != source or local_path(root, output['path']) != source):
             raise ValueError('本地修改的输出凭据与批准文件不一致')
-        target = local_path(root, extra / '阶段采用视频' / STAGES[stage] / f'{scene}-场次' / filename)
+        target = local_path(root, extra.parent / '06-阶段采用视频' / STAGES[stage] / f'{scene}-场次' / filename)
         data = read_text(draft)
         start, end, row = selected_row(data, stage)
         if target.exists():

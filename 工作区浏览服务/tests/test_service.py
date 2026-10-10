@@ -468,7 +468,7 @@ class ServiceTests(unittest.TestCase):
                  'EP001-C001-P001-R003-一采.mp4', 'EP001-C001-P001-R004-二采.mp4']
         for name in names:
             (candidates / name).write_bytes(name.encode())
-        adopted = episode / '其他资料/阶段采用视频/01-一采/C001-场次'
+        adopted = episode / '06-阶段采用视频/01-一采/C001-场次'
         adopted.mkdir(parents=True)
         (candidates / names[1]).rename(adopted / names[1])
         work = episode / '其他资料/工作稿'
@@ -478,7 +478,7 @@ class ServiceTests(unittest.TestCase):
             record.write_text('## 1. 当前选定结果\n'
                 '| 处理阶段 | 当前选定文件 | R编号 | 来源任务 | 人工批准依据 |\n'
                 '| --- | --- | --- | --- | --- |\n'
-                f'| 一采 | [选定](../阶段采用视频/01-一采/C001-场次/{filename}) | {run} | 本次任务 | 用户批准 |\n'
+                f'| 一采 | [选定](../../06-阶段采用视频/01-一采/C001-场次/{filename}) | {run} | 本次任务 | 用户批准 |\n'
                 f'## 2. 逐次执行与采用记录\n### {run}\n- 处理阶段：一采\n- 用户决定：{decision}\n', encoding='utf-8')
         def videos():
             return parser.build_data(self.project, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos']

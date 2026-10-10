@@ -305,11 +305,12 @@ class ProjectParserTests(unittest.TestCase):
                  "\n```\n## 中文提示词参考版\n```text\n当次中文\n```\n")
         expected = {}
         for folder, run, stage, text in [
-                ("其他资料/阶段采用视频/01-一采/C001-场次", "R001", "一采", english),
-                ("其他资料/阶段采用视频/02-二采/C001-场次", "R002", "二采", english),
+                ("06-阶段采用视频/01-一采/C001-场次", "R001", "一采", english),
+                ("06-阶段采用视频/02-二采/C001-场次", "R002", "二采", english),
                 ("其他资料/候选视频", "R003", "一采", "Historical text"),
                 ("其他资料/候选视频", "R004", "二采", english),
-                ("06-生成结果/01-一采/C001-场次", "R007", "一采", english)]:
+                ("06-生成结果/01-一采/C001-场次", "R007", "一采", english),
+                ("其他资料/阶段采用视频/01-一采/C001-场次", "R008", "一采", english)]:
             self.put(f"{episode}/其他资料/执行附件/{identity}-{run}-{stage}/模型提示词.txt", text)
             key = f"{episode}/{folder}/{identity}-{run}-{stage}.mp4"
             self.put(key, "video fixture")
@@ -318,10 +319,10 @@ class ProjectParserTests(unittest.TestCase):
         self.put(missing, "video fixture")
         expected[missing] = {"english": "", "chinese": ""}
         excluded = [
-            f"{episode}/其他资料/阶段采用视频/01-一采/C002-场次/{identity}-R001-一采.mp4",
-            f"{episode}/其他资料/阶段采用视频/01-一采/C001-场次/{identity}-R002-二采.mp4",
+            f"{episode}/06-阶段采用视频/01-一采/C002-场次/{identity}-R001-一采.mp4",
+            f"{episode}/06-阶段采用视频/01-一采/C001-场次/{identity}-R002-二采.mp4",
             f"{episode}/其他资料/候选视频/EP002-C001-P001-R001-一采.mp4",
-            f"{episode}/其他资料/阶段采用视频/03-后处理/C001-场次/{identity}-R006-后处理.mp4",
+            f"{episode}/06-阶段采用视频/03-后处理/C001-场次/{identity}-R006-后处理.mp4",
             f"{episode}/其他资料/候选视频/EP001-C001-场次成片-v01.mp4",
             f"{episode}/其他资料/执行附件/{identity}-R001-一采/seg_0000_pre.mp4"]
         for key in excluded:
@@ -352,13 +353,10 @@ class ProjectParserTests(unittest.TestCase):
             index: "# 索引\n[分段](EP001-C001-场次分镜.md#ep001-c001-p001)",
             episode + "/03-分镜脚本/EP001-C002-场次分镜.md": "# 第二场",
             episode + "/04-专用素材/其他参考图/EP001-C001-P001-专用参考图-姿态-001.png": "image fixture",
-            episode + "/其他资料/阶段采用视频/01-一采/C001-场次/导演包/EP001-C001-一采定稿-导演包.mmxpack.zip": "zip fixture",
-            episode + "/其他资料/阶段采用视频/01-一采/C001-场次/导演包/EP001-C001-一采定稿.workflow.json": '{"nodes": []}',
-            episode + "/其他资料/阶段采用视频/02-二采/C001-场次/EP001-C001-P001-R002-二采.mp4": "video fixture",
-            episode + "/其他资料/阶段采用视频/03-后处理/C001-场次/EP001-C001-P001-R003-后处理.mp4": "video fixture",
-            episode + "/06-生成结果/01-场次成片/C001-场次/EP001-C001-成片说明.md": "# 成片说明\n- 确认状态：待确认",
-            episode + "/06-生成结果/01-场次成片/C001-场次/EP001-C001-场次成片-v01.mp4": "video fixture",
-            episode + "/06-生成结果/02-整集成片/EP001-成片说明.md": "# 整集说明",
+            episode + "/06-阶段采用视频/01-一采/C001-场次/导演包/EP001-C001-一采定稿-导演包.mmxpack.zip": "zip fixture",
+            episode + "/06-阶段采用视频/01-一采/C001-场次/导演包/EP001-C001-一采定稿.workflow.json": '{"nodes": []}',
+            episode + "/06-阶段采用视频/02-二采/C001-场次/EP001-C001-P001-R002-二采.mp4": "video fixture",
+            episode + "/06-阶段采用视频/03-后处理/C001-场次/EP001-C001-P001-R003-后处理.mp4": "video fixture",
             episode + "/其他资料/候选视频/EP001-C001-P001-R004-一采.mp4": "video fixture",
             episode + "/其他资料/执行附件/EP001-C001-P001-生成记录.md": "# 生成记录\n[候选](../候选视频/EP001-C001-P001-R004-一采.mp4)",
             episode + "/其他资料/执行附件/EP001-C001-P001-R004-一采/模型提示词.txt": "Actual text",
@@ -381,12 +379,9 @@ class ProjectParserTests(unittest.TestCase):
         self.assertEqual(len(leaves), len(set(leaves)))
         storyboard = nodes[episode + "/03-分镜脚本"]["children"]
         self.assertEqual([n["key"] for n in storyboard], [index, scene, episode + "/03-分镜脚本/EP001-C002-场次分镜.md"])
-        results = nodes[episode + "/06-生成结果"]["children"]
-        self.assertEqual([n["name"] for n in results], ["01-场次成片", "02-整集成片"])
-        adopted = nodes[episode + "/其他资料/阶段采用视频"]["children"]
+        self.assertNotIn(episode + "/06-生成结果", nodes)
+        adopted = nodes[episode + "/06-阶段采用视频"]["children"]
         self.assertEqual([n["name"] for n in adopted], ["01-一采", "02-二采", "03-后处理"])
-        scene_results = nodes[episode + "/06-生成结果/01-场次成片/C001-场次"]["children"]
-        self.assertEqual(scene_results[0]["name"], "EP001-C001-成片说明.md")
         pack_key = next(k for k in files if k.endswith(".zip"))
         canvas_key = next(k for k in files if k.endswith(".json"))
         self.assertEqual(nodes[pack_key]["kind"], "file")
@@ -997,8 +992,8 @@ class ProjectParserTests(unittest.TestCase):
         bodies, reviews = [], []
         for folder, stage in [('01-一采', '一采'), ('02-二采', '二采'), ('03-后处理', '后处理')]:
             name = f'{identity}-R001-{stage}.mp4'
-            link = f'../阶段采用视频/{folder}/C001-场次/{name}'
-            self.put(f'{root}/其他资料/阶段采用视频/{folder}/C001-场次/{name}', 'fixture')
+            link = f'../../06-阶段采用视频/{folder}/C001-场次/{name}'
+            self.put(f'{root}/06-阶段采用视频/{folder}/C001-场次/{name}', 'fixture')
             table += f'| {stage} | [视频]({link}) | R001 | 原任务 | [批准](#审阅-r001-{stage}-001) |\n'
             # An old pending execution summary must not override the actual later review.
             bodies.append(f'### R001-{stage}\n- 处理阶段：{stage}\n- 用户决定：待审核。\n')
@@ -1015,11 +1010,11 @@ class ProjectParserTests(unittest.TestCase):
                     record, text = self.video_approval_fixture()
                     for folder, stage in [('01-一采', '一采'), ('02-二采', '二采'), ('03-后处理', '后处理')]:
                         name = f'EP001-C001-P001-R001-{stage}.mp4'
-                        old = f'09-剧集制作/EP001/其他资料/阶段采用视频/{folder}/C001-场次/{name}'
+                        old = f'09-剧集制作/EP001/06-阶段采用视频/{folder}/C001-场次/{name}'
                         new = f'09-剧集制作/EP001/其他资料/候选视频/{name}'
                         self.put(new, 'fixture')
                         (self.root / old).unlink()
-                        text = text.replace(f'../阶段采用视频/{folder}/C001-场次/{name}', f'../候选视频/{name}')
+                        text = text.replace(f'../../06-阶段采用视频/{folder}/C001-场次/{name}', f'../候选视频/{name}')
                         text = text.replace(f'| {stage} | [视频]', f'| {stage} | {state}；[视频]')
                     text = text.replace('- 决定：批准采用。', '- 决定：' + decision)
                     self.put(record, text)

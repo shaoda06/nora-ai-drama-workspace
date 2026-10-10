@@ -30,7 +30,7 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
     : !script ? '本集剧本尚未建立，请先准备本集剧本，再整理场次分镜和分段计划。'
     : '本场尚无分段计划，请先完善本集分镜索引。';
   let directorFiles = current?.children;
-  for (const folder of ['其他资料', '阶段采用视频', '01-一采', selectedScene + '-场次', '导演包']) {
+  for (const folder of ['06-阶段采用视频', '01-一采', selectedScene + '-场次', '导演包']) {
     directorFiles = directorFiles?.find(item => item.name === folder)?.children;
   }
   const open = (name: string) => {

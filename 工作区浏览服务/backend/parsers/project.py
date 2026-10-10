@@ -487,7 +487,7 @@ def build_data(project, *, web_episode_navigation=False):
             english_key = f"{stage_root}/执行记录/{take[1]}-{stage[3:]}/模型提示词.txt"
         else:
             adopted = re.fullmatch(
-                r"09-剧集制作/(EP\d{3,})/(?:其他资料/阶段采用视频|06-生成结果)/(01-一采|02-二采)/(C\d{3,})-场次/"
+                r"09-剧集制作/(EP\d{3,})/(?:06-阶段采用视频|其他资料/阶段采用视频|06-生成结果)/(01-一采|02-二采)/(C\d{3,})-场次/"
                 r"(.+)\.(?:mp4|webm|mov)", key)
             candidate = re.fullmatch(
                 r"09-剧集制作/(EP\d{3,})/其他资料/候选视频/(.+)\.(?:mp4|webm|mov)", key)
@@ -1282,6 +1282,7 @@ def build_data(project, *, web_episode_navigation=False):
                     stage_folder = {"一采": "01-一采", "二采": "02-二采", "后处理": "03-后处理"}[take[2]]
                     legacy_root = episode_root + "/06-生成结果/" + identity[1] + "-场次结果/" + identity[2] + "-分段结果/" + stage_folder
                     folders = (episode_root + "/其他资料/候选视频",
+                               episode_root + "/06-阶段采用视频/" + stage_folder + "/" + identity[1] + "-场次",
                                episode_root + "/其他资料/阶段采用视频/" + stage_folder + "/" + identity[1] + "-场次",
                                episode_root + "/06-生成结果/" + stage_folder + "/" + identity[1] + "-场次",
                                legacy_root + "/候选", legacy_root + "/选定")

@@ -66,7 +66,7 @@ class AdoptionTests(unittest.TestCase):
         self.write_json(mapping, mapped)
         item = {'identity': identity, 'mapping': str(mapping), 'receipt': str(receipt)}
         self.plan['items'].append(item)
-        target = self.extra / f'阶段采用视频/{tool.STAGES[stage]}/C001-场次/{identity}.mp4'
+        target = self.extra.parent / f'06-阶段采用视频/{tool.STAGES[stage]}/C001-场次/{identity}.mp4'
         return item, draft, source, target
 
     def run_plan(self, apply=True):

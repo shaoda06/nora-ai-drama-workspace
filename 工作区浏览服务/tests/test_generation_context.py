@@ -480,13 +480,13 @@ class GenerationContextTests(unittest.TestCase):
         self.add_run('R001')
         _, _, candidate = self.add_run('R002')
         before = self.videos()[1]['context']
-        adopted = self.episode + '/其他资料/阶段采用视频/01-一采/C001-场次/EP001-C001-P001-R002-一采.mp4'
+        adopted = self.episode + '/06-阶段采用视频/01-一采/C001-场次/EP001-C001-P001-R002-一采.mp4'
         (self.project / adopted).parent.mkdir(parents=True)
         (self.project / candidate).rename(self.project / adopted)
         self.write(self.episode + '/其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md',
                    '## 1. 当前选定结果\n| 处理阶段 | 当前选定文件 | R编号 | 来源任务 | 人工批准依据 |\n'
                    '| --- | --- | --- | --- | --- |\n'
-                   '| 一采 | [选定](../阶段采用视频/01-一采/C001-场次/EP001-C001-P001-R002-一采.mp4) | R002 | 当次任务 | 用户批准 |\n'
+                   '| 一采 | [选定](../../06-阶段采用视频/01-一采/C001-场次/EP001-C001-P001-R002-一采.mp4) | R002 | 当次任务 | 用户批准 |\n'
                    '## 2. 逐次执行与采用记录\n### R002\n- 处理阶段：一采\n- 用户决定：批准采用\n')
         current = self.videos()[1]
         self.assertTrue(current['approved'])
