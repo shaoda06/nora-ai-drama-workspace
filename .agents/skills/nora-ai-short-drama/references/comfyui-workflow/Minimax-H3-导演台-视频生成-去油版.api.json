@@ -197,7 +197,7 @@
       "clear_vram_between_segments": true,
       "clear_vram_before_refine": true,
       "clear_vram_before_face_refine": false,
-      "cache_frames_codec": "raw",
+      "cache_frames_codec": "ffv1",
       "precise_segment_memory": true,
       "minimax_director_ui": "",
       "model": [

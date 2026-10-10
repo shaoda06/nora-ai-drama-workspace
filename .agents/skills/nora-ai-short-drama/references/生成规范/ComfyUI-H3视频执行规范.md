@@ -1,6 +1,6 @@
 # ComfyUI-H3视频执行规范
 
-版本：v1.57；更新日期：2026-10-09。
+版本：v1.58；更新日期：2026-10-10。
 
 本规范管理视频工作流的填写、执行与记录。制作顺序及审批读取[开发流程第二部分第7节](../流程规范/短剧开发流程规范.md#7-生成视频验收与衔接修改)，后处理与其他视频修改的阶段归属读取[阶段与当前版本修改](../流程规范/短剧开发流程规范.md#视频阶段与当前版本修改)；提示词正文读取[逐集内容制作规范](../流程规范/逐集内容制作规范.md)及 `h3-prompt-writing`。准备资料、实际任务和人工审核按[逐集目录规范](../流程规范/逐集目录与资产管理规范.md)保存，不把技术成功写成内容获批。
 
@@ -72,7 +72,7 @@ python3 -B -m unittest discover -s "/技能实际安装目录/nora-ai-short-dram
 | 尺寸及帧率 | 502控件、timeline根字段及output统一1024×576、24fps；output为fixed尺寸模式、严格16:9、32对齐，实际约0.59MP（megapixels控件为0.6）；ref_max_size / refMaxSize=864；各组refImageSize="1536"，限制参考图片最长边1536 |
 | 采样 | Euler，CFG=1；261为Beta12步，289按8分割；前段SIGMAS连502，一采噪声表末尾归零后实际报告9步；后段SIGMAS连407，二采4步。502的steps/scheduler显示不覆盖外部SIGMAS |
 | Shift | 502 shift_video=12，shift_audio=3 |
-| 性能控件 | clear_vram_between_segments=true，precise_segment_memory=true；clear_vram_before_refine=true，clear_vram_before_face_refine=false，cache_frames_codec=raw |
+| 性能控件 | clear_vram_between_segments=true，precise_segment_memory=true；clear_vram_before_refine=true，clear_vram_before_face_refine=false，cache_frames_codec=ffv1（缓存画面采用FFV1无损压缩，不改变MP4导出） |
 | 连续设置 | continue；重绘0.1；前段末尾22帧；keep_tail=true。实际衔接选择按导演台节点使用规范第6节 |
 | 二采模型分块 | 408：MiniMaxLowVRAMAttention，head_chunks=4；409：MiniMaxChunkFeedForward，chunks=4、seq_threshold=4096；只接二采模型支路 |
 | Refine | 407：upscale / h3_latent / minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors / Euler / passes=1 / seed_mode=inherit / megapixels=1.265625 / width=1536 / height=864；跟随一采比例，目标1536×864；confirm_first_pass=true；skip_fl2v=true；时间与空间分块关闭 |
