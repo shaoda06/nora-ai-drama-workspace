@@ -4,11 +4,11 @@
 .stage-download-section>h3{margin:0 0 24px;color:var(--green);font-size:20px}
 .stage-download-group+.stage-download-group{margin-top:24px}
 .stage-download-group>h4{margin:0 0 12px;font-size:15px}
-.stage-download-link{display:inline-block;border:1px solid var(--line);border-radius:7px;padding:7px 14px;text-decoration:none;font-size:15px;line-height:1.7}
-.stage-download-link:hover{background:#edf5ef;border-color:var(--green)}
-.stage-download-count{display:inline-block;margin-left:12px}
-.stage-download-bundle{background:var(--green);border-color:var(--green);color:white}
-.stage-download-bundle:hover{background:#1d5d51;color:white}
-.stage-download-actions{display:flex;flex-wrap:wrap;gap:12px}
-.stage-download-actions .stage-download-link{max-width:100%;overflow-wrap:anywhere}
+.stage-download-group>summary{font-size:15px;font-weight:600;cursor:pointer}
+.stage-download-link{display:inline-block;max-width:100%;overflow-wrap:anywhere;background:var(--green);color:white;border:1px solid var(--green);border-radius:7px;padding:7px 14px;text-decoration:none;font-size:15px;line-height:1.7}
+.stage-download-link:hover{background:#1d5d51;color:white}
+.stage-download-group .stage-download-count{display:inline-block;margin-left:8px;font-size:13px;font-weight:400}
+.stage-download-actions{display:grid;gap:12px;margin-top:12px}
+.stage-download-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px}
+.stage-download-message{font-size:13px}
 @media(max-width:700px){.stage-downloads{gap:28px}.stage-download-section{padding-bottom:28px}}
