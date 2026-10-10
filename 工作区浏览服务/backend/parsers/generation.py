@@ -8,6 +8,9 @@ from .project import field, markdown
 
 
 def segment_body(text, segment):
+    current = re.search(r"^##[ \t]+1\.[ \t]*当前内容[ \t]*\n(.*?)(?=^##[ \t]|\Z)", text, re.M | re.S)
+    if current:
+        text = re.sub(r"^#{3,6}(?= )", lambda match: match[0][2:], current[1].strip(), flags=re.M)
     shots = re.search(r"^##[ \t]+1\.[ \t]*镜头正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)", text, re.M | re.S)
     section = re.search(r"^###[ \t]+分段[ \t]+" + re.escape(segment)
                         + r"[ \t]*\n.*?(?=^###[ \t]|\Z)", shots[1], re.M | re.S) if shots else None

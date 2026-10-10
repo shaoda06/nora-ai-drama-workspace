@@ -142,6 +142,20 @@ class GenerationContextTests(unittest.TestCase):
         self.assertEqual(video['checkedAt'], '未记录')
         self.assertIn('?v=', video['url'])
 
+    def test_frozen_workdraft_displays_only_its_current_segment_without_changing_bytes(self):
+        context, _, _ = self.add_run('R003')
+        text = self.storyboard('v003', '冻结工作稿当次镜头')
+        nested = '\n'.join('##' + line if line.startswith('#') else line for line in text.splitlines())
+        frozen = '# 场次分镜工作稿\n## 1. 当前内容\n' + nested + '\n## 2. 历史记录\n旧稿不展示。\n'
+        self.write(context['storyboard']['file'], frozen)
+        result = self.videos()[0]['context']
+        self.assertEqual(result['issues'], [])
+        self.assertIn('冻结工作稿当次镜头', result['scriptHtml'])
+        self.assertNotIn('其他分段不展示', result['scriptHtml'])
+        self.assertNotIn('旧稿不展示', result['scriptHtml'])
+        self.assertEqual([(shot['id'], shot['duration']) for shot in result['shots']], [('EP001-SH001', 3)])
+        self.assertEqual((self.project / context['storyboard']['file']).read_text(encoding='utf-8'), frozen)
+
     def automatic_task(self, selected=(0, 1), common_enabled=True):
         root = self.project / (self.episode + '/其他资料/执行附件/EP001-C001-P001-R004-一采')
         script = self.episode + '/03-分镜脚本/EP001-C001-场次分镜.md'
