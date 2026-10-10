@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Submit one authorized Nora task using the project's ordered ComfyUI endpoints."""
+"""Submit one authorized Nora task using the project's primary ComfyUI endpoint."""
 import argparse
 from contextlib import contextmanager
 import errno
@@ -14,7 +14,7 @@ import browser_tasks
 
 TASK_TYPES = ('image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess')
 VIDEO_TASK_TYPES = ('video-first-pass', 'video-second-pass')
-DEFAULT_ONLY_TASK_TYPES = (*VIDEO_TASK_TYPES, 'video-postprocess')
+VIDEO_CONTEXT_TASK_TYPES = (*VIDEO_TASK_TYPES, 'video-postprocess')
 VIDEO_GENERATION_NODES = {'MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo'}
 LOCK_PATH = Path(__file__).resolve().parents[1] / 'state' / 'comfyui-dispatch.lock'
 
@@ -24,20 +24,15 @@ def load_config(project, timeout):
     if not isinstance(data, dict):
         raise client.ClientError('invalid_config', 'Configuration must be a JSON object')
     if set(data) == {'remote-url'}:
-        data = {'enable-multi-remote': False, 'remote-urls': [data['remote-url']],
-                'busy-pending-threshold': 2, 'default-only-task-types': list(DEFAULT_ONLY_TASK_TYPES)}
-    required = {'enable-multi-remote', 'remote-urls', 'busy-pending-threshold', 'default-only-task-types'}
-    if set(data) != required:
-        raise client.ClientError('invalid_config', 'Expected the four project dispatch fields')
-    urls, threshold, pinned = data['remote-urls'], data['busy-pending-threshold'], data['default-only-task-types']
-    if (type(data['enable-multi-remote']) is not bool or not isinstance(urls, list) or not urls or
-            any(not isinstance(url, str) for url in urls) or type(threshold) is not int or threshold < 1 or
-            not isinstance(pinned, list) or any(kind not in TASK_TYPES for kind in pinned)):
-        raise client.ClientError('invalid_config', 'Invalid endpoint list, switch, threshold or task types')
+        data = {'remote-urls': [data['remote-url']]}
+    if set(data) != {'remote-urls'}:
+        raise client.ClientError('invalid_config', 'Expected only remote-urls')
+    urls = data['remote-urls']
+    if not isinstance(urls, list) or not urls or any(not isinstance(url, str) for url in urls):
+        raise client.ClientError('invalid_config', 'Invalid endpoint list')
     data['remote-urls'] = [client.Client(url, timeout).url for url in urls]
     if len(set(data['remote-urls'])) != len(urls):
         raise client.ClientError('invalid_config', 'Endpoint list contains duplicate addresses')
-    data['default-only-task-types'] = list(dict.fromkeys([*DEFAULT_ONLY_TASK_TYPES, *pinned]))
     return data
 
 
@@ -69,19 +64,6 @@ def submission_lock():
         finally:
             stream.seek(0)
             release()
-
-
-def video_job_count(queue):
-    count = 0
-    for item in queue['queue_pending'] + queue['queue_running']:
-        # ComfyUI queue entries: [number, prompt_id, prompt, extra_data, outputs...].
-        if (not isinstance(item, list) or len(item) < 3 or not isinstance(item[2], dict) or
-                not item[2] or any(not isinstance(node, dict) or
-                    not isinstance(node.get('class_type'), str) for node in item[2].values())):
-            raise client.ClientError('invalid_response', 'Queue entry lacks a readable API prompt')
-        if any(node['class_type'] in VIDEO_GENERATION_NODES for node in item[2].values()):
-            count += 1
-    return count
 
 
 def dispatch(args):
@@ -122,77 +104,45 @@ def dispatch(args):
         raise client.ClientError('path_collision', 'Upload and submission evidence must have distinct names')
     with submission_lock():
         config = load_config(args.project, args.timeout)
-        eligible = {client.Client(url, args.timeout).url for url in args.eligible_url}
-        if not eligible <= set(config['remote-urls']):
-            raise client.ClientError('invalid_eligibility', 'Eligible addresses must come from this project')
-        urls = config['remote-urls']
-        if args.target_url:
-            target = client.Client(args.target_url, args.timeout).url
-            if target not in urls or target not in eligible:
-                raise client.ClientError('invalid_target', 'User-selected endpoint must be configured and verified eligible')
-            urls = [target]
-        elif not config['enable-multi-remote'] or args.task_type in config['default-only-task-types']:
-            urls = urls[:1]
-        checks = []
-        for url in urls:
-            if url not in eligible:
-                checks.append({'url': url, 'state': 'not_eligible'})
-                continue
-            remote = client.Client(url, args.timeout)
+        url = config['remote-urls'][0]
+        if client.Client(args.eligible_url, args.timeout).url != url:
+            raise client.ClientError('invalid_eligibility', 'Verify the project primary endpoint before submission')
+        remote = client.Client(url, args.timeout)
+        for item in uploads:
+            response_path = record / item['response-name']
+            # Reserve the response before upload; never re-upload an ambiguous attempt.
+            if response_path.exists():
+                evidence = client.strict_json(response_path.read_bytes())
+                if evidence.get('url') != url or evidence.get('ok') is not True:
+                    raise client.ClientError('upload_guard', 'Reconcile existing upload evidence before continuing')
+                uploaded = evidence['data']
+            else:
+                response_path.parent.mkdir(parents=True, exist_ok=True)
+                with response_path.open('xb') as stream:
+                    try:
+                        uploaded = client.upload(remote, argparse.Namespace(file=item['file'], subfolder=item['subfolder']))
+                    except client.ClientError as exc:
+                        stream.write(client.encoded({'ok': False, 'url': url, 'time': client.now(), 'error': str(exc)}))
+                        raise
+                    stream.write(client.encoded({'ok': True, 'url': url, 'time': client.now(), 'data': uploaded}))
+            workflow[item['node']]['inputs'][item['input']] = uploaded['input_path']
+        if args.task_type in VIDEO_CONTEXT_TASK_TYPES:
             try:
-                queue = remote.json('/queue')
-                if (not isinstance(queue, dict) or
-                        not all(isinstance(queue.get(k), list) for k in ('queue_pending', 'queue_running'))):
-                    raise client.ClientError('invalid_response', 'Queue response lacks pending/running arrays')
-                videos = video_job_count(queue)
-            except client.ClientError as exc:
-                checks.append({'url': url, 'state': 'unknown', 'error': str(exc)})
-                continue
-            check = {'url': url, 'pending': len(queue['queue_pending']),
-                     'running': len(queue['queue_running']), 'video_jobs': videos}
-            if not args.allow_queue and (videos or check['pending'] >= config['busy-pending-threshold']):
-                checks.append({**check, 'state': 'busy',
-                               'reason': 'video_generation' if videos else 'pending_threshold'})
-                continue
-            checks.append({**check, 'state': 'selected', 'allow_queue': args.allow_queue})
-            for item in uploads:
-                response_path = record / item['response-name']
-                # Reserve the response before upload; never re-upload an ambiguous attempt.
-                if response_path.exists():
-                    evidence = client.strict_json(response_path.read_bytes())
-                    if evidence.get('url') != url or evidence.get('ok') is not True:
-                        raise client.ClientError('upload_guard', 'Reconcile existing upload evidence before continuing')
-                    uploaded = evidence['data']
-                else:
-                    response_path.parent.mkdir(parents=True, exist_ok=True)
-                    with response_path.open('xb') as stream:
-                        try:
-                            uploaded = client.upload(remote, argparse.Namespace(file=item['file'], subfolder=item['subfolder']))
-                        except client.ClientError as exc:
-                            stream.write(client.encoded({'ok': False, 'url': url, 'time': client.now(), 'error': str(exc)}))
-                            raise
-                        stream.write(client.encoded({'ok': True, 'url': url, 'time': client.now(), 'data': uploaded}))
-                workflow[item['node']]['inputs'][item['input']] = uploaded['input_path']
-            if args.task_type in DEFAULT_ONLY_TASK_TYPES:
-                try:
-                    prepare_generation_context(args.project, record, workflow, args.task_type)
-                except KeyError as exc:
-                    raise ValueError('生成资料输入映射或API缺少字段：' + str(exc)) from exc
-            # Once a POST is attempted, errors propagate: never try the next endpoint.
-            result = (browser_tasks.submit(args, workflow, url) if args.monitor == 'browser'
-                      else client.submit(remote, args, workflow=workflow))
-            return {'dispatch_state': 'accepted', 'url': url, 'checks': checks, **result}
-        return {'dispatch_state': 'deferred', 'reason': 'no_eligible_available_endpoint', 'checks': checks}
+                prepare_generation_context(args.project, record, workflow, args.task_type)
+            except KeyError as exc:
+                raise ValueError('生成资料输入映射或API缺少字段：' + str(exc)) from exc
+        # Once a POST is attempted, errors propagate: never retry or change endpoints.
+        result = (browser_tasks.submit(args, workflow, url) if args.monitor == 'browser'
+                  else client.submit(remote, args, workflow=workflow))
+        return {'dispatch_state': 'accepted', 'url': url, **result}
 
 
 def parser():
     p = client.Parser(description=__doc__)
     p.add_argument('--project', required=True, help='Project root containing comfyui-config.json; relative to cwd')
-    p.add_argument('--task-type', required=True, choices=TASK_TYPES, help='Authorized task stage; video passes and postprocessing default to the first endpoint')
-    p.add_argument('--target-url', help='Use only this endpoint when explicitly selected by the user; no fallback, still checks eligibility and queue')
-    p.add_argument('--allow-queue', action='store_true', help='Only when explicitly authorized: submit despite existing video jobs or pending threshold; still checks reachability, eligibility and submission evidence')
+    p.add_argument('--task-type', required=True, choices=TASK_TYPES, help='Authorized task stage; all tasks use the project primary endpoint')
     p.add_argument('--workflow', required=True, help='Prepared API JSON; unchanged except declared uploaded input paths')
-    p.add_argument('--eligible-url', action='append', required=True, help='Repeat for each endpoint whose nodes/models and existing inputs were verified')
+    p.add_argument('--eligible-url', required=True, help='Verified primary endpoint; must match the first project address')
     p.add_argument('--uploads', help='Optional JSON array of local files and loader bindings; paths relative to cwd')
     p.add_argument('--record-dir', required=True, help='Existing business evidence directory; video tasks require 输入映射.json and automatically save generation inputs before POST')
     p.add_argument('--attempt-name', default='submit-attempt.json', help='Exclusive attempt evidence filename')

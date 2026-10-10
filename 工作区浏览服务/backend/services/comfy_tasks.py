@@ -119,8 +119,8 @@ class TaskStore:
             raise ValueError('任务必须属于当前工作区projects下的项目')
         config = client.strict_json((project / 'comfyui-config.json').read_bytes())
         configured = config.get('remote-urls', [config.get('remote-url')])
-        if data.url not in [client.Client(url, data.timeout).url for url in configured]:
-            raise ValueError('服务地址不在项目配置中')
+        if client.Client(data.url, data.timeout).url != client.Client(configured[0], data.timeout).url:
+            raise ValueError('新任务只允许提交到项目主节点')
         record = Path(data.record_dir).resolve()
         if not record.is_relative_to(project):
             raise ValueError('执行附件必须位于所属项目内')

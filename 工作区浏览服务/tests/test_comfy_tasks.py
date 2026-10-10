@@ -76,6 +76,32 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             watch.assert_awaited_once_with('task')
             post.assert_not_called()
 
+    async def test_new_task_cannot_submit_to_backup(self):
+        backup = 'http://backup.invalid:8188'
+        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [self.data.url, backup]}))
+        self.data.url = backup
+        with patch.object(t, 'connect', AsyncMock()) as connect, patch.object(t.client, 'submit') as post:
+            with self.assertRaisesRegex(ValueError, '主节点'):
+                await self.store.submit(self.data)
+            connect.assert_not_awaited()
+            post.assert_not_called()
+        self.assertEqual(self.store.rows, {})
+
+    async def test_restart_preserves_old_backup_task_address_without_resubmitting(self):
+        primary = self.data.url
+        backup = 'http://backup.invalid:8188'
+        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [primary, backup]}))
+        self.data.url = backup
+        self.seed()
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        with patch.object(self.store, 'watch', AsyncMock()) as watch, patch.object(t.client, 'submit') as post:
+            await self.store.start()
+            await asyncio.sleep(0)
+            watch.assert_awaited_once_with('task')
+            post.assert_not_called()
+        self.assertEqual(self.store.client_for(self.store.rows['task']['input']).url, backup)
+
     async def test_restart_recovers_saved_submit_response_and_preserves_unknown_delivery(self):
         self.seed()
         self.store.save('task', prompt_id=None, status='submitting')
