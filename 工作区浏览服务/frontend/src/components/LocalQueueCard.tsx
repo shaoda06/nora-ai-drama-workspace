@@ -86,7 +86,10 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
     </div>
     <div className="local-queue-card-body">
       <div className="local-queue-card-description">
-        <h2>{task.title}</h2>
+        <div className="local-queue-card-title"><h2>{task.title}</h2>
+          {history && onDetails && <button type="button" className="local-queue-card-detail"
+            aria-label={`查看${task.title}详情`} onClick={() => onDetails(task.id)}>详情 →</button>}
+        </div>
         {!history && <p className="local-queue-card-session" title={task.source_session_name}>来源会话：{task.source_session_name || '会话名称暂不可用'}</p>}
       </div>
       {['local_queued', 'queued', 'paused'].includes(task.status) && <div className="local-queue-card-actions" aria-label="本地任务操作">
@@ -113,8 +116,6 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
     {task.error && <p className="local-queue-card-error">{task.error}</p>}
     {task.notification && ['waiting_connection', 'waiting_idle', 'delivery_unknown', 'sending'].includes(task.notification) && <p className="local-queue-card-session">
       通知：{task.notification === 'delivery_unknown' ? '送达状态不明，等待确认' : '等待发送'}</p>}
-    {history && onDetails && <div className="local-queue-card-detail"><button type="button"
-      aria-label={`查看${task.title}详情`} onClick={() => onDetails(task.id)}>详情 →</button></div>}
   </>;
   return <>
     <section ref={cardRef} className="local-queue-card" data-local-task-id={task.id}
