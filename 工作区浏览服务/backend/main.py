@@ -342,15 +342,15 @@ def completed_episode_download(name: str, episode: Episode):
 
 
 @app.get('/api/projects/{name}/episodes/{episode}/downloads')
-def episode_download_list(name: str, episode: Episode) -> dict[str, Any]:
+def episode_download_list(name: str, episode: Episode, scene: Scene | None = None) -> dict[str, Any]:
     try:
-        files = episode_resources(store, name, episode, entry(name)['data'])
+        files = episode_resources(store, name, episode, entry(name)['data'], scene)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     prefix = '/api/projects/' + quote(name, safe='') + '/episodes/' + episode + '/downloads/'
     file_prefix = '/api/projects/' + quote(name, safe='') + '/files/'
     return {stage: {kind: {'count': len(items),
-                         'url': prefix + quote(stage, safe='') + '/videos' if kind == 'videos' and items else None,
+                         'url': prefix + quote(stage, safe='') + '/videos' + ('?scene=' + scene if scene else '') if kind == 'videos' and items else None,
                          'files': [] if kind == 'videos' else [
                              {'name': path.name, 'url': file_prefix + quote(path.relative_to(store.project(name)).as_posix(), safe='/') + '?download=true'}
                              for path, _ in items]}
@@ -359,12 +359,13 @@ def episode_download_list(name: str, episode: Episode) -> dict[str, Any]:
 
 @app.get('/api/projects/{name}/episodes/{episode}/downloads/{stage}/{kind}')
 def episode_download(name: str, episode: Episode, stage: Literal['一采', '二采', '后处理'],
-                     kind: Literal['videos']):
+                     kind: Literal['videos'], scene: Scene | None = None):
     try:
-        files = episode_resources(store, name, episode, entry(name)['data'])[stage][kind]
+        files = episode_resources(store, name, episode, entry(name)['data'], scene)[stage][kind]
         if not files:
-            raise FileNotFoundError('本集该阶段没有可下载的' + KINDS[kind])
-        return zip_response(files, video_archive_name(name, episode))
+            raise FileNotFoundError(('本场' if scene else '本集') + '该阶段没有可下载的' + KINDS[kind])
+        filename = f'{name}-第{int(episode[2:])}集-{scene}-{stage}-正式版视频.zip' if scene else video_archive_name(name, episode)
+        return zip_response(files, filename)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except ValueError as error:

@@ -77,6 +77,61 @@ class EpisodeDownloadTests(unittest.TestCase):
                 self.assertEqual(manifest[stage]['videos']['count'], 2)
                 self.assertEqual(self.archive(stage, 'videos'), expected[stage])
 
+    def test_scene_downloads_switch_scope_and_keep_selected_stage_and_script_order(self):
+        expected = {scene: {} for scene in self.episode['scenes']}
+        for stage in episode_downloads.STAGES:
+            for scene in self.episode['scenes']:
+                expected[scene][stage] = self.video(stage, scene, 'P012')[1]
+                self.video(stage, scene, 'P003', approved=False)
+        self.episode['scenes'] = ['C002', 'C001']
+        for scene_number, scene in enumerate(self.episode['scenes'], 1):
+            manifest = self.client.get(self.url, params={'scene': scene}).json()
+            for stage in episode_downloads.STAGES:
+                with self.subTest(scene=scene, stage=stage):
+                    resource = manifest[stage]['videos']
+                    self.assertEqual(resource['count'], 1)
+                    self.assertTrue(resource['url'].endswith('?scene=' + scene))
+                    response = self.client.get(resource['url'])
+                    self.assertEqual(response.status_code, 200)
+                    self.assertIn(f'示例项目-第1集-{scene}-{stage}-正式版视频.zip',
+                                  unquote(response.headers['content-disposition']))
+                    with ZipFile(BytesIO(response.content)) as bundle:
+                        self.assertEqual(bundle.namelist(), [f'第{scene_number}场-第1段-正式版.mp4'])
+                        self.assertEqual(bundle.read(bundle.namelist()[0]), expected[scene][stage])
+
+    def test_scene_download_does_not_read_missing_files_from_other_scenes(self):
+        expected = self.video('后处理', 'C001', 'P001')[1]
+        self.video('后处理', 'C002', 'P001')
+        (self.project / self.episode['segments']['C002'][0]['videos'][0]['key']).unlink()
+        resource = self.client.get(self.url, params={'scene': 'C001'}).json()['后处理']['videos']
+        response = self.client.get(resource['url'])
+        self.assertEqual(response.status_code, 200)
+        with ZipFile(BytesIO(response.content)) as bundle:
+            self.assertEqual(bundle.read('第1场-第1段-正式版.mp4'), expected)
+        self.assertEqual(self.completed_download().status_code, 404)
+
+    def test_scene_request_requires_existing_scene_and_does_not_fall_back_to_other_scenes(self):
+        self.video('一采', 'C001', 'P001')
+        for scene, status in [('invalid', 422), ('C999', 404)]:
+            self.assertEqual(self.client.get(self.url, params={'scene': scene}).status_code, status)
+            self.assertEqual(self.client.get(self.url + '/一采/videos', params={'scene': scene}).status_code, status)
+        resource = self.client.get(self.url, params={'scene': 'C002'}).json()['一采']['videos']
+        self.assertEqual(resource, {'count': 0, 'url': None, 'files': []})
+        response = self.client.get(self.url + '/一采/videos', params={'scene': 'C002'})
+        self.assertEqual(response.status_code, 404)
+        self.assertIn('本场', response.json()['detail'])
+
+    def test_scene_director_and_canvas_list_only_selected_scene(self):
+        for scene in self.episode['scenes']:
+            for suffix in ['-导演包.mmxpack.zip', '.workflow.json']:
+                self.source(f'09-剧集制作/EP001/06-阶段采用视频/02-二采/{scene}-场次/导演包/EP001-{scene}-二采定稿{suffix}',
+                            scene.encode())
+        resource = self.client.get(self.url, params={'scene': 'C002'}).json()['二采']
+        for kind in ('director', 'canvas'):
+            self.assertEqual(resource[kind]['count'], 1)
+            self.assertIn('C002', resource[kind]['files'][0]['name'])
+            self.assertEqual(self.client.get(resource[kind]['files'][0]['url']).content, b'C002')
+
     def test_director_and_canvas_download_original_files_without_outer_zip(self):
         expected = {stage: {'director': {}, 'canvas': {}} for stage in episode_downloads.STAGES}
         for stage, folder in episode_downloads.STAGES.items():
@@ -200,6 +255,8 @@ class EpisodeDownloadTests(unittest.TestCase):
     def test_completed_zip_contains_all_scenes_in_script_and_storyboard_order(self):
         expected = [self.video('后处理', 'C001', number) for number in ('P005', 'P012', 'P006')]
         expected += [self.video('后处理', 'C002', 'P001')]
+        self.video('一采', 'C001', 'P005')
+        self.video('二采', 'C002', 'P001')
         segment = self.episode['segments']['C001'][0]
         segment['videos'].append(dict(segment['videos'][0], approved=False, key='候选视频.mp4'))
         # Script order is authoritative, even when dictionary insertion order differs.

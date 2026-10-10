@@ -51,7 +51,7 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
   };
   return current ? <div className="episode-detail">
     {breadcrumbActions && episodeComplete && createPortal(<DownloadButton key={current.name} pack
-      url={`${projectUrl(project)}/episodes/${current.name}/download`} label="打包下载本集内容"
+      url={`${projectUrl(project)}/episodes/${current.name}/download`} label="本集打包下载"
       title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理正式版视频`} />, breadcrumbActions)}
     <div className="episode-scene-header">
       {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}

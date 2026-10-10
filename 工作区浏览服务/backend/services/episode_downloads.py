@@ -51,11 +51,15 @@ def completed_episode_videos(store, name, episode, data):
     return files
 
 
-def resources(store, name, episode, data):
+def resources(store, name, episode, data, scene=None):
     selected = indexed_episode(episode, data)
+    if scene is not None and scene not in selected['scenes']:
+        raise FileNotFoundError('场次不存在')
     result = {stage: {kind: [] for kind in KINDS} for stage in STAGES}
-    for scene_number, scene in enumerate(selected['scenes'], 1):
-        for segment_number, segment in enumerate(selected['segments'][scene], 1):
+    for scene_number, selected_scene in enumerate(selected['scenes'], 1):
+        if scene is not None and selected_scene != scene:
+            continue
+        for segment_number, segment in enumerate(selected['segments'][selected_scene], 1):
             for video in segment['videos']:
                 if video['approved']:
                     path = store.file(name, video['key'], video['fileRevision'])
@@ -69,12 +73,14 @@ def resources(store, name, episode, data):
             episode_root / '06-生成结果') if (base / folder).is_dir()), None)
         if stage_root is None:
             continue
-        for scene in selected['scenes']:
-            directory = stage_root / (scene + '-场次') / '导演包'
+        for selected_scene in selected['scenes']:
+            if scene is not None and selected_scene != scene:
+                continue
+            directory = stage_root / (selected_scene + '-场次') / '导演包'
             for pattern, kind in (('*-导演包.mmxpack.zip', 'director'), ('*.workflow.json', 'canvas')):
-                for source in sorted(directory.glob(episode + '-' + scene + '-' + pattern)):
+                for source in sorted(directory.glob(episode + '-' + selected_scene + '-' + pattern)):
                     path = store.file(name, source.relative_to(root).as_posix())
-                    result[stage][kind].append((path, scene + '-场次/导演包/' + source.name))
+                    result[stage][kind].append((path, selected_scene + '-场次/导演包/' + source.name))
     return result
 
 

@@ -10,12 +10,12 @@ type Downloads = Record<string, Record<'videos' | 'director' | 'canvas', Resourc
 function OriginalDownloads({ resource, label }: { resource: Resource; label: string }) {
   return resource.files.length
     ? <>{resource.files.map(file => <DownloadButton key={file.url} url={file.url} label={file.name} title={`下载原文件：${file.name}`} />)}</>
-    : <DownloadButton url={null} label={label} title="本集该阶段暂无对应文件" />;
+    : <DownloadButton url={null} label={label} title="本场该阶段暂无对应文件" />;
 }
 
-export function SceneDownloads({ project, episode, revision }: { project: string; episode: string; revision: number }) {
-  const downloads = useQuery({ queryKey: ['episode-downloads', project, episode, revision],
-    queryFn: () => get<Downloads>(`${projectUrl(project)}/episodes/${episode}/downloads`), placeholderData: keepPreviousData });
+export function SceneDownloads({ project, episode, scene, revision }: { project: string; episode: string; scene: string; revision: number }) {
+  const downloads = useQuery({ queryKey: ['episode-downloads', project, episode, scene, revision],
+    queryFn: () => get<Downloads>(`${projectUrl(project)}/episodes/${episode}/downloads?scene=${encodeURIComponent(scene)}`), placeholderData: keepPreviousData });
   return <div className="stage-downloads" aria-label="资源下载">
     {(downloads.isFetching || downloads.isPending || downloads.error) && <Result
       loading={downloads.isFetching || downloads.isPending} error={downloads.error} retry={downloads.refetch} retrying={downloads.isFetching} />}
@@ -25,7 +25,9 @@ export function SceneDownloads({ project, episode, revision }: { project: string
       <h3>{stage}</h3>
       <section className="stage-download-group" aria-label={stage + '正式版视频下载'}>
         <h4>正式版视频下载 <small className="stage-download-count muted">{downloads.data[stage].videos.count}个正式版视频</small></h4>
-        <DownloadButton url={downloads.data[stage].videos.url} label="打包下载" pack title={`下载本集${stage}的${downloads.data[stage].videos.count}个正式版视频`} />
+        <DownloadButton url={downloads.data[stage].videos.url} label="本场打包下载" pack title={downloads.data[stage].videos.url
+          ? `仅下载${episode}场次${scene}的${stage}正式版视频，共${downloads.data[stage].videos.count}段`
+          : `场次${scene}的${stage}暂无正式版视频`} />
       </section>
       <details className="stage-download-group" aria-label={stage + '导演包下载'}>
         <summary>导演包下载</summary>

@@ -82,6 +82,6 @@ export function SceneWorkspace({ scope, segments, emptyMessage, revision, storyb
         {!storyboardDocument && <Result loading={storyboard.isPending} error={storyboard.error} retry={storyboard.refetch} retrying={storyboard.isFetching} />}
         {(storyboardDocument || storyboard.data) && <Document value={storyboardDocument || storyboard.data!} />}
       </>}
-    </div> : view === 'dialogue' ? <SceneStoryboardEditor key={positionKey} scope={scope} segments={segments} /> : <SceneDownloads project={scope.project} episode={scope.episode} revision={revision} />}
+    </div> : view === 'dialogue' ? <SceneStoryboardEditor key={positionKey} scope={scope} segments={segments} /> : <SceneDownloads project={scope.project} episode={scope.episode} scene={scene} revision={revision} />}
   </div></>;
 }

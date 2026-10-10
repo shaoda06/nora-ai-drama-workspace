@@ -51,7 +51,7 @@ export function DownloadButton({ url, label, title, pack = false }: {
 
   return <div className="stage-download-row">
     <button type="button" className="stage-download-link" disabled={!url || busy} aria-busy={busy}
-      title={url ? title : '本集该阶段暂无对应文件'} onClick={download}>
+      title={title} onClick={download}>
       {busy && <span className="loading-spinner download-spinner" aria-hidden="true" />}
       {busy ? (pack ? '正在打包…' : '正在准备…') : label}
     </button>
