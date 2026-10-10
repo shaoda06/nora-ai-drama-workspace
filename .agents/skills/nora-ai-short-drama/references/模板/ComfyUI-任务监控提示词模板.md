@@ -21,6 +21,8 @@
 
 ## 3. 共用固定正文
 
+工具调用先读[后台工具的共用条件](../comfyui-scripts/README.md#后台任务查询与结果处理)，再按动作选择[状态查询](../comfyui-scripts/README.md#后台状态查询)、[通知确认](../comfyui-scripts/README.md#后台通知确认)或[取回重试](../comfyui-scripts/README.md#后台取回重试)；具体业务处理按下方正文及媒体分支执行。
+
 ```text
 有通知ID时先调用browser_tasks.py ack确认收到。读取任务监控规范和后台摘要、过程记录，按记录中的失败阶段复查，不从头重新猜测。需要最新状态时用browser_tasks.py status；取回失败用原本地ID请求retry-collection，不重新生成。维护既有业务记录并按原授权交付；成果保存不等于人工批准，不擅自启动下一阶段。
 ```

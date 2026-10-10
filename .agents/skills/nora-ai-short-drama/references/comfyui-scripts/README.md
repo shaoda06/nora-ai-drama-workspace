@@ -267,6 +267,42 @@ Nora服务配置与任务地址绑定读取[项目ComfyUI配置](../流程规范
 
 Nora任务准备、查询和取回时，读取[监控规范的精简留档规则](../流程规范/ComfyUI-任务监控规范.md#执行附件精简留档)，据此确定附件留存及当前检查时间的维护。
 
+## 后台任务查询与结果处理
+
+入口：[browser_tasks.py](../../scripts/browser_tasks.py)，Python 3.9+、仅标准库。下面三个命令共用本节的调用条件，再按实际动作读取对应小节；无需读取上传、提交和素材映射章节。
+
+依赖已启动的[本机浏览服务](../../../../../工作区浏览服务/README.md#日常启动)。脚本自动读取工作区 `工作区浏览服务/runtime/task-service.json` 中的本机接口地址与内部凭证，不手填或输出凭证；三个命令均不接收 `--url` 或 `--project`，远端绑定由后台按原任务记录处理。将示例中的技能目录和ID替换为本次真实值。配置缺失、服务不可达或接口拒绝时命令非零退出并输出错误，按[异常处理](../流程规范/ComfyUI-任务监控规范.md#31-异常检查与连接恢复)核对，不改走重新提交。
+
+### 后台状态查询
+
+适用于用户主动查询已有任务进度，或处理结果时核对最新后台状态。读取原入队响应的 `local_task_id` 或后台记录的本地任务 `id`；它不是远端 `prompt_id`。
+
+```sh
+python "实际技能目录/scripts/browser_tasks.py" status --task-id 本地任务UUID
+```
+
+此命令只读本机后台，单次返回任务JSON，不启动监控或轮询。核对 `status`、`updated_at`、`progress`、`collected`／`expected`、`error` 及 `record_dir`；失败阶段存在时读取 `failure_stage`。退出0表示查询成功，生成和取回是否完成仍看任务状态与实际成果。跟进方式见[查询规则](../流程规范/ComfyUI-任务监控规范.md#11-待提交跟进方式与间隔)。
+
+### 后台通知确认
+
+仅在收到真实后台通知时使用其中的通知批次ID；主动查询没有通知ID时不调用。必须在真实来源会话内执行，脚本读取当前 `CODEX_THREAD_ID`，后台核对通知归属；不伪造会话上下文。
+
+```sh
+python "实际技能目录/scripts/browser_tasks.py" ack --notification-id 通知批次UUID
+```
+
+成功返回 `notification_id` 和 `status=acknowledged`，表示确认收到通知，不表示已完成业务收尾或用户已批准。按[通知规则](../流程规范/ComfyUI-任务监控规范.md#32-汇报规范)先确认收到，再读 `后台任务状态.json`、`后台过程记录.json` 及实际附件；后续按[结果处理入口](../流程规范/生成任务读取规范.md#进度查询与结果处理)选择媒体规则和交付要求。
+
+### 后台取回重试
+
+仅用于后台状态为 `collection_failed` 的原任务。按[异常处理与授权](../流程规范/ComfyUI-任务监控规范.md#31-异常检查与连接恢复)核对后，用原本地任务ID请求：
+
+```sh
+python "实际技能目录/scripts/browser_tasks.py" retry-collection --task-id 本地任务UUID
+```
+
+成功返回 `local_task_id` 和 `status=collecting`，仅表示后台接受了取回重试，最终结果由后台状态和通知确认。后台复用原终态结果及成功下载凭据，不上传素材、不重新生成；其他状态会被拒绝，不换ID绕过。需要主动核对时用[后台状态查询](#后台状态查询)。
+
 ## Nora统一分配与提交
 
 入口：[comfyui_dispatch.py](../../scripts/comfyui_dispatch.py)。Agent调用此入口登记后台本地队列，不向远端上传或提交，不等待生成。项目配置及调度、按钮语义读取[服务配置与任务提交规范](../流程规范/ComfyUI-服务配置与任务提交规范.md)。上方comfyui_client.py为后台复用的通信模块，普通Agent任务不直接调用upload／submit／download绕过队列。
@@ -321,15 +357,7 @@ targets必须逐一对应输入映射selected_indices，保留原始组序，不
 
 入队成功返回dispatch_state=enqueued、local_task_id（UUID4）、monitor_id及status=local_queued（使用--start-paused时为paused）；此时还没有远端prompt_id。对同一执行附件、相同入队资料重复登记返回原ID；资料不同拒绝，不能改目录绕过原任务。后台真正提交后保存远端ID和实际请求。完成、失败、重启与通知规则读取[任务监控规范](../流程规范/ComfyUI-任务监控规范.md)。
 
-Agent结果处理接口（均使用本机内部凭证）：
-
-```sh
-python /实际技能目录/scripts/browser_tasks.py status --task-id 本地UUID
-python /实际技能目录/scripts/browser_tasks.py retry-collection --task-id 本地UUID
-python /实际技能目录/scripts/browser_tasks.py ack --notification-id 通知批次UUID
-```
-
-retry-collection只允许取回失败任务，复用原终态结果和成功下载凭据，不上传素材、不重新生成。收到通知先ack，再读后台任务状态.json、后台过程记录.json及实际附件；ack要求当前真实来源会话。
+入队后的Agent操作直接进入[后台任务查询与结果处理](#后台任务查询与结果处理)，按当前动作只读对应工具小节。
 
 ### 视频资料自动保存
 
@@ -385,7 +413,7 @@ retry-collection只允许取回失败任务，复用原终态结果和成功下�
 
 工作流仍按本次声明的任务类型校验；原生H3任务继续核对阶段、输入映射及分段计划，不读取远端其他任务的工作流判断是否可提交。
 
-后续查询、取回重试及通知确认使用上方browser_tasks.py接口；后台负责原远端地址、提交证据和防重复。
+后续查询、取回重试及通知确认使用[后台任务查询与结果处理](#后台任务查询与结果处理)中的对应接口；后台负责原远端地址、提交证据和防重复。
 
 调度回归测试使用模拟响应及临时目录，不连接服务器、不生成媒体：
 
