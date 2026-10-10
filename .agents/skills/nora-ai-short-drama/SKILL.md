@@ -67,7 +67,7 @@ description: "创建、规划或推进 AI 连续短剧项目，以及主控会�
 
 ## 固定脚本调用
 
-固定脚本用于直接复用既有执行能力，agent只准备本次参数和任务数据，不重新设计已有工具已覆盖的调用流程。调用说明入口：[ComfyUI通信](references/comfyui-scripts/README.md)、[视频批准后的采用工具](references/comfyui-scripts/README.md#视频批准后的采用收尾)（业务真源见[采用记录规则](references/流程规范/逐集目录与资产管理规范.md#视频采用记录与批准依据)）、[库存刷新](dependencies/comfyui-inventory/SKILL.md#connection-and-refresh)（本流程使用依赖表指定的工作区真源）、[工作流校验与测试](references/生成规范/ComfyUI-H3视频执行规范.md#11-离线配对校验与回归测试)、[项目浏览工具与测试](references/流程规范/项目浏览入口规范.md#工具组成与阅读入口)。
+固定脚本用于直接复用既有执行能力，agent只准备本次参数和任务数据，不重新设计已有工具已覆盖的调用流程。调用说明入口：[ComfyUI通信](references/comfyui-scripts/README.md)、[视频批准后的采用工具](references/comfyui-scripts/README.md#视频批准后的采用收尾)（业务真源见[采用记录规则](references/流程规范/逐集目录与资产管理规范.md#视频采用记录与批准依据)）、[场次阶段批准后的定稿留档](references/comfyui-scripts/README.md#场次阶段批准后的定稿留档)、[库存刷新](dependencies/comfyui-inventory/SKILL.md#connection-and-refresh)（本流程使用依赖表指定的工作区真源）、[工作流校验与测试](references/生成规范/ComfyUI-H3视频执行规范.md#11-离线配对校验与回归测试)、[项目浏览工具与测试](references/流程规范/项目浏览入口规范.md#工具组成与阅读入口)。
 
 日常调用以“脚本调用说明应足以支持直接执行”为行为基调，而不只是脚本维护要求。已有固定脚本且说明足够时，agent默认按说明准备参数并直接执行，不为了泛化的“先确认一下”额外读源码，也不重新设计已有工具覆盖的实现。参数不明确时按需查看 `--help`，不要求每次重复读取帮助。仅在说明存在具体缺口、行为与说明不符、执行异常或需要修改脚本时，查看与问题相关的代码，不默认通读完整实现。日常检查聚焦本次任务参数、执行授权及返回结果，既有安全和验收要求保持不变。
 
