@@ -1,4 +1,6 @@
 import asyncio
+import json
+from types import SimpleNamespace
 from io import BytesIO
 from pathlib import Path
 import tempfile
@@ -9,7 +11,7 @@ from zipfile import ZipFile
 
 from fastapi.testclient import TestClient
 from backend import main
-from backend.services import episode_downloads
+from backend.services import episode_downloads, jianying_draft
 from backend.services.projects import ProjectStore
 
 
@@ -25,7 +27,10 @@ class EpisodeDownloadTests(unittest.TestCase):
         data = {'catalogues': {'09-剧集制作': {'children': [self.episode]}}}
         for override in (patch.object(main, 'store', ProjectStore(self.root)),
                          patch.object(main, 'entry', return_value={'data': data}),
-                         patch.object(episode_downloads, 'DOWNLOAD_DIRECTORY', self.root / 'downloads')):
+                         patch.object(episode_downloads, 'DOWNLOAD_DIRECTORY', self.root / 'downloads'),
+                         patch.object(jianying_draft.MediaInfo, 'parse', return_value=SimpleNamespace(
+                             video_tracks=[SimpleNamespace(duration=2500, width=1536, height=864, frame_rate='24.000')],
+                             general_tracks=[], image_tracks=[]))):
             override.start()
             self.addCleanup(override.stop)
         self.client = TestClient(main.app)
@@ -60,7 +65,9 @@ class EpisodeDownloadTests(unittest.TestCase):
         self.assertEqual(int(response.headers['content-length']), len(response.content))
         self.assertIn('示例项目-第1集-正式版视频.zip', unquote(response.headers['content-disposition']))
         with ZipFile(BytesIO(response.content)) as bundle:
-            return {item.filename: bundle.read(item) for item in bundle.infolist()}
+            self.assertIn('draft_content.json', bundle.namelist())
+            self.assertIn('draft_meta_info.json', bundle.namelist())
+            return {item.filename: bundle.read(item) for item in bundle.infolist() if not item.filename.endswith('.json')}
 
     def test_videos_include_all_scenes_only_approved_and_selected_stage(self):
         expected = {}
@@ -96,7 +103,8 @@ class EpisodeDownloadTests(unittest.TestCase):
                     self.assertIn(f'示例项目-第1集-{scene}-{stage}-正式版视频.zip',
                                   unquote(response.headers['content-disposition']))
                     with ZipFile(BytesIO(response.content)) as bundle:
-                        self.assertEqual(bundle.namelist(), [f'第{scene_number}场-第1段-正式版.mp4'])
+                        self.assertEqual(bundle.namelist(), [f'第{scene_number}场-第1段-正式版.mp4',
+                                                           'draft_content.json', 'draft_meta_info.json'])
                         self.assertEqual(bundle.read(bundle.namelist()[0]), expected[scene][stage])
 
     def test_scene_download_does_not_read_missing_files_from_other_scenes(self):
@@ -268,11 +276,52 @@ class EpisodeDownloadTests(unittest.TestCase):
         self.assertEqual(int(response.headers['content-length']), len(response.content))
         with ZipFile(BytesIO(response.content)) as bundle:
             self.assertEqual(bundle.namelist(), ['第1场-第1段-正式版.mp4', '第2场-第1段-正式版.mp4',
-                                               '第2场-第2段-正式版.mp4', '第2场-第3段-正式版.mp4'])
-            self.assertEqual([bundle.read(member) for member in bundle.namelist()], [content for _, content in expected])
+                                               '第2场-第2段-正式版.mp4', '第2场-第3段-正式版.mp4',
+                                               'draft_content.json', 'draft_meta_info.json'])
+            self.assertEqual([bundle.read(member) for member in bundle.namelist() if not member.endswith('.json')], [content for _, content in expected])
         stage_files = self.archive('后处理', 'videos')
         self.assertEqual(list(stage_files), ['第1场-第1段-正式版.mp4', '第2场-第1段-正式版.mp4',
                                             '第2场-第2段-正式版.mp4', '第2场-第3段-正式版.mp4'])
+
+    def test_draft_uses_same_package_names_script_order_full_durations_and_original_audio(self):
+        for scene, number in [('C001', 'P012'), ('C001', 'P002'), ('C002', 'P001')]:
+            self.video('后处理', scene, number)
+        self.episode['scenes'] = ['C002', 'C001']
+        urls = [self.url.replace('/downloads', '/download'), self.url + '/后处理/videos?scene=C001']
+        for url in urls:
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertEqual(response.status_code, 200)
+                with ZipFile(BytesIO(response.content)) as bundle:
+                    doc = json.loads(bundle.read('draft_content.json'))
+                    meta = json.loads(bundle.read('draft_meta_info.json'))
+                    members = [name for name in bundle.namelist() if name.endswith('.mp4')]
+                    materials = {item['id']: item for item in doc['materials']['videos']}
+                    self.assertEqual(len(doc['tracks']), 1)
+                    segments = doc['tracks'][0]['segments']
+                    self.assertEqual([materials[s['material_id']]['path'] for s in segments],
+                                     [jianying_draft.DRAFT_PATH + name for name in members])
+                    for index, segment in enumerate(segments):
+                        self.assertEqual(segment['target_timerange'], {'start': index * 2500000, 'duration': 2500000})
+                        self.assertEqual(segment['source_timerange'], {'start': 0, 'duration': 2500000})
+                        self.assertEqual(segment['speed'], 1.0)
+                        self.assertEqual(segment['volume'], 1.0)
+                    self.assertEqual(doc['duration'], len(members) * 2500000)
+                    self.assertEqual(meta['tm_duration'], doc['duration'])
+                    self.assertEqual(meta['draft_id'], doc['id'])
+                    self.assertEqual(doc['fps'], 24)
+                    self.assertNotIn(str(self.project), json.dumps(doc, ensure_ascii=False))
+                    self.assertEqual(doc['materials']['audios'], [])
+                    self.assertEqual(doc['materials']['transitions'], [])
+                    self.assertEqual(doc['materials']['texts'], [])
+
+    def test_invalid_video_does_not_deliver_a_zip_with_a_broken_draft(self):
+        self.video('后处理', 'C001', 'P001')
+        with patch.object(jianying_draft.MediaInfo, 'parse', return_value=SimpleNamespace(
+                video_tracks=[], general_tracks=[], image_tracks=[])):
+            response = self.client.get(self.url + '/后处理/videos?scene=C001')
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(list((self.root / 'downloads').iterdir()), [])
 
     def test_segment_order_is_preserved_when_earlier_videos_are_unapproved(self):
         for number in ('P001', 'P002', 'P003', 'P004', 'P005'):

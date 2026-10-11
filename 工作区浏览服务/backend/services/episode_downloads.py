@@ -5,6 +5,7 @@ from tempfile import NamedTemporaryFile
 from zipfile import ZIP_STORED, ZipFile
 
 from fastapi.responses import FileResponse
+from backend.services.jianying_draft import draft_files
 
 STAGES = {'后处理': '03-后处理', '二采': '02-二采', '一采': '01-一采'}
 KINDS = {'videos': '正式版视频', 'director': '导演包', 'canvas': '画布'}
@@ -115,6 +116,8 @@ def zip_response(files, filename):
                     raise ValueError('同一分段存在多个正式版，请核对采用记录后重新下载')
                 members.add(member)
                 bundle.write(source, member)
+            for member, content in draft_files(files, Path(filename).stem).items():
+                bundle.writestr(member, content.encode('utf-8'))
         response = VideoZipResponse(archive.name, media_type='application/zip', filename=filename)
         stack.pop_all()
     return response
