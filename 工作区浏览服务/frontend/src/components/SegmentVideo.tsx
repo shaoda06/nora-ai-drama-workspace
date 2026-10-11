@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import type { SegmentVideo as VideoItem } from '../api';
 import { Original } from '../components';
 
@@ -17,11 +18,11 @@ export const latestVideo = (items: VideoItem[]) => {
   }, undefined);
 };
 
-export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, wide, onToggleWide }: {
+export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, wide, onToggleWide, continuousControl }: {
   current?: VideoItem; onTimeChange: (time: number) => void; autoPlay?: boolean;
   onEnded?: () => void; onError?: () => void;
   onFileRevision?: (revision: string) => void;
-  cachedSource?: string; wide: boolean; onToggleWide: () => void;
+  cachedSource?: string; wide: boolean; onToggleWide: () => void; continuousControl: ReactNode;
 }) {
   const [error, setError] = useState(false);
   const [loaded, setLoaded] = useState(current);
@@ -43,6 +44,7 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
     <div className="video-source">
       {current && loaded && <div className="video-source-summary"><span>{current.approved ? '正式版 · 原' : ''}{candidateLabel(current.candidateNumber)} · {current.run} · {current.stage}</span></div>}
       <div className="video-source-actions">
+        {continuousControl}
         <button className="video-layout-toggle" aria-pressed={wide} onClick={onToggleWide}>{wide ? '恢复布局' : '宽屏显示'}</button>
         {loaded && <Original url={loaded.url} label="查看视频原文件" />}
       </div>

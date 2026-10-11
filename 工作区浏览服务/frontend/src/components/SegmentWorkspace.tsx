@@ -27,15 +27,15 @@ function SegmentReferences({ context }: { context?: GenerationContext }) {
   </section>;
 }
 
-export function SegmentWorkspace({ scope, segment, items, selection: { stage, key: selected }, onSelectionChange, playbackControl, autoPlay, onVideoEnded, onVideoError, cachedSources }: {
+export function SegmentWorkspace({ scope, segment, items, selection: { stage, key: selected }, onSelectionChange, playbackControl, autoPlay, onVideoEnded, onVideoError, cachedSources, wideVideo, onToggleWide, continuousControl }: {
   scope: NoteScope; segment: string;
   items: VideoItem[]; selection: { stage: string; key: string }; onSelectionChange: (selection: { stage: string; key: string }) => void;
+  wideVideo: boolean; onToggleWide: () => void; continuousControl: ReactNode;
   playbackControl: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
   cachedSources: Record<string, string>;
 }) {
   const positionKey = `segment/${scope.project}/${scope.episode}/${scope.scene}/${segment}`;
   const [tab, setTab] = useRefreshState(positionKey + '/tab', 'script');
-  const [wideVideo, setWideVideo] = useRefreshState(positionKey + '/wideVideo', false);
   const [language, setLanguage] = useRefreshState(positionKey + '/language', 'zh');
   const [scriptMode, setScriptMode] = useRefreshState(positionKey + '/scriptMode', 'aligned');
   const [playback, setPlayback] = useState({ key: '', time: 0 });
@@ -77,7 +77,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
       {playbackControl}
     </div>
     <div className={'segment-workspace' + (wideVideo ? ' is-wide' : '')}>
-      <SegmentVideo key={current?.key || 'empty'} wide={wideVideo} onToggleWide={() => setWideVideo(value => !value)} current={current} cachedSource={current && cachedSources[current.url]} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
+      <SegmentVideo key={current?.key || 'empty'} wide={wideVideo} onToggleWide={onToggleWide} continuousControl={continuousControl} current={current} cachedSource={current && cachedSources[current.url]} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
       <SegmentReferences context={context} />
       <section className="segment-script" aria-label="分镜脚本、提示词与修改意见区域">
         <div className="segment-script-header">

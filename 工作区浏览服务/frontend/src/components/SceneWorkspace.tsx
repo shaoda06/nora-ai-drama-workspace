@@ -32,6 +32,7 @@ export function SceneWorkspace({ scope, segments, emptyMessage, revision, storyb
   const segment = segments.some(item => item.id === requestedSegment) ? requestedSegment : segments[0]?.id || '';
   const [selections, setSelections] = useRefreshState<Record<string, Selection>>(positionKey + '/selections', {});
   const [continuous, setContinuous] = useState(false);
+  const [wideVideo, setWideVideo] = useRefreshState(positionKey + '/wideVideo', false);
   const [autoPlay, setAutoPlay] = useState(false);
   const [error, setError] = useState('');
   const currentSegment = segments.find(item => item.id === segment);
@@ -73,9 +74,11 @@ export function SceneWorkspace({ scope, segments, emptyMessage, revision, storyb
     </p>}
     {error && <p className="error" role="alert">{error}</p>}
     {currentSegment && <SegmentWorkspace key={segment} scope={scope} segment={segment} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources}
+      wideVideo={wideVideo} onToggleWide={() => setWideVideo(value => !value)}
+      continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>}
       autoPlay={autoPlay} onVideoError={() => setAutoPlay(false)} onVideoEnded={advance}
       onSelectionChange={value => { setAutoPlay(false); setError(''); setSelections(previous => ({ ...previous, [segment]: value })); }}
-      playbackControl={<div className="scene-review-actions"><label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>{notesExport.control}</div>} />}
+      playbackControl={<div className="scene-review-actions">{notesExport.control}</div>} />}
     {notesExport.dialog}
     </> : view === 'storyboard' ? <div className="scene-storyboard">
       {!scene ? <p className="muted">本集尚无场次分镜。</p> : <>
