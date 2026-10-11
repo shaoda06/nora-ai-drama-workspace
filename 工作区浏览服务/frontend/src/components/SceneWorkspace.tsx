@@ -5,7 +5,7 @@ import { get, projectUrl } from '../api';
 import type { FileItem, RecordData } from '../api';
 import { Document, Result } from '../components';
 import { UnderlineTabs } from './UnderlineTabs';
-import { latestVideo } from './SegmentVideo';
+import { latestVideo, selectedRevision } from './SegmentVideo';
 import { SegmentWorkspace } from './SegmentWorkspace';
 import { useRevisionNotesExport } from './RevisionNotes';
 import { useSceneVideoCache } from './useSceneVideoCache';
@@ -26,7 +26,7 @@ export function SceneWorkspace({ scope, segments, emptyMessage, revision, storyb
   const notesExport = useRevisionNotesExport(scope, segments);
   const videoCache = useSceneVideoCache(segments.flatMap(item => {
     const video = latestVideo(item.videos);
-    return video ? [video] : [];
+    return video?.url ? [video] : [];
   }));
   const [requestedSegment, setSegment] = useRefreshState(positionKey + '/segment', segments[0]?.id || '');
   const segment = segments.some(item => item.id === requestedSegment) ? requestedSegment : segments[0]?.id || '';
@@ -38,8 +38,9 @@ export function SceneWorkspace({ scope, segments, emptyMessage, revision, storyb
   const currentSegment = segments.find(item => item.id === segment);
   const latest = currentSegment && latestVideo(currentSegment.videos);
   const savedSelection = selections[segment];
-  const chosen = savedSelection && (!savedSelection.key || currentSegment?.videos.some(video => video.stage === savedSelection.stage && video.key === savedSelection.key))
-    ? savedSelection : { stage: latest?.stage || '', key: latest?.key || '' };
+  const savedRevision = savedSelection && currentSegment && selectedRevision(currentSegment.videos, savedSelection);
+  const chosen = savedRevision ? { stage: savedRevision.stage, key: savedRevision.key }
+    : savedSelection && !savedSelection.key ? savedSelection : { stage: latest?.stage || '', key: latest?.key || '' };
   useEffect(() => {
     setSelections(previous => {
       const arriving = segments.filter(item => !previous[item.id] && item.videos.length).map(item => {
@@ -53,8 +54,8 @@ export function SceneWorkspace({ scope, segments, emptyMessage, revision, storyb
     const next = segments[segments.findIndex(item => item.id === segment) + 1];
     if (!continuous || !next) { setAutoPlay(false); return; }
     const selected = selections[next.id];
-    const video = selected ? next.videos.find(item => item.stage === selected.stage && item.key === selected.key) : latestVideo(next.videos);
-    if (!video) { setAutoPlay(false); setError(`${next.id}尚未选定可播放的画质和版本，连续播放已停在当前分段。`); return; }
+    const video = selected ? selectedRevision(next.videos, selected) : latestVideo(next.videos);
+    if (!video?.url) { setAutoPlay(false); setError(`${next.id}尚未选定可播放的画质和版本，连续播放已停在当前分段。`); return; }
     setError('');
     setSegment(next.id);
     setAutoPlay(true);

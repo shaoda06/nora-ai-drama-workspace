@@ -48,7 +48,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
   const context = current?.context;
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
   const shots = context?.shots || [];
-  const canAlign = shots.length > 0 && shots.every(shot => shot.duration !== null);
+  const canAlign = !!current?.url && shots.length > 0 && shots.every(shot => shot.duration !== null);
   const time = playback.key === current?.key ? playback.time : 0;
   let plannedDuration = 0;
   const timedShots = canAlign ? shots.map(shot => {

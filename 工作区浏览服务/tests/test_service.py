@@ -449,7 +449,7 @@ class ServiceTests(unittest.TestCase):
         (attachments / 'EP001-C001-P001-R011-后处理.mp4').write_bytes(b'not a final candidate')
         data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]['segments']['C001'][0]['videos']
         self.assertEqual([(v['candidateNumber'], v['run'], v['stage'], v['approved']) for v in data],
-                         [(1, 'R002', '一采', False), (1, 'R010', '二采', False)])
+                         [(2, 'R002', '一采', False), (10, 'R010', '二采', False)])
         self.assertEqual(self.client.get(data[0]['url']).content, b'video candidate')
         self.assertTrue(data[0]['url'].startswith('/api/projects/'))
         self.assertTrue((candidates / 'EP001-C001-P001-R002-一采.mp4').is_file())
@@ -491,7 +491,7 @@ class ServiceTests(unittest.TestCase):
         write_record('R002', names[1], '批准采用')
         data = videos()
         self.assertEqual([(v['run'], v['candidateNumber'], v['approved']) for v in data],
-                         [('R001', 1, False), ('R002', 2, True), ('R003', 3, False), ('R004', 1, False)])
+                         [('R001', 1, False), ('R002', 2, True), ('R003', 3, False), ('R004', 4, False)])
         self.assertEqual(len(data), 4)
         self.assertEqual((adopted / names[1]).read_bytes(), names[1].encode())
         # Replacing the adopted version restores the old candidate's original number.

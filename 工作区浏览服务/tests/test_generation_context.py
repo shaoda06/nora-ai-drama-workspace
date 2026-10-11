@@ -67,6 +67,51 @@ class GenerationContextTests(unittest.TestCase):
     def videos(self):
         return build_data(self.project, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos']
 
+    def test_revision_without_video_keeps_number_and_own_materials(self):
+        _, _, missing = self.add_run('R001')
+        self.add_run('R003')
+        (self.project / missing).unlink()
+        record = self.episode + '/其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md'
+        self.write(record, '## 2. 修订版各阶段与采用记录\n'
+                   '### R001\n- 处理阶段：一采\n- 任务状态：终态未知\n'
+                   '### R002-一采\n- 任务状态：未提交\n'
+                   '### 审阅-R009-一采-001\n- 用户决定：待审核\n')
+        data = self.videos()
+        self.assertEqual([(v['run'], v['candidateNumber']) for v in data],
+                         [('R001', 1), ('R002', 2), ('R003', 3)])
+        first, prepared, third = data
+        self.assertEqual(first['url'], '')
+        self.assertEqual(first['fileRevision'], '')
+        self.assertFalse(first['approved'])
+        self.assertEqual(first['taskStatus'], '终态未知')
+        self.assertIn('R001当次原文', first['context']['scriptHtml'])
+        self.assertEqual(first['context']['prompts']['english'], 'R001 actual submitted prompt')
+        self.assertEqual(len(first['context']['references']['common']), 1)
+        self.assertEqual(prepared['url'], '')
+        self.assertTrue(prepared['context']['issues'])
+        self.assertNotIn('最新版不应出现', str(prepared['context']))
+        self.assertTrue(third['url'])
+        with patch.object(main, 'store', ProjectStore(self.project.parent)), TestClient(main.app) as client:
+            entries = client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]['segments']['C001'][0]['videos']
+            self.assertEqual(entries[0]['url'], '')
+            self.assertTrue(entries[0]['context']['references']['common'][0]['url'].startswith('/api/projects/'))
+        # A later video joins the existing revision instead of creating a fourth choice.
+        self.write(missing, 'returned original video')
+        after = self.videos()
+        self.assertEqual(len(after), 3)
+        self.assertEqual(after[0]['context'], first['context'])
+        self.assertEqual(after[0]['candidateNumber'], 1)
+        self.assertTrue(after[0]['url'])
+
+    def test_revision_zero_and_stage_identity_do_not_depend_on_files(self):
+        self.add_run('R000')
+        _, _, missing = self.add_run('R007', '二采')
+        (self.project / missing).unlink()
+        data = self.videos()
+        self.assertEqual([(v['run'], v['stage'], v['candidateNumber']) for v in data],
+                         [('R000', '一采', 0), ('R007', '二采', 7)])
+        self.assertEqual(data[1]['url'], '')
+
     def test_running_candidate_uses_unique_task_state_and_frozen_inputs(self):
         _, _, candidate = self.add_run('R004')
         owner = self.episode + '/其他资料/工作稿/EP001-C001-P002-视频制作-工作稿.md'
@@ -88,6 +133,11 @@ class GenerationContextTests(unittest.TestCase):
         self.assertEqual(after['url'], before['url'])
         self.assertEqual(after['candidateNumber'], before['candidateNumber'])
         self.assertTrue((self.project / candidate).exists())
+        (self.project / candidate).unlink()
+        without_video = self.videos()[0]
+        self.assertEqual(without_video['url'], '')
+        self.assertEqual(without_video['taskStatus'], '失败')
+        self.assertEqual(without_video['checkedAt'], '2026-10-07 09:35')
 
     def test_final_replacement_changes_file_url_without_inheriting_old_approval(self):
         _, _, candidate = self.add_run('R004')

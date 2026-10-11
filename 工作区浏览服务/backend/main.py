@@ -260,7 +260,7 @@ def view(value, name):
     """Rewrite generated project-relative links without changing record content."""
     prefix = '/api/projects/' + quote(name, safe='') + '/files/'
     if isinstance(value, dict):
-        return {k: prefix + re.sub('%5c', '/', v, flags=re.I) if (k == 'url' or k.endswith('Url')) and isinstance(v, str) and not urlsplit(v).scheme and not v.startswith(('#', '/'))
+        return {k: prefix + re.sub('%5c', '/', v, flags=re.I) if (k == 'url' or k.endswith('Url')) and isinstance(v, str) and v and not urlsplit(v).scheme and not v.startswith(('#', '/'))
                 else view(v, name) for k, v in value.items()}
     if isinstance(value, list):
         return [view(v, name) for v in value]

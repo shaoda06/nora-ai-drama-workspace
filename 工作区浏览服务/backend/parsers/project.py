@@ -1304,26 +1304,38 @@ def build_data(project, *, web_episode_navigation=False):
                     if Path(item["key"]).parent.as_posix() in folders:
                         stat = (project / item["key"]).stat()
                         revision = str(stat.st_mtime_ns) + "-" + str(stat.st_size)
-                        body = video_record_body(record, take[1], take[2])
-                        task_body = body
-                        for link in markdown_links(field(body, "共同任务证据与状态入口"), record_key):
-                            anchor = unquote(urlsplit(link["url"]).fragment)
-                            if (link["key"].endswith("-视频制作-工作稿.md")
-                                    and re.fullmatch(r"r\d{3,}(?:-(?:一采|二采|后处理))?", anchor, re.I)):
-                                owner = read(link["key"]) or ""
-                                task_body = video_record_body(owner, anchor.split('-')[0].upper(), take[2])
-                                break
                         videos.append({"key": item["key"], "url": item["url"], "run": take[1], "stage": take[2],
-                                       "approved": item["key"] in approved_keys, "fileRevision": revision,
-                                       "deliveryStatus": field(body, "取回核对状态"),
-                                       "taskStatus": field(task_body, "任务状态"),
-                                       "checkedAt": field(task_body, "最近检查时间")})
+                                       "approved": item["key"] in approved_keys, "fileRevision": revision})
                         videos[-1]["url"] += "?v=" + revision
+                # A revision exists independently of its video. Keep failed, pending
+                # and uncollected revisions available for their recorded inputs.
+                revisions = set()
+                for context_identity in generation_contexts:
+                    take = re.fullmatch(re.escape(segment_identity) + r"-(R\d{3,})-(一采|二采|后处理)", context_identity)
+                    if take:
+                        revisions.add((take[1], take[2]))
+                for run in re.findall(r"^### (R\d{3,})(?!\d)", record, re.M):
+                    for stage in ("一采", "二采", "后处理"):
+                        if video_record_body(record, run, stage):
+                            revisions.add((run, stage))
+                present = {(video["run"], video["stage"]) for video in videos}
+                for run, stage in sorted(revisions - present):
+                    videos.append({"key": segment_identity + "-" + run + "-" + stage,
+                                   "url": "", "run": run, "stage": stage, "approved": False, "fileRevision": ""})
                 videos.sort(key=lambda item: (int(item["run"][1:]), item["stage"], item["key"]))
-                stage_counts = {"一采": 0, "二采": 0, "后处理": 0}
                 for video in videos:
-                    stage_counts[video["stage"]] += 1
-                    video["candidateNumber"] = stage_counts[video["stage"]]
+                    body = video_record_body(record, video["run"], video["stage"])
+                    task_body = body
+                    for link in markdown_links(field(body, "共同任务证据与状态入口"), record_key):
+                        anchor = unquote(urlsplit(link["url"]).fragment)
+                        if (link["key"].endswith("-视频制作-工作稿.md")
+                                and re.fullmatch(r"r\d{3,}(?:-(?:一采|二采|后处理))?", anchor, re.I)):
+                            owner = read(link["key"]) or ""
+                            task_body = video_record_body(owner, anchor.split('-')[0].upper(), video["stage"])
+                            break
+                    video.update(deliveryStatus=field(body, "取回核对状态"), taskStatus=field(task_body, "任务状态"),
+                                 checkedAt=field(task_body, "最近检查时间"))
+                    video["candidateNumber"] = int(video["run"][1:])
                     video["context"] = resolve_context(segment_identity + "-" + video["run"] + "-" + video["stage"],
                         generation_contexts, project, read, read_plain, text_previews)
                 episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration),
