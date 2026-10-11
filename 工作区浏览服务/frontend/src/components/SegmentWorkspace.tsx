@@ -7,6 +7,7 @@ import { UnderlineTabs } from './UnderlineTabs';
 import { TabSelect } from './TabSelect';
 import { candidateLabel, latestVideo, SegmentVideo } from './SegmentVideo';
 import { CopyButton } from './CopyButton';
+import { PromptSections } from './PromptSections';
 import { RevisionNoteEditor } from './RevisionNotes';
 import type { NoteScope } from './RevisionNotes';
 import { useRefreshState } from '../refreshPosition';
@@ -105,7 +106,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
               <TabNav compact label="提示词语言" items={[{ value: 'zh', label: '中文' }, { value: 'en', label: '英文' }]} selected={language} onChange={setLanguage} />
               {prompt && <CopyButton label="复制" text={prompt} />}
             </div>
-            {prompt ? <pre className="segment-prompt-text">{prompt}</pre> : <div className="script-placeholder">该次{language === 'zh' ? '中文参考版' : '实际提交的英文提示词'}尚未关联或已缺失。</div>}
+            {prompt ? <PromptSections key={`${current!.key}/${language}`} text={prompt} /> : <div className="script-placeholder">该次{language === 'zh' ? '中文参考版' : '实际提交的英文提示词'}尚未关联或已缺失。</div>}
           </>}
           {context.issues.length > 0 && <div className="notice">{context.issues.map(issue => <p key={issue}>{issue}</p>)}</div>}
         </>}

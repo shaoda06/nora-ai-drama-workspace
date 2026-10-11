@@ -1,0 +1,6 @@
+.prompt-sections{display:grid;gap:10px;margin-top:16px;min-width:0}
+.prompt-section{margin:0;border:1px solid var(--line);border-radius:7px;background:white;min-width:0}
+.prompt-section>summary{padding:10px 12px;cursor:pointer;color:var(--green);overflow-wrap:anywhere}
+.prompt-section>summary:hover{background:#edf5ef}
+.prompt-section>summary code{font-size:13px}
+.prompt-section>pre{margin:0;padding:12px;border:0;border-top:1px solid var(--line);border-radius:0 0 7px 7px;background:transparent}
