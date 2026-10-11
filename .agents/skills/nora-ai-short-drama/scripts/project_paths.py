@@ -18,11 +18,14 @@ def project_file(project, value, *, recorded=False):
     path = (path if absolute else project / path).resolve()
     if not path.is_relative_to(project):
         raise ValueError('文件路径越出项目：' + str(value))
+    relative = path.relative_to(project)
+    if not recorded and relative.parts and relative.parts[0].casefold() in ('projects', project.name.casefold()):
+        raise ValueError('文件路径必须相对项目根目录，不得重复 projects/项目名 或项目名：' + str(value))
     return path
 
 
-def relative_file(project, value):
-    return project_file(project, value).relative_to(Path(project).resolve()).as_posix()
+def relative_file(project, value, *, recorded=False):
+    return project_file(project, value, recorded=recorded).relative_to(Path(project).resolve()).as_posix()
 
 
 LOCAL_FIELDS = {'path', 'file', 'record_dir', 'receipt', 'history', 'evidence', 'local_file',

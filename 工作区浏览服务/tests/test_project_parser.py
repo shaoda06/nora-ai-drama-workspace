@@ -32,6 +32,15 @@ class ProjectParserTests(unittest.TestCase):
         self.assertEqual(by_name["参考图-工作稿.md"]["statusHtml"], "")
         self.assertIn("已确认", by_name["已确认稿.md"]["statusHtml"])
 
+    def test_navigation_only_contains_existing_formal_sections(self):
+        for name in portal.FORMAL_SECTIONS:
+            self.put(name + '/内容.md', '# 正式栏目')
+        for name in ('projects', '荒院暴富', '10-临时测试', '临时附件', '99-综合资料', '历史版本'):
+            self.put(name + '/保留记录.json', '{}')
+        data = portal.build_data(self.root)
+        self.assertEqual([item['name'] for item in data['directories']], list(portal.FORMAL_SECTIONS))
+        self.assertTrue((self.root / 'projects/保留记录.json').is_file())
+
     def test_record_document_preview_has_no_invented_confirmation(self):
         source = "00-项目定位/其他资料/工作稿/参考图-工作稿.md"
         text = "# 工作稿\n- 当前稿版本：v01\n- 当前状态及待办：等待本批审核\n\n## 生成记录\n原记录"

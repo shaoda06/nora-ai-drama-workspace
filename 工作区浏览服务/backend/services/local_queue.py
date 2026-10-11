@@ -51,7 +51,7 @@ class LocalQueue:
         from backend.services.comfy_tasks import paths
         summary = {**{name: value for name, value in paths.recorded_paths(row['input'].project, row['state'], relative=True).items()
                       if name not in ('client_id', 'notices', 'segment_monitor')},
-                   'record_dir': paths.relative_file(row['input'].project, directory), 'remote_url': row['input'].url,
+                   'record_dir': paths.relative_file(row['input'].project, directory, recorded=True), 'remote_url': row['input'].url,
                    'outputs': self.portable_input(row['input'])['outputs']}
         (directory / '后台任务状态.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2), 'utf-8')
 

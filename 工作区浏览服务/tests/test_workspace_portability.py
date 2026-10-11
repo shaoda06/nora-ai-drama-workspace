@@ -104,3 +104,39 @@ class PortabilityTests(unittest.IsolatedAsyncioTestCase):
             self.store.validate(self.data)
         with self.assertRaises(ValueError):
             t.paths.project_file(self.project, 'C:/Old/projects/' + self.project.name + '/../../escape', recorded=True)
+
+    async def test_repeated_project_prefix_rejected_before_registration(self):
+        prefix = 'projects/' + self.project.name + '/'
+        cases = ('record_dir', 'output', 'upload', 'segment')
+        original = self.data.model_dump()
+        for field in cases:
+            with self.subTest(field=field):
+                data = t.TaskInput.model_validate(original)
+                if field == 'record_dir':
+                    data.record_dir = prefix + '执行附件/任务001'
+                elif field == 'output':
+                    data.outputs[0].path = prefix + '候选/result.png'
+                elif field == 'upload':
+                    data.uploads = [{'file': prefix + 'ref.png'}]
+                else:
+                    data.segment_plan = t.segments.SegmentPlan(director_node='1', report_node='2',
+                        output_root='/remote/output', targets=[dict(index=0, path=prefix + '候选/a.mp4', response_name='结果.json')])
+                with patch.object(t.client, 'submit') as post, patch.object(t.client, 'upload') as upload:
+                    with self.assertRaisesRegex(ValueError, '相对项目根目录'):
+                        await self.store.enqueue(data)
+                    post.assert_not_called()
+                    upload.assert_not_called()
+                self.assertFalse((self.project / 'projects').exists())
+                self.assertEqual(self.store.db.execute('SELECT COUNT(*) FROM tasks').fetchone()[0], 0)
+
+    async def test_absolute_repeated_prefix_rejected_and_legacy_record_stays_readable(self):
+        wrong = self.project / 'projects' / self.project.name / '执行附件/旧任务'
+        with self.assertRaisesRegex(ValueError, '相对项目根目录'):
+            t.paths.project_file(self.project, wrong)
+        self.assertEqual(t.paths.project_file(self.project, wrong, recorded=True), wrong)
+        self.data.record_dir = str(wrong)
+        self.seed('cancelled', 'not_required')
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        self.assertEqual(self.store.rows['task']['state']['status'], 'cancelled')
+        self.assertEqual(Path(self.store.rows['task']['input'].record_dir), wrong)

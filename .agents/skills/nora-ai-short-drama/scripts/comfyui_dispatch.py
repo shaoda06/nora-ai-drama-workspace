@@ -37,6 +37,7 @@ def dispatch(args):
         raise ValueError('入队需要--output-plan；导演台提供空数组及--segment-plan')
     if not args.task_title or not args.task_title.strip():
         raise ValueError('请通过--task-title提供任务标题')
+    args.record_dir = str(project_file(args.project, args.record_dir))
     workflow = client.strict_json(Path(args.workflow).read_bytes())
     client.validate_workflow(workflow)
     if (any(node['class_type'] in VIDEO_GENERATION_NODES for node in workflow.values())
@@ -63,7 +64,7 @@ def parser():
     p.add_argument('--workflow', required=True, help='Prepared API JSON; unchanged except declared uploaded input paths')
     p.add_argument('--eligible-url', help='Optional verified primary endpoint; if given must match project configuration')
     p.add_argument('--uploads', help='Optional upload bindings; file paths relative to the project root')
-    p.add_argument('--record-dir', required=True, help='Existing business evidence directory; video tasks require 输入映射.json and automatically save generation inputs before POST')
+    p.add_argument('--record-dir', required=True, help='Evidence directory relative to --project, or an absolute path within it; never prefix a relative path with projects/project-name. Video tasks require 输入映射.json before POST')
     p.add_argument('--attempt-name', default='submit-attempt.json', help='Exclusive attempt evidence filename')
     p.add_argument('--request-name', default='request.json', help='Actual request evidence filename')
     p.add_argument('--response-name', default='response.json', help='Actual submission response filename')

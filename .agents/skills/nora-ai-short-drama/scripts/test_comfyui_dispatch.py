@@ -34,6 +34,14 @@ class DispatchTests(unittest.TestCase):
         self.args.task_title=' '
         with self.assertRaises(ValueError): d.dispatch(self.args)
 
+    def test_workspace_relative_record_path_rejected_before_handoff(self):
+        self.args.record_dir = 'projects/' + self.root.name + '/执行附件/任务'
+        with patch.object(d.browser_tasks, 'submit') as handoff:
+            with self.assertRaisesRegex(ValueError, '相对项目根目录'):
+                d.dispatch(self.args)
+            handoff.assert_not_called()
+        self.assertFalse((self.root / 'projects').exists())
+
     def test_missing_output_plan_rejected_before_handoff(self):
         self.args.output_plan=None
         with self.assertRaises(ValueError): d.dispatch(self.args)

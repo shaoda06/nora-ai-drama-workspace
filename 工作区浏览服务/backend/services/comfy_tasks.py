@@ -203,14 +203,14 @@ class TaskStore(LocalQueue, TaskNotifications):
     def portable_input(self, data):
         payload = data.model_dump()
         payload['project'] = Path(data.project).name
-        payload['record_dir'] = paths.relative_file(data.project, data.record_dir)
+        payload['record_dir'] = paths.relative_file(data.project, data.record_dir, recorded=True)
         for output in payload['outputs']:
             output['path'] = paths.recorded_paths(data.project, output['path'], relative=True, field='path')
         for upload in payload['uploads']:
-            upload['file'] = paths.relative_file(data.project, upload['file'])
+            upload['file'] = paths.relative_file(data.project, upload['file'], recorded=True)
         if payload['segment_plan']:
             for target in payload['segment_plan']['targets']:
-                target['path'] = paths.relative_file(data.project, target['path'])
+                target['path'] = paths.relative_file(data.project, target['path'], recorded=True)
         return payload
 
     def validate(self, data):

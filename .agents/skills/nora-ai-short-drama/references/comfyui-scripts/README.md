@@ -327,7 +327,7 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 | 参数 | 含义 |
 | --- | --- |
 | --project、--workflow | 当前设备项目根目录、最终API副本；必填，命令行可使用当前设备绝对路径 |
-| --record-dir | 项目内既定执行附件；必填，可用项目内相对路径，后台保存相对路径 |
+| --record-dir | 项目内既定执行附件；必填，相对路径以--project指定的项目根目录解析，也可用项目内绝对路径；后台保存相对路径 |
 | --task-type | image、image-upscale、video-first-pass、video-second-pass、video-postprocess，按实际获授权阶段 |
 | --task-title | 必填非空标题，格式由Agent遵守[标题规则](../流程规范/ComfyUI-服务配置与任务提交规范.md#任务显示标题)，后台不补目录名 |
 | --eligible-url | 可选已核对主节点地址，提供时须与项目第一项一致 |
@@ -341,6 +341,8 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 | --thread-id | 默认真实CODEX_THREAD_ID；通知其他会话须有用户授权 |
 
 ### 浏览服务监控接入
+
+`--record-dir`、上传绑定的`file`、普通成果的`path`及分段`targets.path`共用项目根目录基准，与当前工作目录无关。例如`--project /工作区/projects/示例项目`时，执行目录填写`09-剧集制作/EP001/其他资料/执行附件/本任务`，不能填写`projects/示例项目/09-剧集制作/...`或再次加上项目名。也可填写该项目内的完整绝对路径。Agent入口和后台在入队前拒绝重复前缀及越界路径，明确报错，不猜测或自动剥掉前缀；失败时不会登记任务、创建执行目录或开始上传。`--workflow`、`--output-plan`、`--uploads`等JSON文件参数仍按当前工作目录定位，计划文件中的本机素材和成果路径才按项目根目录解析。已有历史证据兼容读取，不把新入队校验用于改写原始响应。
 
 先启动[浏览服务](../../../../../工作区浏览服务/README.md#日常启动)，在真实Codex执行环境调用入口。Node、已安装桌面适配器、CODEX_THREAD_ID及CODEX_APP_TOOLS_PIPE_PATH用于来源会话通知，不伪造。连接上下文只存本机runtime，不暴露到项目证据或网页。专用接口接受本机Agent凭证，不接受浏览器Origin。SQLite、runtime及本机连接不随技能分享；缺少完整工作区后台时不能执行这条入队流程。
 

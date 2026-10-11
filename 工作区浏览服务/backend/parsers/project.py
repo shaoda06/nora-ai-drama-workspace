@@ -23,6 +23,8 @@ PROGRESS = "项目进度.md"
 PEOPLE = "03-人物资料"
 SCENES = "04-场景资料"
 PROPS = "05-道具资料"
+FORMAL_SECTIONS = ("00-项目定位", "01-主旨与简介", "02-故事大纲", PEOPLE, SCENES, PROPS,
+                   "06-分集大纲", "07-参考音频", "08-参考视频", "09-剧集制作")
 TEXT_PREVIEW_LIMIT = 256 * 1024
 INLINE_PATTERN = r"(\x60+)(.+?)\1|!?\[([^\]]*)\]\((<[^>]+>|[^)\n]+)\)|\*\*(.+?)\*\*"
 STATUS_COLORS = {
@@ -1363,7 +1365,7 @@ def build_data(project, *, web_episode_navigation=False):
     directories = [{"name": p.name, "label": re.sub(r"^\d+-", "", p.name),
                     "url": quote(p.name, safe="-._~") + "/"}
                    for p in sorted(project.iterdir())
-                   if p.is_dir() and not p.name.startswith(".") and p.name not in ("99-综合资料", "其他资料", "历史版本")]
+                   if p.is_dir() and p.name in FORMAL_SECTIONS]
     meta = {key: field(position or "", key) for key in ("文档版本", "更新日期", "确认状态")}
     body = position or ""
     body = re.sub(r"^# .+\n?", "", body, count=1)
