@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { get } from './api';
 import { Result } from './components';
@@ -31,6 +31,11 @@ export default function Workflows() {
 
 function WorkflowCard({ item }: { item: Workflow }) {
   const [download, setDownload] = useState<DownloadState | null>(null);
+  useEffect(() => {
+    if (!download || download.busy) return;
+    const timer = window.setTimeout(() => setDownload(null), 5000);
+    return () => window.clearTimeout(timer);
+  }, [download]);
   const report = (format: string) => (state: DownloadState) => setDownload({ ...state, message: `${format}：${state.message}` });
   return <article className="workflow-row">
     <div className="workflow-info"><h3>{item.name}</h3></div>
