@@ -363,6 +363,14 @@ def document_header(text, source):
             "meta": meta, "confirmationHtml": status_markup(meta["确认状态"], source) if "确认状态" in meta else ""}
 
 
+def document_preview(text, source):
+    return {
+        "title": next((line[2:].strip() for line in text.splitlines() if line.startswith("# ")), Path(source).stem),
+        "html": markdown(text, source), "url": quote(source, safe="/-._~"),
+        **document_header(text, source),
+    }
+
+
 def table_records(text, required):
     """Read only a table with the explicit expected columns."""
     lines = text.splitlines()
@@ -403,25 +411,31 @@ def formal_record_url(version, record, record_key):
 def build_data(project, *, web_episode_navigation=False):
     documents, sources, texts = {}, {}, {}
     text_previews = {}
+    resolved_paths = {}
     warnings = []
 
-    def read(relative):
+    def resolved_path(relative):
+        if relative not in resolved_paths:
+            resolved_paths[relative] = (project / relative).resolve()
+        return resolved_paths[relative]
+
+    def read(relative, *, preview=None):
+        if preview is None:
+            preview = not web_episode_navigation
         if relative in texts:
+            if preview and "text" in documents[relative]:
+                documents[relative] = document_preview(texts[relative], relative)
             return texts[relative]
         path = project / relative
         if not path.is_file():
             return None
-        if not path.resolve().is_relative_to(project):
+        if not resolved_path(relative).is_relative_to(project):
             raise ValueError("Refusing source outside project: " + relative)
         raw = path.read_bytes()
         text = raw.decode("utf-8-sig").replace("\r\n", "\n")
         sources[relative] = hashlib.sha256(raw).hexdigest()
         texts[relative] = text
-        documents[relative] = {
-            "title": next((line[2:].strip() for line in text.splitlines() if line.startswith("# ")), path.stem),
-            "html": markdown(text, relative), "url": quote(relative, safe="/-._~"),
-            **document_header(text, relative),
-        }
+        documents[relative] = document_preview(text, relative) if preview else {"text": text}
         return text
 
     def read_plain(relative):
@@ -445,7 +459,7 @@ def build_data(project, *, web_episode_navigation=False):
     def latest_episode_document(formal_key, work_key):
         candidates = []
         for key in (formal_key, work_key):
-            text = read(key)
+            text = read(key, preview=True)
             if text is None:
                 continue
             work_version = field(re.split(r"^##[ \t]", text, maxsplit=1, flags=re.M)[0], "当前稿版本")
@@ -520,9 +534,11 @@ def build_data(project, *, web_episode_navigation=False):
         return prompts
 
     def file_entry(path):
-        if not path.is_file() or not path.resolve().is_relative_to(project):
+        if not path.is_file():
             return None
         key = path.relative_to(project).as_posix()
+        if not resolved_path(key).is_relative_to(project):
+            return None
         kind = {".md": "document", ".json": "text", ".txt": "text", ".log": "text",
                 ".png": "image", ".jpg": "image", ".jpeg": "image", ".webp": "image",
                 ".wav": "audio", ".mp3": "audio", ".m4a": "audio", ".ogg": "audio",
@@ -530,7 +546,7 @@ def build_data(project, *, web_episode_navigation=False):
                 }.get(path.suffix.lower(), "file")
         item = {"kind": kind, "name": path.name, "key": key, "url": quote(key, safe="/-._~")}
         if kind == "document":
-            text = read(key)
+            text = read(key, preview=not web_episode_navigation)
             confirmation = field(text, "确认状态")
             item["statusHtml"] = status_markup(confirmation, key) if confirmation != "未记录" else ""
         elif kind == "text":
@@ -541,8 +557,8 @@ def build_data(project, *, web_episode_navigation=False):
                 item["prompts"] = prompts
         return item
 
-    progress = read(PROGRESS)
-    position = read(POSITION)
+    progress = read(PROGRESS, preview=True)
+    position = read(POSITION, preview=True)
     if progress is None:
         warnings.append("尚未找到项目根目录的项目进度.md，顶部信息未记录；请核对实际进度入口。")
     if position is None:
@@ -569,8 +585,6 @@ def build_data(project, *, web_episode_navigation=False):
                 for path in sorted(folder.rglob("*")):
                     if not path.is_file() or any(p.startswith(".") for p in path.relative_to(folder).parts):
                         continue
-                    if not path.resolve().is_relative_to(project):
-                        continue
                     item = file_entry(path)
                     if item:
                         item["name"] = path.relative_to(folder).as_posix()
@@ -582,7 +596,7 @@ def build_data(project, *, web_episode_navigation=False):
 
     groups = collect_groups("00-项目定位")
     def long_document(source, with_groups=True):
-        text = read(source)
+        text = read(source, preview=True)
         meta = {key: field(text or "", key) for key in ("文档版本", "更新日期", "确认状态")}
         body = re.sub(r"^# .+\n?", "", text or "", count=1)
         start = re.search(r"^## ", body, re.M)

@@ -565,6 +565,73 @@ class ServiceTests(unittest.TestCase):
         (self.project / '改名.txt').unlink()
         self.assertEqual(before, self.store.snapshot(self.project))
 
+    def test_snapshot_excludes_hidden_and_shared_material_subtrees(self):
+        for folder in ('.private/nested', '99-综合资料/nested', '00-项目定位/.cache'):
+            directory = self.project / folder
+            directory.mkdir(parents=True)
+            (directory / '记录.txt').write_text('not a project source', encoding='utf-8')
+        nested = self.project / '00-项目定位/其他资料'
+        nested.mkdir()
+        (nested / 'index.html').write_text('generated', encoding='utf-8')
+        (nested / '资料.txt').write_text('visible', encoding='utf-8')
+        self.assertEqual(set(self.store.snapshot(self.project)), {
+            '00-项目定位/项目基本定位.md', '00-项目定位/其他资料/资料.txt'})
+
+    def test_restart_reuses_cache_only_for_same_workspace_version_and_files(self):
+        cache = self.root / '.project-cache'
+        data = ProjectStore(self.root, cache_directory=cache, version='v1').get('示例项目')['data']
+        with patch('backend.services.projects.build_data', side_effect=AssertionError('unchanged project was parsed')):
+            loaded = ProjectStore(self.root, cache_directory=cache, version='v1').get('示例项目')['data']
+            self.assertEqual(loaded, data)
+        for changed in ('version', 'source', 'workspace'):
+            with self.subTest(changed=changed):
+                ProjectStore(self.root, cache_directory=cache, version='v1').get('示例项目')
+                version = 'v2' if changed == 'version' else 'v1'
+                if changed == 'source':
+                    self.source.write_text('# 已更新\n\n## 正文\n新的资料。', encoding='utf-8')
+                root = self.root
+                if changed == 'workspace':
+                    root = self.root / '另一个工作区'
+                    source = root / '示例项目/00-项目定位/项目基本定位.md'
+                    source.parent.mkdir(parents=True)
+                    source.write_bytes(self.source.read_bytes())
+                    stat = self.source.stat()
+                    os.utime(source, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+                with patch('backend.services.projects.build_data', wraps=parser.build_data) as parse:
+                    ProjectStore(root, cache_directory=cache, version=version).get('示例项目')
+                    parse.assert_called_once()
+
+    def test_refresh_updates_restart_cache_and_failed_refresh_keeps_last_complete_cache(self):
+        cache = self.root / '.project-cache'
+        store = ProjectStore(self.root, cache_directory=cache, version='v1')
+        entry = store.get('示例项目')
+        self.source.write_text('# 更新后\n\n## 内容\n更新后的正文。', encoding='utf-8')
+        store.refresh('示例项目', entry, store.snapshot(self.project))
+        with patch('backend.services.projects.build_data', side_effect=AssertionError('cache was not updated')):
+            self.assertEqual(ProjectStore(self.root, cache_directory=cache, version='v1').get('示例项目')['data'], entry['data'])
+        before = (cache / '示例项目.json').read_bytes()
+        with self.assertLogs('backend.services.projects', level='ERROR'), patch(
+                'backend.services.projects.build_data', side_effect=RuntimeError('invalid source')):
+            store.refresh('示例项目', entry, store.snapshot(self.project))
+        self.assertEqual((cache / '示例项目.json').read_bytes(), before)
+
+    def test_web_attachment_is_rendered_only_when_opened(self):
+        key = '00-项目定位/其他资料/执行附件/旧记录.md'
+        source = self.project / key
+        source.parent.mkdir(parents=True)
+        source.write_text('# 旧记录\n\n- 文档版本：v01\n- 确认状态：待确认\n\n'
+                          '## 正文\n旧附件内容。[资料](../../../项目进度.md)\n', encoding='utf-8')
+        with patch.object(parser, 'document_preview', wraps=parser.document_preview) as render:
+            self.assertEqual(self.client.get('/api/projects/示例项目/overview').status_code, 200)
+            self.assertNotIn(key, [call.args[1] for call in render.call_args_list])
+            reply = self.client.get('/api/projects/示例项目/document', params={'path': key})
+            self.assertEqual(reply.status_code, 200)
+            self.assertEqual(reply.json()['title'], '旧记录')
+            self.assertIn('旧附件内容', reply.json()['html'])
+            self.assertIn('待确认', reply.json()['confirmationHtml'])
+            self.assertIn('/api/projects/', reply.json()['contentHtml'])
+            self.assertEqual([call.args[1] for call in render.call_args_list].count(key), 1)
+
     def test_refresh_failure_retains_previous_data_and_reports_error(self):
         entry = self.store.get('示例项目')
         data = entry['data']

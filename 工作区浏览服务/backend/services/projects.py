@@ -1,5 +1,7 @@
 from pathlib import Path
 import logging
+import json
+import os
 import re
 import threading
 import time
@@ -11,8 +13,12 @@ logger = logging.getLogger(__name__)
 class ProjectStore:
     """Parse on demand; keep the last complete result while a change is read."""
 
-    def __init__(self, root: Path):
+    def __init__(self, root: Path, *, cache_directory: Path | None = None, version: str = ''):
         self.root = root.resolve()
+        self.cache_directory = cache_directory
+        self.version = version
+        if cache_directory is not None:
+            cache_directory.mkdir(parents=True, exist_ok=True)
         self.entries = {}
         self.lock = threading.Lock()
 
@@ -28,10 +34,46 @@ class ProjectStore:
 
     def snapshot(self, path: Path):
         # mtime and size detect edits, additions, removal and renames without reading media.
-        return {p.relative_to(path).as_posix(): (p.stat().st_mtime_ns, p.stat().st_size)
-                for p in path.rglob('*') if p.is_file() and not any(part.startswith('.') for part in p.relative_to(path).parts)
-                and p.relative_to(path).parts[0] != '99-综合资料'
-                and p.name not in ('项目总览.html', 'index.html') and p.resolve().is_relative_to(path)}
+        result = {}
+        pending = [(path, '')]
+        while pending:
+            directory, prefix = pending.pop()
+            with os.scandir(directory) as files:
+                for item in files:
+                    if item.name.startswith('.') or not prefix and item.name == '99-综合资料':
+                        continue
+                    key = prefix + item.name
+                    if item.is_dir():
+                        child = Path(item.path)
+                        if not item.is_symlink() and child.resolve().is_relative_to(path):
+                            pending.append((child, key + '/'))
+                    elif item.name not in ('项目总览.html', 'index.html') and item.is_file():
+                        if item.is_symlink() and not Path(item.path).resolve().is_relative_to(path):
+                            continue
+                        stat = item.stat()
+                        result[key] = (stat.st_mtime_ns, stat.st_size)
+        return result
+
+    def load_cache(self, name, snapshot):
+        if self.cache_directory is None:
+            return None
+        path = self.cache_directory / (name + '.json')
+        if not path.is_file():
+            return None
+        saved = json.loads(path.read_text('utf-8'))
+        if (saved['workspace'] == str(self.root) and saved['version'] == self.version
+                and saved['snapshot'] == {key: list(value) for key, value in snapshot.items()}):
+            return saved['data']
+        return None
+
+    def save_cache(self, name, snapshot, data):
+        if self.cache_directory is None:
+            return
+        path = self.cache_directory / (name + '.json')
+        temporary = path.with_suffix('.tmp')
+        temporary.write_text(json.dumps({'workspace': str(self.root), 'version': self.version,
+                                        'snapshot': snapshot, 'data': data}, ensure_ascii=False), encoding='utf-8')
+        temporary.replace(path)
 
     def get(self, name: str):
         path = self.project(name)
@@ -44,7 +86,11 @@ class ProjectStore:
         with entry['lock']:
             if entry['data'] is None and not entry['updating']:
                 entry['snapshot'] = self.snapshot(path)
-                entry['data'] = build_data(path, web_episode_navigation=True)
+                data = self.load_cache(name, entry['snapshot'])
+                if data is None:
+                    data = build_data(path, web_episode_navigation=True)
+                    self.save_cache(name, entry['snapshot'], data)
+                entry['data'] = data
                 entry['revision'] = 1
         return entry
 
@@ -66,6 +112,7 @@ class ProjectStore:
     def refresh(self, name, entry, snapshot):
         try:
             data = build_data(self.project(name), web_episode_navigation=True)
+            self.save_cache(name, snapshot, data)
         except (OSError, ValueError, RuntimeError, UnicodeError) as error:
             if isinstance(error, SourceChangedError):
                 logger.info('Project source changed while reading: %s: %s', name, error)

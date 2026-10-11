@@ -28,10 +28,10 @@ from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionN
 TOOL = Path(__file__).resolve().parent.parent
 WORKSPACE = Path(os.environ.get('NORA_WORKSPACE', TOOL.parent)).resolve()
 ENVIRONMENT = os.environ.get('NORA_SERVICE_ENV', 'production')
-store = ProjectStore(WORKSPACE / 'projects')
 revision_notes = RevisionNotes()
 VERSION = json.loads((TOOL / 'frontend/package.json').read_text('utf-8'))['version']
 FRONTEND_RELEASE = TOOL / 'frontend/dist/release.json'
+store = ProjectStore(WORKSPACE / 'projects', cache_directory=TOOL / 'runtime/project-cache', version=VERSION)
 @asynccontextmanager
 async def lifespan(app):
     clear_downloads()
@@ -376,7 +376,10 @@ def episode_download(name: str, episode: Episode, stage: Literal['一采', '二�
 def document(name: str, path: Annotated[str, Query()]) -> dict[str, Any]:
     data = entry(name)['data']
     if path in data['documents']:
-        return view(data['documents'][path], name)
+        preview = data['documents'][path]
+        if 'text' in preview:
+            return view(parser.document_preview(preview['text'], path), name)
+        return view(preview, name)
     if path in data['textPreviews']:
         return data['textPreviews'][path]
     raise HTTPException(404, '没有可用的文档预览，请打开原文件')
