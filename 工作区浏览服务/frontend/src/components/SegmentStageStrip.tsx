@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { FileItem, SegmentVideo } from '../api';
+import { PointerTooltip } from './PointerTooltip';
 import './SegmentStageStrip.css';
 
 const stages = ['一采', '二采', '后处理'];
@@ -30,7 +31,7 @@ export function SegmentStageStrip({ segments, selected, onSelect }: {
           {stages.map(stage => {
             const status = segmentStageStatus(item.videos, stage);
             const label = `${item.id} ${status.detail}`;
-            return <span key={stage} className={`segment-stage-icon is-${status.state}`} role="img" aria-label={label} title={label} tabIndex={0}>{status.symbol}</span>;
+            return <PointerTooltip key={stage} text={label}><span className={`segment-stage-icon is-${status.state}`} role="img" aria-label={label} tabIndex={0}>{status.symbol}</span></PointerTooltip>;
           })}
         </div>)}
       </div>
