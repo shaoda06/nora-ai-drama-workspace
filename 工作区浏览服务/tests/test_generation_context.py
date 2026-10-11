@@ -112,6 +112,18 @@ class GenerationContextTests(unittest.TestCase):
                          [('R000', '一采', 0), ('R007', '二采', 7)])
         self.assertEqual(data[1]['url'], '')
 
+    def test_stage_local_revisions_keep_explicit_upstream_context(self):
+        first, _, _ = self.add_run('R010')
+        second, _, _ = self.add_run('R001', '二采', first['identity'])
+        self.add_run('R002', '后处理', second['identity'])
+        by_stage = {video['stage']: video for video in self.videos()}
+        self.assertEqual(by_stage['一采']['candidateNumber'], 10)
+        self.assertEqual(by_stage['二采']['candidateNumber'], 1)
+        self.assertEqual(by_stage['后处理']['candidateNumber'], 2)
+        self.assertEqual(by_stage['二采']['context']['source'], first['identity'])
+        self.assertEqual(by_stage['后处理']['context']['source'], second['identity'])
+        self.assertEqual(by_stage['后处理']['context']['prompts']['english'], 'R010 actual submitted prompt')
+
     def test_running_candidate_uses_unique_task_state_and_frozen_inputs(self):
         _, _, candidate = self.add_run('R004')
         owner = self.episode + '/其他资料/工作稿/EP001-C001-P002-视频制作-工作稿.md'

@@ -13,8 +13,9 @@ export const latestVideo = (items: VideoItem[]) => {
   const stages = ['一采', '二采', '后处理'];
   return items.reduce<VideoItem | undefined>((latest, item) => {
     if (!latest) return item;
+    const stage = stages.indexOf(item.stage) - stages.indexOf(latest.stage);
     const revision = Number(item.run.slice(1)) - Number(latest.run.slice(1));
-    return revision > 0 || (revision === 0 && stages.indexOf(item.stage) > stages.indexOf(latest.stage)) ? item : latest;
+    return stage > 0 || (stage === 0 && revision > 0) ? item : latest;
   }, undefined);
 };
 

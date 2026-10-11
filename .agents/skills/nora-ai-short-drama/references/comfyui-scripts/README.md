@@ -442,3 +442,15 @@ python3 -B -m unittest discover -s '/实际技能目录/scripts' -p 'test_comfyu
 ```
 
 后台使用实际返回的input_path替换这一字段，保持原工作流副本和大整数种子。新上传素材的本机来源同时交给资料冻结模块；已有远端素材仍按输入映射uploads核对来源。
+
+## 视频阶段编号迁移
+
+编号规则由[逐集目录规范](../流程规范/逐集目录与资产管理规范.md#视频修订编号与执行过程)维护。已有记录须有明确迁移授权；固定工具 `../../scripts/video_revision_migrate.py` 只整理本地身份和引用，不联网、不生成、不变更审批。请求JSON包含 `episode` 和 `identities` 数组，每项填写完整的 `old`、`new`，下游另填写真实上游 `source`；先核对修订沿革，不以执行次数自动推算版本。
+
+```powershell
+python .agents/skills/nora-ai-short-drama/scripts/video_revision_migrate.py --project "projects/项目名" --request "项目内的迁移请求.json" --database "工作区浏览服务/runtime/comfy-tasks.sqlite"
+```
+
+默认只读预览，返回身份对应、文件移动、记录及后台任务数量。确认预览与授权一致后，停止本工作区浏览服务，再用相同参数加 `--apply --report "项目名/99-综合资料/其他资料/历史版本/编号迁移-实际时间.json"` 执行；数据库参数指向该已停止服务的真实任务库。脚本拒绝活动任务、越出本集的身份、跨片段／阶段修改及覆盖无关目标。保留迁移前文本与任务行、旧新身份和路径对照；视频及原请求、工作流、响应、下载凭据只移动、不改字节。生成资料关联、当前取回映射、工作稿、审批链接、网页修改意见、后台当前结果入口随身份更新，原通知和事件不重发。导演包及画布是已导出的执行档案，保留原字节，来源引用按旧新身份对照追溯。
+
+返回 `state=completed` 才表示本地迁移完成；恢复服务后还须核对网页各阶段候选号、原审批状态、来源资料与下载入口。失败按报告中的原记录和移动对照恢复，不再次执行同一迁移报告。不使用该工具迁移仍在运行的任务。验证命令：`python -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p test_video_revision_migrate.py`，覆盖跨阶段来源、编号重叠、原媒体／请求字节、审批／备注保留和活动任务拒绝。
