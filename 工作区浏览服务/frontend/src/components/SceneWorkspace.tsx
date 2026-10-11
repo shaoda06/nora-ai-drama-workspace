@@ -57,8 +57,7 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
     });
   }, [segments]);
   const advance = () => {
-    if (viewingPrevious) { setAutoPlay(false); return; }
-    const next = segments[segments.findIndex(item => item.id === segment) + 1];
+    const next = viewingPrevious ? segments[0] : segments[segments.findIndex(item => item.id === segment) + 1];
     if (!continuous || !next) { setAutoPlay(false); return; }
     const selected = selections[next.id];
     const video = selected ? selectedRevision(next.videos, selected) : latestVideo(next.videos);
@@ -90,7 +89,7 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
     {currentSegment && <SegmentWorkspace key={`${displayScope.episode}/${displayScope.scene}/${currentSegment.id}`} scope={displayScope} segment={currentSegment.id} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources}
       segmentNavigation={navigation(true)}
       wideVideo={wideVideo} onToggleWide={() => setWideVideo(value => !value)}
-      continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous && !viewingPrevious} disabled={viewingPrevious} onChange={event => setContinuous(event.target.checked)} />连续播放</label>}
+      continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>}
       autoPlay={autoPlay} onVideoError={() => setAutoPlay(false)} onVideoEnded={advance}
       onSelectionChange={value => { setAutoPlay(false); setError(''); setSelections(previous => ({ ...previous, [segment]: value })); }}
       notesExportControl={notesExport.control} />}

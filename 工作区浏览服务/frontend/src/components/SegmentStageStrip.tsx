@@ -34,12 +34,19 @@ export function SegmentStageStrip({ segments, selected, onSelect, vertical = fal
   }, [selected, vertical]);
   const previousAvailable = previousEnding?.segment?.videos.some(video => video.url);
   const previousButton = previousEnding && <button className="previous-ending-button" data-selected={previousSelected}
-    aria-label={`查看${previousEnding.episode}上集末段`} aria-pressed={previousSelected} disabled={!previousAvailable} onClick={onPreviousSelect}>
-    <strong>上集末段</strong><span>{previousEnding.episode}{previousEnding.segment ? ` · ${previousEnding.segment.id}` : ''}</span>
-    <small>{previousAvailable ? `${previousEnding.scene} · ${previousEnding.segment!.duration}秒` : previousEnding.segment ? '暂无可播放视频' : '暂无分段资料'}</small>
+    aria-label={`查看${previousEnding.episode}上集末段`} aria-pressed={previousSelected} disabled={!previousAvailable} onClick={onPreviousSelect}
+    title={!previousAvailable ? previousEnding.segment ? '暂无可播放视频' : '暂无分段资料' : undefined}>
+    <strong>上集末段</strong><span>{previousEnding.segment ? `${previousEnding.segment.duration}秒` : '—秒'}</span>
   </button>;
+  const previousStatus = previousEnding && <div className="segment-stage-cell previous-ending-status" data-selected={previousSelected} role="group" aria-label="上集末段制作进度：一采、二采、后处理">
+    {stages.map(stage => {
+      const status = segmentStageStatus(previousEnding.segment?.videos || [], stage);
+      const label = `上集末段 ${status.detail}`;
+      return <PointerTooltip key={stage} text={label}><span className={`segment-stage-icon is-${status.state}`} role="img" aria-label={label} tabIndex={0}>{status.symbol}</span></PointerTooltip>;
+    })}
+  </div>;
   if (vertical) return <div ref={rail} className="segment-vertical-strip" role="group" aria-label="本场分段">
-    {previousButton}
+    {previousEnding && <div className="segment-vertical-item is-previous-ending" data-selected={previousSelected}>{previousButton}{previousStatus}</div>}
     {segments.map(item => <div className="segment-vertical-item" key={item.id} data-selected={item.id === selected}>
       <PointerTooltip text={`${item.id} · 计划时长 ${item.duration}秒`}><button aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} aria-pressed={item.id === selected} onClick={() => onSelect(item.id)}><span>{item.id}</span><span>{item.duration}秒</span></button></PointerTooltip>
       <div className="segment-stage-cell" data-segment={item.id} data-selected={item.id === selected}>
@@ -54,6 +61,7 @@ export function SegmentStageStrip({ segments, selected, onSelect, vertical = fal
   return <div className="segment-scroll segment-progress-scroll">
     <div className={'segment-timeline' + (previousEnding ? ' has-previous-ending' : '')} style={{ '--segment-columns': segments.map(item => `minmax(84px, ${item.duration}fr)`).join(' '), '--segment-count': segments.length } as CSSProperties}>
       {previousButton}
+      {previousStatus}
       <div className="segment-strip" role="group" aria-label="本场分段">
         {segments.map(item => <PointerTooltip key={item.id} text={`${item.id} · 计划时长 ${item.duration}秒`}><button  aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`}  aria-pressed={item.id === selected} onClick={() => onSelect(item.id)}><span>{item.id}</span><span>{item.duration}秒</span></button></PointerTooltip>)}
       </div>
