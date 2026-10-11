@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { CSSProperties } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { get, projectUrl } from '../api';
 import type { FileItem, RecordData } from '../api';
@@ -13,6 +12,7 @@ import type { NoteScope } from './RevisionNotes';
 import { useRefreshState } from '../refreshPosition';
 import { SceneStoryboardEditor } from './SceneStoryboardEditor';
 import { SceneDownloads } from './SceneDownloads';
+import { SegmentStageStrip } from './SegmentStageStrip';
 
 type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
@@ -66,9 +66,7 @@ export function SceneWorkspace({ scope, segments, emptyMessage, revision, storyb
     {view === 'segments' ? <>
     {segments.length === 0 ? <div className="scene-empty" role="status"><h3>{scene ? '暂无可显示的分段' : '暂无可显示的场次'}</h3><p className="muted">{emptyMessage}</p></div> : null}
     {segments.some((item, index) => index > 0 && Number(item.id.slice(1)) < Number(segments[index - 1].id.slice(1))) && <p className="segment-order-note muted">分段按分镜索引中的剧情顺序排列，编号保留原标识。</p>}
-    {segments.length > 0 && <div className="segment-scroll"><div className="segment-strip" role="group" aria-label="本场分段" style={{ '--segment-columns': segments.map(item => `minmax(0, ${item.duration}fr)`).join(' ') } as CSSProperties}>
-      {segments.map(item => <button key={item.id} aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} title={`${item.id} · 计划时长 ${item.duration}秒`} aria-pressed={item.id === segment} onClick={() => { setAutoPlay(false); setSegment(item.id); setError(''); }}><span>{item.id}</span><span>{item.duration}秒</span></button>)}
-    </div></div>}
+    {segments.length > 0 && <SegmentStageStrip segments={segments} selected={segment} onSelect={id => { setAutoPlay(false); setSegment(id); setError(''); }} />}
     {videoCache.total > 0 && <p className="scene-video-preparation" role="status" title={videoCache.failures.join('\n')}>
       {videoCache.failures.length ? `最新视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
         : videoCache.ready === videoCache.total ? '本场最新视频已全部准备好' : `最新视频已准备 ${videoCache.ready}／${videoCache.total}`}
