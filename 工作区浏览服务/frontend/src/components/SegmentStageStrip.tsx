@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import type { CSSProperties } from 'react';
 import type { FileItem, SegmentVideo } from '../api';
 import { PointerTooltip } from './PointerTooltip';
+import type { PreviousEpisodeEnding } from '../previousEpisodeEnding';
 import './SegmentStageStrip.css';
 
 const stages = ['一采', '二采', '后处理'];
@@ -19,8 +20,9 @@ export function segmentStageStatus(videos: SegmentVideo[], stage: string) {
   return { state: 'started', symbol: '−', detail: `${stage}：${latest.run} · ${details.join('；') || '资料准备中，尚未完成'}` };
 }
 
-export function SegmentStageStrip({ segments, selected, onSelect, vertical = false }: {
+export function SegmentStageStrip({ segments, selected, onSelect, vertical = false, previousEnding, previousSelected, onPreviousSelect }: {
   segments: NonNullable<FileItem['segments']>[string]; selected: string; vertical?: boolean; onSelect: (id: string) => void;
+  previousEnding: PreviousEpisodeEnding | null; previousSelected: boolean; onPreviousSelect: () => void;
 }) {
   const rail = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -30,7 +32,14 @@ export function SegmentStageStrip({ segments, selected, onSelect, vertical = fal
     const offset = active.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
     if (offset < 0 || offset + active.offsetHeight > scroller.clientHeight) scroller.scrollTop += offset;
   }, [selected, vertical]);
+  const previousAvailable = previousEnding?.segment?.videos.some(video => video.url);
+  const previousButton = previousEnding && <button className="previous-ending-button" data-selected={previousSelected}
+    aria-label={`查看${previousEnding.episode}上集末段`} aria-pressed={previousSelected} disabled={!previousAvailable} onClick={onPreviousSelect}>
+    <strong>上集末段</strong><span>{previousEnding.episode}{previousEnding.segment ? ` · ${previousEnding.segment.id}` : ''}</span>
+    <small>{previousAvailable ? `${previousEnding.scene} · ${previousEnding.segment!.duration}秒` : previousEnding.segment ? '暂无可播放视频' : '暂无分段资料'}</small>
+  </button>;
   if (vertical) return <div ref={rail} className="segment-vertical-strip" role="group" aria-label="本场分段">
+    {previousButton}
     {segments.map(item => <div className="segment-vertical-item" key={item.id} data-selected={item.id === selected}>
       <PointerTooltip text={`${item.id} · 计划时长 ${item.duration}秒`}><button aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} aria-pressed={item.id === selected} onClick={() => onSelect(item.id)}><span>{item.id}</span><span>{item.duration}秒</span></button></PointerTooltip>
       <div className="segment-stage-cell" data-segment={item.id} data-selected={item.id === selected}>
@@ -43,7 +52,8 @@ export function SegmentStageStrip({ segments, selected, onSelect, vertical = fal
     </div>)}
   </div>;
   return <div className="segment-scroll segment-progress-scroll">
-    <div className="segment-timeline" style={{ '--segment-columns': segments.map(item => `minmax(84px, ${item.duration}fr)`).join(' '), '--segment-count': segments.length } as CSSProperties}>
+    <div className={'segment-timeline' + (previousEnding ? ' has-previous-ending' : '')} style={{ '--segment-columns': segments.map(item => `minmax(84px, ${item.duration}fr)`).join(' '), '--segment-count': segments.length } as CSSProperties}>
+      {previousButton}
       <div className="segment-strip" role="group" aria-label="本场分段">
         {segments.map(item => <PointerTooltip key={item.id} text={`${item.id} · 计划时长 ${item.duration}秒`}><button  aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`}  aria-pressed={item.id === selected} onClick={() => onSelect(item.id)}><span>{item.id}</span><span>{item.duration}秒</span></button></PointerTooltip>)}
       </div>

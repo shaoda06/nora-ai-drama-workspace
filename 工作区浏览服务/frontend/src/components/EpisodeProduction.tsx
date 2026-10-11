@@ -11,6 +11,7 @@ import { useRefreshState } from '../refreshPosition';
 import { BreadcrumbActionsContext } from './Breadcrumbs';
 import { projectUrl } from '../api';
 import { DownloadButton } from './DownloadButton';
+import { previousEpisodeEnding } from '../previousEpisodeEnding';
 import './SceneDownloads.css';
 
 export function EpisodeProduction({ project, items, selected, onSelect, revision }: { project: string; items: FileItem[]; selected: string | null; onSelect: (episode: string | null) => void; revision: number }) {
@@ -64,7 +65,7 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
         <PointerTooltip text={issue.key}><button className="link"  onClick={() => preview({ kind: 'document', key: issue.key, name: issue.key.split('/').pop()! })}>{issue.key.split('/').pop()}</button></PointerTooltip>：{issue.message}
       </li>)}</ul>
     </div> : null}
-    {selectedScene ? <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} storyboardDocument={current.storyboards?.[selectedScene]?.doc} />
+    {selectedScene ? <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} previousEnding={previousEpisodeEnding(items, current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} storyboardDocument={current.storyboards?.[selectedScene]?.doc} />
       : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
   </div> : <>
     <div ref={cards} className="episode-grid">{items.slice((page - 1) * 36, page * 36).map(item => <EpisodeButton key={item.key} item={item} onSelect={open} />)}</div>
