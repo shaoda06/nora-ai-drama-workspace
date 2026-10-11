@@ -1,0 +1,25 @@
+.segment-playback-row{display:contents}
+.segment-workspace.is-wide{--segment-rail-width:116px;--segment-rail-gap:16px;--segment-frame-height:calc((100cqw - var(--segment-rail-width) - var(--segment-rail-gap))*.5625)}
+.segment-workspace.is-wide>.segment-playback-row{grid-area:video;display:grid;grid-template-columns:minmax(0,1fr) var(--segment-rail-width);gap:var(--segment-rail-gap);min-width:0;align-items:start}
+.segment-workspace.is-wide .segment-video{grid-area:auto}
+.segment-side-navigation{height:var(--segment-frame-height);min-height:0;overflow-y:auto;scrollbar-width:thin;border:1px solid var(--line);border-radius:8px;background:#f7faf8}
+.segment-vertical-strip{display:flex;flex-direction:column}
+.segment-vertical-item{border-bottom:1px solid var(--line)}
+.segment-vertical-item:last-child{border-bottom:0}
+.segment-vertical-item>button{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;padding:10px 8px;border:0;border-radius:0;background:transparent;font-size:12px}
+.segment-vertical-item>button[aria-pressed=true]{background:var(--green);color:white}
+.segment-vertical-item>.segment-stage-cell{padding:2px 0 4px;border:0}
+.segment-workspace.is-wide .video-source{flex-wrap:wrap;gap:8px 12px}
+.segment-workspace.is-wide .video-source-summary{flex:1 1 auto;flex-wrap:wrap;overflow:visible;gap:12px}
+.segment-workspace.is-wide .segment-selectors.tabs{margin:0;gap:8px;align-items:center;flex:none}
+.segment-workspace.is-wide .video-source-actions{margin-left:auto}
+.segment-notes-export{display:flex;align-items:center;gap:8px;margin-left:auto}
+.segment-notes-export>button{white-space:nowrap;font-size:13px;padding:6px 10px}
+@media(max-width:700px){
+ .segment-workspace.is-wide{--segment-rail-width:84px;--segment-rail-gap:8px}
+ .segment-workspace.is-wide .video-source-summary{flex-basis:100%;gap:8px}
+ .segment-workspace.is-wide .segment-selectors.tabs{gap:4px;flex-wrap:wrap}
+ .segment-workspace.is-wide .video-source-actions{max-width:100%;justify-content:flex-start;margin-left:0;flex-wrap:wrap}
+ .segment-vertical-item>button{flex-direction:column;gap:2px;padding:6px 4px}
+ .segment-vertical-item .segment-stage-icon{width:17px;font-size:17px}
+}

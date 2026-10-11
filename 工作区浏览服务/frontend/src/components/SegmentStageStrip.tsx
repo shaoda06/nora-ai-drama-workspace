@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import type { CSSProperties } from 'react';
 import type { FileItem, SegmentVideo } from '../api';
 import { PointerTooltip } from './PointerTooltip';
@@ -18,9 +19,29 @@ export function segmentStageStatus(videos: SegmentVideo[], stage: string) {
   return { state: 'started', symbol: '−', detail: `${stage}：${latest.run} · ${details.join('；') || '资料准备中，尚未完成'}` };
 }
 
-export function SegmentStageStrip({ segments, selected, onSelect }: {
-  segments: NonNullable<FileItem['segments']>[string]; selected: string; onSelect: (id: string) => void;
+export function SegmentStageStrip({ segments, selected, onSelect, vertical = false }: {
+  segments: NonNullable<FileItem['segments']>[string]; selected: string; vertical?: boolean; onSelect: (id: string) => void;
 }) {
+  const rail = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!vertical) return;
+    const active = rail.current!.querySelector<HTMLElement>('[data-selected="true"]')!;
+    const scroller = rail.current!.parentElement!;
+    const offset = active.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
+    if (offset < 0 || offset + active.offsetHeight > scroller.clientHeight) scroller.scrollTop += offset;
+  }, [selected, vertical]);
+  if (vertical) return <div ref={rail} className="segment-vertical-strip" role="group" aria-label="本场分段">
+    {segments.map(item => <div className="segment-vertical-item" key={item.id} data-selected={item.id === selected}>
+      <PointerTooltip text={`${item.id} · 计划时长 ${item.duration}秒`}><button aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} aria-pressed={item.id === selected} onClick={() => onSelect(item.id)}><span>{item.id}</span><span>{item.duration}秒</span></button></PointerTooltip>
+      <div className="segment-stage-cell" data-segment={item.id} data-selected={item.id === selected}>
+        {stages.map(stage => {
+          const status = segmentStageStatus(item.videos, stage);
+          const label = `${item.id} ${status.detail}`;
+          return <PointerTooltip key={stage} text={label}><span className={`segment-stage-icon is-${status.state}`} role="img" aria-label={label} tabIndex={0}>{status.symbol}</span></PointerTooltip>;
+        })}
+      </div>
+    </div>)}
+  </div>;
   return <div className="segment-scroll segment-progress-scroll">
     <div className="segment-timeline" style={{ '--segment-columns': segments.map(item => `minmax(84px, ${item.duration}fr)`).join(' '), '--segment-count': segments.length } as CSSProperties}>
       <div className="segment-strip" role="group" aria-label="本场分段">

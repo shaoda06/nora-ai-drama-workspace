@@ -66,18 +66,19 @@ export function SceneWorkspace({ scope, segments, emptyMessage, revision, storyb
     {view === 'segments' ? <>
     {segments.length === 0 ? <div className="scene-empty" role="status"><h3>{scene ? '暂无可显示的分段' : '暂无可显示的场次'}</h3><p className="muted">{emptyMessage}</p></div> : null}
     {segments.some((item, index) => index > 0 && Number(item.id.slice(1)) < Number(segments[index - 1].id.slice(1))) && <p className="segment-order-note muted">分段按分镜索引中的剧情顺序排列，编号保留原标识。</p>}
-    {segments.length > 0 && <SegmentStageStrip segments={segments} selected={segment} onSelect={id => { setAutoPlay(false); setSegment(id); setError(''); }} />}
-    {videoCache.total > 0 && <p className="scene-video-preparation" role="status" title={videoCache.failures.join('\n')}>
+    {!wideVideo && segments.length > 0 && <SegmentStageStrip segments={segments} selected={segment} onSelect={id => { setAutoPlay(false); setSegment(id); setError(''); }} />}
+    {!wideVideo && videoCache.total > 0 && <p className="scene-video-preparation" role="status" title={videoCache.failures.join('\n')}>
       {videoCache.failures.length ? `最新视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
         : videoCache.ready === videoCache.total ? '本场最新视频已全部准备好' : `最新视频已准备 ${videoCache.ready}／${videoCache.total}`}
     </p>}
     {error && <p className="error" role="alert">{error}</p>}
     {currentSegment && <SegmentWorkspace key={segment} scope={scope} segment={segment} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources}
+      segmentNavigation={<SegmentStageStrip vertical segments={segments} selected={segment} onSelect={id => { setAutoPlay(false); setSegment(id); setError(''); }} />}
       wideVideo={wideVideo} onToggleWide={() => setWideVideo(value => !value)}
       continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>}
       autoPlay={autoPlay} onVideoError={() => setAutoPlay(false)} onVideoEnded={advance}
       onSelectionChange={value => { setAutoPlay(false); setError(''); setSelections(previous => ({ ...previous, [segment]: value })); }}
-      playbackControl={<div className="scene-review-actions">{notesExport.control}</div>} />}
+      notesExportControl={notesExport.control} />}
     {notesExport.dialog}
     </> : view === 'storyboard' ? <div className="scene-storyboard">
       {!scene ? <p className="muted">本集尚无场次分镜。</p> : <>

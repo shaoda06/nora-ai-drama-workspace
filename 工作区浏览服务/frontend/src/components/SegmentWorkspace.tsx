@@ -11,6 +11,7 @@ import { PromptSections } from './PromptSections';
 import { RevisionNoteEditor } from './RevisionNotes';
 import type { NoteScope } from './RevisionNotes';
 import { useRefreshState } from '../refreshPosition';
+import './SegmentWideLayout.css';
 
 function SegmentReferences({ context }: { context?: GenerationContext }) {
   const preview = useContext(PreviewContext);
@@ -27,11 +28,11 @@ function SegmentReferences({ context }: { context?: GenerationContext }) {
   </section>;
 }
 
-export function SegmentWorkspace({ scope, segment, items, selection: { stage, key: selected }, onSelectionChange, playbackControl, autoPlay, onVideoEnded, onVideoError, cachedSources, wideVideo, onToggleWide, continuousControl }: {
+export function SegmentWorkspace({ scope, segment, items, selection: { stage, key: selected }, onSelectionChange, notesExportControl, segmentNavigation, autoPlay, onVideoEnded, onVideoError, cachedSources, wideVideo, onToggleWide, continuousControl }: {
   scope: NoteScope; segment: string;
   items: VideoItem[]; selection: { stage: string; key: string }; onSelectionChange: (selection: { stage: string; key: string }) => void;
   wideVideo: boolean; onToggleWide: () => void; continuousControl: ReactNode;
-  playbackControl: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
+  notesExportControl: ReactNode; segmentNavigation: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
   cachedSources: Record<string, string>;
 }) {
   const positionKey = `segment/${scope.project}/${scope.episode}/${scope.scene}/${segment}`;
@@ -69,19 +70,23 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
     const bounds = container.getBoundingClientRect();
     container.scrollBy({ left: title.left < bounds.left ? title.left - bounds.left : Math.max(0, title.right - bounds.right) });
   }, [tab, activeShot?.id, current?.key, editingNotes]);
-  return <>
-    <div className="segment-selectors tabs tabs-grouped">
+  const selectors = <div className="segment-selectors tabs tabs-grouped">
       <TabSelect label="画质选择" selected={stage} onChange={value => onSelectionChange({ stage: value, key: '' })} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
       <TabSelect label="版本切换" disabled={!stage} selected={current?.key || ''} onChange={key => onSelectionChange({ stage, key })} items={versions.map(item => ({ value: item.key, label: item.approved ? '正式版' : candidateLabel(item.candidateNumber) }))} />
       <button disabled={!latest} onClick={() => onSelectionChange({ stage: latest!.stage, key: latest!.key })}>最新</button>
-      {playbackControl}
-    </div>
+    </div>;
+  return <>
+    {!wideVideo && selectors}
     <div className={'segment-workspace' + (wideVideo ? ' is-wide' : '')}>
-      <SegmentVideo key={current?.key || 'empty'} wide={wideVideo} onToggleWide={onToggleWide} continuousControl={continuousControl} current={current} cachedSource={current && cachedSources[current.url]} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
+      <div className="segment-playback-row">
+      <SegmentVideo selectorControl={wideVideo ? selectors : undefined} key={current?.key || 'empty'} wide={wideVideo} onToggleWide={onToggleWide} continuousControl={continuousControl} current={current} cachedSource={current && cachedSources[current.url]} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
+      {wideVideo && <aside className="segment-side-navigation" aria-label="宽屏分段导航">{segmentNavigation}</aside>}
+      </div>
       <SegmentReferences context={context} />
       <section className="segment-script" aria-label="分镜脚本、提示词与修改意见区域">
         <div className="segment-script-header">
           <UnderlineTabs label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }, { value: 'notes', label: '修改意见' }]} selected={tab} onChange={setTab} disabled={!current} />
+          {editingNotes && <div className="segment-notes-export">{notesExportControl}</div>}
           {!editingNotes && <Original url={tab === 'script' ? context?.scriptUrl : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />}
         </div>
         {tab === 'script' && <div className="segment-script-modes">
