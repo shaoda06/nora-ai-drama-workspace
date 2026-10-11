@@ -36,6 +36,28 @@ STATUS_FIELDS = {"状态", "当前状态", "确认状态", "画风确认状态",
                  "agent 技术审查结论", "agent 内容审查状态", "agent 初审结论", "agent初审结论", "agent 画面初审结论", "用户采用状态", "用户决定"}
 
 
+def live_task_record(relative):
+    path = Path(relative)
+    return (path.name in ("后台任务状态.json", "后台过程记录.json")
+            and any(part in ("执行附件", "执行记录") for part in path.parts))
+
+
+def plain_text_preview(path):
+    digest, prefix, total = hashlib.sha256(), bytearray(), 0
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(65536), b""):
+            digest.update(chunk)
+            total += len(chunk)
+            prefix.extend(chunk[:max(0, TEXT_PREVIEW_LIMIT - len(prefix))])
+    truncated = total > TEXT_PREVIEW_LIMIT
+    notice = "仅截取前256 KiB供预览；完整内容请打开原文件。" if truncated else ""
+    try:
+        text = codecs.getincrementaldecoder("utf-8-sig")().decode(bytes(prefix), final=not truncated)
+    except UnicodeDecodeError:
+        text, notice = "", "文件不是有效的UTF-8文本，无法页内预览；请打开原文件。"
+    return {"text": text, "notice": notice}, digest.hexdigest()
+
+
 def status_markup(value, source):
     """Style a declared status only; retain qualifiers and never infer approval."""
     names = "|".join(re.escape(s) for s in sorted(STATUS_COLORS, key=len, reverse=True))
@@ -441,20 +463,10 @@ def build_data(project, *, web_episode_navigation=False):
     def read_plain(relative):
         if relative in text_previews:
             return
-        digest, prefix, total = hashlib.sha256(), bytearray(), 0
-        with (project / relative).open("rb") as stream:
-            for chunk in iter(lambda: stream.read(65536), b""):
-                digest.update(chunk)
-                total += len(chunk)
-                prefix.extend(chunk[:max(0, TEXT_PREVIEW_LIMIT - len(prefix))])
-        sources[relative] = digest.hexdigest()
-        truncated = total > TEXT_PREVIEW_LIMIT
-        notice = "仅截取前256 KiB供预览；完整内容请打开原文件。" if truncated else ""
-        try:
-            text = codecs.getincrementaldecoder("utf-8-sig")().decode(bytes(prefix), final=not truncated)
-        except UnicodeDecodeError:
-            text, notice = "", "文件不是有效的UTF-8文本，无法页内预览；请打开原文件。"
-        text_previews[relative] = {"text": text, "notice": notice}
+        if web_episode_navigation and live_task_record(relative):
+            text_previews[relative] = {"deferred": True}
+            return
+        text_previews[relative], sources[relative] = plain_text_preview(project / relative)
 
     def latest_episode_document(formal_key, work_key):
         candidates = []

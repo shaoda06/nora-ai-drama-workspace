@@ -398,7 +398,14 @@ def document(name: str, path: Annotated[str, Query()]) -> dict[str, Any]:
             return view(parser.document_preview(preview['text'], path), name)
         return view(preview, name)
     if path in data['textPreviews']:
-        return data['textPreviews'][path]
+        preview = data['textPreviews'][path]
+        if preview.get('deferred'):
+            try:
+                target = store.file(name, path)
+            except FileNotFoundError as error:
+                raise HTTPException(404, str(error)) from error
+            preview, _ = parser.plain_text_preview(target)
+        return preview
     raise HTTPException(404, '没有可用的文档预览，请打开原文件')
 
 

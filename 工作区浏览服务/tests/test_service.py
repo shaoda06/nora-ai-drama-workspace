@@ -694,6 +694,118 @@ class ServiceTests(unittest.TestCase):
         with patch.object(Path, 'read_bytes', edit_after_read), self.assertRaises(parser.SourceChangedError):
             parser.build_data(self.project, web_episode_navigation=True)
 
+    def test_other_episode_live_progress_does_not_block_pending_storyboard_refresh(self):
+        progress = self.project / '项目进度.md'
+        progress.write_text('# 项目进度\n', encoding='utf-8')
+        records = self.project / '09-剧集制作/EP001/其他资料/执行附件/EP001-C001-P001-R001-一采'
+        records.mkdir(parents=True)
+        state = records / '后台任务状态.json'
+        events = records / '后台过程记录.json'
+        state.write_text('{"status":"running","step":1}', encoding='utf-8')
+        events.write_text('[]', encoding='utf-8')
+        episode = self.project / '09-剧集制作/EP003'
+        script = episode / '02-剧集剧本/EP003-本集剧本.md'
+        script.parent.mkdir(parents=True)
+        script.write_text('# 剧本\n- 文档版本：v14\n\n## 1. 故事剧本正文\n'
+                          '### EP003-C001\n陈清颜：住手！\n', encoding='utf-8')
+        boards = episode / '03-分镜脚本'
+        boards.mkdir(parents=True)
+        (boards / 'EP003-C001-场次分镜.md').write_text(
+            '# 正式分镜v13\n- 文档版本：v13\n- 确认状态：已确认\n', encoding='utf-8')
+        (boards / 'EP003-分镜索引.md').write_text(
+            '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+            '| EP003-C001 | EP003-C001-P001 | 10 |\n', encoding='utf-8')
+        entry = self.store.get('示例项目')
+        work = episode / '其他资料/工作稿'
+        work.mkdir(parents=True)
+        (work / 'EP003-C001-场次分镜-工作稿.md').write_text(
+            '# 工作稿\n- 当前稿版本：v14\n\n## 1. 当前内容\n'
+            '### 单人正反打测试v14\n- 文档版本：v14\n- 确认状态：待审核\n\n'
+            '#### 1. 镜头正文\n##### 分段 P001\n###### EP003-SH022\n单人对白。\n'
+            '## 2. 讨论与修改\n旧讨论。\n', encoding='utf-8')
+        read_bytes = Path.read_bytes
+        reads = 0
+
+        def update_live_records_during_validation(path):
+            nonlocal reads
+            raw = read_bytes(path)
+            if path == progress:
+                reads += 1
+                if reads == 2:
+                    state.write_text('{"status":"running","step":2}', encoding='utf-8')
+                    events.write_text('[{"step":2}]', encoding='utf-8')
+            return raw
+
+        with patch.object(Path, 'read_bytes', update_live_records_during_validation):
+            self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
+        self.assertEqual(reads, 2)
+        self.assertIsNone(entry['error'])
+        self.assertEqual(entry['revision'], 2)
+        response = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
+        current = next(item for item in response['children'] if item['name'] == 'EP003')
+        doc = current['storyboards']['C001']['doc']
+        self.assertEqual(doc['meta'], {'文档版本': 'v14', '确认状态': '待审核'})
+        self.assertIn('单人对白。', doc['html'])
+        self.assertNotIn('旧讨论。', doc['html'])
+        self.assertEqual(state.read_text(encoding='utf-8'), '{"status":"running","step":2}')
+
+    def test_live_task_record_preview_reads_current_file_with_existing_limits(self):
+        key = '09-剧集制作/EP001/其他资料/执行附件/任务/后台任务状态.json'
+        source = self.project / key
+        source.parent.mkdir(parents=True)
+        source.write_text('{"status":"running"}', encoding='utf-8')
+        self.store.get('示例项目')
+        source.write_text('{"status":"completed"}', encoding='utf-8')
+        reply = self.client.get('/api/projects/示例项目/document', params={'path': key})
+        self.assertEqual(reply.json(), {'text': '{"status":"completed"}', 'notice': ''})
+        source.write_text('汉' * parser.TEXT_PREVIEW_LIMIT, encoding='utf-8')
+        preview = self.client.get('/api/projects/示例项目/document', params={'path': key}).json()
+        self.assertIn('256 KiB', preview['notice'])
+        self.assertNotIn('\ufffd', preview['text'])
+        self.assertLessEqual(len(preview['text'].encode('utf-8')), parser.TEXT_PREVIEW_LIMIT)
+        source.unlink()
+        self.assertEqual(self.client.get('/api/projects/示例项目/document', params={'path': key}).status_code, 404)
+
+    def test_live_progress_snapshot_keeps_file_presence_and_watches_frozen_inputs(self):
+        records = self.project / '09-剧集制作/EP001/其他资料/执行附件/任务'
+        records.mkdir(parents=True)
+        state = records / '后台任务状态.json'
+        before = self.store.snapshot(self.project)
+        state.write_text('running', encoding='utf-8')
+        present = self.store.snapshot(self.project)
+        self.assertNotEqual(present, before)
+        state.write_text('completed with output', encoding='utf-8')
+        self.assertEqual(self.store.snapshot(self.project), present)
+        frozen = records / '输入映射.json'
+        frozen.write_text('{"approved":false}', encoding='utf-8')
+        frozen_before = self.store.snapshot(self.project)
+        frozen.write_text('{"approved":true}', encoding='utf-8')
+        self.assertNotEqual(self.store.snapshot(self.project), frozen_before)
+        frozen.unlink()
+        state.unlink()
+        self.assertEqual(self.store.snapshot(self.project), before)
+        # A similarly named user document outside execution records is still watched.
+        ordinary = self.project / '后台任务状态.json'
+        ordinary.write_text('first', encoding='utf-8')
+        ordinary_before = self.store.snapshot(self.project)
+        ordinary.write_text('changed user document', encoding='utf-8')
+        self.assertNotEqual(self.store.snapshot(self.project), ordinary_before)
+
+    def test_frozen_execution_json_still_rejects_concurrent_edits(self):
+        source = self.project / '09-剧集制作/EP001/其他资料/执行附件/任务/输入映射.json'
+        source.parent.mkdir(parents=True)
+        source.write_text('{"approved":false}', encoding='utf-8')
+        preview = parser.plain_text_preview
+
+        def edit_frozen_input_after_read(path):
+            result = preview(path)
+            if path == source:
+                source.write_text('{"approved":true}', encoding='utf-8')
+            return result
+
+        with patch.object(parser, 'plain_text_preview', edit_frozen_input_after_read), self.assertRaises(parser.SourceChangedError):
+            parser.build_data(self.project, web_episode_navigation=True)
+
     def test_due_retry_is_not_delayed_by_recent_scan(self):
         entry = self.store.get('示例项目')
         with patch('backend.services.projects.time.monotonic', return_value=100), self.assertLogs(

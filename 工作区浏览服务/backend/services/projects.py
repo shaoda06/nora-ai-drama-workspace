@@ -6,7 +6,7 @@ import re
 import threading
 import time
 
-from backend.parsers.project import SourceChangedError, build_data
+from backend.parsers.project import SourceChangedError, build_data, live_task_record
 
 logger = logging.getLogger(__name__)
 
@@ -50,8 +50,14 @@ class ProjectStore:
                     elif item.name not in ('项目总览.html', 'index.html') and item.is_file():
                         if item.is_symlink() and not Path(item.path).resolve().is_relative_to(path):
                             continue
-                        stat = item.stat()
-                        result[key] = (stat.st_mtime_ns, stat.st_size)
+                        # These generated records are read live when opened. Their
+                        # presence affects the file list, but progress writes do not
+                        # change compiled project documents or the queue's own API.
+                        if live_task_record(key):
+                            result[key] = (0, 0)
+                        else:
+                            stat = item.stat()
+                            result[key] = (stat.st_mtime_ns, stat.st_size)
         return result
 
     def load_cache(self, name, snapshot):
