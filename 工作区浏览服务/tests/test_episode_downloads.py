@@ -309,6 +309,16 @@ class EpisodeDownloadTests(unittest.TestCase):
                     self.assertEqual(doc['duration'], len(members) * 2500000)
                     self.assertEqual(meta['tm_duration'], doc['duration'])
                     self.assertEqual(meta['draft_id'], doc['id'])
+                    imported = next(group['value'] for group in meta['draft_materials'] if group['type'] == 0)
+                    self.assertEqual([item['file_Path'] for item in imported], ['./' + name for name in members])
+                    self.assertEqual([item['extra_info'] for item in imported], members)
+                    for item, segment in zip(imported, segments):
+                        material = materials[segment['material_id']]
+                        self.assertEqual(item['metetype'], 'video')
+                        self.assertEqual(item['duration'], material['duration'])
+                        self.assertEqual(item['roughcut_time_range'], segment['source_timerange'])
+                        self.assertEqual((item['width'], item['height']), (material['width'], material['height']))
+                    self.assertNotIn(str(self.project), json.dumps(meta, ensure_ascii=False))
                     self.assertEqual(doc['fps'], 24)
                     self.assertNotIn(str(self.project), json.dumps(doc, ensure_ascii=False))
                     self.assertEqual(doc['materials']['audios'], [])

@@ -41,5 +41,17 @@ def draft_files(files, name):
     now = time.time_ns() // 1000
     meta.update(draft_id=identifier, draft_name=name, tm_duration=start,
                 tm_draft_create=now, tm_draft_modified=now)
+    # The import bin is indexed separately from timeline materials. Its paths
+    # use ./ relative to the draft folder (writer.py _meta_value), not source paths.
+    imported = next(group for group in meta['draft_materials'] if group['type'] == 0)
+    imported['value'] = [{
+        'id': str(uuid.uuid4()).upper(), 'md5': '', 'metetype': 'video', 'type': 0,
+        'extra_info': member, 'file_Path': './' + member,
+        'width': material.width, 'height': material.height, 'duration': material.duration,
+        'create_time': now // 1000000, 'import_time': now // 1000000,
+        'import_time_ms': now // 1000, 'item_source': 1,
+        'roughcut_time_range': {'start': 0, 'duration': material.duration},
+        'sub_time_range': {'start': -1, 'duration': -1},
+    } for material, (_, member) in zip(materials, files)]
     return {'draft_content.json': script.dumps(),
             'draft_meta_info.json': json.dumps(meta, ensure_ascii=False, indent=2)}
