@@ -1,3 +1,4 @@
+import { PointerTooltip } from './PointerTooltip';
 import { useState } from 'react';
 import './SceneDownloads.css';
 
@@ -58,11 +59,11 @@ export function DownloadButton({ url, label, title, pack = false, disabled = fal
   }
 
   return <div className="stage-download-row">
-    <button type="button" className="stage-download-link" disabled={!url || busy || disabled} aria-busy={busy}
-      title={title} onClick={download}>
+    <PointerTooltip text={title}><button type="button" className="stage-download-link" disabled={!url || busy || disabled} aria-busy={busy}
+       onClick={download}>
       {busy && <span className="loading-spinner download-spinner" aria-hidden="true" />}
       {busy ? (pack ? '正在打包…' : '正在准备…') : label}
-    </button>
+    </button></PointerTooltip>
     {!onStateChange && requests.map((request, index) => <span className={`stage-download-message ${request.failed ? 'download-failed' : 'muted'}`}
       role={request.failed ? 'alert' : 'status'} key={index}>{request.time} {request.message}</span>)}
   </div>;

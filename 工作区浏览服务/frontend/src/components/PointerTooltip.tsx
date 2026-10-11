@@ -5,16 +5,17 @@ import './PointerTooltip.css';
 
 /** A layout-neutral tooltip for a single focusable trigger. */
 export function PointerTooltip({ text, children }: {
-  text: string; children: ReactElement<HTMLAttributes<HTMLElement>>;
+  text: string | null | undefined; children: ReactElement<HTMLAttributes<HTMLElement>>;
 }) {
   const id = useId();
   const tooltip = useRef<HTMLDivElement>(null);
   const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null);
-  const open = anchor !== null;
+  const open = anchor !== null && !!text;
 
   useLayoutEffect(() => {
-    if (!anchor || !tooltip.current) return;
+    if (!open || !anchor || !tooltip.current) return;
     const element = tooltip.current;
+    if (!element.matches(':popover-open')) element.showPopover();
     const { width, height } = element.getBoundingClientRect();
     const gap = 12, margin = 8;
     const left = Math.max(margin, Math.min(anchor.x + gap, window.innerWidth - width - margin));
@@ -24,7 +25,7 @@ export function PointerTooltip({ text, children }: {
     element.style.left = `${left}px`;
     element.style.top = `${top}px`;
     element.style.visibility = 'visible';
-  }, [anchor, text]);
+  }, [anchor, text, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -43,13 +44,15 @@ export function PointerTooltip({ text, children }: {
   }, [open]);
 
   const description = [children.props['aria-describedby'], open ? id : undefined].filter(Boolean).join(' ') || undefined;
-  return <span className="pointer-tooltip-trigger"
-    onPointerEnter={event => { if (event.pointerType !== 'touch') setAnchor({ x: event.clientX, y: event.clientY }); }}
-    onPointerMove={event => { if (event.pointerType !== 'touch') setAnchor({ x: event.clientX, y: event.clientY }); }}
-    onPointerLeave={() => setAnchor(null)}
-    onFocus={event => { const rect = event.target.getBoundingClientRect(); setAnchor({ x: rect.right, y: rect.top }); }}
-    onBlur={() => setAnchor(null)}>
-    {cloneElement(children, { 'aria-describedby': description })}
-    {open ? createPortal(<div ref={tooltip} id={id} role="tooltip" className="pointer-tooltip">{text}</div>, document.body) : null}
-  </span>;
+  const trigger = cloneElement(children, {
+    title: undefined,
+    'aria-describedby': description,
+    onPointerEnter: event => { children.props.onPointerEnter?.(event); if (text && event.pointerType !== 'touch') setAnchor({ x: event.clientX, y: event.clientY }); },
+    onPointerMove: event => { children.props.onPointerMove?.(event); if (text && event.pointerType !== 'touch') setAnchor({ x: event.clientX, y: event.clientY }); },
+    onPointerLeave: event => { children.props.onPointerLeave?.(event); setAnchor(null); },
+    onPointerDown: event => { children.props.onPointerDown?.(event); setAnchor(null); },
+    onFocus: event => { children.props.onFocus?.(event); if (text) { const rect = event.currentTarget.getBoundingClientRect(); setAnchor({ x: rect.right, y: rect.top }); } },
+    onBlur: event => { children.props.onBlur?.(event); setAnchor(null); },
+  });
+  return <>{trigger}{open ? createPortal(<div ref={tooltip} id={id} role="tooltip" popover="manual" className="pointer-tooltip">{text}</div>, document.body) : null}</>;
 }

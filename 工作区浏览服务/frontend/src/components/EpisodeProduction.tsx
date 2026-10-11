@@ -1,3 +1,4 @@
+import { PointerTooltip } from './PointerTooltip';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { FileItem } from '../api';
@@ -55,12 +56,12 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
       title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理正式版视频`} />, breadcrumbActions)}
     <div className="episode-scene-header">
       {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
-      <button className="link episode-script-link" disabled={!script} title={script ? undefined : '本集剧本尚未建立'} onClick={() => preview(script!)}>查看本集剧本</button>
+      <PointerTooltip text={script ? undefined : '本集剧本尚未建立'}><button className="link episode-script-link" disabled={!script}  onClick={() => preview(script!)}>查看本集剧本</button></PointerTooltip>
     </div>
     {issues.length > 0 ? <div className="notice episode-data-issues" role="alert">
       <strong>制作资料需要修正</strong>
       <ul>{issues.map((issue, index) => <li key={index}>
-        <button className="link" title={issue.key} onClick={() => preview({ kind: 'document', key: issue.key, name: issue.key.split('/').pop()! })}>{issue.key.split('/').pop()}</button>：{issue.message}
+        <PointerTooltip text={issue.key}><button className="link"  onClick={() => preview({ kind: 'document', key: issue.key, name: issue.key.split('/').pop()! })}>{issue.key.split('/').pop()}</button></PointerTooltip>：{issue.message}
       </li>)}</ul>
     </div> : null}
     {selectedScene ? <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} storyboardDocument={current.storyboards?.[selectedScene]?.doc} />

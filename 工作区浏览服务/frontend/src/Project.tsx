@@ -1,3 +1,4 @@
+import { PointerTooltip } from './components/PointerTooltip';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -121,8 +122,8 @@ function Assets({ value, project, revision, active, asset, onAssetChange }: { va
     <div hidden={!!selected}><div className="toolbar"><SearchField label="搜索资料" placeholder="搜索编号、名称" value={search} onChange={setSearch} /><span className="muted">共{matched.length}项</span></div>
       <div className="grid asset-list-grid">{matched.map((item: RecordData) => <article className="asset-card" key={item.id}>
         <button className={value.kind === 'people' && item.cover?.media ? 'cover character-cover-image' : 'cover'} onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('资料卡'); }}>{item.cover?.media ? <img loading="lazy" src={item.cover.media.url + `?v=${revision}`} alt={item.name} /> : <span>{item.id}</span>}</button>
-        <div className="asset-card-heading"><h3 title={`${item.id} · ${item.name}`}>{item.id} · {item.name}</h3>{value.kind === 'people' && voiceButton(item)}</div>
-        <p className="asset-card-role" title={item.role}><span className="field-label">{({ people: '人物定位', scenes: '场景类型', props: '道具类别' } as Record<string, string>)[value.kind]}：</span>{item.role}</p>
+        <div className="asset-card-heading"><PointerTooltip text={`${item.id} · ${item.name}`}><h3 >{item.id} · {item.name}</h3></PointerTooltip>{value.kind === 'people' && voiceButton(item)}</div>
+        <PointerTooltip text={item.role}><p className="asset-card-role" ><span className="field-label">{({ people: '人物定位', scenes: '场景类型', props: '道具类别' } as Record<string, string>)[value.kind]}：</span>{item.role}</p></PointerTooltip>
         <div className="asset-card-footer"><div className="asset-card-status"><span>资料卡状态：</span><Rich html={item.statusHtml} /></div><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
         <button onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('资料卡'); }}>查看详情</button></div> {item.pendingCount > 0 && <button className="pending" onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('候选与审阅'); }}>留存待确认／待审核 {item.pendingCount}</button>}
       </article>)}</div><Groups groups={value.groups} /></div>

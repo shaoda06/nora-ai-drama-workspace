@@ -1,3 +1,4 @@
+import { PointerTooltip } from './PointerTooltip';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TaskCard, type Task } from './TaskCard';
 import { LocalQueueCard, localQueueStates, type LocalQueueTask } from './LocalQueueCard';
@@ -170,11 +171,11 @@ export function TaskSidebar() {
       </span></button>
     <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
       <div className="comfy-node-heading"><nav className="underline-tabs comfy-node-tabs" aria-label="远端节点">
-        {nodes.map(node => <button key={node.url} aria-current={node.url === selectedNode?.url ? 'page' : undefined}
+        {nodes.map(node => <PointerTooltip key={node.url} text={connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复'}><button  aria-current={node.url === selectedNode?.url ? 'page' : undefined}
           disabled={busy || dragToken.current !== null}
-          onClick={() => { setSelectedUrl(node.url); setActionError(''); }} title={connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复'}>
+          onClick={() => { setSelectedUrl(node.url); setActionError(''); }} >
           <span className="comfy-node-dot" data-connection={connection === 'connected' ? node.connection : 'connecting'}
-            aria-hidden="true" />{node.name}</button>)}
+            aria-hidden="true" />{node.name}</button></PointerTooltip>)}
       </nav></div>
       <section className="comfy-queue" aria-label="远端队列">
       <div className="comfy-task-heading"><strong>远端</strong>

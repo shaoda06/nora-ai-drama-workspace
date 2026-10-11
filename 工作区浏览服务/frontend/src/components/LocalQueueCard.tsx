@@ -1,3 +1,4 @@
+import { PointerTooltip } from './PointerTooltip';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { clockText, localDateTime, taskTypeLabels } from './TaskCard';
@@ -87,7 +88,7 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
     <div className="local-queue-card-top">
       <div className="local-queue-card-identity">
         <span className="local-queue-card-source">本机提交</span>
-        <span className="local-queue-card-project" title={task.project}>{task.project}</span>
+        <PointerTooltip text={task.project}><span className="local-queue-card-project" >{task.project}</span></PointerTooltip>
         <span className="local-queue-card-type">{taskTypeLabels[task.task_type]}</span>
       </div>
       <strong className="local-queue-card-status" data-status={task.status}>{collectionStatus(task)}{position !== undefined && ` #${position}`}</strong>
@@ -98,7 +99,7 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
           {history && onDetails && <button type="button" className="local-queue-card-detail"
             aria-label={`查看${task.title}详情`} onClick={() => onDetails(task.id)}>详情 →</button>}
         </div>
-        {!history && <p className="local-queue-card-session" title={task.source_session_name}>来源会话：{task.source_session_name || '会话名称暂不可用'}</p>}
+        {!history && <PointerTooltip text={task.source_session_name}><p className="local-queue-card-session" >来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip>}
       </div>
       {['local_queued', 'queued', 'paused'].includes(task.status) && <div className="local-queue-card-actions" aria-label="本地任务操作">
         <button type="button" data-tone="green" disabled={busy || !onAction} onClick={() => onAction?.(task.id, 'immediate')}>立即提交</button>
@@ -106,20 +107,20 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
         <button type="button" data-tone={task.status === 'paused' ? 'green' : 'orange'} disabled={busy || !onAction}
           onClick={() => onAction?.(task.id, task.status === 'paused' ? 'resume' : 'pause')}>{task.status === 'paused' ? '恢复' : '暂停'}</button>
         <button type="button" data-tone="red" disabled={busy || !onAction} onClick={() => onAction?.(task.id, 'cancel')}>取消</button>
-        {!!task.transfer_targets?.length && <select aria-label="转移任务" value=""
+        {!!task.transfer_targets?.length && <PointerTooltip text={task.can_transfer ? '移入目标节点队尾，暂停任务保持暂停' : '任务已开始准备，不能转移'}><select aria-label="转移任务" value=""
           disabled={busy || !task.can_transfer || !onTransfer}
-          title={task.can_transfer ? '移入目标节点队尾，暂停任务保持暂停' : '任务已开始准备，不能转移'}
+
           onChange={event => onTransfer?.(task.id, event.target.value)}>
           <option value="" disabled>转移到…</option>
           {task.transfer_targets.map(node => <option key={node.url} value={node.url}>{node.name}</option>)}
-        </select>}
+        </select></PointerTooltip>}
       </div>}
     </div>
     {history && <div className="local-queue-card-history">
-      <p className="local-queue-card-session" title={task.source_session_name}>来源会话：{task.source_session_name || '会话名称暂不可用'}</p>
+      <PointerTooltip text={task.source_session_name}><p className="local-queue-card-session" >来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip>
       <time dateTime={task.ended_at || undefined}>{['completed', 'collecting', 'collection_failed'].includes(task.status) ? '完成时间' : '结束时间'}：{ended ? localDateTime(ended) : '未记录'}</time>
       <p className="local-queue-card-session">成果保存：{task.expected !== undefined ? `${task.collected} / ${task.expected}` : '未记录'}</p>
-      <span title="从执行开始到执行结束，不含排队等待">任务耗时：{elapsed !== null ? clockText(elapsed) : '未记录'}</span>
+      <PointerTooltip text="从执行开始到执行结束，不含排队等待"><span >任务耗时：{elapsed !== null ? clockText(elapsed) : '未记录'}</span></PointerTooltip>
     </div>}
     {task.error && <p className="local-queue-card-error">{task.error}</p>}
     {task.status === 'collecting' && task.collection_next_retry_at && <p className="local-queue-card-session">

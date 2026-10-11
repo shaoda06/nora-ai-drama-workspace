@@ -1,3 +1,4 @@
+import { PointerTooltip } from './PointerTooltip';
 import { useEffect, useRef, useState } from 'react';
 import { useNotify } from './Notifications';
 
@@ -34,7 +35,7 @@ export function useAudioPreview(active: boolean, selection: string | null, revis
 export function AudioPreviewButton({ name, enabled, playing, progress, onClick }: {
   name: string; enabled: boolean; playing: boolean; progress: number; onClick: () => void;
 }) {
-  return <button className="voice-preview" disabled={!enabled} aria-label={!enabled ? `${name}暂无音频` : `${playing ? '暂停' : '播放'}${name}`} title={!enabled ? '暂无参考音频' : playing ? '暂停音频' : '试听音频'} aria-pressed={playing} onClick={onClick}>
+  return <PointerTooltip text={!enabled ? '暂无参考音频' : playing ? '暂停音频' : '试听音频'}><button className="voice-preview" disabled={!enabled} aria-label={!enabled ? `${name}暂无音频` : `${playing ? '暂停' : '播放'}${name}`}  aria-pressed={playing} onClick={onClick}>
     {playing ? 'Ⅱ' : '▶'}<svg className="voice-progress" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="6" pathLength="100" strokeDasharray="100" strokeDashoffset={100 * (1 - progress)} /></svg>
-  </button>;
+  </button></PointerTooltip>;
 }

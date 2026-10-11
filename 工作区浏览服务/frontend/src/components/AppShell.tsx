@@ -5,6 +5,7 @@ import { APP_VERSION, useAppUpdate } from '../useAppUpdate';
 import { restoreRefreshScroll } from '../refreshPosition';
 import { Notifications } from './Notifications';
 import { TaskSidebar } from './TaskSidebar';
+import { BottomTools } from './BottomTools';
 
 export const HeaderControlsContext = createContext<HTMLElement | null>(null);
 export const FooterSyncContext = createContext<HTMLElement | null>(null);
@@ -44,10 +45,10 @@ export function AppShell({ children }: { children: ReactNode }) {
       <Link className="history-link" to="/history">版本与开发记录 · v{APP_VERSION}</Link>
       <span className="footer-sync"><span ref={setSyncRoot} />{!location.pathname.startsWith('/projects/') && '上次同步：—'}</span>
     </footer>
-    <div className="app-bottom-tools">
+    <BottomTools>
       {backTop && <button className="back-top" onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}>↑ 返回顶部</button>}
       {pending && <p className="app-update-notice" role="status">页面已有更新，将在编辑或播放结束后自动刷新。</p>}
-    </div>
+    </BottomTools>
     </div>
   </FooterSyncContext.Provider></HeaderControlsContext.Provider></Notifications>;
 }
