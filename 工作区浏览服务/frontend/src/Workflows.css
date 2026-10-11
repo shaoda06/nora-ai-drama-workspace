@@ -1,17 +1,17 @@
 .workflow-group{margin:0 0 36px}
-.workflow-group-heading{margin-bottom:14px}
+.workflow-group-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}
 .workflow-group-heading h2{display:flex;align-items:center;gap:10px;margin:0;font-size:20px}
 .workflow-group-heading h2 span{padding:2px 8px;border-radius:5px;background:#e6efeb;color:var(--green);font-size:12px;font-weight:500}
-.workflow-group-heading p{margin:5px 0 0;font-size:13px;color:var(--muted)}
+.workflow-group-heading p{margin:0;font-size:13px;color:var(--muted);text-align:right}
 .workflow-list{display:grid;gap:10px}
 .workflow-row{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:0;padding:18px 22px;border:1px solid var(--line);border-radius:9px;background:white;box-shadow:none}
 .workflow-info{min-width:0;flex:1}
 .workflow-info h3{margin:0;font-size:16px;line-height:1.6;overflow-wrap:anywhere}
-.workflow-info p{margin:4px 0 0;font-size:13px;color:var(--muted)}
-.workflow-downloads{display:grid;grid-template-columns:repeat(2,128px);gap:10px;flex-shrink:0}
-.workflow-downloads .stage-download-row{align-content:start;align-items:start}
+.workflow-downloads{display:grid;grid-template-columns:minmax(0,240px) repeat(2,128px);gap:10px;align-items:center;flex-shrink:0}
+.workflow-downloads .stage-download-row{align-content:center;align-items:center}
 .workflow-downloads .stage-download-link{width:100%;font-size:13px;padding:6px 10px;white-space:nowrap}
 .workflow-downloads .stage-download-row:last-child .stage-download-link{background:white;color:var(--green);border-color:#bfd4cc}
 .workflow-downloads .stage-download-row:last-child .stage-download-link:hover{background:#edf4f1}
-.workflow-downloads .stage-download-message{font-size:12px;overflow-wrap:anywhere}
-@media(max-width:760px){.workflow-row{flex-direction:column;align-items:stretch;gap:14px;padding:16px}.workflow-downloads{grid-template-columns:repeat(2,minmax(0,1fr))}.workflow-info h3{font-size:15px}}
+.workflow-download-message{font-size:12px;overflow-wrap:anywhere;text-align:right;line-height:1.6}
+@media(max-width:1000px){.workflow-row{flex-direction:column;align-items:stretch;gap:14px;padding:16px}.workflow-downloads{grid-template-columns:minmax(0,1fr) repeat(2,128px)}.workflow-info h3{font-size:15px}}
+@media(max-width:600px){.workflow-group-heading{align-items:flex-start;gap:12px}.workflow-group-heading h2{flex-shrink:0;font-size:18px}.workflow-group-heading p{max-width:55%;font-size:12px}.workflow-downloads{grid-template-columns:repeat(2,minmax(0,1fr))}.workflow-download-message{grid-column:1/-1;text-align:left}.workflow-download-message:empty{display:none}}

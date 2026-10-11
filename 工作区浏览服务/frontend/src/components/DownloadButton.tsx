@@ -2,22 +2,29 @@ import { useState } from 'react';
 import './SceneDownloads.css';
 
 type Request = { time: string; message: string; failed: boolean };
+export type DownloadState = Request & { busy: boolean };
 
-export function DownloadButton({ url, label, title, pack = false }: {
-  url: string | null; label: string; title: string; pack?: boolean;
+export function DownloadButton({ url, label, title, pack = false, disabled = false, onStateChange }: {
+  url: string | null; label: string; title: string; pack?: boolean; disabled?: boolean;
+  onStateChange?: (state: DownloadState) => void;
 }) {
   const [busy, setBusy] = useState(false);
   const [requests, setRequests] = useState<Request[]>([]);
 
   async function download() {
     const index = requests.length;
-    const update = (message: string, failed = false) => setRequests(previous => previous.map((request, i) =>
-      i === index ? { ...request, message, failed } : request));
-    setBusy(true);
-    setRequests(previous => [...previous, {
+    let current = {
       time: new Date().toLocaleTimeString('zh-CN', { hour12: false }),
       message: pack ? '正在打包视频，请稍候…' : '正在准备文件，请稍候…', failed: false,
-    }]);
+    };
+    const update = (message: string, failed = false) => {
+      current = { ...current, message, failed };
+      if (onStateChange) onStateChange({ ...current, busy: true });
+      else setRequests(previous => previous.map((request, i) => i === index ? current : request));
+    };
+    setBusy(true);
+    if (onStateChange) onStateChange({ ...current, busy: true });
+    else setRequests(previous => [...previous, current]);
     try {
       const response = await fetch(url!);
       if (!response.ok) {
@@ -46,16 +53,17 @@ export function DownloadButton({ url, label, title, pack = false }: {
       update(`下载失败：${error instanceof Error ? error.message : String(error)}`, true);
     } finally {
       setBusy(false);
+      onStateChange?.({ ...current, busy: false });
     }
   }
 
   return <div className="stage-download-row">
-    <button type="button" className="stage-download-link" disabled={!url || busy} aria-busy={busy}
+    <button type="button" className="stage-download-link" disabled={!url || busy || disabled} aria-busy={busy}
       title={title} onClick={download}>
       {busy && <span className="loading-spinner download-spinner" aria-hidden="true" />}
       {busy ? (pack ? '正在打包…' : '正在准备…') : label}
     </button>
-    {requests.map((request, index) => <span className={`stage-download-message ${request.failed ? 'download-failed' : 'muted'}`}
+    {!onStateChange && requests.map((request, index) => <span className={`stage-download-message ${request.failed ? 'download-failed' : 'muted'}`}
       role={request.failed ? 'alert' : 'status'} key={index}>{request.time} {request.message}</span>)}
   </div>;
 }
