@@ -19,6 +19,7 @@ from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
 from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response, clear_downloads, video_archive_name
 from backend.services import krea2
+from backend.services.workflows import catalogue as workflow_catalogue
 from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
 from backend.services.task_details import task_detail
 from backend.services.task_history import task_history
@@ -27,6 +28,7 @@ from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionN
 
 TOOL = Path(__file__).resolve().parent.parent
 WORKSPACE = Path(os.environ.get('NORA_WORKSPACE', TOOL.parent)).resolve()
+WORKFLOWS = WORKSPACE / '.agents/skills/nora-ai-short-drama/references/comfyui-workflow'
 ENVIRONMENT = os.environ.get('NORA_SERVICE_ENV', 'production')
 revision_notes = RevisionNotes()
 VERSION = json.loads((TOOL / 'frontend/package.json').read_text('utf-8'))['version']
@@ -272,6 +274,20 @@ def view(value, name):
 @app.get('/api/projects')
 def projects() -> list[dict[str, str]]:
     return store.discover()
+
+
+@app.get('/api/workflows')
+def workflows() -> list[dict]:
+    return workflow_catalogue(WORKFLOWS)
+
+
+@app.get('/api/workflows/files/{filename}')
+def workflow_file(filename: str) -> FileResponse:
+    path = (WORKFLOWS / filename).resolve()
+    if (path.parent != WORKFLOWS.resolve() or not path.is_file()
+            or not filename.endswith(('.workflow.json', '.api.json'))):
+        raise HTTPException(404, '工作流文件不存在')
+    return FileResponse(path, media_type='application/json', filename=filename)
 
 
 @app.get('/api/service')

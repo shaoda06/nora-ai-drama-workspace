@@ -928,7 +928,7 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('女性样例', section['bodyHtml'])
         self.assertEqual(self.source.read_text(encoding='utf-8'), source)
 
-    def test_root_history_replaces_other_materials_without_mixing_stage_records(self):
+    def test_root_history_section_removed_without_mixing_stage_records(self):
         root_record = self.project / '历史版本/项目进度-归档.md'
         legacy_record = self.project / '其他资料/历史版本/旧位置.md'
         stage_record = self.project / '00-项目定位/其他资料/工作稿/定位-工作稿.md'
@@ -937,14 +937,11 @@ class ServiceTests(unittest.TestCase):
             path.write_text('# 记录\n\n原始依据。', encoding='utf-8')
         overview = self.client.get('/api/projects/示例项目/overview').json()
         directories = [item['name'] for item in overview['directories']]
-        self.assertIn('历史版本', directories)
+        self.assertNotIn('历史版本', directories)
         self.assertNotIn('其他资料', directories)
         response = self.client.get('/api/projects/示例项目/sections/历史版本')
-        self.assertEqual(response.status_code, 200)
-        files = response.json()['children']
-        self.assertEqual([item['key'] for item in files], ['历史版本/项目进度-归档.md'])
-        preview = self.client.get('/api/projects/示例项目/document', params={'path': files[0]['key']})
-        self.assertIn('原始依据', preview.json()['html'])
+        self.assertEqual(response.status_code, 404)
+        self.assertTrue((self.project / '历史版本/项目进度-归档.md').is_file())
         stage = self.client.get('/api/projects/示例项目/sections/00-项目定位').json()
         self.assertIn('其他资料/工作稿/定位-工作稿.md', str(stage))
         self.assertNotIn('历史版本/项目进度-归档.md', str(stage))

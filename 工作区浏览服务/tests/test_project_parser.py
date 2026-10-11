@@ -15,6 +15,15 @@ class ProjectParserTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.addCleanup(self.temp.cleanup)
 
+    def test_root_history_is_not_a_web_section_and_source_is_preserved(self):
+        self.put('历史版本/旧稿.md', '# 原归档\n保留内容')
+        self.put('00-项目定位/其他资料/历史版本/定位旧稿.md', '# 阶段归档')
+        data = portal.build_data(self.root)
+        self.assertNotIn('历史版本', [item['name'] for item in data['directories']])
+        self.assertNotIn('历史版本', data['catalogues'])
+        self.assertEqual((self.root / '历史版本/旧稿.md').read_text('utf-8'), '# 原归档\n保留内容')
+        self.assertTrue(next(group for group in data['groups'] if group['name'] == '历史版本')['files'])
+
     def test_process_file_status_only_shows_recorded_confirmation(self):
         self.put("00-项目定位/其他资料/工作稿/参考图-工作稿.md", "# 工作稿\n- 当前稿版本：v01\n- 当前状态及待办：等待本批审核\n\n## 生成记录\n原记录")
         self.put("00-项目定位/其他资料/工作稿/已确认稿.md", "# 工作稿\n- 确认状态：已确认\n\n原记录")
@@ -503,11 +512,11 @@ class ProjectParserTests(unittest.TestCase):
         self.assertIn("UTF-8", previews[base + "错误.log"]["notice"])
         self.assertEqual(previews[base + "错误.log"]["text"], "")
 
-    def test_catalogue_and_folders_share_preview_types(self):
-        self.put("历史版本/批次/工作流.json", '{"value": 1}')
+    def test_stage_history_folders_keep_preview_types(self):
+        self.put("00-项目定位/其他资料/历史版本/工作流.json", '{"value": 1}')
         self.data = portal.build_data(self.root)
         data = self.data
-        item = data["catalogues"]["历史版本"]["children"][0]["children"][0]
+        item = next(g for g in data["groups"] if g["name"] == "历史版本")["files"][0]
         self.assertEqual(item["kind"], "text")
         self.assertEqual(data["textPreviews"][item["key"]]["text"], '{"value": 1}')
 
@@ -1128,17 +1137,17 @@ class ProjectParserTests(unittest.TestCase):
         self.assertNotIn("批准采用", encoded)
 
     def test_history_is_separate_and_inventory_skips_outside_symlinks(self):
-        self.put("历史版本/旧批次/定位.md", "# 旧定位\n旧事实")
+        self.put("00-项目定位/其他资料/历史版本/定位.md", "# 旧定位\n旧事实")
         with tempfile.TemporaryDirectory() as outside:
             external = Path(outside) / "private.md"
             external.write_text("private", encoding="utf-8")
-            self.create_symlink(self.root / "历史版本/越界.md", external)
+            self.create_symlink(self.root / "00-项目定位/其他资料/历史版本/越界.md", external)
             self.data = portal.build_data(self.root)
         data = self.data
         self.assertFalse(data["positionExists"])
-        self.assertNotIn("历史版本/越界.md", data["documents"])
-        self.assertIn("历史版本/旧批次/定位.md", data["documents"])
-        self.assertEqual(data["catalogues"]["历史版本"]["children"][0]["name"], "旧批次")
+        self.assertNotIn("00-项目定位/其他资料/历史版本/越界.md", data["documents"])
+        self.assertIn("00-项目定位/其他资料/历史版本/定位.md", data["documents"])
+        self.assertNotIn("历史版本", data["catalogues"])
 
     def prop_fixture(self, decision="批准采用。"):
         base = "05-道具资料"
