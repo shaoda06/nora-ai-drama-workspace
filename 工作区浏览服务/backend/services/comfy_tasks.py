@@ -6,10 +6,11 @@ import importlib.util
 import json
 import logging
 import os
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import secrets
 import sqlite3
 import subprocess
+import sys
 import time
 from urllib.parse import urlencode, urlsplit, urlunsplit
 import uuid
@@ -26,6 +27,8 @@ from backend.services.collection_retry import DELAYS, failure
 
 logger = logging.getLogger(__name__)
 SKILL = Path(__file__).resolve().parents[3] / '.agents/skills/nora-ai-short-drama'
+sys.path.insert(0, str(SKILL / 'scripts'))
+import project_paths as paths
 spec = importlib.util.spec_from_file_location('nora_comfy_client', SKILL / 'references/comfyui-scripts/comfyui_client.py')
 client = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(client)
@@ -79,8 +82,14 @@ class TaskStore(LocalQueue, TaskNotifications):
         self.db.execute('CREATE TABLE IF NOT EXISTS task_events (id INTEGER PRIMARY KEY, task_id TEXT NOT NULL, event TEXT NOT NULL)')
         self.db.execute('CREATE TABLE IF NOT EXISTS notification_batches (id TEXT PRIMARY KEY, thread_id TEXT NOT NULL, task_ids TEXT NOT NULL, payload TEXT NOT NULL, state TEXT NOT NULL)')
         self.db.commit()
-        self.rows = {key: {'input': TaskInput.model_validate_json(payload), 'state': json.loads(state)}
-                     for key, payload, state in self.db.execute('SELECT id, payload, state FROM tasks')}
+        self.rows = {}
+        for key, payload, state in self.db.execute('SELECT id, payload, state FROM tasks'):
+            data = TaskInput.model_validate_json(payload)
+            self.resolve_input(data, recorded=True)
+            self.rows[key] = {'input': data, 'state': paths.recorded_paths(data.project, json.loads(state))}
+        for key in self.rows:
+            self.persist(key)
+        self.db.commit()
         self.workers = {}
         self.notifiers = {}
         self.session_readers = {}
@@ -170,9 +179,42 @@ class TaskStore(LocalQueue, TaskNotifications):
     def persist(self, key):
         row = self.rows[key]
         self.db.execute('INSERT INTO tasks VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload,state=excluded.state',
-                        (key, row['input'].model_dump_json(), json.dumps(row['state'], ensure_ascii=False)))
+                        (key, json.dumps(self.portable_input(row['input']), ensure_ascii=False),
+                         json.dumps(paths.recorded_paths(row['input'].project, row['state'], relative=True), ensure_ascii=False)))
+
+    def resolve_input(self, data, *, recorded=False):
+        if not recorded and not Path(data.project).is_absolute() and PureWindowsPath(data.project).name != data.project:
+            raise ValueError('项目必须是当前工作区内的项目名或绝对路径')
+        project = self.workspace / 'projects' / PureWindowsPath(data.project).name if recorded or not Path(data.project).is_absolute() else Path(data.project)
+        if project.resolve().parent != self.workspace / 'projects':
+            raise ValueError('任务必须属于当前工作区projects下的项目')
+        data.project = str(project.resolve())
+        data.record_dir = str(paths.project_file(project, data.record_dir, recorded=recorded))
+        for output in data.outputs:
+            output.path = str(paths.project_file(project, output.path, recorded=recorded))
+        for upload in data.uploads:
+            if not isinstance(upload.get('file'), str):
+                raise ValueError('上传映射必须提供file路径')
+            upload['file'] = str(paths.project_file(project, upload['file'], recorded=recorded))
+        if data.segment_plan:
+            for target in data.segment_plan.targets:
+                target.path = str(paths.project_file(project, target.path, recorded=recorded))
+
+    def portable_input(self, data):
+        payload = data.model_dump()
+        payload['project'] = Path(data.project).name
+        payload['record_dir'] = paths.relative_file(data.project, data.record_dir)
+        for output in payload['outputs']:
+            output['path'] = paths.recorded_paths(data.project, output['path'], relative=True, field='path')
+        for upload in payload['uploads']:
+            upload['file'] = paths.relative_file(data.project, upload['file'])
+        if payload['segment_plan']:
+            for target in payload['segment_plan']['targets']:
+                target['path'] = paths.relative_file(data.project, target['path'])
+        return payload
 
     def validate(self, data):
+        self.resolve_input(data)
         if not data.title.strip():
             raise ValueError('任务标题不能为空')
         project = Path(data.project).resolve(strict=True)
@@ -442,13 +484,14 @@ class TaskStore(LocalQueue, TaskNotifications):
                 if response.exists():
                     previous = client.strict_json(response.read_bytes())['data']
                     if (previous['remote'] != {name: identity[name] for name in ('filename', 'subfolder', 'type')}
-                            or previous['path'] != str(Path(output.path).absolute())
+                            or paths.project_file(data.project, previous['path'], recorded=True) != Path(output.path)
                             or not Path(output.path).is_file() or Path(output.path).stat().st_size != previous['bytes']):
                         raise ValueError('已有下载证据与当前文件不一致，不覆盖文件')
                 else:
                     downloaded = await asyncio.to_thread(client.download, self.client_for(data),
                         argparse.Namespace(filename=identity['filename'], subfolder=identity['subfolder'],
                                            type=identity['type'], output=output.path, sha256=None))
+                    downloaded['path'] = paths.relative_file(data.project, downloaded['path'])
                     client.write_new(response, {'time': client.now(), 'data': downloaded})
                     self.record(key, 'download', 'success', path=output.path, remote=identity, receipt=str(response),
                                 attempt=state.get('collection_attempt', 1))

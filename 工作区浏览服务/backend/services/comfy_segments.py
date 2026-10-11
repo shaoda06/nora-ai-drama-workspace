@@ -37,6 +37,7 @@ def remote_file(root, absolute):
 
 
 def targets(data):
+    from backend.services.comfy_tasks import paths
     project = Path(data.project).resolve()
     mapping = json.loads((Path(data.record_dir) / '输入映射.json').read_text('utf-8-sig'))
     stage = {'video-first-pass': '一采', 'video-second-pass': '二采'}[data.task_type]
@@ -44,7 +45,7 @@ def targets(data):
     for index in mapping['selected_indices']:
         segment = mapping['segments'][index]
         identity = f"{segment['segment']}-{segment['round']}-{stage}"
-        record = (project / segment['local_execution_dir']).resolve()
+        record = paths.project_file(project, segment['local_execution_dir'], recorded=True)
         episode = segment['segment'].split('-')[0]
         explicit = next((item for item in data.segment_plan.targets if item.index == index), None)
         candidate = Path(explicit.path).resolve() if explicit else project / '09-剧集制作' / episode / '其他资料/候选视频' / (identity + '.mp4')
@@ -95,6 +96,7 @@ def validate(data):
 
 
 async def finish(store, key, result):
+    from backend.services.comfy_tasks import paths as project_paths
     data, state = store.rows[key]['input'], store.rows[key]['state']
     outputs = result['history'].get('outputs', {}).get(data.segment_plan.report_node, {})
     text = '\n'.join(value for values in outputs.values() if isinstance(values, list)
@@ -123,12 +125,13 @@ async def finish(store, key, result):
                 receipt = store.client.strict_json(receipt_path.read_bytes())
                 downloaded = receipt['data']
                 if (receipt['prompt_id'] != state['prompt_id'] or downloaded['remote'] != source
-                        or downloaded['path'] != str(candidate) or not candidate.is_file()
+                        or project_paths.project_file(data.project, downloaded['path'], recorded=True) != candidate or not candidate.is_file()
                         or candidate.stat().st_size != downloaded['bytes']):
                     raise ValueError('已有最终下载凭据与文件不一致，不覆盖文件')
             else:
                 downloaded = await asyncio.to_thread(store.client.download, store.client_for(data), argparse.Namespace(
                     filename=source['filename'], subfolder=source['subfolder'], type='output', output=str(candidate), sha256=None))
+                downloaded['path'] = project_paths.relative_file(data.project, downloaded['path'])
                 store.client.write_new(receipt_path, {'time': store.client.now(), 'prompt_id': state['prompt_id'],
                                                      'identity': target['identity'], 'data': downloaded})
                 store.record(key, 'download', 'success', path=str(candidate), remote=source, receipt=str(receipt_path),

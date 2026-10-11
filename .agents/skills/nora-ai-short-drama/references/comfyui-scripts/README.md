@@ -326,7 +326,8 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 
 | 参数 | 含义 |
 | --- | --- |
-| --project、--workflow、--record-dir | 项目根目录、最终API副本、既定执行附件；必填，建议绝对路径 |
+| --project、--workflow | 当前设备项目根目录、最终API副本；必填，命令行可使用当前设备绝对路径 |
+| --record-dir | 项目内既定执行附件；必填，可用项目内相对路径，后台保存相对路径 |
 | --task-type | image、image-upscale、video-first-pass、video-second-pass、video-postprocess，按实际获授权阶段 |
 | --task-title | 必填非空标题，格式由Agent遵守[标题规则](../流程规范/ComfyUI-服务配置与任务提交规范.md#任务显示标题)，后台不补目录名 |
 | --eligible-url | 可选已核对主节点地址，提供时须与项目第一项一致 |
@@ -347,16 +348,16 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 
 ```json
 [{"node_id":"实际保存节点ID","output_key":"images","index":0,
-  "path":"C:/工作区/projects/项目/候选/CH001-本次版本.png",
+  "path":"候选/CH001-本次版本.png",
   "response_name":"本任务-取回响应.json"}]
 ```
 
-path是Agent指定的项目内绝对路径及文件名，不是远端路径，不放执行附件。节点、output_key和从0开始的index选择真实结果；后台完成后再从history取得远端filename／subfolder／type。普通任务不得空映射；导演台原生分段使用output-plan空数组并提供如下segment-plan。文件名与路径须换成真实项目值：
+path是Agent指定的项目根目录相对路径及文件名，不是远端路径，不放执行附件。当前设备的项目内绝对路径仍可作为入队参数，但后台转换为相对路径保存；上传映射file及分段targets.path使用同一规则。节点、output_key和从0开始的index选择真实结果；后台完成后再从history取得远端filename／subfolder／type。普通任务不得空映射；导演台原生分段使用output-plan空数组并提供如下segment-plan。文件名与路径须换成真实项目值：
 
 ```json
 {"director_node":"502","report_node":"403","output_root":"E:/实际ComfyUI/output",
  "targets":[{"index":0,
-  "path":"C:/工作区/projects/项目/09-剧集制作/EP001/其他资料/候选视频/EP001-C001-P001-R000-一采.mp4",
+  "path":"09-剧集制作/EP001/其他资料/候选视频/EP001-C001-P001-R000-一采.mp4",
   "response_name":"P001-最终取回.json"}]}
 ```
 
@@ -433,7 +434,7 @@ python3 -B -m unittest discover -s '/实际技能目录/scripts' -p 'test_comfyu
 导演台素材藏在timeline_data JSON内时，上传映射可加json-path数组；每个组件为字段名或数组下标，绑定必须已经存在。例如：
 
 ```json
-[{"file":"C:/项目/素材/参考.png","node":"502","input":"timeline_data",
+[{"file":"素材/参考.png","node":"502","input":"timeline_data",
   "subfolder":"本次任务","response-name":"上传-001.json",
   "json-path":["global","refs",0,"imageFile"]}]
 ```

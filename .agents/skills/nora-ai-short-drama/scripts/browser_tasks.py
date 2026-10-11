@@ -8,6 +8,7 @@ import urllib.request
 
 
 def submit(args, workflow, url, uploads=None):
+    from project_paths import project_file, relative_file
     project = Path(args.project).resolve()
     service = project.parent.parent / '工作区浏览服务'
     config = json.loads((service / 'runtime/task-service.json').read_text('utf-8'))
@@ -23,13 +24,20 @@ def submit(args, workflow, url, uploads=None):
         raise ValueError('缺少Node或Codex桌面适配器；未提交')
     payload = {name: getattr(args, name) for name in
                ('project', 'task_type', 'record_dir', 'attempt_name', 'request_name', 'response_name', 'history_name', 'timeout')}
-    payload.update(project=str(project), record_dir=str(Path(args.record_dir).resolve()),
+    payload.update(project=project.name, record_dir=relative_file(project, project_file(project, args.record_dir)),
         workflow=workflow, url=url, title=args.task_title, uploads=uploads or [], start_paused=args.start_paused,
         outputs=json.loads(Path(args.output_plan).read_text('utf-8')),
         segment_plan=json.loads(Path(args.segment_plan).read_text('utf-8')) if args.segment_plan else None,
         thread_id=args.thread_id or caller,
         desktop={'node': node, 'server': str(max(servers, key=lambda path: path.stat().st_mtime)),
                  'pipe': pipe, 'caller_thread': caller})
+    for output in payload['outputs']:
+        output['path'] = relative_file(project, output['path'])
+    for upload in payload['uploads']:
+        upload['file'] = relative_file(project, upload['file'])
+    if payload['segment_plan']:
+        for target in payload['segment_plan']['targets']:
+            target['path'] = relative_file(project, target['path'])
     request = urllib.request.Request(config['url'] + '/api/internal/comfy/submit',
         data=json.dumps(payload, ensure_ascii=False, allow_nan=False).encode('utf-8'),
         headers={'Content-Type': 'application/json', 'x-nora-task-token': config['token']})

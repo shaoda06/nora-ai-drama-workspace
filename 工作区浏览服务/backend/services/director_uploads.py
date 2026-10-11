@@ -2,6 +2,7 @@
 import importlib.util
 import json
 from pathlib import Path
+from project_paths import project_file, recorded_paths
 
 SCRIPT = Path(__file__).resolve().parents[3] / '.agents/skills/nora-ai-short-drama/scripts/workflow_baselines.py'
 spec = importlib.util.spec_from_file_location('nora_director_pairs', SCRIPT)
@@ -45,7 +46,7 @@ def save_uploaded_workflow(project, record, original, workflow, uploaded_materia
     mapping = json.loads(mapping_file.read_text(encoding='utf-8-sig'))
     uploaded_files = {Path(item['file']).resolve() for item in uploaded_materials.values()}
     sources = {item['input_path']: item for item in mapping['uploads']
-               if (Path(project) / item['file']).resolve() not in uploaded_files}
+               if project_file(project, item['file'], recorded=True) not in uploaded_files}
     sources.update(uploaded_materials)
     mapping['uploads'] = list(sources.values())
-    mapping_file.write_text(json.dumps(mapping, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    mapping_file.write_text(json.dumps(recorded_paths(project, mapping, relative=True), ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

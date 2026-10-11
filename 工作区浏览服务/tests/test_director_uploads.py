@@ -30,7 +30,7 @@ class DirectorUploadsTests(unittest.TestCase):
             save_uploaded_workflow(project, record, original, workflow, uploads)
             self.assertEqual(len(pairs.verify(record)), 1)
             mapping = json.loads((record / '输入映射.json').read_text(encoding='utf-8'))
-            self.assertEqual(mapping['uploads'], list(uploads.values()))
+            self.assertEqual(mapping['uploads'], [{'file': 'reference.png', 'input_path': 'real/renamed.png'}])
             self.assertEqual(json.loads((record / (stem + '.api.json')).read_text(encoding='utf-8')), workflow)
             broken = copy.deepcopy(workflow)
             state = json.loads(broken['502']['inputs']['timeline_data'])

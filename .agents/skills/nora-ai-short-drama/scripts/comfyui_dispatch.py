@@ -7,6 +7,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'comfyui-scripts'))
 import comfyui_client as client
 import browser_tasks
+from project_paths import project_file
 
 TASK_TYPES = ('image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess')
 VIDEO_TASK_TYPES = ('video-first-pass', 'video-second-pass')
@@ -47,7 +48,7 @@ def dispatch(args):
     for item in uploads:
         if not isinstance(item, dict) or not isinstance(item.get('file'), str):
             raise ValueError('上传映射必须提供file路径')
-        item['file'] = str(Path(item['file']).resolve())
+        item['file'] = str(project_file(args.project, item['file']))
     url = load_config(args.project, args.timeout)['remote-urls'][0]
     if args.eligible_url and client.Client(args.eligible_url, args.timeout).url != url:
         raise ValueError('指定的能力核对地址不是项目主节点')
@@ -61,7 +62,7 @@ def parser():
     p.add_argument('--task-type', required=True, choices=TASK_TYPES, help='Authorized task stage; all tasks use the project primary endpoint')
     p.add_argument('--workflow', required=True, help='Prepared API JSON; unchanged except declared uploaded input paths')
     p.add_argument('--eligible-url', help='Optional verified primary endpoint; if given must match project configuration')
-    p.add_argument('--uploads', help='Optional JSON array of local files and loader bindings; paths relative to cwd')
+    p.add_argument('--uploads', help='Optional upload bindings; file paths relative to the project root')
     p.add_argument('--record-dir', required=True, help='Existing business evidence directory; video tasks require 输入映射.json and automatically save generation inputs before POST')
     p.add_argument('--attempt-name', default='submit-attempt.json', help='Exclusive attempt evidence filename')
     p.add_argument('--request-name', default='request.json', help='Actual request evidence filename')
@@ -69,8 +70,8 @@ def parser():
     p.add_argument('--timeout', type=float, default=30, help='Seconds per network operation, not task duration; no retries')
     p.add_argument('--monitor', choices=('browser',), default='browser', help='Persistent backend queue; Agent does not upload or submit remotely')
     p.add_argument('--start-paused', action='store_true', help='Register paused for an authorized manual transfer; default is automatic local queueing, with no remote submission until resumed')
-    p.add_argument('--output-plan', help='JSON array of explicit output selectors and absolute local targets; required for browser mode; H3 segments use [] plus --segment-plan')
-    p.add_argument('--segment-plan', help='Native H3 segments JSON with director_node, report_node and verified output_root; targets explicitly specify index, absolute path and response_name for every selected segment')
+    p.add_argument('--output-plan', help='JSON output selectors and project-relative local targets; H3 segments use [] plus --segment-plan')
+    p.add_argument('--segment-plan', help='Native H3 plan; targets specify index, project-relative path and response_name; output_root belongs to the remote server')
     p.add_argument('--history-name', default='执行结果.json', help='Terminal history evidence filename inside record-dir; use the project-required prefix for image tasks')
     p.add_argument('--task-title', required=True, help='Nonempty task title: object number plus short description')
     p.add_argument('--thread-id', help='Authorized destination Codex thread; defaults to genuine CODEX_THREAD_ID; never changes model settings')

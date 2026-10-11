@@ -3,6 +3,7 @@ from datetime import datetime
 import json
 from pathlib import Path
 import re
+from project_paths import project_file
 
 STAGES = {'video-first-pass': '一采', 'video-second-pass': '二采', 'video-postprocess': '后处理'}
 
@@ -18,7 +19,7 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
     payloads = {}
 
     def inside(path):
-        path = (project / path).resolve()
+        path = project_file(project, path, recorded=True)
         if not path.is_relative_to(project):
             raise ValueError('生成资料越出项目：' + str(path))
         return path

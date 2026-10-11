@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import sys
 import tempfile
+from project_paths import project_file, relative_file
 from datetime import datetime
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'comfyui-scripts'))
@@ -18,11 +19,7 @@ STAGES = {'一采': '01-一采', '二采': '02-二采', '后处理': '03-后处�
 
 
 def local_path(root, value):
-    path = Path(value)
-    path = (path if path.is_absolute() else root / path).resolve()
-    if not path.is_relative_to(root):
-        raise ValueError(f'路径越出项目：{path}')
-    return path
+    return project_file(root, value, recorded=True)
 
 
 def link(base, path):
@@ -301,10 +298,10 @@ def adoption(args):
         data = re.sub(r'^- 最近更新：[^\n]*', lambda _: '- 最近更新：' + stamp, data, count=1, flags=re.M)
         data = re.sub(r'^- 当前状态及待办：[^\n]*', lambda _: f'- 当前状态及待办：{revision}{stage}已批准采用；其他阶段及下游状态见选定表和执行记录。', data, count=1, flags=re.M)
         texts[draft] = data
-        record = {'identity': identity, 'recorded_at': stamp, 'source_path': str(source),
-                  'selected_path': str(target), 'basis': plan['approval_text'], 'approval_scope': scope,
+        record = {'identity': identity, 'recorded_at': stamp, 'source_path': relative_file(root, source),
+                  'selected_path': relative_file(root, target), 'basis': plan['approval_text'], 'approval_scope': scope,
                   'segment_review': draft.name + '#' + review.lower(), 'prompt_id': prompt,
-                  'bytes': receipt['bytes'], 'receipt': str(receipt_path)}
+                  'bytes': receipt['bytes'], 'receipt': relative_file(root, receipt_path)}
         mapped['adoptions'] = [a for a in adoptions if a.get('identity') != identity] + [record]
         mapped['adoption_updated_at'] = stamp
         sync_related(item, mapping, prompt, record)

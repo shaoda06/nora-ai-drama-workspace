@@ -34,6 +34,8 @@ class LocalQueue:
     def record(self, key, stage, result, **details):
         row = self.rows[key]
         event = {'time': self.client.now(), 'stage': stage, 'result': result, **details}
+        from backend.services.comfy_tasks import paths
+        event = paths.recorded_paths(row['input'].project, event, relative=True)
         self.db.execute('INSERT INTO task_events(task_id, event) VALUES (?, ?)',
                         (key, json.dumps(event, ensure_ascii=False)))
         self.db.commit()
@@ -46,13 +48,15 @@ class LocalQueue:
         events = [json.loads(value) for value, in self.db.execute(
             'SELECT event FROM task_events WHERE task_id=? ORDER BY id', (key,))]
         (directory / '后台过程记录.json').write_text(json.dumps(events, ensure_ascii=False, indent=2), 'utf-8')
-        summary = {**{name: value for name, value in row['state'].items()
+        from backend.services.comfy_tasks import paths
+        summary = {**{name: value for name, value in paths.recorded_paths(row['input'].project, row['state'], relative=True).items()
                       if name not in ('client_id', 'notices', 'segment_monitor')},
-                   'record_dir': str(directory), 'remote_url': row['input'].url,
-                   'outputs': [item.model_dump() for item in row['input'].outputs]}
+                   'record_dir': paths.relative_file(row['input'].project, directory), 'remote_url': row['input'].url,
+                   'outputs': self.portable_input(row['input'])['outputs']}
         (directory / '后台任务状态.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2), 'utf-8')
 
     async def enqueue(self, data):
+        self.resolve_input(data)
         # Registration has no await before saving, so duplicate HTTP arrivals share one durable ID.
         existing = next((key for key, row in self.rows.items()
                          if Path(row['input'].record_dir).resolve() == Path(data.record_dir).resolve()), None)
