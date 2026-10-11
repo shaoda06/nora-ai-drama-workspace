@@ -28,12 +28,12 @@
       "resize_type.height": 1080,
       "quality": "ULTRA",
       "images": [
-        "7",
+        "12",
         0
       ]
     },
     "_meta": {
-      "title": "03 RTX 超分｜1920×1080 · ULTRA"
+      "title": "04 RTX 超分｜1920×1080 · ULTRA"
     }
   },
   "12": {
@@ -43,17 +43,17 @@
         "7",
         2
       ],
-      "target_fps": 30,
+      "target_fps": 60,
       "method": "optical flow (requires cached RAFT weights)",
       "scene_cut_threshold": 0.15,
       "batch_size": 1,
       "frames": [
-        "1",
+        "7",
         0
       ]
     },
     "_meta": {
-      "title": "04 AusBoss 切镜保护｜光流 · 源帧率→30fps"
+      "title": "03 AusBoss 切镜保护｜光流 · 源帧率→60fps"
     }
   },
   "16": {
@@ -73,7 +73,7 @@
       "pingpong": false,
       "save_output": true,
       "images": [
-        "12",
+        "1",
         0
       ],
       "audio": [

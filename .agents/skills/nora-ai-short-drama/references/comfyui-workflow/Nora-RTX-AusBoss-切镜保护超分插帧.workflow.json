@@ -1,6 +1,6 @@
 {
   "id": "c5386777-92fd-43db-8890-a0418a656da2",
-  "revision": 0,
+  "revision": 1,
   "last_node_id": 24,
   "last_link_id": 28,
   "nodes": [
@@ -158,7 +158,7 @@
       "id": 1,
       "type": "RTXVideoSuperResolution",
       "pos": [
-        740,
+        1210,
         290
       ],
       "size": [
@@ -168,7 +168,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -176,7 +176,7 @@
           "localized_name": "images",
           "name": "images",
           "type": "IMAGE",
-          "link": 28
+          "link": 21
         },
         {
           "label": "resize_type",
@@ -224,7 +224,7 @@
           "name": "upscaled_images",
           "type": "IMAGE",
           "links": [
-            21
+            24
           ]
         }
       ],
@@ -253,7 +253,7 @@
         "resize_type.height": 1080,
         "quality": "ULTRA"
       },
-      "title": "03 RTX 超分｜1920×1080 · ULTRA"
+      "title": "04 RTX 超分｜1920×1080 · ULTRA"
     },
     {
       "id": 16,
@@ -411,7 +411,7 @@
         "widget_ue_connectable": {}
       },
       "widgets_values": {
-        "frame_rate": 30,
+        "frame_rate": 60,
         "loop_count": 0,
         "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
         "format": "video/h264-mp4",
@@ -423,7 +423,7 @@
         "save_output": true
       },
       "widgets_values_named": {
-        "frame_rate": 30,
+        "frame_rate": 60,
         "loop_count": 0,
         "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
         "format": "video/h264-mp4",
@@ -439,9 +439,9 @@
     {
       "id": 12,
       "type": "AUSBOSS_NODES_FrameInterpolate",
-      "title": "04 AusBoss 切镜保护｜光流 · 源帧率→30fps",
+      "title": "03 AusBoss 切镜保护｜光流 · 源帧率→60fps",
       "pos": [
-        1080,
+        740,
         290
       ],
       "size": [
@@ -449,13 +449,13 @@
         270
       ],
       "flags": {},
-      "order": 3,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
           "name": "frames",
           "type": "IMAGE",
-          "link": 21
+          "link": 28
         },
         {
           "name": "source_fps",
@@ -503,7 +503,7 @@
           "name": "frames",
           "type": "IMAGE",
           "links": [
-            24
+            21
           ],
           "slot_index": 0
         },
@@ -523,14 +523,14 @@
       },
       "widgets_values": [
         24,
-        30,
+        60,
         "optical flow (requires cached RAFT weights)",
         0.15,
         1
       ],
       "widgets_values_named": {
         "source_fps": 24,
-        "target_fps": 30,
+        "target_fps": 60,
         "method": "optical flow (requires cached RAFT weights)",
         "scene_cut_threshold": 0.15,
         "batch_size": 1
@@ -545,7 +545,7 @@
       ],
       "size": [
         1490,
-        220
+        240
       ],
       "flags": {},
       "order": 5,
@@ -554,9 +554,9 @@
       "outputs": [],
       "properties": {},
       "widgets_values": [
-        "正式后处理：获批二采分段 → RTX 1920×1080 / ULTRA → AusBoss RAFT光流 / 30fps → 保留原音轨输出。\n切镜阈值0.15，batch_size=1。source_fps接源片实际fps；VideoCombine的frame_rate接插帧输出fps，audio接原音轨。\n固定输出1920×1080、30fps；取回后核对实际规格、时长及来源，不把提高播放帧率当作插帧。\n依赖AUSBOSS_NODES_FrameInterpolate兼容接口及已缓存RAFT权重；使用前按H3执行规范核对节点能力，缺失时报告，不自动安装或切换方法。\n输入文件名须替换为本次获批二采视频；输出前缀按Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理填写。\n逐段取回并展示，由用户人工审核；agent不抽帧、ASR、完整解码或做质量初审。配置更新不授权提交生成任务。"
+        "正式后处理：获批二采分段 → AusBoss RAFT光流 / 60fps → RTX 1920×1080 / ULTRA → 保留原音轨输出。\n画面连接：7.images → 12.frames → 1.images → 16.images。切镜阈值0.15，batch_size=1。\nsource_fps接源片实际fps；VideoCombine的frame_rate接插帧输出fps，audio接原音轨。固定输出1920×1080、60fps；取回后核对实际规格、时长及来源，不把提高播放帧率当作插帧。\n依赖AUSBOSS_NODES_FrameInterpolate兼容接口及已缓存RAFT权重；使用前按H3执行规范核对节点能力，缺失时报告，不自动安装或切换方法。\n输入文件名须替换为本次获批二采视频；输出前缀按Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理填写。\n任务完成后取回全部成果并展示，由用户人工审核；agent不抽帧、ASR、完整解码或做质量初审。配置更新不授权提交生成任务。"
       ],
-      "title": "后处理说明｜固定1920×1080 · 30fps",
+      "title": "后处理说明｜先插帧60fps → 超分1920×1080",
       "color": "#432",
       "bgcolor": "#653"
     }
@@ -574,15 +574,15 @@
       28,
       7,
       0,
-      1,
+      12,
       0,
       "IMAGE"
     ],
     [
       21,
-      1,
-      0,
       12,
+      0,
+      1,
       0,
       "IMAGE"
     ],
@@ -596,7 +596,7 @@
     ],
     [
       24,
-      12,
+      1,
       0,
       16,
       0,
