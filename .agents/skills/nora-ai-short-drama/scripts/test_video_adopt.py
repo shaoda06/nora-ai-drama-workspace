@@ -93,6 +93,25 @@ class AdoptionTests(unittest.TestCase):
                 self.assertEqual(self.run_plan()['items'][0]['state'], 'already_adopted')
                 self.assertEqual(snapshot, {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()})
 
+    def test_existing_storyboard_summary_adoption_and_repeat(self):
+        self.item(stage='后处理')
+        existing = self.summary.with_name('EP001-分镜索引-工作稿.md')
+        self.summary.rename(existing)
+        self.plan['summary'] = str(existing)
+        self.plan['record_updates'][0]['path'] = str(existing)
+        self.assertEqual(self.run_plan()['items'][0]['state'], 'adopt')
+        self.assertIn('本批批准采用', existing.read_text(encoding='utf-8'))
+        self.assertFalse(self.summary.exists())
+        self.assertEqual(self.run_plan()['items'][0]['state'], 'already_adopted')
+
+    def test_summary_cannot_target_another_episode_or_segment(self):
+        self.item()
+        for name in ['EP002-分镜索引-工作稿.md', 'EP001-C001-P001-视频制作-工作稿.md']:
+            with self.subTest(name=name):
+                self.plan['summary'] = str(self.summary.with_name(name))
+                with self.assertRaisesRegex(ValueError, 'summary 须为本集'):
+                    self.run_plan()
+
     def test_shared_mapping_partial_approval(self):
         first, draft, source, target = self.item()
         second, _, second_source, second_target = self.item('P002', mapping=Path(first['mapping']))

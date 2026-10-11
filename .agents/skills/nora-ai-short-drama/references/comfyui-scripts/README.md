@@ -66,7 +66,8 @@ python .agents/skills/nora-ai-short-drama/scripts/video_adopt.py --project 'proj
 | `items[].source` | 可选，默认本集 `其他资料/候选视频/{identity}.mp4`。其他实际格式或旧位置须传实际路径，文件名须为本身份加实际扩展名；保留原格式和文件名，不转码。目标按阶段采用目录确定。 |
 | `items[].execution_heading` | 可选，默认 `R编号-阶段`。旧章节如 `R004后处理故障接续-001` 应明确传完整标题；标题须唯一，章节字段须标明本次阶段。 |
 | `items[].related_mappings` | 可选父映射路径数组。仅同步 `current_execution.mapping/prompt_id` 明确指向本次执行的父记录；原prompt、旧终态、历史输出凭据保留。 |
-| `record_updates` | agent按当前事实准备的定点替换数组，字段为 `path/old/new`，只允许涉及集的生成说明工作稿和项目进度。正式采用要求两类入口均有更新；事实无变化可 `old=new`。原文匹配须唯一；已是唯一新文时不重复更新；他人改动导致失配就停止。可列多处，包含移动后需要更新的链接。 |
+| `summary` | 可选单集既有业务汇总入口，限本集生成说明或分镜索引工作稿；缺省使用生成说明。多集采用计划保持各集默认入口。 |
+| `record_updates` | agent按当前事实准备的定点替换数组，字段为 `path/old/new`，只允许涉及集的业务汇总工作稿（默认生成说明，单集可由 `summary` 指定既有分镜索引工作稿）和项目进度。正式采用要求两类入口均有更新；事实无变化可 `old=new`。原文匹配须唯一；已是唯一新文时不重复更新；他人改动导致失配就停止。可列多处，包含移动后需要更新的链接。 |
 
 本地直接修改视频时，实际输入映射的 `local_edit` 记录 `tool/source/source_file/parameters`（工具、完整来源身份、项目内来源文件及实际参数），与 `generation_contexts` 的来源保持一致；本段输出记录 `path/bytes`，已有 `sha256` 时复用，没有不补造。`receipt` 可指实际输出响应，也可指含单段 `output` 的本地映射本身；不填ComfyUI prompt ID。仅采用已生成的文件，不执行视频修改。目录迁移后，实际文件、原输出凭据及现有批准关联一致时，可同步映射中的当前位置，保留原批准时间，不新增审核决定。
 

@@ -311,7 +311,17 @@ def adoption(args):
     record_updates = plan.get('record_updates', [])
     if not isinstance(record_updates, list) or any(not isinstance(update, dict) for update in record_updates):
         raise ValueError('record_updates 必须是对象数组')
-    required = {root / '项目进度.md'} | {root / '09-剧集制作' / ep / '其他资料' / '工作稿' / f'{ep}-生成说明-工作稿.md' for ep in episodes}
+    summaries = {root / '09-剧集制作' / ep / '其他资料' / '工作稿' / f'{ep}-生成说明-工作稿.md' for ep in episodes}
+    if plan.get('summary'):
+        if len(episodes) != 1:
+            raise ValueError('summary 仅用于单集采用计划')
+        ep = next(iter(episodes))
+        folder = root / '09-剧集制作' / ep / '其他资料' / '工作稿'
+        summary = local_path(root, plan['summary'])
+        if summary not in {folder / f'{ep}-生成说明-工作稿.md', folder / f'{ep}-分镜索引-工作稿.md'}:
+            raise ValueError('summary 须为本集既有生成说明或分镜索引工作稿')
+        summaries = {summary}
+    required = {root / '项目进度.md'} | summaries
     covered = set()
     for update in record_updates:
         path = local_path(root, update['path'])
