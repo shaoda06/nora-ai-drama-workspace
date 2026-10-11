@@ -13,6 +13,9 @@
 .task-detail dd { margin: 3px 0 0; overflow-wrap: anywhere; }
 .task-detail-problem { padding: 16px 20px; margin-bottom: 20px; border: 1px solid #ecc9c2; border-radius: 8px; background: #fff5f1; }
 .task-detail-problem p, .task-detail-error { color: #a83c32; overflow-wrap: anywhere; }
+.task-detail-guidance { padding: 16px 20px; margin-bottom: 20px; border: 1px solid #d0ded5; border-radius: 8px; background: #f1f7f3; }
+.task-detail-guidance h4 { margin-bottom: 8px; color: var(--green); }
+.task-detail-guidance p { overflow-wrap: anywhere; }
 .task-detail-outputs { list-style: none; padding: 0; margin: 14px 0 28px; }
 .task-detail-outputs li { padding: 14px 18px; border: 1px solid var(--line); border-radius: 8px; margin-top: 10px; }
 .task-detail-output-heading { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; }

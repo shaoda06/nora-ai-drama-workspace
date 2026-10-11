@@ -42,6 +42,20 @@ const notices: Record<string, string> = { not_required: '无需通知', waiting:
   waiting_connection: '等待会话连接', sending: '正在发送', sent: '已发送，等待 Agent 确认',
   acknowledged: 'Agent 已确认', delivery_unknown: '送达状态待核对' };
 const outputStatuses: Record<string, string> = { saved: '已保存', failed: '取回失败', missing: '本机文件缺失', pending: '未记录保存成功' };
+const taskGuidance: Record<string, { title: string; text: string }> = {
+  submission_unknown: { title: '请来源 Agent 核对提交结果', text: '提交是否成功还没有确认。请来源 Agent 查看提交请求、响应和远端任务记录，确认这次任务是否已被接收。核对前不要再次提交，后台不会自动重发生成请求。' },
+  needs_attention: { title: '请来源 Agent 核对远端状态', text: '当前记录不足以确认远端任务的结果。请来源 Agent 根据远端任务 ID、执行结果和过程记录核对；任务暂时查不到，不代表生成失败，核对前不要重新生成。' },
+  rejected: { title: '请来源 Agent 检查提交被拒绝的原因', text: '请来源 Agent 查看远端响应，检查工作流、节点依赖和输入资料，修正记录中指出的问题。后台不会自动重新提交；需要再次生成时，另行确认并创建新的执行。' },
+  failed: { title: '请来源 Agent 检查生成失败的原因', text: '请来源 Agent 查看远端执行结果和失败阶段，检查对应的工作流、输入或节点问题。后台不会自动重新生成；需要再次生成时，另行确认并创建新的执行。' },
+};
+const notificationGuidance: Record<string, string> = {
+  waiting: '后台会发送保存的结果通知，无需手动重复发送。',
+  waiting_idle: '来源会话忙碌，后台会等会话空闲后发送结果通知。',
+  waiting_connection: '来源会话暂时无法连接，后台会继续重试发送保存的结果通知。',
+  sending: '后台正在发送结果通知，请等待发送结果。',
+  sent: '通知已经发出，正在等待来源 Agent 确认收到；无需重复生成或再次发送通知。',
+  delivery_unknown: '通知是否送达还没有确认，后台只核对接收确认，不自动重发。请来源 Agent 查看会话是否已收到这条结果通知，收到后确认接收；无需重新生成或取回成果。',
+};
 function date(value: string | null | undefined) {
   if (!value) return '未记录';
   const parsed = new Date(value);
@@ -62,6 +76,21 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close }: {
   const data = query.data;
   const node = (url: string) => nodes.find(item => item.url === url)?.name || url;
   const summary = data?.summary;
+  const missingSavedOutput = data?.outputs.some(output => output.status === 'missing');
+  const guidance = summary && (summary.status === 'collecting' ? {
+    title: summary.collection_next_retry_at ? '后台正在等待自动重试' : '后台正在取回成果',
+    text: summary.collection_next_retry_at
+      ? `后台将在 ${date(summary.collection_next_retry_at)} 重试未保存的成果。已经保存的成果会保留，现在无需 Agent 手动重试，也不要重新提交生成。`
+      : '生成已经结束，后台正在保存成果。请等待全部成果保存成功，或出现需要处理的最终错误；现在无需手动重试或重新生成。',
+  } : summary.status === 'collection_failed' ? {
+    title: summary.collection_retry_stop === 'exhausted' ? '自动重试已用完，请来源 Agent 接手' : '取回已停止，请来源 Agent 检查原因',
+    text: summary.collection_retry_stop === 'exhausted'
+      ? '后台已用完本轮 3 次自动重试。请来源 Agent 查看最后一次失败记录，确认远端连接和保存条件恢复后，通过已有的“重试取回”入口再次请求后台下载。'
+      : '请来源 Agent 按失败记录检查成果映射、保存路径、文件权限或文件冲突，修正具体问题后，通过已有的“重试取回”入口请求后台继续下载。',
+  } : summary.status === 'completed' && missingSavedOutput ? {
+    title: '请来源 Agent 核对缺失的本机成果',
+    text: '记录显示成果曾经保存成功，但现在找不到文件。请来源 Agent 检查文件是否被移动或删除，并核对原保存路径；先查找或恢复已有成果，不要直接重新生成。',
+  } : taskGuidance[summary.status]);
   const timeline = data?.events.filter((event, index, events) => !(event.stage === 'execution' && event.result === 'running'
     && events[index - 1]?.stage === 'execution' && events[index - 1]?.result === 'running')) ?? [];
   const duration = summary?.started_at && summary.ended_at
@@ -76,6 +105,10 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close }: {
         <strong data-status={summary.status}>{collectionStatus(summary)}</strong></div>
       {summary.error && <section className="task-detail-problem"><h4>当前问题 · {stages[summary.failure_stage || ''] || summary.failure_stage || '阶段未记录'}</h4>
         <p>{summary.error}</p><p>成果保存：{summary.collected} / {summary.expected}</p></section>}
+      {guidance && <section className="task-detail-guidance" aria-label="任务处理提示">
+        <h4>{guidance.title}</h4><p>{guidance.text}</p>
+        {summary.status === 'collection_failed' && <p>已经保存的成果保留，只重试未保存的成果，不重新生成。具体文件见下方“成果”，失败原因见“当前问题”和“过程记录”。</p>}
+      </section>}
       <dl className="task-detail-summary">
         <div><dt>最初入队节点</dt><dd>{node(summary.enqueued_url)}</dd></div>
         <div><dt>{summary.submitted_at ? '实际执行节点' : '当前目标节点'}</dt><dd>{node(summary.remote_url)}</dd></div>
@@ -113,6 +146,7 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close }: {
             {event.error && <p className="task-detail-error">{event.error}</p>}</li>)}
         </ol>}
       </section><section><h4>Agent 通知</h4><p>{notices[summary.notification] || summary.notification || '未记录'}</p>
+        {notificationGuidance[summary.notification] && <p className="task-detail-muted">{notificationGuidance[summary.notification]}</p>}
         <dl className="task-detail-notification">{['pending', 'sent', 'acknowledged'].map(result => {
           const events = data.events.filter(event => event.stage === 'notification' && event.result === result);
           return <div key={result}><dt>{results[result]}</dt><dd>{date(events.at(-1)?.time)}</dd></div>;
