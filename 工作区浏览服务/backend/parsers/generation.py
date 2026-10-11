@@ -16,13 +16,13 @@ def segment_body(text, segment):
                         + r"[ \t]*\n.*?(?=^###[ \t]|\Z)", shots[1], re.M | re.S) if shots else None
     start = re.search(r"^####[ \t]+", section[0], re.M) if section else None
     body = section[0][start.start():] if start else ""
-    body = re.sub(r"(^####[ \t]+(EP\d+-SH\d+)[ \t]*\n)\s*\*\*镜号\*\*[：:][ \t]*\2[ \t]*(?=\n|$)",
+    body = re.sub(r"(^####[ \t]+(EP\d+-SH\d+)[ \t]*\n)\s*(?:-[ \t]+)?\*\*镜号\*\*[：:][ \t]*\2[ \t]*(?=\n|$)",
                   r"\1", body, flags=re.M)
     # Historical files retain their bytes; display the existing duration after time.
     shots = re.split(r"(?=^####[ \t])", body, flags=re.M)
     for index, shot in enumerate(shots):
-        duration = re.search(r"^\*\*时长\*\*[：:][^\n]*\n?", shot, re.M)
-        time = re.search(r"^\*\*时间\*\*[：:][^\n]*\n?", shot, re.M)
+        duration = re.search(r"^(?:-[ \t]+)?\*\*时长\*\*[：:][^\n]*\n?", shot, re.M)
+        time = re.search(r"^(?:-[ \t]+)?\*\*时间\*\*[：:][^\n]*\n?", shot, re.M)
         if duration and time and duration.start() > time.end():
             without_duration = shot[:duration.start()] + shot[duration.end():]
             shots[index] = without_duration[:time.end()] + "\n" + duration[0].rstrip() + "\n" + without_duration[time.end():]
@@ -60,7 +60,7 @@ def resolve_context(identity, contexts, project, read, read_plain, previews, tra
             result.update(scriptHtml=markdown(body, storyboard["file"]),
                           scriptUrl=quote(storyboard["file"], safe="/-._~"))
             for shot in re.finditer(r"^####[ \t]+(EP\d+-SH\d+)[ \t]*\n.*?(?=^####[ \t]|\Z)", body, re.M | re.S):
-                duration = re.search(r"^\*\*时长\*\*[：:][ \t]*(\d+(?:\.\d+)?)[ \t]*秒[。.]?[ \t]*$", shot[0], re.M)
+                duration = re.search(r"^(?:-[ \t]+)?\*\*时长\*\*[：:][ \t]*(\d+(?:\.\d+)?)[ \t]*秒[。.]?[ \t]*$", shot[0], re.M)
                 seconds = float(duration[1]) if duration else 0
                 result["shots"].append({"id": shot[1], "duration": seconds if seconds > 0 else None,
                                         "html": markdown(shot[0], storyboard["file"])})

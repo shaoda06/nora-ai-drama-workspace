@@ -218,6 +218,26 @@ class GenerationContextTests(unittest.TestCase):
         self.assertEqual([(shot['id'], shot['duration']) for shot in result['shots']], [('EP001-SH001', 3)])
         self.assertEqual((self.project / context['storyboard']['file']).read_text(encoding='utf-8'), frozen)
 
+    def test_bulleted_storyboard_fields_keep_fractional_durations_and_frozen_bytes(self):
+        context, _, _ = self.add_run('R001')
+        original = self.storyboard('v001', '本轮镜头').replace('**时长**：3秒', '**时长**：1.5秒')
+        bulleted = '\n'.join('- ' + line if line.startswith('**') else line for line in original.splitlines()) + '\n'
+        self.write(context['storyboard']['file'], bulleted)
+        result = self.videos()[0]['context']
+        self.assertEqual(result['issues'], [])
+        self.assertEqual([(shot['id'], shot['duration']) for shot in result['shots']], [('EP001-SH001', 1.5)])
+        self.assertLess(result['scriptHtml'].index('时间'), result['scriptHtml'].index('时长'))
+        self.assertLess(result['scriptHtml'].index('时长'), result['scriptHtml'].index('景别'))
+        self.assertNotIn('镜号', result['scriptHtml'])
+        self.assertNotIn('其他分段不展示', result['scriptHtml'])
+        self.assertEqual((self.project / context['storyboard']['file']).read_text(encoding='utf-8'), bulleted)
+        for value in ('0', '-3', '待定'):
+            with self.subTest(value=value):
+                self.write(context['storyboard']['file'], bulleted.replace('1.5秒', value + '秒'))
+                invalid = self.videos()[0]['context']
+                self.assertIsNone(invalid['shots'][0]['duration'])
+                self.assertIn('该次分镜存在缺失或无效的镜头时长，无法跟视频对齐。', invalid['issues'])
+
     def automatic_task(self, selected=(0, 1), common_enabled=True):
         root = self.project / (self.episode + '/其他资料/执行附件/EP001-C001-P001-R004-一采')
         script = self.episode + '/03-分镜脚本/EP001-C001-场次分镜.md'
