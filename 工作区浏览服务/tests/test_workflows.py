@@ -19,22 +19,29 @@ class WorkflowTests(unittest.TestCase):
         self.client = TestClient(main.app)
         self.addCleanup(self.client.close)
 
-    def test_list_and_download_formal_pairs_only(self):
+    def test_list_and_download_formal_and_backup_pairs(self):
         content = '{"节点": 128}\n'.encode('utf-8')
         for suffix in ('workflow', 'api'):
             (self.root / f'视频-去油版.{suffix}.json').write_bytes(content)
         archive = self.root / '非正式工作流'
         archive.mkdir()
-        (archive / '旧版.workflow.json').write_bytes(content)
+        for suffix in ('workflow', 'api'):
+            (archive / f'备用.{suffix}.json').write_bytes(content)
+        nested = archive / '历史'
+        nested.mkdir()
+        (nested / '旧版.api.json').write_bytes(content)
+        (self.root.parent / 'outside.api.json').write_bytes(content)
         (self.root / 'notes.json').write_bytes(content)
         items = self.client.get('/api/workflows').json()
-        self.assertEqual(len(items), 1)
+        self.assertEqual(len(items), 2)
+        self.assertEqual([item['group'] for item in items], ['formal', 'backup'])
         self.assertTrue(items[0]['explicitOnly'])
-        for key in ('canvasUrl', 'apiUrl'):
-            response = self.client.get(items[0][key])
-            self.assertEqual(response.content, content)
-            self.assertIn('attachment;', response.headers['content-disposition'])
-        for path in ('notes.json', 'missing.api.json', '非正式工作流%2F旧版.workflow.json', '..%5Coutside.api.json'):
+        for item in items:
+            for key in ('canvasUrl', 'apiUrl'):
+                response = self.client.get(item[key])
+                self.assertEqual(response.content, content)
+                self.assertIn('attachment;', response.headers['content-disposition'])
+        for path in ('notes.json', 'missing.api.json', '非正式工作流/历史/旧版.api.json', '..%5Coutside.api.json', '非正式工作流%2F..%2F..%2Foutside.api.json'):
             self.assertEqual(self.client.get('/api/workflows/files/' + path).status_code, 404)
 
     def test_missing_api_is_not_a_download_link(self):

@@ -281,13 +281,14 @@ def workflows() -> list[dict]:
     return workflow_catalogue(WORKFLOWS)
 
 
-@app.get('/api/workflows/files/{filename}')
+@app.get('/api/workflows/files/{filename:path}')
 def workflow_file(filename: str) -> FileResponse:
     path = (WORKFLOWS / filename).resolve()
-    if (path.parent != WORKFLOWS.resolve() or not path.is_file()
+    if (not path.is_relative_to(WORKFLOWS.resolve())
+            or path.parent not in (WORKFLOWS.resolve(), (WORKFLOWS / '非正式工作流').resolve()) or not path.is_file()
             or not filename.endswith(('.workflow.json', '.api.json'))):
         raise HTTPException(404, '工作流文件不存在')
-    return FileResponse(path, media_type='application/json', filename=filename)
+    return FileResponse(path, media_type='application/json', filename=path.name)
 
 
 @app.get('/api/service')
