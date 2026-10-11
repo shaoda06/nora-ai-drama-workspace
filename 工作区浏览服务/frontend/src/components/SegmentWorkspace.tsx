@@ -15,7 +15,7 @@ import { useRefreshState } from '../refreshPosition';
 function SegmentReferences({ context }: { context?: GenerationContext }) {
   const preview = useContext(PreviewContext);
   return <section className="segment-references" aria-label="参考素材区域">
-    {context ? (['common', 'segment'] as const).map(group => <div className="segment-reference-group" key={group}>
+    {context ? (['common', 'segment'] as const).map(group => <div className={`segment-reference-group is-${group}`} key={group}>
       <h3>{group === 'common' ? '公共参考素材' : '本组参考素材'}</h3>
       <div className="segment-reference-images">{context.references[group].map((material, index) => <figure key={index}>
         <figcaption>{material.label}</figcaption>
@@ -35,6 +35,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
 }) {
   const positionKey = `segment/${scope.project}/${scope.episode}/${scope.scene}/${segment}`;
   const [tab, setTab] = useRefreshState(positionKey + '/tab', 'script');
+  const [wideVideo, setWideVideo] = useRefreshState(positionKey + '/wideVideo', false);
   const [language, setLanguage] = useRefreshState(positionKey + '/language', 'zh');
   const [scriptMode, setScriptMode] = useRefreshState(positionKey + '/scriptMode', 'aligned');
   const [playback, setPlayback] = useState({ key: '', time: 0 });
@@ -75,11 +76,9 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
       <button disabled={!latest} onClick={() => onSelectionChange({ stage: latest!.stage, key: latest!.key })}>最新</button>
       {playbackControl}
     </div>
-    <div className="segment-workspace">
-      <div className="segment-media-column">
-        <SegmentVideo key={current?.key || 'empty'} current={current} cachedSource={current && cachedSources[current.url]} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
-        <SegmentReferences context={context} />
-      </div>
+    <div className={'segment-workspace' + (wideVideo ? ' is-wide' : '')}>
+      <SegmentVideo key={current?.key || 'empty'} wide={wideVideo} onToggleWide={() => setWideVideo(value => !value)} current={current} cachedSource={current && cachedSources[current.url]} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
+      <SegmentReferences context={context} />
       <section className="segment-script" aria-label="分镜脚本、提示词与修改意见区域">
         <div className="segment-script-header">
           <UnderlineTabs label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }, { value: 'notes', label: '修改意见' }]} selected={tab} onChange={setTab} disabled={!current} />

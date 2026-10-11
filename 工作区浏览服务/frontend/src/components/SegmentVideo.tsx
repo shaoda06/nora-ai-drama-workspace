@@ -17,11 +17,11 @@ export const latestVideo = (items: VideoItem[]) => {
   }, undefined);
 };
 
-export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource }: {
+export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, wide, onToggleWide }: {
   current?: VideoItem; onTimeChange: (time: number) => void; autoPlay?: boolean;
   onEnded?: () => void; onError?: () => void;
   onFileRevision?: (revision: string) => void;
-  cachedSource?: string;
+  cachedSource?: string; wide: boolean; onToggleWide: () => void;
 }) {
   const [error, setError] = useState(false);
   const [loaded, setLoaded] = useState(current);
@@ -40,7 +40,13 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
       onSeeked={event => onTimeChange(event.currentTarget.currentTime)}
       onPause={event => onTimeChange(event.currentTarget.currentTime)}
       onEnded={event => { onTimeChange(event.currentTarget.currentTime); onEnded?.(); }} /> : <div className="video-placeholder">视频区域</div>}
-    <div className="video-source">{current && loaded && <><div className="video-source-summary"><span>{current.approved ? '正式版 · 原' : ''}{candidateLabel(current.candidateNumber)} · {current.run} · {current.stage}</span></div><Original url={loaded.url} label="查看视频原文件" /></>}</div>
+    <div className="video-source">
+      {current && loaded && <div className="video-source-summary"><span>{current.approved ? '正式版 · 原' : ''}{candidateLabel(current.candidateNumber)} · {current.run} · {current.stage}</span></div>}
+      <div className="video-source-actions">
+        <button className="video-layout-toggle" aria-pressed={wide} onClick={onToggleWide}>{wide ? '恢复布局' : '宽屏显示'}</button>
+        {loaded && <Original url={loaded.url} label="查看视频原文件" />}
+      </div>
+    </div>
     {updated && <div className="video-update" role="status"><span>视频已有更新</span><button onClick={() => { setPlayOnLoad(!video.current!.paused); setLoaded(current); setSource(cachedSource || current.url); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></div>}
     {error && <p className="error" role="alert">视频无法播放，请打开原文件。</p>}
   </section>;
