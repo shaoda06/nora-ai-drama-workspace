@@ -29,15 +29,15 @@ function SegmentReferences({ context }: { context?: GenerationContext }) {
   </section>;
 }
 
-export function SegmentWorkspace({ scope, segment, items, selection: { stage, key: selected }, onSelectionChange, notesExportControl, segmentNavigation, autoPlay, onVideoEnded, onVideoError, cachedSources, wideVideo, onToggleWide, continuousControl }: {
+export function SegmentWorkspace({ scope, segment, items, selection: { stage, key: selected }, onSelectionChange, tab, onTabChange, notesExportControl, segmentNavigation, autoPlay, onVideoEnded, onVideoError, cachedSources, wideVideo, onToggleWide, continuousControl }: {
   scope: NoteScope; segment: string;
   items: VideoItem[]; selection: { stage: string; key: string }; onSelectionChange: (selection: { stage: string; key: string }) => void;
+  tab: string; onTabChange: (tab: string) => void;
   wideVideo: boolean; onToggleWide: () => void; continuousControl: ReactNode;
   notesExportControl: ReactNode; segmentNavigation: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
   cachedSources: Record<string, string>;
 }) {
   const positionKey = `segment/${scope.project}/${scope.episode}/${scope.scene}/${segment}`;
-  const [tab, setTab] = useRefreshState(positionKey + '/tab', 'script');
   const [language, setLanguage] = useRefreshState(positionKey + '/language', 'zh');
   const [scriptMode, setScriptMode] = useRefreshState(positionKey + '/scriptMode', 'aligned');
   const [playback, setPlayback] = useState({ key: '', time: 0 });
@@ -88,7 +88,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
       <SegmentReferences context={context} />
       <section className="segment-script" aria-label="分镜脚本、提示词与修改意见区域">
         <div className="segment-script-header">
-          <UnderlineTabs label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }, { value: 'notes', label: '修改意见' }]} selected={tab} onChange={setTab} disabled={!current} />
+          <UnderlineTabs label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }, { value: 'notes', label: '修改意见' }]} selected={tab} onChange={onTabChange} disabled={!current} />
           {editingNotes && <div className="segment-notes-export">{notesExportControl}</div>}
           {!editingNotes && <Original url={tab === 'script' ? context?.scriptUrl : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />}
         </div>
@@ -106,7 +106,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
           <TabNav compact label="分镜显示方式" items={[{ value: 'aligned', label: '跟视频对齐', disabled: !canAlign }, { value: 'all', label: '显示全部' }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
         </div>}
         <div className={'segment-script-content' + (aligned && tab === 'script' ? ' is-aligned' : '')} ref={scriptContent}>
-        {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} time={time} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? <div className="script-placeholder">{editingNotes ? '修改意见区域' : tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
+        {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} time={time} shot={activeShot?.id.match(/SH\d+$/)?.[0] || activeShot?.id} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? <div className="script-placeholder">{editingNotes ? '修改意见区域' : tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
           {context.issues.length > 0 && <details className="notice generation-context-issues"><summary>{segment} / {current!.stage} / {current!.run} 资料关联提示</summary>{context.issues.map(issue => <p key={issue}>{issue}</p>)}</details>}
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}
           {tab === 'script' ? context.scriptHtml ? <Rich html={aligned ? activeShot!.html : context.scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>

@@ -42,6 +42,7 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
   const [selections, setSelections] = useRefreshState<Record<string, Selection>>(positionKey + '/selections', {});
   const [continuous, setContinuous] = useState(false);
   const [wideVideo, setWideVideo] = useRefreshState(positionKey + '/wideVideo', false);
+  const [segmentTab, setSegmentTab] = useRefreshState(positionKey + '/segmentTab', 'script');
   const [autoPlay, setAutoPlay] = useState(false);
   const [error, setError] = useState('');
   const currentSegment = viewingPrevious ? previousEnding!.segment : segments.find(item => item.id === segment);
@@ -90,6 +91,7 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
     {error && <p className="error" role="alert">{error}</p>}
     {viewingPrevious && <p className="previous-ending-context">上集末段 · {previousEnding!.episode} · {previousEnding!.scene} · {currentSegment!.id} <span>点击本集分段返回</span></p>}
     {currentSegment && <SegmentWorkspace key={`${displayScope.episode}/${displayScope.scene}/${currentSegment.id}`} scope={displayScope} segment={currentSegment.id} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources}
+      tab={segmentTab} onTabChange={setSegmentTab}
       segmentNavigation={navigation(true)}
       wideVideo={wideVideo} onToggleWide={() => setWideVideo(value => !value)}
       continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>}

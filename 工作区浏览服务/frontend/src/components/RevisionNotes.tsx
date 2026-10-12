@@ -6,12 +6,12 @@ import { CopyButton, copyText } from './CopyButton';
 import { candidateLabel } from './SegmentVideo';
 
 export interface NoteScope { project: string; episode: string; scene: string }
-export function RevisionNoteEditor({ scope, segment, current, fileRevision, time }: { scope: NoteScope; segment: string; current: SegmentVideo; fileRevision: string; time: number }) {
+export function RevisionNoteEditor({ scope, segment, current, fileRevision, time, shot }: { scope: NoteScope; segment: string; current: SegmentVideo; fileRevision: string; time: number; shot?: string }) {
   const textarea = useRef<HTMLTextAreaElement>(null);
   const buffer = useRef<HTMLTextAreaElement>(null);
   const [insertMessage, setInsertMessage] = useState('');
   const tenths = Math.floor(time * 10);
-  const timestamp = `${String(Math.floor(tenths / 600)).padStart(2, '0')}.${String(Math.floor(tenths / 10) % 60).padStart(2, '0')}.${tenths % 10}秒：`;
+  const timestamp = `${String(Math.floor(tenths / 600)).padStart(2, '0')}.${String(Math.floor(tenths / 10) % 60).padStart(2, '0')}.${tenths % 10}秒${shot ? `，${shot}` : ''}：`;
   const data = useSceneNotes(scope.project, scope.episode, scope.scene);
   const identity = { segment, stage: current.stage, run: current.run };
   const key = noteKey(identity);
