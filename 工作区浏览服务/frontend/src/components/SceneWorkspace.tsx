@@ -26,12 +26,15 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
   const [view, setView] = useRefreshState(positionKey + '/view', 'segments');
   const storyboardPath = `09-剧集制作/${scope.episode}/03-分镜脚本/${scope.episode}-${scene}-场次分镜.md`;
   const storyboard = useQuery({ queryKey: ['document', scope.project, storyboardPath, revision], queryFn: () => get<RecordData>(`${projectUrl(scope.project)}/document?path=${encodeURIComponent(storyboardPath)}`), enabled: view === 'storyboard' && !!scene && !storyboardDocument, placeholderData: previous => previous });
-  const videoCache = useSceneVideoCache(segments.flatMap(item => {
-    const video = latestVideo(item.videos);
-    return video?.url ? [video] : [];
-  }));
-  const [requestedSegment, setSegment] = useRefreshState(positionKey + '/segment', segments[0]?.id || '');
   const previousVideo = latestVideo(previousEnding?.segment?.videos.filter(video => video.url) || []);
+  const videoCache = useSceneVideoCache([
+    ...(previousVideo ? [previousVideo] : []),
+    ...segments.flatMap(item => {
+      const video = latestVideo(item.videos);
+      return video?.url ? [video] : [];
+    }),
+  ]);
+  const [requestedSegment, setSegment] = useRefreshState(positionKey + '/segment', segments[0]?.id || '');
   const viewingPrevious = requestedSegment === PREVIOUS_ENDING && !!previousVideo;
   const segment = viewingPrevious ? PREVIOUS_ENDING : segments.some(item => item.id === requestedSegment) ? requestedSegment : segments[0]?.id || '';
   const displayScope = viewingPrevious ? { ...scope, episode: previousEnding!.episode, scene: previousEnding!.scene } : scope;
@@ -82,7 +85,7 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
     {!wideVideo && (segments.length > 0 || previousEnding) && navigation()}
     {!wideVideo && videoCache.total > 0 && <PointerTooltip text={videoCache.failures.join('\n')}><p className="scene-video-preparation" role="status" >
       {videoCache.failures.length ? `最新视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
-        : videoCache.ready === videoCache.total ? '本场最新视频已全部准备好' : `最新视频已准备 ${videoCache.ready}／${videoCache.total}`}
+        : videoCache.ready === videoCache.total ? '最新视频已全部准备好' : `最新视频已准备 ${videoCache.ready}／${videoCache.total}`}{previousVideo ? '（含上集末段）' : ''}
     </p></PointerTooltip>}
     {error && <p className="error" role="alert">{error}</p>}
     {viewingPrevious && <p className="previous-ending-context">上集末段 · {previousEnding!.episode} · {previousEnding!.scene} · {currentSegment!.id} <span>点击本集分段返回</span></p>}
