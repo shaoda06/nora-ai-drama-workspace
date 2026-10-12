@@ -1280,7 +1280,7 @@ def build_data(project, *, web_episode_navigation=False):
                                    "message": "镜头正文中缺少三级标题“分段 " + identity[2] + "”（###），无法关联该段镜头。"})
                 shot_body = re.search(r"^####[ \t]+", segment_script[0], re.M) if segment_script else None
                 script_text = segment_script[0][shot_body.start():] if shot_body else ""
-                script_text = re.sub(r"(^####[ \t]+(EP\d+-SH\d+)[ \t]*\n)\s*\*\*镜号\*\*[：:][ \t]*\2[ \t]*(?=\n|$)",
+                script_text = re.sub(r"(^####[ \t]+(EP\d+(?:-C\d+)?-SH\d+)[ \t]*\n)\s*(?:-[ \t]+)?\*\*镜号\*\*[：:][ \t]*\2[ \t]*(?=\n|$)",
                                      r"\1", script_text, flags=re.M)
                 videos = []
                 segment_identity = row["分段"]

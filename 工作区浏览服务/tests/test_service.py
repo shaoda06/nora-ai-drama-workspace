@@ -429,6 +429,30 @@ class ServiceTests(unittest.TestCase):
         self.assertIn('另一场正文。', data['C002'][0]['scriptHtml'])
         self.assertEqual(source.read_bytes(), before)
 
+    def test_scene_shots_restart_at_one_and_use_distinct_full_ids(self):
+        episode = self.project / '09-剧集制作/EP001'
+        (episode / '02-剧集剧本').mkdir(parents=True)
+        (episode / '02-剧集剧本/EP001-本集剧本.md').write_text(
+            '## 1. 故事剧本正文\n### EP001-C001\n第一场。\n### EP001-C002\n第二场。\n', encoding='utf-8')
+        (episode / '03-分镜脚本').mkdir()
+        (episode / '03-分镜脚本/EP001-分镜索引.md').write_text(
+            '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+            '| EP001-C001 | EP001-C001-P001 | 1.5 |\n| EP001-C002 | EP001-C002-P001 | 2 |\n', encoding='utf-8')
+        originals = []
+        for scene, duration in [('C001', '1.5'), ('C002', '2')]:
+            path = episode / f'03-分镜脚本/EP001-{scene}-场次分镜.md'
+            text = f'## 1. 镜头正文\n### 分段 P001\n#### EP001-{scene}-SH001\n- **镜号**：EP001-{scene}-SH001\n- **时长**：{duration}秒\n{scene}的镜头正文。\n'
+            path.write_text(text, encoding='utf-8')
+            originals.append((path, path.read_bytes()))
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        self.assertEqual(data['productionIssues'], [])
+        for scene in ('C001', 'C002'):
+            html = data['segments'][scene][0]['scriptHtml']
+            self.assertIn(f'<h4 id="ep001-{scene.lower()}-sh001">EP001-{scene}-SH001</h4>', html)
+            self.assertNotIn('镜号', html)
+        for path, content in originals:
+            self.assertEqual(path.read_bytes(), content)
+
     def test_segment_videos_match_identity_and_sort_execution_numbers(self):
         episode = self.project / '09-剧集制作/EP001'
         (episode / '02-剧集剧本').mkdir(parents=True)

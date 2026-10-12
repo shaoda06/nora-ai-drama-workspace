@@ -238,6 +238,32 @@ class GenerationContextTests(unittest.TestCase):
                 self.assertIsNone(invalid['shots'][0]['duration'])
                 self.assertIn('该次分镜存在缺失或无效的镜头时长，无法跟视频对齐。', invalid['issues'])
 
+    def test_scene_scoped_shots_and_old_video_contexts_remain_independent(self):
+        old, _, _ = self.add_run('R001')
+        old_bytes = (self.project / old['storyboard']['file']).read_bytes()
+        new, _, _ = self.add_run('R002')
+        text = self.storyboard('v002', '新场次第一镜').replace('EP001-SH001', 'EP001-C001-SH001')
+        text = text.replace('### 分段 P002', '#### EP001-C001-SH002\n- **镜号**：EP001-C001-SH002\n- **时长**：1.5秒\n新场次第二镜。\n### 分段 P002')
+        self.write(new['storyboard']['file'], text)
+        self.write(self.episode + '/02-剧集剧本/EP001-本集剧本.md',
+                   '## 1. 故事剧本正文\n### EP001-C001\n第一场。\n### EP001-C002\n第二场。\n')
+        index = self.episode + '/03-分镜脚本/EP001-分镜索引.md'
+        self.write(index, (self.project / index).read_text(encoding='utf-8') + '| EP001-C002 | EP001-C002-P001 | 2 |\n')
+        self.write(self.episode + '/03-分镜脚本/EP001-C002-场次分镜.md',
+                   '## 1. 镜头正文\n### 分段 P001\n#### EP001-C002-SH001\n- **镜号**：EP001-C002-SH001\n- **时长**：2秒\n另一场起点。\n')
+        episode = build_data(self.project, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]
+        first, second = episode['segments']['C001'][0]['videos']
+        self.assertEqual([(s['id'], s['duration']) for s in first['context']['shots']], [('EP001-SH001', 3)])
+        self.assertEqual([(s['id'], s['duration']) for s in second['context']['shots']],
+                         [('EP001-C001-SH001', 3), ('EP001-C001-SH002', 1.5)])
+        self.assertEqual(second['context']['issues'], [])
+        self.assertNotIn('镜号', second['context']['scriptHtml'])
+        other = episode['segments']['C002'][0]['scriptHtml']
+        self.assertIn('EP001-C002-SH001', other)
+        self.assertNotIn('镜号', other)
+        self.assertNotIn('EP001-C001', other)
+        self.assertEqual((self.project / old['storyboard']['file']).read_bytes(), old_bytes)
+
     def automatic_task(self, selected=(0, 1), common_enabled=True):
         root = self.project / (self.episode + '/其他资料/执行附件/EP001-C001-P001-R004-一采')
         script = self.episode + '/03-分镜脚本/EP001-C001-场次分镜.md'

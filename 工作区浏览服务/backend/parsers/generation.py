@@ -16,7 +16,7 @@ def segment_body(text, segment):
                         + r"[ \t]*\n.*?(?=^###[ \t]|\Z)", shots[1], re.M | re.S) if shots else None
     start = re.search(r"^####[ \t]+", section[0], re.M) if section else None
     body = section[0][start.start():] if start else ""
-    body = re.sub(r"(^####[ \t]+(EP\d+-SH\d+)[ \t]*\n)\s*(?:-[ \t]+)?\*\*镜号\*\*[：:][ \t]*\2[ \t]*(?=\n|$)",
+    body = re.sub(r"(^####[ \t]+(EP\d+(?:-C\d+)?-SH\d+)[ \t]*\n)\s*(?:-[ \t]+)?\*\*镜号\*\*[：:][ \t]*\2[ \t]*(?=\n|$)",
                   r"\1", body, flags=re.M)
     # Historical files retain their bytes; display the existing duration after time.
     shots = re.split(r"(?=^####[ \t])", body, flags=re.M)
@@ -59,7 +59,7 @@ def resolve_context(identity, contexts, project, read, read_plain, previews, tra
             body = segment_body(text, identity.split("-")[2])
             result.update(scriptHtml=markdown(body, storyboard["file"]),
                           scriptUrl=quote(storyboard["file"], safe="/-._~"))
-            for shot in re.finditer(r"^####[ \t]+(EP\d+-SH\d+)[ \t]*\n.*?(?=^####[ \t]|\Z)", body, re.M | re.S):
+            for shot in re.finditer(r"^####[ \t]+(EP\d+(?:-C\d+)?-SH\d+)[ \t]*\n.*?(?=^####[ \t]|\Z)", body, re.M | re.S):
                 duration = re.search(r"^(?:-[ \t]+)?\*\*时长\*\*[：:][ \t]*(\d+(?:\.\d+)?)[ \t]*秒[。.]?[ \t]*$", shot[0], re.M)
                 seconds = float(duration[1]) if duration else 0
                 result["shots"].append({"id": shot[1], "duration": seconds if seconds > 0 else None,
