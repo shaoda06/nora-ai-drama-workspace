@@ -9,7 +9,7 @@ import { latestVideo, selectedRevision } from './SegmentVideo';
 import { SegmentWorkspace } from './SegmentWorkspace';
 import { useRevisionNotesExport } from './RevisionNotes';
 import { useSceneVideoCache } from './useSceneVideoCache';
-import type { NoteScope } from './RevisionNotes';
+import type { NoteScope, ReviewVersions } from './RevisionNotes';
 import { useRefreshState } from '../refreshPosition';
 import { SceneStoryboardEditor } from './SceneStoryboardEditor';
 import { SceneDownloads } from './SceneDownloads';
@@ -19,6 +19,7 @@ import type { PreviousEpisodeEnding } from '../previousEpisodeEnding';
 
 type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
+type ReviewRound = { stage: string; order: string[]; versions: ReviewVersions };
 
 export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, revision, storyboardDocument }: { scope: NoteScope; segments: Segments; previousEnding: PreviousEpisodeEnding | null; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData }) {
   const { scene } = scope;
@@ -27,19 +28,12 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
   const storyboardPath = `09-剧集制作/${scope.episode}/03-分镜脚本/${scope.episode}-${scene}-场次分镜.md`;
   const storyboard = useQuery({ queryKey: ['document', scope.project, storyboardPath, revision], queryFn: () => get<RecordData>(`${projectUrl(scope.project)}/document?path=${encodeURIComponent(storyboardPath)}`), enabled: view === 'storyboard' && !!scene && !storyboardDocument, placeholderData: previous => previous });
   const previousVideo = latestVideo(previousEnding?.segment?.videos.filter(video => video.url) || []);
-  const videoCache = useSceneVideoCache([
-    ...(previousVideo ? [previousVideo] : []),
-    ...segments.flatMap(item => {
-      const video = latestVideo(item.videos);
-      return video?.url ? [video] : [];
-    }),
-  ]);
   const [requestedSegment, setSegment] = useRefreshState(positionKey + '/segment', segments[0]?.id || '');
   const viewingPrevious = requestedSegment === PREVIOUS_ENDING && !!previousVideo;
   const segment = viewingPrevious ? PREVIOUS_ENDING : segments.some(item => item.id === requestedSegment) ? requestedSegment : segments[0]?.id || '';
   const displayScope = viewingPrevious ? { ...scope, episode: previousEnding!.episode, scene: previousEnding!.scene } : scope;
-  const notesExport = useRevisionNotesExport(displayScope, viewingPrevious ? previousEnding!.segments : segments);
   const [selections, setSelections] = useRefreshState<Record<string, Selection>>(positionKey + '/selections', {});
+  const [reviewRound, setReviewRound] = useRefreshState<ReviewRound | null>(positionKey + '/reviewRound', null);
   const [continuous, setContinuous] = useState(false);
   const [wideVideo, setWideVideo] = useRefreshState(positionKey + '/wideVideo', false);
   const [segmentTab, setSegmentTab] = useRefreshState(positionKey + '/segmentTab', 'script');
@@ -50,29 +44,76 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
   const savedSelection = selections[segment];
   const savedRevision = savedSelection && currentSegment && selectedRevision(currentSegment.videos, savedSelection);
   const chosen = savedRevision ? { stage: savedRevision.stage, key: savedRevision.key }
-    : savedSelection && !savedSelection.key ? savedSelection : { stage: latest?.stage || '', key: latest?.key || '' };
+    : savedSelection && (!savedSelection.key || reviewRound) ? savedSelection : { stage: latest?.stage || '', key: latest?.key || '' };
+  const notesExport = useRevisionNotesExport(displayScope, viewingPrevious ? previousEnding!.segments : segments, reviewRound && {
+    stage: reviewRound.stage,
+    versions: viewingPrevious ? { [currentSegment!.id]: reviewRound.versions[PREVIOUS_ENDING] ?? null } : reviewRound.versions,
+  });
+  const roundVideo = (id: string) => {
+    const fixed = reviewRound?.versions[id];
+    const items = id === PREVIOUS_ENDING ? previousEnding?.segment?.videos : segments.find(item => item.id === id)?.videos;
+    return fixed && items ? selectedRevision(items, fixed) : undefined;
+  };
+  const videoCache = useSceneVideoCache(reviewRound ? reviewRound.order.flatMap(id => {
+    const video = roundVideo(id);
+    return video?.url ? [video] : [];
+  }) : [
+    ...(previousVideo ? [previousVideo] : []),
+    ...segments.flatMap(item => {
+      const video = latestVideo(item.videos);
+      return video?.url ? [video] : [];
+    }),
+  ]);
+  const beginReview = (playContinuously: boolean) => {
+    const entries = [
+      ...(previousEnding?.segment ? [{ id: PREVIOUS_ENDING, videos: previousEnding.segment.videos }] : []),
+      ...segments,
+    ];
+    const versions: ReviewVersions = Object.fromEntries(entries.map(item => {
+      const video = latestVideo(item.videos.filter(video => video.stage === chosen.stage && video.url));
+      return [item.id, video ? { stage: video.stage, run: video.run, key: video.key } : null];
+    }));
+    setReviewRound({ stage: chosen.stage, order: entries.map(item => item.id), versions });
+    setSelections(previous => ({ ...previous, ...Object.fromEntries(entries.map(item => [item.id, { stage: chosen.stage, key: versions[item.id]?.key || '' }])) }));
+    setAutoPlay(false);
+    setContinuous(playContinuously && !!versions[segment]);
+    setError(versions[segment] ? '' : `${viewingPrevious ? '上集末段' : segment}暂无${chosen.stage}可播放视频，本轮不会换用其他画质。`);
+  };
+  const toggleContinuous = (checked: boolean) => {
+    setAutoPlay(false);
+    if (!checked) { setContinuous(false); return; }
+    if (!reviewRound) { beginReview(true); return; }
+    const video = roundVideo(segment);
+    if (!video?.url) { setContinuous(false); setError(`${viewingPrevious ? '上集末段' : segment}的本轮${reviewRound.stage}视频不可播放，请检查或开始新一轮。`); return; }
+    setSelections(previous => ({ ...previous, [segment]: { stage: video.stage, key: video.key } }));
+    setContinuous(true);
+    setError('');
+  };
   useEffect(() => {
     setSelections(previous => {
       const arriving = segments.filter(item => !previous[item.id] && item.videos.length).map(item => {
-        const latest = latestVideo(item.videos)!;
-        return [item.id, { stage: latest.stage, key: latest.key }];
+        const latest = reviewRound ? roundVideo(item.id) : latestVideo(item.videos);
+        return [item.id, { stage: reviewRound?.stage || latest!.stage, key: latest?.key || '' }];
       });
       return arriving.length ? { ...previous, ...Object.fromEntries(arriving) } : previous;
     });
-  }, [segments]);
+  }, [segments, reviewRound]);
   const advance = () => {
-    const next = viewingPrevious ? segments[0] : segments[segments.findIndex(item => item.id === segment) + 1];
+    const next = reviewRound?.order[reviewRound.order.indexOf(segment) + 1];
     if (!continuous || !next) { setAutoPlay(false); return; }
-    const selected = selections[next.id];
-    const video = selected ? selectedRevision(next.videos, selected) : latestVideo(next.videos);
-    if (!video?.url) { setAutoPlay(false); setError(`${next.id}尚未选定可播放的画质和版本，连续播放已停在当前分段。`); return; }
+    const video = roundVideo(next);
+    if (!video?.url) { setAutoPlay(false); setError(`${next}的本轮${reviewRound!.stage}视频不可播放，连续播放已停在当前分段；不会换用其他版本。`); return; }
+    setSelections(previous => ({ ...previous, [next]: { stage: video.stage, key: video.key } }));
     setError('');
-    setSegment(next.id);
+    setSegment(next);
     setAutoPlay(true);
   };
-  const selectSegment = (id: string) => { setAutoPlay(false); setSegment(id); setError(''); };
+  const selectSegment = (id: string) => {
+    if (reviewRound) setSelections(previous => ({ ...previous, [id]: { stage: reviewRound.stage, key: roundVideo(id)?.key || '' } }));
+    setAutoPlay(false); setSegment(id); setError('');
+  };
   const selectPrevious = () => {
-    setSelections(previous => ({ ...previous, [PREVIOUS_ENDING]: { stage: previousVideo!.stage, key: previousVideo!.key } }));
+    if (!reviewRound) setSelections(previous => ({ ...previous, [PREVIOUS_ENDING]: { stage: previousVideo!.stage, key: previousVideo!.key } }));
     selectSegment(PREVIOUS_ENDING);
   };
   const navigation = (vertical = false) => <SegmentStageStrip vertical={vertical} segments={segments} selected={segment}
@@ -85,18 +126,24 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
     {segments.some((item, index) => index > 0 && Number(item.id.slice(1)) < Number(segments[index - 1].id.slice(1))) && <p className="segment-order-note muted">分段按分镜索引中的剧情顺序排列，编号保留原标识。</p>}
     {!wideVideo && (segments.length > 0 || previousEnding) && navigation()}
     {!wideVideo && videoCache.total > 0 && <PointerTooltip text={videoCache.failures.join('\n')}><p className="scene-video-preparation" role="status" >
-      {videoCache.failures.length ? `最新视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
-        : videoCache.ready === videoCache.total ? '最新视频已全部准备好' : `最新视频已准备 ${videoCache.ready}／${videoCache.total}`}{previousVideo ? '（含上集末段）' : ''}
+      {videoCache.failures.length ? `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
+        : videoCache.ready === videoCache.total ? `${reviewRound ? '本轮' : '最新'}视频已全部准备好` : `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}`}{(reviewRound ? !!roundVideo(PREVIOUS_ENDING)?.url : !!previousVideo) ? '（含上集末段）' : ''}
     </p></PointerTooltip>}
+    <div className="scene-review-round">
+      <span role="status">{reviewRound ? `本轮${reviewRound.stage}版本已固定；暂停连播后仍保留。${reviewRound.order.filter(id => !reviewRound.versions[id]).length ? '部分分段暂无本轮视频。' : ''}` : '开启连续播放，将固定当前画质下各段最新可播放候选。'}</span>
+      {reviewRound && <button disabled={!chosen.stage} onClick={() => beginReview(false)}>开始新一轮</button>}
+      {reviewRound && savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key && <span>当前查看版本不属于本轮，导出仍按本轮版本。</span>}
+    </div>
     {error && <p className="error" role="alert">{error}</p>}
+    {reviewRound?.versions[segment] && !roundVideo(segment)?.url && <p className="error" role="alert">{viewingPrevious ? '上集末段' : segment}的本轮{reviewRound.stage} {reviewRound.versions[segment]!.run}视频已不可播放，请检查或开始新一轮；不会自动换用其他版本。</p>}
     {viewingPrevious && <p className="previous-ending-context">上集末段 · {previousEnding!.episode} · {previousEnding!.scene} · {currentSegment!.id} <span>点击本集分段返回</span></p>}
     {currentSegment && <SegmentWorkspace key={`${displayScope.episode}/${displayScope.scene}/${currentSegment.id}`} scope={displayScope} segment={currentSegment.id} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources}
       tab={segmentTab} onTabChange={setSegmentTab}
       segmentNavigation={navigation(true)}
       wideVideo={wideVideo} onToggleWide={() => setWideVideo(value => !value)}
-      continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>}
+      continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} disabled={!chosen.stage} onChange={event => toggleContinuous(event.target.checked)} />连续播放</label>}
       autoPlay={autoPlay} onVideoError={() => setAutoPlay(false)} onVideoEnded={advance}
-      onSelectionChange={value => { setAutoPlay(false); setError(''); setSelections(previous => ({ ...previous, [segment]: value })); }}
+      onSelectionChange={value => { setContinuous(false); setAutoPlay(false); setError(''); setSelections(previous => ({ ...previous, [segment]: value })); }}
       notesExportControl={notesExport.control} />}
     {notesExport.dialog}
     </> : view === 'storyboard' ? <div className="scene-storyboard">
