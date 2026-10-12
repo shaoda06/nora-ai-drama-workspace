@@ -62,16 +62,17 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
   const activeShot = (timedShots.find(item => time < item.end) || timedShots[timedShots.length - 1])?.shot;
   const aligned = scriptMode === 'aligned' && canAlign;
   const editingNotes = tab === 'notes';
+  const showShotTimeline = canAlign && (tab === 'script' || editingNotes);
   useEffect(() => {
     scriptContent.current!.scrollTop = 0;
   }, [current?.key, tab, scriptMode, tab === 'script' && aligned ? activeShot?.id : undefined]);
   useEffect(() => {
-    if (tab !== 'script' || !canAlign || editingNotes) return;
+    if (!showShotTimeline) return;
     const container = shotTimeline.current!;
     const title = container.querySelector('[aria-current="step"]')!.getBoundingClientRect();
     const bounds = container.getBoundingClientRect();
     container.scrollBy({ left: title.left < bounds.left ? title.left - bounds.left : Math.max(0, title.right - bounds.right) });
-  }, [tab, activeShot?.id, current?.key, editingNotes]);
+  }, [tab, activeShot?.id, current?.key, showShotTimeline]);
   const selectors = <div className="segment-selectors tabs tabs-grouped">
       <TabSelect label="画质选择" selected={stage} onChange={value => onSelectionChange({ stage: value, key: '' })} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
       <TabSelect label="版本切换" disabled={!stage} selected={current?.key || ''} onChange={key => onSelectionChange({ stage, key })} items={versions.map(item => ({ value: item.key, label: item.approved ? '正式版' : candidateLabel(item.candidateNumber) }))} />
@@ -91,10 +92,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
           {editingNotes && <div className="segment-notes-export">{notesExportControl}</div>}
           {!editingNotes && <Original url={tab === 'script' ? context?.scriptUrl : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />}
         </div>
-        {tab === 'script' && <div className="segment-script-modes">
-          <TabNav compact label="分镜显示方式" items={[{ value: 'aligned', label: '跟视频对齐', disabled: !canAlign }, { value: 'all', label: '显示全部' }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
-        </div>}
-        {tab === 'script' && canAlign && !editingNotes && <div className="shot-timeline-scroll" ref={shotTimeline}>
+        {showShotTimeline && <div className="shot-timeline-scroll" ref={shotTimeline}>
           <div className="shot-timeline" role="group" aria-label="分镜跳转"
             style={{ gridTemplateColumns: timedShots.map(item => `minmax(90px, ${item.shot.duration}fr)`).join(' '), minWidth: `${timedShots.length * 90}px` }}>
             {timedShots.map(({ shot, start }) => <button type="button" className="shot-timeline-item" key={shot.id} aria-current={shot.id === activeShot!.id ? 'step' : undefined}
@@ -103,6 +101,9 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
               <span className="shot-timeline-track"><span style={{ transform: `scaleX(${Math.max(0, Math.min(1, (time - start) / shot.duration!))})` }} /></span>
             </button>)}
           </div>
+        </div>}
+        {tab === 'script' && <div className="segment-script-modes">
+          <TabNav compact label="分镜显示方式" items={[{ value: 'aligned', label: '跟视频对齐', disabled: !canAlign }, { value: 'all', label: '显示全部' }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
         </div>}
         <div className={'segment-script-content' + (aligned && tab === 'script' ? ' is-aligned' : '')} ref={scriptContent}>
         {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} time={time} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? <div className="script-placeholder">{editingNotes ? '修改意见区域' : tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
