@@ -99,7 +99,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
             style={{ gridTemplateColumns: timedShots.map(item => `minmax(90px, ${item.shot.duration}fr)`).join(' '), minWidth: `${timedShots.length * 90}px` }}>
             {timedShots.map(({ shot, start }) => <button type="button" className="shot-timeline-item" key={shot.id} aria-current={shot.id === activeShot!.id ? 'step' : undefined}
               aria-label={`跳转到${shot.id}，${Number(start.toFixed(3))}秒`} title={`跳转到 ${Number(start.toFixed(3))}秒`} onClick={() => player.current?.seekTo(start)}>
-              <span className="shot-timeline-title">{shot.id}</span>
+              <span className="shot-timeline-title">{shot.id.match(/SH\d+$/)?.[0] || shot.id}</span>
               <span className="shot-timeline-track"><span style={{ transform: `scaleX(${Math.max(0, Math.min(1, (time - start) / shot.duration!))})` }} /></span>
             </button>)}
           </div>
