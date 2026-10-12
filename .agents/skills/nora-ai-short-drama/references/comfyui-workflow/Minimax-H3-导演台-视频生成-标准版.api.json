@@ -253,5 +253,83 @@
     "_meta": {
       "title": "409｜二采前馈分块 · 4块"
     }
+  },
+  "503": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "fps": [
+        "502",
+        2
+      ],
+      "bit_depth": 8,
+      "color_space": "sRGB",
+      "codec": "none",
+      "images": [
+        "502",
+        6
+      ],
+      "audio": [
+        "502",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "503｜一采画面＋音频 · 创建视频"
+    }
+  },
+  "504": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "filename_prefix": "Nora/Director/FirstPass",
+      "format": "mp4",
+      "format.codec": "h264",
+      "codec": "h264",
+      "video": [
+        "503",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "504｜一采视频 · 预览与下载"
+    }
+  },
+  "505": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "fps": [
+        "502",
+        2
+      ],
+      "bit_depth": 8,
+      "color_space": "sRGB",
+      "codec": "none",
+      "images": [
+        "502",
+        0
+      ],
+      "audio": [
+        "502",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "505｜二采画面＋音频 · 创建视频"
+    }
+  },
+  "506": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "filename_prefix": "Nora/Director/SecondPass",
+      "format": "mp4",
+      "format.codec": "h264",
+      "codec": "h264",
+      "video": [
+        "505",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "506｜二采视频 · 预览与下载"
+    }
   }
 }

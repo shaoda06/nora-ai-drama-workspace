@@ -76,7 +76,7 @@ class Canvas:
    for v in n['inputs'].values():
     if is_link(v):walk(v[0])
    active.remove(key);out[key]=n
-  walk(str(root))
+  for output in root if isinstance(root,(list,tuple)) else [root]:walk(str(output))
   if optional and 265 in self.nodes:
    for i in self.nodes[265]['inputs']:
     if i['name'].startswith(('ref_images.','ref_audios.','ref_videos.')) and i.get('link') is not None:
@@ -85,7 +85,7 @@ class Canvas:
   return out
 
 def semantic(api):return {k:{'class_type':v['class_type'],'inputs':v['inputs']} for k,v in api.items()}
-def output_for(name):return 3 if name=='Nora-RTX-图片2倍超分' else 461 if name.startswith('Qwen') else 403 if name in ('Minimax-H3-导演台-视频生成-标准版','Minimax-H3-导演台-视频生成-去油版') else 264 if any(s in name for s in ('仅一采','SelfLift-备用')) else 214 if '仅二采' in name else 16
+def output_for(name):return [403,504,506] if name=='Minimax-H3-导演台-视频生成-标准版' else 3 if name=='Nora-RTX-图片2倍超分' else 461 if name.startswith('Qwen') else 403 if name=='Minimax-H3-导演台-视频生成-去油版' else 264 if any(s in name for s in ('仅一采','SelfLift-备用')) else 214 if '仅二采' in name else 16
 
 def director_editor_state(block, common=False):
  """Compare persisted Director content, excluding preview blobs and root-only fields."""

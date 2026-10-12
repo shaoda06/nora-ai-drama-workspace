@@ -31,7 +31,11 @@ def save_uploaded_workflow(project, record, original, workflow, uploaded_materia
                 named['timeline_data'] = director['inputs']['timeline_data']
                 node['widgets_values'] = list(named.values())
             # Check the actual in-memory pair before saving or submitting.
-            expected = pairs.Canvas(canvas).api(pairs.output_for(api_file.name.removesuffix('.api.json')))
+            roots = pairs.output_for(api_file.name.removesuffix('.api.json'))
+            # Existing task copies retain the report-only standard canvas.
+            if roots == [403, 504, 506] and not ({504, 506} & graph.nodes.keys()):
+                roots = 403
+            expected = pairs.Canvas(canvas).api(roots)
             assert pairs.semantic(workflow) == pairs.semantic(expected), '上传后画布/API不一致'
             for director in directors.values():
                 timeline = json.loads(director['inputs']['timeline_data'])

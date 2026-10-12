@@ -21,7 +21,7 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(len(h3), 1)
         self.assertTrue(all(r["reference_combinations"] == 147 for r in h3))
 
-    def test_video_variants_differ_only_by_optional_lora(self):
+    def test_video_variants_share_generation_backbone(self):
         standard = json.loads((BASELINES / "Minimax-H3-导演台-视频生成-标准版.api.json").read_text(encoding="utf-8"))
         deoiled = json.loads((BASELINES / "Minimax-H3-导演台-视频生成-去油版.api.json").read_text(encoding="utf-8"))
         self.assertNotIn("128", standard)
@@ -29,9 +29,42 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(deoiled["128"]["inputs"]["model"], ["58", 0])
         self.assertEqual(deoiled["53"]["inputs"]["model"], ["128", 0])
         self.assertEqual(standard["53"]["inputs"]["model"], ["58", 0])
+        for node in ("503", "504", "505", "506"):
+            standard.pop(node)
         deoiled.pop("128")
         deoiled["53"]["inputs"]["model"] = ["58", 0]
         self.assertEqual(wb.semantic(standard), wb.semantic(deoiled))
+
+    def test_standard_saves_both_stages_without_final_output_dependency_in_first_pass(self):
+        canvas = wb.Canvas(json.loads((BASELINES / "Minimax-H3-导演台-视频生成-标准版.workflow.json").read_text(encoding="utf-8")))
+        first = canvas.api(504)
+        second = canvas.api(506)
+        self.assertNotIn("505", first)
+        self.assertNotIn("503", second)
+        self.assertEqual(first["503"]["inputs"]["images"], ["502", 6])
+        self.assertEqual(second["505"]["inputs"]["images"], ["502", 0])
+        for graph, create_id, save_id in ((first, "503", "504"), (second, "505", "506")):
+            self.assertEqual(graph[create_id]["inputs"]["audio"], ["502", 1])
+            self.assertEqual(graph[create_id]["inputs"]["fps"], ["502", 2])
+            self.assertEqual(graph[save_id]["inputs"]["video"], [create_id, 0])
+            self.assertEqual(graph[save_id]["inputs"]["format"], "mp4")
+            self.assertEqual(graph[save_id]["inputs"]["format.codec"], "h264")
+        self.assertNotEqual(first["504"]["inputs"]["filename_prefix"], second["506"]["inputs"]["filename_prefix"])
+        self.assertTrue(first["407"]["inputs"]["confirm_first_pass"])
+        self.assertEqual(first["407"]["inputs"]["seed_mode"], "inherit")
+
+    def test_standard_pair_detects_missing_first_pass_save_branch(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            name = "Minimax-H3-导演台-视频生成-标准版"
+            for suffix in ("workflow", "api"):
+                source = BASELINES / f"{name}.{suffix}.json"
+                Path(tmp, source.name).write_bytes(source.read_bytes())
+            api_path = Path(tmp, f"{name}.api.json")
+            api = json.loads(api_path.read_text(encoding="utf-8"))
+            del api["504"]
+            api_path.write_text(json.dumps(api), encoding="utf-8")
+            with self.assertRaisesRegex(AssertionError, "mismatch"):
+                wb.verify(tmp)
 
     def test_retained_pairs_can_be_checked_directly(self):
         results = wb.verify(RETAINED)

@@ -8,6 +8,31 @@ from backend.services.director_uploads import SCRIPT, save_uploaded_workflow, pa
 
 
 class DirectorUploadsTests(unittest.TestCase):
+    def test_report_only_standard_task_copy_remains_usable(self):
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            record = project / 'record'
+            record.mkdir()
+            stem = 'Minimax-H3-导演台-视频生成-标准版'
+            baseline = SCRIPT.parent.parent / 'references/comfyui-workflow'
+            canvas = json.loads((baseline / (stem + '.workflow.json')).read_text(encoding='utf-8'))
+            removed = {503, 504, 505, 506}
+            canvas['nodes'] = [node for node in canvas['nodes'] if node['id'] not in removed]
+            canvas['links'] = [link for link in canvas['links'] if link[1] not in removed and link[3] not in removed]
+            retained_links = {link[0] for link in canvas['links']}
+            for node in canvas['nodes']:
+                for output in node.get('outputs', []):
+                    output['links'] = [link for link in (output.get('links') or []) if link in retained_links]
+            original = pairs.Canvas(canvas).api(403)
+            (record / (stem + '.workflow.json')).write_text(json.dumps(canvas), encoding='utf-8')
+            (record / (stem + '.api.json')).write_text(json.dumps(original), encoding='utf-8')
+            (record / '输入映射.json').write_text(json.dumps({'uploads': []}), encoding='utf-8')
+            save_uploaded_workflow(project, record, original, copy.deepcopy(original), {})
+            saved = json.loads((record / (stem + '.api.json')).read_text(encoding='utf-8'))
+            self.assertEqual(saved, original)
+            self.assertNotIn('504', saved)
+            self.assertNotIn('506', saved)
+
     def test_existing_task_pair_and_mapping_follow_actual_uploaded_path(self):
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)

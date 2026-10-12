@@ -1,8 +1,8 @@
 {
   "id": "7fec37f7-c04c-4a51-b251-5ab9b0d650d9",
   "revision": 3,
-  "last_node_id": 502,
-  "last_link_id": 30,
+  "last_node_id": 506,
+  "last_link_id": 38,
   "nodes": [
     {
       "id": 192,
@@ -510,18 +510,26 @@
           "name": "images",
           "shape": 6,
           "type": "IMAGE",
-          "links": []
+          "links": [
+            35
+          ]
         },
         {
           "name": "audio",
           "shape": 6,
           "type": "AUDIO",
-          "links": []
+          "links": [
+            32,
+            36
+          ]
         },
         {
           "name": "fps",
           "type": "FLOAT",
-          "links": []
+          "links": [
+            33,
+            37
+          ]
         },
         {
           "name": "frame_count",
@@ -545,7 +553,9 @@
           "name": "images_pre_refine",
           "shape": 6,
           "type": "IMAGE",
-          "links": []
+          "links": [
+            31
+          ]
         },
         {
           "name": "images_pre_face_refine",
@@ -656,7 +666,7 @@
       "id": 404,
       "type": "Note",
       "pos": [
-        3060,
+        3410,
         1100
       ],
       "size": [
@@ -673,10 +683,10 @@
         "text": "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；模型链58直接连接53，不加载Mystic角色去油LoRA。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n使用分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据并驱动执行，404提供填写说明。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
       },
       "widgets_values": [
-        "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；模型链58直接连接53，不加载Mystic角色去油LoRA。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n使用分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据并驱动执行，404提供填写说明。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
+        "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；模型链58直接连接53，不加载Mystic角色去油LoRA。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n默认分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据；503→504保存一采，505→506保存二采，均含音频和帧率，提供MP4预览与下载。\n首次一采确认时images端口被阻断，二采保存节点不输出；一采使用images_pre_refine。审批后保留节点ID、种子、输入和缓存，再Queue接续二采。\n分段导出时外接保存为最后实际运行组的辅助预览，全部分段按403最终报告取回；全部导出时保存合并视频，不将合并文件当作各P独立结果。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
       ],
       "widgets_values_named": {
-        "text": "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；模型链58直接连接53，不加载Mystic角色去油LoRA。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n使用分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据并驱动执行，404提供填写说明。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
+        "text": "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；模型链58直接连接53，不加载Mystic角色去油LoRA。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采1024×576；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n默认分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据；503→504保存一采，505→506保存二采，均含音频和帧率，提供MP4预览与下载。\n首次一采确认时images端口被阻断，二采保存节点不输出；一采使用images_pre_refine。审批后保留节点ID、种子、输入和缓存，再Queue接续二采。\n分段导出时外接保存为最后实际运行组的辅助预览，全部分段按403最终报告取回；全部导出时保存合并视频，不将合并文件当作各P独立结果。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的批次节点编号、局部返修及缓存维护按导演台节点使用规范第7节处理；502是基准编号，不直接作为所有批次的共用编号。"
       },
       "color": "#432",
       "bgcolor": "#653"
@@ -1012,6 +1022,362 @@
       },
       "color": "#233",
       "bgcolor": "#344"
+    },
+    {
+      "id": 503,
+      "type": "CreateVideo",
+      "pos": [
+        2230,
+        180
+      ],
+      "size": [
+        330,
+        200
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 31
+        },
+        {
+          "label": "audio",
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 32
+        },
+        {
+          "label": "fps",
+          "name": "fps",
+          "type": "FLOAT",
+          "widget": {
+            "name": "fps"
+          },
+          "link": 33
+        },
+        {
+          "label": "bit_depth",
+          "name": "bit_depth",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "bit_depth"
+          },
+          "link": null
+        },
+        {
+          "label": "color_space",
+          "name": "color_space",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "color_space"
+          },
+          "link": null
+        },
+        {
+          "label": "codec",
+          "name": "codec",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "codec"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "VIDEO",
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            34
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo",
+        "widget_ue_connectable": {
+          "fps": true,
+          "bit_depth": true
+        }
+      },
+      "widgets_values": [
+        24,
+        8,
+        "sRGB",
+        "none"
+      ],
+      "widgets_values_named": {
+        "fps": 24,
+        "bit_depth": 8,
+        "color_space": "sRGB",
+        "codec": "none"
+      },
+      "title": "503｜一采画面＋音频 · 创建视频"
+    },
+    {
+      "id": 504,
+      "type": "SaveVideo",
+      "pos": [
+        2640,
+        180
+      ],
+      "size": [
+        660,
+        450
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "video",
+          "name": "video",
+          "type": "VIDEO",
+          "link": 34
+        },
+        {
+          "label": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        },
+        {
+          "label": "format",
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "widget": {
+            "name": "format"
+          },
+          "link": null
+        },
+        {
+          "label": "codec",
+          "name": "codec",
+          "shape": 7,
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "widget": {
+            "name": "codec"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveVideo",
+        "widget_ue_connectable": {
+          "codec": true,
+          "filename_prefix": true,
+          "format": true
+        }
+      },
+      "widgets_values": [
+        "Nora/Director/FirstPass",
+        "mp4",
+        "h264",
+        "h264"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "Nora/Director/FirstPass",
+        "format": "mp4",
+        "format.codec": "h264",
+        "codec": "h264"
+      },
+      "title": "504｜一采视频 · 预览与下载"
+    },
+    {
+      "id": 505,
+      "type": "CreateVideo",
+      "pos": [
+        2230,
+        1430
+      ],
+      "size": [
+        330,
+        200
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 35
+        },
+        {
+          "label": "audio",
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 36
+        },
+        {
+          "label": "fps",
+          "name": "fps",
+          "type": "FLOAT",
+          "widget": {
+            "name": "fps"
+          },
+          "link": 37
+        },
+        {
+          "label": "bit_depth",
+          "name": "bit_depth",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "bit_depth"
+          },
+          "link": null
+        },
+        {
+          "label": "color_space",
+          "name": "color_space",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "color_space"
+          },
+          "link": null
+        },
+        {
+          "label": "codec",
+          "name": "codec",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "codec"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "VIDEO",
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            38
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo",
+        "widget_ue_connectable": {
+          "fps": true,
+          "bit_depth": true
+        }
+      },
+      "widgets_values": [
+        24,
+        8,
+        "sRGB",
+        "none"
+      ],
+      "widgets_values_named": {
+        "fps": 24,
+        "bit_depth": 8,
+        "color_space": "sRGB",
+        "codec": "none"
+      },
+      "title": "505｜二采画面＋音频 · 创建视频"
+    },
+    {
+      "id": 506,
+      "type": "SaveVideo",
+      "pos": [
+        2640,
+        1430
+      ],
+      "size": [
+        660,
+        450
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "video",
+          "name": "video",
+          "type": "VIDEO",
+          "link": 38
+        },
+        {
+          "label": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        },
+        {
+          "label": "format",
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "widget": {
+            "name": "format"
+          },
+          "link": null
+        },
+        {
+          "label": "codec",
+          "name": "codec",
+          "shape": 7,
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "widget": {
+            "name": "codec"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveVideo",
+        "widget_ue_connectable": {
+          "codec": true,
+          "filename_prefix": true,
+          "format": true
+        }
+      },
+      "widgets_values": [
+        "Nora/Director/SecondPass",
+        "mp4",
+        "h264",
+        "h264"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "Nora/Director/SecondPass",
+        "format": "mp4",
+        "format.codec": "h264",
+        "codec": "h264"
+      },
+      "title": "506｜二采视频 · 预览与下载"
     }
   ],
   "links": [
@@ -1150,6 +1516,70 @@
       407,
       0,
       "MODEL"
+    ],
+    [
+      31,
+      502,
+      6,
+      503,
+      0,
+      "IMAGE"
+    ],
+    [
+      32,
+      502,
+      1,
+      503,
+      1,
+      "AUDIO"
+    ],
+    [
+      33,
+      502,
+      2,
+      503,
+      2,
+      "FLOAT"
+    ],
+    [
+      34,
+      503,
+      0,
+      504,
+      0,
+      "VIDEO"
+    ],
+    [
+      35,
+      502,
+      0,
+      505,
+      0,
+      "IMAGE"
+    ],
+    [
+      36,
+      502,
+      1,
+      505,
+      1,
+      "AUDIO"
+    ],
+    [
+      37,
+      502,
+      2,
+      505,
+      2,
+      "FLOAT"
+    ],
+    [
+      38,
+      505,
+      0,
+      506,
+      0,
+      "VIDEO"
     ]
   ],
   "groups": [
