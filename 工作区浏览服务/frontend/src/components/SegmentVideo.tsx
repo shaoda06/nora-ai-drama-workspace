@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import type { ReactNode } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import type { ReactNode, Ref } from 'react';
 import type { SegmentVideo as VideoItem } from '../api';
 import { Original } from '../components';
 
@@ -25,17 +25,30 @@ export const selectedRevision = (items: VideoItem[], selection: { stage: string;
     || items.find(item => item.stage === selection.stage && identity(item.key) === identity(selection.key));
 };
 
-export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, wide, onToggleWide, continuousControl, selectorControl }: {
+export interface SegmentVideoHandle { seekTo: (time: number) => void }
+
+export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, wide, onToggleWide, continuousControl, selectorControl, playerRef }: {
   current?: VideoItem; onTimeChange: (time: number) => void; autoPlay?: boolean;
   onEnded?: () => void; onError?: () => void;
   onFileRevision?: (revision: string) => void;
   cachedSource?: string; wide: boolean; onToggleWide: () => void; continuousControl: ReactNode; selectorControl?: ReactNode;
+  playerRef: Ref<SegmentVideoHandle>;
 }) {
   const [error, setError] = useState(false);
   const [loaded, setLoaded] = useState(current);
   const [source, setSource] = useState(cachedSource || current?.url);
   const [playOnLoad, setPlayOnLoad] = useState(autoPlay);
   const video = useRef<HTMLVideoElement>(null);
+  const pendingSeek = useRef<number | null>(null);
+  const seekTo = (time: number) => {
+    const element = video.current;
+    if (!element || !Number.isFinite(time) || time < 0) return;
+    if (element.readyState === 0) { pendingSeek.current = time; return; }
+    pendingSeek.current = null;
+    element.currentTime = Number.isFinite(element.duration) ? Math.min(time, element.duration) : time;
+    onTimeChange(element.currentTime);
+  };
+  useImperativeHandle(playerRef, () => ({ seekTo }));
   const updated = current && loaded && current.fileRevision !== loaded.fileRevision;
   useEffect(() => {
     if (!autoPlay) video.current?.pause();
@@ -43,7 +56,7 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
   const label = (item: VideoItem) => item.approved ? '正式版' : candidateLabel(item.candidateNumber);
   return <section className="segment-video" aria-label="视频区域">
     {loaded?.url ? <video ref={video} key={loaded.fileRevision} controls autoPlay={playOnLoad} preload="metadata" src={source} aria-label={`${label(current!)} ${current!.run} ${current!.stage}`} onError={() => { setError(true); onError?.(); }}
-      onLoadedMetadata={event => { onTimeChange(event.currentTarget.currentTime); onFileRevision?.(loaded.fileRevision); }}
+      onLoadedMetadata={event => { if (pendingSeek.current !== null) seekTo(pendingSeek.current); else onTimeChange(event.currentTarget.currentTime); onFileRevision?.(loaded.fileRevision); }}
       onTimeUpdate={event => onTimeChange(event.currentTarget.currentTime)}
       onSeeked={event => onTimeChange(event.currentTarget.currentTime)}
       onPause={event => onTimeChange(event.currentTarget.currentTime)}

@@ -6,6 +6,7 @@ import { TabNav } from './TabNav';
 import { UnderlineTabs } from './UnderlineTabs';
 import { TabSelect } from './TabSelect';
 import { candidateLabel, latestVideo, SegmentVideo } from './SegmentVideo';
+import type { SegmentVideoHandle } from './SegmentVideo';
 import { CopyButton } from './CopyButton';
 import { PromptSections } from './PromptSections';
 import { RevisionNoteEditor } from './RevisionNotes';
@@ -43,6 +44,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
   const [loadedFile, setLoadedFile] = useState({ key: '', revision: '' });
   const scriptContent = useRef<HTMLDivElement>(null);
   const shotTimeline = useRef<HTMLDivElement>(null);
+  const player = useRef<SegmentVideoHandle>(null);
   const latest = latestVideo(items);
   const versions = items.filter(item => item.stage === stage).sort((a, b) => Number(b.approved) - Number(a.approved) || b.candidateNumber - a.candidateNumber);
   const current = versions.find(item => item.key === selected);
@@ -79,7 +81,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
     {!wideVideo && selectors}
     <div className={'segment-workspace' + (wideVideo ? ' is-wide' : '')}>
       <div className="segment-playback-row">
-      <SegmentVideo selectorControl={wideVideo ? selectors : undefined} key={current?.key || 'empty'} wide={wideVideo} onToggleWide={onToggleWide} continuousControl={continuousControl} current={current} cachedSource={current && cachedSources[current.url]} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
+      <SegmentVideo playerRef={player} selectorControl={wideVideo ? selectors : undefined} key={current?.key || 'empty'} wide={wideVideo} onToggleWide={onToggleWide} continuousControl={continuousControl} current={current} cachedSource={current && cachedSources[current.url]} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
       {wideVideo && <aside className="segment-side-navigation" aria-label="宽屏分段导航">{segmentNavigation}</aside>}
       </div>
       <SegmentReferences context={context} />
@@ -93,12 +95,13 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
           <TabNav compact label="分镜显示方式" items={[{ value: 'aligned', label: '跟视频对齐', disabled: !canAlign }, { value: 'all', label: '显示全部' }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
         </div>}
         {tab === 'script' && canAlign && !editingNotes && <div className="shot-timeline-scroll" ref={shotTimeline}>
-          <div className="shot-timeline" role="progressbar" aria-label="分镜播放进度" aria-valuemin={0} aria-valuemax={plannedDuration} aria-valuenow={Math.min(time, plannedDuration)} aria-valuetext={`当前镜头：${activeShot!.id}`}
+          <div className="shot-timeline" role="group" aria-label="分镜跳转"
             style={{ gridTemplateColumns: timedShots.map(item => `minmax(90px, ${item.shot.duration}fr)`).join(' '), minWidth: `${timedShots.length * 90}px` }}>
-            {timedShots.map(({ shot, start }) => <div className="shot-timeline-item" key={shot.id} aria-current={shot.id === activeShot!.id ? 'step' : undefined}>
+            {timedShots.map(({ shot, start }) => <button type="button" className="shot-timeline-item" key={shot.id} aria-current={shot.id === activeShot!.id ? 'step' : undefined}
+              aria-label={`跳转到${shot.id}，${Number(start.toFixed(3))}秒`} title={`跳转到 ${Number(start.toFixed(3))}秒`} onClick={() => player.current?.seekTo(start)}>
               <span className="shot-timeline-title">{shot.id}</span>
               <span className="shot-timeline-track"><span style={{ transform: `scaleX(${Math.max(0, Math.min(1, (time - start) / shot.duration!))})` }} /></span>
-            </div>)}
+            </button>)}
           </div>
         </div>}
         <div className={'segment-script-content' + (aligned && tab === 'script' ? ' is-aligned' : '')} ref={scriptContent}>
