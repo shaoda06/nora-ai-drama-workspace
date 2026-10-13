@@ -2,14 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import type { SegmentVideo } from '../api';
 import { Dialog } from '../components';
 import { editNote, loadNotes, noteKey, saveNote, useSceneNotes } from '../revisionNotes';
-import { CopyButton, copyText } from './CopyButton';
+import { CopyButton } from './CopyButton';
 import { candidateLabel } from './SegmentVideo';
 import { TabNav } from './TabNav';
 
 export interface NoteScope { project: string; episode: string; scene: string }
 export function RevisionNoteEditor({ scope, segment, current, fileRevision, time, shot }: { scope: NoteScope; segment: string; current: SegmentVideo; fileRevision: string; time: number; shot?: string }) {
   const textarea = useRef<HTMLTextAreaElement>(null);
-  const buffer = useRef<HTMLTextAreaElement>(null);
   const [insertMessage, setInsertMessage] = useState('');
   const tenths = Math.floor(time * 10);
   const timestamp = `${String(Math.floor(tenths / 600)).padStart(2, '0')}.${String(Math.floor(tenths / 10) % 60).padStart(2, '0')}.${tenths % 10}秒${shot ? `，${shot}` : ''}：`;
@@ -22,32 +21,31 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
   useEffect(() => () => { void saveNote(data.url, key); }, [data.url, key]);
   const status = draft ? { waiting: '等待保存', saving: '保存中…', saved: '已保存', error: '未保存' }[draft.status] : note ? '已保存' : '尚未填写';
   const statusKind = data.error ? 'error' : data.loading ? 'loading' : draft?.status ?? (note ? 'saved' : 'empty');
-  const insertTime = async (button: HTMLButtonElement) => {
+  const insertTime = () => {
     const editor = textarea.current!;
-    if (document.activeElement === editor) {
-      const start = editor.selectionStart;
-      const end = editor.selectionEnd;
-      const value = text.slice(0, start) + timestamp + text.slice(end);
-      if (value.length > editor.maxLength) { setInsertMessage('文字已达上限，无法插入时间。'); return; }
-      editNote(data.url, { ...identity, text: value, fileRevision });
-      requestAnimationFrame(() => editor.setSelectionRange(start + timestamp.length, start + timestamp.length));
-      setInsertMessage('');
-    } else {
-      try { await copyText(timestamp, buffer.current!); setInsertMessage(`已复制 ${timestamp}`); }
-      catch (error) { setInsertMessage(`复制失败：${String(error)}；请手动复制时间 ${timestamp}`); }
-      button.focus();
-    }
+    const editing = document.activeElement === editor;
+    const start = editing ? editor.selectionStart : text.length;
+    const end = editing ? editor.selectionEnd : text.length;
+    const before = text.slice(0, start);
+    const inserted = (before && !before.endsWith('\n') ? '\n' : '') + timestamp;
+    const value = before + inserted + text.slice(end);
+    if (value.length > editor.maxLength) { setInsertMessage('文字已达上限，无法插入时间。'); return; }
+    editNote(data.url, { ...identity, text: value, fileRevision });
+    requestAnimationFrame(() => {
+      editor.focus();
+      editor.setSelectionRange(start + inserted.length, start + inserted.length);
+    });
+    setInsertMessage('');
   };
   return <div className="revision-note-editor">
     <p className="revision-note-identity">{scope.project} / {scope.episode} / {scope.scene} / {segment} / {current.stage} / {current.approved ? '正式版' : candidateLabel(current.candidateNumber)} · {current.run}</p>
     {data.error && <p className="error" role="alert">修改意见读取失败：{data.error}<button onClick={() => { void loadNotes(data.url); }}>重试读取</button></p>}
     <div className="revision-note-heading">
-      <div className="revision-note-label"><label htmlFor="revision-note-text">修改意见</label><button className="link" disabled={!data.loaded || !current.url} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={event => { void insertTime(event.currentTarget); }}>插入时间</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
+      <div className="revision-note-label"><label htmlFor="revision-note-text">修改意见</label><button className="link" disabled={!data.loaded || !current.url} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={insertTime}>插入时间</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
       <div className="revision-note-status" role="status"><span className="revision-note-state" data-state={statusKind}>{data.error ? '读取失败' : data.loading ? '正在读取…' : status}</span>{note && <span className="muted">更新于 {new Date(note.updatedAt).toLocaleString('zh-CN')}</span>}{draft?.status === 'error' && <button onClick={() => { void saveNote(data.url, key); }}>重试保存</button>}</div>
     </div>
     <textarea ref={textarea} id="revision-note-text" placeholder="填写修改意见..." maxLength={20000} disabled={!data.loaded} value={text}
       onChange={event => editNote(data.url, { ...identity, text: event.target.value, fileRevision })} onBlur={() => { void saveNote(data.url, key); }} />
-    <textarea ref={buffer} className="clipboard-buffer" aria-hidden="true" tabIndex={-1} readOnly value={timestamp} />
     {insertMessage && <p role="status" className="muted">{insertMessage}</p>}
     {draft?.error && <p className="error">{draft.error}</p>}
     {note && note.fileRevision !== fileRevision && <p className="muted">该意见记录于此版本更新前。</p>}
