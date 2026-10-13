@@ -14,6 +14,41 @@ BASELINES = ROOT / "references/comfyui-workflow"
 RETAINED = BASELINES / "非正式工作流"
 
 class BaselineTests(unittest.TestCase):
+    def test_director_named_cache_pair_and_conflicting_api(self):
+        for variant in ('标准版', '去油版'):
+            with self.subTest(variant=variant), tempfile.TemporaryDirectory() as tmp:
+                stem = f'Minimax-H3-导演台-视频生成-{variant}'
+                canvas = json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8'))
+                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
+                director = next(node for node in canvas['nodes'] if node['type'] == 'MiniMaxH3Director')
+                api_director = next(node for node in api.values() if node['class_type'] == 'MiniMaxH3Director')
+                name = '测试项目-EP003-C001-a31f02c9d6b8'
+                director['widgets_values_named']['cache_name'] = name
+                director['widgets_values'] = list(director['widgets_values_named'].values())
+                api_director['inputs']['cache_name'] = name
+                Path(tmp, f'{stem}.workflow.json').write_text(json.dumps(canvas), encoding='utf-8')
+                api_path = Path(tmp, f'{stem}.api.json')
+                api_path.write_text(json.dumps(api), encoding='utf-8')
+                self.assertEqual(len(wb.verify(tmp)), 1)
+                api_director['inputs']['cache_name'] = '测试项目-EP003-C001-b42f13d0e7c9'
+                api_path.write_text(json.dumps(api), encoding='utf-8')
+                with self.assertRaisesRegex(AssertionError, 'Canvas/API mismatch'):
+                    wb.verify(tmp)
+
+    def test_legacy_director_pair_without_cache_name(self):
+        for variant in ('标准版', '去油版'):
+            with self.subTest(variant=variant), tempfile.TemporaryDirectory() as tmp:
+                stem = f'Minimax-H3-导演台-视频生成-{variant}'
+                canvas = json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8'))
+                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
+                director = next(node for node in canvas['nodes'] if node['type'] == 'MiniMaxH3Director')
+                director['widgets_values_named'].pop('cache_name')
+                director['widgets_values'] = list(director['widgets_values_named'].values())
+                next(node for node in api.values() if node['class_type'] == 'MiniMaxH3Director')['inputs'].pop('cache_name')
+                Path(tmp, f'{stem}.workflow.json').write_text(json.dumps(canvas), encoding='utf-8')
+                Path(tmp, f'{stem}.api.json').write_text(json.dumps(api), encoding='utf-8')
+                self.assertEqual(len(wb.verify(tmp)), 1)
+
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
         self.assertEqual(len(results), 11)
