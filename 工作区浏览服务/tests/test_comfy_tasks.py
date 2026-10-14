@@ -245,6 +245,39 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual([call.args[1] for call in bridge.await_args_list], ['read', 'read', 'send'])
         self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
 
+    async def test_desktop_adapter_keeps_node_pipe_and_busy_check_with_optional_cli(self):
+        for cli in (None, '/must-not-run/codex'):
+            with self.subTest(cli=cli):
+                self.seed('completed')
+                self.data.desktop.cli = cli
+                responses = [
+                    {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': status}}})}]}
+                    for status in ('active', 'idle')]
+                responses.append({'content': [], 'isError': False})
+                completed = [t.subprocess.CompletedProcess([], 0, json.dumps(result), '') for result in responses]
+                with patch.object(t.subprocess, 'run', side_effect=completed) as run, patch.object(t.asyncio, 'sleep', AsyncMock()):
+                    await self.store.notify('task')
+                    await self.store.notify('task')
+                self.assertEqual(run.call_count, 3)
+                payloads = [json.loads(call.kwargs['input']) for call in run.call_args_list]
+                self.assertEqual([payload['operation'] for payload in payloads], ['read', 'read', 'send'])
+                for call, payload in zip(run.call_args_list, payloads):
+                    self.assertEqual(call.args[0][0], 'node')
+                    self.assertTrue(call.args[0][1].endswith('codex_task_bridge.mjs'))
+                    self.assertEqual(call.kwargs['env']['CODEX_APP_TOOLS_PIPE_PATH'], 'private-pipe')
+                    self.assertEqual(payload['caller'], 'real-caller')
+                    self.assertEqual(payload['threadId'], 'authorized-target')
+                self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
+                batch = self.store.rows['task']['state']['notices'][0]['batch_id']
+                self.store.acknowledge(batch, self.data.thread_id)
+                self.assertEqual(self.store.rows['task']['state']['notification'], 'acknowledged')
+
+    async def test_desktop_adapter_tool_error_is_not_recorded_as_sent(self):
+        result = t.subprocess.CompletedProcess([], 0, json.dumps({'isError': True, 'content': []}), '')
+        with patch.object(t.subprocess, 'run', return_value=result):
+            with self.assertRaisesRegex(OSError, 'Codex拒绝本次会话操作'):
+                await self.store.desktop_call(self.data, 'send', '完成通知')
+
     async def test_pending_failure_is_superseded_by_success(self):
         self.seed('collection_failed')
         idle = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'idle'}}})}]}
