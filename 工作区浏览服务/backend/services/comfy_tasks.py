@@ -8,6 +8,7 @@ import logging
 import os
 from pathlib import Path, PureWindowsPath
 import secrets
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -50,6 +51,7 @@ class DesktopConnection(BaseModel):
     server: str
     pipe: str
     caller_thread: str
+    cli: str | None = None
 
 
 class TaskInput(BaseModel):
@@ -74,6 +76,8 @@ class TaskInput(BaseModel):
 
 
 class TaskStore(LocalQueue, TaskNotifications):
+    queue_notifications = sys.platform == 'darwin'
+
     def __init__(self, runtime: Path, workspace: Path):
         self.runtime, self.workspace = runtime, workspace.resolve()
         runtime.mkdir(parents=True, exist_ok=True)
@@ -588,6 +592,17 @@ class TaskStore(LocalQueue, TaskNotifications):
             logger.warning('ComfyUI task %s source session lookup failed: %s', key, error)
 
     async def desktop_call(self, data, operation, prompt=''):
+        if self.queue_notifications and operation == 'send':
+            cli = data.desktop.cli or os.environ.get('CODEX_CLI_PATH') or shutil.which('codex')
+            if not cli:
+                raise OSError('找不到Codex CLI，无法投递后台通知')
+            def queue():
+                completed = subprocess.run([cli, 'queue', '--thread', data.thread_id, '--message', prompt],
+                    encoding='utf-8', capture_output=True, timeout=40)
+                if completed.returncode:
+                    raise OSError(f'Codex queue退出{completed.returncode}：{completed.stderr.strip()}')
+                return {'receipt': completed.stdout.strip()}
+            return await asyncio.to_thread(queue)
         bridge = Path(__file__).resolve().parents[2] / 'scripts/codex_task_bridge.mjs'
         environment = {**os.environ, 'CODEX_APP_TOOLS_PIPE_PATH': data.desktop.pipe}
         payload = {'server': data.desktop.server, 'caller': data.desktop.caller_thread,

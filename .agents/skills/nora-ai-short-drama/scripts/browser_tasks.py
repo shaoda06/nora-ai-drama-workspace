@@ -30,7 +30,7 @@ def submit(args, workflow, url, uploads=None):
         segment_plan=json.loads(Path(args.segment_plan).read_text('utf-8')) if args.segment_plan else None,
         thread_id=args.thread_id or caller,
         desktop={'node': node, 'server': str(max(servers, key=lambda path: path.stat().st_mtime)),
-                 'pipe': pipe, 'caller_thread': caller})
+                 'pipe': pipe, 'caller_thread': caller, 'cli': os.environ.get('CODEX_CLI_PATH') or shutil.which('codex')})
     for output in payload['outputs']:
         output['path'] = relative_file(project, output['path'])
     for upload in payload['uploads']:

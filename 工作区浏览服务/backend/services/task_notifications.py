@@ -78,20 +78,23 @@ class TaskNotifications:
                 await asyncio.sleep(2)
                 data = max((row for row in self.rows.values() if row['input'].thread_id == data.thread_id),
                            key=lambda row: row['state']['created_at'])['input']
-                try:
-                    result = await self.desktop_call(data, 'read')
-                    response = json.loads(next(item['text'] for item in result['content'] if item['type'] == 'text'))
-                    status = response['thread']['status']['type']
-                except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, StopIteration) as error:
-                    for task, _ in self.notification_pending(data.thread_id):
-                        self.save(task, notification='waiting_connection')
-                    await asyncio.sleep(30)
-                    continue
-                if status not in ('idle', 'notLoaded'):
-                    for task, _ in self.notification_pending(data.thread_id):
-                        self.save(task, notification='waiting_idle')
-                    await asyncio.sleep(15)
-                    continue
+                # macOS uses Codex's durable message queue, which schedules the turn itself.
+                # Do not gate it on the private Desktop pipe that rejects background callers.
+                if not self.queue_notifications:
+                    try:
+                        result = await self.desktop_call(data, 'read')
+                        response = json.loads(next(item['text'] for item in result['content'] if item['type'] == 'text'))
+                        status = response['thread']['status']['type']
+                    except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, StopIteration) as error:
+                        for task, _ in self.notification_pending(data.thread_id):
+                            self.save(task, notification='waiting_connection')
+                        await asyncio.sleep(30)
+                        continue
+                    if status not in ('idle', 'notLoaded'):
+                        for task, _ in self.notification_pending(data.thread_id):
+                            self.save(task, notification='waiting_idle')
+                        await asyncio.sleep(15)
+                        continue
                 pending = self.notification_pending(data.thread_id)
                 if not pending:
                     return
@@ -108,7 +111,7 @@ class TaskNotifications:
                     notice.update(delivery='sending', batch_id=batch_id)
                     self.save(task, notification='sending')
                 try:
-                    await self.desktop_call(data, 'send', prompt)
+                    receipt = await self.desktop_call(data, 'send', prompt)
                 except (OSError, subprocess.TimeoutExpired, ValueError) as error:
                     delivery = 'delivery_unknown'
                     detail = str(error)
@@ -122,7 +125,8 @@ class TaskNotifications:
                 for task, notice in pending:
                     notice['delivery'] = delivery
                     self.save(task, notification=delivery)
-                    self.record(task, 'notification', delivery, notification_id=batch_id, error=detail, message=prompt)
+                    self.record(task, 'notification', delivery, notification_id=batch_id, error=detail, message=prompt,
+                                receipt=receipt.get('receipt') if detail is None else None)
                 if delivery == 'delivery_unknown':
                     self.notifiers['ack:' + batch_id] = asyncio.create_task(self.wait_ack(batch_id))
 
