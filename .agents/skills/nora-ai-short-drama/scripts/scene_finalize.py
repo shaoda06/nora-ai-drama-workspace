@@ -46,6 +46,23 @@ def canvas_api(canvas, workflow):
         raise ValueError('实际 API 与来源画布不配对')
 
 
+def postprocess_uploads(root, record):
+    """从本任务成功上传记录读取实际素材，不扫描或猜测上传响应文件名。"""
+    events_file = record / '后台过程记录.json'
+    if not events_file.is_file():
+        raise ValueError('后处理缺少 uploads 和后台成功上传记录：' + str(record))
+    uploads = []
+    for event in adopt.load(events_file):
+        if event['stage'] == 'upload' and event['result'] == 'success':
+            receipt = event['remote']
+            local = adopt.local_path(root, event['file'])
+            adopt.check_file(local, receipt)
+            uploads.append({'file': str(local), 'input_path': receipt['input_path']})
+    if not uploads:
+        raise ValueError('后处理缺少 uploads 和后台成功上传记录：' + str(record))
+    return uploads
+
+
 def source(root, item):
     mapping_path = adopt.local_path(root, item['mapping'])
     mapping = adopt.load(mapping_path)
@@ -59,6 +76,9 @@ def source(root, item):
     response = adopt.load(mapping_path.parent / '提交响应.json')
     accepted = response.get('data', response)
     restoration = []
+    if item['identity'].endswith('-后处理') and not mapping.get('uploads'):
+        mapping['uploads'] = postprocess_uploads(root, mapping_path.parent)
+        restoration.append('依据本任务后台成功上传记录关联实际 input_path 与本地来源；原映射保留')
     for stored in canvas['nodes']:
         named = stored.get('widgets_values_named', {})
         values = stored.get('widgets_values', [])
@@ -107,10 +127,16 @@ def director(source_item, part):
     timeline = client.strict_json(node['inputs']['timeline_data'])
     if timeline['editMode'] != 'segment' or not timeline['global']['taskType'].startswith('r2v'):
         raise ValueError('场次留档目前支持原生 r2v 分组导演台')
-    groups = [(i, g) for i, g in enumerate(timeline['segments']) if g['id'] == part]
-    if len(groups) != 1:
-        raise ValueError('实际时间线缺少唯一分段：' + part)
-    index, group = groups[0]
+    mapping = source_item['mapping']
+    stage = source_item['identity'].rsplit('-', 1)[1]
+    indices = [i for i, s in enumerate(mapping['segments'])
+               if s['segment'] == part and s['segment'] + '-' + s['round'] + '-' + stage == source_item['identity']]
+    if len(mapping['segments']) != len(timeline['segments']) or len(indices) != 1:
+        raise ValueError('输入映射原组序无法唯一对应实际时间线分段：' + part)
+    index = indices[0]
+    group = timeline['segments'][index]
+    if index not in mapping['selected_indices']:
+        raise ValueError('该分段不在输入映射实际执行范围：' + part)
     if timeline.get('runSelectEnabled') and index not in timeline['runSelection']:
         raise ValueError('该分段不在来源任务实际执行范围：' + part)
     editor = timeline['batchWorkspaces']['r2v']
@@ -242,7 +268,7 @@ def prepare(root, plan, batch_parts=None, batch_name=None):
             adopt.check_file(source_video, {'bytes': actual['mapping']['source_bytes'],
                                             'sha256': actual['mapping']['source_sha256']})
             uploads = [u for u in actual['mapping']['uploads']
-                       if Path(u['file']).name == source_video.name]
+                       if adopt.local_path(root, u['file']) == source_video]
             loaders = [n['inputs']['file'] for n in actual['api'].values() if n['class_type'] == 'LoadVideo']
             if len(uploads) != 1 or loaders != [uploads[0]['input_path']]:
                 raise ValueError('后处理实际输入视频与上传映射不对应：' + part)
