@@ -41,6 +41,38 @@ class ProjectParserTests(unittest.TestCase):
         self.assertEqual([item['name'] for item in data['directories']], list(portal.FORMAL_SECTIONS))
         self.assertTrue((self.root / 'projects/保留记录.json').is_file())
 
+    def test_compact_short_navigation_exposes_sources_and_video_previews(self):
+        self.put('00-项目定位/项目基本定位.md', '# 定位')
+        self.put('短片脚本.md', '# 短片脚本\n已确认对白')
+        self.put('分镜.md', '# 分镜\n六个镜头')
+        self.put('项目进度.md', '# 进度\n- 当前阶段：一采待审核')
+        video = '制作/其他资料/候选视频/EP001-C001-P003-R001-一采.mp4'
+        self.put(video, 'fixture video')
+        self.put('制作/其他资料/工作稿/视频制作-工作稿.md', '# 执行记录')
+        before = {p.relative_to(self.root): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+        data = portal.build_data(self.root, web_episode_navigation=True)
+        sections = {item['name']: item['label'] for item in data['directories']}
+        self.assertEqual(sections['制作'], '剧集制作')
+        self.assertEqual(sections['短片脚本.md'], '短片脚本')
+        self.assertEqual(sections['分镜.md'], '分镜')
+        self.assertEqual(sections['项目进度.md'], '项目进度')
+        self.assertIn('已确认对白', data['catalogues']['短片脚本.md']['html'])
+        candidate = data['catalogues']['制作']['children'][0]
+        self.assertEqual((candidate['kind'], candidate['key']), ('video', video))
+        self.assertNotIn('approved', candidate)
+        self.assertFalse((self.root / '09-剧集制作').exists())
+        self.assertEqual(before, {p.relative_to(self.root): p.read_bytes() for p in self.root.rglob('*') if p.is_file()})
+
+    def test_standard_production_takes_precedence_over_compact_directory(self):
+        self.put('09-剧集制作/EP001/其他资料/说明.md', '# 制作记录')
+        self.put('制作/旧资料.md', '# 旧资料')
+        self.put('短片脚本.md', '# 旧脚本')
+        data = portal.build_data(self.root, web_episode_navigation=True)
+        sections = {item['name'] for item in data['directories']}
+        self.assertIn('09-剧集制作', sections)
+        self.assertNotIn('制作', sections)
+        self.assertNotIn('短片脚本.md', sections)
+
     def test_record_document_preview_has_no_invented_confirmation(self):
         source = "00-项目定位/其他资料/工作稿/参考图-工作稿.md"
         text = "# 工作稿\n- 当前稿版本：v01\n- 当前状态及待办：等待本批审核\n\n## 生成记录\n原记录"
