@@ -1366,22 +1366,6 @@ def build_data(project, *, web_episode_navigation=False):
                     "url": quote(p.name, safe="-._~") + "/"}
                    for p in sorted(project.iterdir())
                    if p.is_dir() and p.name in FORMAL_SECTIONS]
-    # Single shorts keep their existing compact sources and use the same document
-    # and media previews; they do not need an empty series directory hierarchy.
-    if (project / "制作").is_dir() and not (project / production).is_dir():
-        for key, label in (("短片脚本.md", "短片脚本"), ("分镜.md", "分镜"),
-                           (PROGRESS, "项目进度")):
-            text = read(key, preview=True)
-            if text is not None:
-                catalogues[key] = {**documents[key], "exists": True, "documentKey": key}
-                directories.append({"name": key, "label": label, "url": quote(key)})
-        files = inventory("制作")
-        videos = [item for item in files if item["kind"] == "video"]
-        other = [item for item in files if item["kind"] != "video"]
-        catalogues["制作"] = {"kind": "group", "key": "制作", "name": "剧集制作",
-            "children": videos + file_tree(other, "制作", "剧集制作")["children"],
-            "note": "点击视频名称可在工作台内播放；制作资料沿用原目录，文件存在不代表已审核采用。"}
-        directories.append({"name": "制作", "label": "剧集制作", "url": quote("制作") + "/"})
     meta = {key: field(position or "", key) for key in ("文档版本", "更新日期", "确认状态")}
     body = position or ""
     body = re.sub(r"^# .+\n?", "", body, count=1)
