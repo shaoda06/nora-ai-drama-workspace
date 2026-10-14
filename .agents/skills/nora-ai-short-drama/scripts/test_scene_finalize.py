@@ -177,6 +177,116 @@ class FinalizeTests(unittest.TestCase):
         with patch.object(tool.client, 'Client', NativeClient):
             return tool.finalize(argparse.Namespace(project=str(self.root), plan=str(path), apply=apply, timeout=30))
 
+    def replace_timeline(self, item, timeline):
+        api = tool.adopt.load(Path(item['api']))
+        key = next(k for k, n in api.items() if n['class_type'] == 'MiniMaxH3Director')
+        api[key]['inputs']['timeline_data'] = json.dumps(timeline, ensure_ascii=False)
+        canvas = tool.adopt.load(Path(item['canvas']))
+        node = next(n for n in canvas['nodes'] if str(n['id']) == key)
+        node['widgets_values_named']['timeline_data'] = api[key]['inputs']['timeline_data']
+        node['widgets_values'] = list(node['widgets_values_named'].values())
+        self.put(Path(item['api']), api)
+        self.put(Path(item['canvas']), canvas)
+        self.put(Path(item['mapping']).parent / '请求.json', {'prompt': api})
+
+    def test_independent_group_ids_follow_mapping_order_and_keep_original_ids(self):
+        self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
+        for i, item in enumerate(self.plan['items']):
+            api = tool.adopt.load(Path(item['api']))
+            node = next(n for n in api.values() if n['class_type'] == 'MiniMaxH3Director')
+            timeline = json.loads(node['inputs']['timeline_data'])
+            timeline['segments'][0]['id'] = '项目-独立组-' + str(i)
+            mapping = tool.adopt.load(Path(item['mapping']))
+            if i == 0:
+                decoy = copy.deepcopy(timeline['segments'][0])
+                decoy.update(id='未运行组', prompt='不能选用的正文')
+                timeline['segments'].insert(0, decoy)
+                timeline['runSelection'] = [1]
+                mapping['segments'].insert(0, {'segment': 'EP001-C001-P002', 'round': 'R001'})
+                mapping['selected_indices'] = [1]
+            timeline['batchWorkspaces']['r2v'].update(
+                segments=copy.deepcopy(timeline['segments']), runSelection=timeline['runSelection'])
+            self.replace_timeline(item, timeline)
+            self.put(Path(item['mapping']), mapping)
+        result = self.run_plan()
+        with zipfile.ZipFile(result['pack']) as archive:
+            timeline = json.loads(archive.read('timeline.json'))
+        self.assertEqual([g['id'] for g in timeline['segments']], ['项目-独立组-0', '项目-独立组-1'])
+        self.assertEqual([g['prompt'] for g in timeline['segments']], ['P001 <Picture 1>', 'P002 <Picture 1>'])
+
+    def test_group_mapping_length_mismatch_stops_before_export(self):
+        self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
+        item = self.plan['items'][0]
+        mapping = tool.adopt.load(Path(item['mapping']))
+        mapping['segments'].append({'segment': 'EP001-C001-P003', 'round': 'R001'})
+        self.put(Path(item['mapping']), mapping)
+        with self.assertRaisesRegex(ValueError, '原组序'):
+            self.run_plan()
+        self.assertFalse(NativeClient.calls)
+
+    def test_postprocess_without_uploads_uses_successful_task_upload_records(self):
+        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
+        self.plan['stage'] = '后处理'
+        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
+        originals = {}
+        for item in self.plan['items']:
+            folder = Path(item['mapping']).parent
+            mapping = tool.adopt.load(Path(item['mapping']))
+            upload = mapping.pop('uploads')[0]
+            request = tool.adopt.load(folder / '请求.json')
+            loader = next(n for n in request['prompt'].values() if n['class_type'] == 'LoadVideo')
+            loader['inputs']['file'] = 'uploaded/' + loader['inputs']['file']
+            self.put(folder / '请求.json', request)
+            self.put(Path(item['mapping']), mapping)
+            self.put(folder / '后台过程记录.json', [
+                {'stage': 'upload', 'result': 'started', 'file': upload['file']},
+                {'stage': 'upload', 'result': 'success', 'file': upload['file'], 'remote': {
+                    'input_path': loader['inputs']['file'], 'bytes': mapping['source_bytes'],
+                    'sha256': mapping['source_sha256']}}])
+            originals[Path(item['mapping'])] = Path(item['mapping']).read_bytes()
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'completed')
+        canvas = tool.adopt.load(Path(result['canvas']))
+        paths = [n['widgets_values_named']['file'] for n in canvas['nodes'] if n['type'] == 'LoadVideo']
+        self.assertEqual(paths, ['uploaded/EP001-C001-P001-R001-二采.mp4',
+                                 'uploaded/EP001-C001-P002-R001-二采.mp4'])
+        for path, data in originals.items():
+            current = tool.adopt.load(path)
+            self.assertNotIn('uploads', current)
+            del current['scene_finalizations']
+            self.assertEqual(current, json.loads(data))
+
+    def test_postprocess_missing_upload_records_does_not_infer_from_request(self):
+        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
+        self.plan['stage'] = '后处理'
+        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
+        item = self.plan['items'][0]
+        mapping = tool.adopt.load(Path(item['mapping']))
+        del mapping['uploads']
+        self.put(Path(item['mapping']), mapping)
+        with self.assertRaisesRegex(ValueError, '后台成功上传记录'):
+            self.run_plan()
+        self.assertFalse(NativeClient.calls)
+
+    def test_postprocess_upload_record_must_match_exact_source_not_basename(self):
+        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
+        self.plan['stage'] = '后处理'
+        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
+        item = self.plan['items'][0]
+        folder = Path(item['mapping']).parent
+        mapping = tool.adopt.load(Path(item['mapping']))
+        upload = mapping.pop('uploads')[0]
+        wrong_source = self.root / '其他素材' / Path(upload['file']).name
+        self.put(wrong_source, Path(upload['file']).read_bytes())
+        self.put(Path(item['mapping']), mapping)
+        self.put(folder / '后台过程记录.json', [{
+            'stage': 'upload', 'result': 'success', 'file': str(wrong_source), 'remote': {
+                'input_path': upload['input_path'], 'bytes': mapping['source_bytes'],
+                'sha256': mapping['source_sha256']}}])
+        with self.assertRaisesRegex(ValueError, '实际输入视频与上传映射不对应'):
+            self.run_plan()
+        self.assertFalse(NativeClient.calls)
+
     def test_all_three_stages_single_pair_repeat_and_originals(self):
         for stage in tool.adopt.STAGES:
             with self.subTest(stage=stage):
@@ -355,7 +465,7 @@ class FinalizeTests(unittest.TestCase):
         self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
         original = tool.replace_file
         def interrupted(path, text):
-            if path == self.root / '项目进度.md':
+            if path.resolve() == (self.root / '项目进度.md').resolve():
                 raise OSError('模拟记录写入中断')
             return original(path, text)
         with patch.object(tool, 'replace_file', interrupted), self.assertRaises(OSError):
