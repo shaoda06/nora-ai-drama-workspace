@@ -38,7 +38,7 @@ Windows双击本目录的 `启动工作区浏览服务.bat`，后台运行并自
 
 草稿生成依赖[pyJianYingDraft](https://github.com/GuanYixuan/pyJianYingDraft) 0.3.0（Apache-2.0）及[pymediainfo](https://github.com/sbraz/pymediainfo) 7.0.1（MIT），版本固定在requirements.txt；只使用文件生成和媒体信息读取，不调用剪映UI自动化。Windows的pymediainfo wheel包含MediaInfo运行库；其他平台按该库说明准备libmediainfo。固定目录占位符参考[ZenStory实现](https://github.com/zenstory-ai/video-recap-skills/blob/539168622918e058bd250c793b82f043eced31e0/skills/video-assemble/scripts/jianying/writer.py#L14)，未安装整套技能。
 
-当前工作区已安装依赖并构建。其他电脑首次使用，在本目录执行以下命令；Python 3.10＋、Node.js 22＋、pnpm 11为开发环境要求，普通浏览启动仅使用 `.venv` 和已构建前端；ComfyUI后台的Codex会话通知另需本机Node及已安装的桌面适配器，见下方后台任务说明。
+当前工作区已安装依赖并构建。其他电脑首次使用，在本目录执行以下命令；Python 3.10＋、Node.js 22＋、pnpm 11为开发环境要求，普通浏览启动仅使用 `.venv` 和已构建前端；ComfyUI后台的Codex会话通知在macOS需要支持queue的Codex CLI，其他平台需要本机Node及已安装的桌面适配器，见下方后台任务说明。
 
 ```powershell
 python -m venv .venv
@@ -127,7 +127,7 @@ Agent通过[统一入口](../.agents/skills/nora-ai-short-drama/references/comfy
 
 断线重连先核对原ID的queue/history，任务失踪进入历史待核对，不自动重提；主节点确认空闲后其他独立任务继续。后台重启恢复排队顺序、暂停及原ID监控，取回失败可由Agent按原ID请求只重试下载。生成失败不自动重新生成。所有媒体完成后取回，导演台按最终报告对应Agent指定的本机文件名和路径，不再逐段运行中取回。
 
-后台仅通知完成或需要处理的问题，同一来源会话的未发送结果合并。忙时每15秒检查，桌面不可连接时每30秒重试；结果不明等待通知ack，不盲目重复发送。收到消息的Agent先确认，再依据阶段记录复查和维护业务。关闭网页不停止队列，历史旧定时器不因本次发布自动修改。具体规则读取[任务监控规范](../.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-任务监控规范.md)。
+后台仅通知完成或需要处理的问题，同一来源会话的未发送结果合并。macOS通过官方 `codex queue` 向来源会话投递，由Codex安排后续轮次，不先读取私有桌面管道。提交时登记 `CODEX_CLI_PATH`（或PATH中的codex）；旧任务使用服务启动环境中的CLI路径或PATH。其他平台保留原桌面适配器，忙时每15秒检查、不可连接时每30秒重试。CLI回执记入过程记录；入队成功不等于Agent确认，结果不明等待通知ack，不盲目重复发送。收到消息的Agent先确认，再依据阶段记录复查和维护业务。关闭网页不停止队列，历史旧定时器不因本次发布自动修改。具体规则读取[任务监控规范](../.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-任务监控规范.md)。
 
 ```text
 工作区浏览服务/
