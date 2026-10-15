@@ -98,10 +98,10 @@ class PortabilityTests(unittest.IsolatedAsyncioTestCase):
     async def test_new_input_cannot_rebind_another_root_or_escape_project(self):
         self.data.outputs[0].path = '../outside.png'
         with self.assertRaises(ValueError):
-            self.store.validate(self.data)
+            self.store.validate_registration(self.data)
         self.data.outputs[0].path = 'C:/Old/projects/' + self.project.name + '/candidate.png'
         with self.assertRaises(ValueError):
-            self.store.validate(self.data)
+            self.store.validate_registration(self.data)
         with self.assertRaises(ValueError):
             t.paths.project_file(self.project, 'C:/Old/projects/' + self.project.name + '/../../escape', recorded=True)
 

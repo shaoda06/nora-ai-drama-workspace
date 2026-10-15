@@ -124,19 +124,50 @@ def director_checks(workflow):
     return rows
 
 
-def prepare_report(store, data):
-    """Called during preparation, never uploads, enqueues or submits generation."""
+def fixed_checks(store, data):
     from backend.services.director_uploads import check_pair
+    from backend.services import comfy_segments as segments
+    store.client.validate_workflow(data.workflow)
+    if (any(node['class_type'] in ('MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo') for node in data.workflow.values())
+            and data.task_type not in ('video-first-pass', 'video-second-pass')):
+        raise store.client.ClientError('invalid_task_type', 'H3 generation requires a first-pass or second-pass task type')
+    targets = [Path(output.path).resolve() for output in data.outputs]
+    if len(targets) != len(set(targets)):
+        raise ValueError('成果保存路径不能重复')
+    selectors = [(out.node_id, out.output_key, out.index) for out in data.outputs]
+    if any(output.node_id not in data.workflow for output in data.outputs):
+        raise ValueError('预期输出节点不在工作流中')
+    if len(selectors) != len(set(selectors)):
+        raise ValueError('输出身份不能重复')
+    for item in data.uploads:
+        if item['node'] not in data.workflow or item['input'] not in data.workflow[item['node']]['inputs']:
+            raise ValueError('上传映射必须绑定已有输入')
+    native_segments = [node for node in data.workflow.values() if node['class_type'] == 'MiniMaxH3Director'
+        and json.loads(node['inputs']['timeline_data']).get('output', {}).get('exportMode') == 'segments']
+    if native_segments and not data.segment_plan:
+        raise ValueError('原生H3分段任务必须登记segment-plan以对应最终成果')
+    if data.segment_plan:
+        try:
+            segments.validate(data)
+        except (KeyError, IndexError, TypeError) as error:
+            raise ValueError('分段计划或输入映射字段不完整：' + str(error)) from error
+        if data.outputs:
+            raise ValueError('原生分段任务使用segment-plan，不混用末段保存节点作为全组输出')
+    return {'pair': check_pair(Path(data.record_dir), data.workflow), 'segments': director_checks(data.workflow)}
+
+
+def prepare_report(store, data, *, at_execution=False):
+    """Fixed checks, including legacy execution fallback; never uploads or submits generation."""
     previous = read_report(data)
-    report = {'ok': False, 'checked_at': store.client.now(), 'prepared_input': basis(store, data), 'sources': {}}
+    report = {'ok': False, 'checked_at': store.client.now(), 'prepared_input': basis(store, data), 'sources': {},
+              'checked_during': 'execution' if at_execution else 'preparation'}
     try:
         report['sources'] = sources(data)
         if (previous and previous['ok'] and previous['prepared_input'] == report['prepared_input']
                 and previous['sources'] == report['sources']):
             return {'prepared': True, 'report': REPORT, 'reused': True,
                     'checks': {key: previous[key] for key in ('pair', 'segments')}}
-        report['pair'] = check_pair(Path(data.record_dir), data.workflow)
-        report['segments'] = director_checks(data.workflow)
+        report.update(fixed_checks(store, data))
         report['ok'] = True
     except (ValueError, OSError, store.client.ClientError) as error:
         report['error'] = str(error)

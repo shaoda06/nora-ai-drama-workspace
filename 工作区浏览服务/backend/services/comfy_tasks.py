@@ -217,7 +217,7 @@ class TaskStore(LocalQueue, TaskNotifications):
                 target['path'] = paths.relative_file(data.project, target['path'], recorded=True)
         return payload
 
-    def validate(self, data):
+    def validate_registration(self, data):
         self.resolve_input(data)
         if not data.title.strip():
             raise ValueError('任务标题不能为空')
@@ -260,37 +260,22 @@ class TaskStore(LocalQueue, TaskNotifications):
             raise ValueError('成果保存路径必须是绝对路径')
         if any(not path.is_relative_to(project) or path.is_relative_to(record) for path in targets):
             raise ValueError('成果必须位于所属项目内，且不得写入执行附件目录')
-        if len(targets) != len(set(targets)):
-            raise ValueError('成果保存路径不能重复')
-        selectors = [(out.node_id, out.output_key, out.index) for out in data.outputs]
-        if any(output.node_id not in data.workflow for output in data.outputs):
-            raise ValueError('预期输出节点不在工作流中')
-        if len(selectors) != len(set(selectors)):
-            raise ValueError('输出身份不能重复')
         if not data.thread_id or not data.desktop.caller_thread:
             raise ValueError('缺少真实会话身份')
-        client.validate_workflow(data.workflow)
         for item in data.uploads:
-            if (item['node'] not in data.workflow or item['input'] not in data.workflow[item['node']]['inputs']
-                    or not Path(item['file']).is_absolute()):
-                raise ValueError('上传映射必须绑定已有输入并使用本机绝对路径')
+            if not Path(item['file']).is_absolute():
+                raise ValueError('上传映射必须使用本机绝对路径')
             client.remote_path(item['subfolder'])
-        native_segments = [node for node in data.workflow.values() if node['class_type'] == 'MiniMaxH3Director'
-            and json.loads(node['inputs']['timeline_data']).get('output', {}).get('exportMode') == 'segments']
-        if native_segments and not data.segment_plan:
-            raise ValueError('原生H3分段任务必须登记segment-plan以对应最终成果')
         if data.segment_plan:
-            try:
-                segments.validate(data)
-            except (KeyError, IndexError, TypeError) as error:
-                raise ValueError('分段计划或输入映射字段不完整：' + str(error)) from error
-            if data.outputs:
-                raise ValueError('原生分段任务使用segment-plan，不混用末段保存节点作为全组输出')
+            for target in data.segment_plan.targets:
+                path = Path(target.path).resolve()
+                if not path.is_relative_to(project) or path.is_relative_to(record):
+                    raise ValueError('分段成果必须位于所属项目内，且不得写入执行附件目录')
         return project
 
     async def prepare_only(self, data):
         from backend.services.execution_checks import prepare_report
-        self.validate(data)
+        self.validate_registration(data)
         return await asyncio.to_thread(prepare_report, self, data)
 
     def client_for(self, data):
@@ -303,7 +288,10 @@ class TaskStore(LocalQueue, TaskNotifications):
 
     async def submit(self, data, *, key=None, workflow=None):
         if key is None:
-            project = self.validate(data)
+            project = self.validate_registration(data)
+            from backend.services import execution_checks as checks
+            if checks.check_prepared(self, data) is None:
+                await asyncio.to_thread(checks.prepare_report, self, data, at_execution=True)
             key = str(uuid.uuid4())
             self.rows[key] = {'input': data, 'state': {
                 'id': key, 'project': project.name, 'title': data.title, 'task_type': data.task_type,

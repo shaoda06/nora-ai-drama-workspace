@@ -33,6 +33,8 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         await self.store.prepare_only(self.data)
         with patch.object(t.client.Client, 'json') as network, \
                 patch('backend.services.director_uploads.check_pair') as pair, \
+                patch.object(checks, 'fixed_checks', side_effect=AssertionError('固定检查不得重复')), \
+                patch.object(t.client, 'validate_workflow', side_effect=AssertionError('结构检查不得重复')), \
                 patch.object(checks, 'check_prepared', wraps=checks.check_prepared) as compare:
             key = (await self.store.enqueue(self.data))['local_task_id']
             compare.assert_not_called()
@@ -46,6 +48,51 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         from backend.services.task_details import task_detail
         detail = await task_detail(self.store, key)
         self.assertTrue(any(record['name'] == '准备检查报告' for record in detail['records']))
+
+    async def test_unprepared_task_gets_fixed_checks_once_at_execution(self):
+        with patch.object(checks, 'fixed_checks', wraps=checks.fixed_checks) as fixed:
+            key = (await self.store.enqueue(self.data))['local_task_id']
+            fixed.assert_not_called()
+            await self.store.prepare(key)
+            fixed.assert_called_once()
+            self.assertEqual(checks.read_report(self.data)['checked_during'], 'execution')
+            await self.store.prepare(key)
+            fixed.assert_called_once()
+
+    async def test_unprepared_invalid_binding_stops_before_upload_and_post(self):
+        source = self.project / 'source.png'
+        source.write_bytes(b'reference')
+        self.data.uploads = [{'file': str(source), 'node': 'missing-node', 'input': 'seed', 'subfolder': '', 'response-name': 'upload.json'}]
+        key = (await self.store.enqueue(self.data))['local_task_id']
+        with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
+            with self.assertRaisesRegex(ValueError, '上传映射必须绑定已有输入'):
+                await self.store.prepare(key)
+            upload.assert_not_called()
+            post.assert_not_called()
+        self.assertFalse(checks.read_report(self.data)['ok'])
+
+    async def test_output_identity_is_checked_in_preparation_not_enqueue(self):
+        self.data.outputs[0].node_id = 'missing-node'
+        with self.assertRaisesRegex(ValueError, '预期输出节点不在工作流中'):
+            await self.store.prepare_only(self.data)
+        self.assertFalse(self.store.rows)
+        key = (await self.store.enqueue(self.data))['local_task_id']
+        with patch.object(checks, 'fixed_checks', side_effect=AssertionError('失败报告不能被自动重做')), \
+                patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
+            with self.assertRaisesRegex(ValueError, '准备资料已变化或检查未通过'):
+                await self.store.prepare(key)
+            upload.assert_not_called()
+            post.assert_not_called()
+
+    async def test_h3_stage_type_is_checked_once_by_preparation_tool(self):
+        self.data.workflow['1']['class_type'] = 'MiniMaxH3ReferenceToVideo'
+        key = (await self.store.enqueue(self.data))['local_task_id']
+        with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
+            with self.assertRaises(t.client.ClientError) as error:
+                await self.store.prepare(key)
+            self.assertEqual(error.exception.code, 'invalid_task_type')
+            upload.assert_not_called()
+            post.assert_not_called()
 
     async def test_changed_workflow_is_registered_but_stops_before_upload_or_post(self):
         await self.store.prepare_only(self.data)
@@ -167,6 +214,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         self.store.rows[key]['input'].workflow = workflow
         self.store.rows[key]['input'].task_type = 'video-first-pass'
         with patch.object(t.client.Client, 'json', return_value={'can_confirm_refine': True}) as query, \
+                patch('backend.services.execution_checks.fixed_checks', return_value={'pair': {}, 'segments': []}), \
                 patch.object(t.client, 'submit') as post:
             with self.assertRaisesRegex(ValueError, '进入二采'):
                 await self.store.prepare(key)
@@ -194,6 +242,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         cache = {'can_confirm_refine': False, 'segments': [
             {'index': index, 'final_matches': True} for index in range(len(timeline['segments']))]}
         with patch.object(t.client, 'upload', return_value=uploaded) as upload, \
+                patch('backend.services.execution_checks.fixed_checks', return_value={'pair': {}, 'segments': []}), \
                 patch.object(t.client.Client, 'json', return_value=cache), \
                 patch('backend.services.director_uploads.save_uploaded_workflow', wraps=save_uploaded_workflow) as save, \
                 patch.object(self.store.generation_context, 'prepare_generation_context'), \

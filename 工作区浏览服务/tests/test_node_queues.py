@@ -216,6 +216,7 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
             checked.append(payload)
             return {'can_confirm_refine': bool(len(checked) > 1), 'diff_keys': ['<missing-cache>'] if len(checked) == 1 else []}
         with patch.object(t.client.Client, 'json', query), \
+                patch('backend.services.execution_checks.fixed_checks', return_value={'pair': {}, 'segments': []}), \
                 patch('backend.services.director_uploads.save_uploaded_workflow'), \
                 patch.object(self.store.generation_context, 'prepare_generation_context'), \
                 patch.object(self.store.remote_queues, 'refresh', AsyncMock()), \
@@ -257,6 +258,7 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(route, '/minimax/director/first_pass_cache_status')
             return cache
         with patch.object(t.client.Client, 'json', query), \
+                patch('backend.services.execution_checks.fixed_checks', return_value={'pair': {}, 'segments': []}), \
                 patch('backend.services.director_uploads.save_uploaded_workflow'), \
                 patch.object(self.store.generation_context, 'prepare_generation_context'), \
                 patch.object(self.store.remote_queues, 'refresh', AsyncMock()), \

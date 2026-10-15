@@ -12,7 +12,6 @@ from project_paths import project_file
 TASK_TYPES = ('image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess')
 VIDEO_TASK_TYPES = ('video-first-pass', 'video-second-pass')
 VIDEO_CONTEXT_TASK_TYPES = (*VIDEO_TASK_TYPES, 'video-postprocess')
-VIDEO_GENERATION_NODES = {'MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo'}
 
 
 def load_config(project, timeout):
@@ -39,9 +38,6 @@ def dispatch(args):
         raise ValueError('请通过--task-title提供任务标题')
     args.record_dir = str(project_file(args.project, args.record_dir))
     workflow = client.strict_json(Path(args.workflow).read_bytes())
-    if (any(node['class_type'] in VIDEO_GENERATION_NODES for node in workflow.values())
-            and args.task_type not in VIDEO_TASK_TYPES):
-        raise client.ClientError('invalid_task_type', 'H3 generation requires a first-pass or second-pass task type')
     uploads = client.strict_json(Path(args.uploads).read_bytes()) if args.uploads else []
     if not isinstance(uploads, list):
         raise ValueError('上传映射必须是数组')

@@ -74,10 +74,10 @@ class SegmentTests(unittest.IsolatedAsyncioTestCase):
         return {'state': state, 'history': {'outputs': {'403': {'text': [text]}}}, 'files': []}
 
     async def test_native_plan_validates_real_indices_report_link_and_output_root(self):
-        self.store.validate(self.data)
+        s.validate(self.data)
         self.data.workflow['403']['inputs']['text'] = ['502', 0]
         with self.assertRaises(ValueError):
-            self.store.validate(self.data)
+            s.validate(self.data)
         for path in ('E:/Comfy/output/../secret.mp4', 'E:/other/minimax_seg_export/x/seg_0000.mp4',
                      'E:/Comfy/output/minimax_seg_cache/502/seg_0000.mp4'):
             with self.assertRaises(ValueError):
@@ -141,4 +141,4 @@ class SegmentTests(unittest.IsolatedAsyncioTestCase):
     async def test_sparse_destination_map_must_match_selection(self):
         self.data.segment_plan.targets = self.data.segment_plan.targets[:1]
         with self.assertRaises(ValueError):
-            self.store.validate(self.data)
+            s.validate(self.data)

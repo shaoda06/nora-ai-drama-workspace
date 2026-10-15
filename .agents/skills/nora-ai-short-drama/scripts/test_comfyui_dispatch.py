@@ -34,6 +34,18 @@ class DispatchTests(unittest.TestCase):
         self.args.task_title=' '
         with self.assertRaises(ValueError): d.dispatch(self.args)
 
+    def test_h3_relationship_checks_are_delegated_to_preparation_not_repeated_in_cli(self):
+        self.workflow['1']['class_type'] = 'MiniMaxH3ReferenceToVideo'
+        self.path.write_text(json.dumps(self.workflow))
+        for preparing in (True, False):
+            self.args.prepare_only = preparing
+            with self.subTest(preparing=preparing), \
+                    patch.object(d.browser_tasks, 'submit', return_value={}) as handoff, \
+                    patch.object(d.client, 'validate_workflow') as check:
+                d.dispatch(self.args)
+                handoff.assert_called_once()
+                check.assert_not_called()
+
     def test_prepare_only_routes_to_tool_without_agent_validation_or_generation(self):
         self.args.prepare_only = True
         with patch.object(d.browser_tasks, 'submit', return_value={'prepared': True, 'report': '执行检查报告.json'}) as handoff, \

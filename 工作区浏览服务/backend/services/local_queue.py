@@ -71,7 +71,7 @@ class LocalQueue:
             self.save(existing)
             return {'local_task_id': existing, 'monitor_id': existing, 'monitor': 'browser',
                     'status': row['state']['status'], 'duplicate': True}
-        project = self.validate(data)
+        project = self.validate_registration(data)
         if data.segment_plan and not data.segment_plan.targets:
             raise ValueError('新导演台任务必须显式提供每段本机成果保存路径')
         key = str(uuid.uuid4())
@@ -199,9 +199,11 @@ class LocalQueue:
         transferred = data.url.rstrip('/') != row['state'].get('enqueued_url', data.url).rstrip('/')
         from backend.services import execution_checks as checks
         report = checks.check_prepared(self, data, bound=row['state'].get('uploads_bound', False), transferred=transferred)
-        local_checks = checks.director_checks(workflow) if report is None and data.task_type.startswith('video-') else []
-        self.record(key, 'preparation', 'reused' if report else 'legacy_local_checks',
-                    segments=local_checks, remote_capabilities='not_queried')
+        if report is None:
+            result = await asyncio.to_thread(checks.prepare_report, self, data, at_execution=True)
+            self.record(key, 'preparation', 'execution_checks', segments=result['checks']['segments'], remote_capabilities='not_queried')
+        else:
+            self.record(key, 'preparation', 'reused', remote_capabilities='not_queried')
         uploaded_materials = {}
         upload_cache = {}
         saved_uploads = {}

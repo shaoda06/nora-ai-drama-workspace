@@ -192,7 +192,7 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(json.loads(workflow['1']['inputs']['timeline_data'])['global']['refs'][0]['imageFile'], 'task/renamed.png')
         self.assertIn('planned.png', data.workflow['1']['inputs']['timeline_data'])
         source.write_bytes(b'changed')
-        with self.assertRaisesRegex(ValueError, '素材已不同'):
+        with self.assertRaisesRegex(ValueError, '素材已不同|准备资料已变化'):
             await self.store.prepare(key)
 
     async def test_director_upload_updates_root_editor_and_actual_file_metadata(self):
@@ -213,7 +213,8 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
                                             ('segment-editor', ['batchWorkspaces', 'r2v', 'segments', 0, 'refs', 0, 'imageFile'])]]
         uploaded = {'input_path': 'actual/renamed.png', 'sha256': hashlib.sha256(b'picture').hexdigest(),
                     'remote': {'name': 'renamed.png', 'subfolder': 'actual', 'type': 'input'}}
-        with patch.object(t.client, 'upload', return_value=uploaded) as upload:
+        with patch.object(t.client, 'upload', return_value=uploaded) as upload, \
+                patch('backend.services.execution_checks.fixed_checks', return_value={'pair': {}, 'segments': []}):
             workflow = await self.store.prepare(key)
             await self.store.prepare(key)
             upload.assert_called_once()
@@ -362,7 +363,7 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
             source.write_bytes(b'changed')
             return uploaded
         with patch.object(t.client, 'upload', side_effect=upload_and_change) as upload:
-            with self.assertRaisesRegex(ValueError, '素材已不同'):
+            with self.assertRaisesRegex(ValueError, '素材已不同|准备资料已变化'):
                 await self.store.prepare(key)
             upload.assert_called_once()
         self.assertFalse((Path(data.record_dir) / 'upload-1.json').exists())

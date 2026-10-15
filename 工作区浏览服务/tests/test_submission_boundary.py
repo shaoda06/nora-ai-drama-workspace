@@ -5,6 +5,7 @@ from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, patch
 
 from backend.services import comfy_tasks as t
+from backend.services import execution_checks as checks
 from tests import test_comfy_tasks as base
 
 
@@ -15,30 +16,36 @@ class SubmissionBoundaryTests(IsolatedAsyncioTestCase):
     async def asyncTearDown(self):
         await base.TaskTests.asyncTearDown(self)
 
-    async def test_backend_checks_structure_once_from_enqueue_through_transport(self):
+    async def test_backend_checks_structure_once_from_preparation_through_transport(self):
         with patch.object(t.client, 'validate_workflow', wraps=t.client.validate_workflow) as check, \
+                patch.object(checks, 'fixed_checks', wraps=checks.fixed_checks) as fixed, \
                 patch.object(t, 'connect', AsyncMock(return_value=AsyncMock())), \
                 patch.object(t.client.Client, 'json', return_value={'prompt_id': 'mock-id'}) as remote, \
                 patch.object(self.store, 'watch', AsyncMock()):
-            key = (await self.store.enqueue(self.data))['local_task_id']
+            await self.store.prepare_only(self.data)
             check.assert_called_once()
+            with patch.object(checks, 'read_report', side_effect=AssertionError('入队不读取报告')):
+                key = (await self.store.enqueue(self.data))['local_task_id']
+            check.assert_called_once()
+            fixed.assert_called_once()
             workflow = await self.store.prepare(key)
             result = await self.store.submit(self.data, key=key, workflow=workflow)
             await asyncio.sleep(0)
             check.assert_called_once()
+            fixed.assert_called_once()
             remote.assert_called_once()
             self.assertEqual(remote.call_args.args[0], '/prompt')
             self.assertEqual(result['prompt_id'], 'mock-id')
 
-    async def test_invalid_structure_stops_at_ingress(self):
+    async def test_invalid_structure_stops_during_preparation(self):
         self.data.workflow['1']['inputs'] = []
         with patch.object(t.client.Client, 'json') as remote:
             with self.assertRaises(t.client.ClientError) as error:
-                await self.store.enqueue(self.data)
+                await self.store.prepare_only(self.data)
             self.assertEqual(error.exception.code, 'invalid_workflow')
             remote.assert_not_called()
         self.assertFalse(self.store.rows)
-        self.assertFalse(list(self.record.iterdir()))
+        self.assertFalse(json.loads((self.record / '执行检查报告.json').read_text('utf-8'))['ok'])
 
     async def test_existing_response_is_guarded_only_in_transport_and_pauses_unsent_task(self):
         evidence = self.record / self.data.response_name
