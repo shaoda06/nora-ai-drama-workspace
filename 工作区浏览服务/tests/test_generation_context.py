@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+from tests.http_case import HttpTestCase
 from backend import main
 from backend.parsers.project import build_data
 from backend.services.projects import ProjectStore
@@ -17,8 +18,9 @@ writer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(writer)
 
 
-class GenerationContextTests(unittest.TestCase):
+class GenerationContextTests(HttpTestCase):
     def setUp(self):
+        super().setUp()
         self.temp = tempfile.TemporaryDirectory()
         self.project = Path(self.temp.name) / '示例项目'
         self.episode = '09-剧集制作/EP001'

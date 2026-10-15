@@ -9,6 +9,7 @@ import unittest
 from unittest.mock import AsyncMock, patch
 
 from fastapi.testclient import TestClient
+from tests.http_case import HttpTestCase
 from fastapi import FastAPI, Request, WebSocket
 from fastapi.responses import Response
 from starlette.websockets import WebSocketDisconnect
@@ -466,7 +467,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             listener.close()
 
 
-class ApiBoundaryTests(unittest.TestCase):
+class ApiBoundaryTests(HttpTestCase):
     def test_queue_writes_require_same_origin_and_agent_receipts_require_token(self):
         with tempfile.TemporaryDirectory() as folder:
             project = Path(folder) / 'projects/test'

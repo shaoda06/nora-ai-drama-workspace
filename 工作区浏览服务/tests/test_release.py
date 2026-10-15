@@ -1,25 +1,15 @@
 import json
-from contextlib import asynccontextmanager
 from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+from tests.http_case import HttpTestCase
 from backend import main
 
 
-class ReleaseTests(unittest.TestCase):
-    def setUp(self):
-        @asynccontextmanager
-        async def without_background_tasks(app):
-            yield
-
-        # Release HTTP checks must not open the real queue or replace its token.
-        override = patch.object(main.app.router, 'lifespan_context', without_background_tasks)
-        override.start()
-        self.addCleanup(override.stop)
-
+class ReleaseTests(HttpTestCase):
     def test_only_matching_built_frontend_is_ready(self):
         with tempfile.TemporaryDirectory() as directory:
             manifest = Path(directory) / 'release.json'

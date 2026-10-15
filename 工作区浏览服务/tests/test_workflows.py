@@ -4,11 +4,13 @@ from pathlib import Path
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+from tests.http_case import HttpTestCase
 from backend import main
 
 
-class WorkflowTests(unittest.TestCase):
+class WorkflowTests(HttpTestCase):
     def setUp(self):
+        super().setUp()
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name) / 'workflows'

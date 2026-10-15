@@ -10,13 +10,15 @@ from urllib.parse import unquote
 from zipfile import ZipFile
 
 from fastapi.testclient import TestClient
+from tests.http_case import HttpTestCase
 from backend import main
 from backend.services import episode_downloads, jianying_draft
 from backend.services.projects import ProjectStore
 
 
-class EpisodeDownloadTests(unittest.TestCase):
+class EpisodeDownloadTests(HttpTestCase):
     def setUp(self):
+        super().setUp()
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)

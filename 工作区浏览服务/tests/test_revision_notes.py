@@ -6,13 +6,15 @@ import unittest
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+from tests.http_case import HttpTestCase
 from backend import main
 from backend.services.projects import ProjectStore
 from backend.services.revision_notes import NoteInput, RevisionNotes
 
 
-class RevisionNotesTests(unittest.TestCase):
+class RevisionNotesTests(HttpTestCase):
     def setUp(self):
+        super().setUp()
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
         self.project = self.root / '示例项目'
