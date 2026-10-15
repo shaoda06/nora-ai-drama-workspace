@@ -90,7 +90,7 @@ def check_prepared(store, data, *, bound=False, transferred=False):
             raise ValueError('准备资料已变化：' + name + '；请返回准备阶段')
     if data.task_type.startswith('video-') and 'context_sources' not in report:
         try:
-            extra = context_checks(store, data)
+            extra = context_checks(store, data, segment_plan_checked=data.segment_plan is not None)
         except (ValueError, OSError, KeyError, IndexError, TypeError, store.client.ClientError) as error:
             report.update(ok=False, error='旧报告缺项检查失败：' + str(error), context_checked_during='execution')
             write_report(data, report)
@@ -235,7 +235,7 @@ def fixed_checks(store, data, *, mapping=None):
     return result
 
 
-def context_checks(store, data, *, mapping=None, documents=None, timelines=None, segment_context=None):
+def context_checks(store, data, *, mapping=None, documents=None, timelines=None, segment_context=None, segment_plan_checked=False):
     documents = {} if documents is None else documents
     planned = {}
     for item in data.uploads:
@@ -249,7 +249,8 @@ def context_checks(store, data, *, mapping=None, documents=None, timelines=None,
                 value = value[part]
         planned[value] = {'input_path': value, 'file': item['file']}
     context = store.generation_context.prepare_generation_context(data.project, Path(data.record_dir),
-                data.workflow, data.task_type, planned, check_only=True, mapping=mapping, timelines=timelines, segment_context=segment_context)
+                data.workflow, data.task_type, planned, check_only=True, mapping=mapping, timelines=timelines,
+                segment_context=segment_context, segment_plan_checked=segment_plan_checked)
     return (context or {}).get('files', [])
 
 
@@ -270,7 +271,7 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
             report['sources'] = sources(data, previous.get('context_sources', []), mapping)
             if previous['sources'] == report['sources']:
                 if data.task_type.startswith('video-') and 'context_sources' not in previous:
-                    extra = context_checks(store, data, mapping=mapping)
+                    extra = context_checks(store, data, mapping=mapping, segment_plan_checked=data.segment_plan is not None)
                     report.update(previous)
                     report.update(context_sources=extra, context_checked_during='preparation')
                     report['sources'] = sources(data, extra, mapping)

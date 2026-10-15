@@ -34,14 +34,14 @@ def validate_segment_context(project, workflow, task_type, mapping, *, timelines
     return {'director': director, 'timeline': timeline, 'indices': indices, 'entries': entries}
 
 
-def prepare_generation_context(project, record, workflow, task_type, uploaded_materials=None, *, check_only=False, fixed_checked=False, mapping=None, timelines=None, segment_context=None):
+def prepare_generation_context(project, record, workflow, task_type, uploaded_materials=None, *, check_only=False, fixed_checked=False, mapping=None, timelines=None, segment_context=None, segment_plan_checked=False):
     project, record = Path(project).resolve(), Path(record).resolve()
     mapping_file = record / '输入映射.json'
     if mapping is None:
         mapping = json.loads(mapping_file.read_text(encoding='utf-8-sig'))
     stage = STAGES[task_type]
     scene = mapping['scene']
-    if stage == '后处理' and not fixed_checked and not re.fullmatch(r'EP\d{3,}-C\d{3,}', scene):
+    if (stage == '后处理' or segment_plan_checked) and not fixed_checked and not re.fullmatch(r'EP\d{3,}-C\d{3,}', scene):
         raise ValueError('输入映射的场次编号不正确')
     payloads = {}
 
@@ -67,7 +67,9 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
         return target.relative_to(project).as_posix()
 
     if stage != '后处理':
-        if not fixed_checked and segment_context is None:
+        # A matched legacy report already covered its segment plan, but not the
+        # remaining context checks below. This is distinct from fixed_checked.
+        if not fixed_checked and segment_context is None and not segment_plan_checked:
             segment_context = validate_segment_context(project, workflow, task_type, mapping, timelines=timelines)
         if segment_context is not None:
             inputs = segment_context['director']['inputs']
@@ -135,6 +137,9 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
         if stage != '后处理':
             group = groups[index]
             directory = inside(segment['local_execution_dir'])
+            # Legacy plans checked directory ownership, not the execution-child spelling.
+            if segment_plan_checked and not fixed_checked and directory.name != identity and not re.fullmatch(r'执行-\d{8}-\d{6}', directory.name):
+                raise ValueError('本段执行附件目录与执行身份不一致')
             prompt = '\n\n'.join(part.strip() for part in
                                   ([common['prompt'], group['prompt']] if common_enabled else [group['prompt']]) if part.strip())
             reused = None

@@ -359,6 +359,31 @@ class GenerationContextTests(HttpTestCase):
         context = writer.validate_segment_context(self.project, workflow, 'video-first-pass', mapping)
         self.assertEqual(context['entries'][0]['directory'].name, '执行-20261016-123456')
 
+    def test_legacy_plan_reuse_only_checks_uncovered_context(self):
+        root, workflow, mapping = self.automatic_task()
+        fullmatch = writer.re.fullmatch
+        patterns = []
+        def missing_only(pattern, value, *args, **kwargs):
+            patterns.append(pattern)
+            if '-P\\d' in pattern:
+                raise AssertionError('segment identities were already checked')
+            return fullmatch(pattern, value, *args, **kwargs)
+        with patch.object(writer, 'validate_segment_context', side_effect=AssertionError('plan already passed')), \
+                patch.object(writer.re, 'fullmatch', side_effect=missing_only):
+            result = writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass',
+                mapping=mapping, check_only=True, segment_plan_checked=True)
+        self.assertTrue(result['files'])
+        self.assertIn(r'EP\d{3,}-C\d{3,}', patterns)  # Scene spelling was not checked by the old plan.
+        self.assertFalse((root / '分镜脚本.md').exists())
+
+    def test_legacy_plan_reuse_does_not_skip_new_directory_spelling_check(self):
+        root, workflow, mapping = self.automatic_task()
+        mapping['segments'][0]['local_execution_dir'] += '/任意子目录'
+        with patch.object(writer, 'validate_segment_context', side_effect=AssertionError('plan already passed')):
+            with self.assertRaisesRegex(ValueError, '目录与执行身份'):
+                writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass',
+                    mapping=mapping, check_only=True, segment_plan_checked=True)
+
     def test_shared_sources_are_read_once_per_context_preparation(self):
         root, workflow, _ = self.automatic_task()
         original = Path.read_bytes

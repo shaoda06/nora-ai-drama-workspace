@@ -182,11 +182,13 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         checks.write_report(self.data, report)
         key = (await self.store.enqueue(self.data))['local_task_id']
         with patch.object(checks, 'fixed_checks', side_effect=AssertionError('must not rerun old fixed checks')), \
+                patch.object(self.store.generation_context, 'validate_segment_context', side_effect=AssertionError('old segment checks already passed')), \
                 patch.object(checks, 'context_checks', wraps=checks.context_checks) as supplement, \
                 patch.object(t.client.Client, 'json', side_effect=self.respond):
             await self.store.prepare(key)
             await self.store.prepare(key)
             supplement.assert_called_once()
+            self.assertTrue(supplement.call_args.kwargs['segment_plan_checked'])
         self.assertEqual(checks.read_report(self.data)['context_checked_during'], 'execution')
 
     async def test_legacy_missing_context_failure_pauses_without_upload(self):
@@ -216,11 +218,88 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         report.pop('context_sources')
         checks.write_report(self.data, report)
         with patch.object(checks, 'fixed_checks', side_effect=AssertionError('no full recheck')), \
+                patch.object(self.store.generation_context, 'validate_segment_context', side_effect=AssertionError('do not recheck segment plan')), \
                 patch.object(checks, 'context_checks', wraps=checks.context_checks) as missing:
             self.assertTrue((await self.store.prepare_only(self.data))['reused'])
             self.assertTrue((await self.store.prepare_only(self.data))['reused'])
             missing.assert_called_once()
+            self.assertTrue(missing.call_args.kwargs['segment_plan_checked'])
         self.assertEqual(checks.read_report(self.data)['context_checked_during'], 'preparation')
+
+    async def test_legacy_reuse_preserves_fixed_report_and_rejects_changed_input_before_supplement(self):
+        self.video()
+        await self.store.prepare_only(self.data)
+        report = checks.read_report(self.data)
+        report.pop('context_sources')
+        checks.write_report(self.data, report)
+        with patch.object(self.store.generation_context, 'validate_segment_context', side_effect=AssertionError('already checked')):
+            checked = checks.check_prepared(self.store, self.data)
+        for name in ('pair', 'segments', 'checked_at', 'prepared_input'):
+            self.assertEqual(checked[name], report[name])
+        # Change the registered input, not the source file: no supplement may use
+        # a previously successful report for different data.
+        checked.pop('context_sources')
+        checks.write_report(self.data, checked)
+        self.data.workflow['502']['inputs']['seed'] += 1
+        with patch.object(checks, 'context_checks', side_effect=AssertionError('basis mismatch must stop first')), \
+                patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
+            with self.assertRaisesRegex(ValueError, '准备资料已变化'):
+                checks.check_prepared(self.store, self.data)
+            upload.assert_not_called()
+            post.assert_not_called()
+
+    async def test_legacy_changed_source_stops_before_missing_checks(self):
+        script = self.video()
+        await self.store.prepare_only(self.data)
+        report = checks.read_report(self.data)
+        report.pop('context_sources')
+        checks.write_report(self.data, report)
+        script.write_text('changed storyboard after preparation', 'utf-8')
+        with patch.object(checks, 'context_checks', side_effect=AssertionError('source change must stop first')):
+            with self.assertRaisesRegex(ValueError, '准备资料已变化'):
+                checks.check_prepared(self.store, self.data)
+
+    async def test_legacy_without_segment_plan_does_not_assume_shared_checks_passed(self):
+        self.video()
+        canvas_path = self.record / 'task.workflow.json'
+        canvas = json.loads(canvas_path.read_text('utf-8'))
+        node = next(item for item in canvas['nodes'] if item['id'] == 502)
+        inputs = node['widgets_values_named']
+        timeline = json.loads(inputs['timeline_data'])
+        timeline['output']['exportMode'] = 'full'
+        inputs['timeline_data'] = json.dumps(timeline)
+        node['widgets_values'] = list(inputs.values())
+        self.data.workflow = pairs.Canvas(canvas).api(403)
+        self.data.segment_plan = None
+        self.data.outputs = [t.OutputTarget(node_id='403', output_key='text', index=0,
+            path=str(self.project / '候选/report.txt'), response_name='report-download.json')]
+        canvas_path.write_text(json.dumps(canvas), 'utf-8')
+        (self.record / 'task.api.json').write_text(json.dumps(self.data.workflow), 'utf-8')
+        await self.store.prepare_only(self.data)
+        report = checks.read_report(self.data)
+        report.pop('context_sources')
+        checks.write_report(self.data, report)
+        with patch.object(self.store.generation_context, 'validate_segment_context', wraps=self.store.generation_context.validate_segment_context) as shared:
+            self.assertTrue(checks.check_prepared(self.store, self.data)['ok'])
+            self.assertTrue(checks.check_prepared(self.store, self.data)['ok'])
+            shared.assert_called_once()  # Missing coverage is checked once, never silently reused.
+
+    async def test_legacy_missing_version_check_still_fails_without_upload(self):
+        script = self.video()
+        await self.store.prepare_only(self.data)
+        report = checks.read_report(self.data)
+        report.pop('context_sources')
+        script.write_text('- 文档版本：v2\n旧报告没有覆盖的版本检查。', 'utf-8')
+        # This is the file state the legacy fixed-only preparation saw.
+        report['sources'] = checks.sources(self.data)
+        checks.write_report(self.data, report)
+        with patch.object(self.store.generation_context, 'validate_segment_context', side_effect=AssertionError('already checked')), \
+                patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
+            with self.assertRaisesRegex(ValueError, '分镜版本'):
+                checks.check_prepared(self.store, self.data)
+            upload.assert_not_called()
+            post.assert_not_called()
+        self.assertFalse(checks.read_report(self.data)['ok'])
 
     async def test_paused_job_reprepare_updates_original_id_without_generating(self):
         await self.store.prepare_only(self.data)
