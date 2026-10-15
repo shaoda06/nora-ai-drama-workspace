@@ -345,7 +345,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
     async def test_paths_and_remote_endpoint_are_checked(self):
         self.data.outputs[0].path = str(self.root / 'escape.png')
         with self.assertRaises(ValueError):
-            self.store.validate_registration(self.data)
+            await self.store.enqueue(self.data)
         self.data.outputs[0].path = str(self.project / 'ok.png')
         self.data.url = 'http://other.invalid'
         with self.assertRaises(ValueError):

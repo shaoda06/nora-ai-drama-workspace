@@ -24,7 +24,7 @@ from backend.services import comfy_segments as segments
 from backend.services.comfy_nodes import RemoteQueues, initial_state
 from backend.services.local_queue import LocalQueue, LOCAL, TERMINAL
 from backend.services.task_notifications import TaskNotifications
-from backend.services.collection_retry import DELAYS, failure
+from backend.services.collection_retry import DELAYS, failure, saved_stamp
 
 logger = logging.getLogger(__name__)
 SKILL = Path(__file__).resolve().parents[3] / '.agents/skills/nora-ai-short-drama'
@@ -90,14 +90,12 @@ class TaskStore(LocalQueue, TaskNotifications):
             data = TaskInput.model_validate_json(payload)
             self.resolve_input(data, recorded=True)
             self.rows[key] = {'input': data, 'state': paths.recorded_paths(data.project, json.loads(state))}
-        for key in self.rows:
-            self.persist(key)
-        self.db.commit()
         self.workers = {}
         self.notifiers = {}
         self.session_readers = {}
         self.notification_locks = {}
         self.reconcile_locks = {}
+        self.reconcile_queries = {}
         self.client = client
         self.generation_context = generation_context
         self.queue_init()
@@ -120,7 +118,7 @@ class TaskStore(LocalQueue, TaskNotifications):
         historical_urls = sorted({row['input'].url.rstrip('/') for row in self.rows.values()} - set(configured_urls))
         snapshot = {'tasks': sorted(({**{key: ([{field: item.get(field) for field in ('identity', 'index', 'check', 'path', 'error')}
                                         for item in value.values()] if key == 'segments' else value) for key, value in row['state'].items()
-                                 if key not in ('client_id', 'segment_monitor', 'notices')},
+                                 if key not in ('client_id', 'segment_monitor', 'notices', 'prepared_files')},
                                  'remote_url': row['input'].url.rstrip('/'),
                                  'notification_unknown': sum(item['delivery'] == 'delivery_unknown' for item in row['state'].get('notices', []))}
                                 for row in self.rows.values()),
@@ -179,74 +177,96 @@ class TaskStore(LocalQueue, TaskNotifications):
 
     def persist(self, key):
         row = self.rows[key]
-        self.db.execute('INSERT INTO tasks VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload,state=excluded.state',
-                        (key, json.dumps(self.portable_input(row['input']), ensure_ascii=False),
-                         json.dumps(paths.recorded_paths(row['input'].project, row['state'], relative=True), ensure_ascii=False)))
+        payload = json.dumps(self.portable_input(row['input']), ensure_ascii=False)
+        state = json.dumps(paths.recorded_paths(row['input'].project, row['state'], relative=True), ensure_ascii=False)
+        if row.get('_persisted_payload') == payload:
+            self.db.execute('UPDATE tasks SET state=? WHERE id=?', (state, key))
+        else:
+            self.db.execute('INSERT INTO tasks VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload,state=excluded.state',
+                            (key, payload, state))
+            row['_persisted_payload'] = payload
 
     def resolve_input(self, data, *, recorded=False):
         if not recorded and not Path(data.project).is_absolute() and PureWindowsPath(data.project).name != data.project:
             raise ValueError('项目必须是当前工作区内的项目名或绝对路径')
-        project = self.workspace / 'projects' / PureWindowsPath(data.project).name if recorded or not Path(data.project).is_absolute() else Path(data.project)
-        if project.resolve().parent != self.workspace / 'projects':
+        project = (self.workspace / 'projects' / PureWindowsPath(data.project).name
+                   if recorded or not Path(data.project).is_absolute() else Path(data.project)).resolve()
+        if project.parent != self.workspace / 'projects':
             raise ValueError('任务必须属于当前工作区projects下的项目')
-        data.project = str(project.resolve())
-        data.record_dir = str(paths.project_file(project, data.record_dir, recorded=recorded))
-        for output in data.outputs:
-            output.path = str(paths.project_file(project, output.path, recorded=recorded))
+        data.project = str(project)
+        resolved = {}
+        def local(value):
+            if value not in resolved:
+                resolved[value] = str(paths.project_file(project, value, recorded=recorded))
+            return resolved[value]
+        data.record_dir = local(data.record_dir)
+        for target in [*data.outputs, *(data.segment_plan.targets if data.segment_plan else [])]:
+            target.path = local(target.path)
+            if Path(target.path).is_relative_to(data.record_dir):
+                raise ValueError('成果必须位于所属项目内，且不得写入执行附件目录')
         for upload in data.uploads:
             if isinstance(upload.get('file'), str):
-                upload['file'] = str(paths.project_file(project, upload['file'], recorded=recorded))
-        if data.segment_plan:
-            for target in data.segment_plan.targets:
-                target.path = str(paths.project_file(project, target.path, recorded=recorded))
+                upload['file'] = local(upload['file'])
 
     def portable_input(self, data):
+        # Input paths have already crossed the authenticated boundary once.
+        project = Path(data.project)
+        def relative(value):
+            path = Path(value)
+            return path.relative_to(project).as_posix() if path.is_relative_to(project) else str(path)
         payload = data.model_dump()
-        payload['project'] = Path(data.project).name
-        payload['record_dir'] = paths.relative_file(data.project, data.record_dir, recorded=True)
-        for output in payload['outputs']:
-            output['path'] = paths.recorded_paths(data.project, output['path'], relative=True, field='path')
+        payload['project'] = project.name
+        payload['record_dir'] = relative(data.record_dir)
+        for target in [*payload['outputs'], *((payload['segment_plan'] or {}).get('targets', []))]:
+            target['path'] = relative(target['path'])
         for upload in payload['uploads']:
             if isinstance(upload.get('file'), str):
-                upload['file'] = paths.relative_file(data.project, upload['file'], recorded=True)
-        if payload['segment_plan']:
-            for target in payload['segment_plan']['targets']:
-                target['path'] = paths.relative_file(data.project, target['path'], recorded=True)
+                upload['file'] = relative(upload['file'])
         return payload
 
     def validate_registration(self, data):
-        self.resolve_input(data)
-        if not data.title.strip():
-            raise ValueError('任务标题不能为空')
-        project = Path(data.project).resolve(strict=True)
-        if project.parent != self.workspace / 'projects':
-            raise ValueError('任务必须属于当前工作区projects下的项目')
-        configured = config.remote_urls(self.workspace)
-        if client.Client(data.url, data.timeout).url != client.Client(configured[0], data.timeout).url:
+        project = Path(data.project)
+        configured = self.remote_urls()
+        if client.Client(data.url, data.timeout).url != configured[0]:
             raise ValueError('新任务只允许提交到工作区主节点')
-        record = Path(data.record_dir).resolve()
-        if not record.is_relative_to(project):
-            raise ValueError('执行附件必须位于所属项目内')
+        record = Path(data.record_dir)
         if any((record / name).exists() for name in ('后台任务状态.json', '后台过程记录.json')):
             raise client.ClientError('registration_guard', '执行目录已有后台登记记录；请核对原任务')
-        targets = [Path(output.path).resolve() for output in data.outputs]
-        if any(not Path(output.path).is_absolute() for output in data.outputs):
-            raise ValueError('成果保存路径必须是绝对路径')
-        if any(not path.is_relative_to(project) or path.is_relative_to(record) for path in targets):
-            raise ValueError('成果必须位于所属项目内，且不得写入执行附件目录')
         if not data.thread_id or not data.desktop.caller_thread:
             raise ValueError('缺少真实会话身份')
-        if data.segment_plan:
-            for target in data.segment_plan.targets:
-                path = Path(target.path).resolve()
-                if not path.is_relative_to(project) or path.is_relative_to(record):
-                    raise ValueError('分段成果必须位于所属项目内，且不得写入执行附件目录')
         return project
 
     async def prepare_only(self, data):
         from backend.services.execution_checks import prepare_report
-        self.validate_registration(data)
-        return await asyncio.to_thread(prepare_report, self, data)
+        self.resolve_input(data)
+        existing = next((key for key, row in self.rows.items() if row['input'].record_dir == data.record_dir), None)
+        if existing is None:
+            self.validate_registration(data)
+        else:
+            row = self.rows[existing]
+            old = row['input']
+            if (row['state']['status'] not in LOCAL or row['state'].get('prompt_id')
+                    or old.thread_id != data.thread_id or old.desktop.caller_thread != data.desktop.caller_thread
+                    or old.task_type != data.task_type or old.url != data.url
+                    or old.outputs != data.outputs or old.segment_plan != data.segment_plan):
+                raise ValueError('只能为同一来源、同一阶段且尚未提交的本地任务重新准备')
+            record = Path(data.record_dir)
+            evidence = [old.attempt_name, old.request_name, old.response_name, old.history_name,
+                        *(item.response_name for item in old.outputs)]
+            if old.segment_plan:
+                evidence.extend(item.response_name for item in old.segment_plan.targets)
+            if any((record / name).exists() for name in evidence):
+                raise ValueError('已有提交或成果证据，不允许修改原执行资料')
+            # Repreparation must not race an idle scheduler after a successful await.
+            self.save(existing, status='paused', immediate=False)
+        result = await asyncio.to_thread(prepare_report, self, data)
+        if existing is not None:
+            row['input'] = data
+            for name in ('_prepared_run', '_source_digests', '_collection_ok'):
+                row.pop(name, None)
+            self.record(existing, 'preparation', 'updated', _changes={'error': None, 'uploads_bound': False, 'prepared_files': {}})
+            result['local_task_id'] = existing
+        return result
 
     def client_for(self, data):
         return self.remote_client(data.url, data.timeout)
@@ -258,10 +278,11 @@ class TaskStore(LocalQueue, TaskNotifications):
 
     async def submit(self, data, *, key=None, workflow=None):
         if key is None:
+            self.resolve_input(data)
             project = self.validate_registration(data)
             from backend.services import execution_checks as checks
             if checks.check_prepared(self, data) is None:
-                await asyncio.to_thread(checks.prepare_report, self, data, at_execution=True)
+                await asyncio.to_thread(checks.prepare_report, self, data, at_execution=True, previous=None)
             key = str(uuid.uuid4())
             self.rows[key] = {'input': data, 'state': {
                 'id': key, 'project': project.name, 'title': data.title, 'task_type': data.task_type,
@@ -286,14 +307,13 @@ class TaskStore(LocalQueue, TaskNotifications):
         socket = await connect(self.ws_url(data, state['client_id']), open_timeout=data.timeout,
                                additional_headers=self.client_for(data).headers,
                                ping_interval=20, ping_timeout=20, max_size=2**22)
-        self.save(key, status='submitting', phase='submit', failure_stage=None, dispatch_attempt=state.get('dispatch_attempt', 0) + 1)
-        self.record(key, 'submit', 'started')
+        self.record(key, 'submit', 'started', _changes={'status': 'submitting', 'phase': 'submit', 'failure_stage': None, 'dispatch_attempt': state.get('dispatch_attempt', 0) + 1})
         try:
             result = await asyncio.to_thread(client.submit, self.client_for(data),
                 argparse.Namespace(**data.model_dump()), workflow=workflow or data.workflow, client_id=state['client_id'])
         except (client.ClientError, OSError, ValueError) as error:
             details = getattr(error, 'details', {})
-            if isinstance(error, client.ClientError) and error.code == 'submission_guard':
+            if isinstance(error, client.ClientError) and error.code in ('submission_guard', 'submission_not_sent'):
                 state.clear()
                 state.update(previous)
                 if state['status'] in ('local_queued', 'paused', 'preparing', 'submitting'):
@@ -303,13 +323,11 @@ class TaskStore(LocalQueue, TaskNotifications):
                 self.record(key, 'submit', 'blocked', error=str(error), error_details=details)
             else:
                 rejected = isinstance(error, client.ClientError) and error.code == 'submission_rejected'
-                self.save(key, status='rejected' if rejected else 'submission_unknown', error=str(error), error_details=details, failure_stage='submit')
-                self.record(key, 'submit', 'rejected' if rejected else 'unknown', error=str(error), error_details=details)
+                self.record(key, 'submit', 'rejected' if rejected else 'unknown', _changes={'status': 'rejected' if rejected else 'submission_unknown', 'error': str(error), 'error_details': details, 'failure_stage': 'submit'}, error=str(error), error_details=details)
                 self.queue_notice(key, 'submission_issue', 'attention', str(error))
             await socket.close()
             raise
-        self.save(key, prompt_id=result['prompt_id'], status='queued', submitted_at=client.now(), connection='connected', immediate=False)
-        self.record(key, 'submit', 'accepted', prompt_id=result['prompt_id'])
+        self.record(key, 'submit', 'accepted', _changes={'prompt_id': result['prompt_id'], 'status': 'queued', 'submitted_at': client.now(), 'connection': 'connected', 'immediate': False}, prompt_id=result['prompt_id'])
         self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
         self.workers[key] = asyncio.create_task(self.watch(key, socket))
         return {**result, 'monitor': 'browser', 'monitor_id': key, 'local_task_id': key}
@@ -327,8 +345,7 @@ class TaskStore(LocalQueue, TaskNotifications):
             if state['status'] in LOCAL or state['status'] == 'cancelled':
                 continue
             if state['status'] == 'preparing':
-                self.save(key, status='local_queued')
-                self.record(key, 'restart', 'resume_local')
+                self.record(key, 'restart', 'resume_local', _changes={'status': 'local_queued'})
                 continue
             if not state.get('prompt_id'):
                 response = Path(row['input'].record_dir) / row['input'].response_name
@@ -359,7 +376,7 @@ class TaskStore(LocalQueue, TaskNotifications):
 
     async def close(self):
         await self.remote_queues.close()
-        tasks = [*self.workers.values(), *self.notifiers.values(), *self.session_readers.values(), *self.dispatch_workers.values()]
+        tasks = [*self.reconcile_queries.values(), *self.workers.values(), *self.notifiers.values(), *self.session_readers.values(), *self.dispatch_workers.values()]
         if self.scheduler is not None:
             tasks.append(self.scheduler)
         for task in tasks:
@@ -367,13 +384,26 @@ class TaskStore(LocalQueue, TaskNotifications):
         await asyncio.gather(*tasks, return_exceptions=True)
         self.db.close()
 
-    async def reconcile(self, key):
-        async with self.reconcile_locks.setdefault(key, asyncio.Lock()):
-            if self.rows[key]['state']['status'] in TERMINAL:
+    async def reconcile(self, key, *, background_collection=False):
+        if self.rows[key]['state']['status'] in (*TERMINAL, 'collecting'):
+            return True
+        query = self.reconcile_queries.get(key)
+        if query is None:
+            query = self.reconcile_queries[key] = asyncio.create_task(self.remote_result(key))
+        try:
+            result = await asyncio.shield(query)
+        finally:
+            if query.done() and self.reconcile_queries.get(key) is query:
+                del self.reconcile_queries[key]
+        lock = self.reconcile_locks.setdefault(key, asyncio.Lock())
+        if background_collection and lock.locked():
+            return False
+        async with lock:
+            if self.rows[key]['state']['status'] in (*TERMINAL, 'collecting'):
                 return True
-            return await self.reconcile_remote(key)
+            return await self.reconcile_remote(key, result, background_collection=background_collection)
 
-    async def reconcile_remote(self, key):
+    async def remote_result(self, key):
         row = self.rows[key]
         data, state = row['input'], row['state']
         history = Path(data.record_dir) / data.history_name
@@ -383,6 +413,12 @@ class TaskStore(LocalQueue, TaskNotifications):
         if result['state'] == 'unknown':
             # One additional read avoids treating a queue-to-history transition as disappearance.
             result = await asyncio.to_thread(client.status, self.client_for(data), argparse.Namespace(prompt_id=state['prompt_id']))
+        return result
+
+    async def reconcile_remote(self, key, result, *, background_collection=False):
+        row = self.rows[key]
+        data, state = row['input'], row['state']
+        history = Path(data.record_dir) / data.history_name
         remote_state = result['state']
         if not state.get('started_at'):
             for event, payload in (result.get('history') or {}).get('status', {}).get('messages', []):
@@ -393,12 +429,15 @@ class TaskStore(LocalQueue, TaskNotifications):
             if not history.exists():
                 client.write_new(history, {'time': client.now(), 'data': result})
             self.record(key, 'execution', remote_state, evidence=str(history))
-            await self.finish_collection(key, result)
-            self.queue_notice(key, 'terminal', 'terminal', state.get('error') or '预期成果已保存')
+            if background_collection:
+                self.save(key, status='collecting')
+                self.workers[key] = asyncio.create_task(self.collect_saved(key))
+            else:
+                await self.finish_collection(key, result)
+                self.queue_notice(key, 'terminal', 'terminal', state.get('error') or '预期成果已保存')
             return True
         if remote_state == 'unknown':
-            self.save(key, status='needs_attention', error='队列与历史均无法确认任务；状态待核对，不自动重提')
-            self.record(key, 'reconcile', 'unknown', prompt_id=state['prompt_id'])
+            self.record(key, 'reconcile', 'unknown', _changes={'status': 'needs_attention', 'error': '队列与历史均无法确认任务；状态待核对，不自动重提'}, prompt_id=state['prompt_id'])
             self.queue_notice(key, 'terminal', 'attention', state['error'])
             return True
         if state['status'] != remote_state:
@@ -422,20 +461,14 @@ class TaskStore(LocalQueue, TaskNotifications):
                 remaining = (datetime.fromisoformat(state['collection_next_retry_at']) - datetime.now(timezone.utc)).total_seconds()
                 if remaining > 0:
                     await asyncio.sleep(remaining)
-                self.save(key, collection_next_retry_at=None, collection_auto_retry=state['collection_auto_retry'] + 1,
-                          collection_attempt=state['collection_attempt'] + 1)
-                self.record(key, 'collection_retry', 'started', attempt=state['collection_attempt'],
-                            auto_retry=state['collection_auto_retry'])
-            self.save(key, error=None, failure_stage=None)
-            self.record(key, 'collection', 'started', attempt=state['collection_attempt'])
+                self.record(key, 'collection_retry', 'started', _changes={'collection_next_retry_at': None, 'collection_auto_retry': state['collection_auto_retry'] + 1, 'collection_attempt': state['collection_attempt'] + 1}, attempt=state['collection_attempt'] + 1, auto_retry=state['collection_auto_retry'] + 1)
+            self.record(key, 'collection', 'started', _changes={'error': None, 'failure_stage': None}, attempt=state['collection_attempt'])
             try:
                 problems = await segments.finish(self, key, result) if data.segment_plan else await self.collect(key, result)
             except (client.ClientError, OSError, ValueError, KeyError) as error:
                 problems = [failure(error, client.ClientError)]
             if not problems:
-                self.save(key, status='completed', error=None, failure_stage=None, collection_errors=[],
-                          collection_next_retry_at=None, collection_retry_stop=None)
-                self.record(key, 'collection', 'completed', collected=state['collected'], attempt=state['collection_attempt'])
+                self.record(key, 'collection', 'completed', _changes={'status': 'completed', 'error': None, 'failure_stage': None, 'collection_errors': [], 'collection_next_retry_at': None, 'collection_retry_stop': None}, collected=state['collected'], attempt=state['collection_attempt'])
                 return
             message = '；'.join((item.get('path') or item.get('identity') or '成果取回') + '：' + item['error'] for item in problems)
             self.record(key, 'collection', 'attempt_failed', error=message, failures=problems,
@@ -443,17 +476,11 @@ class TaskStore(LocalQueue, TaskNotifications):
             retries = state['collection_auto_retry']
             retryable = all(item['retryable'] for item in problems)
             if not retryable or retries == len(DELAYS):
-                self.save(key, status='collection_failed', error=message, failure_stage='collection', collection_errors=problems,
-                          collection_next_retry_at=None, collection_retry_stop='exhausted' if retryable else 'requires_attention')
-                self.record(key, 'collection', 'collection_failed', error=message, attempt=state['collection_attempt'],
-                            auto_retry=retries, stop=state['collection_retry_stop'])
+                self.record(key, 'collection', 'collection_failed', _changes={'status': 'collection_failed', 'error': message, 'failure_stage': 'collection', 'collection_errors': problems, 'collection_next_retry_at': None, 'collection_retry_stop': 'exhausted' if retryable else 'requires_attention'}, error=message, attempt=state['collection_attempt'], auto_retry=retries, stop='exhausted' if retryable else 'requires_attention')
                 return
             delay = max([DELAYS[retries], *(item.get('retry_after_seconds', 0) for item in problems)])
             due = (datetime.now(timezone.utc) + timedelta(seconds=delay)).isoformat()
-            self.save(key, error=message, failure_stage='collection', collection_errors=problems,
-                      collection_next_retry_at=due, collection_retry_stop=None)
-            self.record(key, 'collection_retry', 'scheduled', error=message, auto_retry=retries + 1,
-                        delay_seconds=delay, next_retry_at=due, attempt=state['collection_attempt'])
+            self.record(key, 'collection_retry', 'scheduled', _changes={'error': message, 'failure_stage': 'collection', 'collection_errors': problems, 'collection_next_retry_at': due, 'collection_retry_stop': None}, error=message, auto_retry=retries + 1, delay_seconds=delay, next_retry_at=due, attempt=state['collection_attempt'])
 
     async def collect(self, key, result):
         data, state = self.rows[key]['input'], self.rows[key]['state']
@@ -462,6 +489,7 @@ class TaskStore(LocalQueue, TaskNotifications):
         problems = []
         collected = 0
         saved_outputs = []
+        verified = self.rows[key].setdefault('_collection_ok', {})
         for output in data.outputs:
             try:
                 matching = [item['file'] for item in result['files'] if
@@ -471,7 +499,10 @@ class TaskStore(LocalQueue, TaskNotifications):
                     raise ValueError(f'预期输出未确认：节点{output.node_id}/{output.output_key}/{output.index}')
                 identity = matching[0]
                 response = Path(data.record_dir) / output.response_name
-                if response.exists():
+                proof = (identity, saved_stamp(response, Path(output.path)))
+                if proof[1] is not None and verified.get(str(response)) == proof:
+                    pass
+                elif response.exists():
                     previous = client.strict_json(response.read_bytes())['data']
                     if (previous['remote'] != {name: identity[name] for name in ('filename', 'subfolder', 'type')}
                             or paths.project_file(data.project, previous['path'], recorded=True) != Path(output.path)
@@ -485,6 +516,7 @@ class TaskStore(LocalQueue, TaskNotifications):
                     client.write_new(response, {'time': client.now(), 'data': downloaded})
                     self.record(key, 'download', 'success', path=output.path, remote=identity, receipt=str(response),
                                 attempt=state.get('collection_attempt', 1))
+                verified[str(response)] = (identity, saved_stamp(response, Path(output.path)))
                 collected += 1
                 saved_outputs.append(output.path)
                 self.save(key, collected=collected, saved_outputs=saved_outputs.copy())
@@ -525,8 +557,7 @@ class TaskStore(LocalQueue, TaskNotifications):
                             continue
                         if event == 'execution_start':
                             self.record_start(key, payload)
-                            self.save(key, status='running')
-                            self.record(key, 'execution', 'running')
+                            self.record(key, 'execution', 'running', _changes={'status': 'running'})
                         elif event == 'progress':
                             self.save(key, status='running', progress={'value': payload['value'], 'max': payload['max']})
                         elif event == 'executing' and payload.get('node') is not None:
@@ -534,32 +565,30 @@ class TaskStore(LocalQueue, TaskNotifications):
                         elif event == 'minimax_director_progress' and data.segment_plan:
                             current = {field: payload[field] for field in ('segment', 'segment_total', 'phase_label')}
                             if current != state.get('director_progress'):
-                                self.save(key, director_progress=current)
-                                self.record(key, 'director', 'progress', **current)
+                                self.record(key, 'director', 'progress', _changes={'director_progress': current}, **current)
                         elif event in ('execution_success', 'execution_error', 'execution_interrupted') or (
                                 event == 'executing' and payload.get('node') is None):
                             if await self.reconcile(key):
                                 break
                 except (OSError, WebSocketException, client.ClientError, asyncio.TimeoutError) as error:
-                    self.save(key, connection='reconnecting', error='连接中断，后台正在重连核对，不代表生成失败')
-                    self.record(key, 'connection', 'reconnecting', error=str(error))
+                    self.record(key, 'connection', 'reconnecting', _changes={'connection': 'reconnecting', 'error': '连接中断，后台正在重连核对，不代表生成失败'}, error=str(error))
                     if socket is not None:
                         await socket.close()
                         socket = None
                     await asyncio.sleep(5)
         except (ValueError, KeyError, TypeError) as error:
             logger.exception('ComfyUI task %s protocol error', key)
-            self.save(key, status='needs_attention', error='远端消息或证据格式异常：' + str(error))
-            self.record(key, 'execution', 'protocol_error', error=str(error))
+            self.record(key, 'execution', 'protocol_error', _changes={'status': 'needs_attention', 'error': '远端消息或证据格式异常：' + str(error)}, error=str(error))
             self.queue_notice(key, 'terminal', 'attention', state['error'])
         finally:
             if socket is not None:
                 await socket.close()
         self.save(key, connection='closed')
-        if key in self.notifiers:
-            await self.notifiers[key]
-        else:
-            await self.notify(key)
+        if state['status'] in TERMINAL:
+            if key in self.notifiers:
+                await self.notifiers[key]
+            else:
+                await self.notify(key)
 
     def record_start(self, key, payload):
         if not self.rows[key]['state'].get('started_at'):

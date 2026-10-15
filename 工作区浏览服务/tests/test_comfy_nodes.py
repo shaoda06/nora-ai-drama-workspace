@@ -74,7 +74,8 @@ class NodeWireTests(unittest.IsolatedAsyncioTestCase):
         await self.until(lambda: self.server.started)
         self.store = TaskStore(self.root / 'runtime', self.root)
         await self.store.remote_queues.start()
-        await self.until(lambda: all(state['updated_at'] for state in self.store.remote_queues.states.values()))
+        await self.until(lambda: all(state['updated_at'] and state['connection'] == 'connected'
+                                    for state in self.store.remote_queues.states.values()))
 
     async def asyncTearDown(self):
         await self.store.close()
@@ -143,7 +144,8 @@ class NodeWireTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual((state['running_count'], state['queued_count']), (1, 1))
             self.assertEqual(self.store.remote_queues.states[self.urls[1]]['connection'], 'connected')
             self.queues['one'] = {'queue_running': [], 'queue_pending': []}
-            await self.until(lambda: self.store.remote_queues.states[self.urls[0]]['queued_count'] == 0)
+            await self.until(lambda: self.store.remote_queues.states[self.urls[0]]['queued_count'] == 0
+                             and self.store.remote_queues.states[self.urls[0]]['connection'] == 'connected')
             self.assertEqual(state['connection'], 'connected')
             self.assertEqual(len(set(sid for node, sid in self.ids if node == 'one')), 1)
         self.assertTrue(all(method == 'GET' for method, _ in self.methods))

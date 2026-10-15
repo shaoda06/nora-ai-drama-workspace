@@ -31,8 +31,11 @@ class LocalQueue:
         return max((row['state'].get('queue_order', 0) for row in self.rows.values()
                     if row['input'].url.rstrip('/') == url), default=0) + 1
 
-    def record(self, key, stage, result, **details):
+    def record(self, key, stage, result, *, _changes=None, **details):
         row = self.rows[key]
+        if _changes is not None:
+            row['state'].update(_changes, updated_at=self.client.now())
+            self.persist(key)
         event = {'time': self.client.now(), 'stage': stage, 'result': result, **details}
         from backend.services.comfy_tasks import paths
         event = paths.recorded_paths(row['input'].project, event, relative=True)
@@ -40,6 +43,7 @@ class LocalQueue:
                         (key, json.dumps(event, ensure_ascii=False)))
         self.db.commit()
         self.write_records(key)
+        self.publish()
 
     def write_records(self, key):
         row = self.rows[key]
@@ -59,7 +63,7 @@ class LocalQueue:
         self.resolve_input(data)
         # Registration has no await before saving, so duplicate HTTP arrivals share one durable ID.
         existing = next((key for key, row in self.rows.items()
-                         if Path(row['input'].record_dir).resolve() == Path(data.record_dir).resolve()), None)
+                         if row['input'].record_dir == data.record_dir), None)
         if existing is not None:
             row = self.rows[existing]
             registered = row['input'].model_copy(update={'url': row['state'].get('enqueued_url', row['input'].url)})
@@ -84,8 +88,7 @@ class LocalQueue:
             'error': None, 'notification': 'waiting', 'created_at': now, 'started_at': None,
             'collected': 0, 'expected': len(data.segment_plan.targets) if data.segment_plan else len(data.outputs),
             'source_session_name': data.source_session_name}}
-        self.save(key)
-        self.record(key, 'enqueue', 'accepted')
+        self.record(key, 'enqueue', 'accepted', _changes={})
         self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
         return {'local_task_id': key, 'monitor_id': key, 'monitor': 'browser', 'status': self.rows[key]['state']['status']}
 
@@ -182,16 +185,13 @@ class LocalQueue:
         order = self.next_order(target)
         row['state'].setdefault('enqueued_url', row['input'].url)
         row['input'].url = target
-        self.save(key, queue_order=order, immediate=False)
-        self.record(key, 'transfer', 'accepted', source_url=source, target_url=target,
-                    status=row['state']['status'], queue_order=order)
+        self.record(key, 'transfer', 'accepted', _changes={'queue_order': order, 'immediate': False}, source_url=source, target_url=target, status=row['state']['status'], queue_order=order)
         return {'local_task_id': key, 'status': row['state']['status'], 'remote_url': target}
 
     async def prepare(self, key):
         row = self.rows[key]
         data = row['input']
-        self.save(key, status='preparing', phase='preflight', preparation_attempt=row['state'].get('preparation_attempt', 0) + 1)
-        self.record(key, 'preflight', 'started')
+        self.record(key, 'preflight', 'started', _changes={'status': 'preparing', 'phase': 'preflight', 'preparation_attempt': row['state'].get('preparation_attempt', 0) + 1})
         # Re-check the endpoint and files at the moment of execution, not just at enqueue time.
         if self.client.Client(data.url, data.timeout).url not in self.remote_urls():
             raise ValueError('节点配置已改变，请核对任务地址')
@@ -200,22 +200,39 @@ class LocalQueue:
         from backend.services import execution_checks as checks
         report = checks.check_prepared(self, data, bound=row['state'].get('uploads_bound', False), transferred=transferred)
         if report is None:
-            result = await asyncio.to_thread(checks.prepare_report, self, data, at_execution=True)
+            result = await asyncio.to_thread(checks.prepare_report, self, data, at_execution=True, previous=None)
+            report = {'sources': result['sources']}
             self.record(key, 'preparation', 'execution_checks', segments=result['checks']['segments'], remote_capabilities='not_queried')
         else:
             self.record(key, 'preparation', 'reused', remote_capabilities='not_queried')
+        prepared = row.get('_prepared_run')
+        if not prepared:
+            for name, stamp in row['state'].get('prepared_files', {}).items():
+                path = Path(data.project) / name
+                current = path.stat()
+                if [current.st_size, current.st_mtime_ns] != stamp:
+                    raise ValueError('已保存执行资料发生变化：' + name + '；请核对原执行')
+        if prepared:
+            for path, stamp in prepared['files'].items():
+                current = Path(path).stat()
+                if (current.st_size, current.st_mtime_ns) != stamp:
+                    raise ValueError('准备资料已变化：' + path + '；请返回准备阶段')
+            await self.check_target_cache(key, prepared['workflow'])
+            return prepared['workflow']
         uploaded_materials = {}
         upload_cache = {}
         saved_uploads = {}
         upload_bindings = []
         binding_results = []
         remote_url = self.client_for(data).url
-        source_digests = {}
+        source_digests = row.setdefault('_source_digests', {})
+        source_stamps = {}
+        documents = {}
 
         def checked_source(source, uploaded):
             if not isinstance(uploaded, dict) or not {'input_path', 'sha256'}.issubset(uploaded):
                 raise ValueError('已有上传凭据缺少文件路径或传输校验信息')
-            stamp = (source.stat().st_size, source.stat().st_mtime_ns)
+            stamp = source_stamps[source]
             if source not in source_digests:
                 with source.open('rb') as stream:
                     source_digests[source] = (stamp, hashlib.file_digest(stream, 'sha256').hexdigest())
@@ -227,7 +244,10 @@ class LocalQueue:
         # Recover all completed transfers first, including receipts for later slots.
         # This cache belongs only to this preparation, never another task or endpoint.
         for item in data.uploads:
-            source = Path(item['file']).resolve(strict=True)
+            source = Path(item['file'])
+            if source not in source_stamps:
+                stamp = source.stat()
+                source_stamps[source] = (stamp.st_size, stamp.st_mtime_ns)
             receipt = Path(data.record_dir) / item['response-name']
             upload_key = (remote_url, source, item['subfolder'])
             upload_bindings.append((item, source, receipt, upload_key))
@@ -241,30 +261,32 @@ class LocalQueue:
 
         for item, source, receipt, upload_key in upload_bindings:
             if receipt in saved_uploads:
-                uploaded = checked_source(source, saved_uploads[receipt])
+                uploaded = saved_uploads[receipt]
             elif upload_key in upload_cache:
                 uploaded, original_receipt = upload_cache[upload_key]
-                checked_source(source, uploaded)
                 self.client.write_new(receipt, {'ok': True, 'url': remote_url, 'time': self.client.now(),
                                                 'data': uploaded, 'reused_from': original_receipt.name})
                 self.record(key, 'upload', 'reused', file=str(source), remote=uploaded,
                             receipt=str(receipt), reused_from=str(original_receipt))
             else:
-                self.save(key, phase='upload')
-                self.record(key, 'upload', 'started', file=str(source), receipt=str(receipt))
-                stamp = (source.stat().st_size, source.stat().st_mtime_ns)
+                self.record(key, 'upload', 'started', _changes={'phase': 'upload'}, file=str(source), receipt=str(receipt))
+                stamp = source_stamps[source]
                 uploaded = await asyncio.to_thread(self.client.upload, self.client_for(data),
                                                    argparse.Namespace(file=str(source), subfolder=item['subfolder']), source=source)
                 self.client.write_new(receipt, {'ok': True, 'url': self.client_for(data).url,
                                                'time': self.client.now(), 'data': uploaded})
                 self.record(key, 'upload', 'success', file=str(source), remote=uploaded)
-                if stamp != (source.stat().st_size, source.stat().st_mtime_ns):
+                current = source.stat()
+                if stamp != (current.st_size, current.st_mtime_ns):
                     raise ValueError('本机素材已不同于上传开始时，请核对素材版本后创建新的执行')
                 source_digests[source] = (stamp, uploaded['sha256'])
                 upload_cache[upload_key] = (uploaded, receipt)
             inputs = workflow[item['node']]['inputs']
             if 'json-path' in item:
-                document = self.client.strict_json(inputs[item['input']].encode('utf-8'))
+                document_key = (item['node'], item['input'])
+                if document_key not in documents:
+                    documents[document_key] = self.client.strict_json(inputs[item['input']].encode('utf-8'))
+                document = documents[document_key]
                 parent = document
                 try:
                     for part in item['json-path'][:-1]:
@@ -285,14 +307,50 @@ class LocalQueue:
                             media.update(fileName=remote['name'], subfolder=remote['subfolder'], type=remote['type'])
                 except (KeyError, IndexError, TypeError) as error:
                     raise ValueError('素材JSON字段路径不匹配：' + str(item['json-path'])) from error
-                inputs[item['input']] = json.dumps(document, ensure_ascii=False, allow_nan=False)
             else:
                 inputs[item['input']] = uploaded['input_path']
             uploaded_materials[uploaded['input_path']] = {'input_path': uploaded['input_path'], 'file': str(source)}
             binding_results.append((item, uploaded))
-        for source, (stamp, _) in source_digests.items():
-            if stamp != (source.stat().st_size, source.stat().st_mtime_ns):
+        for (node, field), document in documents.items():
+            workflow[node]['inputs'][field] = json.dumps(document, ensure_ascii=False, allow_nan=False)
+        await self.check_target_cache(key, workflow)
+        if data.task_type.startswith('video-'):
+            from backend.services.director_uploads import save_uploaded_workflow
+            self.save(key, phase='upload_binding')
+            await asyncio.to_thread(save_uploaded_workflow, data.project, Path(data.record_dir), data.workflow, workflow,
+                                    uploaded_materials, binding_results)
+            self.record(key, 'upload_binding', 'success', _changes={'uploads_bound': True})
+            self.save(key, phase='generation_context')
+            await asyncio.to_thread(self.generation_context.prepare_generation_context,
+                                    data.project, Path(data.record_dir), workflow, data.task_type, uploaded_materials, fixed_checked=True)
+        # This checkpoint is process-local; a restart verifies durable receipts once.
+        files = {Path(item['file']) for item in data.uploads}
+        record = Path(data.record_dir)
+        files.update(record.glob('*.api.json'))
+        files.update(record.glob('*.workflow.json'))
+        mapping_file = record / '输入映射.json'
+        if mapping_file.exists():
+            files.add(mapping_file)
+            mapping = json.loads(mapping_file.read_text('utf-8-sig'))
+            for context in mapping.get('generation_contexts', []):
+                files.update(Path(data.project) / name for name in context.get('prompts', {}).values())
+                if context.get('storyboard'):
+                    files.add(Path(data.project) / context['storyboard']['file'])
+                files.update(Path(data.project) / ref['file'] for refs in context.get('references', {}).values() for ref in refs)
+        final_stamps = {str(path): (stamp.st_size, stamp.st_mtime_ns) for path in files for stamp in [path.stat()]}
+        for source, stamp in source_stamps.items():
+            if final_stamps[str(source)] != stamp:
                 raise ValueError('本机素材已不同于上传／核验时，请返回准备阶段')
+        phase_files = {name: stamp for name, stamp in final_stamps.items()
+                       if Path(name).relative_to(data.project).as_posix() not in report['sources']
+                       or name.endswith(('.api.json', '.workflow.json'))}
+        row['_prepared_run'] = {'workflow': workflow, 'files': phase_files}
+        self.record(key, 'preflight', 'success', _changes={'prepared_files': {
+            Path(name).relative_to(data.project).as_posix(): list(stamp) for name, stamp in phase_files.items()}})
+        return workflow
+
+    async def check_target_cache(self, key, workflow):
+        data = self.rows[key]['input']
         if data.task_type in ('video-first-pass', 'video-second-pass'):
             self.save(key, phase='target_cache')
             for node_id, node in workflow.items():
@@ -335,18 +393,6 @@ class LocalQueue:
                                            and all(name.startswith('refine_') for name in differences))
                             if not matches:
                                 raise ValueError('目标节点缺少匹配的前段衔接缓存：组序 ' + str(index - 1))
-        if data.task_type.startswith('video-'):
-            from backend.services.director_uploads import save_uploaded_workflow
-            self.save(key, phase='upload_binding')
-            await asyncio.to_thread(save_uploaded_workflow, data.project, Path(data.record_dir), data.workflow, workflow,
-                                    uploaded_materials, binding_results)
-            self.save(key, uploads_bound=True)
-            self.record(key, 'upload_binding', 'success')
-            self.save(key, phase='generation_context')
-            await asyncio.to_thread(self.generation_context.prepare_generation_context,
-                                    data.project, Path(data.record_dir), workflow, data.task_type, uploaded_materials)
-        self.record(key, 'preflight', 'success')
-        return workflow
 
     async def dispatch_once(self):
         await asyncio.gather(*(self.dispatch_node(url) for url in self.remote_urls()))
@@ -371,24 +417,24 @@ class LocalQueue:
                           and item['state']['status'] in ('queued', 'running')]
                 if not immediate:
                     for other in active:
-                        await self.reconcile(other)
+                        await self.reconcile(other, background_collection=True)
                 try:
                     workflow = await self.prepare(key)
                     await self.remote_queues.refresh(url)
                     fresh = self.remote_queues.states[url]
                     if (fresh['connection'] != 'connected' or fresh['queue_error']
                             or not immediate and (fresh['running_count'] or fresh['queued_count'])):
-                        self.save(key, status='local_queued')
-                        self.record(key, 'dispatch', 'waiting_remote')
+                        self.record(key, 'dispatch', 'waiting_remote', _changes={'status': 'local_queued'})
                         return
                     await self.submit(row['input'], key=key, workflow=workflow)
                 except (self.client.ClientError, OSError, ValueError, RuntimeError, WebSocketException) as error:
                     phase = row['state'].get('phase', 'dispatch')
                     if row['state']['status'] not in ('rejected', 'submission_unknown'):
                         self.save(key, status='paused', error=str(error), immediate=False, failure_stage=phase)
-                    self.record(key, phase, 'failed', error=str(error))
-                    self.record(key, 'dispatch', 'failed', error=str(error))
-                    self.queue_notice(key, 'dispatch_issue', 'attention', str(error))
+                    if phase != 'submit':
+                        self.record(key, phase, 'failed', error=str(error))
+                    if row['state']['status'] not in ('rejected', 'submission_unknown'):
+                        self.queue_notice(key, 'dispatch_issue', 'attention', str(error))
                 return
 
     async def schedule(self):
@@ -421,9 +467,7 @@ class LocalQueue:
         if key not in self.rows or self.rows[key]['state']['status'] != 'collection_failed':
             raise ValueError('只有取回失败的任务可以重试取回')
         state = self.rows[key]['state']
-        self.save(key, status='collecting', error=None, collection_attempt=state.get('collection_attempt', 1) + 1,
-                  collection_auto_retry=0, collection_next_retry_at=None, collection_retry_stop=None, collection_errors=[])
-        self.record(key, 'collection_retry', 'accepted')
+        self.record(key, 'collection_retry', 'accepted', _changes={'status': 'collecting', 'error': None, 'collection_attempt': state.get('collection_attempt', 1) + 1, 'collection_auto_retry': 0, 'collection_next_retry_at': None, 'collection_retry_stop': None, 'collection_errors': []})
         self.workers[key] = asyncio.create_task(self.collect_saved(key))
         return {'local_task_id': key, 'status': 'collecting'}
 
@@ -433,6 +477,5 @@ class LocalQueue:
             result = self.client.strict_json((Path(data.record_dir) / data.history_name).read_bytes())['data']
             await self.finish_collection(key, result)
         except (self.client.ClientError, OSError, ValueError, KeyError) as error:
-            self.save(key, status='collection_failed', error=str(error))
-            self.record(key, 'collection', 'failed', error=str(error))
+            self.record(key, 'collection', 'failed', _changes={'status': 'collection_failed', 'error': str(error)}, error=str(error))
         self.queue_notice(key, 'terminal', 'terminal', self.rows[key]['state'].get('error') or '预期成果已保存')

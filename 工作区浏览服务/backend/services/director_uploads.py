@@ -10,7 +10,7 @@ pairs = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pairs)
 
 
-def check_pair(record, workflow):
+def check_pair(record, workflow, *, timelines=None):
     checked = []
     for api_file in record.glob('*.api.json'):
         canvas_file = api_file.with_name(api_file.name.removesuffix('.api.json') + '.workflow.json')
@@ -27,7 +27,7 @@ def check_pair(record, workflow):
             assert pairs.semantic(workflow) == pairs.semantic(expected), '画布/API不一致'
             for node in workflow.values():
                 if node['class_type'] == 'MiniMaxH3Director':
-                    timeline = json.loads(node['inputs']['timeline_data'])
+                    timeline = timelines[id(node)] if timelines is not None else json.loads(node['inputs']['timeline_data'])
                     editor = timeline['batchWorkspaces']['r2v']
                     assert pairs.director_editor_state(editor['globalCommon'], True) == pairs.director_editor_state(timeline['global'], True), '公共区与编辑状态不一致'
                     assert [pairs.director_editor_state(group) for group in editor['segments']] == [pairs.director_editor_state(group) for group in timeline['segments']], '分组与编辑状态不一致'
@@ -80,6 +80,8 @@ def save_uploaded_workflow(project, record, original, workflow, uploaded_materia
 
     if changed_inputs:
         for api_file in record.glob('*.api.json'):
+            if json.loads(api_file.read_text('utf-8-sig')) == workflow:
+                continue  # Durable phase recovery: the actual inputs were already saved.
             canvas_file = api_file.with_name(api_file.name.removesuffix('.api.json') + '.workflow.json')
             canvas = json.loads(canvas_file.read_text('utf-8-sig'))
             definitions = {group['id']: group for group in canvas.get('definitions', {}).get('subgraphs', [])}
@@ -108,4 +110,6 @@ def save_uploaded_workflow(project, record, original, workflow, uploaded_materia
                if project_file(project, item['file'], recorded=True) not in uploaded_files}
     sources.update(uploaded_materials)
     mapping['uploads'] = list(sources.values())
-    mapping_file.write_text(json.dumps(recorded_paths(project, mapping, relative=True), ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    text = json.dumps(recorded_paths(project, mapping, relative=True), ensure_ascii=False, indent=2) + '\n'
+    if mapping_file.read_text('utf-8-sig') != text:
+        mapping_file.write_text(text, encoding='utf-8')

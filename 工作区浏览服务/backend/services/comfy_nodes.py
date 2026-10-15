@@ -28,6 +28,7 @@ class RemoteQueues:
         self.states = {}
         self.workers = {}
         self.manager = None
+        self.refreshes = {}
 
     async def start(self):
         await self.sync()
@@ -58,11 +59,9 @@ class RemoteQueues:
             except (self.client.ClientError, OSError, ValueError):
                 logger.warning('ComfyUI configuration could not be loaded; retrying')
                 continue
-            await asyncio.gather(*(self.refresh(url) for url, state in tuple(self.states.items())
-                                   if state['connection'] == 'connected'))
 
     async def close(self):
-        workers = [*self.workers.values()]
+        workers = [*self.workers.values(), *self.refreshes.values()]
         if self.manager is not None:
             workers.append(self.manager)
         for worker in workers:
@@ -74,6 +73,16 @@ class RemoteQueues:
         self.changed()
 
     async def refresh(self, url):
+        task = self.refreshes.get(url)
+        if task is None:
+            task = self.refreshes[url] = asyncio.create_task(self.read_queue(url))
+        try:
+            return await asyncio.shield(task)
+        finally:
+            if task.done() and self.refreshes.get(url) is task:
+                del self.refreshes[url]
+
+    async def read_queue(self, url):
         try:
             result = await asyncio.to_thread(self.client_for(url, 10).json, '/queue')
             queue = []

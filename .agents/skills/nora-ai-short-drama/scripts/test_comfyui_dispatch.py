@@ -34,7 +34,9 @@ class DispatchTests(unittest.TestCase):
 
     def test_missing_title_is_not_replaced_by_directory_name(self):
         self.args.task_title=' '
-        with self.assertRaises(ValueError): d.dispatch(self.args)
+        with patch.object(d.browser_tasks, 'submit', return_value={}) as handoff:
+            d.dispatch(self.args)
+        self.assertEqual(handoff.call_args.args[0].task_title, ' ')
 
     def test_h3_relationship_checks_are_delegated_to_preparation_not_repeated_in_cli(self):
         self.workflow['1']['class_type'] = 'MiniMaxH3ReferenceToVideo'
@@ -58,13 +60,11 @@ class DispatchTests(unittest.TestCase):
         check.assert_not_called()
         post.assert_not_called()
 
-    def test_workspace_relative_record_path_rejected_before_handoff(self):
+    def test_path_validation_is_owned_by_backend_boundary(self):
         self.args.record_dir = 'projects/' + self.root.name + '/执行附件/任务'
-        with patch.object(d.browser_tasks, 'submit') as handoff:
-            with self.assertRaisesRegex(ValueError, '相对项目根目录'):
-                d.dispatch(self.args)
-            handoff.assert_not_called()
-        self.assertFalse((self.root / 'projects').exists())
+        with patch.object(d.browser_tasks, 'submit', return_value={}) as handoff:
+            d.dispatch(self.args)
+        self.assertEqual(handoff.call_args.args[0].record_dir, self.args.record_dir)
 
     def test_missing_output_plan_rejected_before_handoff(self):
         self.args.output_plan=None

@@ -28,3 +28,10 @@ def failure(error, client_error, **target):
         issue['retryable'] = isinstance(error, (TimeoutError, ConnectionError)) or error.errno in (
             errno.ETIMEDOUT, errno.ECONNRESET, errno.ECONNABORTED, errno.ECONNREFUSED, errno.ENETUNREACH, errno.EHOSTUNREACH)
     return issue
+
+
+def saved_stamp(receipt, candidate):
+    """Only metadata; successful receipts are re-read after a restart or a change."""
+    if not receipt.is_file() or not candidate.is_file():
+        return None
+    return tuple((stamp.st_size, stamp.st_mtime_ns) for path in (receipt, candidate) for stamp in [path.stat()])

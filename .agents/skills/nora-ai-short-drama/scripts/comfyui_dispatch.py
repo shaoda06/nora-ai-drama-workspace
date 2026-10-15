@@ -7,7 +7,6 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'comfyui-scripts'))
 import comfyui_client as client
 import browser_tasks
-from project_paths import project_file
 import comfyui_config as config
 
 TASK_TYPES = ('image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess')
@@ -22,9 +21,6 @@ def load_config(project, timeout):
 def dispatch(args):
     if not args.output_plan:
         raise ValueError('入队需要--output-plan；导演台提供空数组及--segment-plan')
-    if not args.task_title or not args.task_title.strip():
-        raise ValueError('请通过--task-title提供任务标题')
-    args.record_dir = str(project_file(args.project, args.record_dir))
     workflow = client.strict_json(Path(args.workflow).read_bytes())
     uploads = client.strict_json(Path(args.uploads).read_bytes()) if args.uploads else []
     url = load_config(args.project, args.timeout)['remote-urls'][0]

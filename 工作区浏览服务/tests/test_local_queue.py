@@ -158,7 +158,7 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
     async def test_blank_title_and_changed_primary_are_rejected(self):
         self.data.title = '  '
         with self.assertRaises(ValueError):
-            await self.store.enqueue(self.data)
+            await self.store.prepare_only(self.data)
         self.data.title = '合法'
         key = await self.add('一')
         (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-urls': ['http://different.invalid']}))
@@ -259,7 +259,7 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(upload.call_count, 11)
             with patch('backend.services.local_queue.hashlib.file_digest', wraps=hashlib.file_digest) as digest:
                 await self.store.prepare(key)
-                self.assertEqual(digest.call_count, 11)  # Recovery hashes files, not 53 slots twice.
+                self.assertEqual(digest.call_count, 0)  # Same-process rescheduling reuses the verified upload checkpoint.
             self.assertEqual(upload.call_count, 11)
         receipts = []
         for item in data.uploads:

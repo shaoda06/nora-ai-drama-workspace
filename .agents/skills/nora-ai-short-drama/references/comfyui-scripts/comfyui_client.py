@@ -19,8 +19,12 @@ import urllib.parse
 import urllib.request
 import uuid
 import zipfile
+from concurrent.futures import Future
+from threading import Lock
 
 CHUNK = 1024 * 1024
+QUEUE_READS = {}
+QUEUE_LOCK = Lock()
 
 
 class ClientError(Exception):
@@ -116,6 +120,33 @@ class Client:
             raise ClientError("transport_error", str(exc)) from exc
 
     def json(self, route, data=None, headers=None):
+        if route != '/queue' or data is not None:
+            return self.read_json(route, data, headers)
+        # Node observers and task status readers share only an in-flight read.
+        # Authentication is part of the identity; no TTL or completed-result cache.
+        key = (self.url, tuple(sorted({**self.headers, **(headers or {})}.items())))
+        with QUEUE_LOCK:
+            pending = QUEUE_READS.get(key)
+            owner = pending is None
+            if owner:
+                pending = QUEUE_READS[key] = Future()
+        if not owner:
+            try:
+                return pending.result(timeout=self.timeout)
+            except TimeoutError as exc:
+                raise ClientError('transport_error', 'Timed out awaiting the current queue read') from exc
+        try:
+            result = self.read_json(route, data, headers)
+            pending.set_result(result)
+            return result
+        except BaseException as exc:
+            pending.set_exception(exc)
+            raise
+        finally:
+            with QUEUE_LOCK:
+                del QUEUE_READS[key]
+
+    def read_json(self, route, data=None, headers=None):
         with self.open(route, data, headers) as response:
             try:
                 return strict_json(response.read())
@@ -208,6 +239,9 @@ def submit(client, args, workflow=None, client_id=None):
     except FileExistsError as exc:
         raise ClientError("submission_guard", "Submission evidence reserved by another call; no request sent",
                           record_dir=str(record), submission_state="not_sent") from exc
+    except OSError as exc:
+        raise ClientError("submission_not_sent", "Local evidence write failed before POST; keep evidence and inspect before recovery",
+                          record_dir=str(record), submission_state="not_sent", error=str(exc)) from exc
     try:
         result = client.json("/prompt", request_bytes, {"Content-Type": "application/json"})
     except Exception as exc:

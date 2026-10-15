@@ -6,7 +6,7 @@ from pathlib import Path, PureWindowsPath, PurePosixPath
 import re
 
 from pydantic import BaseModel, Field
-from backend.services.collection_retry import failure
+from backend.services.collection_retry import failure, saved_stamp
 
 
 class SegmentTarget(BaseModel):
@@ -36,10 +36,11 @@ def remote_file(root, absolute):
     return {'filename': relative.name, 'subfolder': relative.parent.as_posix(), 'type': 'output'}
 
 
-def targets(data):
+def targets(data, mapping=None):
     from backend.services.comfy_tasks import paths
     project = Path(data.project).resolve()
-    mapping = json.loads((Path(data.record_dir) / '输入映射.json').read_text('utf-8-sig'))
+    if mapping is None:
+        mapping = json.loads((Path(data.record_dir) / '输入映射.json').read_text('utf-8-sig'))
     stage = {'video-first-pass': '一采', 'video-second-pass': '二采'}[data.task_type]
     result = []
     for index in mapping['selected_indices']:
@@ -48,12 +49,12 @@ def targets(data):
         record = paths.project_file(project, segment['local_execution_dir'], recorded=True)
         episode = segment['segment'].split('-')[0]
         explicit = next((item for item in data.segment_plan.targets if item.index == index), None)
-        candidate = Path(explicit.path).resolve() if explicit else project / '09-剧集制作' / episode / '其他资料/候选视频' / (identity + '.mp4')
+        candidate = Path(explicit.path) if explicit else project / '09-剧集制作' / episode / '其他资料/候选视频' / (identity + '.mp4')
         result.append({'index': index, 'identity': identity, 'record': record, 'candidate': candidate, 'response_name': explicit.response_name if explicit else f'最终取回-{index:03d}.json'})
     return result
 
 
-def validate(data):
+def validate(data, *, mapping=None, timelines=None):
     plan = data.segment_plan
     if data.task_type not in ('video-first-pass', 'video-second-pass'):
         raise ValueError('分段计划仅用于原生H3一采／二采')
@@ -65,10 +66,11 @@ def validate(data):
     # Require the report node's input to be this director's report output (slot 5).
     if [plan.director_node, 5] not in data.workflow[plan.report_node]['inputs'].values():
         raise ValueError('报告节点未连接该导演台report输出')
-    timeline = json.loads(director['inputs']['timeline_data'])
+    timeline = timelines[id(director)] if timelines is not None else json.loads(director['inputs']['timeline_data'])
     if timeline['output'].get('exportMode') != 'segments':
         raise ValueError('分段取回需要原生segments导出')
-    mapping = json.loads((Path(data.record_dir) / '输入映射.json').read_text('utf-8-sig'))
+    if mapping is None:
+        mapping = json.loads((Path(data.record_dir) / '输入映射.json').read_text('utf-8-sig'))
     selected = sorted(timeline['runSelection']) if timeline.get('runSelectEnabled', False) else list(range(len(timeline['segments'])))
     if not selected or mapping['selected_indices'] != selected or len(mapping['segments']) != len(timeline['segments']):
         raise ValueError('分段计划与实际执行组序不一致')
@@ -76,16 +78,9 @@ def validate(data):
     explicit = plan.targets
     if explicit and (len(explicit) != len(selected) or {item.index for item in explicit} != set(selected)):
         raise ValueError('本机成果目标必须逐一对应实际执行分段')
-    if len({Path(item.path).resolve() for item in explicit}) != len(explicit):
+    if len({Path(item.path) for item in explicit}) != len(explicit):
         raise ValueError('分段目标路径不能重复')
-    for target in explicit:
-        if not Path(target.path).is_absolute() or not Path(target.path).resolve().is_relative_to(project):
-            raise ValueError('分段成果目标必须使用项目内绝对路径')
-        if Path(target.path).resolve().is_relative_to(Path(data.record_dir).resolve()):
-            raise ValueError('成果不能保存在共同执行附件内')
-        if Path(target.response_name).name != target.response_name:
-            raise ValueError('分段下载凭据必须是文件名')
-    for item in targets(data):
+    for item in targets(data, mapping):
         if (not re.fullmatch(re.escape(mapping['scene']) + r'-P\d{3,}-R\d{3,}-(一采|二采)', item['identity'])
                 or not item['record'].is_relative_to(project)
                 or item['record'].name != item['identity'] and item['record'].parent.name != item['identity']):
@@ -107,7 +102,10 @@ async def finish(store, key, result):
             paths[int(match[1]) - 1] = match[4].strip()
     problems, collected = [], 0
     state.setdefault('segments', {})
-    expected_targets = targets(data)
+    expected_targets = store.rows[key].get('_collection_targets')
+    if expected_targets is None:
+        expected_targets = store.rows[key]['_collection_targets'] = targets(data)
+    verified = store.rows[key].setdefault('_collection_ok', {})
     store.save(key, expected=len(expected_targets))
     for target in expected_targets:
         item = state['segments'].setdefault(str(target['index']), {
@@ -121,7 +119,10 @@ async def finish(store, key, result):
                 raise ValueError('最终报告路径与分段身份不一致')
             receipt_path = Path(data.record_dir) / target['response_name']
             candidate = target['candidate']
-            if receipt_path.exists():
+            proof = (state['prompt_id'], source, saved_stamp(receipt_path, candidate))
+            if proof[-1] is not None and verified.get(str(receipt_path)) == proof:
+                pass
+            elif receipt_path.exists():
                 receipt = store.client.strict_json(receipt_path.read_bytes())
                 downloaded = receipt['data']
                 if (receipt['prompt_id'] != state['prompt_id'] or downloaded['remote'] != source
@@ -136,6 +137,7 @@ async def finish(store, key, result):
                                                      'identity': target['identity'], 'data': downloaded})
                 store.record(key, 'download', 'success', path=str(candidate), remote=source, receipt=str(receipt_path),
                              attempt=state.get('collection_attempt', 1))
+            verified[str(receipt_path)] = (state['prompt_id'], source, saved_stamp(receipt_path, candidate))
             item.update(remote=source, path=str(candidate), check='已取回', error=None)
             collected += 1
         except (store.client.ClientError, OSError, ValueError, KeyError) as error:

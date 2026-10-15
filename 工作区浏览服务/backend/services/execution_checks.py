@@ -4,7 +4,7 @@ import re
 import tempfile
 from pathlib import Path
 
-from project_paths import project_file
+from project_paths import project_file, recorded_paths
 
 REPORT = '执行检查报告.json'
 
@@ -20,32 +20,35 @@ def write_json(path, value):
         temporary.unlink(missing_ok=True)
 
 
-def basis(store, data):
+def basis(store, data, mapping=None):
     payload = store.portable_input(data)
-    for name in ('desktop', 'thread_id', 'source_session_name', 'title', 'timeout', 'start_paused'):
+    for name in ('desktop', 'thread_id', 'source_session_name', 'timeout', 'start_paused'):
         payload.pop(name, None)
     mapping_file = Path(data.record_dir) / '输入映射.json'
-    if mapping_file.exists():
-        mapping = json.loads(mapping_file.read_text('utf-8-sig'))
-        payload['mapping'] = {name: mapping[name] for name in (
-            'scene', 'task_type', 'screenplay_version', 'scene_storyboard_version', 'selected_indices', 'segments') if name in mapping}
+    if mapping is None:
+        mapping = json.loads(mapping_file.read_text('utf-8-sig')) if mapping_file.exists() else {}
+    if mapping:
+        payload['mapping'] = recorded_paths(data.project, {name: mapping[name] for name in (
+            'scene', 'task_type', 'screenplay_version', 'scene_storyboard_version', 'selected_indices', 'segments') if name in mapping}, relative=True)
     return payload
 
 
-def sources(data):
-    files = {Path(item['file']).resolve() for item in data.uploads}
+def sources(data, extra=(), mapping=None):
+    files = {Path(item['file']) for item in data.uploads}
+    files.update(Path(path) for path in extra)
     record = Path(data.record_dir)
     files.update(record.glob('*.api.json'))
     files.update(record.glob('*.workflow.json'))
     mapping_file = record / '输入映射.json'
-    if mapping_file.exists():
-        mapping = json.loads(mapping_file.read_text('utf-8-sig'))
+    if mapping is None:
+        mapping = json.loads(mapping_file.read_text('utf-8-sig')) if mapping_file.exists() else {}
+    if mapping:
         if mapping.get('storyboard_file'):
             files.add(project_file(data.project, mapping['storyboard_file'], recorded=True))
         for context in mapping.get('generation_contexts', []):
             files.update(project_file(data.project, name, recorded=True) for name in context.get('prompts', {}).values())
-    return {path.relative_to(data.project).as_posix(): [path.stat().st_size, path.stat().st_mtime_ns]
-            for path in sorted(files)}
+    return {path.relative_to(data.project).as_posix(): [stamp.st_size, stamp.st_mtime_ns]
+            for path in sorted(files) for stamp in [path.stat()]}
 
 
 def read_report(data):
@@ -68,6 +71,8 @@ def check_prepared(store, data, *, bound=False, transferred=False):
     if report is None:
         return None  # Existing queued tasks can perform their first tool check at execution.
     expected, actual = report['prepared_input'].copy(), basis(store, data)
+    if 'title' not in expected:  # Reports made before title became a preparation field.
+        actual.pop('title', None)
     if transferred:
         expected.pop('url', None)
         actual.pop('url', None)
@@ -77,17 +82,34 @@ def check_prepared(store, data, *, bound=False, transferred=False):
         if bound and name.endswith(('.api.json', '.workflow.json')):
             continue  # The upload binder owns and validates these actual path changes.
         path = project_file(data.project, name)
-        if not path.exists() or [path.stat().st_size, path.stat().st_mtime_ns] != stamp:
+        try:
+            current = path.stat()
+        except FileNotFoundError:
+            raise ValueError('准备资料已变化：' + name + '；请返回准备阶段') from None
+        if [current.st_size, current.st_mtime_ns] != stamp:
             raise ValueError('准备资料已变化：' + name + '；请返回准备阶段')
+    if data.task_type.startswith('video-') and 'context_sources' not in report:
+        try:
+            extra = context_checks(store, data)
+        except (ValueError, OSError, KeyError, IndexError, TypeError, store.client.ClientError) as error:
+            report.update(ok=False, error='旧报告缺项检查失败：' + str(error), context_checked_during='execution')
+            write_report(data, report)
+            raise ValueError(report['error']) from error
+        report['context_sources'] = extra
+        report['context_checked_during'] = 'execution'
+        for path in map(Path, extra):
+            current = path.stat()
+            report['sources'][path.relative_to(data.project).as_posix()] = [current.st_size, current.st_mtime_ns]
+        write_report(data, report)
     return report
 
 
-def director_checks(workflow):
+def director_checks(workflow, timelines=None):
     rows = []
     for node in workflow.values():
         if node['class_type'] != 'MiniMaxH3Director':
             continue
-        timeline = json.loads(node['inputs']['timeline_data'])
+        timeline = timelines[id(node)] if timelines is not None else json.loads(node['inputs']['timeline_data'])
         common = timeline['global']
         enabled = common.get('commonEnabled', False)
         indices = timeline['runSelection'] if timeline.get('runSelectEnabled') else range(len(timeline['segments']))
@@ -131,6 +153,8 @@ def director_checks(workflow):
 
 def fixed_input_checks(store, data):
     client = store.client
+    if not data.title.strip():
+        raise ValueError('任务标题不能为空')
     for item in data.uploads:
         required = {'file', 'node', 'input', 'subfolder', 'response-name'}
         if not required.issubset(item) or set(item) - required - {'json-path'} or not all(isinstance(item[name], str) for name in required):
@@ -152,8 +176,8 @@ def fixed_input_checks(store, data):
         raise ValueError('证据文件名不能重复')
     if '执行检查报告.json' in names:
         raise ValueError('证据文件名不能占用执行检查报告.json')
-    for item in data.uploads:
-        client.remote_path(item['subfolder'])
+    for folder in {item['subfolder'] for item in data.uploads}:
+        client.remote_path(folder)
     for source in {Path(item['file']) for item in data.uploads}:
         if not source.is_absolute():
             raise ValueError('上传映射必须使用本机绝对路径')
@@ -162,7 +186,7 @@ def fixed_input_checks(store, data):
             raise client.ClientError('invalid_filename', 'Upload filename cannot contain a quote')
 
 
-def fixed_checks(store, data):
+def fixed_checks(store, data, *, mapping=None):
     from backend.services.director_uploads import check_pair
     from backend.services import comfy_segments as segments
     fixed_input_checks(store, data)
@@ -170,7 +194,7 @@ def fixed_checks(store, data):
     if (any(node['class_type'] in ('MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo') for node in data.workflow.values())
             and data.task_type not in ('video-first-pass', 'video-second-pass')):
         raise store.client.ClientError('invalid_task_type', 'H3 generation requires a first-pass or second-pass task type')
-    targets = [Path(output.path).resolve() for output in data.outputs]
+    targets = [Path(output.path) for output in data.outputs]
     if len(targets) != len(set(targets)):
         raise ValueError('成果保存路径不能重复')
     selectors = [(out.node_id, out.output_key, out.index) for out in data.outputs]
@@ -178,36 +202,86 @@ def fixed_checks(store, data):
         raise ValueError('预期输出节点不在工作流中')
     if len(selectors) != len(set(selectors)):
         raise ValueError('输出身份不能重复')
+    documents = {}
     for item in data.uploads:
         if item['node'] not in data.workflow or item['input'] not in data.workflow[item['node']]['inputs']:
             raise ValueError('上传映射必须绑定已有输入')
+        if 'json-path' in item:
+            field = (item['node'], item['input'])
+            if field not in documents:
+                documents[field] = json.loads(data.workflow[field[0]]['inputs'][field[1]])
+            value = documents[field]
+            try:
+                for part in item['json-path']:
+                    value = value[part]
+            except (KeyError, IndexError, TypeError) as error:
+                raise ValueError('素材JSON字段路径不匹配：' + str(item['json-path'])) from error
+    timelines = {id(node): (documents[(key, 'timeline_data')] if (key, 'timeline_data') in documents
+                 else json.loads(node['inputs']['timeline_data'])) for key, node in data.workflow.items()
+                 if node['class_type'] == 'MiniMaxH3Director'}
     native_segments = [node for node in data.workflow.values() if node['class_type'] == 'MiniMaxH3Director'
-        and json.loads(node['inputs']['timeline_data']).get('output', {}).get('exportMode') == 'segments']
+        and timelines[id(node)].get('output', {}).get('exportMode') == 'segments']
     if native_segments and not data.segment_plan:
         raise ValueError('原生H3分段任务必须登记segment-plan以对应最终成果')
     if data.segment_plan:
         try:
-            segments.validate(data)
+            segments.validate(data, mapping=mapping, timelines=timelines)
         except (KeyError, IndexError, TypeError) as error:
             raise ValueError('分段计划或输入映射字段不完整：' + str(error)) from error
         if data.outputs:
             raise ValueError('原生分段任务使用segment-plan，不混用末段保存节点作为全组输出')
-    return {'pair': check_pair(Path(data.record_dir), data.workflow), 'segments': director_checks(data.workflow)}
+    result = {'pair': check_pair(Path(data.record_dir), data.workflow, timelines=timelines), 'segments': director_checks(data.workflow, timelines)}
+    if data.task_type.startswith('video-'):
+        result['context_sources'] = context_checks(store, data, mapping=mapping, documents=documents, timelines=timelines)
+    return result
 
 
-def prepare_report(store, data, *, at_execution=False):
+def context_checks(store, data, *, mapping=None, documents=None, timelines=None):
+    documents = {} if documents is None else documents
+    planned = {}
+    for item in data.uploads:
+        value = data.workflow[item['node']]['inputs'][item['input']]
+        if 'json-path' in item:
+            key = (item['node'], item['input'])
+            if key not in documents:
+                documents[key] = json.loads(value)
+            value = documents[key]
+            for part in item['json-path']:
+                value = value[part]
+        planned[value] = {'input_path': value, 'file': item['file']}
+    context = store.generation_context.prepare_generation_context(data.project, Path(data.record_dir),
+                data.workflow, data.task_type, planned, check_only=True, mapping=mapping, timelines=timelines)
+    return (context or {}).get('files', [])
+
+
+def prepare_report(store, data, *, at_execution=False, previous=...):
     """Fixed checks, including legacy execution fallback; never uploads or submits generation."""
-    previous = read_report(data)
-    report = {'ok': False, 'checked_at': store.client.now(), 'prepared_input': basis(store, data), 'sources': {},
+    if previous is ...:
+        previous = read_report(data)
+    report = {'ok': False, 'checked_at': store.client.now(), 'prepared_input': {}, 'sources': {},
               'checked_during': 'execution' if at_execution else 'preparation'}
     try:
-        if previous and previous['ok'] and previous['prepared_input'] == report['prepared_input']:
-            report['sources'] = sources(data)
+        mapping_file = Path(data.record_dir) / '输入映射.json'
+        mapping = json.loads(mapping_file.read_text('utf-8-sig')) if mapping_file.exists() else {}
+        report['prepared_input'] = basis(store, data, mapping)
+        expected = previous['prepared_input'].copy() if previous else {}
+        if previous and 'title' not in expected:
+            expected['title'] = data.title
+        if previous and previous['ok'] and expected == report['prepared_input']:
+            report['sources'] = sources(data, previous.get('context_sources', []), mapping)
             if previous['sources'] == report['sources']:
+                if data.task_type.startswith('video-') and 'context_sources' not in previous:
+                    extra = context_checks(store, data, mapping=mapping)
+                    report.update(previous)
+                    report.update(context_sources=extra, context_checked_during='preparation')
+                    report['sources'] = sources(data, extra, mapping)
+                    write_report(data, report)
                 return {'prepared': True, 'report': REPORT, 'reused': True,
                         'checks': {key: previous[key] for key in ('pair', 'segments')}}
-        report.update(fixed_checks(store, data))
-        report['sources'] = sources(data)
+        report.update(fixed_checks(store, data, mapping=mapping))
+        if data.task_type.startswith('video-'):
+            report.setdefault('context_sources', [])
+        report['sources'] = sources(data, report.get('context_sources', []), mapping)
         report['ok'] = True
     except (ValueError, OSError, store.client.ClientError) as error:
         report['error'] = str(error)
@@ -218,4 +292,7 @@ def prepare_report(store, data, *, at_execution=False):
         write_report(data, report)
         raise ValueError(report['error']) from error
     write_report(data, report)
-    return {'prepared': True, 'report': REPORT, 'checks': {key: report[key] for key in ('pair', 'segments')}}
+    result = {'prepared': True, 'report': REPORT, 'checks': {key: report[key] for key in ('pair', 'segments')}}
+    if at_execution:
+        result['sources'] = report['sources']
+    return result
