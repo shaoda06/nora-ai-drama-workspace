@@ -302,6 +302,7 @@ class GenerationContextTests(HttpTestCase):
         writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
         mapping = json.loads((root / '输入映射.json').read_text(encoding='utf-8'))
         self.assertEqual({key: mapping[key] for key in before}, before)
+
         self.assertEqual([context['identity'] for context in mapping['generation_contexts']],
                          ['EP001-C001-P001-R004-一采', 'EP001-C001-P002-R003-一采'])
         self.write(self.episode + '/03-分镜脚本/EP001-C001-场次分镜.md',
@@ -327,6 +328,17 @@ class GenerationContextTests(HttpTestCase):
                 self.assertEqual(client.get(first['references']['common'][0]['url']).text, '提交时公共原图')
                 self.assertEqual(client.get(first['references']['segment'][0]['url']).text, '提交时本组原图')
                 self.assertEqual([(shot['id'], shot['duration']) for shot in second['shots']], [('EP001-SH002', 3)])
+
+    def test_shared_sources_are_read_once_per_context_preparation(self):
+        root, workflow, _ = self.automatic_task()
+        original = Path.read_bytes
+        reads = []
+        def read(path):
+            reads.append(path)
+            return original(path)
+        with patch.object(Path, 'read_bytes', read):
+            writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        self.assertEqual(reads.count(self.project / '图片/公共.png'), 1)
 
     def test_backend_actual_upload_path_keeps_original_local_material(self):
         root, workflow, before = self.automatic_task()

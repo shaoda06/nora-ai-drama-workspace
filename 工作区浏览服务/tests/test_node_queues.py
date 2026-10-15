@@ -188,20 +188,15 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
             await asyncio.gather(self.store.dispatch_node(self.primary), self.store.dispatch_node(self.primary))
             post.assert_awaited_once()
 
-    async def test_missing_target_node_or_model_pauses_before_submission(self):
-        key = await self.add('missing-model', self.backup)
-        self.store.rows[key]['input'].workflow = {'1': {'class_type': 'UNETLoader', 'inputs': {'unet_name': 'required.safetensors'}}}
+    async def test_transferred_task_does_not_query_remote_capabilities(self):
+        key = await self.add('direct-submit', self.backup)
+        self.store.rows[key]['input'].workflow = {'1': {'class_type': 'UNETLoader', 'inputs': {'unet_name': 'remote-model.safetensors'}}}
         self.node(self.backup)
-        for inventory, reason in (({}, '缺少工作流节点'),
-                ({'UNETLoader': {'input': {'required': {'unet_name': [['other.safetensors']]}}}}, '缺少模型')):
-            self.store.save(key, status='local_queued')
-            with patch.object(t.client.Client, 'json', return_value=inventory), \
-                    patch.object(self.store, 'submit', AsyncMock()) as submit:
-                await self.store.dispatch_node(self.backup)
-                submit.assert_not_awaited()
-            self.assertEqual(self.store.rows[key]['state']['status'], 'paused')
-            self.assertIn(reason, self.store.rows[key]['state']['error'])
-            self.assertEqual(self.store.rows[key]['state']['failure_stage'], 'target_dependencies')
+        with patch.object(t.client.Client, 'json') as query, patch.object(self.store.remote_queues, 'refresh', AsyncMock()), \
+                patch.object(self.store, 'submit', AsyncMock()) as submit:
+            await self.store.dispatch_node(self.backup)
+            query.assert_not_called()
+            submit.assert_awaited_once()
 
     async def test_target_second_pass_cache_is_checked_with_actual_workflow(self):
         workflow = json.loads((t.SKILL / 'references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.api.json').read_text('utf8'))
@@ -209,12 +204,9 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
         self.store.rows[key]['input'].workflow = workflow
         self.store.rows[key]['input'].task_type = 'video-second-pass'
         self.node(self.backup)
-        inventory = {node['class_type']: {'input': {'required': {}}} for node in workflow.values()}
         checked = []
         def query(remote, route, data=None, headers=None):
             self.assertEqual(remote.url, self.backup)
-            if route == '/object_info':
-                return inventory
             self.assertEqual(route, '/minimax/director/first_pass_cache_status')
             payload = json.loads(data)
             self.assertEqual(payload['node_id'], '502')
@@ -260,10 +252,10 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
         timeline.update(runSelectEnabled=True, runSelection=[1])
         workflow['502']['inputs']['timeline_data'] = json.dumps(timeline)
         self.node(self.backup)
-        inventory = {node['class_type']: {'input': {'required': {}}} for node in workflow.values()}
         cache = {'can_confirm_refine': True, 'segments': []}
         def query(remote, route, *args):
-            return inventory if route == '/object_info' else cache
+            self.assertEqual(route, '/minimax/director/first_pass_cache_status')
+            return cache
         with patch.object(t.client.Client, 'json', query), \
                 patch('backend.services.director_uploads.save_uploaded_workflow'), \
                 patch.object(self.store.generation_context, 'prepare_generation_context'), \
@@ -315,9 +307,6 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
         @remote.get('/queue')
         def queue():
             return {'queue_pending': [], 'queue_running': []}
-        @remote.get('/object_info')
-        def inventory():
-            return {'SaveImage': {'input': {'required': {}}}}
         @remote.get('/history/backup-id')
         def history():
             return {'backup-id': {'status': {'completed': True, 'status_str': 'success'},

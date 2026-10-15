@@ -4,7 +4,8 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from backend.services.director_uploads import SCRIPT, save_uploaded_workflow, pairs
+from backend.services.comfy_tasks import SKILL
+from backend.services.director_uploads import save_uploaded_workflow, check_pair, pairs
 
 
 class DirectorUploadsTests(unittest.TestCase):
@@ -14,7 +15,7 @@ class DirectorUploadsTests(unittest.TestCase):
             record = project / 'record'
             record.mkdir()
             stem = 'Minimax-H3-导演台-视频生成-标准版'
-            baseline = SCRIPT.parent.parent / 'references/comfyui-workflow'
+            baseline = SKILL / 'references/comfyui-workflow'
             canvas = json.loads((baseline / (stem + '.workflow.json')).read_text(encoding='utf-8'))
             removed = {503, 504, 505, 506}
             canvas['nodes'] = [node for node in canvas['nodes'] if node['id'] not in removed]
@@ -39,10 +40,11 @@ class DirectorUploadsTests(unittest.TestCase):
             record = project / 'record'
             record.mkdir()
             stem = 'Minimax-H3-导演台-视频生成-标准版'
-            baseline = SCRIPT.parent.parent / 'references/comfyui-workflow'
+            baseline = SKILL / 'references/comfyui-workflow'
             for suffix in ('.api.json', '.workflow.json'):
                 (record / (stem + suffix)).write_bytes((baseline / (stem + suffix)).read_bytes())
             original = json.loads((record / (stem + '.api.json')).read_text(encoding='utf-8'))
+            self.assertEqual(check_pair(record, original)['result'], 'passed')
             workflow = copy.deepcopy(original)
             timeline = json.loads(workflow['502']['inputs']['timeline_data'])
             media = {'imageFile': 'real/renamed.png', 'fileName': 'renamed.png', 'subfolder': 'real', 'type': 'input', 'index': 0}
@@ -53,6 +55,7 @@ class DirectorUploadsTests(unittest.TestCase):
             uploads = {'real/renamed.png': {'file': str(project / 'reference.png'), 'input_path': 'real/renamed.png'}}
             save_uploaded_workflow(project, record, original, workflow, uploads)
             save_uploaded_workflow(project, record, original, workflow, uploads)
+            self.assertEqual(check_pair(record, workflow)['result'], 'passed')
             self.assertEqual(len(pairs.verify(record)), 1)
             mapping = json.loads((record / '输入映射.json').read_text(encoding='utf-8'))
             self.assertEqual(mapping['uploads'], [{'file': 'reference.png', 'input_path': 'real/renamed.png'}])

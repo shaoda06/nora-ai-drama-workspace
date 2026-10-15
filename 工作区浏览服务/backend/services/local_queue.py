@@ -72,6 +72,8 @@ class LocalQueue:
             return {'local_task_id': existing, 'monitor_id': existing, 'monitor': 'browser',
                     'status': row['state']['status'], 'duplicate': True}
         project = self.validate(data)
+        from backend.services.execution_checks import check_prepared
+        check_prepared(self, data)
         if data.segment_plan and not data.segment_plan.targets:
             raise ValueError('新导演台任务必须显式提供每段本机成果保存路径')
         key = str(uuid.uuid4())
@@ -197,33 +199,28 @@ class LocalQueue:
             raise ValueError('节点配置已改变，请核对任务地址')
         workflow = deepcopy(data.workflow)
         transferred = data.url.rstrip('/') != row['state'].get('enqueued_url', data.url).rstrip('/')
-        if transferred:
-            self.save(key, phase='target_dependencies')
-            inventory = await asyncio.to_thread(self.client_for(data).json, '/object_info')
-            for node in workflow.values():
-                kind = node['class_type']
-                if kind not in inventory:
-                    raise ValueError('目标节点缺少工作流节点：' + kind)
-                definitions = inventory[kind]['input']
-                fields = {**definitions.get('required', {}), **definitions.get('optional', {})}
-                for name, value in node['inputs'].items():
-                    definition = fields.get(name)
-                    if (definition and isinstance(definition[0], list) and isinstance(value, str)
-                            and (name.endswith('_name') or name.endswith('_model')) and value not in definition[0]):
-                        raise ValueError('目标节点缺少模型：' + kind + '.' + name + ' = ' + value)
-            self.record(key, 'target_dependencies', 'success', url=data.url)
+        from backend.services import execution_checks as checks
+        report = checks.check_prepared(self, data, bound=row['state'].get('uploads_bound', False), transferred=transferred)
+        local_checks = checks.director_checks(workflow) if report is None and data.task_type.startswith('video-') else []
+        self.record(key, 'preparation', 'reused' if report else 'legacy_local_checks',
+                    segments=local_checks, remote_capabilities='not_queried')
         uploaded_materials = {}
         upload_cache = {}
         saved_uploads = {}
         upload_bindings = []
         remote_url = self.client_for(data).url
+        source_digests = {}
 
         def checked_source(source, uploaded):
             if not isinstance(uploaded, dict) or not {'input_path', 'sha256'}.issubset(uploaded):
                 raise ValueError('已有上传凭据缺少文件路径或传输校验信息')
-            with source.open('rb') as stream:
-                if hashlib.file_digest(stream, 'sha256').hexdigest() != uploaded['sha256']:
-                    raise ValueError('本机素材已不同于原上传凭据，请核对素材版本后创建新的执行')
+            stamp = (source.stat().st_size, source.stat().st_mtime_ns)
+            if source not in source_digests:
+                with source.open('rb') as stream:
+                    source_digests[source] = (stamp, hashlib.file_digest(stream, 'sha256').hexdigest())
+            previous, digest = source_digests[source]
+            if previous != stamp or digest != uploaded['sha256']:
+                raise ValueError('本机素材已不同于原上传凭据，请核对素材版本后创建新的执行')
             return uploaded
 
         # Recover all completed transfers first, including receipts for later slots.
@@ -254,11 +251,15 @@ class LocalQueue:
             else:
                 self.save(key, phase='upload')
                 self.record(key, 'upload', 'started', file=str(source), receipt=str(receipt))
+                stamp = (source.stat().st_size, source.stat().st_mtime_ns)
                 uploaded = await asyncio.to_thread(self.client.upload, self.client_for(data),
                                                    argparse.Namespace(file=str(source), subfolder=item['subfolder']))
                 self.client.write_new(receipt, {'ok': True, 'url': self.client_for(data).url,
-                                                'time': self.client.now(), 'data': uploaded})
+                                               'time': self.client.now(), 'data': uploaded})
                 self.record(key, 'upload', 'success', file=str(source), remote=uploaded)
+                if stamp != (source.stat().st_size, source.stat().st_mtime_ns):
+                    raise ValueError('本机素材已不同于上传开始时，请核对素材版本后创建新的执行')
+                source_digests[source] = (stamp, uploaded['sha256'])
                 upload_cache[upload_key] = (uploaded, receipt)
             inputs = workflow[item['node']]['inputs']
             if 'json-path' in item:
@@ -287,7 +288,10 @@ class LocalQueue:
             else:
                 inputs[item['input']] = uploaded['input_path']
             uploaded_materials[uploaded['input_path']] = {'input_path': uploaded['input_path'], 'file': str(source)}
-        if transferred and data.task_type in ('video-first-pass', 'video-second-pass'):
+        for source, (stamp, _) in source_digests.items():
+            if stamp != (source.stat().st_size, source.stat().st_mtime_ns):
+                raise ValueError('本机素材已不同于上传／核验时，请返回准备阶段')
+        if data.task_type in ('video-first-pass', 'video-second-pass'):
             self.save(key, phase='target_cache')
             for node_id, node in workflow.items():
                 if node['class_type'] != 'MiniMaxH3Director':
@@ -305,9 +309,12 @@ class LocalQueue:
                 result = await asyncio.to_thread(self.client_for(data).json, '/minimax/director/first_pass_cache_status',
                     json.dumps(payload, ensure_ascii=False).encode('utf8'), {'Content-Type': 'application/json'})
                 self.record(key, 'target_cache', 'checked', url=data.url, response=result)
+                if type(result.get('can_confirm_refine')) is not bool:
+                    raise ValueError('阶段缓存状态不明确；未提交生成，请核对原任务')
                 if data.task_type == 'video-second-pass' and result.get('can_confirm_refine') is not True:
                     raise ValueError('目标节点的一采缓存缺失或不匹配，不能执行二采；请核对来源缓存后处理，不会自动重做一采')
-                if data.task_type == 'video-first-pass' and result.get('can_confirm_refine') is True:
+                if data.task_type == 'video-first-pass' and (result.get('can_confirm_refine') is True
+                        or result.get('selected_matched', 0) > 0):
                     raise ValueError('目标节点已有匹配的一采缓存，当前工作流会进入二采；请先核对目标节点缓存与任务阶段')
                 timeline = json.loads(inputs['timeline_data'])
                 if timeline.get('runSelectEnabled'):
@@ -322,6 +329,7 @@ class LocalQueue:
             self.save(key, phase='upload_binding')
             await asyncio.to_thread(save_uploaded_workflow, data.project, Path(data.record_dir), data.workflow, workflow,
                                     uploaded_materials)
+            self.save(key, uploads_bound=True)
             self.record(key, 'upload_binding', 'success')
             self.save(key, phase='generation_context')
             await asyncio.to_thread(self.generation_context.prepare_generation_context,

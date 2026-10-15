@@ -31,7 +31,7 @@ Stdout reports JSON: `cache_updated` indicates whether a new cache was saved, `o
 - `models`: API category to filename list. A filename being listed does not verify checksum, integrity or compatibility. Extra model paths may point outside the default model directory.
 - `node_modules`: module names reported by nodes; does not include unregistered or failed-to-import packages.
 
-Refresh if the endpoint changes, the cache is older than one hour, models/nodes changed, a dependency is missing, or the user asks. Before submission, recheck relevant class definitions/model choices if the cache conflicts with the workflow. Do not claim a stale or partial cache is a complete live inventory.
+This skill is an explicit inventory/diagnostic tool, not a prerequisite for ordinary uploads or generation submissions. Workspace preparation and submission tools assume the selected remote can execute the supplied workflow; they do not query or refresh its capability library. Remote execution reports unsupported nodes/models/parameters, and the submission tool preserves and returns those errors to the Agent without automatic resubmission. Only perform an inventory refresh when the user explicitly requests a capability inventory or the current authorized diagnostic task requires it. Cached inventories do not expire automatically after one hour; source_url and last_updated remain factual, and reused/partial data must not be described as a complete live query.
 
 ## Workflow check
 

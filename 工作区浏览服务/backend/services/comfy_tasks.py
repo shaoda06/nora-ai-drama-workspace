@@ -250,6 +250,8 @@ class TaskStore(LocalQueue, TaskNotifications):
             client.remote_path(name, filename=True)
         if len(names) != len(set(names)):
             raise ValueError('证据文件名不能重复')
+        if '执行检查报告.json' in names:
+            raise ValueError('证据文件名不能占用执行检查报告.json')
         if any((record / name).exists() for name in names):
             raise client.ClientError('submission_guard', '已有任务证据；核对原任务，不得再次提交')
         targets = [Path(output.path).resolve() for output in data.outputs]
@@ -285,6 +287,11 @@ class TaskStore(LocalQueue, TaskNotifications):
                 raise ValueError('原生分段任务使用segment-plan，不混用末段保存节点作为全组输出')
         return project
 
+    async def prepare_only(self, data):
+        from backend.services.execution_checks import prepare_report
+        self.validate(data)
+        return await asyncio.to_thread(prepare_report, self, data)
+
     def client_for(self, data):
         return client.Client(data.url, data.timeout)
 
@@ -318,8 +325,8 @@ class TaskStore(LocalQueue, TaskNotifications):
                 argparse.Namespace(**data.model_dump()), workflow=workflow or data.workflow, client_id=state['client_id'])
         except (client.ClientError, OSError, ValueError) as error:
             rejected = isinstance(error, client.ClientError) and error.code == 'submission_rejected'
-            self.save(key, status='rejected' if rejected else 'submission_unknown', error=str(error), failure_stage='submit')
-            self.record(key, 'submit', 'rejected' if rejected else 'unknown', error=str(error))
+            self.save(key, status='rejected' if rejected else 'submission_unknown', error=str(error), error_details=getattr(error, 'details', {}), failure_stage='submit')
+            self.record(key, 'submit', 'rejected' if rejected else 'unknown', error=str(error), error_details=getattr(error, 'details', {}))
             self.queue_notice(key, 'submission_issue', 'attention', str(error))
             await socket.close()
             raise
@@ -425,9 +432,10 @@ class TaskStore(LocalQueue, TaskNotifications):
         data, state = self.rows[key]['input'], self.rows[key]['state']
         if result['state'] == 'failed':
             messages = (result.get('history') or {}).get('status', {}).get('messages', [])
-            error = next((json.dumps(payload, ensure_ascii=False) for event, payload in messages
-                          if event in ('execution_error', 'execution_interrupted')), 'ComfyUI确认执行失败；详情见执行结果.json')
-            self.save(key, status='failed', error=error, ended_at=client.now(), progress=None, failure_stage='execution')
+            details = next((payload for event, payload in messages
+                            if event in ('execution_error', 'execution_interrupted')), {})
+            error = json.dumps(details, ensure_ascii=False) if details else 'ComfyUI确认执行失败；详情见执行结果.json'
+            self.save(key, status='failed', error=error, error_details=details, ended_at=client.now(), progress=None, failure_stage='execution')
             return
         self.save(key, status='collecting', progress=None, ended_at=state.get('ended_at') or client.now(), phase='collection',
                   collection_attempt=state.get('collection_attempt', 1), collection_auto_retry=state.get('collection_auto_retry', 0))

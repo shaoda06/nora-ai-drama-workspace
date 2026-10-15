@@ -109,6 +109,18 @@ async def comfy_submit(request: Request, data: TaskInput) -> dict[str, Any]:
     return result
 
 
+@app.post('/api/internal/comfy/prepare')
+async def comfy_prepare(request: Request, data: TaskInput) -> dict[str, Any]:
+    tasks = request.app.state.comfy_tasks
+    if (request.client.host not in ('127.0.0.1', '::1') or request.headers.get('origin') is not None
+            or not secrets.compare_digest(request.headers.get('x-nora-task-token', ''), tasks.token)):
+        raise HTTPException(403, '仅允许本机Agent通过专用凭证检查')
+    try:
+        return await tasks.prepare_only(data)
+    except (ValueError, OSError, RuntimeError, comfy_client.ClientError) as error:
+        raise HTTPException(409, str(error)) from error
+
+
 class QueueAction(BaseModel):
     action: Literal['immediate', 'insert', 'pause', 'resume', 'cancel']
 
@@ -184,7 +196,8 @@ async def agent_task_status(key: str, request: Request) -> dict[str, Any]:
     if key not in tasks.rows:
         raise HTTPException(404, '任务不存在')
     return next(item for item in tasks.public()['tasks'] if item['id'] == key) | {
-        'record_dir': tasks.rows[key]['input'].record_dir}
+        'record_dir': tasks.rows[key]['input'].record_dir,
+        'error_details': tasks.rows[key]['state'].get('error_details', {})}
 
 
 @app.post('/api/internal/comfy/tasks/{key}/retry-collection')

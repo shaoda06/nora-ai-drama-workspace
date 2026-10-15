@@ -36,6 +36,8 @@ LOCAL_FIELDS = {'path', 'file', 'record_dir', 'receipt', 'history', 'evidence', 
 
 def recorded_paths(project, document, *, relative=False, field=''):
     """Translate local file fields only; remote paths and historical prose stay intact."""
+    if field == 'error_details':
+        return document  # Opaque remote/client error payload, never project file identities.
     if isinstance(document, dict):
         return {key: recorded_paths(project, value, relative=relative, field=key)
                 for key, value in document.items()}

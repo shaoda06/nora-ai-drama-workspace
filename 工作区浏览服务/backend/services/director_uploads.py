@@ -10,6 +10,35 @@ pairs = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pairs)
 
 
+def check_pair(record, workflow):
+    checked = []
+    for api_file in record.glob('*.api.json'):
+        canvas_file = api_file.with_name(api_file.name.removesuffix('.api.json') + '.workflow.json')
+        if not canvas_file.exists():
+            raise ValueError('缺少任务配对画布：' + api_file.name)
+        saved = json.loads(api_file.read_text('utf-8-sig'))
+        if saved != workflow:
+            raise ValueError('任务API副本与登记资料不一致：' + api_file.name)
+        try:
+            graph = pairs.Canvas(json.loads(canvas_file.read_text('utf-8-sig')))
+            # Check exactly the task graph, including its declared terminal outputs.
+            linked = {value[0] for node in workflow.values() for value in node['inputs'].values() if pairs.is_link(value)}
+            expected = graph.api([key for key in workflow if key not in linked])
+            assert pairs.semantic(workflow) == pairs.semantic(expected), '画布/API不一致'
+            for node in workflow.values():
+                if node['class_type'] == 'MiniMaxH3Director':
+                    timeline = json.loads(node['inputs']['timeline_data'])
+                    editor = timeline['batchWorkspaces']['r2v']
+                    assert pairs.director_editor_state(editor['globalCommon'], True) == pairs.director_editor_state(timeline['global'], True), '公共区与编辑状态不一致'
+                    assert [pairs.director_editor_state(group) for group in editor['segments']] == [pairs.director_editor_state(group) for group in timeline['segments']], '分组与编辑状态不一致'
+        except (AssertionError, KeyError, TypeError) as error:
+            raise ValueError('准备配对核对失败：' + str(error)) from error
+        checked.append(api_file.name)
+    if not checked and any(node['class_type'] == 'MiniMaxH3Director' for node in workflow.values()):
+        raise ValueError('导演台准备阶段缺少实际API／画布配对副本')
+    return {'result': 'passed' if checked else 'not_provided', 'files': checked}
+
+
 def save_uploaded_workflow(project, record, original, workflow, uploaded_materials):
     directors = {key: node for key, node in workflow.items() if node['class_type'] == 'MiniMaxH3Director'}
     if not directors:

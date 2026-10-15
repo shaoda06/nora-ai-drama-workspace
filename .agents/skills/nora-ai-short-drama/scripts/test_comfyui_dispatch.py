@@ -34,6 +34,16 @@ class DispatchTests(unittest.TestCase):
         self.args.task_title=' '
         with self.assertRaises(ValueError): d.dispatch(self.args)
 
+    def test_prepare_only_routes_to_tool_without_agent_validation_or_generation(self):
+        self.args.prepare_only = True
+        with patch.object(d.browser_tasks, 'submit', return_value={'prepared': True, 'report': '执行检查报告.json'}) as handoff, \
+                patch.object(d.client, 'validate_workflow') as check, patch.object(d.client, 'submit') as post:
+            result = d.dispatch(self.args)
+        self.assertEqual(result['dispatch_state'], 'prepared')
+        self.assertTrue(handoff.call_args.args[0].prepare_only)
+        check.assert_not_called()
+        post.assert_not_called()
+
     def test_workspace_relative_record_path_rejected_before_handoff(self):
         self.args.record_dir = 'projects/' + self.root.name + '/执行附件/任务'
         with patch.object(d.browser_tasks, 'submit') as handoff:

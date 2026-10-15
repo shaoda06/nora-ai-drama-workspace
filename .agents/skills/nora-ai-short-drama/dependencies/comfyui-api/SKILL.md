@@ -22,8 +22,8 @@ Portable adaptation of [ComfyUI-Expert](https://github.com/MCKRUZ/ComfyUI-Expert
 
 Full API access. Preferred mode for interactive work.
 
-1. **Test connection**: `GET /system_stats`
-2. **Discover capabilities**: Use `comfyui-inventory`
+1. **Use the configured endpoint**: ordinary submission does not probe system capabilities.
+2. **Prepare locally**: use the fixed tool report; capability inventory is only an explicitly requested diagnostic task.
 3. **Queue workflow**: `POST /prompt`
 4. **Poll for results**: `GET /history/{prompt_id}` every 5 seconds
 5. **Retrieve outputs**: `GET /view?filename=...`
@@ -153,15 +153,9 @@ ComfyUI supports WebSocket; REST polling is the default here because it needs no
 
 ## Workflow Validation
 
-Before queuing any workflow:
+Local preparation validates JSON structure, declared bindings, paired local canvas/API and task-specific size/count constraints using the fixed tools. Ordinary submission assumes the selected remote supports the supplied workflow: do not query node/model catalogs or require inventory freshness before queuing. ComfyUI validates remote classes, model availability, input schemas and connections when it receives/executes the request. Preserve the original response/error details and report them to the Agent; rejected or uncertain POSTs are not automatically retried.
 
-1. Read the cache location documented by the installed `comfyui-inventory` skill; refresh through that skill when missing, stale, incomplete or from another endpoint. This skill does not own an inventory cache or assume the other skill is installed next to it.
-2. For each node in workflow: verify `class_type` exists in installed nodes
-3. For each model reference: verify file exists in installed models
-4. Flag missing items with:
-   - Node: identify the package from evidence; do not guess install commands.
-   - Model: consult [references/models.md](references/models.md) and verify the exact source.
-   - Version mismatch: investigate compatibility before proposing an update.
+Capability discovery is a separate authorized diagnostic task. When explicitly needed, use the installed `comfyui-inventory` skill and its documented cache location; do not infer another endpoint's capabilities or install/update dependencies automatically.
 
 ## Error Handling
 

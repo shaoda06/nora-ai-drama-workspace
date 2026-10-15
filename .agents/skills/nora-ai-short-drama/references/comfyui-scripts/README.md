@@ -333,7 +333,8 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 | --record-dir | 项目内既定执行附件；必填，相对路径以--project指定的项目根目录解析，也可用项目内绝对路径；后台保存相对路径 |
 | --task-type | image、image-upscale、video-first-pass、video-second-pass、video-postprocess，按实际获授权阶段 |
 | --task-title | 必填非空标题，格式由Agent遵守[标题规则](../流程规范/ComfyUI-服务配置与任务提交规范.md#任务显示标题)，后台不补目录名 |
-| --eligible-url | 可选已核对主节点地址，提供时须与项目第一项一致 |
+| --eligible-url | 可选预期主节点地址，仅与项目第一项比对，不核验远端能力 |
+| --prepare-only | 只作工具准备检查并写报告；不入队／上传／生成 |
 | --uploads | 可选本机素材与节点输入绑定JSON，后台准备时实际上传 |
 | --output-plan | 必填JSON数组，普通输出明确节点、字段、序号和本机目标；导演台使用空数组及segment-plan |
 | --segment-plan | 原生H3分段必填，含导演台、报告节点、核实output根目录及每个选中组的显式本机目标 |
@@ -342,6 +343,24 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 | --monitor | 仅支持browser，服务缺失时报告接入问题，不回退legacy |
 | --start-paused | 可选，仅在已授权手动转移等需要先暂停的操作中使用；登记时直接为paused，恢复前不上传或提交；默认不传，自动排队 |
 | --thread-id | 默认真实CODEX_THREAD_ID；通知其他会话须有用户授权 |
+
+### 准备检查与提交复用
+
+同一命令在准备阶段加`--prepare-only`，由后台检查并在原`--record-dir`写`执行检查报告.json`，不上传、不入队、不生成。参数、计划文件与正式提交相同；准备命令不要求已有生成授权。返回`dispatch_state=prepared`和`prepared=true`才表示工具检查成功；失败报告写具体错误，不等于内容审核通过。
+
+```sh
+python /实际技能目录/scripts/comfyui_dispatch.py \
+  --project /实际项目目录 --task-type image \
+  --workflow /实际执行附件/本任务-工作流.api.json \
+  --record-dir /实际执行附件 --task-title 'CH001 · 首次生成' \
+  --output-plan /实际执行附件/成果取回映射.json --prepare-only
+```
+
+用户授权后调用相同命令、移除`--prepare-only`即可登记队列，不再次展开内容或人工核对技术项目。准备输入与源文件未变时后台复用报告；变化则停止，先在准备阶段修改并重新检查。旧任务没有报告时后台执行所缺技术检查，不补造历史准备结论。上传后真实路径的绑定和冻结资料仍由后台完成，不需要Agent另跑关联脚本。
+
+正常准备与提交不查询远端`/object_info`、`/models`或系统能力清单，不以库存时效决定能否提交。目标端默认可执行所提供工作流；真实节点／模型／参数错误由远端返回，工具保留原始详情及失败阶段，Agent读取报告，不自行重试。明确要求能力盘点或依赖诊断时才调用inventory工具。队列、阶段缓存和实际上传响应仍按本次执行需要处理，它们不属于能力预检。
+
+`执行检查报告.json`保留实际登记输入、准备时的源文件大小／修改时间、本地配对、H3各组字符数／标签／容量结论，不保存私有桌面连接信息。它是本次工具技术报告，不能占用提交／下载凭据名称。后台任务详情的记录列表可直接打开该报告。准备中的内容判断及审批依据仍在既有业务文档；报告不替代它们。
 
 ### 浏览服务监控接入
 

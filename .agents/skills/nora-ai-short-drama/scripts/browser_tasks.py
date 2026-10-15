@@ -38,7 +38,9 @@ def submit(args, workflow, url, uploads=None):
     if payload['segment_plan']:
         for target in payload['segment_plan']['targets']:
             target['path'] = relative_file(project, target['path'])
-    request = urllib.request.Request(config['url'] + '/api/internal/comfy/submit',
+    preparing = getattr(args, 'prepare_only', False)
+    route = '/prepare' if preparing else '/submit'
+    request = urllib.request.Request(config['url'] + '/api/internal/comfy' + route,
         data=json.dumps(payload, ensure_ascii=False, allow_nan=False).encode('utf-8'),
         headers={'Content-Type': 'application/json', 'x-nora-task-token': config['token']})
     # Bypass system proxies for local service. Never retry a possibly accepted POST.
@@ -47,7 +49,7 @@ def submit(args, workflow, url, uploads=None):
             return json.load(response)
     except urllib.error.HTTPError as error:
         detail = json.load(error).get('detail')
-        raise ValueError('本地入队未成功，检查后台任务状态：' + str(detail)) from error
+        raise ValueError(('准备检查失败：' if preparing else '本地入队未成功，检查后台任务状态：') + str(detail)) from error
 
 
 def service_call(route, payload=None):

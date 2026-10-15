@@ -252,9 +252,13 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
             sources.extend([source] * count)
         data = self.bind_uploads(key, sources)
         with patch.object(t.client, 'upload', side_effect=self.uploaded_file) as upload:
-            workflow = await self.store.prepare(key)
+            with patch('backend.services.local_queue.hashlib.file_digest') as digest:
+                workflow = await self.store.prepare(key)
+                digest.assert_not_called()  # Fresh upload already reports the transmitted byte digest.
             self.assertEqual(upload.call_count, 11)
-            await self.store.prepare(key)
+            with patch('backend.services.local_queue.hashlib.file_digest', wraps=hashlib.file_digest) as digest:
+                await self.store.prepare(key)
+                self.assertEqual(digest.call_count, 11)  # Recovery hashes files, not 53 slots twice.
             self.assertEqual(upload.call_count, 11)
         receipts = []
         for item in data.uploads:

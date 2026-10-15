@@ -20,7 +20,7 @@ async def task_detail(store, key):
     files = await asyncio.to_thread(task_files, data, state, events)
     fields = ('id', 'project', 'title', 'task_type', 'status', 'source_session_name', 'created_at',
               'submitted_at', 'started_at', 'ended_at', 'updated_at', 'prompt_id', 'failure_stage',
-              'error', 'collected', 'expected', 'notification', 'dispatch_attempt', 'preparation_attempt',
+              'error', 'error_details', 'collected', 'expected', 'notification', 'dispatch_attempt', 'preparation_attempt',
               'collection_attempt', 'collection_auto_retry', 'collection_next_retry_at', 'collection_retry_stop')
     summary = {field: state.get(field) for field in fields}
     summary.update(enqueued_url=state.get('enqueued_url', data.url), remote_url=data.url)
@@ -80,6 +80,7 @@ def task_files(data, state, events):
                         'error': error})
     records = []
     for label, name in (('任务摘要', '后台任务状态.json'), ('完整过程记录', '后台过程记录.json'),
+                        ('准备检查报告', '执行检查报告.json'),
                         ('远端执行结果', data.history_name)):
         info = file_info(Path(data.record_dir) / name)
         if info['available']:

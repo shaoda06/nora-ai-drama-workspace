@@ -24,9 +24,16 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
             raise ValueError('生成资料越出项目：' + str(path))
         return path
 
+    file_bytes = {}
+
+    def read_once(path):
+        if path not in file_bytes:
+            file_bytes[path] = path.read_bytes()
+        return file_bytes[path]
+
     def snapshot(target, data):
         target = inside(target)
-        if target in payloads and payloads[target] != data or target.exists() and target.read_bytes() != data:
+        if target in payloads and payloads[target] != data or target.exists() and read_once(target) != data:
             raise ValueError('当次资料已冻结，不可覆盖：' + str(target))
         payloads[target] = data
         return target.relative_to(project).as_posix()
@@ -73,7 +80,7 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
                         slot = f"<{label} {item['index'] + 1}>"
                         prior = next((ref for ref in reused.get(scope, []) if ref['label'] == slot), None)
                         target = inside(prior['file']) if prior else record / '输入素材' / original.name
-                        result[scope].append({'file': snapshot(target, original.read_bytes()),
+                        result[scope].append({'file': snapshot(target, read_once(original)),
                                               'label': slot,
                                               'original_file': prior.get('original_file', original.relative_to(project).as_posix()) if prior else original.relative_to(project).as_posix()})
             return result
@@ -108,12 +115,12 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
             english_file = inside(reused['prompts']['english']) if reused else directory / '模型提示词.txt'
             if english_file.exists() and english_file.read_text(encoding='utf-8-sig').strip() != prompt:
                 raise ValueError('已有冻结英文与本次实际API提示词不一致')
-            english = snapshot(english_file, english_file.read_bytes() if english_file.exists() else prompt.encode('utf-8'))
+            english = snapshot(english_file, read_once(english_file) if english_file.exists() else prompt.encode('utf-8'))
             prompts = {'english': english}
             chinese = inside(reused['prompts']['chinese']) if reused and 'chinese' in reused['prompts'] else directory / '中文提示词参考版.txt'
             if chinese.is_file():
                 prompts['chinese'] = chinese.relative_to(project).as_posix()
-            script_file = snapshot(inside(reused['storyboard']['file']) if reused else record / '分镜脚本.md', storyboard.read_bytes())
+            script_file = snapshot(inside(reused['storyboard']['file']) if reused else record / '分镜脚本.md', read_once(storyboard))
             refs = references(group, reused['references'] if reused else {})
             if reused and {scope: [item['label'] for item in refs[scope]] for scope in refs} != {scope: [item['label'] for item in reused['references'][scope]] for scope in refs}:
                 raise ValueError('复用资料的实际素材槽位与来源不一致')
