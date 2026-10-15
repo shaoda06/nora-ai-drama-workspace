@@ -252,7 +252,8 @@ class TaskStore(LocalQueue, TaskNotifications):
             raise ValueError('证据文件名不能重复')
         if '执行检查报告.json' in names:
             raise ValueError('证据文件名不能占用执行检查报告.json')
-        if any((record / name).exists() for name in names):
+        # Submission evidence is guarded once by the transport; these are registration/output records.
+        if any((record / name).exists() for name in names[3:]):
             raise client.ClientError('submission_guard', '已有任务证据；核对原任务，不得再次提交')
         targets = [Path(output.path).resolve() for output in data.outputs]
         if any(not Path(output.path).is_absolute() for output in data.outputs):
@@ -313,21 +314,29 @@ class TaskStore(LocalQueue, TaskNotifications):
         state = self.rows[key]['state']
         if state.get('prompt_id'):
             raise ValueError('任务已有远端ID，不能重新提交')
-        record = Path(data.record_dir)
-        if any((record / name).exists() for name in (data.attempt_name, data.request_name, data.response_name)):
-            raise client.ClientError('submission_guard', '已有提交证据，不能重新提交')
-        self.save(key, status='submitting', phase='submit', failure_stage=None, dispatch_attempt=state.get('dispatch_attempt', 0) + 1)
+        previous = state.copy()
         socket = await connect(self.ws_url(data, state['client_id']), open_timeout=data.timeout,
                                ping_interval=20, ping_timeout=20, max_size=2**22)
+        self.save(key, status='submitting', phase='submit', failure_stage=None, dispatch_attempt=state.get('dispatch_attempt', 0) + 1)
         self.record(key, 'submit', 'started')
         try:
             result = await asyncio.to_thread(client.submit, self.client_for(data),
                 argparse.Namespace(**data.model_dump()), workflow=workflow or data.workflow, client_id=state['client_id'])
         except (client.ClientError, OSError, ValueError) as error:
-            rejected = isinstance(error, client.ClientError) and error.code == 'submission_rejected'
-            self.save(key, status='rejected' if rejected else 'submission_unknown', error=str(error), error_details=getattr(error, 'details', {}), failure_stage='submit')
-            self.record(key, 'submit', 'rejected' if rejected else 'unknown', error=str(error), error_details=getattr(error, 'details', {}))
-            self.queue_notice(key, 'submission_issue', 'attention', str(error))
+            details = getattr(error, 'details', {})
+            if isinstance(error, client.ClientError) and error.code == 'submission_guard':
+                state.clear()
+                state.update(previous)
+                if state['status'] in ('local_queued', 'paused', 'preparing', 'submitting'):
+                    self.save(key, status='paused', phase='submit', failure_stage='submit', error=str(error), error_details=details)
+                else:
+                    self.save(key)
+                self.record(key, 'submit', 'blocked', error=str(error), error_details=details)
+            else:
+                rejected = isinstance(error, client.ClientError) and error.code == 'submission_rejected'
+                self.save(key, status='rejected' if rejected else 'submission_unknown', error=str(error), error_details=details, failure_stage='submit')
+                self.record(key, 'submit', 'rejected' if rejected else 'unknown', error=str(error), error_details=details)
+                self.queue_notice(key, 'submission_issue', 'attention', str(error))
             await socket.close()
             raise
         self.save(key, prompt_id=result['prompt_id'], status='queued', submitted_at=client.now(), connection='connected', immediate=False)

@@ -1,10 +1,12 @@
 """Pure unit tests: no local server, no remote calls, no media generation."""
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import base64
 import io
 import json
 from pathlib import Path
 import tempfile
+import threading
 import unittest
 import zipfile
 from unittest.mock import patch
@@ -125,7 +127,61 @@ class ClientTests(unittest.TestCase):
             with self.assertRaises(c.ClientError) as caught:
                 run()
             self.assertEqual(caught.exception.code, "submission_guard")
+            self.assertEqual(caught.exception.details['submission_state'], 'not_sent')
             self.assertEqual(len(client.calls), 1)
+
+    def test_file_input_checks_structure_once_and_rejects_ui_canvas(self):
+        with tempfile.TemporaryDirectory() as folder:
+            client = FakeClient({"prompt_id": "accepted"})
+            args, run = self.submit_case(folder, client)
+            with patch.object(c, 'validate_workflow', wraps=c.validate_workflow) as check:
+                run()
+                check.assert_called_once()
+        with tempfile.TemporaryDirectory() as folder:
+            args, run = self.submit_case(folder, client)
+            Path(args.workflow).write_text(json.dumps({'nodes': []}), 'utf-8')
+            with self.assertRaises(c.ClientError) as invalid:
+                run()
+            self.assertEqual(invalid.exception.code, 'invalid_workflow')
+            self.assertFalse(Path(args.record_dir).exists())
+            self.assertEqual(len(client.calls), 1)
+
+    def test_each_existing_evidence_file_blocks_without_post_or_overwrite(self):
+        for field in ('attempt_name', 'request_name', 'response_name'):
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as folder:
+                client = FakeClient({"prompt_id": "accepted"})
+                args, run = self.submit_case(folder, client)
+                evidence = Path(args.record_dir) / getattr(args, field)
+                evidence.parent.mkdir()
+                evidence.write_bytes(b'original evidence')
+                with self.assertRaises(c.ClientError) as blocked:
+                    run()
+                self.assertEqual(blocked.exception.details['submission_state'], 'not_sent')
+                self.assertEqual(evidence.read_bytes(), b'original evidence')
+                self.assertEqual(list(evidence.parent.iterdir()), [evidence])
+                self.assertFalse(client.calls)
+
+    def test_concurrent_reservation_only_one_post_and_loser_is_not_sent(self):
+        with tempfile.TemporaryDirectory() as folder:
+            client = FakeClient({"prompt_id": "accepted"})
+            args, run = self.submit_case(folder, client)
+            barrier = threading.Barrier(2)
+            write = c.write_new
+            def reserve(path, value):
+                if Path(path).name == args.attempt_name:
+                    barrier.wait(timeout=5)
+                return write(path, value)
+            def attempt():
+                try:
+                    return run()['submission_state']
+                except c.ClientError as error:
+                    self.assertEqual(error.code, 'submission_guard')
+                    return error.details['submission_state']
+            with patch.object(c, 'write_new', side_effect=reserve), ThreadPoolExecutor(max_workers=2) as pool:
+                results = list(pool.map(lambda _: attempt(), range(2)))
+            self.assertCountEqual(results, ['accepted', 'not_sent'])
+            self.assertEqual(len(client.calls), 1)
+            self.assertEqual(json.loads((Path(args.record_dir) / args.response_name).read_bytes()), {'prompt_id': 'accepted'})
 
     def test_post_timeout_stays_unknown_and_never_retries(self):
         with tempfile.TemporaryDirectory() as folder:

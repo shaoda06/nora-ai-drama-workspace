@@ -111,6 +111,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         def refuse(*args, **kwargs):
             (self.record / self.data.attempt_name).write_text('real attempt evidence')
             raise error
+        actual_submit = t.client.submit
         with patch.object(t, 'connect', AsyncMock(return_value=AsyncMock())), patch.object(t.client, 'submit', side_effect=refuse) as post:
             with self.assertRaises(t.client.ClientError):
                 await self.store.submit(self.data)
@@ -119,8 +120,13 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
             event = next(event for event in json.loads((self.record / '后台过程记录.json').read_text('utf-8'))
                          if event['stage'] == 'submit' and event['result'] == 'rejected')
             self.assertEqual(event['error_details'], detail)
-            with self.assertRaises(t.client.ClientError):
-                await self.store.submit(self.data, key=key)
+            with patch.object(t.client, 'submit', wraps=actual_submit), patch.object(t.client.Client, 'json') as network:
+                with self.assertRaises(t.client.ClientError) as blocked:
+                    await self.store.submit(self.data, key=key)
+                self.assertEqual(blocked.exception.details['submission_state'], 'not_sent')
+                network.assert_not_called()
+            self.assertEqual(self.store.rows[key]['state']['status'], 'rejected')
+            self.assertEqual(self.store.rows[key]['state']['error_details'], detail)
             post.assert_called_once()
         app = FastAPI()
         app.state.comfy_tasks = self.store

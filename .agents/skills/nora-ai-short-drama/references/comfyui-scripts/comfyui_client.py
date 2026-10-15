@@ -154,7 +154,7 @@ def upload(client, args):
 
 
 def validate_workflow(workflow):
-    # Shape only. Node/model compatibility and business rules remain agent responsibilities.
+    # Shape only; remote compatibility is decided by ComfyUI during execution.
     if not isinstance(workflow, dict) or not workflow:
         raise ClientError("invalid_workflow", "Expected nonempty API-format node object")
     for node_id, node in workflow.items():
@@ -167,7 +167,8 @@ def validate_workflow(workflow):
 def submit(client, args, workflow=None, client_id=None):
     if workflow is None:
         workflow = strict_json(Path(args.workflow).read_bytes())
-    validate_workflow(workflow)
+        validate_workflow(workflow)
+    # A supplied object comes from the backend's validated task input.
     payload = {"prompt": workflow, "client_id": client_id or str(uuid.uuid4())}
     request_bytes = encoded(payload)
     record = Path(args.record_dir).absolute()
@@ -180,12 +181,16 @@ def submit(client, args, workflow=None, client_id=None):
     marker, request_file, response_file = [record / n for n in names]
     if any(os.path.lexists(p) for p in (marker, request_file, response_file)):
         raise ClientError("submission_guard", "Existing submission evidence; reconcile, never resubmit here",
-                          record_dir=str(record))
+                          record_dir=str(record), submission_state="not_sent")
     # O_EXCL also arbitrates concurrent submit calls sharing this record directory.
-    write_new(marker, {"time": now(), "url": client.url, "client_id": payload["client_id"],
-                       "request_sha256": hashlib.sha256(request_bytes).hexdigest(),
-                       "state": "reserved_do_not_resubmit"})
-    write_new(request_file, payload)
+    try:
+        write_new(marker, {"time": now(), "url": client.url, "client_id": payload["client_id"],
+                           "request_sha256": hashlib.sha256(request_bytes).hexdigest(),
+                           "state": "reserved_do_not_resubmit"})
+        write_new(request_file, payload)
+    except FileExistsError as exc:
+        raise ClientError("submission_guard", "Submission evidence reserved by another call; no request sent",
+                          record_dir=str(record), submission_state="not_sent") from exc
     try:
         result = client.json("/prompt", request_bytes, {"Content-Type": "application/json"})
     except Exception as exc:
