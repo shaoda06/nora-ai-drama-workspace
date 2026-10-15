@@ -435,12 +435,13 @@ class Parser(argparse.ArgumentParser):
         raise ClientError("arguments", message)
 
 
-def parser():
+def parser(*, allowed_commands=None, require_url=False):
     root = Parser(description=__doc__)
     commands = root.add_subparsers(dest="command", required=True, parser_class=Parser)
-    for name in ("upload", "submit", "status", "download", "export-pack"):
+    for name in allowed_commands or ("upload", "submit", "status", "download", "export-pack"):
         sub = commands.add_parser(name)
-        sub.add_argument("--url", default=os.environ.get("COMFYUI_URL"))
+        sub.add_argument("--url", required=require_url,
+                         default=None if require_url else os.environ.get("COMFYUI_URL"))
         sub.add_argument("--timeout", type=float, default=30, help="Per blocking network operation, not job deadline")
         sub.add_argument("--result", help="Optional new JSON result file; never overwritten")
         if name == "upload":
@@ -467,10 +468,10 @@ def parser():
     return root
 
 
-def main(argv=None, *, client_factory=Client):
+def main(argv=None, *, client_factory=Client, allowed_commands=None, require_url=False):
     args, result_stream = None, None
     try:
-        args = parser().parse_args(argv)
+        args = parser(allowed_commands=allowed_commands, require_url=require_url).parse_args(argv)
         client = client_factory(args.url, args.timeout)
         if args.result:
             result_path = Path(args.result).absolute()

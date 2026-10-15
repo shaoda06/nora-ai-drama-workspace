@@ -1,5 +1,6 @@
 """Workspace-wide ComfyUI endpoint configuration; never persist credentials in tasks."""
 import hashlib
+import importlib.util
 from pathlib import Path
 import sys
 
@@ -75,12 +76,34 @@ def connection_key(workspace, url):
 
 
 def main(argv=None):
-    """Explicit direct operations reuse the common CLI with workspace credentials."""
+    """Authorized diagnostics and cache operations; generation uses comfyui_dispatch."""
     import argparse
     parser = argparse.ArgumentParser(description=__doc__, add_help=False)
     parser.add_argument('--workspace', required=True, help='Workspace root containing comfyui-config.json')
     args, remaining = parser.parse_known_args(argv)
-    return client.main(remaining, client_factory=lambda url, timeout: client_for(args.workspace, url, timeout))
+    factory = lambda url, timeout: client_for(args.workspace, url, timeout)
+    tool_paths = {
+        'inventory': 'dependencies/comfyui-inventory/scripts/refresh_inventory.py',
+        'cache-clone': 'references/comfyui-scripts/director_cache.py',
+    }
+    if remaining and remaining[0] in tool_paths:
+        path = Path(__file__).resolve().parents[1] / tool_paths[remaining[0]]
+        spec = importlib.util.spec_from_file_location('nora_' + path.stem, path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        if remaining[0] == 'cache-clone':
+            return module.main(remaining[1:], client_factory=factory)
+
+        def authenticated_fetch(url, route, timeout):
+            try:
+                return factory(url, timeout).json(route)
+            except client.ClientError as error:
+                # The independent inventory callback reports network failures as OSError.
+                raise OSError(str(error)) from error
+
+        return module.main(remaining[1:], fetcher=authenticated_fetch, require_url=True)
+    return client.main(remaining, client_factory=factory,
+                       allowed_commands=('status', 'download', 'export-pack'), require_url=True)
 
 
 if __name__ == '__main__':
