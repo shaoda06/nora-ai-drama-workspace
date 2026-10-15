@@ -213,19 +213,44 @@ class LocalQueue:
                         raise ValueError('目标节点缺少模型：' + kind + '.' + name + ' = ' + value)
             self.record(key, 'target_dependencies', 'success', url=data.url)
         uploaded_materials = {}
+        upload_cache = {}
+        saved_uploads = {}
+        upload_bindings = []
+        remote_url = self.client_for(data).url
+
+        def checked_source(source, uploaded):
+            if not isinstance(uploaded, dict) or not {'input_path', 'sha256'}.issubset(uploaded):
+                raise ValueError('已有上传凭据缺少文件路径或传输校验信息')
+            with source.open('rb') as stream:
+                if hashlib.file_digest(stream, 'sha256').hexdigest() != uploaded['sha256']:
+                    raise ValueError('本机素材已不同于原上传凭据，请核对素材版本后创建新的执行')
+            return uploaded
+
+        # Recover all completed transfers first, including receipts for later slots.
+        # This cache belongs only to this preparation, never another task or endpoint.
         for item in data.uploads:
             source = Path(item['file']).resolve(strict=True)
             receipt = Path(data.record_dir) / item['response-name']
+            upload_key = (remote_url, source, item['subfolder'])
+            upload_bindings.append((item, source, receipt, upload_key))
             if receipt.exists():
                 evidence = self.client.strict_json(receipt.read_bytes())
-                if evidence.get('url') != self.client_for(data).url or evidence.get('ok') is not True:
+                if evidence.get('url') != remote_url or evidence.get('ok') is not True:
                     raise ValueError('已有上传凭据不完整，需核对后恢复')
-                uploaded = evidence.get('data')
-                if not isinstance(uploaded, dict) or not {'input_path', 'sha256'}.issubset(uploaded):
-                    raise ValueError('已有上传凭据缺少文件路径或传输校验信息')
-                with source.open('rb') as stream:
-                    if hashlib.file_digest(stream, 'sha256').hexdigest() != uploaded['sha256']:
-                        raise ValueError('本机素材已不同于原上传凭据，请核对素材版本后创建新的执行')
+                uploaded = checked_source(source, evidence.get('data'))
+                saved_uploads[receipt] = uploaded
+                upload_cache.setdefault(upload_key, (uploaded, receipt))
+
+        for item, source, receipt, upload_key in upload_bindings:
+            if receipt in saved_uploads:
+                uploaded = checked_source(source, saved_uploads[receipt])
+            elif upload_key in upload_cache:
+                uploaded, original_receipt = upload_cache[upload_key]
+                checked_source(source, uploaded)
+                self.client.write_new(receipt, {'ok': True, 'url': remote_url, 'time': self.client.now(),
+                                                'data': uploaded, 'reused_from': original_receipt.name})
+                self.record(key, 'upload', 'reused', file=str(source), remote=uploaded,
+                            receipt=str(receipt), reused_from=str(original_receipt))
             else:
                 self.save(key, phase='upload')
                 self.record(key, 'upload', 'started', file=str(source), receipt=str(receipt))
@@ -234,6 +259,7 @@ class LocalQueue:
                 self.client.write_new(receipt, {'ok': True, 'url': self.client_for(data).url,
                                                 'time': self.client.now(), 'data': uploaded})
                 self.record(key, 'upload', 'success', file=str(source), remote=uploaded)
+                upload_cache[upload_key] = (uploaded, receipt)
             inputs = workflow[item['node']]['inputs']
             if 'json-path' in item:
                 document = self.client.strict_json(inputs[item['input']].encode('utf-8'))
