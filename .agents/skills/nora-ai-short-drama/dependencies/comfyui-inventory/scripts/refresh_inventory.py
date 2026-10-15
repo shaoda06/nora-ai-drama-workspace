@@ -17,12 +17,12 @@ def fetch(base, endpoint, timeout):
         return json.load(response)
 
 
-def collect(base, timeout):
+def collect(base, timeout, *, fetcher=fetch):
     endpoints = {'system_stats': '/system_stats', 'nodes': '/object_info',
                  'categories': '/models'}
     core = {}
     with ThreadPoolExecutor(max_workers=3) as pool:
-        pending = {pool.submit(fetch, base, ep, timeout): name
+        pending = {pool.submit(fetcher, base, ep, timeout): name
                    for name, ep in endpoints.items()}
         for future in as_completed(pending):
             core[pending[future]] = future.result()
@@ -33,7 +33,7 @@ def collect(base, timeout):
         raise ValueError('Expected /models to return a list of category names')
     models, errors = {}, []
     with ThreadPoolExecutor(max_workers=4) as pool:
-        pending = {pool.submit(fetch, base, '/models/' + quote(cat, safe=''), timeout): cat
+        pending = {pool.submit(fetcher, base, '/models/' + quote(cat, safe=''), timeout): cat
                    for cat in sorted(set(categories))}
         for future in as_completed(pending):
             cat = pending[future]
@@ -59,12 +59,14 @@ def collect(base, timeout):
                             'Node module names are not a full on-disk custom_nodes package inventory.']}
 
 
-def main():
+def main(argv=None, *, fetcher=fetch, require_url=False):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--url', default=os.environ.get('COMFYUI_URL') or 'http://127.0.0.1:8188', help='HTTP(S) server base URL; default: COMFYUI_URL or http://127.0.0.1:8188. No credentials, query or fragment.')
+    parser.add_argument('--url', required=require_url,
+                        default=None if require_url else os.environ.get('COMFYUI_URL') or 'http://127.0.0.1:8188',
+                        help='Explicit HTTP(S) server base URL when called by a workspace; standalone default: COMFYUI_URL or http://127.0.0.1:8188. No credentials, query or fragment.')
     parser.add_argument('--timeout', type=float, default=30, help='Positive seconds per blocking network operation; default: 30. Not a deadline for the entire refresh.')
     parser.add_argument('--output', type=Path, default=Path(__file__).resolve().parents[1] / 'state/inventory.json', help='Local cache JSON to create or replace; default: state/inventory.json under this skill. Explicit relative paths use the current working directory.')
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     base = args.url.rstrip('/')
     parsed = urlsplit(base)
     if parsed.scheme not in ('http', 'https') or not parsed.netloc or parsed.query or parsed.fragment or parsed.username or parsed.password:
@@ -72,7 +74,7 @@ def main():
     if args.timeout <= 0:
         parser.error('--timeout must be positive')
     try:
-        data = collect(base, args.timeout)
+        data = collect(base, args.timeout, fetcher=fetcher)
     except (OSError, ValueError, HTTPException) as error:
         print(json.dumps({'ok': False, 'cache_updated': False,
                           'error': type(error).__name__ + ': ' + str(error)}))

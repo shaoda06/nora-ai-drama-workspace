@@ -119,7 +119,7 @@ def clone(client, args):
     return {'state': 'cloned', 'files': len(files), 'source': source, 'target': target, 'receipt': str(receipt)}
 
 
-def main():
+def main(argv=None, *, client_factory=c.Client):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--url', required=True, help='Actual ComfyUI service used for both cache identities')
     p.add_argument('--cache-name', required=True, help='Actual normalized scene cache name; not a path')
@@ -130,9 +130,9 @@ def main():
     p.add_argument('--record-dir', required=True, help='Evidence directory, relative to cwd or absolute')
     p.add_argument('--timeout', type=float, default=120, help='Seconds per network operation; default 120')
     p.add_argument('--apply', action='store_true', help='Copy bytes to the empty target; default only previews')
-    args = p.parse_args()
+    args = p.parse_args(argv)
     try:
-        print(json.dumps(clone(c.Client(args.url, args.timeout), args), ensure_ascii=False))
+        print(json.dumps(clone(client_factory(args.url, args.timeout), args), ensure_ascii=False))
     except (c.ClientError, OSError, ValueError) as error:
         failure = {'ok': False, 'error': str(error),
                    'details': error.details if isinstance(error, c.ClientError) else {}}

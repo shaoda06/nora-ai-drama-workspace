@@ -8,7 +8,7 @@
 2. agent先读取根目录 [AGENTS.md](AGENTS.md)，再按任务使用 [Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md) 或 [Krea2技能](.agents/skills/krea2-style-library/SKILL.md)。
 3. 发起新短剧时，告知题材、素材和目标，由技能按阶段创建项目。三个ComfyUI适配技能已随主技能提供，是本工作区直接使用的真源，不重复复制安装。其余依赖按主技能的[来源与获取规则](.agents/skills/nora-ai-short-drama/references/流程规范/技能依赖与协作规范.md#适用平台与技能依赖)按需补齐。
 4. 新增外部技能默认安装到本工作区 `.agents/skills/{技能名}/`，已有可用安装复用。该工作区是本README所在目录，不是某部短剧的项目目录。当前独立安装的外部技能按 `.gitignore` 排除；新增技能默认可被Git发现，提交前核对来源、许可及是否需要随模板提供。
-5. 初始化项目工作区时，按下方[FFmpeg初始化与运行](#ffmpeg初始化与运行)落实媒体处理依赖；服务地址询问及配置按[主技能的项目ComfyUI配置](.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#项目-comfyui-配置)执行。
+5. 初始化项目工作区时，按下方[FFmpeg初始化与运行](#ffmpeg初始化与运行)落实媒体处理依赖；服务地址询问及配置按[主技能的工作区ComfyUI配置](.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)执行。
 
 不需要ComfyUI即可进行策划、剧本和资料整理。执行生成时，使用者须自行准备能够运行配套工作流的ComfyUI服务；本工作区不附带模型权重、不安装服务端节点，也不保证任意后端都兼容。具体核对遵循执行规范。
 
@@ -54,7 +54,7 @@
 - [Python](https://www.python.org/downloads/)：原固定脚本使用3.9及以上标准库；新浏览服务使用3.10及以上和独立虚拟环境，依赖见服务目录。
 - [FFmpeg](https://ffmpeg.org/download.html)：本地音视频裁剪、解码及合成依赖；安装与调用统一按[FFmpeg初始化与运行](#ffmpeg初始化与运行)。
 - [Node.js](https://nodejs.org/)：浏览服务构建使用22及以上。
-- [ComfyUI](https://github.com/Comfy-Org/ComfyUI)：由使用者独立部署的图片／视频生成后端。本仓库携带工作流，不携带模型权重和服务端自定义节点。每个项目配置服务地址，具体节点、模型与兼容性按本地工作流及执行规范核对；这里的技能依赖清单不是后端安装清单。
+- [ComfyUI](https://github.com/Comfy-Org/ComfyUI)：由使用者独立部署的图片／视频生成后端。本仓库携带工作流，不携带模型权重和服务端自定义节点。服务地址与认证按[工作区共用配置](.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)执行；节点、模型与兼容性问题按执行规范处理，这里的技能依赖清单不是后端安装清单。
 
 ## 环境
 

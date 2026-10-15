@@ -4,6 +4,8 @@
 
 ## 使用边界
 
+Nora项目的调用入口和授权边界统一见[固定通信工具与证据](../流程规范/ComfyUI-服务配置与任务提交规范.md#固定通信工具与证据)；按该规范使用下方队列入口或工作区认证适配入口。本文原生客户端命令用于独立通信和底层接口说明。
+
 - agent 按当前业务规范准备最终 **API 格式节点 JSON**、参考素材映射和全部参数；脚本不修改提示词、种子、节点或连线，不转换画布 JSON，不内置工作流模板。
 - 上述已有能力必须复用此脚本，不按任务新写 Python／shell／内联 HTTP 实现。准备 API JSON 和人工审核仍由 agent 完成；视频批准后的文件移动和业务记录更新复用下方独立的采用工具。发现脚本缺陷先报告并集中修复，缺少接口则明确缺口后处理，不悄悄回退成一套临时执行器。
 - 只处理当前获得授权的任务；不启动下一阶段、不自动重试提交、不管理定时器、不操作队列删除／中断／卸载／服务器配置。
@@ -17,7 +19,7 @@
 在工作区根目录运行，替换为实际服务、缓存名、来源及空目标导演台ID、原零基组序和完整组数：
 
 ```powershell
-python .agents/skills/nora-ai-short-drama/references/comfyui-scripts/director_cache.py --url http://server:8188 --cache-name 场次缓存名 --source-node 501 --target-node 502 --indices 5 --segment-count 12 --record-dir 'projects/项目/09-剧集制作/EP001/其他资料/执行附件/本次执行'
+python .agents/skills/nora-ai-short-drama/scripts/comfyui_config.py --workspace . cache-clone --url http://server:8188 --cache-name 场次缓存名 --source-node 501 --target-node 502 --indices 5 --segment-count 12 --record-dir 'projects/项目/09-剧集制作/EP001/其他资料/执行附件/本次执行'
 ```
 
 默认只读预览文件清单、大小、修改时间及目标空闲条件。相同参数加`--apply`才复制。`--indices`为逗号分隔的原零基组序；`--segment-count`为原完整组数，目标空目录检查覆盖全部这些槽。`--record-dir`相对当前目录或绝对路径；来源文件存其`接续来源缓存/`，证据为`缓存隔离结果.json`。`--timeout`默认120秒／单次网络操作，非生成时长。源与目标节点必须不同，缓存名使用实际已规范化名称。
@@ -184,7 +186,7 @@ python .agents/skills/nora-ai-short-drama/scripts/scene_finalize.py --project 'p
 python -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p test_scene_finalize.py -v
 ```
 
-## 调用
+## 独立通信调用
 
 以下相对路径示例在本 README 所在目录执行；跨会话优先使用脚本绝对路径。每个命令的参数以 `python3 comfyui_client.py COMMAND --help` 为准。
 
@@ -303,7 +305,21 @@ Nora服务配置与任务地址绑定读取[工作区ComfyUI配置](../流程规
 python -X utf8 '.agents/skills/nora-ai-short-drama/scripts/comfyui_config.py' --workspace '.' status --url 'https://comfy.example.com' --prompt-id '实际任务ID'
 ```
 
-命令从工作区根目录执行；`--workspace` 相对当前目录，必须显式提供。`status`、`download`、`export-pack` 等子命令参数与上方通信工具一致；`--url` 必须是本次记录的真实服务地址，不默认替换为当前主节点。适配入口仅加载凭据并调用原工具，不改配置、不自动重试；其中upload／submit仍受既有执行授权与队列入口要求约束。没有认证的独立通信可直接使用原CLI；Python调用为 `Client(url, timeout, basic_auth=(username, password))`，HTTP和WS可复用实例的 `headers`，不将其写入证据。正常后台队列及阶段定稿导出已使用共用配置，无需每个任务另传认证。
+命令从工作区根目录执行；`--workspace` 相对当前目录，必须显式提供。支持 `status`、`download`、`export-pack`、`inventory`、`cache-clone`；子命令参数分别与原通信工具、库存工具、上方缓存隔离说明一致，`--url` 必填。调用范围及地址处理按[固定通信工具与证据](../流程规范/ComfyUI-服务配置与任务提交规范.md#固定通信工具与证据)。适配入口只加载凭据并调用原工具，不改配置、不自动重试。独立通信的Python接口为 `Client(url, timeout, basic_auth=(username, password))`，HTTP和WS可复用实例的 `headers`，不将其写入证据。正常后台队列及阶段定稿导出已使用共用配置，无需每个任务另传认证。
+
+获授权盘点库存时使用以下命令；输出与退出码见[库存工具](../../dependencies/comfyui-inventory/SKILL.md)。默认缓存仍在该库存工具的 `state/inventory.json`，可用 `--output` 指定本次保存位置：
+
+```powershell
+python -X utf8 '.agents/skills/nora-ai-short-drama/scripts/comfyui_config.py' --workspace '.' inventory --url 'https://comfy.example.com'
+```
+
+配置与入口回归使用临时工作区和本机模拟HTTP服务，不读取真实凭据、不调用远端：
+
+```powershell
+python -X utf8 -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p 'test_comfyui_config*.py'
+```
+
+退出0且报告OK表示通过；覆盖跨项目共用配置、逐节点认证、凭据不泄露、禁用直接上传／提交、强制实际地址、库存失败保留旧缓存及缓存隔离预览不写入。
 
 Nora任务准备、查询和取回时，读取[监控规范的精简留档规则](../流程规范/ComfyUI-任务监控规范.md#执行附件精简留档)，据此确定附件留存及当前检查时间的维护。
 
@@ -367,7 +383,7 @@ python "实际技能目录/scripts/browser_tasks.py" resolve --task-id 本地任
 
 ## Nora统一分配与提交
 
-入口：[comfyui_dispatch.py](../../scripts/comfyui_dispatch.py)。Agent调用此入口登记后台本地队列，不向远端上传或提交，不等待生成。项目配置及调度、按钮语义读取[服务配置与任务提交规范](../流程规范/ComfyUI-服务配置与任务提交规范.md)。上方comfyui_client.py为后台复用的通信模块，普通Agent任务不直接调用upload／submit／download绕过队列。
+入口：[comfyui_dispatch.py](../../scripts/comfyui_dispatch.py)。Agent调用此入口登记后台本地队列，不向远端上传或提交，不等待生成。工作区配置及调度、按钮语义读取[服务配置与任务提交规范](../流程规范/ComfyUI-服务配置与任务提交规范.md)。上方comfyui_client.py为后台复用的通信模块，调用边界见该规范的[固定通信工具与证据](../流程规范/ComfyUI-服务配置与任务提交规范.md#固定通信工具与证据)。
 
 ```sh
 python /实际技能目录/scripts/comfyui_dispatch.py \
