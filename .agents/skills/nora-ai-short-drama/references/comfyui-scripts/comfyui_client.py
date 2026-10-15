@@ -113,7 +113,9 @@ class Client:
                 raise ClientError("invalid_response", "Server did not return valid JSON") from exc
 
 
-def upload(client, args, *, source=None):
+def upload(client, args, *, source=None, storage_type="input"):
+    if storage_type not in ("input", "output"):
+        raise ClientError("invalid_storage_type", "Upload storage must be input or output")
     if source is None:  # Standalone file input; backend passes its prepared source.
         source = Path(args.file).resolve(strict=True)
         remote_path(source.name, filename=True)
@@ -127,7 +129,7 @@ def upload(client, args, *, source=None):
     size = 0
     # Spill multipart to disk rather than holding large videos in memory.
     with tempfile.TemporaryFile() as body:
-        for key, value in (("type", "input"), ("subfolder", folder), ("overwrite", "false")):
+        for key, value in (("type", storage_type), ("subfolder", folder), ("overwrite", "false")):
             body.write((f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n'
                         f'{value}\r\n').encode("utf-8"))
         mime = mimetypes.guess_type(source.name)[0] or "application/octet-stream"
@@ -150,10 +152,10 @@ def upload(client, args, *, source=None):
                           upload_state="unknown_do_not_blindly_retry")
     name = remote_path(result["name"], filename=True)
     folder = remote_path(result["subfolder"])
-    if result["type"] != "input":
+    if result["type"] != storage_type:
         raise ClientError("invalid_response", "Unexpected upload storage type", response=result)
     return {"file": str(source), "bytes": size, "sha256": digest.hexdigest(),
-            "remote": result, "input_path": "/".join(filter(None, (folder.replace("\\", "/"), name)))}
+            "remote": result, storage_type + "_path": "/".join(filter(None, (folder.replace("\\", "/"), name)))}
 
 
 def validate_workflow(workflow):

@@ -222,6 +222,45 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(query.call_args.args[0], '/minimax/director/first_pass_cache_status')
             post.assert_not_called()
 
+    async def test_continuity_distinguishes_first_pass_source_from_refine_settings(self):
+        workflow = json.loads((t.SKILL / 'references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.api.json').read_text('utf-8'))
+        timeline = json.loads(workflow['502']['inputs']['timeline_data'])
+        timeline.update(runSelectEnabled=True, runSelection=[1])
+        timeline['segments'][1]['continuityFromPrev'] = True
+        workflow['502']['inputs']['timeline_data'] = json.dumps(timeline)
+        key = (await self.store.enqueue(self.data))['local_task_id']
+        self.store.rows[key]['input'].workflow = workflow
+        source = {'index': 0, 'exists': True, 'matches': True, 'final_exists': True,
+                  'final_matches': False, 'final_diff_keys': ['refine_sample_model']}
+        cases = [
+            ('video-first-pass', {}, True),
+            ('video-first-pass', {'matches': False}, False),
+            ('video-first-pass', {'exists': False}, False),
+            ('video-first-pass', {'final_exists': False}, False),
+            ('video-first-pass', {'final_diff_keys': ['prompt']}, False),
+            ('video-first-pass', {'final_diff_keys': []}, False),
+            ('video-second-pass', {}, False),
+            ('video-second-pass', {'final_matches': True}, True),
+        ]
+        for stage, changed, allowed in cases:
+            with self.subTest(stage=stage, changed=changed):
+                self.store.rows[key]['input'].task_type = stage
+                # Each stage has its own preparation basis, as a real task does.
+                (self.record / '执行检查报告.json').unlink(missing_ok=True)
+                cache = {'can_confirm_refine': stage == 'video-second-pass', 'selected_matched': 0,
+                         'segments': [{**source, **changed}]}
+                with patch.object(t.client.Client, 'json', return_value=cache), \
+                        patch('backend.services.execution_checks.fixed_checks', return_value={'pair': {}, 'segments': []}), \
+                        patch('backend.services.director_uploads.save_uploaded_workflow'), \
+                        patch.object(self.store.generation_context, 'prepare_generation_context'), \
+                        patch.object(t.client, 'submit') as post:
+                    if allowed:
+                        await self.store.prepare(key)
+                    else:
+                        with self.assertRaisesRegex(ValueError, '前段衔接缓存'):
+                            await self.store.prepare(key)
+                    post.assert_not_called()
+
     async def test_upload_responses_reach_scoped_binding_save_and_both_media_states(self):
         from backend.services.director_uploads import save_uploaded_workflow
         source = self.project / 'source.png'

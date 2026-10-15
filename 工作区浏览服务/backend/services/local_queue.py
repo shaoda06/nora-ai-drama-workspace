@@ -324,7 +324,16 @@ class LocalQueue:
                     cached = {item['index']: item for item in result['segments']}
                     for index in selected:
                         if index and index - 1 not in selected and timeline['segments'][index].get('continuityFromPrev'):
-                            if not cached.get(index - 1, {}).get('final_matches'):
+                            previous = cached.get(index - 1, {})
+                            matches = previous.get('final_matches') is True
+                            if data.task_type == 'video-first-pass' and not matches:
+                                differences = previous.get('final_diff_keys', [])
+                                # First-pass guide uses the matching pre-refine source. A change
+                                # confined to Refine settings does not invalidate that source.
+                                matches = (previous.get('exists') is True and previous.get('matches') is True
+                                           and previous.get('final_exists') is True and bool(differences)
+                                           and all(name.startswith('refine_') for name in differences))
+                            if not matches:
                                 raise ValueError('目标节点缺少匹配的前段衔接缓存：组序 ' + str(index - 1))
         if data.task_type.startswith('video-'):
             from backend.services.director_uploads import save_uploaded_workflow
