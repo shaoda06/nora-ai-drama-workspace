@@ -113,12 +113,15 @@ class Client:
                 raise ClientError("invalid_response", "Server did not return valid JSON") from exc
 
 
-def upload(client, args):
-    source = Path(args.file).resolve(strict=True)
-    remote_path(source.name, filename=True)
-    if '"' in source.name:
-        raise ClientError("invalid_filename", "Upload filename cannot contain a quote")
-    folder = remote_path(args.subfolder)
+def upload(client, args, *, source=None):
+    if source is None:  # Standalone file input; backend passes its prepared source.
+        source = Path(args.file).resolve(strict=True)
+        remote_path(source.name, filename=True)
+        if '"' in source.name:
+            raise ClientError("invalid_filename", "Upload filename cannot contain a quote")
+        folder = remote_path(args.subfolder)
+    else:
+        folder = args.subfolder
     boundary = "ComfyClient" + uuid.uuid4().hex
     digest = hashlib.sha256()
     size = 0
@@ -165,7 +168,8 @@ def validate_workflow(workflow):
 
 
 def submit(client, args, workflow=None, client_id=None):
-    if workflow is None:
+    from_file = workflow is None
+    if from_file:
         workflow = strict_json(Path(args.workflow).read_bytes())
         validate_workflow(workflow)
     # A supplied object comes from the backend's validated task input.
@@ -174,10 +178,11 @@ def submit(client, args, workflow=None, client_id=None):
     record = Path(args.record_dir).absolute()
     record.mkdir(parents=True, exist_ok=True)
     names = (args.attempt_name, args.request_name, args.response_name)
-    for name in names:
-        remote_path(name, filename=True)
-    if len(set(names)) != 3:
-        raise ClientError("path_collision", "Submission evidence filenames must be distinct")
+    if from_file:
+        for name in names:
+            remote_path(name, filename=True)
+        if len(set(names)) != 3:
+            raise ClientError("path_collision", "Submission evidence filenames must be distinct")
     marker, request_file, response_file = [record / n for n in names]
     if any(os.path.lexists(p) for p in (marker, request_file, response_file)):
         raise ClientError("submission_guard", "Existing submission evidence; reconcile, never resubmit here",

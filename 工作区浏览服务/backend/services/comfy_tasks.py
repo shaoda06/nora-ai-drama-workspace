@@ -197,9 +197,8 @@ class TaskStore(LocalQueue, TaskNotifications):
         for output in data.outputs:
             output.path = str(paths.project_file(project, output.path, recorded=recorded))
         for upload in data.uploads:
-            if not isinstance(upload.get('file'), str):
-                raise ValueError('上传映射必须提供file路径')
-            upload['file'] = str(paths.project_file(project, upload['file'], recorded=recorded))
+            if isinstance(upload.get('file'), str):
+                upload['file'] = str(paths.project_file(project, upload['file'], recorded=recorded))
         if data.segment_plan:
             for target in data.segment_plan.targets:
                 target.path = str(paths.project_file(project, target.path, recorded=recorded))
@@ -211,7 +210,8 @@ class TaskStore(LocalQueue, TaskNotifications):
         for output in payload['outputs']:
             output['path'] = paths.recorded_paths(data.project, output['path'], relative=True, field='path')
         for upload in payload['uploads']:
-            upload['file'] = paths.relative_file(data.project, upload['file'], recorded=True)
+            if isinstance(upload.get('file'), str):
+                upload['file'] = paths.relative_file(data.project, upload['file'], recorded=True)
         if payload['segment_plan']:
             for target in payload['segment_plan']['targets']:
                 target['path'] = paths.relative_file(data.project, target['path'], recorded=True)
@@ -231,30 +231,8 @@ class TaskStore(LocalQueue, TaskNotifications):
         record = Path(data.record_dir).resolve()
         if not record.is_relative_to(project):
             raise ValueError('执行附件必须位于所属项目内')
-        for item in data.uploads:
-            required = {'file', 'node', 'input', 'subfolder', 'response-name'}
-            if not required.issubset(item) or set(item) - required - {'json-path'} or not all(isinstance(item[name], str) for name in required):
-                raise ValueError('上传映射字段不完整或类型不正确')
-            if 'json-path' in item and (not isinstance(item['json-path'], list) or not item['json-path']
-                                       or any(type(part) not in (str, int) for part in item['json-path'])):
-                raise ValueError('JSON素材绑定必须提供字段路径数组')
-        names = [data.attempt_name, data.request_name, data.response_name, data.history_name,
-                 '后台任务状态.json', '后台过程记录.json']
-        names += [output.response_name for output in data.outputs]
-        names += [item['response-name'] for item in data.uploads]
-        if data.segment_plan:
-            names += [item.response_name for item in data.segment_plan.targets]
-        elif not data.outputs:
-            raise ValueError('必须登记预期成果保存映射')
-        for name in names:
-            client.remote_path(name, filename=True)
-        if len(names) != len(set(names)):
-            raise ValueError('证据文件名不能重复')
-        if '执行检查报告.json' in names:
-            raise ValueError('证据文件名不能占用执行检查报告.json')
-        # Submission evidence is guarded once by the transport; these are registration/output records.
-        if any((record / name).exists() for name in names[3:]):
-            raise client.ClientError('submission_guard', '已有任务证据；核对原任务，不得再次提交')
+        if any((record / name).exists() for name in ('后台任务状态.json', '后台过程记录.json')):
+            raise client.ClientError('registration_guard', '执行目录已有后台登记记录；请核对原任务')
         targets = [Path(output.path).resolve() for output in data.outputs]
         if any(not Path(output.path).is_absolute() for output in data.outputs):
             raise ValueError('成果保存路径必须是绝对路径')
@@ -262,10 +240,6 @@ class TaskStore(LocalQueue, TaskNotifications):
             raise ValueError('成果必须位于所属项目内，且不得写入执行附件目录')
         if not data.thread_id or not data.desktop.caller_thread:
             raise ValueError('缺少真实会话身份')
-        for item in data.uploads:
-            if not Path(item['file']).is_absolute():
-                raise ValueError('上传映射必须使用本机绝对路径')
-            client.remote_path(item['subfolder'])
         if data.segment_plan:
             for target in data.segment_plan.targets:
                 path = Path(target.path).resolve()
@@ -302,6 +276,16 @@ class TaskStore(LocalQueue, TaskNotifications):
         state = self.rows[key]['state']
         if state.get('prompt_id'):
             raise ValueError('任务已有远端ID，不能重新提交')
+        record = Path(data.record_dir)
+        result_names = [data.history_name, *(item.response_name for item in data.outputs)]
+        if data.segment_plan:
+            result_names.extend(item.response_name for item in data.segment_plan.targets)
+        if any((record / name).exists() for name in result_names):
+            error = client.ClientError('execution_guard', '已有终态或取回凭据；请核对原执行，不发送新任务', submission_state='not_sent')
+            if state['status'] in ('local_queued', 'paused', 'preparing', 'submitting'):
+                self.save(key, status='paused', phase='submit', failure_stage='submit', error=str(error), error_details=error.details)
+            self.record(key, 'submit', 'blocked', error=str(error), error_details=error.details)
+            raise error
         previous = state.copy()
         socket = await connect(self.ws_url(data, state['client_id']), open_timeout=data.timeout,
                                ping_interval=20, ping_timeout=20, max_size=2**22)

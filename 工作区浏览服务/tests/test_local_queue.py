@@ -238,7 +238,7 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
         return data
 
     @staticmethod
-    def uploaded_file(remote, args):
+    def uploaded_file(remote, args, *, source=None):
         source = Path(args.file)
         return {'input_path': args.subfolder + '/' + source.name,
                 'sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
@@ -358,7 +358,7 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
         source = self.project / 'reference.png'
         source.write_bytes(b'picture')
         data = self.bind_uploads(key, [source, source])
-        def upload_and_change(remote, args):
+        def upload_and_change(remote, args, *, source=None):
             uploaded = self.uploaded_file(remote, args)
             source.write_bytes(b'changed')
             return uploaded
@@ -379,11 +379,12 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
             upload.assert_called_once()
         self.assertFalse(list(Path(data.record_dir).glob('upload-*.json')))
 
-    async def test_invalid_upload_or_reserved_receipt_names_fail_at_boundary(self):
+    async def test_invalid_upload_format_fails_during_preparation(self):
         self.data.uploads = [{'file': 'broken'}]
         with self.assertRaisesRegex(ValueError, '上传映射'):
-            await self.store.enqueue(self.data)
-        self.data.uploads = []
+            await self.store.prepare_only(self.data)
+
+    async def test_reserved_receipt_name_fails_during_preparation(self):
         self.data.response_name = '后台任务状态.json'
         with self.assertRaisesRegex(ValueError, '不能重复'):
-            await self.store.enqueue(self.data)
+            await self.store.prepare_only(self.data)

@@ -68,13 +68,13 @@ class DispatchTests(unittest.TestCase):
         self.args.output_plan=None
         with self.assertRaises(ValueError): d.dispatch(self.args)
 
-    def test_upload_paths_are_resolved_but_missing_files_checked_by_backend(self):
+    def test_upload_mapping_is_passed_without_repeating_backend_checks(self):
         mapping=self.root/'uploads.json'
         mapping.write_text(json.dumps([{'file':'not-yet-present.png','node':'1','input':'image','subfolder':'','response-name':'upload.json'}]))
         self.args.uploads=str(mapping)
         with patch.object(d.browser_tasks,'submit',return_value={}) as handoff:
             d.dispatch(self.args)
-        self.assertTrue(Path(handoff.call_args.kwargs['uploads'][0]['file']).is_absolute())
+        self.assertEqual(handoff.call_args.kwargs['uploads'][0]['file'], 'not-yet-present.png')
 
     def test_backup_cannot_be_selected(self):
         self.args.eligible_url='http://backup.invalid:8188'

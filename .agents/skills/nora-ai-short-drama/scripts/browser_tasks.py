@@ -25,7 +25,7 @@ def submit(args, workflow, url, uploads=None):
     payload = {name: getattr(args, name) for name in
                ('project', 'task_type', 'record_dir', 'attempt_name', 'request_name', 'response_name', 'history_name', 'timeout')}
     payload.update(project=project.name, record_dir=relative_file(project, project_file(project, args.record_dir)),
-        workflow=workflow, url=url, title=args.task_title, uploads=uploads or [], start_paused=args.start_paused,
+        workflow=workflow, url=url, title=args.task_title, uploads=[] if uploads is None else uploads, start_paused=args.start_paused,
         outputs=json.loads(Path(args.output_plan).read_text('utf-8')),
         segment_plan=json.loads(Path(args.segment_plan).read_text('utf-8')) if args.segment_plan else None,
         thread_id=args.thread_id or caller,
@@ -33,8 +33,6 @@ def submit(args, workflow, url, uploads=None):
                  'pipe': pipe, 'caller_thread': caller, 'cli': os.environ.get('CODEX_CLI_PATH') or shutil.which('codex')})
     for output in payload['outputs']:
         output['path'] = relative_file(project, output['path'])
-    for upload in payload['uploads']:
-        upload['file'] = relative_file(project, upload['file'])
     if payload['segment_plan']:
         for target in payload['segment_plan']['targets']:
             target['path'] = relative_file(project, target['path'])

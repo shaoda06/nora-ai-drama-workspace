@@ -39,12 +39,6 @@ def dispatch(args):
     args.record_dir = str(project_file(args.project, args.record_dir))
     workflow = client.strict_json(Path(args.workflow).read_bytes())
     uploads = client.strict_json(Path(args.uploads).read_bytes()) if args.uploads else []
-    if not isinstance(uploads, list):
-        raise ValueError('上传映射必须是数组')
-    for item in uploads:
-        if not isinstance(item, dict) or not isinstance(item.get('file'), str):
-            raise ValueError('上传映射必须提供file路径')
-        item['file'] = str(project_file(args.project, item['file']))
     url = load_config(args.project, args.timeout)['remote-urls'][0]
     if args.eligible_url and client.Client(args.eligible_url, args.timeout).url != url:
         raise ValueError('指定的地址不是项目主节点')

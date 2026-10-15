@@ -254,7 +254,7 @@ class LocalQueue:
                 self.record(key, 'upload', 'started', file=str(source), receipt=str(receipt))
                 stamp = (source.stat().st_size, source.stat().st_mtime_ns)
                 uploaded = await asyncio.to_thread(self.client.upload, self.client_for(data),
-                                                   argparse.Namespace(file=str(source), subfolder=item['subfolder']))
+                                                   argparse.Namespace(file=str(source), subfolder=item['subfolder']), source=source)
                 self.client.write_new(receipt, {'ok': True, 'url': self.client_for(data).url,
                                                'time': self.client.now(), 'data': uploaded})
                 self.record(key, 'upload', 'success', file=str(source), remote=uploaded)

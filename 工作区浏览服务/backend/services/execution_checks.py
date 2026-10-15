@@ -50,7 +50,12 @@ def sources(data):
 
 def read_report(data):
     path = Path(data.record_dir) / REPORT
-    return json.loads(path.read_text('utf-8')) if path.exists() else None
+    if not path.exists():
+        return None
+    report = json.loads(path.read_text('utf-8'))
+    if not isinstance(report, dict) or 'prepared_input' not in report:
+        raise ValueError('执行检查报告位置已有其他资料；不覆盖，请核对目录')
+    return report
 
 
 def write_report(data, report):
@@ -124,9 +129,43 @@ def director_checks(workflow):
     return rows
 
 
+def fixed_input_checks(store, data):
+    client = store.client
+    for item in data.uploads:
+        required = {'file', 'node', 'input', 'subfolder', 'response-name'}
+        if not required.issubset(item) or set(item) - required - {'json-path'} or not all(isinstance(item[name], str) for name in required):
+            raise ValueError('上传映射字段不完整或类型不正确')
+        if 'json-path' in item and (not isinstance(item['json-path'], list) or not item['json-path']
+                                   or any(type(part) not in (str, int) for part in item['json-path'])):
+            raise ValueError('JSON素材绑定必须提供字段路径数组')
+    names = [data.attempt_name, data.request_name, data.response_name, data.history_name,
+             '后台任务状态.json', '后台过程记录.json']
+    names += [output.response_name for output in data.outputs]
+    names += [item['response-name'] for item in data.uploads]
+    if data.segment_plan:
+        names += [item.response_name for item in data.segment_plan.targets]
+    elif not data.outputs:
+        raise ValueError('必须登记预期成果保存映射')
+    for name in names:
+        client.remote_path(name, filename=True)
+    if len(names) != len(set(names)):
+        raise ValueError('证据文件名不能重复')
+    if '执行检查报告.json' in names:
+        raise ValueError('证据文件名不能占用执行检查报告.json')
+    for item in data.uploads:
+        client.remote_path(item['subfolder'])
+    for source in {Path(item['file']) for item in data.uploads}:
+        if not source.is_absolute():
+            raise ValueError('上传映射必须使用本机绝对路径')
+        client.remote_path(source.name, filename=True)
+        if '"' in source.name:
+            raise client.ClientError('invalid_filename', 'Upload filename cannot contain a quote')
+
+
 def fixed_checks(store, data):
     from backend.services.director_uploads import check_pair
     from backend.services import comfy_segments as segments
+    fixed_input_checks(store, data)
     store.client.validate_workflow(data.workflow)
     if (any(node['class_type'] in ('MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo') for node in data.workflow.values())
             and data.task_type not in ('video-first-pass', 'video-second-pass')):
@@ -162,12 +201,13 @@ def prepare_report(store, data, *, at_execution=False):
     report = {'ok': False, 'checked_at': store.client.now(), 'prepared_input': basis(store, data), 'sources': {},
               'checked_during': 'execution' if at_execution else 'preparation'}
     try:
-        report['sources'] = sources(data)
-        if (previous and previous['ok'] and previous['prepared_input'] == report['prepared_input']
-                and previous['sources'] == report['sources']):
-            return {'prepared': True, 'report': REPORT, 'reused': True,
-                    'checks': {key: previous[key] for key in ('pair', 'segments')}}
+        if previous and previous['ok'] and previous['prepared_input'] == report['prepared_input']:
+            report['sources'] = sources(data)
+            if previous['sources'] == report['sources']:
+                return {'prepared': True, 'report': REPORT, 'reused': True,
+                        'checks': {key: previous[key] for key in ('pair', 'segments')}}
         report.update(fixed_checks(store, data))
+        report['sources'] = sources(data)
         report['ok'] = True
     except (ValueError, OSError, store.client.ClientError) as error:
         report['error'] = str(error)
