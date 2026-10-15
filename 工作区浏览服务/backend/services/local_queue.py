@@ -10,7 +10,7 @@ import uuid
 from websockets.exceptions import WebSocketException
 
 LOCAL = ('local_queued', 'paused')
-TERMINAL = ('completed', 'failed', 'rejected', 'collection_failed', 'needs_attention', 'submission_unknown', 'cancelled')
+TERMINAL = ('completed', 'failed', 'rejected', 'collection_failed', 'needs_attention', 'submission_unknown', 'cancelled', 'resolved')
 
 
 class LocalQueue:

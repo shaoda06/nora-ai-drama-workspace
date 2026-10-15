@@ -335,6 +335,8 @@ class TaskStore(LocalQueue, TaskNotifications):
     async def start(self):
         for key, row in self.rows.items():
             state = row['state']
+            if state['status'] == 'resolved':
+                continue
             for notice in state.get('notices', []):
                 if notice['delivery'] == 'sending':
                     notice['delivery'] = 'delivery_unknown'

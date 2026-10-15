@@ -21,18 +21,31 @@ async def task_detail(store, key):
     fields = ('id', 'project', 'title', 'task_type', 'status', 'source_session_name', 'created_at',
               'submitted_at', 'started_at', 'ended_at', 'updated_at', 'prompt_id', 'failure_stage',
               'error', 'error_details', 'collected', 'expected', 'notification', 'dispatch_attempt', 'preparation_attempt',
-              'collection_attempt', 'collection_auto_retry', 'collection_next_retry_at', 'collection_retry_stop')
+              'collection_attempt', 'collection_auto_retry', 'collection_next_retry_at', 'collection_retry_stop', 'resolution')
     summary = {field: state.get(field) for field in fields}
     summary.update(enqueued_url=state.get('enqueued_url', data.url), remote_url=data.url)
     collection = [event['time'] for event in events if event['stage'] == 'collection' and event['result'] == 'completed']
     summary['collected_at'] = collection[-1] if collection else None
     public_fields = ('id', 'time', 'stage', 'result', 'error', 'source_url', 'target_url', 'url',
                      'position', 'path', 'file', 'identity', 'collected', 'notification_id', 'attempt',
-                     'auto_retry', 'delay_seconds', 'next_retry_at', 'code', 'http_status', 'retryable', 'stop')
+                     'auto_retry', 'delay_seconds', 'next_retry_at', 'code', 'http_status', 'retryable', 'stop', 'summary')
     timeline = [{field: event[field] for field in public_fields if field in event}
                 for event in events if not (event['stage'] == 'director' and event['result'] == 'progress')]
+    resolution = state.get('resolution')
+    evidence = []
+    replacements = []
+    if resolution:
+        project_route = '/api/projects/' + quote(Path(data.project).name, safe='') + '/files/'
+        for value in resolution['evidence_files']:
+            path = paths.project_file(data.project, value)
+            evidence.append({'name': path.name, 'url': project_route + quote(value, safe='/') if path.is_file() else None})
+        for identity in resolution['replacement_task_ids']:
+            target = store.rows.get(identity)
+            replacements.append({'id': identity, 'title': target['state']['title'] if target else identity,
+                                 'status': target['state']['status'] if target else 'unknown'})
     return {'summary': summary, 'events': timeline, 'outputs': files['outputs'],
-            'records': files['records'], 'notification_batches': batches}
+            'records': files['records'], 'notification_batches': batches,
+            'resolution_evidence': evidence, 'replacement_tasks': replacements}
 
 
 def task_files(data, state, events):

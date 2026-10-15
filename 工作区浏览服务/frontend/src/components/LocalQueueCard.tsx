@@ -8,7 +8,7 @@ export const localQueueStates = { queued: '排队中', paused: '暂停中', hist
 export const statusLabels: Record<string, string> = { local_queued: '排队中', queued: '排队中', paused: '暂停中',
   preparing: '准备提交', submitting: '提交中', collecting: '取回中', completed: '已完成',
   failed: '生成失败', rejected: '提交被拒绝', collection_failed: '取回失败',
-  needs_attention: '状态待核对', submission_unknown: '提交结果待核对', cancelled: '已取消' };
+  needs_attention: '状态待核对', submission_unknown: '提交结果待核对', cancelled: '已取消', resolved: '已结案' };
 
 export interface LocalQueueTask {
   queue: 'local';
@@ -21,6 +21,7 @@ export interface LocalQueueTask {
   transfer_targets?: { url: string; name: string }[];
   created_at: string; updated_at?: string; started_at?: string | null; ended_at?: string | null;
   collection_auto_retry?: number | null; collection_next_retry_at?: string | null;
+  resolution?: { summary: string; resolved_at: string };
 }
 
 export function collectionStatus(task: Pick<LocalQueueTask, 'status' | 'collection_auto_retry' | 'collection_next_retry_at'>) {
@@ -119,13 +120,14 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
     {history && <div className="local-queue-card-history">
       <PointerTooltip text={task.source_session_name}><p className="local-queue-card-session" >来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip>
       <time dateTime={task.ended_at || undefined}>{['completed', 'collecting', 'collection_failed'].includes(task.status) ? '完成时间' : '结束时间'}：{ended ? localDateTime(ended) : '未记录'}</time>
-      <p className="local-queue-card-session">成果保存：{task.expected !== undefined ? `${task.collected} / ${task.expected}` : '未记录'}</p>
+      <p className="local-queue-card-session">{task.status === 'resolved' ? '原任务保存记录' : '成果保存'}：{task.expected !== undefined ? `${task.collected} / ${task.expected}` : '未记录'}</p>
       <PointerTooltip text="从执行开始到执行结束，不含排队等待"><span >任务耗时：{elapsed !== null ? clockText(elapsed) : '未记录'}</span></PointerTooltip>
     </div>}
-    {task.error && <p className="local-queue-card-error">{task.error}</p>}
+    {task.status === 'resolved' && task.resolution && <p className="local-queue-card-session">结案：{task.resolution.summary}</p>}
+    {task.error && task.status !== 'resolved' && <p className="local-queue-card-error">{task.error}</p>}
     {task.status === 'collecting' && task.collection_next_retry_at && <p className="local-queue-card-session">
       下次重试：{localDateTime(new Date(task.collection_next_retry_at))}:{String(new Date(task.collection_next_retry_at).getSeconds()).padStart(2, '0')}</p>}
-    {task.notification && ['waiting_connection', 'waiting_idle', 'delivery_unknown', 'sending'].includes(task.notification) && <p className="local-queue-card-session">
+    {task.status !== 'resolved' && task.notification && ['waiting_connection', 'waiting_idle', 'delivery_unknown', 'sending'].includes(task.notification) && <p className="local-queue-card-session">
       通知：{task.notification === 'delivery_unknown' ? '送达状态不明，等待确认' : '等待发送'}</p>}
   </>;
   return <>

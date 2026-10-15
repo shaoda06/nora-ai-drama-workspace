@@ -23,6 +23,7 @@ from backend.services.workflows import catalogue as workflow_catalogue
 from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
 from backend.services.task_details import task_detail
 from backend.services.task_history import task_history
+from backend.services.task_resolution import ResolutionInput, resolve_task
 from websockets.exceptions import WebSocketException
 from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes
 
@@ -62,7 +63,7 @@ async def comfy_tasks(request: Request, include_history: bool = True) -> dict[st
 
 @app.get('/api/comfy/history')
 async def comfy_history(request: Request, url: str, q: str = '',
-                        result: Literal['all', 'completed', 'abnormal', 'cancelled'] = 'all',
+                        result: Literal['all', 'completed', 'abnormal', 'cancelled', 'resolved'] = 'all',
                         offset: Annotated[int, Query(ge=0)] = 0,
                         limit: Annotated[int, Query(ge=1, le=100)] = 20) -> dict[str, Any]:
     return task_history(request.app.state.comfy_tasks, url, q, result, offset, limit)
@@ -206,6 +207,15 @@ async def agent_retry_collection(key: str, request: Request) -> dict[str, Any]:
     try:
         return await tasks.retry_collection(key)
     except ValueError as error:
+        raise HTTPException(409, str(error)) from error
+
+
+@app.post('/api/internal/comfy/tasks/{key}/resolve')
+async def agent_resolve_task(key: str, data: ResolutionInput, request: Request) -> dict[str, Any]:
+    tasks = agent_request(request)
+    try:
+        return resolve_task(tasks, key, data)
+    except (ValueError, OSError) as error:
         raise HTTPException(409, str(error)) from error
 
 

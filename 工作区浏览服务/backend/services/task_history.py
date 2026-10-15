@@ -13,7 +13,9 @@ def task_history(store, url, search='', result='all', offset=0, limit=20):
             continue
         if result == 'completed' and status != 'completed' or result == 'cancelled' and status != 'cancelled':
             continue
-        if result == 'abnormal' and status in ('completed', 'cancelled', 'collecting'):
+        if result == 'resolved' and status != 'resolved':
+            continue
+        if result == 'abnormal' and status in ('completed', 'cancelled', 'collecting', 'resolved'):
             continue
         if needle and not any(needle in (state.get(field) or '').casefold() for field in ('title', 'source_session_name')):
             continue
@@ -22,7 +24,7 @@ def task_history(store, url, search='', result='all', offset=0, limit=20):
                                row['state']['created_at'], row['state']['id']), reverse=True)
     fields = ('id', 'project', 'title', 'task_type', 'status', 'source_session_name', 'created_at', 'updated_at',
               'started_at', 'ended_at', 'error', 'notification', 'collected', 'expected',
-              'collection_auto_retry', 'collection_next_retry_at')
+              'collection_auto_retry', 'collection_next_retry_at', 'resolution')
     items = [{**{field: row['state'][field] for field in fields if field in row['state']},
               'remote_url': row['input'].url.rstrip('/'), 'queue': 'local', 'category': 'history'}
              for row in rows[offset:offset + limit]]

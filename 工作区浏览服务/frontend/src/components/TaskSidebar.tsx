@@ -214,5 +214,5 @@ export function TaskSidebar() {
     </div>
   </aside>{detailId && <TaskDetailDialog key={detailId} id={detailId}
     updatedAt={historyUpdates[selectedNode?.url] ?? undefined}
-    nodes={nodes} close={() => setDetailId(null)} />}</>;
+    nodes={nodes} close={() => setDetailId(null)} openTask={setDetailId} />}</>;
 }

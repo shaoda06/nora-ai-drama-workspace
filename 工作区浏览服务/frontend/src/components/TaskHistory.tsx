@@ -37,7 +37,7 @@ export function TaskHistory({ url, updatedAt, total, onDetails }: {
       placeholder="搜索标题或来源会话" value={text} onChange={event => setText(event.target.value)} />
       <select aria-label="历史任务结果" value={result} onChange={event => setResult(event.target.value)}>
         <option value="all">全部结果</option><option value="completed">已完成</option>
-        <option value="abnormal">异常</option><option value="cancelled">已取消</option>
+        <option value="abnormal">异常</option><option value="resolved">已结案</option><option value="cancelled">已取消</option>
       </select></div>
     <div className="comfy-queue-body">
       {query.isPending && <p className="comfy-empty" role="status">正在读取历史…</p>}

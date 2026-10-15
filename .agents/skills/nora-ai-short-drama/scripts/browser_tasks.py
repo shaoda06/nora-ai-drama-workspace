@@ -59,19 +59,25 @@ def service_call(route, payload=None):
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description='查询后台任务、请求重试取回或确认收到通知；不会重新生成')
+    parser = argparse.ArgumentParser(description='查询后台任务、请求重试取回、确认通知或对已核查异常结案；不会重新生成')
     commands = parser.add_subparsers(dest='command', required=True)
     for command in ('status', 'retry-collection'):
         item = commands.add_parser(command)
         item.add_argument('--task-id', required=True, help='Backend local UUID, not remote prompt_id')
     item = commands.add_parser('ack')
     item.add_argument('--notification-id', required=True, help='Notification batch UUID from received message')
+    item = commands.add_parser('resolve', help='Close an investigated needs_attention task; preserve its original exception')
+    item.add_argument('--task-id', required=True, help='Backend local UUID, not remote prompt_id')
+    item.add_argument('--resolution', required=True, help='UTF-8 JSON resolution file with original prompt ID, evidence and replacement IDs')
     args = parser.parse_args()
     if args.command == 'ack':
         thread = os.environ.get('CODEX_THREAD_ID')
         if not thread:
             raise ValueError('通知确认必须在真实来源会话内调用')
         result = service_call('notifications/' + args.notification_id + '/ack', {'thread_id': thread})
+    elif args.command == 'resolve':
+        result = service_call('tasks/' + args.task_id + '/resolve',
+                              json.loads(Path(args.resolution).read_text('utf-8-sig')))
     else:
         result = service_call('tasks/' + args.task_id + ('/retry-collection' if args.command == 'retry-collection' else ''),
                               {} if args.command == 'retry-collection' else None)

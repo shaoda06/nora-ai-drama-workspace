@@ -9,7 +9,7 @@ interface Event {
   id: number; time: string; stage: string; result: string; error?: string;
   source_url?: string; target_url?: string; url?: string; position?: number;
   path?: string; file?: string; identity?: string; collected?: number; notification_id?: string;
-  attempt?: number; auto_retry?: number; delay_seconds?: number; next_retry_at?: string;
+  attempt?: number; auto_retry?: number; delay_seconds?: number; next_retry_at?: string; summary?: string;
 }
 interface Detail {
   summary: {
@@ -21,23 +21,26 @@ interface Detail {
     dispatch_attempt: number | null; preparation_attempt: number | null;
     collection_attempt: number | null; collection_auto_retry: number | null;
     collection_next_retry_at: string | null; collection_retry_stop: string | null;
+    resolution?: { summary: string; resolved_at: string; original_status: string };
   };
   events: Event[];
   outputs: { path: string; name: string; identity: string | null; available: boolean; bytes: number | null;
     url: string | null; status: string; downloaded_at: string | null; error: string | null }[];
   records: { name: string; url: string }[];
   notification_batches: { id: string; task_count: number; status: string }[];
+  resolution_evidence: { name: string; url: string | null }[];
+  replacement_tasks: { id: string; title: string; status: string }[];
 }
 const stages: Record<string, string> = { enqueue: '登记入队', transfer: '转移节点', pause: '暂停', resume: '恢复排队',
   insert: '插队', immediate: '立即提交', cancel: '取消', reorder: '排序', preflight: '提交前检查',
   target_dependencies: '节点依赖检查', target_cache: '节点缓存检查', upload: '上传素材', upload_binding: '素材绑定',
   dispatch: '调度', submit: '提交远端', execution: '远端生成', collection: '取回全部成果', download: '保存成果',
-  collection_retry: '重试取回', notification: '通知来源会话', restart: '后台恢复', reconcile: '核对远端状态', connection: '远端连接' };
+  collection_retry: '重试取回', notification: '通知来源会话', restart: '后台恢复', reconcile: '核对远端状态', connection: '远端连接', resolution: '异常结案' };
 const results: Record<string, string> = { accepted: '已接受', started: '开始', success: '成功', completed: '完成',
   running: '执行中', queued: '远端排队中', failed: '失败', collection_failed: '取回失败', rejected: '被拒绝',
   unknown: '结果待核对', pending: '等待发送', sent: '已发送', acknowledged: 'Agent 已确认', saved: '已保存',
   checked: '已检查', waiting_remote: '等待远端空闲', resume_local: '恢复本地任务', reconnecting: '正在重连', protocol_error: '响应解析失败',
-  scheduled: '等待自动重试', attempt_failed: '本轮取回失败' };
+  scheduled: '等待自动重试', attempt_failed: '本轮取回失败', resolved: '已结案' };
 const notices: Record<string, string> = { not_required: '无需通知', waiting: '等待发送', waiting_idle: '等待会话空闲',
   waiting_connection: '等待会话连接', sending: '正在发送', sent: '已发送，等待 Agent 确认',
   acknowledged: 'Agent 已确认', delivery_unknown: '送达状态待核对' };
@@ -62,8 +65,8 @@ function date(value: string | null | undefined) {
   return `${localDateTime(parsed)}:${String(parsed.getSeconds()).padStart(2, '0')}`;
 }
 
-export function TaskDetailDialog({ id, updatedAt, nodes, close }: {
-  id: string; updatedAt?: string; nodes: { url: string; name: string }[]; close: () => void;
+export function TaskDetailDialog({ id, updatedAt, nodes, close, openTask }: {
+  id: string; updatedAt?: string; nodes: { url: string; name: string }[]; close: () => void; openTask?: (id: string) => void;
 }) {
   const query = useQuery<Detail>({ queryKey: ['task-detail', id], queryFn: async () => {
     const response = await fetch(`/api/comfy/tasks/${encodeURIComponent(id)}/detail`);
@@ -103,8 +106,17 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close }: {
       <div className="task-detail-title"><div><p>{summary.project} · {taskTypeLabels[summary.task_type]}</p>
         <h3>{summary.title}</h3><p>来源会话：{summary.source_session_name || '未记录'}</p></div>
         <strong data-status={summary.status}>{collectionStatus(summary)}</strong></div>
-      {summary.error && <section className="task-detail-problem"><h4>当前问题 · {stages[summary.failure_stage || ''] || summary.failure_stage || '阶段未记录'}</h4>
-        <p>{summary.error}</p><p>成果保存：{summary.collected} / {summary.expected}</p></section>}
+      {summary.resolution && <section className="task-detail-guidance" aria-label="异常结案">
+        <h4>已结案 · {date(summary.resolution.resolved_at)}</h4><p>{summary.resolution.summary}</p>
+        <p className="task-detail-muted">结案不代表原任务生成成功；原任务ID、异常和保存计数保留。</p>
+        <ul>{data.resolution_evidence.map((item, index) => <li key={index}>{item.url
+          ? <a href={item.url} target="_blank" rel="noreferrer">{item.name} ↗</a> : `${item.name}（文件不可用）`}</li>)}</ul>
+        {data.replacement_tasks.map(task => <p key={task.id}>后续任务：{openTask
+          ? <button onClick={() => openTask(task.id)}>{task.title} · {collectionStatus(task)}</button>
+          : `${task.title} · ${collectionStatus(task)}`}</p>)}
+      </section>}
+      {summary.error && <section className="task-detail-problem"><h4>{summary.status === 'resolved' ? '原异常（已结案）' : '当前问题'} · {stages[summary.failure_stage || ''] || summary.failure_stage || '阶段未记录'}</h4>
+        <p>{summary.error}</p><p>原任务保存记录：{summary.collected} / {summary.expected}</p></section>}
       {guidance && <section className="task-detail-guidance" aria-label="任务处理提示">
         <h4>{guidance.title}</h4><p>{guidance.text}</p>
         {summary.status === 'collection_failed' && <p>已经保存的成果保留，只重试未保存的成果，不重新生成。具体文件见下方“成果”，失败原因见“当前问题”和“过程记录”。</p>}
@@ -123,8 +135,10 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close }: {
         {summary.collection_retry_stop === 'exhausted' && <p>自动重试次数已用完，交由 Agent 处理。</p>}
         {summary.collection_retry_stop === 'requires_attention' && <p>当前错误需要核对资料或文件，已停止自动重试，交由 Agent 处理。</p>}
       </section>}
-      <section><h4>成果 <span>{summary.collected} / {summary.expected} 已保存</span></h4>
-        <p className="task-detail-muted">任务完成后取回全部成果，按入队时指定的本机路径保存。</p>
+      <section><h4>{summary.status === 'resolved' ? '原任务成果记录' : '成果'} <span>{summary.collected} / {summary.expected} 已保存</span></h4>
+        <p className="task-detail-muted">{summary.status === 'resolved'
+          ? '此处保留原任务当时的保存记录；恢复及替代成果见上方结案依据。'
+          : '任务完成后取回全部成果，按入队时指定的本机路径保存。'}</p>
         {data.outputs.length === 0 ? <p className="task-detail-muted">未登记成果目标。</p> : <ul className="task-detail-outputs">
           {data.outputs.map(output => <li key={output.path}><div className="task-detail-output-heading"><b>{output.name}</b>
             <span data-status={output.status}>{outputStatuses[output.status] || output.status}</span>
@@ -140,6 +154,7 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close }: {
             <p><b>{stages[event.stage] || event.stage}</b><span>{results[event.result] || event.result}</span></p>
             {event.attempt !== undefined && <p>取回第 {event.attempt} 轮{event.auto_retry !== undefined && ` · 自动重试 ${event.auto_retry} / 3`}</p>}
             {event.next_retry_at && <p>下次重试：{date(event.next_retry_at)}</p>}
+            {event.summary && <p>{event.summary}</p>}
             {event.source_url && event.target_url && <p>{node(event.source_url)} → {node(event.target_url)}</p>}
             {event.position !== undefined && <p>本地排位 #{event.position}</p>}
             {(event.identity || event.file || event.path) && <p className="task-detail-path">{event.identity || event.file || event.path}</p>}
