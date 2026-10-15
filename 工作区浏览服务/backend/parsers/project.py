@@ -432,7 +432,7 @@ def formal_record_url(version, record, record_key):
     return url + "#" + quote(matches[0]) if len(numbers) == len(matches) == 1 else url
 
 
-def build_data(project, *, web_episode_navigation=False):
+def build_data(project, *, web_episode_navigation=False, load_scope=None, episode_id=None):
     documents, sources, texts = {}, {}, {}
     text_previews = {}
     resolved_paths = {}
@@ -444,6 +444,12 @@ def build_data(project, *, web_episode_navigation=False):
         return resolved_paths[relative]
 
     def read(relative, *, preview=None):
+        if load_scope is not None and relative != PROGRESS:
+            allowed = {'00-项目定位', load_scope}
+            if load_scope == '09-剧集制作':
+                allowed.add('06-分集大纲')
+            if relative.split('/')[0] not in allowed:
+                return None
         if preview is None:
             preview = not web_episode_navigation
         if relative in texts:
@@ -462,10 +468,10 @@ def build_data(project, *, web_episode_navigation=False):
         documents[relative] = document_preview(text, relative) if preview else {"text": text}
         return text
 
-    def read_plain(relative):
-        if relative in text_previews:
+    def read_plain(relative, *, defer=False):
+        if relative in text_previews and (defer or not text_previews[relative].get('deferred')):
             return
-        if web_episode_navigation and live_task_record(relative):
+        if web_episode_navigation and (defer or live_task_record(relative)):
             text_previews[relative] = {"deferred": True}
             return
         text_previews[relative], sources[relative] = plain_text_preview(project / relative)
@@ -560,11 +566,17 @@ def build_data(project, *, web_episode_navigation=False):
                 }.get(path.suffix.lower(), "file")
         item = {"kind": kind, "name": path.name, "key": key, "url": quote(key, safe="/-._~")}
         if kind == "document":
-            text = read(key, preview=not web_episode_navigation)
+            if load_scope is not None:
+                text = texts.get(key)
+                if text is None:
+                    text = path.read_text('utf-8-sig')
+                    documents.setdefault(key, {'deferred': True})
+            else:
+                text = read(key, preview=not web_episode_navigation)
             confirmation = field(text, "确认状态")
             item["statusHtml"] = status_markup(confirmation, key) if confirmation != "未记录" else ""
         elif kind == "text":
-            read_plain(key)
+            read_plain(key, defer=load_scope is not None)
         elif kind == "video":
             prompts = video_prompts(key)
             if prompts is not None:
@@ -589,6 +601,8 @@ def build_data(project, *, web_episode_navigation=False):
         return 0 if item["kind"] == "document" and Path(item["key"]).name.endswith("索引.md") else 1
 
     def collect_groups(directory):
+        if load_scope is not None and directory.split('/')[0] != load_scope:
+            return []
         result = []
         for group in (*GROUPS, *LEGACY_GROUPS):
             if group in LEGACY_GROUPS and not any(
@@ -1036,6 +1050,9 @@ def build_data(project, *, web_episode_navigation=False):
     # Remaining tabs use a read-only catalogue. Text is embedded once in documents;
     # media stays on disk and is never decoded, transformed or judged here.
     def inventory(relative):
+        if load_scope is not None and (relative.split('/')[0] != load_scope or
+                load_scope == '09-剧集制作' and (episode_id is None or relative != load_scope + '/' + episode_id)):
+            return []
         folder = project / relative
         if not folder.is_dir() or not folder.resolve().is_relative_to(project):
             return []
@@ -1121,6 +1138,8 @@ def build_data(project, *, web_episode_navigation=False):
             warnings.append(number + "大纲入口未识别，请核对分集索引。")
             continue
         indexed.add(key)
+        if load_scope == '09-剧集制作':
+            continue
         doc = long_document(key, False)
         title_match = re.search(r"^(?:-[ \t]*)?本集题名[:：][ \t]*([^。\n]+)", read(key) or "", re.M)
         outline_items.append({"kind": "outline", "name": number, "key": key, "doc": doc,
@@ -1177,7 +1196,9 @@ def build_data(project, *, web_episode_navigation=False):
     production_statuses = {match[1]: row["status"] for row in rows
                            if (match := re.fullmatch(r"(EP\d{3,})\s*制作", row["name"]))}
     folder = project / production
-    for episode in sorted(folder.iterdir()) if folder.is_dir() else []:
+    for episode in sorted(folder.iterdir()) if folder.is_dir() and load_scope in (None, production) else []:
+        if episode_id is not None and episode.name != episode_id:
+            continue
         if not episode.is_dir() or not re.fullmatch(r"EP\d{3,}", episode.name) or not episode.resolve().is_relative_to(project):
             continue
         root = episode.relative_to(project).as_posix()
@@ -1187,9 +1208,10 @@ def build_data(project, *, web_episode_navigation=False):
             for item in files:
                 if item["name"] != "输入映射.json" or "执行附件" not in Path(item["key"]).parts:
                     continue
+                read_plain(item["key"])
                 snapshot = text_previews[item["key"]]
                 mapping_text = ((project / item["key"]).read_text("utf-8-sig")
-                                if snapshot["notice"] else snapshot["text"])
+                                if snapshot.get('deferred') or snapshot.get('notice') else snapshot["text"])
                 for context in json.loads(mapping_text).get("generation_contexts", []):
                     identity = context["identity"]
                     if not re.fullmatch(re.escape(episode.name) + r"-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)", identity):
@@ -1217,6 +1239,8 @@ def build_data(project, *, web_episode_navigation=False):
                  if raw_status in ("进行中", "待确认") or (number in existing_episodes and raw_status != "未开始")
                  else "未开始")
         counts[state] += 1
+        if episode_id is not None and number != episode_id:
+            continue
         if not web_episode_navigation and number not in existing_episodes:
             continue
         episode_node = existing_episodes.get(number) or {
@@ -1227,7 +1251,7 @@ def build_data(project, *, web_episode_navigation=False):
             "productionComplete": state == "已完成",
             "statusHtml": status_markup(state if web_episode_navigation else raw_status or "未记录", PROGRESS),
             "note": "等待审阅也属于进行中；整集完成以项目进度为准。"})
-        if web_episode_navigation:
+        if web_episode_navigation and (load_scope is None or episode_id is not None):
             episode_root = production + "/" + number
             work_root = episode_root + "/其他资料/工作稿/"
             issues = episode_node["productionIssues"] = []

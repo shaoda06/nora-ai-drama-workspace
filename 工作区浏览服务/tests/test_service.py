@@ -32,7 +32,7 @@ class ServiceTests(HttpTestCase):
         self.temp.cleanup()
 
     def test_formal_image_count_requires_approval_and_existing_media(self):
-        data = {}
+        data = {'warnings': []}
         for group in ('people', 'props', 'scenes'):
             prefix = {'people': 'people', 'props': 'prop', 'scenes': 'scene'}[group]
             data[prefix + 'Index'] = group + '.md'
@@ -96,7 +96,9 @@ class ServiceTests(HttpTestCase):
         self.assertEqual([(item['name'], item['title']) for item in data['children']],
                          [('EP001', '先撑过今晚'), ('EP002', '婶子也不能白拿'), ('EP003', ''),
                           ('EP004', '仅有大纲，没有制作目录'), ('EP005', '')])
-        self.assertIn('EP001-本集剧本.md', str(data['children'][0]['children']))
+        self.assertNotIn('script', data['children'][0])
+        detail = self.client.get('/api/projects/示例项目/episodes/EP001').json()
+        self.assertIn('EP001-本集剧本.md', str(detail['children']))
         self.assertIn('未开始', data['children'][3]['statusHtml'])
         self.assertEqual(data['children'][3]['children'], [])
         self.assertFalse((self.project / '09-剧集制作/EP004').exists())
@@ -170,8 +172,8 @@ class ServiceTests(HttpTestCase):
             '| 集号 | 一句话概要 | 大纲入口 |\n| --- | --- | --- |\n'
             '| EP002 | 二 | [大纲](EP002-分集大纲.md) |\n', encoding='utf-8')
         data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
-        self.assertEqual(data['children'][0]['scenes'], ['C002', 'C001'])
-        self.assertEqual(data['children'][1]['scenes'], [])
+        self.assertEqual(self.client.get('/api/projects/示例项目/episodes/EP001').json()['scenes'], ['C002', 'C001'])
+        self.assertEqual(self.client.get('/api/projects/示例项目/episodes/EP002').json()['scenes'], [])
         story = self.client.get('/api/projects/示例项目/sections/01-主旨与简介')
         self.assertEqual(story.status_code, 200)
         self.assertIn('主旨正文保留。', story.json()['bodyHtml'])
@@ -208,7 +210,7 @@ class ServiceTests(HttpTestCase):
                              + '\n## 2. 讨论与修改\n旧索引。\n', encoding='utf-8')
         os.utime(old_index, (1_700_000_000, 1_700_000_000))
         os.utime(new_index, (1_700_000_001, 1_700_000_001))
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         script = data['script']
         self.assertTrue(script['key'].endswith('本集剧本-工作稿.md'))
         self.assertTrue(script['url'].startswith('/api/projects/'))
@@ -250,7 +252,7 @@ class ServiceTests(HttpTestCase):
                              + content, encoding='utf-8')
             os.utime(file, (1_700_000_000, 1_700_000_000))
             os.utime(draft, (1_700_000_001, 1_700_000_001))
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual(data['scenes'], ['C001'])
         self.assertTrue(data['script']['key'].endswith('/02-剧集剧本/EP001-本集剧本.md'))
         self.assertTrue(data['storyboards']['C001']['key'].endswith('/03-分镜脚本/EP001-C001-场次分镜.md'))
@@ -277,7 +279,7 @@ class ServiceTests(HttpTestCase):
                         '#### 当前审批与准备安排\n| 顺序 | 当前状态 |\n| --- | --- |\n| 1 | 已批准采用 |\n'
                         '## 2. 讨论与修改\n### 历史正文\n- 文档版本：v99\n', encoding='utf-8')
         source = work.read_bytes()
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual(data['scenes'], ['C001'])
         self.assertEqual([(item['id'], item['duration']) for item in data['segments']['C001']],
                          [('P002', 15), ('P001', 10)])
@@ -289,7 +291,7 @@ class ServiceTests(HttpTestCase):
         draft = work / 'EP001-本集剧本-工作稿.md'
         draft.write_text('# 工作稿\n\n## 1. 当前内容\n### 新稿\n- 文档版本：v02\n'
                          '- 确认状态：待审核\n\n#### 1. 故事剧本正文\n##### EP001-C001\n草稿正文。\n', encoding='utf-8')
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual(data['scenes'], ['C001'])
         self.assertTrue(data['script']['key'].endswith('工作稿.md'))
         formal = self.project / '09-剧集制作/EP001/02-剧集剧本/EP001-本集剧本.md'
@@ -298,7 +300,7 @@ class ServiceTests(HttpTestCase):
                           '## 1. 故事剧本正文\n### EP001-C002\n正式新正文。\n', encoding='utf-8')
         os.utime(draft, (1_900_000_000, 1_900_000_000))
         self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual(data['scenes'], ['C002'])
         self.assertTrue(data['script']['key'].endswith('/02-剧集剧本/EP001-本集剧本.md'))
         self.assertEqual(data['script']['doc']['meta']['文档版本'], 'v03')
@@ -308,7 +310,7 @@ class ServiceTests(HttpTestCase):
         script = episode / '02-剧集剧本/EP001-本集剧本.md'
         script.parent.mkdir(parents=True)
         script.write_text('# 本集剧本\n### 1. 故事剧本正文\n### EP001-C001\n正文。\n', encoding='utf-8')
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual(data['scenes'], [])
         self.assertEqual(data['productionIssues'][0]['key'], '09-剧集制作/EP001/02-剧集剧本/EP001-本集剧本.md')
         self.assertIn('二级标题', data['productionIssues'][0]['message'])
@@ -318,7 +320,7 @@ class ServiceTests(HttpTestCase):
         index.write_text('# 分镜索引\n| 场次 | 分段 | 时长 |\n| --- | --- | --- |\n'
                          '| EP001-C001 | EP001-C001-P001 | 10 |\n', encoding='utf-8')
         self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual(data['scenes'], ['C001'])
         self.assertEqual(data['segments']['C001'], [])
         self.assertEqual(data['productionIssues'][0]['key'], '09-剧集制作/EP001/03-分镜脚本/EP001-分镜索引.md')
@@ -327,7 +329,7 @@ class ServiceTests(HttpTestCase):
                          '| EP001-C001 | EP001-C001-P001 | 10 |\n'
                          '| EP001-C001 | EP001-C002-P002 | 11 |\n', encoding='utf-8')
         self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual([item['id'] for item in data['segments']['C001']], ['P001'])
         self.assertIn('不匹配', data['productionIssues'][0]['message'])
 
@@ -342,7 +344,7 @@ class ServiceTests(HttpTestCase):
         index = board.parent / 'EP001-分镜索引.md'
         index.write_text('| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
                          '| EP001-C001 | EP001-C001-P001 | 10 |\n', encoding='utf-8')
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual(len(data['segments']['C001']), 1)
         issue = data['productionIssues'][0]
         self.assertTrue(issue['key'].endswith('EP001-C001-场次分镜.md'))
@@ -350,12 +352,12 @@ class ServiceTests(HttpTestCase):
         self.assertIn('1. 镜头正文', issue['message'])
         board.write_text('# 场次分镜\n## 1. 镜头正文\n### 分段 P002\n#### EP001-SH001\n镜头。\n', encoding='utf-8')
         self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertIn('分段 P001', data['productionIssues'][0]['message'])
 
     def test_unstarted_episode_has_no_structure_error(self):
         (self.project / '09-剧集制作/EP001').mkdir(parents=True)
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual(data['scenes'], [])
         self.assertEqual(data['productionIssues'], [])
 
@@ -379,7 +381,7 @@ class ServiceTests(HttpTestCase):
         (history / 'EP001-分镜索引-旧版.md').write_text(
             '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
             '| EP001-C001 | EP001-C001-P099 | 15 |\n', encoding='utf-8')
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual(data['segments'], {'C002': [{'id': 'P001', 'duration': 11, 'scriptHtml': '', 'videos': []}],
                                            'C001': [{'id': 'P002', 'duration': 5.5, 'scriptHtml': '', 'videos': []}, {'id': 'P001', 'duration': 4.75, 'scriptHtml': '', 'videos': []}]})
         self.assertEqual(index.read_bytes(), source)
@@ -409,7 +411,7 @@ class ServiceTests(HttpTestCase):
         history.mkdir(parents=True)
         (history / 'EP001-C001-场次分镜-旧版.md').write_text(
             '## 1. 镜头正文\n### 分段 P001\n旧版正文。\n', encoding='utf-8')
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]['segments']
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()['segments']
         first = data['C001'][0]['scriptHtml']
         self.assertIn('<strong>景别</strong>：近景。', first)
         self.assertIn('第一段原对白。', first)
@@ -446,7 +448,7 @@ class ServiceTests(HttpTestCase):
             text = f'## 1. 镜头正文\n### 分段 P001\n#### EP001-{scene}-SH001\n- **镜号**：EP001-{scene}-SH001\n- **时长**：{duration}秒\n{scene}的镜头正文。\n'
             path.write_text(text, encoding='utf-8')
             originals.append((path, path.read_bytes()))
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         self.assertEqual(data['productionIssues'], [])
         for scene in ('C001', 'C002'):
             html = data['segments'][scene][0]['scriptHtml']
@@ -473,7 +475,7 @@ class ServiceTests(HttpTestCase):
         attachments = episode / '其他资料/执行附件'
         attachments.mkdir()
         (attachments / 'EP001-C001-P001-R011-后处理.mp4').write_bytes(b'not a final candidate')
-        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()['children'][0]['segments']['C001'][0]['videos']
+        data = self.client.get('/api/projects/示例项目/episodes/EP001').json()['segments']['C001'][0]['videos']
         self.assertEqual([(v['candidateNumber'], v['run'], v['stage'], v['approved']) for v in data],
                          [(2, 'R002', '一采', False), (10, 'R010', '二采', False)])
         self.assertEqual(self.client.get(data[0]['url']).content, b'video candidate')
@@ -545,7 +547,7 @@ class ServiceTests(HttpTestCase):
         (episode / '03-分镜脚本/EP001-分镜索引.md').write_text(
             '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
             '| EP001-C001 | EP001-C001-P001 | 0 |\n', encoding='utf-8')
-        response = self.client.get('/api/projects/示例项目/sections/09-剧集制作')
+        response = self.client.get('/api/projects/示例项目/episodes/EP001')
         self.assertEqual(response.status_code, 503)
         self.assertIn('分段计划时长必须为正数秒', response.json()['detail'])
 
@@ -609,10 +611,10 @@ class ServiceTests(HttpTestCase):
         with patch('backend.services.projects.build_data', side_effect=AssertionError('unchanged project was parsed')):
             loaded = ProjectStore(self.root, cache_directory=cache, version='v1').get('示例项目')['data']
             self.assertEqual(loaded, data)
-        for changed in ('version', 'source', 'workspace'):
+        for changed in ('source', 'workspace', 'schema'):
             with self.subTest(changed=changed):
                 ProjectStore(self.root, cache_directory=cache, version='v1').get('示例项目')
-                version = 'v2' if changed == 'version' else 'v1'
+                version = 'v2'
                 if changed == 'source':
                     self.source.write_text('# 已更新\n\n## 正文\n新的资料。', encoding='utf-8')
                 root = self.root
@@ -623,7 +625,7 @@ class ServiceTests(HttpTestCase):
                     source.write_bytes(self.source.read_bytes())
                     stat = self.source.stat()
                     os.utime(source, ns=(stat.st_atime_ns, stat.st_mtime_ns))
-                with patch('backend.services.projects.build_data', wraps=parser.build_data) as parse:
+                with patch('backend.services.projects.CACHE_SCHEMA', 2 if changed == 'schema' else 1), patch('backend.services.projects.build_data', wraps=parser.build_data) as parse:
                     ProjectStore(root, cache_directory=cache, version=version).get('示例项目')
                     parse.assert_called_once()
 
@@ -768,7 +770,7 @@ class ServiceTests(HttpTestCase):
         self.assertIsNone(entry['error'])
         self.assertEqual(entry['revision'], 2)
         response = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
-        current = next(item for item in response['children'] if item['name'] == 'EP003')
+        current = self.client.get('/api/projects/示例项目/episodes/EP003').json()
         doc = current['storyboards']['C001']['doc']
         self.assertEqual(doc['meta'], {'文档版本': 'v14', '确认状态': '待审核'})
         self.assertIn('单人对白。', doc['html'])

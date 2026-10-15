@@ -6,9 +6,12 @@ import re
 import threading
 import time
 
-from backend.parsers.project import SourceChangedError, build_data, live_task_record
+from backend.parsers.project import SourceChangedError, build_data, live_task_record, FORMAL_SECTIONS
 
 logger = logging.getLogger(__name__)
+
+# Increment only when the parsed project data or interpretation becomes incompatible.
+CACHE_SCHEMA = 1
 
 class ProjectStore:
     """Parse on demand; keep the last complete result while a change is read."""
@@ -60,24 +63,25 @@ class ProjectStore:
                             result[key] = (stat.st_mtime_ns, stat.st_size)
         return result
 
-    def load_cache(self, name, snapshot):
+    def load_cache(self, name, snapshot, part=None):
         if self.cache_directory is None:
             return None
-        path = self.cache_directory / (name + '.json')
+        path = (self.cache_directory / name / (part + '.json') if part else self.cache_directory / (name + '.json'))
         if not path.is_file():
             return None
         saved = json.loads(path.read_text('utf-8'))
-        if (saved['workspace'] == str(self.root) and saved['version'] == self.version
+        if (saved['workspace'] == str(self.root) and saved.get('schema') == CACHE_SCHEMA
                 and saved['snapshot'] == {key: list(value) for key, value in snapshot.items()}):
             return saved['data']
         return None
 
-    def save_cache(self, name, snapshot, data):
+    def save_cache(self, name, snapshot, data, part=None):
         if self.cache_directory is None:
             return
-        path = self.cache_directory / (name + '.json')
+        path = (self.cache_directory / name / (part + '.json') if part else self.cache_directory / (name + '.json'))
+        path.parent.mkdir(parents=True, exist_ok=True)
         temporary = path.with_suffix('.tmp')
-        temporary.write_text(json.dumps({'workspace': str(self.root), 'version': self.version,
+        temporary.write_text(json.dumps({'workspace': str(self.root), 'schema': CACHE_SCHEMA,
                                         'snapshot': snapshot, 'data': data}, ensure_ascii=False), encoding='utf-8')
         temporary.replace(path)
 
@@ -87,14 +91,14 @@ class ProjectStore:
             entry = self.entries.get(name)
             if entry is None:
                 entry = {'data': None, 'revision': 0, 'error': None, 'error_kind': None, 'updating': False,
-                         'snapshot': None, 'checked': 0.0, 'retry_at': 0.0, 'retry_at_time': 0.0, 'lock': threading.Lock()}
+                         'sections': {}, 'snapshot': None, 'checked': 0.0, 'retry_at': 0.0, 'retry_at_time': 0.0, 'lock': threading.Lock()}
                 self.entries[name] = entry
         with entry['lock']:
             if entry['data'] is None and not entry['updating']:
                 entry['snapshot'] = self.snapshot(path)
                 data = self.load_cache(name, entry['snapshot'])
                 if data is None:
-                    data = build_data(path, web_episode_navigation=True)
+                    data = build_data(path, web_episode_navigation=True, load_scope="overview")
                     self.save_cache(name, entry['snapshot'], data)
                 entry['data'] = data
                 entry['revision'] = 1
@@ -117,7 +121,7 @@ class ProjectStore:
 
     def refresh(self, name, entry, snapshot):
         try:
-            data = build_data(self.project(name), web_episode_navigation=True)
+            data = build_data(self.project(name), web_episode_navigation=True, load_scope="overview")
             self.save_cache(name, snapshot, data)
         except (OSError, ValueError, RuntimeError, UnicodeError) as error:
             if isinstance(error, SourceChangedError):
@@ -134,7 +138,27 @@ class ProjectStore:
             return
         with entry['lock']:
             entry.update(data=data, snapshot=snapshot, revision=entry['revision'] + 1,
-                         error=None, error_kind=None, updating=False, retry_at=0.0, retry_at_time=0.0)
+                         error=None, error_kind=None, updating=False, retry_at=0.0, retry_at_time=0.0, sections={})
+
+    def section(self, name: str, scope: str, episode: str | None = None):
+        if scope not in FORMAL_SECTIONS or episode is not None and not re.fullmatch(r'EP\d{3,}', episode):
+            raise FileNotFoundError('栏目或剧集不存在')
+        entry = self.get(name)
+        key = scope + ('--' + episode if episode else '')
+        with entry['lock']:
+            if key not in entry['sections']:
+                data = self.load_cache(name, entry['snapshot'], part=key)
+                if data is None:
+                    try:
+                        data = build_data(self.project(name), web_episode_navigation=True, load_scope=scope, episode_id=episode)
+                        self.save_cache(name, entry['snapshot'], data, part=key)
+                    except (OSError, ValueError, RuntimeError, UnicodeError) as error:
+                        entry.update(error=str(error),
+                                     error_kind='source_changed' if isinstance(error, SourceChangedError) else 'read_failed',
+                                     retry_at=time.monotonic() + 30, retry_at_time=(time.time() + 30) * 1000)
+                        raise
+                entry['sections'][key] = data
+            return entry['sections'][key]
 
     def file(self, name: str, relative: str, revision: str | None = None):
         root = self.project(name)

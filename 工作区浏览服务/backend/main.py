@@ -244,9 +244,9 @@ async def security_headers(request: Request, call_next):
     return response
 
 
-def entry(name):
+def entry(name, scope=None, episode=None):
     try:
-        return store.get(name)
+        return {'data': store.section(name, scope, episode)} if scope else store.get(name)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except (OSError, ValueError, RuntimeError, UnicodeError) as error:
@@ -335,7 +335,7 @@ def overview(name: str) -> dict[str, Any]:
 
 @app.get('/api/projects/{name}/sections/{section}')
 def section(name: str, section: str) -> dict[str, Any]:
-    data = entry(name)['data']
+    data = entry(name, section)['data']
     if section == '00-项目定位':
         result = {'exists': data['positionExists'], 'title': data['positionTitle'], 'meta': data['meta'], 'confirmationHtml': data['confirmationHtml'],
                   'introHtml': data['introHtml'], 'summaryHtml': data['summaryHtml'], 'headerHtml': data['headerHtml'], 'bodyHtml': data['positionHtml'], 'groups': data['groups'],
@@ -359,21 +359,39 @@ def section(name: str, section: str) -> dict[str, Any]:
         result = data['catalogues'][section]
     else:
         raise HTTPException(404, '栏目不存在')
-    return view(result, name)
+    return view(dict(result, warnings=data['warnings']), name)
 
 
 @app.get('/api/projects/{name}/assets/{kind}/{identity}')
 def asset(name: str, kind: Literal['people', 'scenes', 'props'], identity: str) -> dict[str, Any]:
-    for item in entry(name)['data'][kind]:
+    for item in entry(name, {'people': parser.PEOPLE, 'scenes': parser.SCENES, 'props': parser.PROPS}[kind])['data'][kind]:
         if item['id'] == identity:
             return view(item, name)
     raise HTTPException(404, '资料卡不存在')
 
 
+@app.get('/api/projects/{name}/episodes/{episode}')
+def episode_detail(name: str, episode: Episode) -> dict[str, Any]:
+    data = entry(name, '09-剧集制作', episode)['data']
+    current = next((item for item in data['catalogues']['09-剧集制作']['children'] if item['name'] == episode), None)
+    if current is None:
+        raise HTTPException(404, '剧集不存在')
+    previous = None
+    if int(episode[2:]) > 1:
+        previous_id = 'EP' + str(int(episode[2:]) - 1).zfill(len(episode) - 2)
+        prior = entry(name, '09-剧集制作', previous_id)['data']['catalogues']['09-剧集制作']['children']
+        if prior:
+            item = prior[0]
+            scene = next(reversed(item.get('scenes', [])), '')
+            previous = {'name': previous_id, 'scenes': [scene] if scene else [],
+                        'segments': {scene: item['segments'][scene]} if scene else {}}
+    return view({**current, 'previousEpisode': previous, 'warnings': data['warnings']}, name)
+
+
 @app.get('/api/projects/{name}/episodes/{episode}/download')
 def completed_episode_download(name: str, episode: Episode):
     try:
-        files = completed_episode_videos(store, name, episode, entry(name)['data'])
+        files = completed_episode_videos(store, name, episode, entry(name, '09-剧集制作', episode)['data'])
         return zip_response(files, video_archive_name(name, episode))
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
@@ -384,7 +402,7 @@ def completed_episode_download(name: str, episode: Episode):
 @app.get('/api/projects/{name}/episodes/{episode}/downloads')
 def episode_download_list(name: str, episode: Episode, scene: Scene | None = None) -> dict[str, Any]:
     try:
-        files = episode_resources(store, name, episode, entry(name)['data'], scene)
+        files = episode_resources(store, name, episode, entry(name, '09-剧集制作', episode)['data'], scene)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     prefix = '/api/projects/' + quote(name, safe='') + '/episodes/' + episode + '/downloads/'
@@ -401,7 +419,7 @@ def episode_download_list(name: str, episode: Episode, scene: Scene | None = Non
 def episode_download(name: str, episode: Episode, stage: Literal['一采', '二采', '后处理'],
                      kind: Literal['videos'], scene: Scene | None = None):
     try:
-        files = episode_resources(store, name, episode, entry(name)['data'], scene)[stage][kind]
+        files = episode_resources(store, name, episode, entry(name, '09-剧集制作', episode)['data'], scene)[stage][kind]
         if not files:
             raise FileNotFoundError(('本场' if scene else '本集') + '该阶段没有可下载的' + KINDS[kind])
         filename = f'{name}-第{int(episode[2:])}集-{scene}-{stage}-正式版视频.zip' if scene else video_archive_name(name, episode)
@@ -414,21 +432,14 @@ def episode_download(name: str, episode: Episode, stage: Literal['一采', '二�
 
 @app.get('/api/projects/{name}/document')
 def document(name: str, path: Annotated[str, Query()]) -> dict[str, Any]:
-    data = entry(name)['data']
-    if path in data['documents']:
-        preview = data['documents'][path]
-        if 'text' in preview:
-            return view(parser.document_preview(preview['text'], path), name)
-        return view(preview, name)
-    if path in data['textPreviews']:
-        preview = data['textPreviews'][path]
-        if preview.get('deferred'):
-            try:
-                target = store.file(name, path)
-            except FileNotFoundError as error:
-                raise HTTPException(404, str(error)) from error
-            preview, _ = parser.plain_text_preview(target)
-        return preview
+    try:
+        target = store.file(name, path)
+        if target.suffix.lower() == '.md':
+            return view(parser.document_preview(target.read_text('utf-8-sig'), path), name)
+        if target.suffix.lower() in ('.json', '.txt', '.log'):
+            return parser.plain_text_preview(target)[0]
+    except FileNotFoundError as error:
+        raise HTTPException(404, str(error)) from error
     raise HTTPException(404, '没有可用的文档预览，请打开原文件')
 
 

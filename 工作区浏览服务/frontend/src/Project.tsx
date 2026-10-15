@@ -56,9 +56,10 @@ export default function Project() {
     return () => window.clearTimeout(timer);
   }, [name, retryAt, syncing, refetch]);
   const revision = status.data?.revision || 1;
-  const production = useQuery<RecordData>({ queryKey: ['section', name, '09-剧集制作', revision], enabled: false, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
-  const episodeTitle = production.data?.children.find((item: FileItem) => item.name === episode)?.title || '题名未记录';
+  const production = useQuery<RecordData>({ queryKey: ['section', name, section, revision], enabled: false, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
+  const episodeTitle = production.data?.children?.find((item: FileItem) => item.name === episode)?.title || '题名未记录';
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
+  const warnings = [...new Set<string>([...(overview.data?.warnings || []), ...(production.data?.warnings || [])])];
   useEffect(() => {
     if (overview.data && !overview.data.directories.some((dir: RecordData) => dir.name === section)) {
       setSection('00-项目定位'); setVisited(['00-项目定位']); setEpisode(null); setAsset(null);
@@ -78,7 +79,7 @@ export default function Project() {
     </PageHeader>
     <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} retry={status.error ? status.refetch : overview.refetch} retrying={status.isFetching || overview.isFetching} />
     {overview.data && <>
-      {overview.data.warnings.length > 0 && <details className="notice"><summary>资料提示（{overview.data.warnings.length}）</summary>{overview.data.warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
+      {warnings.length > 0 && <details className="notice"><summary>资料提示（{warnings.length}）</summary>{warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
       {controlsRoot && createPortal(<TabNav label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={[...overview.data.directories].sort((a: RecordData, b: RecordData) => Number(['07-参考音频', '08-参考视频'].includes(a.name)) - Number(['07-参考音频', '08-参考视频'].includes(b.name))).map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={openSection} />, controlsRoot)}
       {visited.filter(label => overview.data.directories.some((dir: RecordData) => dir.name === label)).map(label => <SectionPane key={name + '/' + label + '/' + (entries[label] || 0)} project={name} section={label} revision={revision} active={label === section} asset={label === section ? asset : null} onAssetChange={value => { setAsset(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} episode={episode} onEpisodeChange={value => { setEpisode(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} />)}
     </>}
