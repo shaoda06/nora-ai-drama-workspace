@@ -7,13 +7,13 @@ import { TaskHistory } from './TaskHistory';
 import './TaskSidebar.css';
 
 interface RemoteNode {
-  url: string; name: string; connection: 'connecting' | 'connected' | 'reconnecting';
+  url: string; name: string; connection: 'connecting' | 'connected' | 'reconnecting' | 'unconfigured';
   queue: { prompt_id: string; status: 'running' | 'queued'; queue_position: number | null }[];
   running_count: number | null; queued_count: number | null; updated_at: string | null;
   error: string | null; queue_error: string | null;
 }
 
-const nodeConnectionLabels = { connecting: '正在连接', connected: '已连接', reconnecting: '连接中断，正在自动重连' };
+const nodeConnectionLabels = { connecting: '正在连接', connected: '已连接', reconnecting: '连接中断，正在自动重连', unconfigured: '已退出配置，保留任务记录' };
 
 export function TaskSidebar() {
   const [open, setOpen] = useState(false);
@@ -73,6 +73,7 @@ export function TaskSidebar() {
     };
   });
   const nodeWarning = connection !== 'connected' ? '后台连接恢复中，远端队列数据可能滞后'
+    : selectedNode?.error ? selectedNode.error
     : selectedNode?.connection === 'reconnecting' ? selectedNode.updated_at
       ? '远端连接中断，显示上次队列，正在自动重连' : '远端暂未连接，正在自动重连'
     : selectedNode?.queue_error;
@@ -185,6 +186,7 @@ export function TaskSidebar() {
       <div className="comfy-queue-body" key={selectedNode?.url}>
       {nodeWarning && <p className="comfy-task-warning" role="status">{nodeWarning}</p>}
       {visibleTasks.length === 0 && <p className="comfy-empty">{!selectedNode ? '暂无配置的远端节点'
+        : selectedNode.connection === 'unconfigured' ? '此地址不再读取远端队列，原任务记录保留在下方'
         : !selectedNode.updated_at ? selectedNode.connection === 'reconnecting' ? '尚未获取到远端队列' : '正在读取远端队列…'
         : '该节点暂无队列任务'}</p>}
       <div className="comfy-task-items">{visibleTasks.map(task => <TaskCard key={task.id} task={task} />)}</div>

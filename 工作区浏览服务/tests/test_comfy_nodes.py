@@ -1,5 +1,6 @@
 """Persistent node observers: real local sockets, no real workflows or media."""
 import asyncio
+import base64
 import json
 from pathlib import Path
 import socket
@@ -8,6 +9,7 @@ import unittest
 from unittest.mock import AsyncMock, patch
 
 from fastapi import FastAPI, WebSocket
+from fastapi.responses import Response
 from starlette.websockets import WebSocketDisconnect
 import uvicorn
 
@@ -29,7 +31,15 @@ class NodeWireTests(unittest.IsolatedAsyncioTestCase):
         self.sockets = {'one': {}, 'two': {}}
         self.methods = []
         self.ids = []
+        self.auth = {'type': 'basic', 'username': 'test-user', 'password': 'private-password'}
+        self.expected_auth = 'Basic ' + base64.b64encode(b'test-user:private-password').decode()
         remote = FastAPI()
+
+        @remote.middleware('http')
+        async def authenticated(request, call_next):
+            if request.headers.get('authorization') != self.expected_auth:
+                return Response(status_code=401, headers={'WWW-Authenticate': 'Basic realm="test"'})
+            return await call_next(request)
 
         @remote.get('/{node}/queue')
         async def queue(node: str):
@@ -38,6 +48,9 @@ class NodeWireTests(unittest.IsolatedAsyncioTestCase):
 
         @remote.websocket('/{node}/ws')
         async def websocket(ws: WebSocket, node: str):
+            if ws.headers.get('authorization') != self.expected_auth:
+                await ws.close()
+                return
             await ws.accept()
             sid = ws.query_params['clientId']
             self.ids.append((node, sid))
@@ -54,8 +67,8 @@ class NodeWireTests(unittest.IsolatedAsyncioTestCase):
         self.listener.bind(('127.0.0.1', 0))
         base = 'http://127.0.0.1:' + str(self.listener.getsockname()[1])
         self.urls = [base + '/one', base + '/two']
-        self.config = self.project / 'comfyui-config.json'
-        self.config.write_text(json.dumps({'remote-urls': self.urls}))
+        self.config = self.root / 'comfyui-config.json'
+        self.config.write_text(json.dumps({'remote-nodes': [{'url': url, 'auth': self.auth} for url in self.urls]}))
         self.server = uvicorn.Server(uvicorn.Config(remote, log_level='error', lifespan='off'))
         self.serving = asyncio.create_task(self.server.serve(sockets=[self.listener]))
         await self.until(lambda: self.server.started)
@@ -88,7 +101,27 @@ class NodeWireTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn('secret-workflow', public)
         self.assertNotIn('foreign-client', public)
         self.assertFalse(self.store.subscribers)  # No browser is needed to keep monitoring.
+        self.assertNotIn('private-password', json.dumps(self.store.public()))
+        self.assertNotIn(self.expected_auth, json.dumps(self.store.public()))
         self.assertEqual(set(self.methods), {('GET', 'one'), ('GET', 'two')})
+
+    async def test_password_edit_reconnects_observers_without_url_change(self):
+        original_ids = {sid for _, sid in self.ids}
+        self.auth['password'] = 'new-password'
+        self.expected_auth = 'Basic ' + base64.b64encode(b'test-user:new-password').decode()
+        self.config.write_text(json.dumps({'remote-nodes': [{'url': url, 'auth': self.auth} for url in self.urls]}))
+        await self.store.remote_queues.sync()
+        await self.until(lambda: all(state['connection'] == 'connected' for state in self.store.remote_queues.states.values()))
+        self.assertEqual(len(self.ids), 4)
+        self.assertFalse(original_ids.intersection(sid for _, sid in self.ids[2:]))
+
+    async def test_missing_credentials_keep_node_waiting_without_network_submission(self):
+        self.config.write_text(json.dumps({'remote-nodes': [
+            {'url': self.urls[0], 'auth': {'type': 'basic', 'username': '', 'password': ''}},
+            {'url': self.urls[1], 'auth': self.auth}]}))
+        await self.store.remote_queues.sync()
+        await self.until(lambda: self.store.remote_queues.states[self.urls[0]]['connection'] == 'reconnecting')
+        self.assertIsNone(self.store.remote_queues.states[self.urls[0]]['running_count'])
 
     async def test_status_refreshes_full_queue_and_drops_departed_tasks(self):
         self.queues['one'] = {'queue_running': [[2, 'foreign-id']],
@@ -141,7 +174,7 @@ class NodeWireTests(unittest.IsolatedAsyncioTestCase):
         probe.bind(('127.0.0.1', 0))
         offline_url = 'http://127.0.0.1:' + str(probe.getsockname()[1])
         probe.close()
-        self.config.write_text(json.dumps({'remote-urls': [*self.urls, offline_url]}))
+        self.config.write_text(json.dumps({'remote-nodes': [{'url': url, 'auth': self.auth} for url in [*self.urls, offline_url]]}))
         await self.store.remote_queues.sync()
         await self.until(lambda: self.store.remote_queues.states[offline_url]['connection'] == 'reconnecting')
         offline = self.store.remote_queues.states[offline_url]
@@ -151,7 +184,7 @@ class NodeWireTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(all(self.store.remote_queues.states[url]['connection'] == 'connected' for url in self.urls))
 
     async def test_removed_node_closes_socket_and_shutdown_closes_remaining_observers(self):
-        self.config.write_text(json.dumps({'remote-urls': self.urls[1:]}))
+        self.config.write_text(json.dumps({'remote-nodes': [{'url': url, 'auth': self.auth} for url in self.urls[1:]]}))
         await self.store.remote_queues.sync()
         await self.until(lambda: not self.sockets['one'])
         self.assertEqual(list(self.store.remote_queues.states), self.urls[1:])

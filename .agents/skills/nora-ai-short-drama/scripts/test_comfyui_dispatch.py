@@ -12,8 +12,10 @@ class DispatchTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name)
-        (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-urls':['http://main.invalid:8188','http://backup.invalid:8188']}))
+        self.workspace = Path(self.temp.name)
+        self.root = self.workspace / "projects/test"
+        self.root.mkdir(parents=True)
+        (self.workspace / 'comfyui-config.json').write_text(json.dumps({'remote-urls':['http://main.invalid:8188','http://backup.invalid:8188']}))
         self.workflow = {'1':{'class_type':'SaveImage','inputs':{'seed':9223372036854775807}}}
         self.path = self.root / 'workflow.json'
         self.path.write_text(json.dumps(self.workflow))
@@ -94,7 +96,7 @@ class DispatchTests(unittest.TestCase):
 
     def test_nonempty_ordered_primary_and_legacy_config(self):
         self.assertEqual(d.load_config(self.root,30)['remote-urls'][0],'http://main.invalid:8188')
-        (self.root/'comfyui-config.json').write_text(json.dumps({'remote-url':'http://main.invalid:8188'}))
+        (self.workspace/'comfyui-config.json').write_text(json.dumps({'remote-url':'http://main.invalid:8188'}))
         self.assertEqual(len(d.load_config(self.root,30)['remote-urls']),1)
 
 

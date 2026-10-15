@@ -1,5 +1,6 @@
 """Independent node queues, transfers and real mock HTTP/WS lifecycle."""
 import asyncio
+import base64
 import json
 from pathlib import Path
 import unittest
@@ -27,7 +28,7 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
         await local.QueueTests.asyncTearDown(self)
 
     def configure(self):
-        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [self.primary, self.backup]}))
+        (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [self.primary, self.backup]}))
 
     async def add(self, name, url=None):
         key = await local.QueueTests.add(self, name)
@@ -279,11 +280,18 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
     async def test_transferred_task_submits_and_collects_from_target_over_real_transport(self):
         state = {'posts': 0, 'done': False}
         primary, remote = FastAPI(), FastAPI()
+        expected = 'Basic ' + base64.b64encode(b'wire-user:wire-private-password').decode()
+        @remote.middleware('http')
+        async def authenticated(request, call_next):
+            if request.headers.get('authorization') != expected:
+                return Response(status_code=401)
+            return await call_next(request)
         @primary.post('/prompt')
         def forbidden():
             self.fail('Transferred task submitted to primary')
         @remote.websocket('/ws')
         async def ws(socket: WebSocket):
+            self.assertEqual(socket.headers.get('authorization'), expected)
             await socket.accept()
             state['socket'] = socket
             try:
@@ -319,6 +327,9 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
         async with serving(primary) as self.primary, serving(remote) as self.backup:
             self.data.url = self.primary
             self.configure()
+            (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-nodes': [
+                {'url': self.primary}, {'url': self.backup, 'auth': {
+                    'type': 'basic', 'username': 'wire-user', 'password': 'wire-private-password'}}]}))
             source = self.project / 'source.png'
             source.write_bytes(b'test-source-image')
             self.data.uploads = [{'file': str(source), 'node': '1', 'input': 'seed',
@@ -334,4 +345,6 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(self.store.rows[key]['state']['prompt_id'], 'backup-id')
                 self.assertEqual(self.store.rows[key]['state']['status'], 'completed')
                 self.assertEqual(Path(self.store.rows[key]['input'].outputs[0].path).read_bytes(), b'target-node-image')
+                self.assertNotIn('wire-private-password', json.dumps(self.store.public()))
+                self.assertNotIn(expected, (Path(self.store.rows[key]['input'].record_dir) / '后台过程记录.json').read_text('utf-8'))
                 notice.assert_awaited_once_with(key)

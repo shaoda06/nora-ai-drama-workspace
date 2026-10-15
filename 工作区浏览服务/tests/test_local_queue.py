@@ -161,7 +161,7 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
             await self.store.enqueue(self.data)
         self.data.title = '合法'
         key = await self.add('一')
-        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': ['http://different.invalid']}))
+        (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-urls': ['http://different.invalid']}))
         with self.assertRaises(ValueError):
             await self.store.prepare(key)
 

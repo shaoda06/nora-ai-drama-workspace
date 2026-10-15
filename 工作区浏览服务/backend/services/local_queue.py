@@ -172,8 +172,8 @@ class LocalQueue:
             raise ValueError('任务已开始准备、提交或结束，不能转移')
         row = self.rows[key]
         target = self.client.Client(url, row['input'].timeout).url
-        if target not in self.project_urls(row['input']):
-            raise ValueError('目标节点不属于该任务的项目配置')
+        if target not in self.remote_urls():
+            raise ValueError('目标节点不属于工作区配置')
         source = row['input'].url.rstrip('/')
         if source == target:
             raise ValueError('任务已在该节点队列中')
@@ -193,7 +193,7 @@ class LocalQueue:
         self.save(key, status='preparing', phase='preflight', preparation_attempt=row['state'].get('preparation_attempt', 0) + 1)
         self.record(key, 'preflight', 'started')
         # Re-check the endpoint and files at the moment of execution, not just at enqueue time.
-        if self.client_for(data).url not in self.project_urls(data):
+        if self.client.Client(data.url, data.timeout).url not in self.remote_urls():
             raise ValueError('节点配置已改变，请核对任务地址')
         workflow = deepcopy(data.workflow)
         transferred = data.url.rstrip('/') != row['state'].get('enqueued_url', data.url).rstrip('/')

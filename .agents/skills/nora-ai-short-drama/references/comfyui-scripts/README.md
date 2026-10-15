@@ -293,9 +293,17 @@ python3 -B -m unittest discover -s '/absolute/path/comfyui-scripts' -p 'test_*.p
 
 覆盖请求不改写、大整数种子、重复提交、POST超时不重试、状态分类、不泄漏其他任务、半下载清理及并发落盘防覆盖；导演包覆盖JSON/base64与二进制响应、原时间线与大种子保留、缺素材停止、错误节点、已有文件及坏包／截断不落成品。POST响应丢失和并发下载边界使用单元测试注入，不通过破坏远端制造故障。真实任务排队中／运行中状态、长时间网络中断、任意自定义节点和认证网关不据此宣称全部实测。
 
-## Nora 项目配置与分享边界
+## Nora 工作区配置与分享边界
 
-Nora服务配置与任务地址绑定读取[项目ComfyUI配置](../流程规范/ComfyUI-服务配置与任务提交规范.md#项目-comfyui-配置)。新任务经下方统一入口调用本工具；已有任务查询与下载将其实际提交地址显式传入 `--url`。本工具不另维护业务配置规则。新记录使用执行机器本地时区及偏移，协议原始时间戳如实保存。
+Nora服务配置与任务地址绑定读取[工作区ComfyUI配置](../流程规范/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)。新任务经下方统一入口调用本工具；本工具不另维护业务配置规则。新记录使用执行机器本地时区及偏移，协议原始时间戳如实保存。
+
+明确获授权直接查询、取回或诊断时，使用[配置适配入口](../../scripts/comfyui_config.py)，复用本客户端的命令、输出及错误语义，并从指定工作区为实际地址读取认证，不在命令行传账号密码：
+
+```powershell
+python -X utf8 '.agents/skills/nora-ai-short-drama/scripts/comfyui_config.py' --workspace '.' status --url 'https://comfy.example.com' --prompt-id '实际任务ID'
+```
+
+命令从工作区根目录执行；`--workspace` 相对当前目录，必须显式提供。`status`、`download`、`export-pack` 等子命令参数与上方通信工具一致；`--url` 必须是本次记录的真实服务地址，不默认替换为当前主节点。适配入口仅加载凭据并调用原工具，不改配置、不自动重试；其中upload／submit仍受既有执行授权与队列入口要求约束。没有认证的独立通信可直接使用原CLI；Python调用为 `Client(url, timeout, basic_auth=(username, password))`，HTTP和WS可复用实例的 `headers`，不将其写入证据。正常后台队列及阶段定稿导出已使用共用配置，无需每个任务另传认证。
 
 Nora任务准备、查询和取回时，读取[监控规范的精简留档规则](../流程规范/ComfyUI-任务监控规范.md#执行附件精简留档)，据此确定附件留存及当前检查时间的维护。
 

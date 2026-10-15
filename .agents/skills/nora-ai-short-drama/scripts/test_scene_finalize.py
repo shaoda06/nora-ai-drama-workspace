@@ -66,7 +66,7 @@ class FinalizeTests(unittest.TestCase):
     def setUp(self):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
-        self.root = Path(tmp.name)
+        self.root = Path(tmp.name) / "projects/test"
         self.ep = self.root / '09-剧集制作/EP001'
         self.extra = self.ep / '其他资料'
         self.put(self.root / '项目进度.md', '# 原项目进度\n')

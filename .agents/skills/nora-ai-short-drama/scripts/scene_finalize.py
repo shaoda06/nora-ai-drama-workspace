@@ -14,6 +14,7 @@ from urllib.parse import unquote
 
 import video_adopt as adopt
 import workflow_baselines as pairs
+import comfyui_config
 
 client = adopt.client
 MEDIA = ('imageFile', 'audioFile', 'videoFile', 'pairedAudioFile')
@@ -456,7 +457,7 @@ def finalize_one(root, plan, p, apply, timeout):
         if p['receipt'].exists():
             raise ValueError('已有导出响应但定稿包缺失，须先核对，不自动再次导出')
         try:
-            response = client.export_pack(client.Client(p['url'], timeout),
+            response = client.export_pack(comfyui_config.client_for(comfyui_config.workspace_for_project(root), p['url'], timeout),
                                           argparse.Namespace(workflow=p['api_path'], node_id=p['node'], output=p['pack']))
         except (client.ClientError, ValueError, OSError, zipfile.BadZipFile) as error:
             failure = {'ok': False, 'recorded_at': client.now(), 'error': str(error),

@@ -79,7 +79,7 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 class Client:
-    def __init__(self, url, timeout):
+    def __init__(self, url, timeout, *, basic_auth=None):
         parts = urllib.parse.urlsplit(url or "")
         if (parts.scheme not in ("http", "https") or not parts.hostname or
                 parts.username or parts.password or parts.query or parts.fragment):
@@ -87,10 +87,20 @@ class Client:
         if not math.isfinite(timeout) or timeout <= 0:
             raise ClientError("invalid_timeout", "Timeout must be a finite positive number")
         self.url, self.timeout = url.rstrip("/"), timeout
+        self.headers = {}
+        if basic_auth is not None:
+            username, password = basic_auth
+            if (not isinstance(username, str) or not isinstance(password, str) or ':' in username
+                    or any(ord(c) < 32 or ord(c) == 127 for c in username + password)):
+                raise ClientError('invalid_auth', 'Invalid Basic authentication credentials')
+            token = base64.b64encode((username + ':' + password).encode('utf-8')).decode('ascii')
+            self.headers['Authorization'] = 'Basic ' + token
         self.opener = urllib.request.build_opener(NoRedirect())
 
     def open(self, route, data=None, headers=None):
-        request = urllib.request.Request(self.url + route, data=data, headers=headers or {},
+        if not route.startswith('/') or route.startswith('//'):
+            raise ClientError('invalid_route', 'Expected endpoint-relative route')
+        request = urllib.request.Request(self.url + route, data=data, headers={**self.headers, **(headers or {})},
                                          method="GET" if data is None else "POST")
         try:
             return self.opener.open(request, timeout=self.timeout)
@@ -423,11 +433,11 @@ def parser():
     return root
 
 
-def main(argv=None):
+def main(argv=None, *, client_factory=Client):
     args, result_stream = None, None
     try:
         args = parser().parse_args(argv)
-        client = Client(args.url, args.timeout)
+        client = client_factory(args.url, args.timeout)
         if args.result:
             result_path = Path(args.result).absolute()
             protected = []

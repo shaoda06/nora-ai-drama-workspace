@@ -24,7 +24,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.root = Path(self.temp.name)
         self.project = self.root / 'projects/测试项目'
         self.project.mkdir(parents=True)
-        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': ['http://comfy.invalid:8188']}))
+        (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-urls': ['http://comfy.invalid:8188']}))
         self.record = self.project / '执行附件/任务001'
         self.record.mkdir(parents=True)
         self.store = t.TaskStore(self.root / 'runtime', self.root)
@@ -80,7 +80,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_new_task_cannot_submit_to_backup(self):
         backup = 'http://backup.invalid:8188'
-        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [self.data.url, backup]}))
+        (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [self.data.url, backup]}))
         self.data.url = backup
         with patch.object(t, 'connect', AsyncMock()) as connect, patch.object(t.client, 'submit') as post:
             with self.assertRaisesRegex(ValueError, '主节点'):
@@ -89,10 +89,20 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             post.assert_not_called()
         self.assertEqual(self.store.rows, {})
 
+    async def test_second_project_reuses_workspace_primary_without_project_configuration(self):
+        project = self.root / 'projects/另一个项目'
+        project.mkdir()
+        data = self.data.model_copy(deep=True)
+        data.project = str(project)
+        data.record_dir = str(project / '执行附件/新任务')
+        data.outputs[0].path = str(project / '候选/result.png')
+        self.assertEqual(self.store.validate_registration(data), project.resolve())
+        self.assertFalse((project / 'comfyui-config.json').exists())
+
     async def test_restart_preserves_old_backup_task_address_without_resubmitting(self):
         primary = self.data.url
         backup = 'http://backup.invalid:8188'
-        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [primary, backup]}))
+        (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [primary, backup]}))
         self.data.url = backup
         self.seed()
         await self.store.close()
@@ -103,6 +113,17 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             watch.assert_awaited_once_with('task')
             post.assert_not_called()
         self.assertEqual(self.store.client_for(self.store.rows['task']['input']).url, backup)
+
+    async def test_removed_endpoint_keeps_history_visible_and_is_not_a_transfer_target(self):
+        old_url = self.data.url
+        self.seed(status='completed')
+        (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-nodes': [{'url': 'https://new.invalid'}]}))
+        snapshot = self.store.public(include_history=False)
+        self.assertEqual([node['url'] for node in snapshot['remote_nodes']], ['https://new.invalid', old_url])
+        self.assertEqual(snapshot['remote_nodes'][1]['connection'], 'unconfigured')
+        self.assertEqual(snapshot['local_counts'][old_url]['history'], 1)
+        self.assertEqual(self.store.rows['task']['input'].url, old_url)
+        self.assertEqual(self.store.remote_urls(), ['https://new.invalid'])
 
     async def test_restart_recovers_saved_submit_response_and_preserves_unknown_delivery(self):
         self.seed()
@@ -340,7 +361,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
     async def test_public_nodes_follow_config_order_and_task_remote(self):
         urls = ['http://comfy.invalid:8188', 'http://comfy.invalid:8189',
                 'http://comfy.invalid:8190', 'http://comfy.invalid:8191']
-        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': urls}))
+        (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-urls': urls}))
         second_project = self.root / 'projects/另一项目'
         second_project.mkdir()
         (second_project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': urls}))
@@ -356,7 +377,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(snapshot['tasks'][0]['node'], 'H3')
 
     async def test_public_nodes_include_idle_legacy_config(self):
-        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-url': self.data.url + '/'}))
+        (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-url': self.data.url + '/'}))
         snapshot = self.store.public()
         self.assertEqual(snapshot['tasks'], [])
         self.assertEqual(snapshot['remote_nodes'][0], {
@@ -449,7 +470,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         while not server.started:
             await asyncio.sleep(.01)
         self.data.url = url
-        (self.project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [url]}))
+        (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [url]}))
         try:
             with patch.object(self.store, 'notify', AsyncMock()) as notify:
                 result = await self.store.enqueue(self.data)
@@ -472,7 +493,7 @@ class ApiBoundaryTests(HttpTestCase):
         with tempfile.TemporaryDirectory() as folder:
             project = Path(folder) / 'projects/test'
             project.mkdir(parents=True)
-            (project / 'comfyui-config.json').write_text(json.dumps({'remote-urls': ['http://comfy.invalid:8188']}))
+            (Path(folder) / 'comfyui-config.json').write_text(json.dumps({'remote-urls': ['http://comfy.invalid:8188']}))
             store = t.TaskStore(Path(folder), Path(folder))
             main.app.state.comfy_tasks = store
             api = TestClient(main.app, base_url='http://127.0.0.1', client=('127.0.0.1', 1234))

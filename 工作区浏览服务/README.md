@@ -51,7 +51,7 @@ pnpm --dir frontend build
 
 ## 换电脑与工作区迁移
 
-本服务默认从所在目录定位工作区，不依赖盘符、用户名、项目名称或Codex安装位置。GitHub仅同步共用代码、规则、模板和风格库；真实`projects/`、`综合资料/`、`.venv`、`frontend/node_modules`、`frontend/dist`、`runtime`按根目录.gitignore排除。另一台设备拉取仓库后，先按“安装与构建”安装本机依赖及构建前端，再在`projects/`放入自己的项目；没有ComfyUI配置时仍可浏览项目，生成任务需单独配置该项目的节点及本机Codex连接。
+本服务默认从所在目录定位工作区，不依赖盘符、用户名、项目名称或Codex安装位置。GitHub仅同步共用代码、规则、模板和风格库；真实`projects/`、`综合资料/`、`.venv`、`frontend/node_modules`、`frontend/dist`、`runtime`及工作区根目录的`comfyui-config.json`按根目录.gitignore排除。另一台设备拉取仓库后，先按“安装与构建”安装本机依赖及构建前端，再在`projects/`放入自己的项目；没有ComfyUI配置时仍可浏览项目，生成任务复用[工作区服务配置](../.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)及本机Codex连接。后台读取实际资料工作区根目录的配置，独立开发目录共用资料时同样共用此文件；HTTP与WebSocket认证均从该文件加载，不向网页返回凭据。
 
 整份工作区换位置前停止浏览服务，完整复制真实项目、执行附件、素材和`runtime/comfy-tasks.sqlite`，核对复制结果后再启动新位置的服务；不让两份后台同时处理同一队列。虚拟环境须在新位置重新创建并安装requirements.txt；Node、FFmpeg及Codex属于本机环境，按README配置，不把另一台设备的可执行文件路径作为通用配置。若有runtime/service.json或NORA_WORKSPACE覆盖默认目录，需要改为本机实际资料目录；没有覆盖时不用填写工作区路径。项目缓存绑定旧根目录，迁移后自动重建。
 

@@ -30,9 +30,8 @@ logger = logging.getLogger(__name__)
 SKILL = Path(__file__).resolve().parents[3] / '.agents/skills/nora-ai-short-drama'
 sys.path.insert(0, str(SKILL / 'scripts'))
 import project_paths as paths
-spec = importlib.util.spec_from_file_location('nora_comfy_client', SKILL / 'references/comfyui-scripts/comfyui_client.py')
-client = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(client)
+import comfyui_config as config
+client = config.client
 context_spec = importlib.util.spec_from_file_location('nora_generation_context', SKILL / 'scripts/generation_context.py')
 generation_context = importlib.util.module_from_spec(context_spec)
 context_spec.loader.exec_module(generation_context)
@@ -104,23 +103,21 @@ class TaskStore(LocalQueue, TaskNotifications):
         self.queue_init()
         self.subscribers = set()
         self.token = secrets.token_urlsafe(32)
-        self.remote_queues = RemoteQueues(client, self.remote_urls, self.publish)
+        self.remote_queues = RemoteQueues(client, self.remote_urls, self.publish,
+                                         client_for=self.remote_client, connection_key=self.connection_key)
 
     def remote_urls(self):
-        remote_urls = []
-        for path in sorted((self.workspace / 'projects').glob('*/comfyui-config.json')):
-            config = client.strict_json(path.read_bytes())
-            for url in config.get('remote-urls', [config.get('remote-url')]):
-                remote_url = client.Client(url, 30).url
-                if remote_url not in remote_urls:
-                    remote_urls.append(remote_url)
-        return remote_urls
+        return config.remote_urls(self.workspace, missing_ok=True)
 
-    def project_urls(self, data):
-        config = client.strict_json((Path(data.project) / 'comfyui-config.json').read_bytes())
-        return [client.Client(url, data.timeout).url for url in config.get('remote-urls', [config.get('remote-url')])]
+    def remote_client(self, url, timeout):
+        return config.client_for(self.workspace, url, timeout)
+
+    def connection_key(self, url):
+        return config.connection_key(self.workspace, url)
 
     def public(self, include_history=True):
+        configured_urls = self.remote_urls()
+        historical_urls = sorted({row['input'].url.rstrip('/') for row in self.rows.values()} - set(configured_urls))
         snapshot = {'tasks': sorted(({**{key: ([{field: item.get(field) for field in ('identity', 'index', 'check', 'path', 'error')}
                                         for item in value.values()] if key == 'segments' else value) for key, value in row['state'].items()
                                  if key not in ('client_id', 'segment_monitor', 'notices')},
@@ -130,10 +127,12 @@ class TaskStore(LocalQueue, TaskNotifications):
                                 key=lambda item: item['created_at'], reverse=True),
                 'remote_nodes': [{'url': url, 'name': '默认节点' if index == 0 else f'备用{index}',
                                   **self.remote_queues.states.get(url, initial_state())}
-                                 for index, url in enumerate(self.remote_urls())]}
+                                 for index, url in enumerate(configured_urls)] + [
+                    {'url': url, 'name': f'旧节点{index + 1}', **initial_state(), 'connection': 'unconfigured',
+                     'error': '该地址已退出工作区配置；保留原任务及历史，新任务请使用已配置节点'}
+                    for index, url in enumerate(historical_urls)]}
         local = []
         orders = {node['url']: self.ordered(node['url']) for node in snapshot['remote_nodes']}
-        projects = {}
         for task in snapshot['tasks']:
             status = task['status']
             if status in LOCAL or status in ('preparing', 'submitting'):
@@ -144,12 +143,10 @@ class TaskStore(LocalQueue, TaskNotifications):
                 continue
             row = self.rows[task['id']]
             order = orders.get(task['remote_url'], [])
-            if row['input'].project not in projects:
-                projects[row['input'].project] = self.project_urls(row['input'])
             local.append({**task, 'queue': 'local', 'category': category,
                           'can_transfer': self.can_transfer(task['id']),
                           'transfer_targets': [{'url': url, 'name': '默认节点' if index == 0 else f'备用{index}'}
-                                               for index, url in enumerate(projects[row['input'].project]) if url != task['remote_url']],
+                                               for index, url in enumerate(configured_urls) if url != task['remote_url']],
                           'queue_position': order.index(task['id']) + 1 if task['id'] in order else None})
         snapshot['local_tasks'] = sorted(local, key=lambda task: (task['category'] != 'queued', task.get('queue_order', 0)))
         if not include_history:
@@ -224,10 +221,9 @@ class TaskStore(LocalQueue, TaskNotifications):
         project = Path(data.project).resolve(strict=True)
         if project.parent != self.workspace / 'projects':
             raise ValueError('任务必须属于当前工作区projects下的项目')
-        config = client.strict_json((project / 'comfyui-config.json').read_bytes())
-        configured = config.get('remote-urls', [config.get('remote-url')])
+        configured = config.remote_urls(self.workspace)
         if client.Client(data.url, data.timeout).url != client.Client(configured[0], data.timeout).url:
-            raise ValueError('新任务只允许提交到项目主节点')
+            raise ValueError('新任务只允许提交到工作区主节点')
         record = Path(data.record_dir).resolve()
         if not record.is_relative_to(project):
             raise ValueError('执行附件必须位于所属项目内')
@@ -253,7 +249,7 @@ class TaskStore(LocalQueue, TaskNotifications):
         return await asyncio.to_thread(prepare_report, self, data)
 
     def client_for(self, data):
-        return client.Client(data.url, data.timeout)
+        return self.remote_client(data.url, data.timeout)
 
     def ws_url(self, data, client_id):
         parts = urlsplit(data.url)
@@ -288,6 +284,7 @@ class TaskStore(LocalQueue, TaskNotifications):
             raise error
         previous = state.copy()
         socket = await connect(self.ws_url(data, state['client_id']), open_timeout=data.timeout,
+                               additional_headers=self.client_for(data).headers,
                                ping_interval=20, ping_timeout=20, max_size=2**22)
         self.save(key, status='submitting', phase='submit', failure_stage=None, dispatch_attempt=state.get('dispatch_attempt', 0) + 1)
         self.record(key, 'submit', 'started')
@@ -505,6 +502,7 @@ class TaskStore(LocalQueue, TaskNotifications):
                 try:
                     if socket is None:
                         socket = await connect(self.ws_url(data, state['client_id']), open_timeout=data.timeout,
+                                               additional_headers=self.client_for(data).headers,
                                                ping_interval=20, ping_timeout=20, max_size=2**22)
                     self.save(key, connection='connected')
                     if await self.reconcile(key):

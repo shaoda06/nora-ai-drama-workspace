@@ -20,8 +20,11 @@ def initial_state():
 
 
 class RemoteQueues:
-    def __init__(self, client, configured_urls, changed):
+    def __init__(self, client, configured_urls, changed, *, client_for=None, connection_key=None):
         self.client, self.configured_urls, self.changed = client, configured_urls, changed
+        self.client_for = client_for or client.Client
+        self.connection_key = connection_key or (lambda url: url)
+        self.connection_keys = {}
         self.states = {}
         self.workers = {}
         self.manager = None
@@ -32,22 +35,29 @@ class RemoteQueues:
 
     async def sync(self):
         urls = self.configured_urls()
+        keys = {url: self.connection_key(url) for url in urls}
         for url in list(self.workers):
-            if url not in urls:
+            if url not in urls or keys[url] != self.connection_keys[url]:
                 worker = self.workers.pop(url)
                 worker.cancel()
                 await asyncio.gather(worker, return_exceptions=True)
                 del self.states[url]
+                del self.connection_keys[url]
         for url in urls:
             if url not in self.workers:
                 self.states[url] = initial_state()
+                self.connection_keys[url] = keys[url]
                 self.workers[url] = asyncio.create_task(self.watch(url))
         self.changed()
 
     async def follow_config(self):
         while True:
             await asyncio.sleep(CONFIG_INTERVAL)
-            await self.sync()
+            try:
+                await self.sync()
+            except (self.client.ClientError, OSError, ValueError):
+                logger.warning('ComfyUI configuration could not be loaded; retrying')
+                continue
             await asyncio.gather(*(self.refresh(url) for url, state in tuple(self.states.items())
                                    if state['connection'] == 'connected'))
 
@@ -65,7 +75,7 @@ class RemoteQueues:
 
     async def refresh(self, url):
         try:
-            result = await asyncio.to_thread(self.client.Client(url, 10).json, '/queue')
+            result = await asyncio.to_thread(self.client_for(url, 10).json, '/queue')
             queue = []
             for status, key in (('running', 'queue_running'), ('queued', 'queue_pending')):
                 items = result[key]
@@ -95,6 +105,7 @@ class RemoteQueues:
             connected_at = None
             try:
                 async with connect(ws_url, open_timeout=10, ping_interval=20, ping_timeout=20,
+                                   additional_headers=self.client_for(url, 10).headers,
                                    close_timeout=5, max_size=2**22) as socket:
                     connected_at = monotonic()
                     self.update(url, connection='connecting', error=None)
@@ -113,11 +124,12 @@ class RemoteQueues:
                             raise ValueError('远端WebSocket消息必须为对象')
                         if message.get('type') == 'status':
                             await self.refresh(url)
-            except (OSError, WebSocketException, asyncio.TimeoutError, ValueError) as error:
+            except (self.client.ClientError, OSError, WebSocketException, asyncio.TimeoutError, ValueError) as error:
                 logger.warning('ComfyUI node connection interrupted for %s: %s', url, error)
                 if connected_at is not None and monotonic() - connected_at >= 60:
                     failures = 0
                 delay = RETRY_DELAYS[min(failures, len(RETRY_DELAYS) - 1)]
                 failures += 1
-                self.update(url, connection='reconnecting', error='连接中断，正在自动重连')
+                message = str(error) if isinstance(error, self.client.ClientError) and error.code == 'missing_auth' else '连接中断，正在自动重连'
+                self.update(url, connection='reconnecting', error=message)
                 await asyncio.sleep(delay)
