@@ -1,10 +1,12 @@
 """Cache isolation transport tests; all remote bytes and evidence live in test fixtures."""
 import argparse
+from contextlib import redirect_stdout
 import io
 import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 from urllib.parse import parse_qs, urlparse
 
 import comfyui_client as c
@@ -119,6 +121,23 @@ class CacheTests(unittest.TestCase):
         for name in ('../source', 'nested/source', 'source/../target'):
             with self.assertRaises(ValueError):
                 d.cache_folder(name, '502')
+
+    def test_upload_limit_failure_is_saved_without_losing_partial_copy_evidence(self):
+        receipt = Path(self.temp.name) / '缓存隔离结果.json'
+        receipt.write_text(json.dumps({'state': 'copying', 'copied': ['one verified file']}), 'utf-8')
+        argv = ['director_cache.py', '--url', self.remote.url, '--cache-name', '测试场次',
+                '--source-node', '501', '--target-node', '502', '--indices', '1',
+                '--segment-count', '3', '--record-dir', self.temp.name, '--apply']
+        error = c.ClientError('http_error', 'Upload rejected', http_status=413,
+                              response='Maximum request body size 104857600 exceeded.')
+        output = io.StringIO()
+        with patch('sys.argv', argv), patch.object(d, 'clone', side_effect=error), redirect_stdout(output):
+            self.assertEqual(d.main(), 1)
+        self.assertEqual(json.loads(output.getvalue())['details']['http_status'], 413)
+        evidence = json.loads(receipt.read_text('utf-8'))
+        self.assertEqual(evidence['state'], 'failed')
+        self.assertEqual(evidence['copied'], ['one verified file'])
+        self.assertEqual(evidence['failure']['details']['http_status'], 413)
 
 
 if __name__ == '__main__':

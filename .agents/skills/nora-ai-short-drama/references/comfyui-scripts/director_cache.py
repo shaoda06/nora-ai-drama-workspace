@@ -134,7 +134,15 @@ def main():
     try:
         print(json.dumps(clone(c.Client(args.url, args.timeout), args), ensure_ascii=False))
     except (c.ClientError, OSError, ValueError) as error:
-        print(json.dumps({'ok': False, 'error': str(error)}, ensure_ascii=False))
+        failure = {'ok': False, 'error': str(error),
+                   'details': error.details if isinstance(error, c.ClientError) else {}}
+        receipt = Path(args.record_dir) / '缓存隔离结果.json'
+        if receipt.exists():
+            evidence = json.loads(receipt.read_text('utf-8'))
+            if evidence.get('state') == 'copying':
+                evidence.update(state='failed', failure=failure)
+                receipt.write_bytes(c.encoded(evidence))
+        print(json.dumps(failure, ensure_ascii=False))
         return 1
     return 0
 
