@@ -8,14 +8,40 @@ from project_paths import project_file
 STAGES = {'video-first-pass': '一采', 'video-second-pass': '二采', 'video-postprocess': '后处理'}
 
 
-def prepare_generation_context(project, record, workflow, task_type, uploaded_materials=None, *, check_only=False, fixed_checked=False, mapping=None, timelines=None):
+def validate_segment_context(project, workflow, task_type, mapping, *, timelines=None):
+    """Shared fixed facts for segment retrieval and generation input records."""
+    scene, stage = mapping['scene'], STAGES[task_type]
+    if not re.fullmatch(r'EP\d{3,}-C\d{3,}', scene):
+        raise ValueError('输入映射的场次编号不正确')
+    directors = [node for node in workflow.values() if node['class_type'] == 'MiniMaxH3Director']
+    if len(directors) != 1:
+        raise ValueError('资料保存需要一个正式MiniMaxH3Director节点')
+    director = directors[0]
+    timeline = timelines[id(director)] if timelines is not None else json.loads(director['inputs']['timeline_data'])
+    indices = sorted(timeline['runSelection']) if timeline.get('runSelectEnabled', False) else list(range(len(timeline['segments'])))
+    if len(mapping['segments']) != len(timeline['segments']) or mapping['selected_indices'] != indices or not indices:
+        raise ValueError('输入映射的原组序或执行范围与实际API不一致')
+    entries = {}
+    for index in indices:
+        segment = mapping['segments'][index]
+        identity = f"{segment['segment']}-{segment['round']}-{stage}"
+        if not re.fullmatch(re.escape(scene) + r'-P\d{3,}-R\d{3,}-' + stage, identity):
+            raise ValueError('生成资料身份与场次不一致：' + identity)
+        directory = project_file(project, segment['local_execution_dir'], recorded=True)
+        if directory.name != identity and not (directory.parent.name == identity and re.fullmatch(r'执行-\d{8}-\d{6}', directory.name)):
+            raise ValueError('本段执行附件目录与执行身份不一致')
+        entries[index] = {'identity': identity, 'directory': directory}
+    return {'director': director, 'timeline': timeline, 'indices': indices, 'entries': entries}
+
+
+def prepare_generation_context(project, record, workflow, task_type, uploaded_materials=None, *, check_only=False, fixed_checked=False, mapping=None, timelines=None, segment_context=None):
     project, record = Path(project).resolve(), Path(record).resolve()
     mapping_file = record / '输入映射.json'
     if mapping is None:
         mapping = json.loads(mapping_file.read_text(encoding='utf-8-sig'))
     stage = STAGES[task_type]
     scene = mapping['scene']
-    if not fixed_checked and not re.fullmatch(r'EP\d{3,}-C\d{3,}', scene):
+    if stage == '后处理' and not fixed_checked and not re.fullmatch(r'EP\d{3,}-C\d{3,}', scene):
         raise ValueError('输入映射的场次编号不正确')
     payloads = {}
 
@@ -41,15 +67,19 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
         return target.relative_to(project).as_posix()
 
     if stage != '后处理':
-        directors = [node for node in workflow.values() if node['class_type'] == 'MiniMaxH3Director']
-        if not fixed_checked and len(directors) != 1:
-            raise ValueError('资料保存需要一个正式MiniMaxH3Director节点')
-        inputs = directors[0]['inputs']
-        timeline = timelines[id(directors[0])] if timelines is not None else json.loads(inputs['timeline_data'])
+        if not fixed_checked and segment_context is None:
+            segment_context = validate_segment_context(project, workflow, task_type, mapping, timelines=timelines)
+        if segment_context is not None:
+            inputs = segment_context['director']['inputs']
+            timeline, indices = segment_context['timeline'], segment_context['indices']
+            local_paths.update((mapping['segments'][index]['local_execution_dir'], entry['directory'])
+                               for index, entry in segment_context['entries'].items())
+        else:
+            director = next(node for node in workflow.values() if node['class_type'] == 'MiniMaxH3Director')
+            inputs = director['inputs']
+            timeline = timelines[id(director)] if timelines is not None else json.loads(inputs['timeline_data'])
+            indices = sorted(timeline['runSelection']) if timeline.get('runSelectEnabled', False) else list(range(len(timeline['segments'])))
         groups = timeline['segments']
-        indices = sorted(timeline['runSelection']) if timeline.get('runSelectEnabled', False) else list(range(len(groups)))
-        if not fixed_checked and (len(mapping['segments']) != len(groups) or mapping['selected_indices'] != indices or not indices):
-            raise ValueError('输入映射的原组序或执行范围与实际API不一致')
         storyboard = inside(mapping.get('storyboard_file') or f"09-剧集制作/{scene.split('-')[0]}/03-分镜脚本/{scene}-场次分镜.md")
         if not fixed_checked:
             text = read_once(storyboard).decode('utf-8-sig')
@@ -95,7 +125,7 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
     for index in indices:
         segment = mapping['segments'][index]
         identity = f"{segment['segment']}-{segment['round']}-{stage}"
-        if not fixed_checked and not re.fullmatch(re.escape(scene) + r'-P\d{3,}-R\d{3,}-' + stage, identity):
+        if stage == '后处理' and not fixed_checked and not re.fullmatch(re.escape(scene) + r'-P\d{3,}-R\d{3,}-' + stage, identity):
             raise ValueError('生成资料身份与场次不一致：' + identity)
         context = {'identity': identity}
         if stage in ('二采', '后处理'):
@@ -105,8 +135,6 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
         if stage != '后处理':
             group = groups[index]
             directory = inside(segment['local_execution_dir'])
-            if not fixed_checked and directory.name != identity and not (directory.parent.name == identity and re.fullmatch(r'执行-\d{8}-\d{6}', directory.name)):
-                raise ValueError('本段执行附件目录与执行身份不一致')
             prompt = '\n\n'.join(part.strip() for part in
                                   ([common['prompt'], group['prompt']] if common_enabled else [group['prompt']]) if part.strip())
             reused = None

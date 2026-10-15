@@ -329,6 +329,36 @@ class GenerationContextTests(HttpTestCase):
                 self.assertEqual(client.get(first['references']['segment'][0]['url']).text, '提交时本组原图')
                 self.assertEqual([(shot['id'], shot['duration']) for shot in second['shots']], [('EP001-SH002', 3)])
 
+    def test_standalone_context_validates_shared_segment_facts_once(self):
+        root, workflow, _ = self.automatic_task()
+        with patch.object(writer, 'validate_segment_context', wraps=writer.validate_segment_context) as shared:
+            writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass', check_only=True)
+        shared.assert_called_once()
+        self.assertFalse((root / '分镜脚本.md').exists())
+
+    def test_shared_segment_validation_rejects_bad_identity_selection_and_directory(self):
+        for invalid in ('director', 'selection', 'count', 'identity', 'directory', 'outside'):
+            with self.subTest(invalid=invalid):
+                root, workflow, mapping = self.automatic_task()
+                if invalid == 'director':
+                    workflow['duplicate'] = workflow['105001']
+                elif invalid == 'selection':
+                    mapping['selected_indices'] = [1]
+                elif invalid == 'count':
+                    mapping['segments'].pop()
+                elif invalid == 'identity':
+                    mapping['segments'][0]['segment'] = 'EP002-C001-P001'
+                elif invalid == 'directory':
+                    mapping['segments'][0]['local_execution_dir'] += '/任意子目录'
+                else:
+                    mapping['segments'][0]['local_execution_dir'] = str(self.project.parent / 'outside')
+                with self.assertRaises(ValueError):
+                    writer.validate_segment_context(self.project, workflow, 'video-first-pass', mapping)
+        root, workflow, mapping = self.automatic_task()
+        mapping['segments'][0]['local_execution_dir'] += '/执行-20261016-123456'
+        context = writer.validate_segment_context(self.project, workflow, 'video-first-pass', mapping)
+        self.assertEqual(context['entries'][0]['directory'].name, '执行-20261016-123456')
+
     def test_shared_sources_are_read_once_per_context_preparation(self):
         root, workflow, _ = self.automatic_task()
         original = Path.read_bytes

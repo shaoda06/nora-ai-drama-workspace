@@ -291,7 +291,6 @@ class LocalQueue:
                 try:
                     for part in item['json-path'][:-1]:
                         parent = parent[part]
-                    parent[item['json-path'][-1]]  # Require an existing field; do not invent timeline structure.
                     parent[item['json-path'][-1]] = uploaded['input_path']
                     if (workflow[item['node']]['class_type'] == 'MiniMaxH3Director'
                             and item['input'] == 'timeline_data'

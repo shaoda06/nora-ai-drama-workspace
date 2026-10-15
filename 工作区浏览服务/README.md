@@ -184,6 +184,8 @@ pnpm --dir frontend build
 
 HTTP接口测试继承 `tests.http_case.HttpTestCase`，覆写 `setUp` 时先调用 `super().setUp()`；测试客户端不运行正式后台的启动和退出逻辑，不写正式凭证、打开正式任务库或启动队列。队列及恢复集成测试显式使用临时工作区、临时任务库和模拟远端，不复用正式服务的运行目录。隔离回归见 `tests/test_http_isolation.py`。
 
+分段取回与生成资料共用一次导演台／组序／身份／目录检查结果；上传绑定不重查准备时已确认的JSON末级字段，路径不重复判断绝对性。职责见[固定检查与动态条件](../.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#固定检查与动态条件)。
+
 完整提交调用链回归：`.venv/Scripts/python.exe -X utf8 -B -m unittest tests.test_submission_lifecycle -v`。覆盖真实CLI／本机HTTP／模拟远端、固定检查次数、队列变忙重新调度、原任务重新准备、重启恢复、并发查询及成功取回复用；不使用正式任务库或提交真实生成。
 
 测试资源更新使用临时目录，不执行真实上游应用或恢复。浏览器验证与检查结果见[开发记录](docs/开发记录/W001-工作区服务首版.md)。

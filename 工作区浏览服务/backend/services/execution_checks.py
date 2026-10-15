@@ -179,8 +179,6 @@ def fixed_input_checks(store, data):
     for folder in {item['subfolder'] for item in data.uploads}:
         client.remote_path(folder)
     for source in {Path(item['file']) for item in data.uploads}:
-        if not source.is_absolute():
-            raise ValueError('上传映射必须使用本机绝对路径')
         client.remote_path(source.name, filename=True)
         if '"' in source.name:
             raise client.ClientError('invalid_filename', 'Upload filename cannot contain a quote')
@@ -223,20 +221,21 @@ def fixed_checks(store, data, *, mapping=None):
         and timelines[id(node)].get('output', {}).get('exportMode') == 'segments']
     if native_segments and not data.segment_plan:
         raise ValueError('原生H3分段任务必须登记segment-plan以对应最终成果')
+    segment_context = None
     if data.segment_plan:
         try:
-            segments.validate(data, mapping=mapping, timelines=timelines)
+            segment_context = segments.validate(data, mapping=mapping, timelines=timelines)
         except (KeyError, IndexError, TypeError) as error:
             raise ValueError('分段计划或输入映射字段不完整：' + str(error)) from error
         if data.outputs:
             raise ValueError('原生分段任务使用segment-plan，不混用末段保存节点作为全组输出')
     result = {'pair': check_pair(Path(data.record_dir), data.workflow, timelines=timelines), 'segments': director_checks(data.workflow, timelines)}
     if data.task_type.startswith('video-'):
-        result['context_sources'] = context_checks(store, data, mapping=mapping, documents=documents, timelines=timelines)
+        result['context_sources'] = context_checks(store, data, mapping=mapping, documents=documents, timelines=timelines, segment_context=segment_context)
     return result
 
 
-def context_checks(store, data, *, mapping=None, documents=None, timelines=None):
+def context_checks(store, data, *, mapping=None, documents=None, timelines=None, segment_context=None):
     documents = {} if documents is None else documents
     planned = {}
     for item in data.uploads:
@@ -250,7 +249,7 @@ def context_checks(store, data, *, mapping=None, documents=None, timelines=None)
                 value = value[part]
         planned[value] = {'input_path': value, 'file': item['file']}
     context = store.generation_context.prepare_generation_context(data.project, Path(data.record_dir),
-                data.workflow, data.task_type, planned, check_only=True, mapping=mapping, timelines=timelines)
+                data.workflow, data.task_type, planned, check_only=True, mapping=mapping, timelines=timelines, segment_context=segment_context)
     return (context or {}).get('files', [])
 
 

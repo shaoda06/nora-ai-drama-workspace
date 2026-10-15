@@ -84,6 +84,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             self.node(running=1 if refreshes.pop(0) else 0)
         refreshes = [True, False]
         with patch.object(checks, 'fixed_checks', wraps=checks.fixed_checks) as fixed, \
+                patch.object(self.store.generation_context, 'validate_segment_context', wraps=self.store.generation_context.validate_segment_context) as shared, \
                 patch.object(self.store.generation_context, 'prepare_generation_context', wraps=self.store.generation_context.prepare_generation_context) as context, \
                 patch.object(t.client, 'upload', wraps=t.client.upload) as upload, \
                 patch('backend.services.local_queue.hashlib.file_digest', wraps=hashlib.file_digest) as digest, \
@@ -106,10 +107,55 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             upload.assert_called_once()
             digest.assert_not_called()
             self.assertEqual(context.call_count, 2)  # Fixed preparation + actual snapshot, never on rescheduling.
+            shared.assert_called_once()  # Retrieval and input records consume the same validated facts.
             self.assertEqual([call.args[0] for call in remote.call_args_list].count('/prompt'), 1, self.store.rows[key]['state'])
             self.assertEqual([call.args[0] for call in remote.call_args_list].count('/minimax/director/first_pass_cache_status'), 2)
             for path, stamp in saved.items():
                 self.assertEqual(path.stat().st_mtime_ns, stamp)
+
+    async def test_binding_writes_prepared_field_without_reading_it_again(self):
+        self.video()
+        await self.store.prepare_only(self.data)
+        key = (await self.store.enqueue(self.data))['local_task_id']
+        writes = []
+        class PreparedSlot(dict):
+            def __getitem__(self, key):
+                if key == 'imageFile':
+                    raise AssertionError('prepared field must not be checked again')
+                return super().__getitem__(key)
+
+            def __setitem__(self, key, value):
+                writes.append((key, value))
+                return super().__setitem__(key, value)
+
+        original = t.client.strict_json
+        def parse(raw):
+            document = original(raw)
+            if isinstance(document, dict) and 'batchWorkspaces' in document:
+                document['global']['refs'][0] = PreparedSlot(document['global']['refs'][0])
+            return document
+
+        with patch.object(t.client, 'strict_json', side_effect=parse), \
+                patch.object(t.client.Client, 'json', side_effect=self.respond), \
+                patch.object(t.client, 'submit') as post:
+            actual = await self.store.prepare(key)
+            post.assert_not_called()
+        bound = json.loads(actual['502']['inputs']['timeline_data'])
+        self.assertIn(('imageFile', 'actual/renamed.png'), writes)
+        self.assertEqual(bound['global']['refs'][0]['imageFile'], 'actual/renamed.png')
+        self.assertEqual(bound['batchWorkspaces']['r2v']['globalCommon']['refs'][0]['imageFile'], 'actual/renamed.png')
+
+    async def test_relative_source_resolved_once_before_fixed_checks(self):
+        self.upload()
+        self.data.uploads[0]['file'] = 'reference.png'
+        original = t.paths.project_file
+        with patch.object(t.paths, 'project_file', wraps=original) as resolve:
+            self.store.resolve_input(self.data)
+            with patch.object(Path, 'is_absolute', side_effect=AssertionError('resolved path must not be checked again')):
+                checks.fixed_input_checks(self.store, self.data)
+        source_calls = [call for call in resolve.call_args_list if call.args[1] == 'reference.png']
+        self.assertEqual(len(source_calls), 1)
+        self.assertEqual(self.data.uploads[0]['file'], str(self.project / 'reference.png'))
 
     async def test_invalid_video_version_fails_before_upload_and_is_reported(self):
         script = self.video()
