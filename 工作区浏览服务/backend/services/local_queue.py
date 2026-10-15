@@ -72,8 +72,6 @@ class LocalQueue:
             return {'local_task_id': existing, 'monitor_id': existing, 'monitor': 'browser',
                     'status': row['state']['status'], 'duplicate': True}
         project = self.validate(data)
-        from backend.services.execution_checks import check_prepared
-        check_prepared(self, data)
         if data.segment_plan and not data.segment_plan.targets:
             raise ValueError('新导演台任务必须显式提供每段本机成果保存路径')
         key = str(uuid.uuid4())
@@ -208,6 +206,7 @@ class LocalQueue:
         upload_cache = {}
         saved_uploads = {}
         upload_bindings = []
+        binding_results = []
         remote_url = self.client_for(data).url
         source_digests = {}
 
@@ -288,6 +287,7 @@ class LocalQueue:
             else:
                 inputs[item['input']] = uploaded['input_path']
             uploaded_materials[uploaded['input_path']] = {'input_path': uploaded['input_path'], 'file': str(source)}
+            binding_results.append((item, uploaded))
         for source, (stamp, _) in source_digests.items():
             if stamp != (source.stat().st_size, source.stat().st_mtime_ns):
                 raise ValueError('本机素材已不同于上传／核验时，请返回准备阶段')
@@ -328,7 +328,7 @@ class LocalQueue:
             from backend.services.director_uploads import save_uploaded_workflow
             self.save(key, phase='upload_binding')
             await asyncio.to_thread(save_uploaded_workflow, data.project, Path(data.record_dir), data.workflow, workflow,
-                                    uploaded_materials)
+                                    uploaded_materials, binding_results)
             self.save(key, uploads_bound=True)
             self.record(key, 'upload_binding', 'success')
             self.save(key, phase='generation_context')

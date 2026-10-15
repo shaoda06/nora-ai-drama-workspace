@@ -32,9 +32,12 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
     async def test_prepared_input_reused_without_pair_or_network_recheck(self):
         await self.store.prepare_only(self.data)
         with patch.object(t.client.Client, 'json') as network, \
-                patch('backend.services.director_uploads.check_pair') as pair:
+                patch('backend.services.director_uploads.check_pair') as pair, \
+                patch.object(checks, 'check_prepared', wraps=checks.check_prepared) as compare:
             key = (await self.store.enqueue(self.data))['local_task_id']
+            compare.assert_not_called()
             await self.store.prepare(key)
+            compare.assert_called_once()
         network.assert_not_called()
         pair.assert_not_called()
         events = json.loads((self.record / '后台过程记录.json').read_text('utf-8'))
@@ -44,15 +47,37 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         detail = await task_detail(self.store, key)
         self.assertTrue(any(record['name'] == '准备检查报告' for record in detail['records']))
 
-    async def test_changed_workflow_requires_preparation_and_never_enqueues(self):
+    async def test_changed_workflow_is_registered_but_stops_before_upload_or_post(self):
         await self.store.prepare_only(self.data)
         self.data.workflow['1']['inputs']['seed'] = 4
-        with self.assertRaisesRegex(ValueError, '准备资料已变化'):
-            await self.store.enqueue(self.data)
-        self.assertFalse(self.store.rows)
+        with patch.object(checks, 'read_report', side_effect=AssertionError('入队不读取准备报告')):
+            key = (await self.store.enqueue(self.data))['local_task_id']
+        with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
+            with self.assertRaisesRegex(ValueError, '准备资料已变化'):
+                await self.store.prepare(key)
+            upload.assert_not_called()
+            post.assert_not_called()
         self.assertEqual(checks.read_report(self.data)['prepared_input']['workflow']['1']['inputs']['seed'], 9223372036854775807)
+
+    async def test_explicit_preparation_replaces_changed_preparation_result(self):
+        await self.store.prepare_only(self.data)
+        self.data.workflow['1']['inputs']['seed'] = 4
         await self.store.prepare_only(self.data)  # Explicit preparation can replace its old check result.
         self.assertEqual(checks.read_report(self.data)['prepared_input']['workflow']['1']['inputs']['seed'], 4)
+
+    async def test_source_changed_before_enqueue_is_checked_only_when_execution_starts(self):
+        source = self.project / 'source.png'
+        source.write_bytes(b'old')
+        self.data.uploads = [{'file': str(source), 'node': '1', 'input': 'seed', 'subfolder': 'task', 'response-name': 'upload.json'}]
+        await self.store.prepare_only(self.data)
+        source.write_bytes(b'changed')
+        with patch.object(checks, 'read_report', side_effect=AssertionError('入队不读取准备报告')):
+            key = (await self.store.enqueue(self.data))['local_task_id']
+        with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
+            with self.assertRaisesRegex(ValueError, '准备资料已变化'):
+                await self.store.prepare(key)
+            upload.assert_not_called()
+            post.assert_not_called()
 
     async def test_file_change_while_waiting_stops_before_upload(self):
         source = self.project / 'source.png'
@@ -142,6 +167,40 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
             query.assert_called_once()
             self.assertEqual(query.call_args.args[0], '/minimax/director/first_pass_cache_status')
             post.assert_not_called()
+
+    async def test_upload_responses_reach_scoped_binding_save_and_both_media_states(self):
+        from backend.services.director_uploads import save_uploaded_workflow
+        source = self.project / 'source.png'
+        source.write_bytes(b'reference')
+        key = (await self.store.enqueue(self.data))['local_task_id']
+        workflow = json.loads((t.SKILL / 'references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.api.json').read_text('utf-8'))
+        timeline = json.loads(workflow['502']['inputs']['timeline_data'])
+        media = {'imageFile': 'planned.png', 'fileName': 'planned.png', 'subfolder': '', 'type': 'input', 'index': 0}
+        timeline['global']['refs'] = [media.copy()]
+        timeline['batchWorkspaces']['r2v']['globalCommon']['refs'] = [media.copy()]
+        workflow['502']['inputs']['timeline_data'] = json.dumps(timeline)
+        self.data.workflow, self.data.task_type = workflow, 'video-first-pass'
+        self.data.uploads = [{'file': str(source), 'node': '502', 'input': 'timeline_data', 'subfolder': 'planned',
+                              'response-name': 'upload.json', 'json-path': ['global', 'refs', 0, 'imageFile']}]
+        (self.record / '输入映射.json').write_text(json.dumps({'uploads': []}), 'utf-8')
+        uploaded = {'input_path': 'actual/renamed.png', 'sha256': 'mock-transport-digest',
+                    'remote': {'name': 'renamed.png', 'subfolder': 'actual', 'type': 'input'}}
+        cache = {'can_confirm_refine': False, 'segments': [
+            {'index': index, 'final_matches': True} for index in range(len(timeline['segments']))]}
+        with patch.object(t.client, 'upload', return_value=uploaded) as upload, \
+                patch.object(t.client.Client, 'json', return_value=cache), \
+                patch('backend.services.director_uploads.save_uploaded_workflow', wraps=save_uploaded_workflow) as save, \
+                patch.object(self.store.generation_context, 'prepare_generation_context'), \
+                patch.object(t.client, 'submit') as post:
+            actual = await self.store.prepare(key)
+            upload.assert_called_once()
+            save.assert_called_once()
+            self.assertEqual(save.call_args.args[-1], [(self.data.uploads[0], uploaded)])
+            post.assert_not_called()
+        bound = json.loads(actual['502']['inputs']['timeline_data'])
+        expected = {'imageFile': 'actual/renamed.png', 'fileName': 'renamed.png', 'subfolder': 'actual', 'type': 'input', 'index': 0}
+        self.assertEqual(bound['global']['refs'][0], expected)
+        self.assertEqual(bound['batchWorkspaces']['r2v']['globalCommon']['refs'][0], expected)
 
 
 class LocalFormatTests(unittest.TestCase):
