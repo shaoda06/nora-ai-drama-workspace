@@ -197,11 +197,13 @@ class LocalQueue:
         workflow = deepcopy(data.workflow)
         transferred = data.url.rstrip('/') != row['state'].get('enqueued_url', data.url).rstrip('/')
         from backend.services import execution_checks as checks
+        checked_files = {}
         report = checks.check_prepared(self, data, bound=row['state'].get('uploads_bound', False), transferred=transferred,
-                                       legacy=not row['state'].get('preparation_required', False))
+                                       legacy=not row['state'].get('preparation_required', False), file_stamps=checked_files)
         if report is None:
             result = await asyncio.to_thread(checks.prepare_report, self, data, at_execution=True, previous=None)
             report = {'sources': result['sources']}
+            checked_files.update((Path(data.project) / name, tuple(stamp)) for name, stamp in report['sources'].items())
             self.record(key, 'preparation', 'execution_checks', segments=result['checks']['segments'], remote_capabilities='not_queried')
         else:
             self.record(key, 'preparation', 'reused', remote_capabilities='not_queried')
@@ -246,8 +248,11 @@ class LocalQueue:
         for item in data.uploads:
             source = Path(item['file'])
             if source not in source_stamps:
-                stamp = source.stat()
-                source_stamps[source] = (stamp.st_size, stamp.st_mtime_ns)
+                if source in checked_files:
+                    source_stamps[source] = checked_files[source]
+                else:  # Legacy coverage or upload sources excluded from the report comparison.
+                    stamp = source.stat()
+                    source_stamps[source] = (stamp.st_size, stamp.st_mtime_ns)
             receipt = Path(data.record_dir) / item['response-name']
             upload_key = (remote_url, source, item['subfolder'])
             upload_bindings.append((item, source, receipt, upload_key))

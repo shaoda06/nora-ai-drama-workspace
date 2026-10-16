@@ -66,7 +66,7 @@ def write_report(data, report):
     write_json(path, report)
 
 
-def check_prepared(store, data, *, bound=False, transferred=False, legacy=False):
+def check_prepared(store, data, *, bound=False, transferred=False, legacy=False, file_stamps=None):
     report = read_report(data)
     if report is None:
         if legacy:
@@ -92,6 +92,8 @@ def check_prepared(store, data, *, bound=False, transferred=False, legacy=False)
             raise ValueError('准备资料已变化：' + name + '；请返回准备阶段') from None
         if [current.st_size, current.st_mtime_ns] != stamp:
             raise ValueError('准备资料已变化：' + name + '；请返回准备阶段')
+        if file_stamps is not None:
+            file_stamps[path] = (current.st_size, current.st_mtime_ns)
     if data.task_type.startswith('video-') and 'context_sources' not in report:
         if not legacy:
             raise ValueError('新任务准备报告缺少资料关联检查；请使用--prepare-only补齐准备')
@@ -106,6 +108,8 @@ def check_prepared(store, data, *, bound=False, transferred=False, legacy=False)
         for path in map(Path, extra):
             current = path.stat()
             report['sources'][path.relative_to(data.project).as_posix()] = [current.st_size, current.st_mtime_ns]
+            if file_stamps is not None:
+                file_stamps[path] = (current.st_size, current.st_mtime_ns)
         write_report(data, report)
     return report
 
