@@ -132,7 +132,7 @@ async def finish(store, key, result):
             else:
                 downloaded = await asyncio.to_thread(store.client.download, store.client_for(data), argparse.Namespace(
                     filename=source['filename'], subfolder=source['subfolder'], type='output', output=str(candidate), sha256=None))
-                downloaded['path'] = project_paths.relative_file(data.project, downloaded['path'])
+                downloaded['path'] = store.record_paths(key).relative_file(downloaded['path'])
                 store.client.write_new(receipt_path, {'time': store.client.now(), 'prompt_id': state['prompt_id'],
                                                      'identity': target['identity'], 'data': downloaded})
                 store.record(key, 'download', 'success', path=str(candidate), remote=source, receipt=str(receipt_path),

@@ -89,7 +89,8 @@ class TaskStore(LocalQueue, TaskNotifications):
         for key, payload, state in self.db.execute('SELECT id, payload, state FROM tasks'):
             data = TaskInput.model_validate_json(payload)
             self.resolve_input(data, recorded=True)
-            self.rows[key] = {'input': data, 'state': paths.recorded_paths(data.project, json.loads(state))}
+            self.rows[key] = {'input': data, 'state': json.loads(state)}
+            self.rows[key]['state'] = self.record_paths(key).convert(self.rows[key]['state'])
         self.workers = {}
         self.notifiers = {}
         self.session_readers = {}
@@ -178,13 +179,24 @@ class TaskStore(LocalQueue, TaskNotifications):
     def persist(self, key):
         row = self.rows[key]
         payload = json.dumps(self.portable_input(row['input']), ensure_ascii=False)
-        state = json.dumps(paths.recorded_paths(row['input'].project, row['state'], relative=True), ensure_ascii=False)
+        state = json.dumps(self.record_paths(key).convert(row['state'], relative=True), ensure_ascii=False)
         if row.get('_persisted_payload') == payload:
             self.db.execute('UPDATE tasks SET state=? WHERE id=?', (state, key))
         else:
             self.db.execute('INSERT INTO tasks VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload,state=excluded.state',
                             (key, payload, state))
             row['_persisted_payload'] = payload
+
+    def record_paths(self, key):
+        row = self.rows[key]
+        if '_record_paths' not in row:
+            data = row['input']
+            files = [data.record_dir, *(item.path for item in data.outputs)]
+            if data.segment_plan:
+                files.extend(item.path for item in data.segment_plan.targets)
+            files.extend(item['file'] for item in data.uploads if isinstance(item.get('file'), str))
+            row['_record_paths'] = paths.RecordPaths.from_resolved(data.project, files)
+        return row['_record_paths']
 
     def resolve_input(self, data, *, recorded=False):
         if not recorded and not Path(data.project).is_absolute() and PureWindowsPath(data.project).name != data.project:
@@ -262,7 +274,7 @@ class TaskStore(LocalQueue, TaskNotifications):
         result = await asyncio.to_thread(prepare_report, self, data)
         if existing is not None:
             row['input'] = data
-            for name in ('_prepared_run', '_source_digests', '_collection_ok'):
+            for name in ('_prepared_run', '_source_digests', '_collection_ok', '_record_paths'):
                 row.pop(name, None)
             self.record(existing, 'preparation', 'updated', _changes={'error': None, 'uploads_bound': False, 'prepared_files': {}})
             result['local_task_id'] = existing
@@ -519,7 +531,7 @@ class TaskStore(LocalQueue, TaskNotifications):
                     downloaded = await asyncio.to_thread(client.download, self.client_for(data),
                         argparse.Namespace(filename=identity['filename'], subfolder=identity['subfolder'],
                                            type=identity['type'], output=output.path, sha256=None))
-                    downloaded['path'] = paths.relative_file(data.project, downloaded['path'])
+                    downloaded['path'] = self.record_paths(key).relative_file(downloaded['path'])
                     client.write_new(response, {'time': client.now(), 'data': downloaded})
                     self.record(key, 'download', 'success', path=output.path, remote=identity, receipt=str(response),
                                 attempt=state.get('collection_attempt', 1))

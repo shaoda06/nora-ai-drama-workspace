@@ -10,7 +10,7 @@ from backend.services.comfy_tasks import paths
 async def task_detail(store, key):
     row = store.rows[key]
     data, state = row['input'].model_copy(deep=True), deepcopy(row['state'])
-    events = [dict(id=event_id, **paths.recorded_paths(data.project, json.loads(value))) for event_id, value in store.db.execute(
+    events = [dict(id=event_id, **store.record_paths(key).convert(json.loads(value))) for event_id, value in store.db.execute(
         'SELECT id, event FROM task_events WHERE task_id=? ORDER BY id', (key,))]
     batches = []
     for batch_id in dict.fromkeys(event['notification_id'] for event in events if event.get('notification_id')):

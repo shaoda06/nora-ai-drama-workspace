@@ -37,8 +37,7 @@ class LocalQueue:
             row['state'].update(_changes, updated_at=self.client.now())
             self.persist(key)
         event = {'time': self.client.now(), 'stage': stage, 'result': result, **details}
-        from backend.services.comfy_tasks import paths
-        event = paths.recorded_paths(row['input'].project, event, relative=True)
+        event = self.record_paths(key).convert(event, relative=True)
         self.db.execute('INSERT INTO task_events(task_id, event) VALUES (?, ?)',
                         (key, json.dumps(event, ensure_ascii=False)))
         self.db.commit()
@@ -52,10 +51,10 @@ class LocalQueue:
         events = [json.loads(value) for value, in self.db.execute(
             'SELECT event FROM task_events WHERE task_id=? ORDER BY id', (key,))]
         (directory / '后台过程记录.json').write_text(json.dumps(events, ensure_ascii=False, indent=2), 'utf-8')
-        from backend.services.comfy_tasks import paths
-        summary = {**{name: value for name, value in paths.recorded_paths(row['input'].project, row['state'], relative=True).items()
+        converter = self.record_paths(key)
+        summary = {**{name: value for name, value in converter.convert(row['state'], relative=True).items()
                       if name not in ('client_id', 'notices', 'segment_monitor')},
-                   'record_dir': paths.relative_file(row['input'].project, directory, recorded=True), 'remote_url': row['input'].url,
+                   'record_dir': converter.relative_file(directory), 'remote_url': row['input'].url,
                    'outputs': self.portable_input(row['input'])['outputs']}
         (directory / '后台任务状态.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2), 'utf-8')
 
