@@ -1,7 +1,9 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import type { GenerationContext, SegmentVideo as VideoItem } from '../api';
-import { Original, PreviewContext, Rich } from '../components';
+import { get, projectUrl } from '../api';
+import { Original, PreviewContext, Rich, Result } from '../components';
 import { TabNav } from './TabNav';
 import { UnderlineTabs } from './UnderlineTabs';
 import { TabSelect } from './TabSelect';
@@ -29,8 +31,9 @@ function SegmentReferences({ context }: { context?: GenerationContext }) {
   </section>;
 }
 
-export function SegmentWorkspace({ scope, segment, items, selection: { stage, key: selected }, onSelectionChange, tab, onTabChange, notesExportControl, segmentNavigation, autoPlay, onVideoEnded, onVideoError, cachedSources, wideVideo, onToggleWide, continuousControl }: {
+export function SegmentWorkspace({ scope, segment, revision, items, selection: { stage, key: selected }, onSelectionChange, tab, onTabChange, notesExportControl, segmentNavigation, autoPlay, onVideoEnded, onVideoError, cachedSources, wideVideo, onToggleWide, continuousControl }: {
   scope: NoteScope; segment: string;
+  revision: number;
   items: VideoItem[]; selection: { stage: string; key: string }; onSelectionChange: (selection: { stage: string; key: string }) => void;
   tab: string; onTabChange: (tab: string) => void;
   wideVideo: boolean; onToggleWide: () => void; continuousControl: ReactNode;
@@ -48,7 +51,11 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
   const latest = latestVideo(items);
   const versions = items.filter(item => item.stage === stage).sort((a, b) => Number(b.approved) - Number(a.approved) || b.candidateNumber - a.candidateNumber);
   const current = versions.find(item => item.key === selected);
-  const context = current?.context;
+  const identity = current && `${scope.episode}-${scope.scene}-${segment}-${current.run}-${current.stage}`;
+  const detail = useQuery({ queryKey: ['generation-context', scope.project, identity, revision],
+    queryFn: () => get<GenerationContext>(`${projectUrl(scope.project)}/episodes/${scope.episode}/contexts/${encodeURIComponent(identity!)}`),
+    enabled: !!current && !current.context });
+  const context = current?.context || (current ? detail.data : undefined);
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
   const shots = context?.shots || [];
   const canAlign = !!current?.url && shots.length > 0 && shots.every(shot => shot.duration !== null);
@@ -106,6 +113,7 @@ export function SegmentWorkspace({ scope, segment, items, selection: { stage, ke
           <TabNav compact label="分镜显示方式" items={[{ value: 'aligned', label: '跟视频对齐', disabled: !canAlign }, { value: 'all', label: '显示全部' }]} selected={aligned ? 'aligned' : 'all'} onChange={setScriptMode} disabled={!current} />
         </div>}
         <div className={'segment-script-content' + (aligned && tab === 'script' ? ' is-aligned' : '')} ref={scriptContent}>
+        {current && !current.context && <Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />}
         {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} time={time} shot={activeShot?.id.match(/SH\d+$/)?.[0] || activeShot?.id} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? <div className="script-placeholder">{editingNotes ? '修改意见区域' : tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
           {context.issues.length > 0 && <details className="notice generation-context-issues"><summary>{segment} / {current!.stage} / {current!.run} 资料关联提示</summary>{context.issues.map(issue => <p key={issue}>{issue}</p>)}</details>}
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}

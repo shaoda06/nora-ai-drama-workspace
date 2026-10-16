@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from tests.http_case import HttpTestCase
 from backend import main
 from backend.parsers import project as parser
-from backend.services.projects import ProjectStore
+from backend.services.projects import ProjectStore, CACHE_SCHEMA
 
 
 class ServiceTests(HttpTestCase):
@@ -97,7 +97,7 @@ class ServiceTests(HttpTestCase):
                          [('EP001', '先撑过今晚'), ('EP002', '婶子也不能白拿'), ('EP003', ''),
                           ('EP004', '仅有大纲，没有制作目录'), ('EP005', '')])
         self.assertNotIn('script', data['children'][0])
-        detail = self.client.get('/api/projects/示例项目/episodes/EP001').json()
+        detail = self.client.get('/api/projects/示例项目/episodes/EP001?view=full').json()
         self.assertIn('EP001-本集剧本.md', str(detail['children']))
         self.assertIn('未开始', data['children'][3]['statusHtml'])
         self.assertEqual(data['children'][3]['children'], [])
@@ -625,7 +625,7 @@ class ServiceTests(HttpTestCase):
                     source.write_bytes(self.source.read_bytes())
                     stat = self.source.stat()
                     os.utime(source, ns=(stat.st_atime_ns, stat.st_mtime_ns))
-                with patch('backend.services.projects.CACHE_SCHEMA', 2 if changed == 'schema' else 1), patch('backend.services.projects.build_data', wraps=parser.build_data) as parse:
+                with patch('backend.services.projects.CACHE_SCHEMA', CACHE_SCHEMA + 1 if changed == 'schema' else CACHE_SCHEMA), patch('backend.services.projects.build_data', wraps=parser.build_data) as parse:
                     ProjectStore(root, cache_directory=cache, version=version).get('示例项目')
                     parse.assert_called_once()
 

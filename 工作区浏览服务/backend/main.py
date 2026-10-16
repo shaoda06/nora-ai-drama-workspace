@@ -244,9 +244,9 @@ async def security_headers(request: Request, call_next):
     return response
 
 
-def entry(name, scope=None, episode=None):
+def entry(name, scope=None, episode=None, mode='full', candidate=None):
     try:
-        return {'data': store.section(name, scope, episode)} if scope else store.get(name)
+        return {'data': store.section(name, scope, episode, mode=mode, candidate=candidate)} if scope else store.get(name)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except (OSError, ValueError, RuntimeError, UnicodeError) as error:
@@ -371,15 +371,15 @@ def asset(name: str, kind: Literal['people', 'scenes', 'props'], identity: str) 
 
 
 @app.get('/api/projects/{name}/episodes/{episode}')
-def episode_detail(name: str, episode: Episode) -> dict[str, Any]:
-    data = entry(name, '09-剧集制作', episode)['data']
+def episode_detail(name: str, episode: Episode, detail: Annotated[Literal['playback', 'full'], Query(alias='view')] = 'playback') -> dict[str, Any]:
+    data = entry(name, '09-剧集制作', episode, mode=detail)['data']
     current = next((item for item in data['catalogues']['09-剧集制作']['children'] if item['name'] == episode), None)
     if current is None:
         raise HTTPException(404, '剧集不存在')
     previous = None
     if int(episode[2:]) > 1:
         previous_id = 'EP' + str(int(episode[2:]) - 1).zfill(len(episode) - 2)
-        prior = entry(name, '09-剧集制作', previous_id)['data']['catalogues']['09-剧集制作']['children']
+        prior = entry(name, '09-剧集制作', previous_id, mode='ending' if detail == 'playback' else 'full')['data']['catalogues']['09-剧集制作']['children']
         if prior:
             item = prior[0]
             scene = next(reversed(item.get('scenes', [])), '')
@@ -388,10 +388,15 @@ def episode_detail(name: str, episode: Episode) -> dict[str, Any]:
     return view({**current, 'previousEpisode': previous, 'warnings': data['warnings']}, name)
 
 
+@app.get('/api/projects/{name}/episodes/{episode}/contexts/{candidate}')
+def generation_context(name: str, episode: Episode, candidate: str) -> dict[str, Any]:
+    return view(entry(name, '09-剧集制作', episode, candidate=candidate)['data']['context'], name)
+
+
 @app.get('/api/projects/{name}/episodes/{episode}/download')
 def completed_episode_download(name: str, episode: Episode):
     try:
-        files = completed_episode_videos(store, name, episode, entry(name, '09-剧集制作', episode)['data'])
+        files = completed_episode_videos(store, name, episode, entry(name, '09-剧集制作', episode, mode='playback')['data'])
         return zip_response(files, video_archive_name(name, episode))
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
@@ -402,7 +407,7 @@ def completed_episode_download(name: str, episode: Episode):
 @app.get('/api/projects/{name}/episodes/{episode}/downloads')
 def episode_download_list(name: str, episode: Episode, scene: Scene | None = None) -> dict[str, Any]:
     try:
-        files = episode_resources(store, name, episode, entry(name, '09-剧集制作', episode)['data'], scene)
+        files = episode_resources(store, name, episode, entry(name, '09-剧集制作', episode, mode='playback')['data'], scene)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     prefix = '/api/projects/' + quote(name, safe='') + '/episodes/' + episode + '/downloads/'
@@ -419,7 +424,7 @@ def episode_download_list(name: str, episode: Episode, scene: Scene | None = Non
 def episode_download(name: str, episode: Episode, stage: Literal['一采', '二采', '后处理'],
                      kind: Literal['videos'], scene: Scene | None = None):
     try:
-        files = episode_resources(store, name, episode, entry(name, '09-剧集制作', episode)['data'], scene)[stage][kind]
+        files = episode_resources(store, name, episode, entry(name, '09-剧集制作', episode, mode='playback')['data'], scene)[stage][kind]
         if not files:
             raise FileNotFoundError(('本场' if scene else '本集') + '该阶段没有可下载的' + KINDS[kind])
         filename = f'{name}-第{int(episode[2:])}集-{scene}-{stage}-正式版视频.zip' if scene else video_archive_name(name, episode)

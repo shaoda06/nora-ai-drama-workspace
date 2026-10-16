@@ -69,6 +69,41 @@ class GenerationContextTests(HttpTestCase):
     def videos(self):
         return build_data(self.project, web_episode_navigation=True)['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos']
 
+    def test_playback_and_lazy_context_keep_every_recorded_version(self):
+        first, _, missing = self.add_run('R001')
+        self.add_run('R003', '二采', first['identity'])
+        (self.project / missing).unlink()
+        with patch.object(main, 'store', ProjectStore(self.project.parent)):
+            with TestClient(main.app) as client:
+                expected = client.get('/api/projects/示例项目/episodes/EP001?view=full').json()['segments']['C001'][0]['videos']
+                listing = client.get('/api/projects/示例项目/episodes/EP001').json()
+                self.assertEqual(listing['children'], [])
+                actual = listing['segments']['C001'][0]['videos']
+                self.assertEqual(actual, [{k: v for k, v in video.items() if k != 'context'} for video in expected])
+                for video, original in zip(actual, expected):
+                    identity = 'EP001-C001-P001-' + video['run'] + '-' + video['stage']
+                    context = client.get('/api/projects/示例项目/episodes/EP001/contexts/' + identity)
+                    self.assertEqual(context.status_code, 200)
+                    self.assertEqual(context.json(), original['context'])
+                self.assertEqual(client.get('/api/projects/示例项目/episodes/EP001/contexts/EP002-C001-P001-R001-一采').status_code, 404)
+
+    def test_lazy_context_refreshes_external_material_and_preserves_path_boundary(self):
+        context, root, _ = self.add_run('R001')
+        self.write('图片/外部参考.png', '外部图')
+        context['references']['common'] = [{'file': '图片/外部参考.png', 'label': 'Picture 1'}]
+        self.write(root + '/输入映射.json', json.dumps({'generation_contexts': [context]}))
+        store = ProjectStore(self.project.parent)
+        with patch.object(main, 'store', store), TestClient(main.app) as client:
+            url = '/api/projects/示例项目/episodes/EP001/contexts/' + context['identity']
+            self.assertIn('url', client.get(url).json()['references']['common'][0])
+            (self.project / '图片/外部参考.png').unlink()
+            store.refresh('示例项目', store.get('示例项目'), store.snapshot(self.project))
+            self.assertTrue(client.get(url).json()['references']['common'][0]['missing'])
+            context['storyboard']['file'] = '../outside.md'
+            self.write(root + '/输入映射.json', json.dumps({'generation_contexts': [context]}))
+            store.refresh('示例项目', store.get('示例项目'), store.snapshot(self.project))
+            self.assertEqual(client.get(url).status_code, 503)
+
     def test_revision_without_video_keeps_number_and_own_materials(self):
         _, _, missing = self.add_run('R001')
         self.add_run('R003')
@@ -94,7 +129,7 @@ class GenerationContextTests(HttpTestCase):
         self.assertNotIn('最新版不应出现', str(prepared['context']))
         self.assertTrue(third['url'])
         with patch.object(main, 'store', ProjectStore(self.project.parent)), TestClient(main.app) as client:
-            entries = client.get('/api/projects/示例项目/episodes/EP001').json()['segments']['C001'][0]['videos']
+            entries = client.get('/api/projects/示例项目/episodes/EP001?view=full').json()['segments']['C001'][0]['videos']
             self.assertEqual(entries[0]['url'], '')
             self.assertTrue(entries[0]['context']['references']['common'][0]['url'].startswith('/api/projects/'))
         # A later video joins the existing revision instead of creating a fourth choice.
@@ -186,7 +221,7 @@ class GenerationContextTests(HttpTestCase):
         self.assertEqual(after['context'], before['context'])
         self.assertEqual((self.project / archive).read_text(encoding='utf-8'), 'EP001-C001-P001-R004-一采')
         with patch.object(main, 'store', ProjectStore(self.project.parent)), TestClient(main.app) as client:
-            video = client.get('/api/projects/示例项目/episodes/EP001').json()['segments']['C001'][0]['videos'][0]
+            video = client.get('/api/projects/示例项目/episodes/EP001?view=full').json()['segments']['C001'][0]['videos'][0]
             response = client.get(video['url'])
             self.assertIn('收尾裁尾', response.text)
             self.assertEqual(response.headers['cache-control'], 'no-store')
@@ -312,7 +347,7 @@ class GenerationContextTests(HttpTestCase):
         self.write('图片/公共.png', '后来更新原图')
         with patch.object(main, 'store', ProjectStore(self.project.parent)):
             with TestClient(main.app) as client:
-                segments = client.get('/api/projects/示例项目/episodes/EP001').json()['segments']['C001']
+                segments = client.get('/api/projects/示例项目/episodes/EP001?view=full').json()['segments']['C001']
                 first, second = [segment['videos'][0]['context'] for segment in segments]
                 self.assertIn('当次第一段', first['scriptHtml'])
                 self.assertNotIn('后来新版', first['scriptHtml'])
@@ -535,7 +570,7 @@ class GenerationContextTests(HttpTestCase):
         saved['generation_contexts'][0]['references']['common'].reverse()
         self.write(str((root / '输入映射.json').relative_to(self.project)), json.dumps(saved))
         with patch.object(main, 'store', ProjectStore(self.project.parent)), TestClient(main.app) as client:
-            references = client.get('/api/projects/示例项目/episodes/EP001').json()['segments']['C001'][0]['videos'][0]['context']['references']['common']
+            references = client.get('/api/projects/示例项目/episodes/EP001?view=full').json()['segments']['C001'][0]['videos'][0]['context']['references']['common']
             self.assertEqual([(item['kind'], item['label']) for item in references],
                              [('image', '<Picture 1>'), ('video', '<Video 1>'), ('audio', '<Audio 1>')])
             self.assertEqual(client.get(references[1]['url']).text, '提交时公共视频.mp4')
@@ -621,7 +656,7 @@ class GenerationContextTests(HttpTestCase):
         self.add_run('R002')
         with patch.object(main, 'store', ProjectStore(self.project.parent)):
             with TestClient(main.app) as client:
-                videos = client.get('/api/projects/示例项目/episodes/EP001').json()['segments']['C001'][0]['videos']
+                videos = client.get('/api/projects/示例项目/episodes/EP001?view=full').json()['segments']['C001'][0]['videos']
                 for video in videos:
                     run = video['run']
                     context = video['context']

@@ -87,12 +87,16 @@ class ProjectLoadingTests(HttpTestCase):
             index = root / '03-分镜脚本' / (number + '-分镜索引.md')
             index.parent.mkdir()
             index.write_text('| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n| ' + number + '-' + scene + ' | ' + number + '-' + scene + '-' + segment + ' | 8 |\n', encoding='utf-8')
+            if number == 'EP001':
+                with index.open('a', encoding='utf-8') as stream:
+                    stream.write('| EP001-C002 | EP001-C002-P003 | 4 |\n')
         first = self.client.get('/api/projects/示例项目/episodes/EP001').json()
         second = self.client.get('/api/projects/示例项目/episodes/EP002').json()
         self.assertIsNone(first['previousEpisode'])
         self.assertEqual(second['previousEpisode']['name'], 'EP001')
         self.assertEqual(second['previousEpisode']['scenes'], ['C002'])
-        self.assertEqual(second['previousEpisode']['segments']['C002'][-1]['id'], 'P009')
+        self.assertEqual([item['id'] for item in second['previousEpisode']['segments']['C002']], ['P003'])
+        self.assertEqual([item['id'] for item in first['segments']['C002']], ['P009', 'P003'])
         self.assertEqual(second['segments']['C001'][0]['id'], 'P001')
 
     def test_episode_list_retains_source_warnings(self):
@@ -101,3 +105,19 @@ class ProjectLoadingTests(HttpTestCase):
         index.write_text('| 集号 | 一句话概要 | 大纲入口 |\n| --- | --- | --- |\n| EP001 | 测试 | 错误入口 |\n', encoding='utf-8')
         listing = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
         self.assertTrue(any('EP001大纲入口未识别' in warning for warning in listing['warnings']))
+
+    def test_playback_cache_survives_unrelated_edits_and_restart_but_refreshes_own_episode(self):
+        root = self.project / '09-剧集制作/EP001'
+        root.mkdir(parents=True)
+        first = self.store.section('示例项目', '09-剧集制作', 'EP001', mode='playback')
+        unrelated = self.project / '09-剧集制作/EP002/其他资料/工作稿/备注.md'
+        unrelated.parent.mkdir(parents=True)
+        unrelated.write_text('另一集改动', encoding='utf-8')
+        self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
+        self.assertIs(self.store.section('示例项目', '09-剧集制作', 'EP001', mode='playback'), first)
+        restart = ProjectStore(self.root, cache_directory=self.root / '.cache', version='new-release')
+        with patch('backend.services.projects.build_data', side_effect=AssertionError('unrelated edit rebuilt EP001')):
+            self.assertEqual(restart.section('示例项目', '09-剧集制作', 'EP001', mode='playback'), first)
+        (root / '备注.md').write_text('本集改动', encoding='utf-8')
+        self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
+        self.assertIsNot(self.store.section('示例项目', '09-剧集制作', 'EP001', mode='playback'), first)

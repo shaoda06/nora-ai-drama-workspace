@@ -1,5 +1,6 @@
 """Resolve a video's explicitly recorded generation inputs, never current defaults."""
 import mimetypes
+import hashlib
 import re
 from pathlib import Path
 from urllib.parse import quote
@@ -29,7 +30,7 @@ def segment_body(text, segment):
     return "".join(shots)
 
 
-def resolve_context(identity, contexts, project, read, read_plain, previews, trail=()):
+def resolve_context(identity, contexts, project, read, read_plain, previews, trail=(), dependencies=None):
     empty = {"scriptHtml": "", "shots": [], "prompts": {"english": "", "chinese": ""},
              "references": {"common": [], "segment": []}, "issues": []}
     if identity not in contexts:
@@ -38,7 +39,7 @@ def resolve_context(identity, contexts, project, read, read_plain, previews, tra
         raise ValueError("视频来源循环：" + identity)
     context = contexts[identity]
     if "source" in context and "storyboard" not in context and "prompts" not in context:
-        result = resolve_context(context["source"], contexts, project, read, read_plain, previews, (*trail, identity))
+        result = resolve_context(context["source"], contexts, project, read, read_plain, previews, (*trail, identity), dependencies)
         return dict(result, source=context["source"])
     result = empty
     if "source" in context:
@@ -48,6 +49,8 @@ def resolve_context(identity, contexts, project, read, read_plain, previews, tra
         path = project / key
         if Path(key).is_absolute() or not path.resolve().is_relative_to(project):
             raise ValueError("生成资料越出项目：" + key)
+        if dependencies is not None:
+            dependencies.add(key)
         return path if path.is_file() else None
 
     storyboard = context.get("storyboard")
@@ -106,3 +109,34 @@ def resolve_context(identity, contexts, project, read, read_plain, previews, tra
             result["references"][group].append(material)
         result["references"][group].sort(key=lambda item: ('image', 'video', 'audio').index(item['kind']))
     return result
+
+
+def load_context(project, identity, contexts):
+    """Read only the selected revision's frozen inputs, with existing integrity checks."""
+    from .project import plain_text_preview, SourceChangedError
+    texts, previews, sources, dependencies = {}, {}, {}, set()
+
+    def read(key):
+        if key not in texts:
+            path = project / key
+            if not path.resolve().is_relative_to(project):
+                raise ValueError('生成资料越出项目：' + key)
+            if not path.is_file():
+                return None
+            raw = path.read_bytes()
+            sources[key] = hashlib.sha256(raw).hexdigest()
+            texts[key] = raw.decode('utf-8-sig').replace('\r\n', '\n')
+        return texts[key]
+
+    def read_plain(key):
+        if key not in previews:
+            path = project / key
+            if not path.resolve().is_relative_to(project):
+                raise ValueError('生成资料越出项目：' + key)
+            previews[key], sources[key] = plain_text_preview(path)
+
+    context = resolve_context(identity, contexts, project, read, read_plain, previews, dependencies=dependencies)
+    for key, digest in sources.items():
+        if hashlib.sha256((project / key).read_bytes()).hexdigest() != digest:
+            raise SourceChangedError('Source changed while reading; rerun: ' + key)
+    return {'context': context, 'sources': sources, 'dependencies': sorted(dependencies)}

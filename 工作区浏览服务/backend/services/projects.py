@@ -7,11 +7,12 @@ import threading
 import time
 
 from backend.parsers.project import SourceChangedError, build_data, live_task_record, FORMAL_SECTIONS
+from backend.parsers.generation import load_context
 
 logger = logging.getLogger(__name__)
 
 # Increment only when the parsed project data or interpretation becomes incompatible.
-CACHE_SCHEMA = 1
+CACHE_SCHEMA = 2
 
 class ProjectStore:
     """Parse on demand; keep the last complete result while a change is read."""
@@ -63,6 +64,16 @@ class ProjectStore:
                             result[key] = (stat.st_mtime_ns, stat.st_size)
         return result
 
+    def cache_snapshot(self, snapshot, part, data):
+        episode = re.match(r'09-剧集制作--(EP\d{3,})--(?:playback|ending|context)(?:--|$)', part or '')
+        if episode is None:
+            return snapshot
+        number = episode[1]
+        prefix = '09-剧集制作/' + number + '/'
+        dependencies = {'项目进度.md', '00-项目定位/项目基本定位.md', '06-分集大纲/分集索引.md',
+                        '06-分集大纲/' + number + '-分集大纲.md', *data.get('sources', {}), *data.get('dependencies', [])}
+        return {key: value for key, value in snapshot.items() if key.startswith(prefix) or key in dependencies}
+
     def load_cache(self, name, snapshot, part=None):
         if self.cache_directory is None:
             return None
@@ -71,7 +82,7 @@ class ProjectStore:
             return None
         saved = json.loads(path.read_text('utf-8'))
         if (saved['workspace'] == str(self.root) and saved.get('schema') == CACHE_SCHEMA
-                and saved['snapshot'] == {key: list(value) for key, value in snapshot.items()}):
+                and saved['snapshot'] == {key: list(value) for key, value in self.cache_snapshot(snapshot, part, saved['data']).items()}):
             return saved['data']
         return None
 
@@ -82,7 +93,7 @@ class ProjectStore:
         path.parent.mkdir(parents=True, exist_ok=True)
         temporary = path.with_suffix('.tmp')
         temporary.write_text(json.dumps({'workspace': str(self.root), 'schema': CACHE_SCHEMA,
-                                        'snapshot': snapshot, 'data': data}, ensure_ascii=False), encoding='utf-8')
+                                        'snapshot': self.cache_snapshot(snapshot, part, data), 'data': data}, ensure_ascii=False), encoding='utf-8')
         temporary.replace(path)
 
     def get(self, name: str):
@@ -137,20 +148,26 @@ class ProjectStore:
                 entry['retry_at_time'] = (time.time() + 30) * 1000
             return
         with entry['lock']:
+            sections = {key: data for key, data in entry['sections'].items()
+                        if self.cache_snapshot(entry['snapshot'], key, data) == self.cache_snapshot(snapshot, key, data)}
             entry.update(data=data, snapshot=snapshot, revision=entry['revision'] + 1,
-                         error=None, error_kind=None, updating=False, retry_at=0.0, retry_at_time=0.0, sections={})
+                         error=None, error_kind=None, updating=False, retry_at=0.0, retry_at_time=0.0, sections=sections)
 
-    def section(self, name: str, scope: str, episode: str | None = None):
+    def section(self, name: str, scope: str, episode: str | None = None, mode='full', candidate=None):
         if scope not in FORMAL_SECTIONS or episode is not None and not re.fullmatch(r'EP\d{3,}', episode):
             raise FileNotFoundError('栏目或剧集不存在')
         entry = self.get(name)
-        key = scope + ('--' + episode if episode else '')
+        if candidate is not None and not re.fullmatch(re.escape(episode) + r'-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)', candidate):
+            raise FileNotFoundError('候选版本不存在')
+        playback = self.section(name, scope, episode, mode='playback') if candidate else None
+        key = scope + ('--' + episode if episode else '') + ('--context--' + candidate if candidate else '--' + mode if mode != 'full' else '')
         with entry['lock']:
             if key not in entry['sections']:
                 data = self.load_cache(name, entry['snapshot'], part=key)
                 if data is None:
                     try:
-                        data = build_data(self.project(name), web_episode_navigation=True, load_scope=scope, episode_id=episode)
+                        data = (load_context(self.project(name), candidate, playback['generationContexts']) if candidate else
+                                build_data(self.project(name), web_episode_navigation=True, load_scope=scope, episode_id=episode, episode_mode=mode))
                         self.save_cache(name, entry['snapshot'], data, part=key)
                     except (OSError, ValueError, RuntimeError, UnicodeError) as error:
                         entry.update(error=str(error),

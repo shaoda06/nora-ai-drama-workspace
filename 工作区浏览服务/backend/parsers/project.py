@@ -432,7 +432,7 @@ def formal_record_url(version, record, record_key):
     return url + "#" + quote(matches[0]) if len(numbers) == len(matches) == 1 else url
 
 
-def build_data(project, *, web_episode_navigation=False, load_scope=None, episode_id=None):
+def build_data(project, *, web_episode_navigation=False, load_scope=None, episode_id=None, episode_mode='full'):
     documents, sources, texts = {}, {}, {}
     text_previews = {}
     resolved_paths = {}
@@ -1056,6 +1056,20 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
         folder = project / relative
         if not folder.is_dir() or not folder.resolve().is_relative_to(project):
             return []
+        if episode_mode != 'full' and relative == '09-剧集制作/' + episode_id:
+            # Playback needs video identities and mapping locations, not the
+            # historical file tree or every candidate's rendered inputs.
+            result = []
+            for path in folder.rglob('*'):
+                if any(p.startswith('.') for p in path.relative_to(folder).parts):
+                    continue
+                video = path.suffix.lower() in ('.mp4', '.webm', '.mov')
+                mapping = path.name == '输入映射.json' and '执行附件' in path.parts
+                if (video or mapping) and path.is_file():
+                    key = path.relative_to(project).as_posix()
+                    result.append({'kind': 'video' if video else 'text', 'name': path.name,
+                                   'key': key, 'url': quote(key, safe='/-._~')})
+            return result
         return [item for path in sorted(folder.rglob("*"))
                 if not any(p.startswith(".") for p in path.relative_to(folder).parts)
                 and (item := file_entry(path))]
@@ -1208,6 +1222,8 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             for item in files:
                 if item["name"] != "输入映射.json" or "执行附件" not in Path(item["key"]).parts:
                     continue
+                if not resolved_path(item['key']).is_relative_to(project):
+                    raise ValueError('Refusing source outside project: ' + item['key'])
                 read_plain(item["key"])
                 snapshot = text_previews[item["key"]]
                 mapping_text = ((project / item["key"]).read_text("utf-8-sig")
@@ -1219,9 +1235,9 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                     if identity in generation_contexts and generation_contexts[identity] != context:
                         raise ValueError("生成资料关联重复：" + identity)
                     generation_contexts[identity] = context
-        children = file_tree(files, root, episode.name)["children"]
+        children = file_tree(files, root, episode.name)["children"] if episode_mode == 'full' else []
         present = {item["name"] for item in children}
-        for directory in sorted(episode.iterdir()):
+        for directory in sorted(episode.iterdir()) if episode_mode == 'full' else []:
             if (directory.is_dir() and not directory.name.startswith(".")
                     and directory.resolve().is_relative_to(project) and directory.name not in present):
                 children.append(file_tree([], root + "/" + directory.name, directory.name))
@@ -1284,6 +1300,11 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             if index_item and not index_rows:
                 issues.append({"key": storyboard_index,
                                "message": "没有可读取的分段表。表头须包含“场次”“分段”“分段计划时长（秒）”，并填写完整数据行。"})
+            if episode_mode == 'ending':
+                last_scene = next(reversed(episode_node['scenes']), '')
+                index_rows = [row for row in index_rows if row['场次'] == number + '-' + last_scene][-1:]
+                episode_node['scenes'] = [last_scene] if last_scene else []
+                episode_node['segments'] = {last_scene: []} if last_scene else {}
             for row in index_rows:
                 identity = re.fullmatch(re.escape(number) + r"-(C\d{3,})-(P\d{3,})", row["分段"])
                 if not identity or identity[1] not in episode_node["segments"] or row["场次"] != number + "-" + identity[1]:
@@ -1340,6 +1361,8 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                                episode_root + "/06-生成结果/" + stage_folder + "/" + identity[1] + "-场次",
                                legacy_root + "/候选", legacy_root + "/选定")
                     if Path(item["key"]).parent.as_posix() in folders:
+                        if not resolved_path(item['key']).is_relative_to(project):
+                            raise ValueError('Refusing source outside project: ' + item['key'])
                         stat = (project / item["key"]).stat()
                         revision = str(stat.st_mtime_ns) + "-" + str(stat.st_size)
                         videos.append({"key": item["key"], "url": item["url"], "run": take[1], "stage": take[2],
@@ -1374,8 +1397,9 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                     video.update(deliveryStatus=field(body, "取回核对状态"), taskStatus=field(task_body, "任务状态"),
                                  checkedAt=field(task_body, "最近检查时间"))
                     video["candidateNumber"] = int(video["run"][1:])
-                    video["context"] = resolve_context(segment_identity + "-" + video["run"] + "-" + video["stage"],
-                        generation_contexts, project, read, read_plain, text_previews)
+                    if episode_mode == 'full':
+                        video["context"] = resolve_context(segment_identity + "-" + video["run"] + "-" + video["stage"],
+                            generation_contexts, project, read, read_plain, text_previews)
                 episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration),
                     "scriptHtml": markdown(script_text, storyboard_source),
                     "videos": videos,
@@ -1422,4 +1446,5 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
         "summaryHtml": markdown("\n".join(summary_lines), POSITION),
         "introHtml": intro_markup(intro), "positionHtml": markdown(main, POSITION),
         "warnings": warnings, "sources": sources,
+        **({'generationContexts': generation_contexts} if episode_mode != 'full' else {}),
     }
