@@ -24,6 +24,8 @@ from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_c
 from backend.services.task_details import task_detail
 from backend.services.task_history import task_history
 from backend.services.task_resolution import ResolutionInput, resolve_task
+from backend.services.result_summary import summary as result_summary
+from backend.services.result_registration import closeout as result_closeout
 from websockets.exceptions import WebSocketException
 from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes
 
@@ -196,7 +198,7 @@ async def agent_task_status(key: str, request: Request) -> dict[str, Any]:
     tasks = agent_request(request)
     if key not in tasks.rows:
         raise HTTPException(404, '任务不存在')
-    return next(item for item in tasks.public()['tasks'] if item['id'] == key) | {
+    return result_summary(tasks, key) | {
         'record_dir': tasks.rows[key]['input'].record_dir,
         'error_details': tasks.rows[key]['state'].get('error_details', {})}
 
@@ -223,12 +225,27 @@ class NoticeReceipt(BaseModel):
     thread_id: str
 
 
+class ResultRegistrationInput(NoticeReceipt):
+    record_updates: list[dict[str, str]] = []
+
+
 @app.post('/api/internal/comfy/notifications/{batch_id}/ack')
 async def agent_notice_ack(batch_id: str, data: NoticeReceipt, request: Request) -> dict[str, Any]:
     tasks = agent_request(request)
     try:
         return tasks.acknowledge(batch_id, data.thread_id)
     except ValueError as error:
+        raise HTTPException(409, str(error)) from error
+
+
+@app.post('/api/internal/comfy/notifications/{batch_id}/register-results')
+async def agent_register_results(batch_id: str, data: ResultRegistrationInput, request: Request) -> dict[str, Any]:
+    tasks = agent_request(request)
+    try:
+        locks = tasks.__dict__.setdefault('_closeout_locks', {})
+        async with locks.setdefault(batch_id, asyncio.Lock()):
+            return await result_closeout(tasks, store, batch_id, data.thread_id, data.record_updates)
+    except (ValueError, OSError, KeyError, TypeError) as error:
         raise HTTPException(409, str(error)) from error
 
 

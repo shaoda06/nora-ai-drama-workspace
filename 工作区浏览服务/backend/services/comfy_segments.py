@@ -93,20 +93,25 @@ def validate(data, *, mapping=None, timelines=None):
 async def finish(store, key, result):
     from backend.services.comfy_tasks import paths as project_paths
     data, state = store.rows[key]['input'], store.rows[key]['state']
-    outputs = result['history'].get('outputs', {}).get(data.segment_plan.report_node, {})
-    text = '\n'.join(value for values in outputs.values() if isinstance(values, list)
-                     for value in values if isinstance(value, str))
-    paths = {}
-    for match in REPORT.finditer(text):
-        if (match[2] == '一采 mp4') == (data.task_type == 'video-first-pass'):
-            paths[int(match[1]) - 1] = match[4].strip()
+    row = store.rows[key]
+    if row.get('_segment_result') is not result:
+        outputs = result['history'].get('outputs', {}).get(data.segment_plan.report_node, {})
+        text = '\n'.join(value for values in outputs.values() if isinstance(values, list)
+                         for value in values if isinstance(value, str))
+        paths = {}
+        for match in REPORT.finditer(text):
+            if (match[2] == '一采 mp4') == (data.task_type == 'video-first-pass'):
+                paths[int(match[1]) - 1] = match[4].strip()
+        row['_segment_paths'], row['_segment_result'] = paths, result
+    paths = row['_segment_paths']
     problems, collected = [], 0
     state.setdefault('segments', {})
     expected_targets = store.rows[key].get('_collection_targets')
     if expected_targets is None:
         expected_targets = store.rows[key]['_collection_targets'] = targets(data)
     verified = store.rows[key].setdefault('_collection_ok', {})
-    store.save(key, expected=len(expected_targets))
+    if state['expected'] != len(expected_targets):
+        store.save(key, expected=len(expected_targets))
     for target in expected_targets:
         item = state['segments'].setdefault(str(target['index']), {
             'identity': target['identity'], 'index': target['index'], 'check': '未取回', 'error': None})
@@ -120,14 +125,15 @@ async def finish(store, key, result):
             receipt_path = Path(data.record_dir) / target['response_name']
             candidate = target['candidate']
             proof = (state['prompt_id'], source, saved_stamp(receipt_path, candidate))
+            fresh = False
             if proof[-1] is not None and verified.get(str(receipt_path)) == proof:
                 pass
             elif receipt_path.exists():
                 receipt = store.client.strict_json(receipt_path.read_bytes())
                 downloaded = receipt['data']
                 if (receipt['prompt_id'] != state['prompt_id'] or downloaded['remote'] != source
-                        or project_paths.project_file(data.project, downloaded['path'], recorded=True) != candidate or not candidate.is_file()
-                        or candidate.stat().st_size != downloaded['bytes']):
+                        or project_paths.project_file(data.project, downloaded['path'], recorded=True) != candidate
+                        or proof[-1] is None or proof[-1][1][0] != downloaded['bytes']):
                     raise ValueError('已有最终下载凭据与文件不一致，不覆盖文件')
             else:
                 downloaded = await asyncio.to_thread(store.client.download, store.client_for(data), argparse.Namespace(
@@ -135,15 +141,19 @@ async def finish(store, key, result):
                 downloaded['path'] = store.record_paths(key).relative_file(downloaded['path'])
                 store.client.write_new(receipt_path, {'time': store.client.now(), 'prompt_id': state['prompt_id'],
                                                      'identity': target['identity'], 'data': downloaded})
-                store.record(key, 'download', 'success', path=str(candidate), remote=source, receipt=str(receipt_path),
-                             attempt=state.get('collection_attempt', 1))
-            verified[str(receipt_path)] = (state['prompt_id'], source, saved_stamp(receipt_path, candidate))
-            item.update(remote=source, path=str(candidate), check='已取回', error=None)
+                proof = (state['prompt_id'], source, saved_stamp(receipt_path, candidate))
+                fresh = True
+            verified[str(receipt_path)] = proof
+            item.update(remote=source, path=str(candidate), receipt=str(receipt_path), bytes=proof[-1][1][0], check='已取回', error=None)
             collected += 1
-        except (store.client.ClientError, OSError, ValueError, KeyError) as error:
+            if fresh:
+                store.record(key, 'download', 'success', path=str(candidate), remote=source, receipt=str(receipt_path),
+                             attempt=state.get('collection_attempt', 1), _changes={'collected': collected})
+        except (store.client.ClientError, OSError, ValueError, KeyError, TypeError, IndexError, AttributeError) as error:
             item.update(error=str(error), check='取回失败')
             issue = failure(error, store.client.ClientError, identity=target['identity'])
             problems.append(issue)
             store.record(key, 'download', 'failed', **issue, attempt=state.get('collection_attempt', 1))
+    if state['collected'] != collected:
         store.save(key, collected=collected)
     return problems

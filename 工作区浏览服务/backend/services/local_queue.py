@@ -472,11 +472,13 @@ class LocalQueue:
         self.workers[key] = asyncio.create_task(self.collect_saved(key))
         return {'local_task_id': key, 'status': 'collecting'}
 
-    async def collect_saved(self, key):
+    async def collect_saved(self, key, result=None):
         data = self.rows[key]['input']
         try:
-            result = self.client.strict_json((Path(data.record_dir) / data.history_name).read_bytes())['data']
+            if result is None:
+                result = self.client.strict_json((Path(data.record_dir) / data.history_name).read_bytes())['data']
             await self.finish_collection(key, result)
-        except (self.client.ClientError, OSError, ValueError, KeyError) as error:
-            self.record(key, 'collection', 'failed', _changes={'status': 'collection_failed', 'error': str(error)}, error=str(error))
+        except (self.client.ClientError, OSError, ValueError, KeyError, TypeError, IndexError, AttributeError) as error:
+            self.record(key, 'collection', 'failed', _changes={'status': 'collection_failed', 'error': str(error),
+                        'failure_stage': 'collection', 'collection_retry_stop': 'requires_attention'}, error=str(error))
         self.queue_notice(key, 'terminal', 'terminal', self.rows[key]['state'].get('error') or '预期成果已保存')

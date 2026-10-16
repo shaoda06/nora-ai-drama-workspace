@@ -91,7 +91,7 @@ class HttpIsolationTests(HttpTestCase):
                                                  headers={**headers, 'origin': 'http://localhost'}).status_code, 403)
                     response = client.post(url, json=body, headers=headers)
                     self.assertEqual(response.status_code, 200)
-                    self.assertEqual(response.json(), {'notification_id': 'notice', 'status': 'acknowledged'})
+                    self.assertEqual(response.json(), {'notification_id': 'notice', 'status': 'acknowledged', 'tasks': []})
             finally:
                 client.portal.call(connection.close)
         self.assert_credentials_unchanged()

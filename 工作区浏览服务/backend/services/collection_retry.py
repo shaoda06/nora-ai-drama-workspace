@@ -2,8 +2,13 @@
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 import errno
+import stat
 
 DELAYS = (10, 30, 60)
+
+
+class EvidenceError(ValueError):
+    """A local receipt failure is not a transient remote connection failure."""
 
 
 def failure(error, client_error, **target):
@@ -32,6 +37,10 @@ def failure(error, client_error, **target):
 
 def saved_stamp(receipt, candidate):
     """Only metadata; successful receipts are re-read after a restart or a change."""
-    if not receipt.is_file() or not candidate.is_file():
+    try:
+        stamps = (receipt.stat(), candidate.stat())
+    except FileNotFoundError:
         return None
-    return tuple((stamp.st_size, stamp.st_mtime_ns) for path in (receipt, candidate) for stamp in [path.stat()])
+    if not all(stat.S_ISREG(value.st_mode) for value in stamps):
+        return None
+    return tuple((value.st_size, value.st_mtime_ns) for value in stamps)

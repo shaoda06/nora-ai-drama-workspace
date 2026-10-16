@@ -426,7 +426,13 @@ class TaskStore(LocalQueue, TaskNotifications):
         row = self.rows[key]
         data, state = row['input'], row['state']
         history = Path(data.record_dir) / data.history_name
-        saved = client.strict_json(history.read_bytes())['data'] if history.is_file() else None
+        try:
+            saved = client.strict_json(history.read_bytes())['data'] if history.is_file() else None
+            if saved is not None and not isinstance(saved, dict):
+                raise ValueError('终态凭据必须包含结果对象')
+        except (OSError, client.ClientError, ValueError, KeyError, TypeError) as error:
+            from backend.services.collection_retry import EvidenceError
+            raise EvidenceError('本地终态凭据不可读取：' + str(error)) from error
         result = saved if saved and saved.get('state') in ('success', 'failed') else await asyncio.to_thread(
             client.status, self.client_for(data), argparse.Namespace(prompt_id=state['prompt_id']))
         if result['state'] == 'unknown':
@@ -450,7 +456,7 @@ class TaskStore(LocalQueue, TaskNotifications):
             self.record(key, 'execution', remote_state, evidence=str(history))
             if background_collection:
                 self.save(key, status='collecting')
-                self.workers[key] = asyncio.create_task(self.collect_saved(key))
+                self.workers[key] = asyncio.create_task(self.collect_saved(key, result))
             else:
                 await self.finish_collection(key, result)
                 self.queue_notice(key, 'terminal', 'terminal', state.get('error') or '预期成果已保存')
@@ -466,6 +472,8 @@ class TaskStore(LocalQueue, TaskNotifications):
 
     async def finish_collection(self, key, result):
         data, state = self.rows[key]['input'], self.rows[key]['state']
+        if not isinstance(result, dict) or result.get('state') not in ('success', 'failed'):
+            raise ValueError('取回必须使用已确认的终态结果')
         if result['state'] == 'failed':
             messages = (result.get('history') or {}).get('status', {}).get('messages', [])
             details = next((payload for event, payload in messages
@@ -484,10 +492,10 @@ class TaskStore(LocalQueue, TaskNotifications):
             self.record(key, 'collection', 'started', _changes={'error': None, 'failure_stage': None}, attempt=state['collection_attempt'])
             try:
                 problems = await segments.finish(self, key, result) if data.segment_plan else await self.collect(key, result)
-            except (client.ClientError, OSError, ValueError, KeyError) as error:
+            except (client.ClientError, OSError, ValueError, KeyError, TypeError, IndexError, AttributeError) as error:
                 problems = [failure(error, client.ClientError)]
             if not problems:
-                self.record(key, 'collection', 'completed', _changes={'status': 'completed', 'error': None, 'failure_stage': None, 'collection_errors': [], 'collection_next_retry_at': None, 'collection_retry_stop': None}, collected=state['collected'], attempt=state['collection_attempt'])
+                self.record(key, 'collection', 'completed', _changes={'status': 'completed', 'error': None, 'failure_stage': None, 'collection_errors': [], 'collection_next_retry_at': None, 'collection_retry_stop': None, 'collected_at': client.now()}, collected=state['collected'], attempt=state['collection_attempt'])
                 return
             message = '；'.join((item.get('path') or item.get('identity') or '成果取回') + '：' + item['error'] for item in problems)
             self.record(key, 'collection', 'attempt_failed', error=message, failures=problems,
@@ -509,23 +517,29 @@ class TaskStore(LocalQueue, TaskNotifications):
         collected = 0
         saved_outputs = []
         verified = self.rows[key].setdefault('_collection_ok', {})
+        row = self.rows[key]
+        if row.get('_output_result') is not result:
+            index = {}
+            for item in result['files']:
+                index.setdefault((item['node_id'], item['output_key'], item['index']), []).append(item['file'])
+            row['_output_index'], row['_output_result'] = index, result
+        saved_items = []
         for output in data.outputs:
             try:
-                matching = [item['file'] for item in result['files'] if
-                            (item['node_id'], item['output_key'], item['index']) ==
-                            (output.node_id, output.output_key, output.index)]
+                matching = row['_output_index'].get((output.node_id, output.output_key, output.index), [])
                 if len(matching) != 1:
                     raise ValueError(f'预期输出未确认：节点{output.node_id}/{output.output_key}/{output.index}')
                 identity = matching[0]
                 response = Path(data.record_dir) / output.response_name
                 proof = (identity, saved_stamp(response, Path(output.path)))
+                fresh = False
                 if proof[1] is not None and verified.get(str(response)) == proof:
                     pass
                 elif response.exists():
                     previous = client.strict_json(response.read_bytes())['data']
                     if (previous['remote'] != {name: identity[name] for name in ('filename', 'subfolder', 'type')}
                             or paths.project_file(data.project, previous['path'], recorded=True) != Path(output.path)
-                            or not Path(output.path).is_file() or Path(output.path).stat().st_size != previous['bytes']):
+                            or proof[1] is None or proof[1][1][0] != previous['bytes']):
                         raise ValueError('已有下载证据与当前文件不一致，不覆盖文件')
                 else:
                     downloaded = await asyncio.to_thread(client.download, self.client_for(data),
@@ -533,17 +547,24 @@ class TaskStore(LocalQueue, TaskNotifications):
                                            type=identity['type'], output=output.path, sha256=None))
                     downloaded['path'] = self.record_paths(key).relative_file(downloaded['path'])
                     client.write_new(response, {'time': client.now(), 'data': downloaded})
-                    self.record(key, 'download', 'success', path=output.path, remote=identity, receipt=str(response),
-                                attempt=state.get('collection_attempt', 1))
-                verified[str(response)] = (identity, saved_stamp(response, Path(output.path)))
+                    proof = (identity, saved_stamp(response, Path(output.path)))
+                    fresh = True
+                verified[str(response)] = proof
                 collected += 1
                 saved_outputs.append(output.path)
-                self.save(key, collected=collected, saved_outputs=saved_outputs.copy())
-            except (client.ClientError, OSError, ValueError, KeyError) as error:
+                saved_items.append({'path': output.path, 'receipt': str(response), 'remote': identity,
+                                    'bytes': proof[1][1][0]})
+                if fresh:
+                    self.record(key, 'download', 'success', path=output.path, remote=identity, receipt=str(response),
+                                attempt=state.get('collection_attempt', 1), _changes={'collected': collected,
+                                'saved_outputs': saved_outputs.copy(), 'result_items': saved_items.copy()})
+            except (client.ClientError, OSError, ValueError, KeyError, TypeError, IndexError, AttributeError) as error:
                 issue = failure(error, client.ClientError, path=output.path)
                 problems.append(issue)
                 self.record(key, 'download', 'failed', **issue, attempt=state.get('collection_attempt', 1))
-        self.save(key, collected=collected, saved_outputs=saved_outputs)
+        if any(state.get(name) != value for name, value in {'collected': collected, 'saved_outputs': saved_outputs,
+                                                          'result_items': saved_items}.items()):
+            self.save(key, collected=collected, saved_outputs=saved_outputs, result_items=saved_items)
         return problems
 
     async def watch(self, key, socket=None):
@@ -595,9 +616,12 @@ class TaskStore(LocalQueue, TaskNotifications):
                         await socket.close()
                         socket = None
                     await asyncio.sleep(5)
-        except (ValueError, KeyError, TypeError) as error:
+        except (ValueError, KeyError, TypeError, IndexError, AttributeError) as error:
             logger.exception('ComfyUI task %s protocol error', key)
-            self.record(key, 'execution', 'protocol_error', _changes={'status': 'needs_attention', 'error': '远端消息或证据格式异常：' + str(error)}, error=str(error))
+            from backend.services.collection_retry import EvidenceError
+            phase = 'collection' if isinstance(error, EvidenceError) else 'execution'
+            self.record(key, phase, 'protocol_error', _changes={'status': 'needs_attention', 'failure_stage': phase,
+                        'error': '远端消息或证据格式异常：' + str(error)}, error=str(error))
             self.queue_notice(key, 'terminal', 'attention', state['error'])
         finally:
             if socket is not None:
@@ -627,6 +651,9 @@ class TaskStore(LocalQueue, TaskNotifications):
             logger.warning('ComfyUI task %s source session lookup failed: %s', key, error)
 
     async def desktop_call(self, data, operation, prompt=''):
+        channel = getattr(self, '_notification_channels', {}).get(data.thread_id)
+        if channel is not None and not self.queue_notifications:
+            return await channel.call(data, operation, prompt)
         if self.queue_notifications and operation == 'send':
             cli = data.desktop.cli or os.environ.get('CODEX_CLI_PATH') or shutil.which('codex')
             if not cli:

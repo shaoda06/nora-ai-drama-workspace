@@ -176,7 +176,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             await self.store.reconcile('task')
         self.assertEqual(self.store.rows['task']['state']['status'], 'collection_failed')
         self.assertEqual(self.store.rows['task']['state']['collected'], 0)
-        self.assertIn('已保存成果：[]', self.store.notification_text('task'))
+        self.assertEqual(__import__('backend.services.result_summary', fromlist=['summary']).summary(self.store, 'task')['outputs'], [])
         self.assertEqual(old_file.read_bytes(), b'previous execution')
 
     async def test_start_timestamp_is_remote_event_time_and_survives_restart(self):
@@ -283,19 +283,18 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
                     {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': status}}})}]}
                     for status in ('active', 'idle')]
                 responses.append({'content': [], 'isError': False})
-                completed = [t.subprocess.CompletedProcess([], 0, json.dumps(result), '') for result in responses]
-                with patch.object(t.subprocess, 'run', side_effect=completed) as run, patch.object(t.asyncio, 'sleep', AsyncMock()):
+                with patch('backend.services.desktop_channel.DesktopChannel') as factory, patch.object(t.asyncio, 'sleep', AsyncMock()):
+                    channel = factory.return_value
+                    channel.call = AsyncMock(side_effect=responses)
+                    channel.close = AsyncMock()
                     await self.store.notify('task')
                     await self.store.notify('task')
-                self.assertEqual(run.call_count, 3)
-                payloads = [json.loads(call.kwargs['input']) for call in run.call_args_list]
-                self.assertEqual([payload['operation'] for payload in payloads], ['read', 'read', 'send'])
-                for call, payload in zip(run.call_args_list, payloads):
-                    self.assertEqual(call.args[0][0], 'node')
-                    self.assertTrue(call.args[0][1].endswith('codex_task_bridge.mjs'))
-                    self.assertEqual(call.kwargs['env']['CODEX_APP_TOOLS_PIPE_PATH'], 'private-pipe')
-                    self.assertEqual(payload['caller'], 'real-caller')
-                    self.assertEqual(payload['threadId'], 'authorized-target')
+                self.assertEqual([call.args[1] for call in channel.call.await_args_list], ['read', 'read', 'send'])
+                for call in channel.call.await_args_list:
+                    self.assertEqual(call.args[0].desktop.node, 'node')
+                    self.assertEqual(call.args[0].desktop.pipe, 'private-pipe')
+                    self.assertEqual(call.args[0].desktop.caller_thread, 'real-caller')
+                    self.assertEqual(call.args[0].thread_id, 'authorized-target')
                 self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
                 batch = self.store.rows['task']['state']['notices'][0]['batch_id']
                 self.store.acknowledge(batch, self.data.thread_id)

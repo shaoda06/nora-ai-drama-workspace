@@ -59,22 +59,28 @@ def service_call(route, payload=None):
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description='查询后台任务、请求重试取回、确认通知或对已核查异常结案；不会重新生成')
+    parser = argparse.ArgumentParser(description='查询后台任务、确认通知、登记视频待审、重试取回或异常结案；不会重新生成')
     commands = parser.add_subparsers(dest='command', required=True)
     for command in ('status', 'retry-collection'):
         item = commands.add_parser(command)
         item.add_argument('--task-id', required=True, help='Backend local UUID, not remote prompt_id')
-    item = commands.add_parser('ack')
-    item.add_argument('--notification-id', required=True, help='Notification batch UUID from received message')
+    for name in ('ack', 'register-results'):
+        item = commands.add_parser(name, help='确认并读取本批摘要' if name == 'ack' else '登记视频待审并核验一次网页；不批准、不生成')
+        item.add_argument('--notification-id', required=True, help='Notification batch UUID from received message')
+        if name == 'register-results':
+            item.add_argument('--record-updates', help='UTF-8 JSON array of exact path/old/new updates for this batch progress or production checks; paths relative to the project')
     item = commands.add_parser('resolve', help='Close an investigated needs_attention task; preserve its original exception')
     item.add_argument('--task-id', required=True, help='Backend local UUID, not remote prompt_id')
     item.add_argument('--resolution', required=True, help='UTF-8 JSON resolution file with original prompt ID, evidence and replacement IDs')
     args = parser.parse_args()
-    if args.command == 'ack':
+    if args.command in ('ack', 'register-results'):
         thread = os.environ.get('CODEX_THREAD_ID')
         if not thread:
             raise ValueError('通知确认必须在真实来源会话内调用')
-        result = service_call('notifications/' + args.notification_id + '/ack', {'thread_id': thread})
+        payload = {'thread_id': thread}
+        if args.command == 'register-results' and args.record_updates:
+            payload['record_updates'] = json.loads(Path(args.record_updates).read_text('utf-8-sig'))
+        result = service_call('notifications/' + args.notification_id + '/' + args.command, payload)
     elif args.command == 'resolve':
         result = service_call('tasks/' + args.task_id + '/resolve',
                               json.loads(Path(args.resolution).read_text('utf-8-sig')))

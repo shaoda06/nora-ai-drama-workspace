@@ -385,7 +385,8 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
     async def test_dispatch_does_not_wait_for_previous_download(self):
         base.TaskTests.seed(self, status='running', notification='sent')
         finished = asyncio.Event()
-        async def collect(key):
+        async def collect(key, confirmed_result):
+            self.assertIs(confirmed_result, result)
             await finished.wait()
         result = {'state': 'success', 'history': {}, 'files': []}
         with patch.object(t.client, 'status', return_value=result), patch.object(self.store, 'collect_saved', collect):
