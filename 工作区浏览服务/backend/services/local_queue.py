@@ -196,6 +196,8 @@ class LocalQueue:
         workflow = deepcopy(data.workflow)
         transferred = data.url.rstrip('/') != row['state'].get('enqueued_url', data.url).rstrip('/')
         from backend.services import execution_checks as checks
+        # Share this opening observation across report, phase and upload baselines.
+        # Later transfer/end checks still read fresh states at their own checkpoints.
         checked_files = {}
         report = checks.check_prepared(self, data, bound=row['state'].get('uploads_bound', False), transferred=transferred,
                                        legacy=not row['state'].get('preparation_required', False), file_stamps=checked_files)
@@ -210,13 +212,13 @@ class LocalQueue:
         if not prepared:
             for name, stamp in row['state'].get('prepared_files', {}).items():
                 path = Path(data.project) / name
-                current = path.stat()
-                if [current.st_size, current.st_mtime_ns] != stamp:
+                current = checks._file_stamp(path, checked_files)
+                if list(current) != stamp:
                     raise ValueError('已保存执行资料发生变化：' + name + '；请核对原执行')
         if prepared:
             for path, stamp in prepared['files'].items():
-                current = Path(path).stat()
-                if (current.st_size, current.st_mtime_ns) != stamp:
+                current = checks._file_stamp(Path(path), checked_files)
+                if current != stamp:
                     raise ValueError('准备资料已变化：' + path + '；请返回准备阶段')
             await self.check_target_cache(key, prepared['workflow'])
             return prepared['workflow']
@@ -247,11 +249,7 @@ class LocalQueue:
         for item in data.uploads:
             source = Path(item['file'])
             if source not in source_stamps:
-                if source in checked_files:
-                    source_stamps[source] = checked_files[source]
-                else:  # Legacy coverage or upload sources excluded from the report comparison.
-                    stamp = source.stat()
-                    source_stamps[source] = (stamp.st_size, stamp.st_mtime_ns)
+                source_stamps[source] = checks._file_stamp(source, checked_files)
             receipt = Path(data.record_dir) / item['response-name']
             upload_key = (remote_url, source, item['subfolder'])
             upload_bindings.append((item, source, receipt, upload_key))
