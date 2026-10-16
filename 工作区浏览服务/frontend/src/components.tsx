@@ -86,6 +86,22 @@ export function Document({ value: latest }: { value: RecordData }) {
   const changed = (value.html || value.bodyHtml) !== (latest.html || latest.bodyHtml) || value.headerHtml !== latest.headerHtml;
   const body = value.bodyHtml || value.contentHtml || value.html || '';
   const presentation = useMemo(() => {
+    if (body.includes('故事剧本正文')) {
+      const document = new DOMParser().parseFromString(body, 'text/html');
+      let storyLevel = 0;
+      for (const element of Array.from(document.body.children)) {
+        if (/^H[1-6]$/.test(element.tagName)) {
+          const level = Number(element.tagName[1]);
+          if (/^1[.、．]\s*故事剧本正文$/.test(element.textContent?.trim() || '')) storyLevel = level;
+          else if (storyLevel && level <= storyLevel) storyLevel = 0;
+        } else if (storyLevel && element.tagName === 'P') {
+          const text = element.textContent?.trim() || '';
+          const speaker = text.match(/^([\p{L}\p{N}·]{1,24}(?:\s*[（(](?:OS|VO)[）)])?)\s*[:：]/u)?.[1];
+          if (speaker && !['地点', '时间', '人物'].includes(speaker)) element.classList.add('script-dialogue');
+        }
+      }
+      return { html: document.body.innerHTML, languages: [] };
+    }
     if (value.documentKey !== '00-项目定位/项目基本定位.md') return { html: body, languages: [] };
     const document = new DOMParser().parseFromString(body, 'text/html');
     const visual = Array.from(document.querySelectorAll('h3')).find(el => el.textContent?.trim() === '视觉规格');
