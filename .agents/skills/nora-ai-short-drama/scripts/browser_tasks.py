@@ -59,13 +59,14 @@ def service_call(route, payload=None):
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description='查询后台任务、确认通知、登记视频待审、重试取回或异常结案；不会重新生成')
+    parser = argparse.ArgumentParser(description='读取后台最终报告并自动确认收到、查询异常或重试原任务取回；不会重新生成')
     commands = parser.add_subparsers(dest='command', required=True)
     for command in ('status', 'retry-collection'):
         item = commands.add_parser(command)
         item.add_argument('--task-id', required=True, help='Backend local UUID, not remote prompt_id')
-    for name in ('ack', 'register-results'):
-        item = commands.add_parser(name, help='确认并读取本批摘要' if name == 'ack' else '登记视频待审并核验一次网页；不批准、不生成')
+    for name in ('report', 'ack', 'register-results'):
+        item = commands.add_parser(name, help={'report': '读取现成报告并自动确认收到；正常完成只需此命令',
+            'ack': '兼容旧通知的独立确认；正常完成不用', 'register-results': '显式修复待审登记或兼容旧任务；正常完成由后台自动执行'}[name])
         item.add_argument('--notification-id', required=True, help='Notification batch UUID from received message')
         if name == 'register-results':
             item.add_argument('--record-updates', help='UTF-8 JSON array of exact path/old/new updates for this batch progress or production checks; paths relative to the project')
@@ -73,7 +74,7 @@ def main():
     item.add_argument('--task-id', required=True, help='Backend local UUID, not remote prompt_id')
     item.add_argument('--resolution', required=True, help='UTF-8 JSON resolution file with original prompt ID, evidence and replacement IDs')
     args = parser.parse_args()
-    if args.command in ('ack', 'register-results'):
+    if args.command in ('report', 'ack', 'register-results'):
         thread = os.environ.get('CODEX_THREAD_ID')
         if not thread:
             raise ValueError('通知确认必须在真实来源会话内调用')

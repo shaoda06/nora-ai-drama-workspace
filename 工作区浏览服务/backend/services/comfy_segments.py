@@ -104,6 +104,7 @@ async def finish(store, key, result):
             if (match[2] == '一采 mp4') == (data.task_type == 'video-first-pass'):
                 paths[int(match[1]) - 1] = match[4].strip()
         row['_segment_paths'], row['_segment_result'] = paths, result
+        row['_segment_sources'] = {}
     paths = row['_segment_paths']
     problems, collected = [], 0
     state.setdefault('segments', {})
@@ -117,12 +118,22 @@ async def finish(store, key, result):
         item = state['segments'].setdefault(str(target['index']), {
             'identity': target['identity'], 'index': target['index'], 'check': '未取回', 'error': None})
         try:
-            if target['index'] not in paths:
-                raise ValueError('最终报告缺少该段的保存路径')
-            source = remote_file(data.segment_plan.output_root, paths[target['index']])
-            expected = f"seg_{target['index']:04d}{'_pre' if data.task_type == 'video-first-pass' else ''}.mp4"
-            if source['filename'] != expected:
-                raise ValueError('最终报告路径与分段身份不一致')
+            sources = row['_segment_sources']
+            index = target['index']
+            if index not in sources:
+                try:
+                    if index not in paths:
+                        raise ValueError('最终报告缺少该段的保存路径')
+                    source = remote_file(data.segment_plan.output_root, paths[index])
+                    expected = f"seg_{index:04d}{'_pre' if data.task_type == 'video-first-pass' else ''}.mp4"
+                    if source['filename'] != expected:
+                        raise ValueError('最终报告路径与分段身份不一致')
+                    sources[index] = source
+                except ValueError as error:
+                    sources[index] = str(error)
+            source = sources[index]
+            if isinstance(source, str):
+                raise ValueError(source)
             receipt_path = Path(data.record_dir) / target['response_name']
             candidate = target['candidate']
             stamp, receipt_exists = saved_files(receipt_path, candidate)

@@ -1,4 +1,4 @@
-"""Explicit, resumable registration of downloaded video candidates; never adoption."""
+"""Automatic, resumable registration of downloaded video candidates; never adoption."""
 import hashlib
 import json
 import os
@@ -101,11 +101,14 @@ def register(store, key):
         items.append({'identity': identity, 'path': output['path'], 'receipt': output['receipt'],
                       'draft': draft.relative_to(root).as_posix(), 'episode': ep})
     old_files = previous.get('files', {})
-    files = {path.relative_to(root).as_posix(): {'before': digest(before), 'after': digest(after)}
-             for path, (before, after) in edits.items()}
+    files = {}
+    for path, (before, after) in edits.items():
+        before_digest = digest(before)
+        files[path.relative_to(root).as_posix()] = {'before': before_digest,
+            'after': digest(after) if after != before else before_digest}
     for path, (before, _) in edits.items():
         old = old_files.get(path.relative_to(root).as_posix())
-        if old and digest(before) not in old.values():
+        if old and files[path.relative_to(root).as_posix()]['before'] not in old.values():
             raise ValueError('登记期间源资料已被修改，请核对：' + str(path))
     report = {'task_id': key, 'prompt_id': state['prompt_id'], 'recorded_at': stamp,
               'status': 'registering', 'files': files, 'items': items}
@@ -156,11 +159,12 @@ def verify(projects, store, key, report):
             'review_path': '/#/projects/' + quote(name, safe='')}
 
 
-def apply_record_updates(store, key, updates, episodes):
+def apply_record_updates(store, key, updates, episodes, report=None):
     """Journal exact Agent wording in the existing report, resume only unfinished edits."""
     root = Path(store.rows[key]['input'].project)
     report_file = Path(store.rows[key]['input'].record_dir) / REPORT
-    report = json.loads(report_file.read_text('utf-8'))
+    if report is None:
+        report = json.loads(report_file.read_text('utf-8'))
     journal = report.get('record_updates', {})
     if not updates:
         if journal.get('status') != 'applying':
@@ -171,7 +175,7 @@ def apply_record_updates(store, key, updates, episodes):
         return fingerprint
     if journal.get('status') == 'applying' and journal.get('fingerprint') != fingerprint:
         raise ValueError('先恢复原业务更新，不接受另一份更新覆盖未完成记录')
-    edits = {}
+    edits, before_digests = {}, {}
     for update in updates:
         if set(update) != {'path', 'old', 'new'} or not all(isinstance(value, str) and value for value in update.values()):
             raise ValueError('业务更新须提供 path、old、new，且不得为空')
@@ -185,17 +189,18 @@ def apply_record_updates(store, key, updates, episodes):
         if path not in edits:
             before = path.read_text('utf-8-sig')
             edits[path] = before, before
+            before_digests[path] = digest(before)
         before, current = edits[path]
         saved = journal.get('files', {}).get(path.relative_to(root).as_posix()) if journal.get('fingerprint') == fingerprint else None
-        if saved and digest(before) == saved['after']:
+        if saved and before_digests[path] == saved['after']:
             continue
-        if saved and digest(before) != saved['before']:
+        if saved and before_digests[path] != saved['before']:
             raise ValueError('业务登记中断后源资料已变化：' + str(path))
         if current.count(update['old']) != 1:
             raise ValueError('业务更新原文不唯一或已变化：' + str(path))
         edits[path] = before, current.replace(update['old'], update['new'], 1)
     journal = {'fingerprint': fingerprint, 'status': 'applying', 'updates': updates,
-               'files': {path.relative_to(root).as_posix(): {'before': digest(before), 'after': digest(after)}
+               'files': {path.relative_to(root).as_posix(): {'before': before_digests[path], 'after': digest(after) if after != before else before_digests[path]}
                          for path, (before, after) in edits.items()}}
     report['record_updates'] = journal
     write_json(report_file, report)
@@ -219,8 +224,13 @@ def apply_record_updates(store, key, updates, episodes):
 
 
 async def closeout(store, projects, batch_id, thread_id, record_updates=()):
-    import asyncio
     ids, _ = batch_tasks(store, batch_id, thread_id)
+    return await closeout_tasks(store, projects, ids, record_updates, batch_id=batch_id)
+
+
+async def closeout_tasks(store, projects, ids, record_updates=(), *, batch_id=None):
+    """Internal completion worker; no Agent acknowledgement is required to register."""
+    import asyncio
     if record_updates and len({store.rows[key]['state']['project'] for key in ids}) != 1:
         raise ValueError('跨项目通知的业务更新须分项目处理，不接受混合更新')
     reports, groups = [], {}
@@ -228,7 +238,8 @@ async def closeout(store, projects, batch_id, thread_id, record_updates=()):
         try:
             report = await asyncio.to_thread(register, store, key)
         except (ValueError, OSError, KeyError, TypeError) as error:
-            outcome = {'status': 'registration_failed', 'error': str(error), 'report': REPORT}
+            outcome = {'status': 'registration_failed', 'error': str(error), 'report': REPORT,
+                       'retryable': isinstance(error, OSError) and not isinstance(error, (PermissionError, FileNotFoundError))}
             if store.rows[key]['state'].get('closeout') != outcome:
                 store.record(key, 'closeout', 'registration_failed', _changes={'closeout': outcome}, error=str(error))
             reports.append({'task_id': key, **outcome})
@@ -252,7 +263,7 @@ async def closeout(store, projects, batch_id, thread_id, record_updates=()):
         try:
             if record_updates or journal.get('status') == 'applying':
                 fingerprint = await asyncio.to_thread(apply_record_updates, store, key, record_updates,
-                                        {item['episode'] for item in combined['items']})
+                                        {item['episode'] for item in combined['items']}, owner)
         except (ValueError, OSError, KeyError, TypeError) as error:
             for task, report in group:
                 outcome = {'status': 'registration_failed', 'report': REPORT, 'error': str(error)}

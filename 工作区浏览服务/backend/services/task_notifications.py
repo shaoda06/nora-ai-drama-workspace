@@ -1,5 +1,6 @@
 """Coalesce pending outcomes per source conversation, with durable delivery receipts."""
 import asyncio
+from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
 import subprocess
@@ -30,9 +31,13 @@ class TaskNotifications:
 
     def acknowledge(self, batch_id, thread_id):
         ids, delivery = batch_tasks(self, batch_id, thread_id)
+        reused = self.mark_received(batch_id, ids, delivery)
+        return {'notification_id': batch_id, 'status': 'acknowledged',
+                'tasks': [summary(self, key) for key in ids], **({'reused': True} if reused else {})}
+
+    def mark_received(self, batch_id, ids, delivery):
         if delivery == 'acknowledged':
-            return {'notification_id': batch_id, 'status': 'acknowledged',
-                    'tasks': [summary(self, key) for key in ids], 'reused': True}
+            return True
         self.db.execute('UPDATE notification_batches SET state=? WHERE id=?', ('acknowledged', batch_id))
         for key in ids:
             row = self.rows[key]
@@ -46,7 +51,70 @@ class TaskNotifications:
         event = getattr(self, '_ack_events', {}).get(batch_id)
         if event is not None:
             event.set()
-        return {'notification_id': batch_id, 'status': 'acknowledged', 'tasks': [summary(self, key) for key in ids]}
+        return False
+
+    def read_report(self, batch_id, thread_id):
+        ids, delivery = batch_tasks(self, batch_id, thread_id)
+        saved = self.db.execute('SELECT report FROM notification_reports WHERE batch_id=?', (batch_id,)).fetchone()
+        # Old delivered notices have no snapshot. Reading them never restarts collection/registration.
+        report = json.loads(saved[0]) if saved else {
+            'tasks': [summary(self, key) for key in ids], 'legacy_report': True,
+            'user_message_ready': False, 'results': []}
+        reused = self.mark_received(batch_id, ids, delivery)
+        return {**report, 'notification_id': batch_id, 'status': 'acknowledged', 'reused': reused}
+
+    async def prepare_report(self, ids):
+        """Finish normal videos before delivery; persist bounded retry progress across restarts."""
+        from backend.services.result_registration import closeout_tasks
+        videos = [key for key in ids if self.rows[key]['input'].task_type.startswith('video-')
+                  and self.rows[key]['state']['status'] == 'completed']
+        if videos and not hasattr(self, 'projects'):
+            from backend.services.projects import ProjectStore
+            self.projects = ProjectStore(self.workspace / 'projects')
+        while True:
+            active = []
+            for key in videos:
+                state = self.rows[key]['state']
+                outcome = state.get('closeout', {})
+                if outcome.get('status') == 'completed' or state.get('closeout_retry_stop'):
+                    continue
+                if state.get('closeout_attempts', 0) >= 4 or (
+                        outcome.get('status') == 'registration_failed' and not outcome.get('retryable')):
+                    self.record(key, 'closeout', 'stopped', _changes={
+                        'closeout_retry_stop': 'exhausted' if state.get('closeout_attempts', 0) >= 4 else 'requires_attention'})
+                    continue
+                due = state.get('closeout_next_retry_at')
+                if due:
+                    remaining = (datetime.fromisoformat(due) - datetime.now(timezone.utc)).total_seconds()
+                    if remaining > 0:
+                        await asyncio.sleep(remaining)
+                self.record(key, 'closeout', 'started', _changes={
+                    'closeout_attempts': state.get('closeout_attempts', 0) + 1, 'closeout_next_retry_at': None})
+                active.append(key)
+            if not active:
+                break
+            await closeout_tasks(self, self.projects, active)
+            for key in active:
+                state = self.rows[key]['state']
+                outcome = state['closeout']
+                if outcome['status'] == 'completed':
+                    continue
+                retryable = outcome['status'] == 'browser_pending' or outcome.get('retryable', False)
+                attempts = state['closeout_attempts']
+                if not retryable or attempts >= 4:
+                    self.record(key, 'closeout', 'stopped', _changes={
+                        'closeout_retry_stop': 'exhausted' if retryable else 'requires_attention'})
+                else:
+                    delay = (2, 5, 10)[attempts - 1]
+                    due = (datetime.now(timezone.utc) + timedelta(seconds=delay)).isoformat()
+                    self.record(key, 'closeout', 'retry_scheduled', _changes={'closeout_next_retry_at': due}, delay_seconds=delay)
+        tasks = [summary(self, key) for key in ids]
+        results = [{'task_id': key, **self.rows[key]['state']['closeout']} for key in videos]
+        return {'tasks': tasks, 'results': results, 'reported_at': self.client.now(),
+                'user_message_ready': bool(tasks) and all(
+                    task['status'] == 'completed' and
+                    (not task['task_type'].startswith('video-') or task.get('closeout', {}).get('status') == 'completed')
+                    for task in tasks)}
 
     def notification_text(self, key):
         row = self.rows[key]
@@ -57,7 +125,9 @@ class TaskNotifications:
                 f'失败阶段：{state.get("failure_stage") or "无"}；原因：{state.get("error") or "预期成果已保存"}\n'
                 + (f'取回累计尝试：{state["collection_attempt"]}轮；本轮自动重试：{state.get("collection_auto_retry", 0)}/3；'
                    f'停止原因：{state.get("collection_retry_stop") or "无"}\n' if state.get('collection_attempt') else '')
-                + f'结果摘要与凭据入口：确认通知时一次返回。记录位置：{data.record_dir}\n'
+                + f'收尾结果：{state.get("closeout", {}).get("status", "不适用")}；'
+                  f'原因：{state.get("closeout", {}).get("error") or "无"}\n'
+                + f'最终报告与凭据入口：读取报告时一次返回。记录位置：{data.record_dir}\n'
                 + ('此前问题通知已被最新结果替代，完整经过见过程记录。\n' if any(item['delivery'] == 'superseded' for item in state.get('notices', [])) else '')
                 + ('可用本地任务ID请求重试取回，无需重新生成。\n' if state['status'] == 'collection_failed' else ''))
 
@@ -92,9 +162,15 @@ class TaskNotifications:
         if not self.notification_pending(data.thread_id):
             return
         await asyncio.sleep(2)
+        prepared_notices, report = None, None
         while self.notification_pending(data.thread_id):
             data = max((row for row in self.rows.values() if row['input'].thread_id == data.thread_id),
                        key=lambda row: row['state']['created_at'])['input']
+            pending = self.notification_pending(data.thread_id)
+            signature = tuple(notice['id'] for _, notice in pending)
+            if signature != prepared_notices:
+                report = await self.prepare_report(list(dict.fromkeys(task for task, _ in pending)))
+                prepared_notices = signature
             # macOS uses Codex's durable message queue, which schedules the turn itself.
             # Do not gate it on the private Desktop pipe that rejects background callers.
             if not self.queue_notifications:
@@ -118,15 +194,18 @@ class TaskNotifications:
             pending = self.notification_pending(data.thread_id)
             if not pending:
                 return
+            if tuple(notice['id'] for _, notice in pending) != prepared_notices:
+                continue
             ids = list(dict.fromkeys(task for task, _ in pending))
             batch_id = str(uuid.uuid4())
             prompt = (f'后台任务结果通知。通知ID：{batch_id}；来源会话：{data.thread_id}。\n'
-                      '请先调用 browser_tasks.py ack --notification-id 上述ID，一次确认并取得本批摘要；正常成功不展开完整日志。\n'
+                      '请调用 browser_tasks.py report --notification-id 上述ID，读取已保存的最终报告；读取同时自动确认收到。\n'
                       + '\n'.join(self.notification_text(task) for task in ids)
-                      + '\n正常视频调用 browser_tasks.py register-results --notification-id 上述ID 批量登记待审并核验网页；成功后仅汇报数量与审核入口。图片继续原图片审核与展示流程。成果保存不等于内容获批。'
+                      + '\n视频待审登记与网页核验已由后台执行，以报告结果为准；正常成功直接汇报数量与审核入口，不再调用ack或register-results。图片继续原图片审核与展示流程。成果保存不等于内容获批。'
                       '失败请从记录中的失败阶段复查；未知任务不自动重新生成。')
             self.db.execute('INSERT INTO notification_batches VALUES (?, ?, ?, ?, ?)',
                             (batch_id, data.thread_id, json.dumps(ids), prompt, 'sending'))
+            self.db.execute('INSERT INTO notification_reports VALUES (?, ?)', (batch_id, json.dumps(report, ensure_ascii=False)))
             for task, notice in pending:
                 notice.update(delivery='sending', batch_id=batch_id)
                 self.record(task, 'notification', 'sending', notification_id=batch_id,

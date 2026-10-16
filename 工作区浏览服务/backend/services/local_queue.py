@@ -48,14 +48,36 @@ class LocalQueue:
         row = self.rows[key]
         directory = Path(row['input'].record_dir)
         directory.mkdir(parents=True, exist_ok=True)
-        events = [json.loads(value) for value, in self.db.execute(
-            'SELECT event FROM task_events WHERE task_id=? ORDER BY id', (key,))]
-        (directory / '后台过程记录.json').write_text(json.dumps(events, ensure_ascii=False, indent=2), 'utf-8')
+        prepared = self.completion_input(key)
+        if prepared:
+            history = directory / '后台过程记录.json'
+            checkpoint = row.get('_completion_events') if history.is_file() else None
+            last = checkpoint[0] if checkpoint else 0
+            added = self.db.execute('SELECT id, event FROM task_events WHERE task_id=? AND id>? ORDER BY id', (key, last)).fetchall()
+            if checkpoint is None:
+                rendered = json.dumps([json.loads(value) for _, value in added], ensure_ascii=False, indent=2)
+                history.write_text(rendered, 'utf-8', newline='')
+                raw = rendered.encode('utf-8')
+                offset = len(raw) - (2 if added else 1)
+                row['_completion_events'] = (added[-1][0] if added else 0, offset)
+            elif added:
+                # SQLite is authoritative. A restart reconstructs once after an interrupted tail write.
+                tail = json.dumps([json.loads(value) for _, value in added], ensure_ascii=False, indent=2)[1:-1].rstrip()
+                with history.open('r+b') as stream:
+                    stream.seek(checkpoint[1])
+                    stream.write(((',' if last else '') + tail + '\n]').encode('utf-8'))
+                    stream.truncate()
+                    offset = stream.tell() - 2
+                row['_completion_events'] = (added[-1][0], offset)
+        else:
+            events = [json.loads(value) for value, in self.db.execute(
+                'SELECT event FROM task_events WHERE task_id=? ORDER BY id', (key,))]
+            (directory / '后台过程记录.json').write_text(json.dumps(events, ensure_ascii=False, indent=2), 'utf-8')
         converter = self.record_paths(key)
         summary = {**{name: value for name, value in converter.convert(row['state'], relative=True).items()
                       if name not in ('client_id', 'notices', 'segment_monitor')},
                    'record_dir': converter.relative_file(directory), 'remote_url': row['input'].url,
-                   'outputs': self.portable_input(row['input'])['outputs']}
+                   'outputs': (prepared[0] if prepared else self.portable_input(row['input']))['outputs']}
         (directory / '后台任务状态.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2), 'utf-8')
 
     async def enqueue(self, data):

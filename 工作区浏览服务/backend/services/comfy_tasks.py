@@ -84,6 +84,7 @@ class TaskStore(LocalQueue, TaskNotifications):
         self.db.execute('CREATE TABLE IF NOT EXISTS tasks (id TEXT PRIMARY KEY, payload TEXT NOT NULL, state TEXT NOT NULL)')
         self.db.execute('CREATE TABLE IF NOT EXISTS task_events (id INTEGER PRIMARY KEY, task_id TEXT NOT NULL, event TEXT NOT NULL)')
         self.db.execute('CREATE TABLE IF NOT EXISTS notification_batches (id TEXT PRIMARY KEY, thread_id TEXT NOT NULL, task_ids TEXT NOT NULL, payload TEXT NOT NULL, state TEXT NOT NULL)')
+        self.db.execute('CREATE TABLE IF NOT EXISTS notification_reports (batch_id TEXT PRIMARY KEY, report TEXT NOT NULL)')
         self.db.commit()
         self.rows = {}
         for key, payload, state in self.db.execute('SELECT id, payload, state FROM tasks'):
@@ -178,7 +179,8 @@ class TaskStore(LocalQueue, TaskNotifications):
 
     def persist(self, key):
         row = self.rows[key]
-        payload = json.dumps(self.portable_input(row['input']), ensure_ascii=False)
+        prepared = self.completion_input(key)
+        payload = prepared[1] if prepared else json.dumps(self.portable_input(row['input']), ensure_ascii=False)
         state = json.dumps(self.record_paths(key).convert(row['state'], relative=True), ensure_ascii=False)
         if row.get('_persisted_payload') == payload:
             self.db.execute('UPDATE tasks SET state=? WHERE id=?', (state, key))
@@ -186,6 +188,22 @@ class TaskStore(LocalQueue, TaskNotifications):
             self.db.execute('INSERT INTO tasks VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload,state=excluded.state',
                             (key, payload, state))
             row['_persisted_payload'] = payload
+
+    def completion_input(self, key):
+        """Only post-execution uses the accepted immutable input; dispatch stays unchanged."""
+        row = self.rows[key]
+        data, state = row['input'], row['state']
+        if not state.get('prompt_id') or state['status'] not in ('collecting', *TERMINAL):
+            row.pop('_completion_input', None)
+            row.pop('_completion_events', None)
+            return None
+        # Re-registering may replace the connection, never the accepted workflow.
+        signature = (id(data), data.url, id(data.desktop), data.source_session_name)
+        cached = row.get('_completion_input')
+        if cached is None or cached[0] != signature:
+            portable = self.portable_input(data)
+            cached = row['_completion_input'] = (signature, (portable, json.dumps(portable, ensure_ascii=False)))
+        return cached[1]
 
     def record_paths(self, key):
         row = self.rows[key]
@@ -533,13 +551,17 @@ class TaskStore(LocalQueue, TaskNotifications):
             for item in result['files']:
                 index.setdefault((item['node_id'], item['output_key'], item['index']), []).append(item['file'])
             row['_output_index'], row['_output_result'] = index, result
+            row['_output_selected'] = {}
         saved_items = []
         for output in data.outputs:
             try:
-                matching = row['_output_index'].get((output.node_id, output.output_key, output.index), [])
-                if len(matching) != 1:
+                selector = (output.node_id, output.output_key, output.index)
+                if selector not in row['_output_selected']:
+                    matching = row['_output_index'].get(selector, [])
+                    row['_output_selected'][selector] = matching[0] if len(matching) == 1 else None
+                identity = row['_output_selected'][selector]
+                if identity is None:
                     raise ValueError(f'预期输出未确认：节点{output.node_id}/{output.output_key}/{output.index}')
-                identity = matching[0]
                 response = Path(data.record_dir) / output.response_name
                 stamp, receipt_exists = saved_files(response, Path(output.path))
                 proof = (identity, stamp)

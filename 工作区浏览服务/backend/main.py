@@ -41,6 +41,7 @@ store = ProjectStore(WORKSPACE / 'projects', cache_directory=TOOL / 'runtime/pro
 async def lifespan(app):
     clear_downloads()
     tasks = TaskStore(TOOL / 'runtime', WORKSPACE)
+    tasks.projects = store
     app.state.comfy_tasks = tasks
     config_path = TOOL / 'runtime/service.json'
     config = json.loads(config_path.read_text('utf-8-sig')) if config_path.is_file() else {}
@@ -234,6 +235,15 @@ async def agent_notice_ack(batch_id: str, data: NoticeReceipt, request: Request)
     tasks = agent_request(request)
     try:
         return tasks.acknowledge(batch_id, data.thread_id)
+    except ValueError as error:
+        raise HTTPException(409, str(error)) from error
+
+
+@app.post('/api/internal/comfy/notifications/{batch_id}/report')
+async def agent_result_report(batch_id: str, data: NoticeReceipt, request: Request) -> dict[str, Any]:
+    tasks = agent_request(request)
+    try:
+        return tasks.read_report(batch_id, data.thread_id)
     except ValueError as error:
         raise HTTPException(409, str(error)) from error
 

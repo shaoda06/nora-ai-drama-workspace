@@ -90,8 +90,10 @@ def summary(store, key):
     result.update(remote_url=data.url, outputs=deepcopy(outputs(store, key)),
                   record_dir=store.record_paths(key).relative_file(data.record_dir),
                   review_path='/#/projects/' + quote(state['project'], safe=''),
-                  next_action=('register-results' if data.task_type.startswith('video-') else 'image-review-workflow')
-                  if state['status'] == 'completed' else 'inspect-failure')
+                  next_action=('report-user' if state.get('closeout', {}).get('status') == 'completed' else 'inspect-closeout')
+                  if data.task_type.startswith('video-') else 'image-review-workflow')
+    if state['status'] != 'completed':
+        result['next_action'] = 'inspect-failure'
     return result
 
 

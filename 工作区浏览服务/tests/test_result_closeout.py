@@ -1,5 +1,6 @@
 """Temporary projects and fake remotes: collection -> receipt -> ACK -> review page."""
 import asyncio
+from contextlib import nullcontext
 import hashlib
 import json
 from pathlib import Path
@@ -43,6 +44,7 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.terminal = {'state': 'success', 'files': [], 'history': {'outputs': {'403': {'text': [
             'Segment 1/1: 一采 mp4 saved → E:/Comfy/output/minimax_seg_export/run/seg_0000_pre.mp4']}}}}
         self.projects = ProjectStore(self.project.parent)
+        self.store.projects = self.projects
         return candidate, draft
 
     def download(self, remote, args):
@@ -52,12 +54,15 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         return {'path': str(path), 'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
                 'remote': {name: getattr(args, name) for name in ('filename', 'subfolder', 'type')}}
 
-    async def collect_and_notice(self):
+    async def collect_and_notice(self, automatic=False):
+        """Legacy fixtures exercise explicit repair; automatic=True exercises new delivery."""
         with patch.object(t.client, 'download', side_effect=self.download) as download:
             await self.store.finish_collection('task', self.terminal)
         download.assert_called_once()
         idle = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'idle'}}})}]}
-        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[idle, {}])), \
+        legacy = nullcontext() if automatic else patch.object(self.store, 'prepare_report', AsyncMock(return_value={
+            'tasks': [summary(self.store, 'task')], 'results': [], 'user_message_ready': False}))
+        with legacy, patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[idle, {}])), \
                 patch('backend.services.task_notifications.asyncio.sleep', AsyncMock()):
             self.store.queue_notice('task', 'terminal', 'terminal', '完成')
             await self.store.notifiers['task']
