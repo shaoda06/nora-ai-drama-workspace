@@ -582,6 +582,39 @@ class ServiceTests(HttpTestCase):
         self.assertEqual(self.client.get('/api/history/document?path=../../AGENTS.md').status_code, 404)
         self.assertEqual(self.client.get('/api/krea2/files/../使用说明.md').status_code, 404)
 
+    def test_versioned_video_cache_revalidates_before_reusing_bytes(self):
+        video = self.project / 'EP001-C001-P001-R001-一采.mp4'
+        video.write_bytes(bytes(range(100)))
+        stat = video.stat()
+        url = f'/api/projects/示例项目/files/{video.name}?v={stat.st_mtime_ns}-{stat.st_size}'
+        first = self.client.get(url)
+        self.assertEqual(first.status_code, 200)
+        self.assertEqual(first.headers['cache-control'], 'private, no-cache')
+        headers = {'If-None-Match': first.headers['etag']}
+        reused = self.client.get(url, headers=headers)
+        self.assertEqual(reused.status_code, 304)
+        self.assertEqual(reused.content, b'')
+        ranged = self.client.get(url, headers={'Range': 'bytes=10-19'})
+        self.assertEqual(ranged.status_code, 206)
+        self.assertEqual(ranged.content, bytes(range(10, 20)))
+        self.assertEqual(self.client.get(url + '&download=true', headers=headers).status_code, 200)
+        self.assertEqual(self.client.get(url + '&download=true').headers['cache-control'], 'no-store')
+        self.assertEqual(self.client.get(url.split('?')[0]).headers['cache-control'], 'no-store')
+        self.assertEqual(self.client.get(url.split('?')[0] + '?v=unknown', headers=headers).status_code, 404)
+        history = self.project / '09-剧集制作/EP001/其他资料/历史版本'
+        history.mkdir(parents=True)
+        archive = history / (video.stem + '-替换前-测试.mp4')
+        video.replace(archive)
+        video.write_bytes(b'new version')
+        self.assertEqual(self.client.get(url, headers=headers).status_code, 304)
+        self.assertEqual(self.client.get(url).content, bytes(range(100)))
+        new_stat = video.stat()
+        new_url = url.split('?')[0] + f'?v={new_stat.st_mtime_ns}-{new_stat.st_size}'
+        self.assertEqual(self.client.get(new_url, headers=headers).content, b'new version')
+        archive.unlink()
+        self.assertEqual(self.client.get(url, headers=headers).status_code, 404)
+        self.assertEqual(self.client.get(url, headers=headers).headers['cache-control'], 'no-store')
+
     def test_changes_include_additions_removal_and_rename(self):
         before = self.store.snapshot(self.project)
         path = self.project / '新增.txt'

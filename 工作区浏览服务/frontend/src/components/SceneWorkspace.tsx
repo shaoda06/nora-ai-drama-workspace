@@ -59,7 +59,10 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
     const items = id === PREVIOUS_ENDING ? previousEnding?.segment?.videos : segments.find(item => item.id === id)?.videos;
     return fixed && items ? selectedRevision(items, fixed) : undefined;
   };
-  const videoCache = useSceneVideoCache(reviewRound ? reviewRound.order.flatMap(id => {
+  const preparationOrder = reviewRound?.order || [
+    ...(previousVideo ? [PREVIOUS_ENDING] : []), ...segments.map(item => item.id),
+  ];
+  const preparationVideos = reviewRound ? reviewRound.order.flatMap(id => {
     const video = roundVideo(id);
     return video?.url ? [video] : [];
   }) : [
@@ -68,7 +71,13 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
       const video = latestVideo(item.videos);
       return video?.url ? [video] : [];
     }),
-  ]);
+  ];
+  const priorityVideos = [segment, preparationOrder[preparationOrder.indexOf(segment) + 1]].flatMap(id => {
+    const video = reviewRound ? roundVideo(id) : id === PREVIOUS_ENDING ? previousVideo
+      : latestVideo(segments.find(item => item.id === id)?.videos || []);
+    return video?.url ? [video.url] : [];
+  });
+  const videoCache = useSceneVideoCache(preparationVideos, priorityVideos);
   const beginReview = (playContinuously: boolean) => {
     const entries = [
       ...(previousEnding?.segment ? [{ id: PREVIOUS_ENDING, videos: previousEnding.segment.videos }] : []),

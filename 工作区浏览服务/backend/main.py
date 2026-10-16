@@ -11,7 +11,7 @@ from ipaddress import ip_address, ip_network
 from urllib.parse import quote, urlsplit
 
 from fastapi import FastAPI, HTTPException, Query, Request
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from fastapi.sse import EventSourceResponse, ServerSentEvent
 from pydantic import BaseModel
 
@@ -255,7 +255,7 @@ async def security_headers(request: Request, call_next):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['Referrer-Policy'] = 'same-origin'
     if request.url.path.startswith('/api/'):
-        response.headers['Cache-Control'] = 'no-store'
+        response.headers.setdefault('Cache-Control', 'no-store')
     elif response.headers.get('content-type', '').startswith('text/html'):
         response.headers['Cache-Control'] = 'no-cache'
     return response
@@ -466,13 +466,23 @@ def document(name: str, path: Annotated[str, Query()]) -> dict[str, Any]:
 
 
 @app.get('/api/projects/{name}/files/{path:path}')
-def project_file(name: str, path: str, v: str | None = None, download: bool = False):
+def project_file(name: str, path: str, request: Request, v: str | None = None, download: bool = False):
     try:
         target = store.file(name, path, v)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
-    return FileResponse(target, filename=target.name if download else None,
-                        media_type='application/octet-stream' if download else None)
+    response = FileResponse(target, filename=target.name if download else None,
+                            media_type='application/octet-stream' if download else None)
+    if v and not download and target.suffix.lower() in {'.mp4', '.webm', '.mov'}:
+        stat = target.stat()
+        if v == f'{stat.st_mtime_ns}-{stat.st_size}':
+            response.stat_result = stat
+            response.set_stat_headers(stat)
+            response.headers['Cache-Control'] = 'private, no-cache'
+            tags = [tag.strip().removeprefix('W/') for tag in request.headers.get('if-none-match', '').split(',')]
+            if response.headers['etag'] in tags or '*' in tags:
+                return Response(status_code=304, headers={key: response.headers[key] for key in ('cache-control', 'etag', 'last-modified')})
+    return response
 
 
 @app.get('/api/projects/{name}/revision-notes/{episode}/{scene}')

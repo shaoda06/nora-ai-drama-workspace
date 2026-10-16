@@ -224,7 +224,7 @@ class GenerationContextTests(HttpTestCase):
             video = client.get('/api/projects/示例项目/episodes/EP001?view=full').json()['segments']['C001'][0]['videos'][0]
             response = client.get(video['url'])
             self.assertIn('收尾裁尾', response.text)
-            self.assertEqual(response.headers['cache-control'], 'no-store')
+            self.assertEqual(response.headers['cache-control'], 'private, no-cache')
             # Old native-player range requests must still read the reviewed bytes.
             old_url = '/api/projects/示例项目/files/' + before['url']
             self.assertEqual(client.get(old_url).text, 'EP001-C001-P001-R004-一采')
