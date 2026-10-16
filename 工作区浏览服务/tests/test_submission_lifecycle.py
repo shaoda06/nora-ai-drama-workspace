@@ -181,6 +181,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         report.pop('context_sources')
         checks.write_report(self.data, report)
         key = (await self.store.enqueue(self.data))['local_task_id']
+        base.TaskTests.legacy_registration(self, key)
         with patch.object(checks, 'fixed_checks', side_effect=AssertionError('must not rerun old fixed checks')), \
                 patch.object(self.store.generation_context, 'validate_segment_context', side_effect=AssertionError('old segment checks already passed')), \
                 patch.object(checks, 'context_checks', wraps=checks.context_checks) as supplement, \
@@ -203,6 +204,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         mapping_file.write_text(json.dumps(mapping), 'utf-8')
         checks.write_report(self.data, report)
         key = (await self.store.enqueue(self.data))['local_task_id']
+        base.TaskTests.legacy_registration(self, key)
         self.node()
         with patch.object(t.client, 'upload') as upload, patch.object(self.store, 'queue_notice'):
             await self.store.dispatch_once()
@@ -233,7 +235,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         report.pop('context_sources')
         checks.write_report(self.data, report)
         with patch.object(self.store.generation_context, 'validate_segment_context', side_effect=AssertionError('already checked')):
-            checked = checks.check_prepared(self.store, self.data)
+            checked = checks.check_prepared(self.store, self.data, legacy=True)
         for name in ('pair', 'segments', 'checked_at', 'prepared_input'):
             self.assertEqual(checked[name], report[name])
         # Change the registered input, not the source file: no supplement may use
@@ -244,7 +246,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(checks, 'context_checks', side_effect=AssertionError('basis mismatch must stop first')), \
                 patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
             with self.assertRaisesRegex(ValueError, '准备资料已变化'):
-                checks.check_prepared(self.store, self.data)
+                checks.check_prepared(self.store, self.data, legacy=True)
             upload.assert_not_called()
             post.assert_not_called()
 
@@ -257,7 +259,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         script.write_text('changed storyboard after preparation', 'utf-8')
         with patch.object(checks, 'context_checks', side_effect=AssertionError('source change must stop first')):
             with self.assertRaisesRegex(ValueError, '准备资料已变化'):
-                checks.check_prepared(self.store, self.data)
+                checks.check_prepared(self.store, self.data, legacy=True)
 
     async def test_legacy_without_segment_plan_does_not_assume_shared_checks_passed(self):
         self.video()
@@ -280,8 +282,8 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         report.pop('context_sources')
         checks.write_report(self.data, report)
         with patch.object(self.store.generation_context, 'validate_segment_context', wraps=self.store.generation_context.validate_segment_context) as shared:
-            self.assertTrue(checks.check_prepared(self.store, self.data)['ok'])
-            self.assertTrue(checks.check_prepared(self.store, self.data)['ok'])
+            self.assertTrue(checks.check_prepared(self.store, self.data, legacy=True)['ok'])
+            self.assertTrue(checks.check_prepared(self.store, self.data, legacy=True)['ok'])
             shared.assert_called_once()  # Missing coverage is checked once, never silently reused.
 
     async def test_legacy_missing_version_check_still_fails_without_upload(self):
@@ -296,7 +298,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(self.store.generation_context, 'validate_segment_context', side_effect=AssertionError('already checked')), \
                 patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
             with self.assertRaisesRegex(ValueError, '分镜版本'):
-                checks.check_prepared(self.store, self.data)
+                checks.check_prepared(self.store, self.data, legacy=True)
             upload.assert_not_called()
             post.assert_not_called()
         self.assertFalse(checks.read_report(self.data)['ok'])
@@ -353,6 +355,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_completed_upload_does_not_allow_changed_source_on_reschedule(self):
         source = self.upload()
+        await self.store.prepare_only(self.data)
         key = (await self.store.enqueue(self.data))['local_task_id']
         with patch.object(t.client.Client, 'json', side_effect=self.respond):
             await self.store.prepare(key)

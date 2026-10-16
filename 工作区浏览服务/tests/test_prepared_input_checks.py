@@ -55,8 +55,9 @@ class PreparedInputChecksTests(IsolatedAsyncioTestCase):
             key = (await self.store.enqueue(self.data))['local_task_id']
         await self.store.close()
         self.store = t.TaskStore(self.root / 'runtime', self.root)
-        with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as submit:
-            with self.assertRaisesRegex(ValueError, '上传映射'):
+        with patch.object(checks, 'fixed_input_checks', side_effect=AssertionError('开工不补查格式')), \
+                patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as submit:
+            with self.assertRaisesRegex(ValueError, '新任务必须先通过准备检查'):
                 await self.store.prepare(key)
             upload.assert_not_called()
             submit.assert_not_called()

@@ -48,6 +48,7 @@ class SubmissionBoundaryTests(IsolatedAsyncioTestCase):
         self.assertFalse(json.loads((self.record / '执行检查报告.json').read_text('utf-8'))['ok'])
 
     async def test_existing_response_is_guarded_only_in_transport_and_pauses_unsent_task(self):
+        await self.store.prepare_only(self.data)
         evidence = self.record / self.data.response_name
         evidence.write_bytes(b'original remote response')
         key = (await self.store.enqueue(self.data))['local_task_id']
@@ -69,6 +70,7 @@ class SubmissionBoundaryTests(IsolatedAsyncioTestCase):
         self.assertEqual([event['result'] for event in events if event['stage'] == 'submit'], ['started', 'blocked'])
 
     async def test_blocked_retry_preserves_unknown_task_and_original_error(self):
+        await self.store.prepare_only(self.data)
         key = (await self.store.enqueue(self.data))['local_task_id']
         details = {'submission_state': 'unknown', 'response': {'file': 'remote/value'}}
         self.store.save(key, status='submission_unknown', phase='submit', failure_stage='submit',
@@ -96,6 +98,7 @@ class SubmissionBoundaryTests(IsolatedAsyncioTestCase):
         self.assertEqual(self.store.rows[key]['state']['status'], 'queued')
 
     async def test_connection_failure_does_not_replace_existing_unknown_result(self):
+        await self.store.prepare_only(self.data)
         key = (await self.store.enqueue(self.data))['local_task_id']
         self.store.save(key, status='submission_unknown', error='original timeout', error_details={'original': True})
         previous = self.store.rows[key]['state'].copy()

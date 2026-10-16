@@ -46,7 +46,13 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             'created_at': t.client.now(), 'collected': 0, 'expected': 1}}
         self.store.save('task')
 
+    def legacy_registration(self, key):
+        """Fixture for registrations persisted before preparation became mandatory."""
+        self.store.rows[key]['state'].pop('preparation_required', None)
+        self.store.save(key)
+
     async def test_websocket_opens_before_post_and_same_client_id(self):
+        await self.store.prepare_only(self.data)
         order = []
         socket = AsyncMock()
         async def connected(url, **kwargs):
@@ -63,6 +69,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(self.store.rows[result['monitor_id']]['state']['prompt_id'], 'new-id')
 
     async def test_post_timeout_is_recorded_and_never_retried_on_restart(self):
+        await self.store.prepare_only(self.data)
         with patch.object(t, 'connect', AsyncMock(return_value=AsyncMock())), patch.object(t.client, 'submit', side_effect=t.client.ClientError('submission_unknown', 'timeout')) as post:
             with self.assertRaises(t.client.ClientError):
                 await self.store.submit(self.data)
@@ -473,6 +480,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-urls': [url]}))
         try:
             with patch.object(self.store, 'notify', AsyncMock()) as notify:
+                await self.store.prepare_only(self.data)
                 result = await self.store.enqueue(self.data)
                 self.store.remote_queues.states[url] = {'connection': 'connected', 'queue': [],
                     'running_count': 0, 'queued_count': 0, 'updated_at': t.client.now(), 'queue_error': None}

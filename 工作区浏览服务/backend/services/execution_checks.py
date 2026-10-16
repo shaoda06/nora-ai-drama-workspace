@@ -66,10 +66,12 @@ def write_report(data, report):
     write_json(path, report)
 
 
-def check_prepared(store, data, *, bound=False, transferred=False):
+def check_prepared(store, data, *, bound=False, transferred=False, legacy=False):
     report = read_report(data)
     if report is None:
-        return None  # Existing queued tasks can perform their first tool check at execution.
+        if legacy:
+            return None
+        raise ValueError('新任务必须先通过准备检查；请使用--prepare-only完成准备，不会在开工时补查')
     expected, actual = report['prepared_input'].copy(), basis(store, data)
     if 'title' not in expected:  # Reports made before title became a preparation field.
         actual.pop('title', None)
@@ -78,6 +80,8 @@ def check_prepared(store, data, *, bound=False, transferred=False):
         actual.pop('url', None)
     if not report['ok'] or expected != actual:
         raise ValueError('准备资料已变化或检查未通过；请在准备阶段重新调用检查，不会边提交边修改')
+    if not legacy and not report.get('new_task_ready'):
+        raise ValueError('新任务准备报告尚未覆盖完整登记要求；请使用--prepare-only补齐准备，不会在开工时补查')
     for name, stamp in report['sources'].items():
         if bound and name.endswith(('.api.json', '.workflow.json')):
             continue  # The upload binder owns and validates these actual path changes.
@@ -89,6 +93,8 @@ def check_prepared(store, data, *, bound=False, transferred=False):
         if [current.st_size, current.st_mtime_ns] != stamp:
             raise ValueError('准备资料已变化：' + name + '；请返回准备阶段')
     if data.task_type.startswith('video-') and 'context_sources' not in report:
+        if not legacy:
+            raise ValueError('新任务准备报告缺少资料关联检查；请使用--prepare-only补齐准备')
         try:
             extra = context_checks(store, data, segment_plan_checked=data.segment_plan is not None)
         except (ValueError, OSError, KeyError, IndexError, TypeError, store.client.ClientError) as error:
@@ -184,14 +190,20 @@ def fixed_input_checks(store, data):
             raise client.ClientError('invalid_filename', 'Upload filename cannot contain a quote')
 
 
-def fixed_checks(store, data, *, mapping=None):
+def check_new_targets(data):
+    if data.segment_plan and not data.segment_plan.targets:
+        raise ValueError('新导演台任务必须显式提供每段本机成果保存路径')
+
+
+def fixed_checks(store, data, *, mapping=None, legacy=False):
     from backend.services.director_uploads import check_pair
     from backend.services import comfy_segments as segments
     fixed_input_checks(store, data)
+    if not legacy:
+        check_new_targets(data)
     store.client.validate_workflow(data.workflow)
-    if (any(node['class_type'] in ('MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo') for node in data.workflow.values())
-            and data.task_type not in ('video-first-pass', 'video-second-pass')):
-        raise store.client.ClientError('invalid_task_type', 'H3 generation requires a first-pass or second-pass task type')
+    if not data.segment_plan and any(node['class_type'] in ('MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo') for node in data.workflow.values()):
+        segments.validate_h3_stage(data.task_type)
     targets = [Path(output.path) for output in data.outputs]
     if len(targets) != len(set(targets)):
         raise ValueError('成果保存路径不能重复')
@@ -270,24 +282,35 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
         if previous and previous['ok'] and expected == report['prepared_input']:
             report['sources'] = sources(data, previous.get('context_sources', []), mapping)
             if previous['sources'] == report['sources']:
+                report.update(previous)
+                changed = False
+                if not at_execution and not previous.get('new_task_ready'):
+                    check_new_targets(data)
+                    report['new_task_ready'] = True
+                    changed = True
                 if data.task_type.startswith('video-') and 'context_sources' not in previous:
                     extra = context_checks(store, data, mapping=mapping, segment_plan_checked=data.segment_plan is not None)
-                    report.update(previous)
                     report.update(context_sources=extra, context_checked_during='preparation')
                     report['sources'] = sources(data, extra, mapping)
+                    changed = True
+                if changed:
                     write_report(data, report)
                 return {'prepared': True, 'report': REPORT, 'reused': True,
                         'checks': {key: previous[key] for key in ('pair', 'segments')}}
-        report.update(fixed_checks(store, data, mapping=mapping))
+        report.update(fixed_checks(store, data, mapping=mapping, legacy=at_execution))
         if data.task_type.startswith('video-'):
             report.setdefault('context_sources', [])
         report['sources'] = sources(data, report.get('context_sources', []), mapping)
         report['ok'] = True
+        if not at_execution:
+            report['new_task_ready'] = True
     except (ValueError, OSError, store.client.ClientError) as error:
+        report['ok'] = False
         report['error'] = str(error)
         write_report(data, report)
         raise
     except (KeyError, IndexError, TypeError) as error:
+        report['ok'] = False
         report['error'] = '本地准备字段不完整或类型不正确：' + str(error)
         write_report(data, report)
         raise ValueError(report['error']) from error

@@ -55,11 +55,16 @@ def targets(data, mapping=None, *, segment_context=None):
     return result
 
 
+def validate_h3_stage(task_type):
+    from backend.services.comfy_tasks import client
+    if task_type not in ('video-first-pass', 'video-second-pass'):
+        raise client.ClientError('invalid_task_type', 'H3 generation requires a first-pass or second-pass task type')
+
+
 def validate(data, *, mapping=None, timelines=None):
     from backend.services.comfy_tasks import generation_context
     plan = data.segment_plan
-    if data.task_type not in ('video-first-pass', 'video-second-pass'):
-        raise ValueError('分段计划仅用于原生H3一采／二采')
+    validate_h3_stage(data.task_type)
     if mapping is None:
         mapping = json.loads((Path(data.record_dir) / '输入映射.json').read_text('utf-8-sig'))
     context = generation_context.validate_segment_context(data.project, data.workflow, data.task_type, mapping, timelines=timelines)

@@ -27,6 +27,9 @@ class QueueTests(unittest.IsolatedAsyncioTestCase):
         data.title = name
         data.outputs[0].path = str(self.project / '候选' / (name + '.png'))
         result = await self.store.enqueue(data)
+        # Existing upload/recovery cases exercise durable pre-policy queue rows;
+        # new registration policy is covered by test_preparation_policy.
+        base.TaskTests.legacy_registration(self, result['local_task_id'])
         return result['local_task_id']
 
     def node(self, running=0, queued=0):

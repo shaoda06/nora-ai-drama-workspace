@@ -76,13 +76,12 @@ class LocalQueue:
             return {'local_task_id': existing, 'monitor_id': existing, 'monitor': 'browser',
                     'status': row['state']['status'], 'duplicate': True}
         project = self.validate_registration(data)
-        if data.segment_plan and not data.segment_plan.targets:
-            raise ValueError('新导演台任务必须显式提供每段本机成果保存路径')
         key = str(uuid.uuid4())
         now = self.client.now()
         self.rows[key] = {'input': data, 'state': {
             'id': key, 'project': project.name, 'title': data.title, 'task_type': data.task_type,
             'prompt_id': None, 'client_id': str(uuid.uuid4()), 'status': 'paused' if data.start_paused else 'local_queued',
+            'preparation_required': True,
             'queue_order': self.next_order(data.url.rstrip('/')), 'enqueued_url': data.url,
             'connection': 'waiting', 'progress': None, 'node': None,
             'error': None, 'notification': 'waiting', 'created_at': now, 'started_at': None,
@@ -198,7 +197,8 @@ class LocalQueue:
         workflow = deepcopy(data.workflow)
         transferred = data.url.rstrip('/') != row['state'].get('enqueued_url', data.url).rstrip('/')
         from backend.services import execution_checks as checks
-        report = checks.check_prepared(self, data, bound=row['state'].get('uploads_bound', False), transferred=transferred)
+        report = checks.check_prepared(self, data, bound=row['state'].get('uploads_bound', False), transferred=transferred,
+                                       legacy=not row['state'].get('preparation_required', False))
         if report is None:
             result = await asyncio.to_thread(checks.prepare_report, self, data, at_execution=True, previous=None)
             report = {'sources': result['sources']}

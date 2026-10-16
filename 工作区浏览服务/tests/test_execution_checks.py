@@ -52,6 +52,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
     async def test_unprepared_task_gets_fixed_checks_once_at_execution(self):
         with patch.object(checks, 'fixed_checks', wraps=checks.fixed_checks) as fixed:
             key = (await self.store.enqueue(self.data))['local_task_id']
+            base.TaskTests.legacy_registration(self, key)
             fixed.assert_not_called()
             await self.store.prepare(key)
             fixed.assert_called_once()
@@ -64,6 +65,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         source.write_bytes(b'reference')
         self.data.uploads = [{'file': str(source), 'node': 'missing-node', 'input': 'seed', 'subfolder': '', 'response-name': 'upload.json'}]
         key = (await self.store.enqueue(self.data))['local_task_id']
+        base.TaskTests.legacy_registration(self, key)
         with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
             with self.assertRaisesRegex(ValueError, '上传映射必须绑定已有输入'):
                 await self.store.prepare(key)
@@ -86,10 +88,9 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_h3_stage_type_is_checked_once_by_preparation_tool(self):
         self.data.workflow['1']['class_type'] = 'MiniMaxH3ReferenceToVideo'
-        key = (await self.store.enqueue(self.data))['local_task_id']
         with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as post:
             with self.assertRaises(t.client.ClientError) as error:
-                await self.store.prepare(key)
+                await self.store.prepare_only(self.data)
             self.assertEqual(error.exception.code, 'invalid_task_type')
             upload.assert_not_called()
             post.assert_not_called()
@@ -152,6 +153,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse((self.root / 'runtime/comfy-capabilities.json').exists())
 
     async def test_remote_rejection_details_are_kept_and_never_retried(self):
+        await self.store.prepare_only(self.data)
         detail = {'node_errors': {'1': {'errors': [{'message': 'remote model missing'}]}},
                   'http_status': 400, 'response': {'file': 'models/remote-relative-model.bin'}}
         error = t.client.ClientError('submission_rejected', 'remote refused', **detail)
@@ -216,6 +218,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(t.client.Client, 'json', return_value={'can_confirm_refine': True}) as query, \
                 patch('backend.services.execution_checks.fixed_checks', return_value={'pair': {}, 'segments': []}), \
                 patch.object(t.client, 'submit') as post:
+            checks.prepare_report(self.store, self.store.rows[key]['input'])
             with self.assertRaisesRegex(ValueError, '进入二采'):
                 await self.store.prepare(key)
             query.assert_called_once()
@@ -254,6 +257,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
                         patch('backend.services.director_uploads.save_uploaded_workflow'), \
                         patch.object(self.store.generation_context, 'prepare_generation_context'), \
                         patch.object(t.client, 'submit') as post:
+                    checks.prepare_report(self.store, self.store.rows[key]['input'])
                     if allowed:
                         await self.store.prepare(key)
                     else:
@@ -286,6 +290,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
                 patch('backend.services.director_uploads.save_uploaded_workflow', wraps=save_uploaded_workflow) as save, \
                 patch.object(self.store.generation_context, 'prepare_generation_context'), \
                 patch.object(t.client, 'submit') as post:
+            checks.prepare_report(self.store, self.data)
             actual = await self.store.prepare(key)
             upload.assert_called_once()
             save.assert_called_once()

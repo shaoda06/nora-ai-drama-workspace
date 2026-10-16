@@ -277,16 +277,17 @@ class TaskStore(LocalQueue, TaskNotifications):
                            parts.path + '/ws', urlencode({'clientId': client_id}), ''))
 
     async def submit(self, data, *, key=None, workflow=None):
+        registered = key is not None
         if key is None:
             self.resolve_input(data)
             project = self.validate_registration(data)
             from backend.services import execution_checks as checks
-            if checks.check_prepared(self, data) is None:
-                await asyncio.to_thread(checks.prepare_report, self, data, at_execution=True, previous=None)
+            checks.check_prepared(self, data)
             key = str(uuid.uuid4())
             self.rows[key] = {'input': data, 'state': {
                 'id': key, 'project': project.name, 'title': data.title, 'task_type': data.task_type,
                 'prompt_id': None, 'client_id': str(uuid.uuid4()), 'status': 'submitting',
+                'preparation_required': True,
                 'connection': 'connecting', 'progress': None, 'node': None, 'error': None,
                 'notification': 'waiting', 'created_at': client.now(), 'started_at': None,
                 'collected': 0, 'expected': len(data.outputs)}}
@@ -303,6 +304,10 @@ class TaskStore(LocalQueue, TaskNotifications):
                 self.save(key, status='paused', phase='submit', failure_stage='submit', error=str(error), error_details=error.details)
             self.record(key, 'submit', 'blocked', error=str(error), error_details=error.details)
             raise error
+        if registered and workflow is None and state.get('preparation_required', False):
+            from backend.services.execution_checks import check_prepared
+            check_prepared(self, data, bound=state.get('uploads_bound', False),
+                           transferred=data.url.rstrip('/') != state.get('enqueued_url', data.url).rstrip('/'))
         previous = state.copy()
         socket = await connect(self.ws_url(data, state['client_id']), open_timeout=data.timeout,
                                additional_headers=self.client_for(data).headers,

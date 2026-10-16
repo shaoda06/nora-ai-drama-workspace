@@ -136,7 +136,7 @@ class SegmentTests(unittest.IsolatedAsyncioTestCase):
         self.data.segment_plan.targets = []
         self.store.rows.clear()
         with self.assertRaisesRegex(ValueError, '显式'):
-            await self.store.enqueue(self.data)
+            await self.store.prepare_only(self.data)
 
     async def test_sparse_destination_map_must_match_selection(self):
         self.data.segment_plan.targets = self.data.segment_plan.targets[:1]
