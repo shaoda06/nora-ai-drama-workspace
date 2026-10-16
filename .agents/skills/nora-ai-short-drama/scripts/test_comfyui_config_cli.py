@@ -9,7 +9,7 @@ import sys
 import tempfile
 import threading
 import unittest
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import urlsplit
 
 import comfyui_config as config
 
@@ -44,28 +44,17 @@ class ConfigCliTests(unittest.TestCase):
                 if route.path == '/models/checkpoints' and fixture.fail_category:
                     self.send_error(503)
                     return
-                if route.path == '/view':
-                    query = parse_qs(route.query)
-                    name = query['filename'][0]
-                    suffixes = ('.meta.json', '.av.pt', '.audio.pt', '.pre.meta.json',
-                                '.pre.av.pt', '.frames.mkv', '.pre.frames.mkv')
-                    if (query['subfolder'][0] != 'minimax_seg_cache/scene_501'
-                            or name not in {'seg_0000' + suffix for suffix in suffixes}):
-                        self.send_error(404)
-                        return
-                    body = b'fixture'
-                else:
-                    data = {
-                        '/system_stats': {'system': {'comfyui_version': 'fixture'}},
-                        '/object_info': {'FixtureNode': {'python_module': 'fixture'}},
-                        '/models': ['checkpoints'], '/models/checkpoints': ['fixture.safetensors'],
-                        '/queue': {'queue_running': [], 'queue_pending': []},
-                        '/history/fixture-id': {},
-                    }
-                    if route.path not in data:
-                        self.send_error(404)
-                        return
-                    body = json.dumps(data[route.path]).encode()
+                data = {
+                    '/system_stats': {'system': {'comfyui_version': 'fixture'}},
+                    '/object_info': {'FixtureNode': {'python_module': 'fixture'}},
+                    '/models': ['checkpoints'], '/models/checkpoints': ['fixture.safetensors'],
+                    '/queue': {'queue_running': [], 'queue_pending': []},
+                    '/history/fixture-id': {},
+                }
+                if route.path not in data:
+                    self.send_error(404)
+                    return
+                body = json.dumps(data[route.path]).encode()
                 self.send_response(200)
                 self.send_header('Content-Length', str(len(body)))
                 self.end_headers()
@@ -160,16 +149,6 @@ class ConfigCliTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertEqual(self.requests, [])
         self.assertFalse((self.root / 'inventory.json').exists())
-
-    def test_cache_clone_preview_uses_auth_without_writes(self):
-        result = self.call('cache-clone', '--url', self.url, '--cache-name', 'scene',
-                           '--source-node', '501', '--target-node', '502', '--indices', '0',
-                           '--segment-count', '1', '--record-dir', str(self.root / 'cache-record'))
-        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(json.loads(result.stdout)['state'], 'preview')
-        self.assertFalse((self.root / 'cache-record').exists())
-        self.assert_authenticated_reads_only()
-
 
 if __name__ == '__main__':
     unittest.main()

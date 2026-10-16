@@ -76,7 +76,7 @@ def connection_key(workspace, url):
 
 
 def main(argv=None):
-    """Authorized diagnostics and cache operations; generation uses comfyui_dispatch."""
+    """Authorized diagnostics; generation uses comfyui_dispatch."""
     import argparse
     parser = argparse.ArgumentParser(description=__doc__, add_help=False)
     parser.add_argument('--workspace', required=True, help='Workspace root containing comfyui-config.json')
@@ -84,16 +84,12 @@ def main(argv=None):
     factory = lambda url, timeout: client_for(args.workspace, url, timeout)
     tool_paths = {
         'inventory': 'dependencies/comfyui-inventory/scripts/refresh_inventory.py',
-        'cache-clone': 'references/comfyui-scripts/director_cache.py',
     }
     if remaining and remaining[0] in tool_paths:
         path = Path(__file__).resolve().parents[1] / tool_paths[remaining[0]]
         spec = importlib.util.spec_from_file_location('nora_' + path.stem, path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        if remaining[0] == 'cache-clone':
-            return module.main(remaining[1:], client_factory=factory)
-
         def authenticated_fetch(url, route, timeout):
             try:
                 return factory(url, timeout).json(route)
