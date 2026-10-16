@@ -103,7 +103,7 @@ class ProjectStore:
                                         'snapshot': self.cache_snapshot(snapshot, part, data), 'data': data}, ensure_ascii=False), encoding='utf-8')
         temporary.replace(path)
 
-    def get(self, name: str):
+    def get(self, name: str, *, synchronize=False):
         path = self.project(name)
         with self.lock:
             entry = self.entries.get(name)
@@ -111,6 +111,7 @@ class ProjectStore:
                 entry = {'data': None, 'revision': 0, 'error': None, 'error_kind': None, 'updating': False,
                          'scanning': False, 'sections': {}, 'snapshot': None, 'checked': 0.0, 'retry_at': 0.0, 'retry_at_time': 0.0, 'lock': threading.Lock()}
                 self.entries[name] = entry
+        initialized = False
         with entry['lock']:
             if entry['data'] is None and not entry['updating']:
                 entry['snapshot'] = self.snapshot(path)
@@ -121,6 +122,13 @@ class ProjectStore:
                 entry['data'] = data
                 entry['revision'] = 1
                 entry['checked'] = time.monotonic()
+                initialized = True
+        if synchronize and not initialized:
+            with entry['lock']:
+                if entry['scanning']:
+                    return entry
+                entry['scanning'] = True
+            self.scan(name, entry)
         return entry
 
     def status(self, name: str):

@@ -35,12 +35,17 @@ def failure(error, client_error, **target):
     return issue
 
 
-def saved_stamp(receipt, candidate):
-    """Only metadata; successful receipts are re-read after a restart or a change."""
+def saved_files(receipt, candidate):
+    """One metadata observation supplies both the proof and receipt existence."""
     try:
-        stamps = (receipt.stat(), candidate.stat())
+        receipt_stamp = receipt.stat()
     except FileNotFoundError:
-        return None
-    if not all(stat.S_ISREG(value.st_mode) for value in stamps):
-        return None
-    return tuple((value.st_size, value.st_mtime_ns) for value in stamps)
+        return None, False
+    try:
+        candidate_stamp = candidate.stat()
+    except FileNotFoundError:
+        return None, True
+    stamps = receipt_stamp, candidate_stamp
+    proof = tuple((value.st_size, value.st_mtime_ns) for value in stamps) if all(
+        stat.S_ISREG(value.st_mode) for value in stamps) else None
+    return proof, True

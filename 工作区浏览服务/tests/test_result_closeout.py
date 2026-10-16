@@ -119,7 +119,8 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
     async def test_browser_failure_returns_source_report_and_can_resume(self):
         _, draft = self.setup_video()
         batch = await self.collect_and_notice()
-        with patch.object(self.projects, 'scan', side_effect=OSError('browser unavailable')):
+        self.projects.get(self.project.name)
+        with patch.object(self.projects, 'snapshot', side_effect=OSError('browser unavailable')):
             result = await closeout(self.store, self.projects, batch, self.data.thread_id)
         self.assertFalse(result['user_message_ready'])
         self.assertEqual(self.store.rows['task']['state']['closeout']['status'], 'browser_pending')
@@ -151,7 +152,7 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.setup_video()
         await self.collect_and_notice()
         from backend.services import comfy_segments as segments
-        with patch.object(segments, 'saved_stamp', wraps=segments.saved_stamp) as stamps, \
+        with patch.object(segments, 'saved_files', wraps=segments.saved_files) as stamps, \
                 patch.object(t.client, 'download') as download:
             # A retry with the same terminal object reuses the parsed report and one proof per success.
             await self.store.finish_collection('task', self.terminal)
@@ -330,7 +331,7 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.store.save('second')
         self.store.db.execute('UPDATE notification_batches SET task_ids=? WHERE id=?', (json.dumps(['task','second']),batch))
         self.store.db.commit()
-        with patch.object(self.projects, 'scan', wraps=self.projects.scan) as scan, \
+        with patch.object(self.projects, 'snapshot', wraps=self.projects.snapshot) as scan, \
                 patch.object(self.projects, 'section', wraps=self.projects.section) as section:
             result = await closeout(self.store, self.projects, batch, self.data.thread_id)
         self.assertTrue(result['user_message_ready'], result)

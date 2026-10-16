@@ -24,7 +24,7 @@ from backend.services import comfy_segments as segments
 from backend.services.comfy_nodes import RemoteQueues, initial_state
 from backend.services.local_queue import LocalQueue, LOCAL, TERMINAL
 from backend.services.task_notifications import TaskNotifications
-from backend.services.collection_retry import DELAYS, failure, saved_stamp
+from backend.services.collection_retry import DELAYS, failure, saved_files
 
 logger = logging.getLogger(__name__)
 SKILL = Path(__file__).resolve().parents[3] / '.agents/skills/nora-ai-short-drama'
@@ -455,7 +455,10 @@ class TaskStore(LocalQueue, TaskNotifications):
                 client.write_new(history, {'time': client.now(), 'data': result})
             self.record(key, 'execution', remote_state, evidence=str(history))
             if background_collection:
-                self.save(key, status='collecting')
+                if remote_state == 'success':
+                    self.begin_collection(key)
+                else:
+                    self.save(key, status='collecting')
                 self.workers[key] = asyncio.create_task(self.collect_saved(key, result))
             else:
                 await self.finish_collection(key, result)
@@ -470,6 +473,14 @@ class TaskStore(LocalQueue, TaskNotifications):
         self.save(key, status=remote_state, error=None)
         return False
 
+    def begin_collection(self, key):
+        state = self.rows[key]['state']
+        changes = dict(status='collecting', progress=None, ended_at=state.get('ended_at') or client.now(),
+                       phase='collection', collection_attempt=state.get('collection_attempt', 1),
+                       collection_auto_retry=state.get('collection_auto_retry', 0))
+        if any(state.get(name) != value for name, value in changes.items()):
+            self.save(key, **changes)
+
     async def finish_collection(self, key, result):
         data, state = self.rows[key]['input'], self.rows[key]['state']
         if not isinstance(result, dict) or result.get('state') not in ('success', 'failed'):
@@ -481,8 +492,7 @@ class TaskStore(LocalQueue, TaskNotifications):
             error = json.dumps(details, ensure_ascii=False) if details else 'ComfyUI确认执行失败；详情见执行结果.json'
             self.save(key, status='failed', error=error, error_details=details, ended_at=client.now(), progress=None, failure_stage='execution')
             return
-        self.save(key, status='collecting', progress=None, ended_at=state.get('ended_at') or client.now(), phase='collection',
-                  collection_attempt=state.get('collection_attempt', 1), collection_auto_retry=state.get('collection_auto_retry', 0))
+        self.begin_collection(key)
         while True:
             if state.get('collection_next_retry_at'):
                 remaining = (datetime.fromisoformat(state['collection_next_retry_at']) - datetime.now(timezone.utc)).total_seconds()
@@ -531,11 +541,12 @@ class TaskStore(LocalQueue, TaskNotifications):
                     raise ValueError(f'预期输出未确认：节点{output.node_id}/{output.output_key}/{output.index}')
                 identity = matching[0]
                 response = Path(data.record_dir) / output.response_name
-                proof = (identity, saved_stamp(response, Path(output.path)))
+                stamp, receipt_exists = saved_files(response, Path(output.path))
+                proof = (identity, stamp)
                 fresh = False
                 if proof[1] is not None and verified.get(str(response)) == proof:
                     pass
-                elif response.exists():
+                elif receipt_exists:
                     previous = client.strict_json(response.read_bytes())['data']
                     if (previous['remote'] != {name: identity[name] for name in ('filename', 'subfolder', 'type')}
                             or paths.project_file(data.project, previous['path'], recorded=True) != Path(output.path)
@@ -547,7 +558,7 @@ class TaskStore(LocalQueue, TaskNotifications):
                                            type=identity['type'], output=output.path, sha256=None))
                     downloaded['path'] = self.record_paths(key).relative_file(downloaded['path'])
                     client.write_new(response, {'time': client.now(), 'data': downloaded})
-                    proof = (identity, saved_stamp(response, Path(output.path)))
+                    proof = (identity, saved_files(response, Path(output.path))[0])
                     fresh = True
                 verified[str(response)] = proof
                 collected += 1

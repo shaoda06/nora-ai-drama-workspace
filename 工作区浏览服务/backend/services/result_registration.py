@@ -8,12 +8,11 @@ import tempfile
 from urllib.parse import quote, unquote
 
 from backend.services.execution_checks import write_json
-from backend.services.result_summary import batch_tasks, summary
+from backend.services.result_summary import batch_tasks, summary, outputs as collected_outputs
 from project_paths import project_file
 from video_adopt import field
 
 REPORT = '结果收尾报告.json'
-IDENTITY = re.compile(r'(EP\d{3,})-(C\d{3,})-(P\d{3,})-(R\d{3,})-(一采|二采|后处理)')
 
 
 def digest(text):
@@ -38,25 +37,19 @@ def register(store, key):
     if previous.get('status') == 'registered':
         return previous
     stamp = previous.get('recorded_at') or store.client.now()
-    outputs = summary(store, key)['outputs']
+    outputs = collected_outputs(store, key)
     if len(outputs) != state['expected']:
         raise ValueError('成果摘要不完整，先核对取回记录')
-    mapping_file = record / '输入映射.json'
-    mapping = json.loads(mapping_file.read_text('utf-8-sig'))
-    contexts = {item['identity']: item for item in mapping.get('generation_contexts', [])}
     from backend.services.comfy_tasks import SKILL
     template_file = SKILL / 'references/模板/视频人工审阅区模板.md'
     template = re.search(r'```markdown\n(.*?)\n```', template_file.read_text('utf-8-sig'), re.S)[1]
     edits, items = {}, []
     for output in outputs:
         candidate = project_file(root, output['path'], recorded=True)
-        identity = output.get('identity') or candidate.stem
-        match = IDENTITY.fullmatch(identity)
-        if not match or identity not in contexts:
-            raise ValueError('成果身份或冻结资料关联缺失：' + identity)
-        ep, scene, part, revision, stage = match.groups()
-        if data.task_type != {'一采': 'video-first-pass', '二采': 'video-second-pass', '后处理': 'video-postprocess'}[stage]:
-            raise ValueError('成果阶段与本次任务不一致')
+        identity = output['identity']
+        if not output.get('review'):
+            raise ValueError('取回记录没有可登记的分段身份：' + identity)
+        ep, scene, part, revision, stage = (output['review'][name] for name in ('episode', 'scene', 'part', 'revision', 'stage'))
         receipt = project_file(root, output['receipt'], recorded=True)
         # Downloads already established technical identity. No rehash or remote query.
         if not candidate.is_file() or not receipt.is_file():
@@ -120,8 +113,6 @@ def register(store, key):
     for path, (before, after) in edits.items():
         if before == after:
             continue
-        if path.read_text('utf-8-sig') != before:
-            raise ValueError('源资料并发变化，未覆盖：' + str(path))
         temporary = None
         try:
             with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', newline='', dir=path.parent,
@@ -143,10 +134,9 @@ def register(store, key):
 def verify(projects, store, key, report):
     data, state = store.rows[key]['input'], store.rows[key]['state']
     name = state['project']
-    entry = projects.get(name)
-    projects.scan(name, entry)
+    entry = projects.get(name, synchronize=True)
     status = projects.status(name)
-    if status['updating'] or status['error']:
+    if status['updating'] or status['checking'] or status['error']:
         raise ValueError('源资料已登记，网页尚未同步：' + str(status['error']))
     for ep in dict.fromkeys(item['episode'] for item in report['items']):
         parsed = projects.section(name, '09-剧集制作', ep, mode='playback')

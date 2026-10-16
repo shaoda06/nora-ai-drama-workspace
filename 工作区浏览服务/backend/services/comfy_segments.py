@@ -6,7 +6,7 @@ from pathlib import Path, PureWindowsPath, PurePosixPath
 import re
 
 from pydantic import BaseModel, Field
-from backend.services.collection_retry import failure, saved_stamp
+from backend.services.collection_retry import failure, saved_files
 
 
 class SegmentTarget(BaseModel):
@@ -124,11 +124,12 @@ async def finish(store, key, result):
                 raise ValueError('最终报告路径与分段身份不一致')
             receipt_path = Path(data.record_dir) / target['response_name']
             candidate = target['candidate']
-            proof = (state['prompt_id'], source, saved_stamp(receipt_path, candidate))
+            stamp, receipt_exists = saved_files(receipt_path, candidate)
+            proof = (state['prompt_id'], source, stamp)
             fresh = False
             if proof[-1] is not None and verified.get(str(receipt_path)) == proof:
                 pass
-            elif receipt_path.exists():
+            elif receipt_exists:
                 receipt = store.client.strict_json(receipt_path.read_bytes())
                 downloaded = receipt['data']
                 if (receipt['prompt_id'] != state['prompt_id'] or downloaded['remote'] != source
@@ -141,7 +142,7 @@ async def finish(store, key, result):
                 downloaded['path'] = store.record_paths(key).relative_file(downloaded['path'])
                 store.client.write_new(receipt_path, {'time': store.client.now(), 'prompt_id': state['prompt_id'],
                                                      'identity': target['identity'], 'data': downloaded})
-                proof = (state['prompt_id'], source, saved_stamp(receipt_path, candidate))
+                proof = (state['prompt_id'], source, saved_files(receipt_path, candidate)[0])
                 fresh = True
             verified[str(receipt_path)] = proof
             item.update(remote=source, path=str(candidate), receipt=str(receipt_path), bytes=proof[-1][1][0], check='已取回', error=None)

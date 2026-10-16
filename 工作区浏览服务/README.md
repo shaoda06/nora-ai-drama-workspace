@@ -192,4 +192,4 @@ HTTP接口测试继承 `tests.http_case.HttpTestCase`，覆写 `setUp` 时先调
 
 测试资源更新使用临时目录，不执行真实上游应用或恢复。浏览器验证与检查结果见[开发记录](docs/开发记录/W001-工作区服务首版.md)。
 
-完成后完整链路回归：`.venv/Scripts/python.exe -X utf8 -B -m unittest tests.test_result_closeout tests.test_collection_retry tests.test_comfy_segments tests.test_comfy_tasks tests.test_task_details -q`。使用临时项目、模拟远端和隔离MCP服务，覆盖取回、重试、重启、通知确认竞态、可恢复待审登记及真实网页解析；不连接正式生成服务，不向真实会话发送测试通知。
+完成后完整链路回归：`.venv/Scripts/python.exe -X utf8 -B -m unittest tests.test_result_reuse tests.test_result_closeout tests.test_collection_retry tests.test_comfy_segments tests.test_comfy_tasks tests.test_task_details -q`。使用临时项目、模拟远端和隔离MCP服务，覆盖取回、重试、重启、通知确认竞态、可恢复待审登记及真实网页解析，并断言凭据状态读取、取回初始化、稳定成果条目、工作稿读取及冷／热项目扫描的复用次数；不连接正式生成服务，不向真实会话发送测试通知。
