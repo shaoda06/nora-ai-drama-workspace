@@ -560,7 +560,7 @@ class ServiceTests(HttpTestCase):
         self.store.get('示例项目')['checked'] = 0
         self.store.status('示例项目')
         for _ in range(100):
-            if not self.store.get('示例项目')['updating']:
+            if not self.store.get('示例项目')['updating'] and not self.store.get('示例项目')['scanning']:
                 break
             time.sleep(.01)
         self.assertGreater(self.store.status('示例项目')['revision'], previous)
@@ -849,6 +849,7 @@ class ServiceTests(HttpTestCase):
 
     def test_new_file_change_retries_before_failure_delay(self):
         entry = self.store.get('示例项目')
+        entry['checked'] = 100
         with patch('backend.services.projects.time.monotonic', return_value=100), self.assertLogs(
                 'backend.services.projects', level='ERROR'), patch(
                 'backend.services.projects.build_data', side_effect=ValueError('错误源文件')):

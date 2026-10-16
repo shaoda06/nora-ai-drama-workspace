@@ -46,7 +46,7 @@ export default function Project() {
     requestAnimationFrame(() => currentPath.current!.scrollIntoView({ block: 'start' }));
   };
   const status = useQuery({ queryKey: ['status', name], queryFn: () =>
-    get<RecordData>(`${projectUrl(name)}/status`), refetchInterval: 5000 });
+    get<RecordData>(`${projectUrl(name)}/status`), refetchInterval: query => query.state.data?.checking ? 200 : 5000 });
   const retryAt = status.data?.retryAt;
   const syncing = status.data?.updating;
   const { refetch } = status;

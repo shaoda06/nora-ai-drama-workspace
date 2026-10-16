@@ -3,6 +3,7 @@ import logging
 import json
 import os
 import re
+import stat
 import threading
 import time
 
@@ -38,8 +39,9 @@ class ProjectStore:
 
     def snapshot(self, path: Path):
         # mtime and size detect edits, additions, removal and renames without reading media.
+        path = path.resolve()
         result = {}
-        pending = [(path, '')]
+        pending = [(str(path), '')]
         while pending:
             directory, prefix = pending.pop()
             with os.scandir(directory) as files:
@@ -48,20 +50,25 @@ class ProjectStore:
                         continue
                     key = prefix + item.name
                     if item.is_dir():
-                        child = Path(item.path)
-                        if not item.is_symlink() and child.resolve().is_relative_to(path):
-                            pending.append((child, key + '/'))
+                        if item.is_symlink():
+                            continue
+                        # Ordinary entries inherit their checked parent boundary.
+                        # Windows junctions/reparse points still need real-path validation.
+                        if (os.name == 'nt' and item.stat(follow_symlinks=False).st_file_attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT
+                                and not Path(item.path).resolve().is_relative_to(path)):
+                            continue
+                        pending.append((item.path, key + '/'))
                     elif item.name not in ('项目总览.html', 'index.html') and item.is_file():
                         if item.is_symlink() and not Path(item.path).resolve().is_relative_to(path):
                             continue
                         # These generated records are read live when opened. Their
                         # presence affects the file list, but progress writes do not
                         # change compiled project documents or the queue's own API.
-                        if live_task_record(key):
+                        if item.name in ('后台任务状态.json', '后台过程记录.json') and live_task_record(key):
                             result[key] = (0, 0)
                         else:
-                            stat = item.stat()
-                            result[key] = (stat.st_mtime_ns, stat.st_size)
+                            info = item.stat()
+                            result[key] = (info.st_mtime_ns, info.st_size)
         return result
 
     def cache_snapshot(self, snapshot, part, data):
@@ -102,7 +109,7 @@ class ProjectStore:
             entry = self.entries.get(name)
             if entry is None:
                 entry = {'data': None, 'revision': 0, 'error': None, 'error_kind': None, 'updating': False,
-                         'sections': {}, 'snapshot': None, 'checked': 0.0, 'retry_at': 0.0, 'retry_at_time': 0.0, 'lock': threading.Lock()}
+                         'scanning': False, 'sections': {}, 'snapshot': None, 'checked': 0.0, 'retry_at': 0.0, 'retry_at_time': 0.0, 'lock': threading.Lock()}
                 self.entries[name] = entry
         with entry['lock']:
             if entry['data'] is None and not entry['updating']:
@@ -113,6 +120,7 @@ class ProjectStore:
                     self.save_cache(name, entry['snapshot'], data)
                 entry['data'] = data
                 entry['revision'] = 1
+                entry['checked'] = time.monotonic()
         return entry
 
     def status(self, name: str):
@@ -120,32 +128,55 @@ class ProjectStore:
         with entry['lock']:
             now = time.monotonic()
             retry_due = entry['error'] and now >= entry['retry_at']
-            if not entry['updating'] and (now - entry['checked'] >= 3 or retry_due):
+            if not entry['scanning'] and not entry['updating'] and (now - entry['checked'] >= 3 or retry_due):
                 entry['checked'] = now
-                snapshot = self.snapshot(self.project(name))
-                if snapshot != entry['snapshot'] or retry_due:
+                entry['scanning'] = True
+                if retry_due:
                     entry['updating'] = True
-                    threading.Thread(target=self.refresh, args=(name, entry, snapshot), daemon=True).start()
-            return {'revision': entry['revision'], 'updating': entry['updating'],
+                threading.Thread(target=self.scan, args=(name, entry), daemon=True).start()
+            return {'revision': entry['revision'], 'updating': entry['updating'], 'checking': entry['scanning'],
                     'error': entry['error'], 'errorKind': entry['error_kind'],
                     'retryAt': entry['retry_at_time'], 'updated': entry['data']['builtAt']}
+
+    def scan(self, name, entry):
+        try:
+            snapshot = self.snapshot(self.project(name))
+            with entry['lock']:
+                retry_due = entry['error'] and time.monotonic() >= entry['retry_at']
+                changed = snapshot != entry['snapshot'] or retry_due
+                if changed:
+                    entry['updating'] = True
+            if changed:
+                self.refresh(name, entry, snapshot)
+        except (OSError, ValueError, RuntimeError, UnicodeError) as error:
+            self.read_failed(name, entry, error)
+        finally:
+            with entry['lock']:
+                entry['scanning'] = False
+                entry['checked'] = time.monotonic()
+
+    def read_failed(self, name, entry, error, snapshot=None):
+        if isinstance(error, SourceChangedError):
+            logger.info('Project source changed while reading: %s: %s', name, error)
+        else:
+            logger.exception('Project sync failed: %s', name)
+        with entry['lock']:
+            waiting_for_retry = entry['error'] and time.monotonic() < entry['retry_at']
+            entry['error'] = str(error)
+            entry['error_kind'] = 'source_changed' if isinstance(error, SourceChangedError) else 'read_failed'
+            entry['updating'] = False
+            if snapshot is not None:
+                entry['snapshot'] = snapshot
+            if snapshot is not None or not waiting_for_retry:
+                entry['retry_at'] = time.monotonic() + 30
+                entry['retry_at_time'] = (time.time() + 30) * 1000
 
     def refresh(self, name, entry, snapshot):
         try:
             data = build_data(self.project(name), web_episode_navigation=True, load_scope="overview")
             self.save_cache(name, snapshot, data)
         except (OSError, ValueError, RuntimeError, UnicodeError) as error:
-            if isinstance(error, SourceChangedError):
-                logger.info('Project source changed while reading: %s: %s', name, error)
-            else:
-                logger.exception('Project sync failed: %s', name)
-            with entry['lock']:
-                entry['error'] = str(error)
-                entry['error_kind'] = 'source_changed' if isinstance(error, SourceChangedError) else 'read_failed'
-                entry['updating'] = False
-                entry['snapshot'] = snapshot
-                entry['retry_at'] = time.monotonic() + 30
-                entry['retry_at_time'] = (time.time() + 30) * 1000
+            self.read_failed(name, entry, error, snapshot)
             return
         with entry['lock']:
             sections = {key: data for key, data in entry['sections'].items()
