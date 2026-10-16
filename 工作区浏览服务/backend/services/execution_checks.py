@@ -33,7 +33,15 @@ def basis(store, data, mapping=None):
     return payload
 
 
-def sources(data, extra=(), mapping=None):
+def _file_stamp(path, observed):
+    if path not in observed:
+        current = path.stat()
+        observed[path] = (current.st_size, current.st_mtime_ns)
+    return observed[path]
+
+
+def sources(data, extra=(), mapping=None, *, observed=None):
+    observed = {} if observed is None else observed
     files = {Path(item['file']) for item in data.uploads}
     files.update(Path(path) for path in extra)
     record = Path(data.record_dir)
@@ -47,8 +55,7 @@ def sources(data, extra=(), mapping=None):
             files.add(project_file(data.project, mapping['storyboard_file'], recorded=True))
         for context in mapping.get('generation_contexts', []):
             files.update(project_file(data.project, name, recorded=True) for name in context.get('prompts', {}).values())
-    return {path.relative_to(data.project).as_posix(): [stamp.st_size, stamp.st_mtime_ns]
-            for path in sorted(files) for stamp in [path.stat()]}
+    return {path.relative_to(data.project).as_posix(): list(_file_stamp(path, observed)) for path in sorted(files)}
 
 
 def read_report(data):
@@ -67,6 +74,7 @@ def write_report(data, report):
 
 
 def check_prepared(store, data, *, bound=False, transferred=False, legacy=False, file_stamps=None):
+    observed = {}
     report = read_report(data)
     if report is None:
         if legacy:
@@ -87,30 +95,28 @@ def check_prepared(store, data, *, bound=False, transferred=False, legacy=False,
             continue  # The upload binder owns and validates these actual path changes.
         path = project_file(data.project, name)
         try:
-            current = path.stat()
+            current = _file_stamp(path, observed)
         except FileNotFoundError:
             raise ValueError('准备资料已变化：' + name + '；请返回准备阶段') from None
-        if [current.st_size, current.st_mtime_ns] != stamp:
+        if list(current) != stamp:
             raise ValueError('准备资料已变化：' + name + '；请返回准备阶段')
-        if file_stamps is not None:
-            file_stamps[path] = (current.st_size, current.st_mtime_ns)
     if data.task_type.startswith('video-') and 'context_sources' not in report:
         if not legacy:
             raise ValueError('新任务准备报告缺少资料关联检查；请使用--prepare-only补齐准备')
         try:
             extra = context_checks(store, data, segment_plan_checked=data.segment_plan is not None)
+            added_sources = {path.relative_to(data.project).as_posix(): list(_file_stamp(path, observed))
+                             for path in map(Path, extra)}
         except (ValueError, OSError, KeyError, IndexError, TypeError, store.client.ClientError) as error:
             report.update(ok=False, error='旧报告缺项检查失败：' + str(error), context_checked_during='execution')
             write_report(data, report)
             raise ValueError(report['error']) from error
         report['context_sources'] = extra
         report['context_checked_during'] = 'execution'
-        for path in map(Path, extra):
-            current = path.stat()
-            report['sources'][path.relative_to(data.project).as_posix()] = [current.st_size, current.st_mtime_ns]
-            if file_stamps is not None:
-                file_stamps[path] = (current.st_size, current.st_mtime_ns)
+        report['sources'].update(added_sources)
         write_report(data, report)
+    if file_stamps is not None:
+        file_stamps.update(observed)
     return report
 
 
@@ -284,7 +290,8 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
         if previous and 'title' not in expected:
             expected['title'] = data.title
         if previous and previous['ok'] and expected == report['prepared_input']:
-            report['sources'] = sources(data, previous.get('context_sources', []), mapping)
+            observed = {}
+            report['sources'] = sources(data, previous.get('context_sources', []), mapping, observed=observed)
             if previous['sources'] == report['sources']:
                 report.update(previous)
                 changed = False
@@ -295,7 +302,7 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
                 if data.task_type.startswith('video-') and 'context_sources' not in previous:
                     extra = context_checks(store, data, mapping=mapping, segment_plan_checked=data.segment_plan is not None)
                     report.update(context_sources=extra, context_checked_during='preparation')
-                    report['sources'] = sources(data, extra, mapping)
+                    report['sources'] = sources(data, extra, mapping, observed=observed)
                     changed = True
                 if changed:
                     write_report(data, report)
