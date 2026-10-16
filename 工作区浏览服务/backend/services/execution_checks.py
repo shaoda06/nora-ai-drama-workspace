@@ -4,7 +4,7 @@ import re
 import tempfile
 from pathlib import Path
 
-from project_paths import project_file, recorded_paths
+from project_paths import project_file, recorded_paths, PreparationPaths
 
 REPORT = '执行检查报告.json'
 
@@ -209,6 +209,8 @@ def fixed_checks(store, data, *, mapping=None, legacy=False):
     from backend.services.director_uploads import check_pair
     from backend.services import comfy_segments as segments
     fixed_input_checks(store, data)
+    path_scope = PreparationPaths.from_resolved(data.project,
+                        [data.record_dir, *(item['file'] for item in data.uploads)])
     if not legacy:
         check_new_targets(data)
     store.client.validate_workflow(data.workflow)
@@ -222,7 +224,7 @@ def fixed_checks(store, data, *, mapping=None, legacy=False):
         raise ValueError('预期输出节点不在工作流中')
     if len(selectors) != len(set(selectors)):
         raise ValueError('输出身份不能重复')
-    documents = {}
+    documents, bindings = {}, []
     for item in data.uploads:
         if item['node'] not in data.workflow or item['input'] not in data.workflow[item['node']]['inputs']:
             raise ValueError('上传映射必须绑定已有输入')
@@ -236,6 +238,9 @@ def fixed_checks(store, data, *, mapping=None, legacy=False):
                     value = value[part]
             except (KeyError, IndexError, TypeError) as error:
                 raise ValueError('素材JSON字段路径不匹配：' + str(item['json-path'])) from error
+        else:
+            value = data.workflow[item['node']]['inputs'][item['input']]
+        bindings.append((item, value))
     timelines = {id(node): (documents[(key, 'timeline_data')] if (key, 'timeline_data') in documents
                  else json.loads(node['inputs']['timeline_data'])) for key, node in data.workflow.items()
                  if node['class_type'] == 'MiniMaxH3Director'}
@@ -246,33 +251,36 @@ def fixed_checks(store, data, *, mapping=None, legacy=False):
     segment_context = None
     if data.segment_plan:
         try:
-            segment_context = segments.validate(data, mapping=mapping, timelines=timelines)
+            segment_context = segments.validate(data, mapping=mapping, timelines=timelines, path_scope=path_scope)
         except (KeyError, IndexError, TypeError) as error:
             raise ValueError('分段计划或输入映射字段不完整：' + str(error)) from error
         if data.outputs:
             raise ValueError('原生分段任务使用segment-plan，不混用末段保存节点作为全组输出')
-    result = {'pair': check_pair(Path(data.record_dir), data.workflow, timelines=timelines), 'segments': director_checks(data.workflow, timelines)}
+    result = {'pair': check_pair(Path(data.record_dir), data.workflow, timelines=timelines, path_scope=path_scope),
+              'segments': director_checks(data.workflow, timelines)}
     if data.task_type.startswith('video-'):
-        result['context_sources'] = context_checks(store, data, mapping=mapping, documents=documents, timelines=timelines, segment_context=segment_context)
+        result['context_sources'] = context_checks(store, data, mapping=mapping, bindings=bindings,
+                                                  timelines=timelines, segment_context=segment_context, path_scope=path_scope)
     return result
 
 
-def context_checks(store, data, *, mapping=None, documents=None, timelines=None, segment_context=None, segment_plan_checked=False):
-    documents = {} if documents is None else documents
-    planned = {}
-    for item in data.uploads:
-        value = data.workflow[item['node']]['inputs'][item['input']]
-        if 'json-path' in item:
-            key = (item['node'], item['input'])
-            if key not in documents:
-                documents[key] = json.loads(value)
-            value = documents[key]
-            for part in item['json-path']:
-                value = value[part]
-        planned[value] = {'input_path': value, 'file': item['file']}
+def context_checks(store, data, *, mapping=None, bindings=None, timelines=None, segment_context=None, segment_plan_checked=False, path_scope=None):
+    if bindings is None:  # Legacy supplement or standalone context-only check.
+        documents, bindings = {}, []
+        for item in data.uploads:
+            value = data.workflow[item['node']]['inputs'][item['input']]
+            if 'json-path' in item:
+                key = (item['node'], item['input'])
+                if key not in documents:
+                    documents[key] = json.loads(value)
+                value = documents[key]
+                for part in item['json-path']:
+                    value = value[part]
+            bindings.append((item, value))
+    planned = {value: {'input_path': value, 'file': item['file']} for item, value in bindings}
     context = store.generation_context.prepare_generation_context(data.project, Path(data.record_dir),
                 data.workflow, data.task_type, planned, check_only=True, mapping=mapping, timelines=timelines,
-                segment_context=segment_context, segment_plan_checked=segment_plan_checked)
+                segment_context=segment_context, segment_plan_checked=segment_plan_checked, path_scope=path_scope)
     return (context or {}).get('files', [])
 
 

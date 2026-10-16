@@ -38,7 +38,7 @@ def remote_file(root, absolute):
 
 def targets(data, mapping=None, *, segment_context=None):
     from backend.services.comfy_tasks import paths
-    project = Path(data.project).resolve()
+    project = segment_context['project'] if segment_context is not None else Path(data.project).resolve()
     if mapping is None:
         mapping = json.loads((Path(data.record_dir) / '输入映射.json').read_text('utf-8-sig'))
     stage = {'video-first-pass': '一采', 'video-second-pass': '二采'}[data.task_type]
@@ -61,13 +61,14 @@ def validate_h3_stage(task_type):
         raise client.ClientError('invalid_task_type', 'H3 generation requires a first-pass or second-pass task type')
 
 
-def validate(data, *, mapping=None, timelines=None):
+def validate(data, *, mapping=None, timelines=None, path_scope=None):
     from backend.services.comfy_tasks import generation_context
     plan = data.segment_plan
     validate_h3_stage(data.task_type)
     if mapping is None:
         mapping = json.loads((Path(data.record_dir) / '输入映射.json').read_text('utf-8-sig'))
-    context = generation_context.validate_segment_context(data.project, data.workflow, data.task_type, mapping, timelines=timelines)
+    context = generation_context.validate_segment_context(data.project, data.workflow, data.task_type, mapping,
+                                                           timelines=timelines, path_scope=path_scope)
     director = data.workflow[plan.director_node]
     if director is not context['director'] or plan.report_node not in data.workflow:
         raise ValueError('分段计划必须绑定实际导演台及报告节点')

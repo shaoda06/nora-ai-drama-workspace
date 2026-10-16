@@ -188,6 +188,8 @@ HTTP接口测试继承 `tests.http_case.HttpTestCase`，覆写 `setUp` 时先调
 
 完整提交调用链回归：`.venv/Scripts/python.exe -X utf8 -B -m unittest tests.test_submission_lifecycle -v`。覆盖真实CLI／本机HTTP／模拟远端、固定检查次数、队列变忙重新调度、原任务重新准备、重启恢复、并发查询及成功取回复用；不使用正式任务库或提交真实生成。
 
+提交前资料处理复用回归：`.venv/Scripts/python.exe -X utf8 -B -m unittest tests.test_preparation_reuse -v`。覆盖字段路径取值复用、独立补项、实际绑定与冻结共用路径范围、映射原文单次读取、共享快照状态、保存前变化、独占创建竞态和Windows目录联接转向；全部使用临时项目和模拟远端，不提交真实生成。实现不改变对外参数或资料字段；路径复用不代替实际读写前的范围核验。规则见[固定检查与动态条件](../.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#固定检查与动态条件)。
+
 恢复文件状态回归：`.venv/Scripts/python.exe -X utf8 -B -m unittest tests.test_recovery_file_states tests.test_upload_source_stamps tests.test_legacy_source_reuse -v`。覆盖同进程及重启恢复中API／画布读取复用、准备报告与阶段依据分别拦截不符、未覆盖文件的按需读取、后续开工重新读取、上传后及结束时的变化检查；使用临时项目和模拟远端，不提交真实生成。
 
 测试资源更新使用临时目录，不执行真实上游应用或恢复。浏览器验证与检查结果见[开发记录](docs/开发记录/W001-工作区服务首版.md)。

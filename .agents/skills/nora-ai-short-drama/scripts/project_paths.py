@@ -102,3 +102,17 @@ def recorded_paths(project, document, *, relative=False, field=''):
     if field == 'error_details':
         return document
     return RecordPaths(project).convert(document, relative=relative, field=field)
+
+
+class PreparationPaths(RecordPaths):
+    """One preparation phase's addresses; IO always rechecks the actual target."""
+
+    def io_file(self, value):
+        spelling = str(value).replace('\\', '/')
+        previous = self._files.get(spelling)
+        actual = _project_file(self.project, spelling, recorded=True)
+        if previous is not None and previous != actual:
+            raise ValueError('准备资料路径发生变化：' + str(value))
+        self._remember(actual)
+        self._files[spelling] = actual
+        return actual

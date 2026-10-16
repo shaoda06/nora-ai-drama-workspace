@@ -317,13 +317,18 @@ class LocalQueue:
         await self.check_target_cache(key, workflow)
         if data.task_type.startswith('video-'):
             from backend.services.director_uploads import save_uploaded_workflow
+            from project_paths import PreparationPaths
+            # Address reuse belongs to this save phase; each IO still checks scope.
+            path_scope = PreparationPaths.from_resolved(data.project,
+                            [data.record_dir, *(item['file'] for item in data.uploads)])
             self.save(key, phase='upload_binding')
             await asyncio.to_thread(save_uploaded_workflow, data.project, Path(data.record_dir), data.workflow, workflow,
-                                    uploaded_materials, binding_results)
+                                    uploaded_materials, binding_results, path_scope=path_scope)
             self.record(key, 'upload_binding', 'success', _changes={'uploads_bound': True})
             self.save(key, phase='generation_context')
             await asyncio.to_thread(self.generation_context.prepare_generation_context,
-                                    data.project, Path(data.record_dir), workflow, data.task_type, uploaded_materials, fixed_checked=True)
+                                    data.project, Path(data.record_dir), workflow, data.task_type, uploaded_materials,
+                                    fixed_checked=True, path_scope=path_scope)
         # This checkpoint is process-local; a restart verifies durable receipts once.
         files = {Path(item['file']) for item in data.uploads}
         record = Path(data.record_dir)

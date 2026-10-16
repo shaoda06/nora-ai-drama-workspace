@@ -3,13 +3,15 @@ from datetime import datetime
 import json
 from pathlib import Path
 import re
-from project_paths import project_file
+import stat
+from project_paths import PreparationPaths
 
 STAGES = {'video-first-pass': '一采', 'video-second-pass': '二采', 'video-postprocess': '后处理'}
 
 
-def validate_segment_context(project, workflow, task_type, mapping, *, timelines=None):
+def validate_segment_context(project, workflow, task_type, mapping, *, timelines=None, path_scope=None):
     """Shared fixed facts for segment retrieval and generation input records."""
+    path_scope = path_scope if path_scope is not None else PreparationPaths(project)
     scene, stage = mapping['scene'], STAGES[task_type]
     if not re.fullmatch(r'EP\d{3,}-C\d{3,}', scene):
         raise ValueError('输入映射的场次编号不正确')
@@ -27,42 +29,62 @@ def validate_segment_context(project, workflow, task_type, mapping, *, timelines
         identity = f"{segment['segment']}-{segment['round']}-{stage}"
         if not re.fullmatch(re.escape(scene) + r'-P\d{3,}-R\d{3,}-' + stage, identity):
             raise ValueError('生成资料身份与场次不一致：' + identity)
-        directory = project_file(project, segment['local_execution_dir'], recorded=True)
+        directory = path_scope.file(segment['local_execution_dir'])
         if directory.name != identity and not (directory.parent.name == identity and re.fullmatch(r'执行-\d{8}-\d{6}', directory.name)):
             raise ValueError('本段执行附件目录与执行身份不一致')
         entries[index] = {'identity': identity, 'directory': directory}
-    return {'director': director, 'timeline': timeline, 'indices': indices, 'entries': entries}
+    return {'director': director, 'timeline': timeline, 'indices': indices, 'entries': entries, 'project': path_scope.project}
 
 
-def prepare_generation_context(project, record, workflow, task_type, uploaded_materials=None, *, check_only=False, fixed_checked=False, mapping=None, timelines=None, segment_context=None, segment_plan_checked=False):
-    project, record = Path(project).resolve(), Path(record).resolve()
+def prepare_generation_context(project, record, workflow, task_type, uploaded_materials=None, *, check_only=False, fixed_checked=False, mapping=None, timelines=None, segment_context=None, segment_plan_checked=False, path_scope=None):
+    path_scope = path_scope if path_scope is not None else PreparationPaths(project)
+    project, record = path_scope.project, path_scope.file(record)
     mapping_file = record / '输入映射.json'
     if mapping is None:
-        mapping = json.loads(mapping_file.read_text(encoding='utf-8-sig'))
+        mapping = json.loads(path_scope.io_file(mapping_file).read_text(encoding='utf-8-sig'))
     stage = STAGES[task_type]
     scene = mapping['scene']
     if (stage == '后处理' or segment_plan_checked) and not fixed_checked and not re.fullmatch(r'EP\d{3,}-C\d{3,}', scene):
         raise ValueError('输入映射的场次编号不正确')
     payloads = {}
 
-    local_paths = {}
-    def inside(path):
-        if path not in local_paths:
-            local_paths[path] = project_file(project, path, recorded=True)
-        return local_paths[path]
+    inside = path_scope.file
 
     file_bytes = {}
+    file_states = {}
     source_files = set()
+
+    def current_state(path):
+        try:
+            return path_scope.io_file(path).stat()
+        except FileNotFoundError:
+            return None
+
+    def state_once(path):
+        if path not in file_states:
+            file_states[path] = current_state(path)
+        return file_states[path]
+
+    def is_file(path):
+        state = state_once(path)
+        return state is not None and stat.S_ISREG(state.st_mode)
+
+    def signature(state):
+        return None if state is None else (state.st_dev, state.st_ino, state.st_mode, state.st_size, state.st_mtime_ns)
 
     def read_once(path):
         if path not in file_bytes:
-            file_bytes[path] = path.read_bytes()
+            file_bytes[path] = path_scope.io_file(path).read_bytes()
         return file_bytes[path]
 
     def snapshot(target, data):
         target = inside(target)
-        if not check_only and (target in payloads and payloads[target] != data or target.exists() and read_once(target) != data):
-            raise ValueError('当次资料已冻结，不可覆盖：' + str(target))
+        if not check_only:
+            if target in payloads:
+                if payloads[target] != data:
+                    raise ValueError('当次资料已冻结，不可覆盖：' + str(target))
+            elif state_once(target) is not None and read_once(target) != data:
+                raise ValueError('当次资料已冻结，不可覆盖：' + str(target))
         payloads[target] = data
         return target.relative_to(project).as_posix()
 
@@ -70,12 +92,11 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
         # A matched legacy report already covered its segment plan, but not the
         # remaining context checks below. This is distinct from fixed_checked.
         if not fixed_checked and segment_context is None and not segment_plan_checked:
-            segment_context = validate_segment_context(project, workflow, task_type, mapping, timelines=timelines)
+            segment_context = validate_segment_context(project, workflow, task_type, mapping,
+                                                       timelines=timelines, path_scope=path_scope)
         if segment_context is not None:
             inputs = segment_context['director']['inputs']
             timeline, indices = segment_context['timeline'], segment_context['indices']
-            local_paths.update((mapping['segments'][index]['local_execution_dir'], entry['directory'])
-                               for index, entry in segment_context['entries'].items())
         else:
             director = next(node for node in workflow.values() if node['class_type'] == 'MiniMaxH3Director')
             inputs = director['inputs']
@@ -150,13 +171,13 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
                 old = json.loads(read_once(inside(origin['mapping'])).decode('utf-8-sig'))
                 reused = next(item for item in old['generation_contexts'] if item['identity'] == origin['identity'])
             english_file = inside(reused['prompts']['english']) if reused else directory / '模型提示词.txt'
-            has_english = english_file.is_file()
+            has_english = is_file(english_file)
             if not fixed_checked and has_english and read_once(english_file).decode('utf-8-sig').strip() != prompt:
                 raise ValueError('已有冻结英文与本次实际API提示词不一致')
             english = snapshot(english_file, read_once(english_file) if has_english else prompt.encode('utf-8'))
             prompts = {'english': english}
             chinese = inside(reused['prompts']['chinese']) if reused and 'chinese' in reused['prompts'] else directory / '中文提示词参考版.txt'
-            if chinese.is_file():
+            if is_file(chinese):
                 prompts['chinese'] = chinese.relative_to(project).as_posix()
             script_file = snapshot(inside(reused['storyboard']['file']) if reused else record / '分镜脚本.md', b'' if check_only else read_once(storyboard))
             refs = references(group, reused['references'] if reused else {})
@@ -170,12 +191,15 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
     if check_only:
         return {'files': [str(path) for path in set(file_bytes) | source_files]}
     for path, data in payloads.items():
-        if not path.exists():
+        # Fresh checkpoint: cached existence never authorizes overwriting a new file.
+        if signature(current_state(path)) != signature(file_states[path]):
+            raise ValueError('冻结资料在保存前发生变化，不可覆盖：' + str(path))
+        if file_states[path] is None:
             path.parent.mkdir(parents=True, exist_ok=True)
-            with path.open('xb') as stream:
+            with path_scope.io_file(path).open('xb') as stream:
                 stream.write(data)
     if 'generation_contexts' not in mapping:
         mapping.update(generation_contexts=contexts,
                        generation_contexts_recorded_at=datetime.now().astimezone().isoformat(timespec='seconds'),
                        generation_contexts_basis='统一提交入口在POST前按实际API自动保存当次资料。')
-        mapping_file.write_text(json.dumps(mapping, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+        path_scope.io_file(mapping_file).write_text(json.dumps(mapping, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
