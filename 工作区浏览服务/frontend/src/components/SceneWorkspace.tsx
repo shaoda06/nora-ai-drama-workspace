@@ -151,7 +151,7 @@ export function SceneWorkspace({ scope, segments, previousEnding, emptyMessage, 
     {error && <p className="error" role="alert">{error}</p>}
     {reviewRound?.versions[segment] && !roundVideo(segment)?.url && <p className="error" role="alert">{viewingPrevious ? '上集末段' : segment}的本轮{reviewRound.stage} {reviewRound.versions[segment]!.run}视频已不可播放，请检查或开始新一轮；不会自动换用其他版本。</p>}
     {viewingPrevious && <p className="previous-ending-context">上集末段 · {previousEnding!.episode} · {previousEnding!.scene} · {currentSegment!.id} <span>点击本集分段返回</span></p>}
-    {currentSegment && <SegmentWorkspace key={`${displayScope.episode}/${displayScope.scene}/${currentSegment.id}`} scope={displayScope} segment={currentSegment.id} revision={revision} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources}
+    {currentSegment && <SegmentWorkspace key={`${displayScope.episode}/${displayScope.scene}/${currentSegment.id}`} scope={displayScope} segment={currentSegment.id} revision={revision} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources} retainSource={videoCache.retainSource}
       tab={segmentTab} onTabChange={setSegmentTab}
       segmentNavigation={navigation(true)}
       wideVideo={wideVideo} onToggleWide={() => setWideVideo(value => !value)}

@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode, Ref } from 'react';
 import type { SegmentVideo as VideoItem } from '../api';
 import { Original } from '../components';
@@ -27,16 +27,18 @@ export const selectedRevision = (items: VideoItem[], selection: { stage: string;
 
 export interface SegmentVideoHandle { seekTo: (time: number) => void }
 
-export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, wide, onToggleWide, continuousControl, selectorControl, playerRef }: {
+export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, retainSource, wide, onToggleWide, continuousControl, selectorControl, playerRef }: {
   current?: VideoItem; onTimeChange: (time: number) => void; autoPlay?: boolean;
   onEnded?: () => void; onError?: () => void;
   onFileRevision?: (revision: string) => void;
   cachedSource?: string; wide: boolean; onToggleWide: () => void; continuousControl: ReactNode; selectorControl?: ReactNode;
+  retainSource: (source: string) => () => void;
   playerRef: Ref<SegmentVideoHandle>;
 }) {
   const [error, setError] = useState(false);
   const [loaded, setLoaded] = useState(current);
   const [source, setSource] = useState(cachedSource || current?.url);
+  useLayoutEffect(() => source ? retainSource(source) : undefined, [source, retainSource]);
   const [playOnLoad, setPlayOnLoad] = useState(autoPlay);
   const video = useRef<HTMLVideoElement>(null);
   const pendingSeek = useRef<number | null>(null);
