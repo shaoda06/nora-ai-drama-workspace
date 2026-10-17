@@ -135,6 +135,7 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .revision-export-fields strong{display:block;margin-bottom:8px;font-size:14px}
 .revision-export-fields textarea{display:block;width:100%;min-height:140px;resize:vertical;box-sizing:border-box}
 .revision-export-note{margin-bottom:20px}
+.revision-export-note textarea{field-sizing:content;min-height:0;resize:none}
 .revision-export-overall{border-top:1px solid var(--line);padding-top:20px;margin-top:8px}
 .revision-export-overall label+label{margin-top:20px}
 .revision-export-save{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:20px}
