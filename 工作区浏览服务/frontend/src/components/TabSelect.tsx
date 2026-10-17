@@ -21,7 +21,7 @@ function MarkedTabSelect({ items, selected, onChange, label, disabled }: Props) 
     const rect = trigger.current!.getBoundingClientRect();
     const width = Math.min(Math.max(rect.width, 340), window.innerWidth - 16);
     setPosition({ left: Math.max(8, Math.min(rect.left, window.innerWidth - width - 8)),
-      top: rect.bottom + 4, width, maxHeight: Math.max(80, window.innerHeight - rect.bottom - 20) });
+      top: rect.bottom + 4, width, maxHeight: Math.min(320, Math.max(80, window.innerHeight - rect.bottom - 20)) });
     setActive(Math.max(0, items.findIndex(item => item.value === selected)));
   };
   const close = () => { menu.current!.hidePopover(); setExpanded(false); };

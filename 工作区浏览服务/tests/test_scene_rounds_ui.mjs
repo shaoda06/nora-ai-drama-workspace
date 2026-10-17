@@ -124,8 +124,26 @@ try {
   assert.ok(menuBox.x >= 0 && menuBox.x + menuBox.width <= 391);
   await page.getByRole('button', { name: '最新修改轮次', exact: true }).click();
   assert.equal(await choose.getAttribute('aria-expanded'), 'false');
+  // Long history stays compact even on tall screens; the oldest option remains reachable.
+  for (let number = 4; number <= 20; number++) fixtureRounds.push(round(number, ['P001', 'P002']));
+  refreshRevision = 2;
+  await page.waitForFunction(() => document.querySelector('[role=listbox][aria-label="场次修改轮次"]')?.children.length === 20);
+  await page.setViewportSize({ width: 1194, height: 1600 });
+  await choose.scrollIntoViewIfNeeded();
+  await choose.click();
+  const longMenu = page.getByRole('listbox', { name: '场次修改轮次' });
+  assert.ok((await longMenu.boundingBox()).height <= 321, 'history menu grows with the screen');
+  assert.ok(await longMenu.evaluate(element => element.scrollHeight > element.clientHeight), 'long history is not internally scrollable');
+  await choose.press('End'); await choose.press('Enter');
+  assert.equal(await choose.getAttribute('data-value'), '1', 'oldest round is unreachable');
+  await page.getByRole('button', { name: '最新修改轮次', exact: true }).click();
+  await page.setViewportSize({ width: 1194, height: 890 });
+  await choose.scrollIntoViewIfNeeded(); await choose.click();
+  assert.ok((await longMenu.boundingBox()).height <= 321);
+  await page.screenshot({ path: path.join(out, 'bounded-round-history.png') });
+  await choose.press('Escape');
   assert.deepEqual(errors, []);
-  const evidence = { url: page.url(), title: await page.title(), checks: ['round defaults', 'shared select styling', 'descending version labels', 'current plan badge', 'keyboard and dismissal', 'pending revision retained', 'stage-scoped latest', 'outside-round notice', 'round-scoped note export', 'script and storyboard versions', 'historical segment order', 'unchanged run inheritance', 'fixed-round continuous playback', 'missing clip stops playback', 'new round does not replace current selection'], pageErrors: errors, productionWrites: 0 };
+  const evidence = { url: page.url(), title: await page.title(), checks: ['round defaults', 'shared select styling', 'descending version labels', 'current plan badge', 'keyboard and dismissal', 'bounded scrollable long history', 'pending revision retained', 'stage-scoped latest', 'outside-round notice', 'round-scoped note export', 'script and storyboard versions', 'historical segment order', 'unchanged run inheritance', 'fixed-round continuous playback', 'missing clip stops playback', 'new round does not replace current selection'], pageErrors: errors, productionWrites: 0 };
   await writeFile(path.join(out, 'evidence.json'), JSON.stringify(evidence, null, 2));
   console.log(JSON.stringify(evidence));
 } finally { await browser.close(); }
