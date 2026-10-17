@@ -17,6 +17,7 @@ const nodeConnectionLabels = { connecting: '正在连接', connected: '已连接
 
 export function TaskSidebar() {
   const [open, setOpen] = useState(false);
+  const [editingNodes, setEditingNodes] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
   const [tasks, setTasks] = useState<(Task | LocalQueueTask)[]>([]);
   const [localCategory, setLocalCategory] = useState<keyof typeof localQueueStates>('queued');
@@ -173,14 +174,21 @@ export function TaskSidebar() {
           {(Object.keys(localQueueStates) as (keyof typeof localQueueStates)[]).map(status => <span key={status}>{status === 'queued' ? '队列中' : localQueueStates[status]} <b>{localCounts[status]}</b></span>)}
         </span>
       </span></button>
-    <div id="comfy-task-list" className="comfy-task-content" hidden={!open}>
+    <div id="comfy-task-list" className="comfy-task-content" data-view={editingNodes ? 'nodes' : 'tasks'} hidden={!open}>
+      {editingNodes ? <>
+        <header className="comfy-node-editor-heading">
+          <button autoFocus onClick={() => setEditingNodes(false)}>‹ 返回</button><strong>节点编辑</strong>
+        </header>
+        <section className="comfy-node-editor" aria-label="节点编辑" />
+      </> : <>
       <div className="comfy-node-heading"><nav className="underline-tabs comfy-node-tabs" aria-label="远端节点">
         {nodes.map(node => <PointerTooltip key={node.url} text={connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复'}><button  aria-current={node.url === selectedNode?.url ? 'page' : undefined}
           disabled={busy || dragToken.current !== null}
           onClick={() => { setSelectedUrl(node.url); setActionError(''); }} >
           <span className="comfy-node-dot" data-connection={connection === 'connected' ? node.connection : 'connecting'}
             aria-hidden="true" />{node.name}</button></PointerTooltip>)}
-      </nav></div>
+      </nav><button className="comfy-node-edit" disabled={busy || dragToken.current !== null}
+        onClick={() => setEditingNodes(true)}>编辑</button></div>
       <section className="comfy-queue" aria-label="远端队列">
       <div className="comfy-task-heading"><strong>远端</strong>
       <div className="comfy-node-counts" aria-label="当前节点任务数量">
@@ -213,6 +221,7 @@ export function TaskSidebar() {
             onReorder={task.status === 'local_queued' ? reorderLocal : undefined} />)}</div>
         </div>}
       </section>
+      </>}
     </div>
   </aside>{detailId && <TaskDetailDialog key={detailId} id={detailId}
     updatedAt={historyUpdatedAt ?? undefined}
