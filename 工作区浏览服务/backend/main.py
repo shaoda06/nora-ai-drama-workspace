@@ -65,7 +65,7 @@ async def comfy_tasks(request: Request, include_history: bool = True) -> dict[st
 
 
 @app.get('/api/comfy/history')
-async def comfy_history(request: Request, url: str, q: str = '',
+async def comfy_history(request: Request, url: str | None = None, q: str = '',
                         result: Literal['all', 'completed', 'abnormal', 'cancelled', 'resolved'] = 'all',
                         offset: Annotated[int, Query(ge=0)] = 0,
                         limit: Annotated[int, Query(ge=1, le=100)] = 20) -> dict[str, Any]:

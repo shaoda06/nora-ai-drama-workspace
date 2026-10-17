@@ -117,7 +117,6 @@ class TaskStore(LocalQueue, TaskNotifications):
 
     def public(self, include_history=True):
         configured_urls = self.remote_urls()
-        historical_urls = sorted({row['input'].url.rstrip('/') for row in self.rows.values()} - set(configured_urls))
         snapshot = {'tasks': sorted(({**{key: ([{field: item.get(field) for field in ('identity', 'index', 'check', 'path', 'error')}
                                         for item in value.values()] if key == 'segments' else value) for key, value in row['state'].items()
                                  if key not in ('client_id', 'segment_monitor', 'notices', 'prepared_files')},
@@ -127,10 +126,7 @@ class TaskStore(LocalQueue, TaskNotifications):
                                 key=lambda item: item['created_at'], reverse=True),
                 'remote_nodes': [{'url': url, 'name': '默认节点' if index == 0 else f'备用{index}',
                                   **self.remote_queues.states.get(url, initial_state())}
-                                 for index, url in enumerate(configured_urls)] + [
-                    {'url': url, 'name': f'旧节点{index + 1}', **initial_state(), 'connection': 'unconfigured',
-                     'error': '该地址已退出工作区配置；保留原任务及历史，新任务请使用已配置节点'}
-                    for index, url in enumerate(historical_urls)]}
+                                 for index, url in enumerate(configured_urls)]}
         local = []
         orders = {node['url']: self.ordered(node['url']) for node in snapshot['remote_nodes']}
         for task in snapshot['tasks']:
@@ -150,13 +146,14 @@ class TaskStore(LocalQueue, TaskNotifications):
                           'queue_position': order.index(task['id']) + 1 if task['id'] in order else None})
         snapshot['local_tasks'] = sorted(local, key=lambda task: (task['category'] != 'queued', task.get('queue_order', 0)))
         if not include_history:
-            snapshot['local_counts'] = {node['url']: {category: sum(task['remote_url'] == node['url'] and task['category'] == category
+            task_urls = sorted(set(configured_urls) | {task['remote_url'] for task in local})
+            snapshot['local_counts'] = {url: {category: sum(task['remote_url'] == url and task['category'] == category
                                                                    for task in local)
                                                      for category in ('queued', 'paused', 'history')}
-                                        for node in snapshot['remote_nodes']}
-            snapshot['history_updated_at'] = {node['url']: max((task.get('updated_at') or task['created_at'] for task in local
-                                                               if task['remote_url'] == node['url'] and task['category'] == 'history'), default=None)
-                                             for node in snapshot['remote_nodes']}
+                                        for url in task_urls}
+            snapshot['history_updated_at'] = {url: max((task.get('updated_at') or task['created_at'] for task in local
+                                                       if task['remote_url'] == url and task['category'] == 'history'), default=None)
+                                             for url in task_urls}
             snapshot['tasks'] = [task for task in snapshot['tasks'] if task['status'] not in TERMINAL and task['status'] != 'collecting']
             snapshot['local_tasks'] = [task for task in snapshot['local_tasks'] if task['category'] != 'history']
         return snapshot

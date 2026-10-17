@@ -7,13 +7,13 @@ import { TaskHistory } from './TaskHistory';
 import './TaskSidebar.css';
 
 interface RemoteNode {
-  url: string; name: string; connection: 'connecting' | 'connected' | 'reconnecting' | 'unconfigured';
+  url: string; name: string; connection: 'connecting' | 'connected' | 'reconnecting';
   queue: { prompt_id: string; status: 'running' | 'queued'; queue_position: number | null }[];
   running_count: number | null; queued_count: number | null; updated_at: string | null;
   error: string | null; queue_error: string | null;
 }
 
-const nodeConnectionLabels = { connecting: '正在连接', connected: '已连接', reconnecting: '连接中断，正在自动重连', unconfigured: '已退出配置，保留任务记录' };
+const nodeConnectionLabels = { connecting: '正在连接', connected: '已连接', reconnecting: '连接中断，正在自动重连' };
 
 export function TaskSidebar() {
   const [open, setOpen] = useState(false);
@@ -59,7 +59,10 @@ export function TaskSidebar() {
   const category = (task: LocalQueueTask): keyof typeof localQueueStates => task.category ??
     (task.status === 'queued' || task.status === 'local_queued' ? 'queued' : task.status === 'paused' ? 'paused' : 'history');
   const nodeRows = localRows.filter(task => task.remote_url === selectedNode?.url);
-  const localCounts = counts[selectedNode?.url] ?? { queued: 0, paused: 0, history: 0 };
+  const localCounts = { queued: counts[selectedNode?.url]?.queued ?? 0, paused: counts[selectedNode?.url]?.paused ?? 0,
+    history: Object.values(counts).reduce((total, count) => total + count.history, 0) };
+  const historyUpdatedAt = Object.values(historyUpdates).reduce<string | null>((latest, value) =>
+    value && (!latest || Date.parse(value) > Date.parse(latest)) ? value : latest, null);
   const localTasks = nodeRows.filter(task => category(task) === localCategory);
   const localPositions = new Map(localTasks.filter(task => task.status === 'local_queued' || task.status === 'queued')
     .map((task, index) => [task.id, index + 1]));
@@ -186,7 +189,6 @@ export function TaskSidebar() {
       <div className="comfy-queue-body" key={selectedNode?.url}>
       {nodeWarning && <p className="comfy-task-warning" role="status">{nodeWarning}</p>}
       {visibleTasks.length === 0 && <p className="comfy-empty">{!selectedNode ? '暂无配置的远端节点'
-        : selectedNode.connection === 'unconfigured' ? '此地址不再读取远端队列，原任务记录保留在下方'
         : !selectedNode.updated_at ? selectedNode.connection === 'reconnecting' ? '尚未获取到远端队列' : '正在读取远端队列…'
         : '该节点暂无队列任务'}</p>}
       <div className="comfy-task-items">{visibleTasks.map(task => <TaskCard key={task.id} task={task} />)}</div>
@@ -200,8 +202,8 @@ export function TaskSidebar() {
               onClick={() => setLocalCategory(status)}>{localQueueStates[status]}（{localCounts[status]}）</button>)}
           </nav>
         </div>
-        {localCategory === 'history' && selectedNode ? <TaskHistory key={selectedNode.url} url={selectedNode.url}
-          updatedAt={historyUpdates[selectedNode.url]} total={localCounts.history} onDetails={setDetailId} /> :
+        {localCategory === 'history' ? <TaskHistory
+          updatedAt={historyUpdatedAt} total={localCounts.history} onDetails={setDetailId} /> :
         <div className="comfy-queue-body" key={`${selectedNode?.url}:${localCategory}`}>
           {actionError && <p className="comfy-task-warning" role="alert">{actionError}</p>}
           {localTasks.length === 0 && <p className="comfy-empty">暂无{localQueueStates[localCategory]}任务</p>}
@@ -213,6 +215,6 @@ export function TaskSidebar() {
       </section>
     </div>
   </aside>{detailId && <TaskDetailDialog key={detailId} id={detailId}
-    updatedAt={historyUpdates[selectedNode?.url] ?? undefined}
+    updatedAt={historyUpdatedAt ?? undefined}
     nodes={nodes} close={() => setDetailId(null)} openTask={setDetailId} />}</>;
 }

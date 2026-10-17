@@ -74,6 +74,34 @@ class HistoryTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(self.store.public()['tasks']), 5)
         self.assertNotIn('local_counts', self.store.public())
 
+    async def test_all_nodes_history_keeps_original_addresses_search_filters_and_pagination(self):
+        old_url = 'http://retired.invalid:8188'
+        for index in range(25):
+            self.add(str(index), url=old_url if index % 2 else self.data.url,
+                     title='EP003 二采', status='failed' if index == 3 else 'completed')
+        self.add('queued', status='local_queued', url=old_url)
+        before = {key: row['input'].model_dump() for key, row in self.store.rows.items()}
+        first = task_history(self.store)
+        second = task_history(self.store, offset=first['next_offset'])
+        self.assertEqual(first['total'], 25)
+        self.assertEqual(len(first['items']), 20)
+        self.assertEqual(len(second['items']), 5)
+        self.assertFalse({item['id'] for item in first['items']} & {item['id'] for item in second['items']})
+        self.assertEqual({item['remote_url'] for item in first['items']}, {self.data.url, old_url})
+        filtered = task_history(self.store, search='ep003', result='abnormal')
+        self.assertEqual([(item['id'], item['remote_url']) for item in filtered['items']], [('3', old_url)])
+        self.assertEqual(task_history(self.store, search='图片制作会话')['total'], 25)
+        self.assertEqual(before, {key: row['input'].model_dump() for key, row in self.store.rows.items()})
+
+    async def test_history_counts_and_access_survive_no_configured_nodes(self):
+        self.add('old')
+        (self.root / 'comfyui-config.json').unlink()
+        snapshot = self.store.public(include_history=False)
+        self.assertEqual(snapshot['remote_nodes'], [])
+        self.assertEqual(snapshot['local_counts'][self.data.url]['history'], 1)
+        self.assertEqual(snapshot['history_updated_at'][self.data.url], '2026-10-11T00:00:00+08:00')
+        self.assertEqual(task_history(self.store)['total'], 1)
+
     async def test_http_pagination_boundaries_and_read_only_queries(self):
         api = FastAPI()
         api.add_api_route('/history', main.comfy_history, methods=['GET'])
@@ -86,6 +114,11 @@ class HistoryTests(unittest.IsolatedAsyncioTestCase):
                 response = await client.get('/history', params={'url': self.data.url})
                 self.assertEqual(response.status_code, 200)
                 self.assertEqual(response.json()['total'], 1)
+                self.add('old', url='http://retired.invalid:8188', status='failed')
+                response = await client.get('/history')
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json()['total'], 2)
+                self.assertEqual((await client.get('/history', params={'q': '测试', 'result': 'abnormal'})).json()['items'][0]['id'], 'old')
                 for params in ({'offset': -1}, {'limit': 0}, {'limit': 101}, {'result': 'unknown'}):
                     self.assertEqual((await client.get('/history', params={'url': self.data.url, **params})).status_code, 422)
                 compact = (await client.get('/tasks?include_history=false')).json()
