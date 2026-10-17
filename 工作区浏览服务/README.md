@@ -4,7 +4,7 @@
 
 ## 日常启动
 
-Windows双击本目录的 `启动工作区浏览服务.bat`，macOS双击 `启动工作区浏览服务.command`，就绪后自动打开 http://127.0.0.1:8782/ 。停止时双击对应系统的“停止工作区浏览服务”脚本。重复启动复用本工作区已经运行的服务；端口被其他程序占用时明确报错，不终止其他进程。
+Windows双击本目录的 `启动（Windows）.bat`，macOS双击 `启动（Mac）.command`，就绪后自动打开 http://127.0.0.1:8782/ 。停止时双击“停止（Windows）.bat”或“停止（Mac）.command”。重复启动复用本工作区已经运行的服务；端口被其他程序占用时明确报错，不终止其他进程。
 
 启动器自动交给本机系统托管：Windows使用当前用户的任务计划程序，macOS使用当前登录用户的launchd（LaunchAgent），关闭Codex或网页不停止服务。后台项只按需启动，不添加开机、登录、定时或自动重启触发；退出系统账号或关机后，下次需手动启动。日志仍位于 `runtime/server.log`。
 
@@ -155,8 +155,10 @@ Agent通过[统一入口](../.agents/skills/nora-ai-short-drama/references/comfy
 
 ```text
 工作区浏览服务/
-├── 启动工作区浏览服务.bat
-├── 停止工作区浏览服务.bat
+├── 启动（Windows）.bat
+├── 停止（Windows）.bat
+├── 启动（Mac）.command
+├── 停止（Mac）.command
 ├── backend/
 │   ├── main.py                # API与前端发布入口
 │   ├── parsers/project.py     # 项目源文件解析器
