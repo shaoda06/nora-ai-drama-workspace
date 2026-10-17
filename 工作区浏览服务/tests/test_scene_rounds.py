@@ -138,6 +138,39 @@ class SceneRoundTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, '分段身份'):
             writer.validate_segment_context(self.project, workflow, 'video-first-pass', mapping)
 
+    def test_historical_compositions_use_explicit_order_not_run_numbers(self):
+        old = self.plan(replacements={'P001': 'R009', 'P002': 'R003'})
+        old.update(historical_at='2026-10-01T09:00:00+08:00', basis='preserved-input-mapping.json')
+        self.create(old)
+        self.layout(['P004', 'P002'], 'v2')
+        new = self.plan(ids=['P004', 'P002'], version='v2', replacements={'P004': 'R001', 'P002': 'R004'})
+        new.update(historical_at='2026-10-02T09:00:00+08:00', basis='later-input-mapping.json')
+        self.create(new)
+        entries = self.episode()['sceneRounds']['C001']
+        self.assertEqual([x['number'] for x in entries], [1, 2])
+        self.assertEqual(entries[0]['historical_at'], old['historical_at'])
+        self.assertEqual(entries[0]['basis'], old['basis'])
+        self.assertNotEqual(entries[0]['created_at'], old['historical_at'])
+        self.assertEqual([x['run'] for x in entries[0]['segments']], ['R009', 'R003', 'R001'])
+        self.assertEqual([x['id'] for x in entries[1]['segments']], ['P004', 'P002'])
+        self.assertIn('v1-P001', entries[0]['segments'][0]['scriptHtml'])
+        self.assertIn('v2-P004', entries[1]['segments'][0]['scriptHtml'])
+
+    def test_second_pass_keeps_scene_sequence_and_independent_run(self):
+        result = self.create(self.plan(replacements={'P001': 'R009'}))
+        first = json.loads(Path(result['file']).read_text('utf-8'))['rounds'][0]
+        record = self.project / (self.root + '/其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md')
+        before = record.read_bytes()
+        plan = self.plan(replacements={'P001': 'R001'})
+        plan['segments'][0]['stage'] = '二采'
+        self.create(plan)
+        entries = self.episode()['sceneRounds']['C001']
+        self.assertEqual([x['number'] for x in entries], [1, 2])
+        self.assertEqual([(s['stage'], s['run']) for s in entries[1]['segments']],
+                         [('二采', 'R001'), ('一采', 'R001'), ('一采', 'R001')])
+        self.assertEqual(first, json.loads(Path(result['file']).read_text('utf-8'))['rounds'][0])
+        self.assertEqual(before, record.read_bytes())
+
 
 if __name__ == '__main__':
     unittest.main()
