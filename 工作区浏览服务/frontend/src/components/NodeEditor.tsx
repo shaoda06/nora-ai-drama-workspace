@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import './NodeEditor.css';
 
-interface SavedNode { url: string; has_auth: boolean; locked: boolean }
+interface SavedNode { url: string; has_auth: boolean; locked: boolean; username: string; password: string }
 interface Config { revision: string | null; nodes: SavedNode[] }
 interface Row extends SavedNode {
-  key: number; original_url: string | null; auth_mode: 'keep' | 'none' | 'basic'; username: string; password: string;
+  key: number; original_url: string | null; no_auth: boolean;
 }
 
 export function NodeEditor({ close }: { close: () => void }) {
@@ -17,19 +17,21 @@ export function NodeEditor({ close }: { close: () => void }) {
   const [notice, setNotice] = useState('');
   const [confirmClose, setConfirmClose] = useState(false);
   const [confirmReload, setConfirmReload] = useState(false);
+  const [shownPasswords, setShownPasswords] = useState<number[]>([]);
   const nextKey = useRef(0);
   const dirty = JSON.stringify(rows) !== JSON.stringify(initialRows);
 
   function accept(value: Config) {
     const next = value.nodes.map(node => ({ ...node, key: nextKey.current++, original_url: node.url,
-      auth_mode: node.has_auth ? 'keep' as const : 'none' as const, username: '', password: '' }));
+      no_auth: !node.has_auth }));
     setConfig(value); setRows(next); setInitialRows(next);
     setConfirmClose(false); setConfirmReload(false);
+    setShownPasswords([]);
   }
   async function load(signal?: AbortSignal) {
     setLoading(true); setError(''); setNotice('');
     try {
-      const response = await fetch('/api/comfy/config', { signal, cache: 'no-store' });
+      const response = await fetch('/api/comfy/config/read', { method: 'POST', signal, cache: 'no-store' });
       const data = await response.json();
       if (!response.ok) throw new Error(data.detail);
       accept(data);
@@ -67,8 +69,8 @@ export function NodeEditor({ close }: { close: () => void }) {
     setSaving(true); setError(''); setNotice('');
     try {
       const response = await fetch('/api/comfy/config', { method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ revision: config!.revision, nodes: rows.map(({ url, original_url, auth_mode, username, password }) =>
-          ({ url, original_url, auth_mode, ...(auth_mode === 'basic' ? { username, password } : {}) })) }) });
+        body: JSON.stringify({ revision: config!.revision, nodes: rows.map(({ url, original_url, no_auth, username, password }) =>
+          ({ url, original_url, auth_mode: no_auth ? 'none' : 'basic', ...(!no_auth ? { username, password } : {}) })) }) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.detail);
       accept(data); setNotice('已保存'); setConfirmClose(false);
@@ -76,6 +78,10 @@ export function NodeEditor({ close }: { close: () => void }) {
     } catch (failure) {
       setError((failure as Error).message);
     } finally { setSaving(false); }
+  }
+  function restore() {
+    setRows(initialRows); setError(''); setNotice('已还原');
+    setConfirmClose(false); setConfirmReload(false); setShownPasswords([]);
   }
   const busy = loading || saving;
   return <>
@@ -110,27 +116,35 @@ export function NodeEditor({ close }: { close: () => void }) {
                   onClick={() => { setRows(current => current.filter(item => item.key !== row.key)); setNotice(''); }}>删除</button></div>
             </div>
             <label>节点地址<input aria-label={`节点${index + 1}地址`} type="url" required value={row.url} disabled={row.locked}
-              placeholder="http://127.0.0.1:8188" onChange={event => update(index, { url: event.target.value })} /></label>
+              placeholder="http://127.0.0.1:8188" onChange={event => {
+                const url = event.target.value;
+                const changedAddress = row.original_url !== null && url.trim().replace(/\/+$/, '') !== row.original_url;
+                update(index, { url, ...(changedAddress ? { username: '', password: '' } : {}) });
+              }} /></label>
             {row.locked && <p className="node-editor-hint">有未结束或待处理任务，地址暂不能修改或删除。</p>}
-            <label>认证<select aria-label={`节点${index + 1}认证`} value={row.auth_mode}
-              onChange={event => update(index, { auth_mode: event.target.value as Row['auth_mode'], username: '', password: '' })}>
-              {row.has_auth && <option value="keep">保留已配置认证</option>}
-              <option value="none">无需认证</option><option value="basic">填写Basic账号密码</option>
-            </select></label>
-            {row.auth_mode === 'basic' && <div className="node-editor-auth">
-              <label>账号<input aria-label={`节点${index + 1}账号`} autoComplete="off" required value={row.username}
+            <label className="node-editor-no-auth"><input aria-label={`节点${index + 1}无需认证`} type="checkbox" checked={row.no_auth}
+              onChange={event => { update(index, { no_auth: event.target.checked }); setShownPasswords(current => current.filter(key => key !== row.key)); }} />无需认证</label>
+            <div className="node-editor-auth">
+              <label>账号<input aria-label={`节点${index + 1}账号`} autoComplete="off" required={!row.no_auth} disabled={row.no_auth} value={row.username}
                 onChange={event => update(index, { username: event.target.value })} /></label>
-              <label>密码<input aria-label={`节点${index + 1}密码`} type="password" autoComplete="new-password" required value={row.password}
-                onChange={event => update(index, { password: event.target.value })} /></label>
-            </div>}
+              <div className="node-editor-password-field"><label htmlFor={`node-password-${row.key}`}>密码</label>
+                <div className="node-editor-password"><input id={`node-password-${row.key}`} aria-label={`节点${index + 1}密码`}
+                  type={shownPasswords.includes(row.key) ? 'text' : 'password'} autoComplete="new-password" required={!row.no_auth} disabled={row.no_auth} value={row.password}
+                  onChange={event => update(index, { password: event.target.value })} />
+                  <button type="button" disabled={row.no_auth} aria-label={`${shownPasswords.includes(row.key) ? '隐藏' : '显示'}节点${index + 1}密码`}
+                    onClick={() => setShownPasswords(current => current.includes(row.key) ? current.filter(key => key !== row.key) : [...current, row.key])}>{shownPasswords.includes(row.key) ? '隐藏' : '显示'}</button>
+                </div>
+              </div>
+            </div>
           </section>)}
           {rows.length === 0 && <p className="node-editor-hint">尚未配置节点，点击下方添加。</p>}
           <button type="button" className="node-editor-add" onClick={() => {
             setRows(current => [...current, { key: nextKey.current++, original_url: null, url: '', has_auth: false,
-              locked: false, auth_mode: 'none', username: '', password: '' }]); setNotice('');
+              locked: false, no_auth: true, username: '', password: '' }]); setNotice('');
           }}>＋ 添加节点</button>
         </fieldset>
         <footer className="node-editor-save"><button type="submit" disabled={busy || !dirty || rows.length === 0}>{saving ? '保存中…' : '保存'}</button>
+          <button type="button" disabled={busy || !dirty} onClick={restore}>还原</button>
           <span role="status">{notice || (dirty ? '有未保存的修改' : '')}</span></footer>
       </form>}
     </section>

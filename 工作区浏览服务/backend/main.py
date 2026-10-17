@@ -69,10 +69,20 @@ async def comfy_tasks(request: Request, include_history: bool = True) -> dict[st
 async def comfy_config(request: Request, response: Response) -> dict[str, Any]:
     if not management_request(request):
         raise HTTPException(403, '仅允许工作台管理操作')
+    return node_config_response(request, response)
+
+
+@app.post('/api/comfy/config/read')
+async def read_comfy_config(request: Request, response: Response) -> dict[str, Any]:
+    queue_write(request)
+    return node_config_response(request, response, credentials=True)
+
+
+def node_config_response(request: Request, response: Response, *, credentials=False):
     response.headers['Cache-Control'] = 'no-store'
     tasks = request.app.state.comfy_tasks
     try:
-        return node_config.snapshot(tasks, *node_config.read_config(tasks))
+        return node_config.snapshot(tasks, *node_config.read_config(tasks), credentials=credentials)
     except node_config.ConfigConflict as error:
         raise HTTPException(409, str(error)) from error
     except (comfy_client.ClientError, OSError, ValueError) as error:
@@ -89,7 +99,7 @@ async def save_comfy_config(request: Request, response: Response) -> dict[str, A
         # Validation responses must not echo a submitted credential-bearing object.
         raise HTTPException(422, '节点配置请求格式不正确') from error
     try:
-        return node_config.save_config(request.app.state.comfy_tasks, edit)
+        return node_config.save_config(request.app.state.comfy_tasks, edit, credentials=True)
     except node_config.ConfigConflict as error:
         raise HTTPException(409, str(error)) from error
     except comfy_client.ClientError as error:

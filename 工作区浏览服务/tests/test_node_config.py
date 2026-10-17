@@ -148,6 +148,42 @@ class NodeConfigTests(unittest.IsolatedAsyncioTestCase):
             stale = await client.put('/api/comfy/config', headers={'origin': 'http://localhost'}, json=payload)
             self.assertEqual(stale.status_code, 409)
 
+    async def test_editor_reads_credentials_only_through_same_origin_management_route(self):
+        self.config_path().write_text(json.dumps({'remote-nodes': [{'url': self.data.url,
+            'auth': {'type': 'basic', 'username': 'editor-user', 'password': 'editor-password'}}]}))
+        before = self.config_path().read_bytes()
+        changes = self.store.db.total_changes
+        api = FastAPI()
+        api.state.comfy_tasks = self.store
+        api.add_api_route('/api/comfy/config', main.comfy_config, methods=['GET'])
+        api.add_api_route('/api/comfy/config/read', main.read_comfy_config, methods=['POST'])
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=api), base_url='http://localhost') as client:
+            public = await client.get('/api/comfy/config')
+            self.assertNotIn('editor-user', public.text)
+            self.assertNotIn('editor-password', public.text)
+            self.assertNotIn('username', public.json()['nodes'][0])
+            for headers in ({}, {'origin': 'http://foreign.invalid'}):
+                denied = await client.post('/api/comfy/config/read', headers=headers)
+                self.assertEqual(denied.status_code, 403)
+                self.assertNotIn('editor-password', denied.text)
+            private = await client.post('/api/comfy/config/read', headers={'origin': 'http://localhost'})
+            self.assertEqual(private.status_code, 200)
+            self.assertEqual(private.headers['cache-control'], 'no-store')
+            self.assertEqual(private.json()['nodes'][0]['username'], 'editor-user')
+            self.assertEqual(private.json()['nodes'][0]['password'], 'editor-password')
+        self.assertEqual(self.config_path().read_bytes(), before)
+        self.assertEqual(self.store.db.total_changes, changes)
+
+    async def test_private_save_result_refreshes_edited_credentials_and_no_auth_clears_them(self):
+        result = editor.save_config(self.store, self.edit([{'url': self.data.url, 'auth_mode': 'basic',
+            'username': 'editable-user', 'password': 'editable-password'}]), credentials=True)
+        self.assertEqual(result['nodes'][0]['username'], 'editable-user')
+        self.assertEqual(result['nodes'][0]['password'], 'editable-password')
+        result = editor.save_config(self.store, self.edit([{'url': self.data.url}]), credentials=True)
+        self.assertEqual(result['nodes'][0]['username'], '')
+        self.assertEqual(result['nodes'][0]['password'], '')
+        self.assertFalse(result['nodes'][0]['has_auth'])
+
     async def test_config_change_wakes_single_observer_without_waiting_for_poll(self):
         observer = self.store.remote_queues
         observer.sync = AsyncMock()

@@ -50,13 +50,15 @@ def protected_urls(store):
         url for url, state in store.remote_queues.states.items() if state['queue']}
 
 
-def snapshot(store, nodes, revision):
+def snapshot(store, nodes, revision, *, credentials=False):
     protected = protected_urls(store)
     return {'revision': revision, 'nodes': [
-        {'url': node['url'], 'has_auth': 'auth' in node, 'locked': node['url'] in protected} for node in nodes]}
+        {'url': node['url'], 'has_auth': 'auth' in node, 'locked': node['url'] in protected,
+         **({'username': node.get('auth', {}).get('username', ''),
+             'password': node.get('auth', {}).get('password', '')} if credentials else {})} for node in nodes]}
 
 
-def save_config(store, edit):
+def save_config(store, edit, *, credentials=False):
     current, revision = read_config(store)
     if edit.revision != revision:
         raise ConfigConflict('配置已被Agent或其他页面修改，请重新载入后再保存')
@@ -98,4 +100,4 @@ def save_config(store, edit):
             temporary.unlink(missing_ok=True)
     store.remote_queues.config_changed.set()
     store.publish()
-    return snapshot(store, nodes, file_revision(path))
+    return snapshot(store, nodes, file_revision(path), credentials=credentials)
