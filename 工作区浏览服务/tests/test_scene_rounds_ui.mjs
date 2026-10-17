@@ -40,9 +40,9 @@ try {
     data.segments = { C001: segments }; data.sceneRounds = { C001: fixtureRounds };
     await route.fulfill({ response, json: data });
   });
-  await page.route('**/revision-notes/**', route => route.fulfill({ json: { notes: {
-    old: { segment: 'P001', run: 'R001', stage: '一采', text: '旧轮意见', updatedAt: '2026-10-17T20:00:00+08:00', fileRevision: '' },
-    current: { segment: 'P001', run: 'R002', stage: '一采', text: '新轮意见', updatedAt: '2026-10-17T20:00:00+08:00', fileRevision: '' }
+  await page.route('**/revision-notes/**', route => route.fulfill({ json: { rounds: {}, notes: {
+    'P001/一采/R001': { segment: 'P001', run: 'R001', stage: '一采', text: '旧轮意见', updatedAt: '2026-10-17T20:00:00+08:00', fileRevision: 'fixture-old' },
+    'P001/一采/R002': { segment: 'P001', run: 'R002', stage: '一采', text: '新轮意见', updatedAt: '2026-10-17T20:00:00+08:00', fileRevision: 'fixture-new' }
   } } }));
   await page.goto(base + '/#/projects/' + encodeURIComponent(project), { waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: '剧集制作', exact: true }).click();
@@ -84,9 +84,9 @@ try {
   assert.ok(await page.getByText('当前查看版本不属于本轮，导出仍按本轮版本。', { exact: true }).isVisible());
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
   await page.getByRole('button', { name: '导出修改意见', exact: true }).click();
-  const exported = page.getByRole('textbox', { name: '导出修改意见文本', exact: true });
+  const exported = page.locator('.revision-export-note textarea');
   await exported.waitFor();
-  assert.ok((await exported.inputValue()).includes('第1轮审看意见'));
+  assert.ok((await page.getByRole('dialog').innerText()).includes('分段意见对应第1轮固定的版本'));
   assert.ok((await exported.inputValue()).includes('旧轮意见'));
   assert.ok(!(await exported.inputValue()).includes('新轮意见'));
   await page.getByRole('button', { name: '关闭', exact: true }).click();

@@ -125,3 +125,20 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 @media(max-width:700px){.video-source{flex-wrap:wrap;row-gap:6px}.video-source-summary{flex-basis:100%}.video-source-actions{max-width:100%;flex-wrap:wrap;gap:8px}}
 
 .scene-round-selector{display:flex;align-items:center;gap:12px;flex-wrap:wrap;max-width:100%;margin-left:auto}.scene-round-selector>.tab-select{max-width:100%}.tab-select-marked{display:inline-flex;align-items:center;justify-content:space-between;gap:14px;text-align:left}.tab-select-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tab-select-marked svg{flex:none}.tab-select-menu{position:fixed;inset:auto;margin:0;padding:4px;border:1px solid var(--line);border-radius:8px;background:white;box-shadow:0 8px 24px #25352f24;overflow:auto;max-width:calc(100vw - 16px)}.tab-select-menu:popover-open{display:flex;flex-direction:column;gap:2px}.tab-select-menu [role=option]{display:flex;align-items:center;gap:16px;flex-shrink:0;width:100%;border:0;text-align:left;color:#25352f;padding:9px 12px}.tab-select-menu [role=option][data-active=true]{background:#edf3ee}.tab-select-menu [role=option][aria-selected=true]{font-weight:600}.tab-select-badge{margin-left:auto;flex:none;font-size:12px;font-weight:600;white-space:nowrap;color:var(--green);background:#edf3ee;border-radius:4px;padding:1px 7px}
+
+.revision-export-structured{position:relative}
+.revision-export-toolbar{display:contents}
+.revision-export-toolbar>button{position:absolute;top:-6px;right:0}
+.revision-export-toolbar .notice{margin:8px 0 0;text-align:right}
+.revision-export-toolbar>textarea:not(.clipboard-buffer){width:100%;margin-top:8px}
+.revision-export-fields>.revision-export-note:first-child strong,.revision-export-fields>.revision-export-overall:first-child strong{padding-right:88px;min-height:34px}
+.revision-export-fields{border:0;padding:0;margin:0;min-width:0}
+.revision-export-fields label{display:block}
+.revision-export-fields strong{display:block;margin-bottom:8px;font-size:14px}
+.revision-export-fields textarea{display:block;width:100%;min-height:140px;resize:vertical;box-sizing:border-box}
+.revision-export-note{margin-bottom:20px}
+.revision-export-overall{border-top:1px solid var(--line);padding-top:20px;margin-top:8px}
+.revision-export-overall label+label{margin-top:20px}
+.revision-export-save{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:20px}
+
+.revision-export-fields>p:first-child{padding-right:88px;min-height:34px}

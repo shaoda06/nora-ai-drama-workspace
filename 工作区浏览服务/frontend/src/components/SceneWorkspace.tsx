@@ -60,8 +60,9 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     : savedSelection && (!savedSelection.key || reviewRound) ? savedSelection : { stage: roundDefault?.stage || latest?.stage || '', key: roundDefault?.key || latest?.key || '' };
   const viewingRoundRevision = roundEntry && currentSegment && selectedRevision(currentSegment.videos, chosen)?.run === roundEntry.run && chosen.stage === roundEntry.stage;
   const notesExport = useRevisionNotesExport(displayScope, viewingPrevious ? previousEnding!.segments : segments, reviewRound && {
-    stage: reviewRound.stage, label: reviewRound.label,
-    versions: viewingPrevious ? { [currentSegment!.id]: reviewRound.versions[PREVIOUS_ENDING] ?? null } : reviewRound.versions,
+    stage: reviewRound.stage, label: reviewRound.label, number: viewingPrevious ? undefined : productionRound?.number,
+    versions: viewingPrevious ? { [currentSegment!.id]: reviewRound.versions[PREVIOUS_ENDING] ?? null } : productionRound
+      ? Object.fromEntries(productionRound.segments.map(entry => [entry.id, { stage: entry.stage, run: entry.run, key: fixedVersions[entry.id]?.key || '' }])) : reviewRound.versions,
   }, viewingPrevious ? async () => {
     const item = await queryClient.fetchQuery({ queryKey: ['episode', scope.project, displayScope.episode, revision],
       queryFn: () => get<FileItem>(`${projectUrl(scope.project)}/episodes/${displayScope.episode}`) });

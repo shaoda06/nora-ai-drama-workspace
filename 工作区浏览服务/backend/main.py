@@ -28,7 +28,7 @@ from backend.services.task_resolution import ResolutionInput, resolve_task
 from backend.services.result_summary import summary as result_summary
 from backend.services.result_registration import closeout as result_closeout
 from websockets.exceptions import WebSocketException
-from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes
+from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes, ExportChanges, NotesChangedError
 
 TOOL = Path(__file__).resolve().parent.parent
 WORKSPACE = Path(os.environ.get('NORA_WORKSPACE', TOOL.parent)).resolve()
@@ -557,6 +557,20 @@ def save_revision_note(name: str, episode: Episode, scene: Scene, value: NoteInp
         raise HTTPException(403, '修改意见仅限本机或局域网地址，并要求同源请求')
     try:
         return revision_notes.save(store.project(name), episode, scene, value)
+    except FileNotFoundError as error:
+        raise HTTPException(404, str(error)) from error
+    except (OSError, ValueError, UnicodeError) as error:
+        raise HTTPException(503, '修改意见未保存：' + str(error)) from error
+
+
+@app.put('/api/projects/{name}/revision-notes/{episode}/{scene}/export')
+def save_revision_export(name: str, episode: Episode, scene: Scene, value: ExportChanges, request: Request) -> SceneNotes:
+    if not local_write_request(request):
+        raise HTTPException(403, '修改意见仅限本机或局域网地址，并要求同源请求')
+    try:
+        return revision_notes.save_export(store.project(name), episode, scene, value)
+    except NotesChangedError as error:
+        raise HTTPException(409, str(error)) from error
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except (OSError, ValueError, UnicodeError) as error:
