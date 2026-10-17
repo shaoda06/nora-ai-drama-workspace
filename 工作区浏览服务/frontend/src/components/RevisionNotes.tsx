@@ -106,8 +106,8 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
       <TabNav compact label="意见导出范围" items={[{ value: 'round', label: '本轮意见' }, { value: 'history', label: '全部历史意见' }]} selected={mode} onChange={value => { setMode(value as ExportMode); setConfirmClose(false); }} />
       <p className="muted">{mode === 'history' ? '本场次全部画质、全部版本中已填写的意见。' : review ? `仅包含${review.label || '浏览片单'}固定的审看版本；没有填写意见时不补入旧版本意见。` : '尚未固定本轮版本，请先开启连续播放，或选择全部历史意见。'}此处编辑只影响本次导出稿。</p>
       <div className="revision-export-editor">
-        <div className="revision-export-actions"><CopyButton label="复制" text={draft[mode].text} />{draft[mode].text !== draft[mode].original && <button onClick={() => { setDraft({ ...draft, [mode]: { ...draft[mode], text: draft[mode].original } }); setConfirmClose(false); }}>还原</button>}</div>
         <textarea className="revision-notes-export" aria-label="导出修改意见文本" value={draft[mode].text} onChange={event => { setDraft({ ...draft, [mode]: { ...draft[mode], text: event.target.value } }); setConfirmClose(false); }} />
+        <div className="revision-export-actions"><CopyButton label="复制" text={draft[mode].text} />{draft[mode].text !== draft[mode].original && <button onClick={() => { setDraft({ ...draft, [mode]: { ...draft[mode], text: draft[mode].original } }); setConfirmClose(false); }}>还原</button>}</div>
       </div>
     </Dialog> };
 }
