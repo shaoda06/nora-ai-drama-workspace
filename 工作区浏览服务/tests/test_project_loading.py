@@ -8,6 +8,7 @@ from tests.http_case import HttpTestCase
 from backend import main
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
+from backend.services.revision_notes import NoteInput, RevisionNotes
 
 
 class ProjectLoadingTests(HttpTestCase):
@@ -121,3 +122,13 @@ class ProjectLoadingTests(HttpTestCase):
         (root / '备注.md').write_text('本集改动', encoding='utf-8')
         self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
         self.assertIsNot(self.store.section('示例项目', '09-剧集制作', 'EP001', mode='playback'), first)
+
+    def test_review_note_save_preserves_playback_cache_in_memory_and_after_restart(self):
+        (self.project / '09-剧集制作/EP001').mkdir(parents=True)
+        first = self.store.section('示例项目', '09-剧集制作', 'EP001', mode='playback')
+        RevisionNotes().save(self.project, 'EP001', 'C001', NoteInput(
+            segment='P001', stage='一采', run='R001', text='动作需连贯', fileRevision='123-456'))
+        self.assertIs(self.store.section('示例项目', '09-剧集制作', 'EP001', mode='playback'), first)
+        restart = ProjectStore(self.root, cache_directory=self.root / '.cache', version='new-release')
+        with patch('backend.services.projects.build_data', side_effect=AssertionError('note save rebuilt playback')):
+            self.assertEqual(restart.section('示例项目', '09-剧集制作', 'EP001', mode='playback'), first)

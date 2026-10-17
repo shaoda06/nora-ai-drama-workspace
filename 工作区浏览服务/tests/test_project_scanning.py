@@ -9,6 +9,7 @@ import unittest
 from unittest.mock import patch
 
 from backend.services.projects import ProjectStore
+from backend.services.revision_notes import NoteInput, RevisionNotes
 
 
 class ProjectScanningTests(unittest.TestCase):
@@ -85,6 +86,39 @@ class ProjectScanningTests(unittest.TestCase):
         self.assertEqual(entry['revision'], revision)
         self.assertFalse(entry['updating'])
         self.assertIsNone(entry['error'])
+
+    def test_review_note_creation_edit_clear_and_removal_do_not_refresh_project(self):
+        episode = self.project / '09-剧集制作/EP001'
+        episode.mkdir(parents=True)
+        entry = self.store.get('示例项目')
+        data, snapshot, revision = entry['data'], entry['snapshot'], entry['revision']
+        notes = RevisionNotes()
+        target = episode / '其他资料/工作稿/EP001-C001-视频修改意见.json'
+        for text in ('动作需要调整。', '动作需要调整。\n再加一条意见。', ''):
+            notes.save(self.project, 'EP001', 'C001', NoteInput(
+                segment='P001', stage='一采', run='R001', text=text, fileRevision='123-456'))
+            self.assertEqual(notes.read(self.project, 'EP001', 'C001').notes['P001/一采/R001'].text, text)
+            self.assertEqual(self.store.snapshot(self.project), snapshot)
+            entry['checked'] = 0
+            self.store.status('示例项目')
+            self.wait_for_scan()
+            self.assertIs(entry['data'], data)
+            self.assertEqual(entry['revision'], revision)
+            self.assertFalse(entry['updating'])
+        target.unlink()
+        self.assertEqual(self.store.snapshot(self.project), snapshot)
+
+    def test_review_notes_exemption_does_not_hide_real_episode_changes(self):
+        folder = self.project / '09-剧集制作/EP001/其他资料/工作稿'
+        folder.mkdir(parents=True)
+        baseline = self.store.snapshot(self.project)
+        for name in ('EP001-C001-场次分镜-工作稿.md', '输入映射.json', 'EP002-C001-视频修改意见.json',
+                     'EP001-C001-视频修改意见-备份.json', 'EP001-C001-视频修改意见.md'):
+            with self.subTest(name=name):
+                source = folder / name
+                source.write_text('新内容', encoding='utf-8')
+                self.assertNotEqual(self.store.snapshot(self.project), baseline)
+                source.unlink()
 
     def test_scan_error_preserves_snapshot_and_retry_recovers(self):
         entry = self.store.get('示例项目')

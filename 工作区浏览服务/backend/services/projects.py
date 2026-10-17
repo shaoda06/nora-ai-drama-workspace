@@ -7,7 +7,7 @@ import stat
 import threading
 import time
 
-from backend.parsers.project import SourceChangedError, build_data, live_task_record, FORMAL_SECTIONS
+from backend.parsers.project import SourceChangedError, build_data, live_task_record, live_revision_notes, FORMAL_SECTIONS
 from backend.parsers.generation import load_context
 
 logger = logging.getLogger(__name__)
@@ -49,6 +49,8 @@ class ProjectStore:
                     if item.name.startswith('.') or not prefix and item.name == '99-综合资料':
                         continue
                     key = prefix + item.name
+                    if live_revision_notes(key):
+                        continue
                     if item.is_dir():
                         if item.is_symlink():
                             continue

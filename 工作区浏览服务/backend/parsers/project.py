@@ -44,6 +44,12 @@ def live_task_record(relative):
             and any(part in ("执行附件", "执行记录") for part in path.parts))
 
 
+def live_revision_notes(relative):
+    # Review notes have their own live API; they are not compiled project sources.
+    return re.fullmatch(r"09-剧集制作/(EP\d{3,})/其他资料/工作稿/\1-C\d{3,}-视频修改意见\.json",
+                        Path(relative).as_posix()) is not None
+
+
 def plain_text_preview(path):
     digest, prefix, total = hashlib.sha256(), bytearray(), 0
     with path.open("rb") as stream:
@@ -1072,6 +1078,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             return result
         return [item for path in sorted(folder.rglob("*"))
                 if not any(p.startswith(".") for p in path.relative_to(folder).parts)
+                and not live_revision_notes(path.relative_to(project))
                 and (item := file_entry(path))]
 
     def file_tree(items, root, name):

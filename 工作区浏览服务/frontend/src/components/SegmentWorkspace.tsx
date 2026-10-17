@@ -55,6 +55,7 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
   const identity = current && `${scope.episode}-${scope.scene}-${segment}-${current.run}-${current.stage}`;
   const detail = useQuery({ queryKey: ['generation-context', scope.project, identity, revision],
     queryFn: () => get<GenerationContext>(`${projectUrl(scope.project)}/episodes/${scope.episode}/contexts/${encodeURIComponent(identity!)}`),
+    placeholderData: (previous, query) => query?.queryKey[1] === scope.project && query.queryKey[2] === identity ? previous : undefined,
     enabled: !!current && !current.context });
   const context = current?.context || (current ? detail.data : undefined);
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
