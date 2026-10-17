@@ -41,6 +41,18 @@ def validate_manifest(data, episode, scene):
         raise ValueError('场次修改轮次须按编号递增保存')
     return data
 
+
+def referenced_round(project, scene, number):
+    """Read only the referenced composition; appending other rounds does not change it."""
+    if type(number) is not int or number < 1:
+        raise ValueError('场次修改轮次引用须为正整数')
+    episode, scene_number = scene.split('-')
+    data = validate_manifest(json.loads((Path(project) / manifest_key(episode, scene_number)).read_text('utf-8-sig')), episode, scene_number)
+    item = next((item for item in data['rounds'] if item['number'] == number), None)
+    if item is None:
+        raise ValueError('输入映射引用的场次修改轮次不存在')
+    return {key: item[key] for key in ('number', 'script', 'storyboard', 'segments')}
+
 def snapshot_text(text, source, target):
     """Preserve document text while keeping relative links usable after archiving."""
     def link(match):
@@ -69,6 +81,21 @@ def create_round(project, episode, scene, plan):
     project = Path(project).resolve()
     target = project / manifest_key(episode, scene)
     data = validate_manifest(json.loads(target.read_text('utf-8-sig')), episode, scene) if target.exists() else {'episode': episode, 'scene': scene, 'rounds': []}
+    if 'base_round' in plan:
+        if 'segments' in plan or 'segment_changes' not in plan:
+            raise ValueError('局部轮次须用base_round与segment_changes；重新分段请提供完整segments')
+        base = referenced_round(project, episode + '-' + scene, plan['base_round'])
+        changes = {item['id']: item for item in plan['segment_changes']}
+        if len(changes) != len(plan['segment_changes']):
+            raise ValueError('局部轮次修改分段重复')
+        if changes.keys() - {item['id'] for item in base['segments']}:
+            raise ValueError('局部轮次不能增加或重排分段；请提供完整segments方案')
+        plan = {**plan, 'script': plan.get('script', base['script']), 'storyboard': plan.get('storyboard', base['storyboard']),
+                'segments': [changes.get(item['id'], item) for item in base['segments']]}
+        plan.pop('segment_changes')
+        plan['changed_segments'] = list(changes)
+    elif 'segment_changes' in plan:
+        raise ValueError('局部轮次必须明确base_round，不自动选择最新或推算R')
     number = max((item['number'] for item in data['rounds']), default=0) + 1
     item = {**plan, 'number': number, 'created_at': datetime.now(timezone(timedelta(hours=8))).isoformat(timespec='seconds')}
     validate_manifest({**data, 'rounds': [*data['rounds'], item]}, episode, scene)
@@ -106,7 +133,7 @@ def main():
     parser.add_argument('--project', required=True, help='项目根目录绝对路径')
     parser.add_argument('--episode', required=True, help='集号，例如EP003')
     parser.add_argument('--scene', required=True, help='场次号，例如C001')
-    parser.add_argument('--plan', required=True, help='UTF-8 JSON完整组合计划；字段见场次修改轮次模板')
+    parser.add_argument('--plan', required=True, help='UTF-8 JSON：完整segments，或明确base_round与segment_changes的局部方案；字段见场次修改轮次模板')
     args = parser.parse_args()
     print(json.dumps(create_round(args.project, args.episode, args.scene, json.loads(Path(args.plan).read_text('utf-8-sig'))), ensure_ascii=False))
 

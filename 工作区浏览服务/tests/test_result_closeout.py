@@ -70,6 +70,10 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_http_ack_register_and_real_parser_review_page(self):
         candidate, draft = self.setup_video()
+        composition_before = self.scene_rounds_file.read_bytes()
+        unselected = draft.with_name('EP001-C001-P002-视频制作-工作稿.md')
+        unselected.write_text('### R009-一采\n- 人工决定：保留原批准及原话。\n', 'utf-8')
+        unselected_before = unselected.read_bytes()
         batch = await self.collect_and_notice()
         app = FastAPI()
         app.state.comfy_tasks = self.store
@@ -96,6 +100,8 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn('- 原文：保留。', text)
         self.assertIn('- 决定：待审核', text)
         self.assertNotIn('- 决定：批准采用', text)
+        self.assertEqual(self.scene_rounds_file.read_bytes(), composition_before)
+        self.assertEqual(unselected.read_bytes(), unselected_before)
 
     async def test_ack_is_idempotent_and_rejects_other_thread(self):
         self.setup_video()

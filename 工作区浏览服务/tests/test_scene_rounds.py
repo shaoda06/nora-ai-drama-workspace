@@ -128,9 +128,9 @@ class SceneRoundTests(unittest.TestCase):
     def test_opt_in_submission_identity_is_checked_without_requiring_legacy_field(self):
         self.create()
         directory = self.root + '/其他资料/执行附件/EP001-C001-P001-R001-一采'
-        mapping = {'scene': 'EP001-C001', 'selected_indices': [0], 'scene_storyboard_version': 'v1',
-                   'segments': [{'segment': 'EP001-C001-P001', 'round': 'R001', 'local_execution_dir': directory}]}
-        workflow = {'1': {'class_type': 'MiniMaxH3Director', 'inputs': {'timeline_data': json.dumps({'segments': [{}]})}}}
+        mapping = {'scene': 'EP001-C001', 'selected_indices': [0], 'scene_storyboard_version': 'v1', 'screenplay_version': 'v1',
+                   'segments': [{'segment': 'EP001-C001-P001', 'round': 'R001', 'duration_seconds': 3, 'local_execution_dir': directory}]}
+        workflow = {'1': {'class_type': 'MiniMaxH3Director', 'inputs': {'timeline_data': json.dumps({'segments': [{'durationSec': 3}]})}}}
         writer.validate_segment_context(self.project, workflow, 'video-first-pass', mapping)
         mapping['scene_modification_round'] = 1
         writer.validate_segment_context(self.project, workflow, 'video-first-pass', mapping)
@@ -170,6 +170,65 @@ class SceneRoundTests(unittest.TestCase):
                          [('二采', 'R001'), ('一采', 'R001'), ('一采', 'R001')])
         self.assertEqual(first, json.loads(Path(result['file']).read_text('utf-8'))['rounds'][0])
         self.assertEqual(before, record.read_bytes())
+
+    def test_partial_round_inherits_only_the_explicit_base_composition(self):
+        first = self.create(self.plan(replacements={'P001': 'R009', 'P003': 'R007'}))
+        before = json.loads(Path(first['file']).read_text('utf-8'))['rounds'][0]
+        self.layout(['P001', 'P002', 'P003'], 'v2')
+        self.create({'base_round': 1, 'storyboard': {'file': self.board, 'version': 'v2'},
+                     'segment_changes': [{'id': 'P002', 'run': 'R002', 'stage': '一采', 'duration': 3}]})
+        data = json.loads(Path(first['file']).read_text('utf-8'))
+        self.assertEqual(before, data['rounds'][0])
+        self.assertEqual([s['run'] for s in data['rounds'][1]['segments']], ['R009', 'R002', 'R007'])
+        self.assertEqual(data['rounds'][1]['changed_segments'], ['P002'])
+        self.assertEqual(data['rounds'][1]['script'], before['script'])
+        saved = Path(first['file']).read_bytes()
+        for plan in [{'segment_changes': []}, {'base_round': 1, 'segment_changes': [{'id': 'P004'}]},
+                     {'base_round': 1, 'segment_changes': [{'id': 'P002'}, {'id': 'P002'}]},
+                     {'base_round': 1, 'segments': [], 'segment_changes': []}]:
+            with self.assertRaises(ValueError):
+                self.create(plan)
+            self.assertEqual(Path(first['file']).read_bytes(), saved)
+
+    def test_execution_can_retain_unselected_cache_groups_without_rebinding_scene(self):
+        self.create(self.plan(replacements={'P001': 'R009', 'P003': 'R007'}))
+        mapping = {'scene': 'EP001-C001', 'scene_modification_round': 1, 'screenplay_version': 'v1',
+                   'scene_storyboard_version': 'v1', 'selected_indices': [1], 'segments': [
+                       {'segment': 'EP001-C001-' + p, 'round': 'R001', 'duration_seconds': 3,
+                        'local_execution_dir': self.root + '/其他资料/执行附件/EP001-C001-' + p + '-R001-一采'}
+                       for p in ['P001', 'P002', 'P003']]}
+        frozen = json.dumps(mapping)
+        timeline = {'segments': [{'durationSec': 9}, {'durationSec': 3}, {'durationSec': 7}],
+                    'runSelectEnabled': True, 'runSelection': [1]}
+        workflow = {'1': {'class_type': 'MiniMaxH3Director', 'inputs': {'timeline_data': json.dumps(timeline)}}}
+        writer.validate_segment_context(self.project, workflow, 'video-first-pass', mapping)
+        self.assertEqual(json.dumps(mapping), frozen)
+        for field, value in [('screenplay_version', 'v0'), ('scene_storyboard_version', 'v0')]:
+            bad = {**mapping, field: value}
+            with self.assertRaisesRegex(ValueError, '版本'):
+                writer.validate_segment_context(self.project, workflow, 'video-first-pass', bad)
+        mapping['segments'][1]['duration_seconds'] = 4
+        with self.assertRaisesRegex(ValueError, '计划时长'):
+            writer.validate_segment_context(self.project, workflow, 'video-first-pass', mapping)
+        mapping['segments'][1]['duration_seconds'] = 3
+        timeline['segments'][1]['durationSec'] = 4
+        workflow['1']['inputs']['timeline_data'] = json.dumps(timeline)
+        with self.assertRaisesRegex(ValueError, '实际执行选中段计划时长'):
+            writer.validate_segment_context(self.project, workflow, 'video-first-pass', mapping)
+
+    def test_round_binding_supports_independent_second_pass_and_postprocess_revisions(self):
+        for task_type, stage in [('video-second-pass', '二采'), ('video-postprocess', '后处理')]:
+            plan = self.plan(replacements={'P001': 'R009'})
+            plan['segments'][1]['stage'] = stage
+            result = self.create(plan)
+            mapping = {'scene': 'EP001-C001', 'scene_modification_round': result['number'],
+                       'screenplay_version': 'v1', 'scene_storyboard_version': 'v1', 'selected_indices': [1],
+                       'segments': [{}, {'segment': 'EP001-C001-P002', 'round': 'R001', 'durationSec': 3}]}
+            composition = writer.scene_round_basis(self.project, mapping, task_type)
+            self.assertEqual(composition['number'], result['number'])
+            self.assertEqual(composition['segments'][0]['run'], 'R009')
+            with self.assertRaisesRegex(ValueError, '分段身份'):
+                writer.scene_round_basis(self.project, mapping, 'video-first-pass')
 
 
 if __name__ == '__main__':

@@ -29,7 +29,11 @@ def basis(store, data, mapping=None):
         mapping = json.loads(mapping_file.read_text('utf-8-sig')) if mapping_file.exists() else {}
     if mapping:
         payload['mapping'] = recorded_paths(data.project, {name: mapping[name] for name in (
-            'scene', 'task_type', 'screenplay_version', 'scene_storyboard_version', 'selected_indices', 'segments') if name in mapping}, relative=True)
+            'scene', 'task_type', 'screenplay_version', 'scene_storyboard_version', 'scene_modification_round', 'selected_indices', 'segments') if name in mapping}, relative=True)
+        if data.task_type.startswith('video-'):
+            revision = store.generation_context.scene_round_basis(data.project, mapping, data.task_type)
+            if revision is not None:
+                payload['scene_composition'] = revision
     return payload
 
 
@@ -40,7 +44,7 @@ def _file_stamp(path, observed):
     return observed[path]
 
 
-def sources(data, extra=(), mapping=None, *, observed=None):
+def sources(data, extra=(), mapping=None, *, observed=None, composition=None):
     observed = {} if observed is None else observed
     files = {Path(item['file']) for item in data.uploads}
     files.update(Path(path) for path in extra)
@@ -55,6 +59,8 @@ def sources(data, extra=(), mapping=None, *, observed=None):
             files.add(project_file(data.project, mapping['storyboard_file'], recorded=True))
         for context in mapping.get('generation_contexts', []):
             files.update(project_file(data.project, name, recorded=True) for name in context.get('prompts', {}).values())
+    if composition:
+        files.update(project_file(data.project, composition[kind]['file'], recorded=True) for kind in ('script', 'storyboard'))
     return {path.relative_to(data.project).as_posix(): list(_file_stamp(path, observed)) for path in sorted(files)}
 
 
@@ -73,7 +79,7 @@ def write_report(data, report):
     write_json(path, report)
 
 
-def check_prepared(store, data, *, bound=False, transferred=False, legacy=False, file_stamps=None):
+def check_prepared(store, data, *, bound=False, transferred=False, legacy=False, require_scene_round=True, file_stamps=None):
     observed = {}
     report = read_report(data)
     if report is None:
@@ -88,6 +94,8 @@ def check_prepared(store, data, *, bound=False, transferred=False, legacy=False,
         actual.pop('url', None)
     if not report['ok'] or expected != actual:
         raise ValueError('准备资料已变化或检查未通过；请在准备阶段重新调用检查，不会边提交边修改')
+    if not legacy and require_scene_round and data.task_type.startswith('video-') and 'scene_composition' not in expected:
+        raise ValueError('新视频任务必须先关联场次修改轮次；请使用--prepare-only补齐准备，旧登记任务仍按原记录恢复')
     if not legacy and not report.get('new_task_ready'):
         raise ValueError('新任务准备报告尚未覆盖完整登记要求；请使用--prepare-only补齐准备，不会在开工时补查')
     for name, stamp in report['sources'].items():
@@ -294,12 +302,17 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
         mapping_file = Path(data.record_dir) / '输入映射.json'
         mapping = json.loads(mapping_file.read_text('utf-8-sig')) if mapping_file.exists() else {}
         report['prepared_input'] = basis(store, data, mapping)
+        if not at_execution and data.task_type.startswith('video-'):
+            if 'scene_composition' not in report['prepared_input']:
+                check_new_targets(data)
+                raise ValueError('新视频任务必须填写scene_modification_round，关联完整场次组合后再准备；不得用执行时间线代替')
+        composition = report['prepared_input'].get('scene_composition')
         expected = previous['prepared_input'].copy() if previous else {}
         if previous and 'title' not in expected:
             expected['title'] = data.title
         if previous and previous['ok'] and expected == report['prepared_input']:
             observed = {}
-            report['sources'] = sources(data, previous.get('context_sources', []), mapping, observed=observed)
+            report['sources'] = sources(data, previous.get('context_sources', []), mapping, observed=observed, composition=composition)
             if previous['sources'] == report['sources']:
                 report.update(previous)
                 changed = False
@@ -310,7 +323,7 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
                 if data.task_type.startswith('video-') and 'context_sources' not in previous:
                     extra = context_checks(store, data, mapping=mapping, segment_plan_checked=data.segment_plan is not None)
                     report.update(context_sources=extra, context_checked_during='preparation')
-                    report['sources'] = sources(data, extra, mapping, observed=observed)
+                    report['sources'] = sources(data, extra, mapping, observed=observed, composition=composition)
                     changed = True
                 if changed:
                     write_report(data, report)
@@ -319,7 +332,7 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
         report.update(fixed_checks(store, data, mapping=mapping, legacy=at_execution))
         if data.task_type.startswith('video-'):
             report.setdefault('context_sources', [])
-        report['sources'] = sources(data, report.get('context_sources', []), mapping)
+        report['sources'] = sources(data, report.get('context_sources', []), mapping, composition=composition)
         report['ok'] = True
         if not at_execution:
             report['new_task_ready'] = True

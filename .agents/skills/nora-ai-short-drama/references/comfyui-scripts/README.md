@@ -590,10 +590,18 @@ python .agents/skills/nora-ai-short-drama/scripts/video_revision_migrate.py --pr
 
 ## 场次修改轮次登记
 
-规则见[场次修改轮次](../流程规范/逐集目录与资产管理规范.md#场次修改轮次)，计划字段见[模板](../模板/场次修改轮次模板.md)。在当前集中修改形成送审或执行方案后调用一次；不是每次保存、失败重试或结果取回都调用。输入JSON须列出完整顺序和沿用项。
+规则见[场次修改轮次](../流程规范/逐集目录与资产管理规范.md#场次修改轮次)，计划字段见[模板](../模板/场次修改轮次模板.md)。在当前集中修改形成送审或执行方案后调用一次；不是每次保存、失败重试或结果取回都调用。完整计划列出全部分段；局部计划明确`base_round`及完整的`segment_changes`条目，由工具展开沿用项。未提供的剧本／分镜引用沿用基轮，不能增加、删除或重排分段；新布局必须提供完整`segments`。两种计划互斥，不从执行时间线或R最大值拼造播放组合。
 
 ```powershell
 python -X utf8 .agents/skills/nora-ai-short-drama/scripts/scene_rounds.py --project "项目根目录绝对路径" --episode EP003 --scene C001 --plan "完整组合计划.json"
 ```
 
-从工作区根目录运行，Python标准库即可。`--project`指定实际项目根目录，`--episode`和`--scene`为目标集／场次；`--plan`是UTF-8 JSON文件路径。工具核对文件范围、文档版本和分段身份，保留剧本分镜副本并调整相对链接，向唯一组合JSON追加下一轮；原R、提示词、输入素材、执行和审核记录不改。未变文档复用上一轮副本，旧轮次不覆盖。成功输出组合文件、轮次整数和分段数，错误以非零退出，不联网、不生成媒体、不登记后台任务。新任务输入映射使用输出的轮次整数填写`scene_modification_round`；已登记任务不为补此字段修改原执行证据。
+从工作区根目录运行，Python标准库即可。`--project`指定实际项目根目录，`--episode`和`--scene`为目标集／场次；`--plan`是UTF-8 JSON文件路径。工具核对文件范围、文档版本和分段身份，保留剧本分镜副本并调整相对链接，向唯一组合JSON追加下一轮；原R、提示词、输入素材、执行和审核记录不改。未变文档复用上一轮副本，旧轮次不覆盖。成功输出组合文件、轮次整数和分段数，错误以非零退出，不联网、不生成媒体、不登记后台任务。新视频任务输入映射必须使用输出的轮次整数填写`scene_modification_round`，并填写`screenplay_version`、`scene_storyboard_version`及选中组的`duration_seconds`（兼容既有`durationSec`）。准备报告保存所引用的组合，校验选中组身份、版本和计划时长；未选中组仍可保留原缓存时间线，不用它确定整场播放候选。后续增加其他轮次不会使该报告失效。只有原先已登记的旧任务保留无此字段的恢复兼容，不改原执行证据、不补造轮次归属；旧报告不能用于跳过新任务准备。
+
+回归检查（工作区根目录，隔离临时项目与模拟端点）：
+
+```powershell
+工作区浏览服务/.venv/Scripts/python.exe -X utf8 -B -m unittest discover -s 工作区浏览服务/tests -t 工作区浏览服务 -p test_scene_rounds.py -q
+```
+
+此项覆盖完整与局部组合、沿用项、执行旧缓存组与播放身份分离、版本与时长不符；准备复用、旧任务恢复和只回写实际成果分别由`tests.test_submission_lifecycle`、`tests.test_result_closeout`覆盖，从`工作区浏览服务`目录运行相应unittest模块。退出码0且显示OK为通过，不调用真实服务、不生成媒体。

@@ -13,6 +13,28 @@ from tests import test_comfy_tasks as base
 
 
 class PreparationTests(unittest.IsolatedAsyncioTestCase):
+    def video_round(self, data):
+        """Local composition fixture for tests that isolate cache/upload checks."""
+        timeline = json.loads(data.workflow['502']['inputs']['timeline_data'])
+        selected = sorted(timeline['runSelection']) if timeline.get('runSelectEnabled') else list(range(len(timeline['segments'])))
+        document = self.project / 'round-document.md'
+        if not document.exists():
+            document.write_text('- 文档版本：v1\n测试正文。', 'utf-8')
+        path = self.record / '输入映射.json'
+        mapping = json.loads(path.read_text('utf-8')) if path.exists() else {'uploads': []}
+        mapping.update(scene='EP001-C001', scene_modification_round=1, screenplay_version='v1', scene_storyboard_version='v1',
+                       selected_indices=selected, segments=[{'segment': f'EP001-C001-P{i+1:03d}', 'round': 'R001',
+                       'duration_seconds': group['durationSec']} for i, group in enumerate(timeline['segments'])])
+        text = json.dumps(mapping)
+        if not path.exists() or path.read_text('utf-8') != text:
+            path.write_text(text, 'utf-8')
+        manifest = self.project / '09-剧集制作/EP001/其他资料/工作稿/EP001-C001-场次修改轮次.json'
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        manifest.write_text(json.dumps({'episode': 'EP001', 'scene': 'C001', 'rounds': [{'number': 1,
+            'script': {'file': 'round-document.md', 'version': 'v1'}, 'storyboard': {'file': 'round-document.md', 'version': 'v1'},
+            'segments': [{'id': f'P{i+1:03d}', 'stage': '一采' if data.task_type == 'video-first-pass' else '二采',
+                          'run': 'R001', 'duration': group['durationSec']} for i, group in enumerate(timeline['segments'])]}]}), 'utf-8')
+
     async def asyncSetUp(self):
         await base.TaskTests.asyncSetUp(self)
 
@@ -215,6 +237,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         key = (await self.store.enqueue(image))['local_task_id']
         self.store.rows[key]['input'].workflow = workflow
         self.store.rows[key]['input'].task_type = 'video-first-pass'
+        self.video_round(self.store.rows[key]['input'])
         with patch.object(t.client.Client, 'json', return_value={'can_confirm_refine': True}) as query, \
                 patch('backend.services.execution_checks.fixed_checks', return_value={'pair': {}, 'segments': []}), \
                 patch.object(t.client, 'submit') as post:
@@ -248,6 +271,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         for stage, changed, allowed in cases:
             with self.subTest(stage=stage, changed=changed):
                 self.store.rows[key]['input'].task_type = stage
+                self.video_round(self.store.rows[key]['input'])
                 # Each stage has its own preparation basis, as a real task does.
                 (self.record / '执行检查报告.json').unlink(missing_ok=True)
                 cache = {'can_confirm_refine': stage == 'video-second-pass', 'selected_matched': 0,
@@ -280,6 +304,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         self.data.uploads = [{'file': str(source), 'node': '502', 'input': 'timeline_data', 'subfolder': 'planned',
                               'response-name': 'upload.json', 'json-path': ['global', 'refs', 0, 'imageFile']}]
         (self.record / '输入映射.json').write_text(json.dumps({'uploads': []}), 'utf-8')
+        self.video_round(self.data)
         uploaded = {'input_path': 'actual/renamed.png', 'sha256': 'mock-transport-digest',
                     'remote': {'name': 'renamed.png', 'subfolder': 'actual', 'type': 'input'}}
         cache = {'can_confirm_refine': False, 'segments': [
