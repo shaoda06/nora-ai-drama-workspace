@@ -174,7 +174,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
         : videoCache.ready === videoCache.total ? `${reviewRound ? '本轮' : '最新'}视频已全部准备好` : `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}`}{(reviewRound ? !!roundVideo(PREVIOUS_ENDING)?.url : !!previousVideo) ? '（含上集末段）' : ''}
     </p></PointerTooltip>}
     <div className="scene-review-round">
-      <span role="status">{reviewRound ? `${productionRound ? `第${productionRound.number}轮` : '浏览片单'}版本已固定；暂停连播后仍保留。${reviewRound.order.filter(id => !roundVideo(id)?.url).length ? '部分分段暂无本轮视频。' : ''}` : '尚未登记场次修改轮次；开启连续播放可临时固定当前画质的浏览片单。'}</span>
+      {!reviewRound ? <span role="status">尚未登记场次修改轮次；开启连续播放可临时固定当前画质的浏览片单。</span> : reviewRound.order.some(id => !roundVideo(id)?.url) && <span role="status">部分分段暂无本轮视频。</span>}
       {reviewRound && !productionRound && <button disabled={!chosen.stage} onClick={() => beginReview(false)}>重新固定浏览片单</button>}
       {reviewRound && savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key && <span>当前查看版本不属于本轮，导出仍按本轮版本。</span>}
     </div>

@@ -86,7 +86,7 @@ try {
   await page.getByRole('button', { name: '导出修改意见', exact: true }).click();
   const exported = page.locator('.revision-export-note textarea');
   await exported.waitFor();
-  assert.ok((await page.getByRole('dialog').innerText()).includes('分段意见对应第1轮固定的版本'));
+  assert.ok(await page.getByRole('textbox', { name: '第1轮 整场总体意见', exact: true }).isVisible());
   assert.ok((await exported.inputValue()).includes('旧轮意见'));
   assert.ok(!(await exported.inputValue()).includes('新轮意见'));
   await page.getByRole('button', { name: '关闭', exact: true }).click();

@@ -138,7 +138,6 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
     {data.error && <span className="error">意见读取失败<button onClick={() => { void loadNotes(data.url); }}>重试</button></span>}</>,
     dialog: draft !== null && <Dialog title={`${draft.scope.episode} · ${draft.scope.scene} 导出修改意见`} close={close} headerActions={confirmClose ? <div className="revision-export-close-actions"><button autoFocus onClick={() => setConfirmClose(false)}>继续编辑</button><button className="revision-export-discard" onClick={() => { setDraft(null); setConfirmClose(false); }}>放弃修改并关闭</button></div> : undefined}>
       <TabNav compact label="意见导出范围" items={[{ value: 'round', label: '本轮意见' }, { value: 'history', label: '全部历史意见' }]} selected={mode} onChange={value => { setMode(value as ExportMode); setConfirmClose(false); }} />
-      <p className="muted">{mode === 'history' ? '本场次各版本的分段意见，最后列出按轮次保存的整场总体意见。' : `分段意见对应${draft.label}固定的版本，整场总体意见在最下方。`}保存后回写；复制只复制当前内容。</p>
       {confirmClose && <p className="notice" role="alert">尚有未保存的修改。放弃修改并关闭后，这些修改不会保留。</p>}
       <div className="revision-export-structured">
         <fieldset disabled={saving} className="revision-export-fields">

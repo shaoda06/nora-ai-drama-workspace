@@ -22,3 +22,5 @@
  .segment-workspace.is-wide .video-source-actions{max-width:100%;justify-content:flex-start;margin-left:0;flex-wrap:wrap}
  .segment-vertical-item>button{flex-direction:column;gap:2px;padding:6px 4px}
 }
+
+.scene-review-round:empty{display:none}
