@@ -128,10 +128,8 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 
 .revision-export-structured{position:relative}
 .revision-export-toolbar{display:contents}
-.revision-export-toolbar>button{position:absolute;top:-6px;right:0}
-.revision-export-toolbar .notice{margin:8px 0 0;text-align:right}
-.revision-export-toolbar>textarea:not(.clipboard-buffer){width:100%;margin-top:8px}
-.revision-export-fields>.revision-export-note:first-child strong,.revision-export-fields>.revision-export-overall:first-child strong{padding-right:88px;min-height:34px}
+.revision-export-toolbar .notice{flex-basis:100%;order:1;margin:0}
+.revision-export-toolbar>textarea:not(.clipboard-buffer){flex-basis:100%;order:2;width:100%}
 .revision-export-fields{border:0;padding:0;margin:0;min-width:0}
 .revision-export-fields label{display:block}
 .revision-export-fields strong{display:block;margin-bottom:8px;font-size:14px}
@@ -140,5 +138,3 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .revision-export-overall{border-top:1px solid var(--line);padding-top:20px;margin-top:8px}
 .revision-export-overall label+label{margin-top:20px}
 .revision-export-save{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:20px}
-
-.revision-export-fields>p:first-child{padding-right:88px;min-height:34px}
