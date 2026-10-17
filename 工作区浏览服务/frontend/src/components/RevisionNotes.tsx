@@ -56,7 +56,7 @@ export type ReviewVersions = Record<string, Pick<SegmentVideo, 'stage' | 'run' |
 type ExportMode = 'round' | 'history';
 type ExportDraft = { original: string; text: string };
 
-export function useRevisionNotesExport(scope: NoteScope, segments: { id: string; videos: SegmentVideo[] }[], review: { stage: string; versions: ReviewVersions } | null, loadHistorySegments?: () => Promise<{ id: string; videos: SegmentVideo[] }[]>) {
+export function useRevisionNotesExport(scope: NoteScope, segments: { id: string; videos: SegmentVideo[] }[], review: { stage: string; label?: string; versions: ReviewVersions } | null, loadHistorySegments?: () => Promise<{ id: string; videos: SegmentVideo[] }[]>) {
   const data = useSceneNotes(scope.project, scope.episode, scope.scene);
   const [draft, setDraft] = useState<Record<ExportMode, ExportDraft> | null>(null);
   const [mode, setMode] = useState<ExportMode>('round');
@@ -77,7 +77,7 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
       const order = (id: string) => { const index = ids.indexOf(id); return index < 0 ? ids.length + Number(id.slice(1)) : index; };
       return order(a.segment) - order(b.segment) || ['一采', '二采', '后处理'].indexOf(a.stage) - ['一采', '二采', '后处理'].indexOf(b.stage) || Number(b.run.slice(1)) - Number(a.run.slice(1));
     });
-    const text = `${scope.project} / ${scope.episode} / ${scope.scene} ${mode === 'round' ? '本轮审看意见' : '全部历史意见'}\n\n` + (notes.length ? notes.map(note => {
+    const text = `${scope.project} / ${scope.episode} / ${scope.scene} ${mode === 'round' ? `${review?.label || '本轮'}审看意见` : '全部历史意见'}\n\n` + (notes.length ? notes.map(note => {
       const video = exportSegments.find(segment => segment.id === note.segment)?.videos.find(video => video.stage === note.stage && video.run === note.run);
       const label = video ? (video.approved ? '正式版' : candidateLabel(video.candidateNumber)) : '';
       const status = data.drafts[noteKey(note)]?.status;
@@ -104,7 +104,7 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
     {data.error && <span className="error">意见读取失败<button onClick={() => { void loadNotes(data.url); }}>重试</button></span>}</>,
     dialog: draft !== null && <Dialog title={`${scope.episode} · ${scope.scene} 导出修改意见`} close={close} headerActions={confirmClose ? <div className="revision-export-close-actions"><button autoFocus onClick={() => setConfirmClose(false)}>继续编辑</button><button className="revision-export-discard" onClick={() => { setDraft(null); setConfirmClose(false); }}>放弃修改并关闭</button></div> : undefined}>
       <TabNav compact label="意见导出范围" items={[{ value: 'round', label: '本轮意见' }, { value: 'history', label: '全部历史意见' }]} selected={mode} onChange={value => { setMode(value as ExportMode); setConfirmClose(false); }} />
-      <p className="muted">{mode === 'history' ? '本场次全部画质、全部版本中已填写的意见。' : review ? `仅包含本轮固定的${review.stage}审看版本；没有填写意见时不补入旧版本意见。` : '尚未固定本轮版本，请先开启连续播放，或选择全部历史意见。'}此处编辑只影响本次导出稿。</p>
+      <p className="muted">{mode === 'history' ? '本场次全部画质、全部版本中已填写的意见。' : review ? `仅包含${review.label || '浏览片单'}固定的审看版本；没有填写意见时不补入旧版本意见。` : '尚未固定本轮版本，请先开启连续播放，或选择全部历史意见。'}此处编辑只影响本次导出稿。</p>
       <div className="revision-export-editor">
         <div className="revision-export-actions"><CopyButton label="复制" text={draft[mode].text} />{draft[mode].text !== draft[mode].original && <button onClick={() => { setDraft({ ...draft, [mode]: { ...draft[mode], text: draft[mode].original } }); setConfirmClose(false); }}>还原</button>}</div>
         <textarea className="revision-notes-export" aria-label="导出修改意见文本" value={draft[mode].text} onChange={event => { setDraft({ ...draft, [mode]: { ...draft[mode], text: event.target.value } }); setConfirmClose(false); }} />

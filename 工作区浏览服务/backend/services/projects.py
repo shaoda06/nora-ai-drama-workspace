@@ -13,7 +13,7 @@ from backend.parsers.generation import load_context
 logger = logging.getLogger(__name__)
 
 # Increment only when the parsed project data or interpretation becomes incompatible.
-CACHE_SCHEMA = 2
+CACHE_SCHEMA = 3
 
 class ProjectStore:
     """Parse on demand; keep the last complete result while a change is read."""

@@ -1289,6 +1289,9 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                     "缺少二级标题“1. 故事剧本正文”（##），或该章中没有三级场次标题（### " + number + "-C001）。"})
             episode_node["segments"] = {scene: [] for scene in episode_node["scenes"]}
             episode_node["storyboards"] = {}
+            from .scene_rounds import load_scene_rounds
+            episode_node['sceneRounds'] = {scene: load_scene_rounds(project, number, scene, read)
+                                          for scene in episode_node['scenes']} if episode_mode != 'ending' else {}
             storyboard_texts = {}
             for scene in episode_node["scenes"]:
                 identity = number + "-" + scene + "-场次分镜"
@@ -1312,6 +1315,16 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                 index_rows = [row for row in index_rows if row['场次'] == number + '-' + last_scene][-1:]
                 episode_node['scenes'] = [last_scene] if last_scene else []
                 episode_node['segments'] = {last_scene: []} if last_scene else {}
+            current_segment_ids = {row['分段'] for row in index_rows}
+            known_segment_ids = set(current_segment_ids)
+            for scene, scene_rounds in episode_node['sceneRounds'].items():
+                for scene_round in scene_rounds:
+                    for segment in scene_round['segments']:
+                        segment_id = number + '-' + scene + '-' + segment['id']
+                        if segment_id not in known_segment_ids:
+                            index_rows.append({'场次': number + '-' + scene, '分段': segment_id,
+                                               '分段计划时长（秒）': str(segment['duration'])})
+                            known_segment_ids.add(segment_id)
             for row in index_rows:
                 identity = re.fullmatch(re.escape(number) + r"-(C\d{3,})-(P\d{3,})", row["分段"])
                 if not identity or identity[1] not in episode_node["segments"] or row["场次"] != number + "-" + identity[1]:
@@ -1327,7 +1340,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                                   storyboard_texts.get(identity[1], ""), re.M | re.S)
                 segment_script = re.search(r"^###[ \t]+分段[ \t]+" + re.escape(identity[2])
                                            + r"[ \t]*\n.*?(?=^###[ \t]|\Z)", shots[1], re.M | re.S) if shots else None
-                if shots and not segment_script:
+                if shots and not segment_script and row["分段"] in current_segment_ids:
                     issues.append({"key": storyboard_source, "scene": identity[1],
                                    "message": "镜头正文中缺少三级标题“分段 " + identity[2] + "”（###），无法关联该段镜头。"})
                 shot_body = re.search(r"^####[ \t]+", segment_script[0], re.M) if segment_script else None
@@ -1386,6 +1399,8 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                     for stage in ("一采", "二采", "后处理"):
                         if video_record_body(record, run, stage):
                             revisions.add((run, stage))
+                for scene_round in episode_node['sceneRounds'].get(identity[1], []):
+                    revisions.update((entry['run'], entry['stage']) for entry in scene_round['segments'] if entry['id'] == identity[2])
                 present = {(video["run"], video["stage"]) for video in videos}
                 for run, stage in sorted(revisions - present):
                     videos.append({"key": segment_identity + "-" + run + "-" + stage,
@@ -1407,7 +1422,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                     if episode_mode == 'full':
                         video["context"] = resolve_context(segment_identity + "-" + video["run"] + "-" + video["stage"],
                             generation_contexts, project, read, read_plain, text_previews)
-                episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration),
+                episode_node["segments"][identity[1]].append({"id": identity[2], "duration": float(duration), **({"historical": True} if row["分段"] not in current_segment_ids else {}),
                     "scriptHtml": markdown(script_text, storyboard_source),
                     "videos": videos,
                     **({"scriptUrl": quote(storyboard_source, safe="/-._~")} if read(storyboard_source) is not None else {})})

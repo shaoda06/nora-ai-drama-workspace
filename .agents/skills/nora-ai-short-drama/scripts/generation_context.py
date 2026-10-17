@@ -33,6 +33,22 @@ def validate_segment_context(project, workflow, task_type, mapping, *, timelines
         if directory.name != identity and not (directory.parent.name == identity and re.fullmatch(r'执行-\d{8}-\d{6}', directory.name)):
             raise ValueError('本段执行附件目录与执行身份不一致')
         entries[index] = {'identity': identity, 'directory': directory}
+    if mapping.get('scene_modification_round') is not None:
+        from scene_rounds import manifest_key, validate_manifest
+        episode, scene_number = scene.split('-')
+        number = mapping['scene_modification_round']
+        data = validate_manifest(json.loads((path_scope.project / manifest_key(episode, scene_number)).read_text('utf-8-sig')), episode, scene_number)
+        revision = next((item for item in data['rounds'] if item['number'] == number), None)
+        if revision is None or type(number) is not int:
+            raise ValueError('输入映射引用的场次修改轮次不存在')
+        if revision['storyboard']['version'] != mapping.get('scene_storyboard_version'):
+            raise ValueError('输入映射分镜版本与场次修改轮次不一致')
+        expected = {item['id']: item for item in revision['segments']}
+        for index in indices:
+            item = mapping['segments'][index]
+            fixed = expected.get(item['segment'].split('-')[-1])
+            if fixed is None or fixed['stage'] != stage or fixed['run'] != item['round']:
+                raise ValueError('执行分段身份与场次修改轮次不一致：' + item['segment'])
     return {'director': director, 'timeline': timeline, 'indices': indices, 'entries': entries, 'project': path_scope.project}
 
 

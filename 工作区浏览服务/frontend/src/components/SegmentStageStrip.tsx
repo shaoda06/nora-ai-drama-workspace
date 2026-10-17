@@ -7,8 +7,9 @@ import './SegmentStageStrip.css';
 
 const stages = ['一采', '二采', '后处理'];
 
-export function segmentStageStatus(videos: SegmentVideo[], stage: string) {
-  const recorded = videos.filter(video => video.stage === stage);
+export function segmentStageStatus(videos: SegmentVideo[], stage: string, selection?: { stage: string; run: string }) {
+  if (selection && selection.stage !== stage) return { state: 'not-started', symbol: '·', detail: `${stage}：未纳入本轮` };
+  const recorded = videos.filter(video => video.stage === stage && (!selection || video.run === selection.run));
   const adopted = recorded.find(video => video.approved);
   if (adopted) return { state: 'adopted', symbol: '✓', detail: `${stage}：已采纳（${adopted.run}）` };
   if (!recorded.length) return { state: 'not-started', symbol: '○', detail: `${stage}：未开始` };
@@ -20,7 +21,8 @@ export function segmentStageStatus(videos: SegmentVideo[], stage: string) {
   return { state: 'started', symbol: '−', detail: `${stage}：${latest.run} · ${details.join('；') || '资料准备中，尚未完成'}` };
 }
 
-export function SegmentStageStrip({ segments, selected, onSelect, vertical = false, previousEnding, previousSelected, onPreviousSelect }: {
+export function SegmentStageStrip({ segments, selected, onSelect, vertical = false, previousEnding, previousSelected, onPreviousSelect, roundVersions }: {
+  roundVersions?: Record<string, { stage: string; run: string } | null>;
   segments: NonNullable<FileItem['segments']>[string]; selected: string; vertical?: boolean; onSelect: (id: string) => void;
   previousEnding: PreviousEpisodeEnding | null; previousSelected: boolean; onPreviousSelect: () => void;
 }) {
@@ -61,7 +63,7 @@ export function SegmentStageStrip({ segments, selected, onSelect, vertical = fal
       <div className="segment-stage-strip" role="group" aria-label="分段制作进度：一采、二采、后处理">
         {segments.map(item => <div className="segment-stage-cell" key={item.id} data-segment={item.id} data-selected={item.id === selected}>
           {stages.map(stage => {
-            const status = segmentStageStatus(item.videos, stage);
+            const status = segmentStageStatus(item.videos, stage, roundVersions?.[item.id] || undefined);
             const label = `${item.id} ${status.detail}`;
             return <PointerTooltip key={stage} text={label}><span className={`segment-stage-icon is-${status.state}`} role="img" aria-label={label} tabIndex={0}>{status.symbol}</span></PointerTooltip>;
           })}
