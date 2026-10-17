@@ -1,6 +1,7 @@
 import copy
 import importlib.util
 import json
+import math
 import os
 from pathlib import Path
 import tempfile
@@ -14,6 +15,40 @@ BASELINES = ROOT / "references/comfyui-workflow"
 RETAINED = BASELINES / "非正式工作流"
 
 class BaselineTests(unittest.TestCase):
+    def test_video_preview_dimensions_and_refine_target(self):
+        for variant in ('标准版', '去油版'):
+            with self.subTest(variant=variant):
+                stem = f'Minimax-H3-导演台-视频生成-{variant}'
+                canvas = wb.Canvas(json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8')))
+                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
+                # Check both persisted representations, including the UI's named values.
+                director = canvas.nodes[502]['widgets_values_named']
+                self.assertEqual(wb.semantic(canvas.api(wb.output_for(stem))), wb.semantic(api))
+                for inputs in (director, api['502']['inputs']):
+                    self.assertEqual((inputs['width'], inputs['height'], inputs['frame_rate']), (864, 480, 24))
+                    timeline = json.loads(inputs['timeline_data'])
+                    self.assertEqual((timeline['width'], timeline['height'], timeline['frameRate']), (864, 480, 24))
+                    output = timeline['output']
+                    for key, value in {'mode': 'fixed', 'width': 864, 'height': 480, 'longEdge': 864,
+                                       'megapixels': 0.4, 'multiple': 32, 'aspectRatio': '16:9 (宽屏)'}.items():
+                        self.assertEqual(output[key], value, key)
+                    self.assertEqual(inputs['ref_max_size'], 864)
+                    self.assertEqual(output['refImageSize'], '1536')
+                    for segment in timeline['segments']:
+                        self.assertEqual(segment['refImageSize'], '1536')
+                refine = api['407']['inputs']
+                self.assertEqual((refine['mode'], refine['upscale_method']), ('upscale', 'h3_latent'))
+                self.assertEqual((refine['width'], refine['height']), (1536, 864))
+                self.assertEqual(refine['megapixels'], 1.265625)
+                self.assertTrue(refine['confirm_first_pass'])
+                self.assertEqual(refine['passes'], 1)
+                # Refine resolves dimensions from source aspect and MP, then snaps to 32.
+                pixels = refine['megapixels'] * 1024 ** 2
+                aspect = director['width'] / director['height']
+                resolved = (round(math.sqrt(pixels * aspect) / 32) * 32,
+                            round(math.sqrt(pixels / aspect) / 32) * 32)
+                self.assertEqual(resolved, (1536, 864))
+
     def test_director_named_cache_pair_and_conflicting_api(self):
         for variant in ('标准版', '去油版'):
             with self.subTest(variant=variant), tempfile.TemporaryDirectory() as tmp:
