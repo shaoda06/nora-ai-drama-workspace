@@ -399,7 +399,7 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 
 | 参数 | 含义 |
 | --- | --- |
-| --project、--workflow | 当前设备项目根目录、最终API副本；必填，命令行可使用当前设备绝对路径 |
+| --project、--workflow | 当前设备项目根目录、最终API任务副本；必填，命令行可使用当前设备绝对路径。H3副本按[任务参数来源](../生成规范/ComfyUI-H3视频执行规范.md#12-任务参数来源与准备提交)制作，入口不自动加载基准或覆盖生成参数 |
 | --record-dir | 项目内既定执行附件；必填，相对路径以--project指定的项目根目录解析，也可用项目内绝对路径；后台保存相对路径 |
 | --task-type | image、image-upscale、video-first-pass、video-second-pass、video-postprocess，按实际获授权阶段 |
 | --task-title | 必填非空标题，格式由Agent遵守[标题规则](../流程规范/ComfyUI-服务配置与任务提交规范.md#任务显示标题)，后台不补目录名 |
