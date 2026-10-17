@@ -1,0 +1,2185 @@
+{
+  "id": "ff08b414-ca62-41dc-8372-707ac3ec6f62",
+  "revision": 0,
+  "last_node_id": 900,
+  "last_link_id": 22,
+  "nodes": [
+    {
+      "id": 192,
+      "type": "UNETLoader",
+      "pos": [
+        0,
+        0
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "title": "01｜作者 Hybrid INT8 底模",
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "inputs": [
+        {
+          "name": "unet_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "unet_name"
+          }
+        },
+        {
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "weight_dtype"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors",
+        "default"
+      ],
+      "widgets_values_named": {
+        "unet_name": "minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    {
+      "id": 53,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        0,
+        220
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "title": "02｜作者 DMAD v4 · 0.8",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors",
+        0.8000000000000002
+      ],
+      "widgets_values_named": {
+        "lora_name": "minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors",
+        "strength_model": 0.8000000000000002
+      }
+    },
+    {
+      "id": 400,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        0,
+        420
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "title": "03｜作者 MysticXXX · 0.35",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "MysticXXX_MMH3-V1.safetensors",
+        0.3500000000000001
+      ],
+      "widgets_values_named": {
+        "lora_name": "MysticXXX_MMH3-V1.safetensors",
+        "strength_model": 0.3500000000000001
+      }
+    },
+    {
+      "id": 342,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        430,
+        0
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 4,
+      "title": "可选 Combat · 沿作者旁路",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 3
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "H3_Combat_V2.safetensors",
+        0.6500000000000001
+      ],
+      "widgets_values_named": {
+        "lora_name": "H3_Combat_V2.safetensors",
+        "strength_model": 0.6500000000000001
+      }
+    },
+    {
+      "id": 344,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        430,
+        210
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "title": "可选 Motion Repair · 沿作者旁路",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 4
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            5
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "Motion_Repair_V2.safetensors",
+        0.3500000000000001
+      ],
+      "widgets_values_named": {
+        "lora_name": "Motion_Repair_V2.safetensors",
+        "strength_model": 0.3500000000000001
+      }
+    },
+    {
+      "id": 345,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        430,
+        420
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 4,
+      "title": "可选 Fight Flow · 沿作者旁路",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 5
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            6
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "H3_Fight_Flow_V1.safetensors",
+        0.3500000000000001
+      ],
+      "widgets_values_named": {
+        "lora_name": "H3_Fight_Flow_V1.safetensors",
+        "strength_model": 0.3500000000000001
+      }
+    },
+    {
+      "id": 343,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        430,
+        630
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 4,
+      "title": "可选 Speed Slider · 沿作者旁路",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 6
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "H3_speed_slider_1.1.safetensors",
+        3.0000000000000004
+      ],
+      "widgets_values_named": {
+        "lora_name": "H3_speed_slider_1.1.safetensors",
+        "strength_model": 3.0000000000000004
+      }
+    },
+    {
+      "id": 331,
+      "type": "ModelAttentionBackend",
+      "pos": [
+        860,
+        0
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "title": "04｜作者 Comfy Kitchen Attention",
+      "properties": {
+        "Node name for S&R": "ModelAttentionBackend"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 7
+        },
+        {
+          "name": "attention",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "attention"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            8
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "comfy kitchen attention"
+      ],
+      "widgets_values_named": {
+        "attention": "comfy kitchen attention"
+      }
+    },
+    {
+      "id": 332,
+      "type": "BlockSparseAttention",
+      "pos": [
+        860,
+        210
+      ],
+      "size": [
+        390,
+        345
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "title": "05｜作者 sol-attn · tau 1.3",
+      "properties": {
+        "Node name for S&R": "BlockSparseAttention"
+      },
+      "inputs": [
+        {
+          "label": "model",
+          "localized_name": "模型",
+          "name": "model",
+          "type": "MODEL",
+          "link": 8
+        },
+        {
+          "label": "selection",
+          "localized_name": "选择",
+          "name": "selection",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "widget": {
+            "name": "selection"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "tau",
+          "name": "selection.tau",
+          "type": "FLOAT",
+          "widget": {
+            "name": "selection.tau"
+          },
+          "link": null
+        },
+        {
+          "label": "start_percent",
+          "localized_name": "start_percent",
+          "name": "start_percent",
+          "type": "FLOAT",
+          "widget": {
+            "name": "start_percent"
+          },
+          "link": null
+        },
+        {
+          "label": "end_percent",
+          "localized_name": "end_percent",
+          "name": "end_percent",
+          "type": "FLOAT",
+          "widget": {
+            "name": "end_percent"
+          },
+          "link": null
+        },
+        {
+          "label": "dense_blocks",
+          "localized_name": "dense_blocks",
+          "name": "dense_blocks",
+          "type": "STRING",
+          "widget": {
+            "name": "dense_blocks"
+          },
+          "link": null
+        },
+        {
+          "label": "min_tokens",
+          "localized_name": "min_tokens",
+          "name": "min_tokens",
+          "type": "INT",
+          "widget": {
+            "name": "min_tokens"
+          },
+          "link": null
+        },
+        {
+          "label": "extra_tokens",
+          "localized_name": "extra_tokens",
+          "name": "extra_tokens",
+          "type": "INT",
+          "widget": {
+            "name": "extra_tokens"
+          },
+          "link": null
+        },
+        {
+          "label": "sink_conditioning",
+          "localized_name": "sink_conditioning",
+          "name": "sink_conditioning",
+          "type": "COMBO",
+          "widget": {
+            "name": "sink_conditioning"
+          },
+          "link": null
+        },
+        {
+          "label": "verbose",
+          "localized_name": "详细日志",
+          "name": "verbose",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "verbose"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            9
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "sol-attn",
+        1.3,
+        0.2,
+        1,
+        "",
+        12288,
+        256,
+        "exact_kv_and_rows",
+        true
+      ],
+      "widgets_values_named": {
+        "selection": "sol-attn",
+        "selection.tau": 1.3,
+        "start_percent": 0.2,
+        "end_percent": 1,
+        "dense_blocks": "",
+        "min_tokens": 12288,
+        "extra_tokens": 256,
+        "sink_conditioning": "exact_kv_and_rows",
+        "verbose": true
+      }
+    },
+    {
+      "id": 333,
+      "type": "MiniMaxH3SigmaShift",
+      "pos": [
+        860,
+        630
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "title": "06｜作者 Shift · 视频12／音频3",
+      "properties": {
+        "Node name for S&R": "MiniMaxH3SigmaShift"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 9
+        },
+        {
+          "name": "shift_video",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "shift_video"
+          }
+        },
+        {
+          "name": "shift_audio",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "shift_audio"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            10
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        12.0,
+        3.0
+      ],
+      "widgets_values_named": {
+        "shift_video": 12.0,
+        "shift_audio": 3.0
+      }
+    },
+    {
+      "id": 401,
+      "type": "MiniMaxChunkFeedForward",
+      "pos": [
+        860,
+        850
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "title": "07｜作者前馈分块 · 2块",
+      "properties": {
+        "Node name for S&R": "MiniMaxChunkFeedForward"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 10
+        },
+        {
+          "name": "chunks",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "chunks"
+          }
+        },
+        {
+          "name": "seq_threshold",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seq_threshold"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            11
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        2,
+        4096
+      ],
+      "widgets_values_named": {
+        "chunks": 2,
+        "seq_threshold": 4096
+      }
+    },
+    {
+      "id": 329,
+      "type": "ModelPreviewOverrideKJ",
+      "pos": [
+        860,
+        1080
+      ],
+      "size": [
+        390,
+        290
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "title": "08｜作者采样预览",
+      "properties": {
+        "Node name for S&R": "ModelPreviewOverrideKJ"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 11
+        },
+        {
+          "name": "max_resolution",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "max_resolution"
+          }
+        },
+        {
+          "name": "jpeg_quality",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "jpeg_quality"
+          }
+        },
+        {
+          "name": "suppress_default_preview",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "suppress_default_preview"
+          }
+        },
+        {
+          "name": "preview_frames",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "preview_frames"
+          }
+        },
+        {
+          "name": "preview_fps",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "preview_fps"
+          }
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 12
+        },
+        {
+          "name": "tiny_vae",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "tiny_vae"
+          }
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            13,
+            14
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        1024,
+        80,
+        true,
+        1024,
+        12,
+        "taeh3.safetensors"
+      ],
+      "widgets_values_named": {
+        "max_resolution": 1024,
+        "jpeg_quality": 80,
+        "suppress_default_preview": true,
+        "preview_frames": 1024,
+        "preview_fps": 12,
+        "tiny_vae": "taeh3.safetensors"
+      }
+    },
+    {
+      "id": 38,
+      "type": "CLIPLoader",
+      "pos": [
+        1320,
+        0
+      ],
+      "size": [
+        440,
+        190
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "title": "09｜作者 NVFP4 AWQ · 可切换INT8作对照",
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "inputs": [
+        {
+          "name": "clip_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "clip_name"
+          }
+        },
+        {
+          "name": "type",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "type"
+          }
+        },
+        {
+          "name": "device",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "device"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            17
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "minimax",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "type": "minimax",
+        "device": "default"
+      }
+    },
+    {
+      "id": 36,
+      "type": "VAELoader",
+      "pos": [
+        1320,
+        270
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "title": "10｜原视频VAE · INT8",
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "vae_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            12,
+            15
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "minimax_h3_video_vae_int8_convrot.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+      }
+    },
+    {
+      "id": 37,
+      "type": "VAELoader",
+      "pos": [
+        1320,
+        470
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "title": "11｜原音频VAE · FP32",
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "inputs": [
+        {
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "vae_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "minimax_h3_audio_vae_fp32.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
+    },
+    {
+      "id": 261,
+      "type": "BasicScheduler",
+      "pos": [
+        1320,
+        680
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "title": "12｜作者 Simple · 完整12步",
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 13
+        },
+        {
+          "name": "scheduler",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "scheduler"
+          }
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "steps"
+          }
+        },
+        {
+          "name": "denoise",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "denoise"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            18
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "simple",
+        12,
+        1.0
+      ],
+      "widgets_values_named": {
+        "scheduler": "simple",
+        "steps": 12,
+        "denoise": 1.0
+      }
+    },
+    {
+      "id": 600,
+      "type": "MiniMaxH3DirectorSelfLift",
+      "pos": [
+        1320,
+        930
+      ],
+      "size": [
+        440,
+        790
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "title": "13｜导演台原生SelfLift · 6低清＋6高清",
+      "properties": {
+        "Node name for S&R": "MiniMaxH3DirectorSelfLift"
+      },
+      "inputs": [
+        {
+          "name": "bd_grp_selflift_sample",
+          "type": "BDGROUP",
+          "link": null,
+          "widget": {
+            "name": "bd_grp_selflift_sample"
+          }
+        },
+        {
+          "name": "split_mode",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "split_mode"
+          }
+        },
+        {
+          "name": "highres_steps",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "highres_steps"
+          }
+        },
+        {
+          "name": "transition_step",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "transition_step"
+          }
+        },
+        {
+          "name": "lowres_scale",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "lowres_scale"
+          }
+        },
+        {
+          "name": "sampler_mode",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "sampler_mode"
+          }
+        },
+        {
+          "name": "native_low_carry",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "native_low_carry"
+          }
+        },
+        {
+          "name": "bd_grp_selflift_lift",
+          "type": "BDGROUP",
+          "link": null,
+          "widget": {
+            "name": "bd_grp_selflift_lift"
+          }
+        },
+        {
+          "name": "latent_upscale_model",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "latent_upscale_model"
+          }
+        },
+        {
+          "name": "latent_upsample",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "latent_upsample"
+          }
+        },
+        {
+          "name": "rho",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "rho"
+          }
+        },
+        {
+          "name": "w_min",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "w_min"
+          }
+        },
+        {
+          "name": "w_max",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "w_max"
+          }
+        },
+        {
+          "name": "enable_latent_chunking",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "enable_latent_chunking"
+          }
+        },
+        {
+          "name": "bd_grp_selflift_tile",
+          "type": "BDGROUP",
+          "link": null,
+          "widget": {
+            "name": "bd_grp_selflift_tile"
+          }
+        },
+        {
+          "name": "enable_tiling",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "enable_tiling"
+          }
+        },
+        {
+          "name": "tile_count",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "tile_count"
+          }
+        },
+        {
+          "name": "tile_overlap",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "tile_overlap"
+          }
+        },
+        {
+          "name": "model_hires",
+          "type": "MODEL",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "selflift",
+          "type": "MMX_DIR_SELFLIFT",
+          "links": [
+            19
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "渐进采样",
+        "transition_step",
+        6,
+        6,
+        0.6,
+        "euler",
+        false,
+        "提升 / 3D",
+        "minimax_h3_latent_upscaler_3d_fp16_V2.safetensors",
+        "bilinear",
+        0.0,
+        0.5,
+        1.0,
+        false,
+        "高清分块",
+        false,
+        2,
+        128
+      ],
+      "widgets_values_named": {
+        "bd_grp_selflift_sample": "渐进采样",
+        "split_mode": "transition_step",
+        "highres_steps": 6,
+        "transition_step": 6,
+        "lowres_scale": 0.6,
+        "sampler_mode": "euler",
+        "native_low_carry": false,
+        "bd_grp_selflift_lift": "提升 / 3D",
+        "latent_upscale_model": "minimax_h3_latent_upscaler_3d_fp16_V2.safetensors",
+        "latent_upsample": "bilinear",
+        "rho": 0.0,
+        "w_min": 0.5,
+        "w_max": 1.0,
+        "enable_latent_chunking": false,
+        "bd_grp_selflift_tile": "高清分块",
+        "enable_tiling": false,
+        "tile_count": 2,
+        "tile_overlap": 128
+      }
+    },
+    {
+      "id": 502,
+      "type": "MiniMaxH3Director",
+      "pos": [
+        1830,
+        0
+      ],
+      "size": [
+        1370,
+        1500
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "title": "14｜导演台素材／分组／提示词 · 作者配置融合测试",
+      "properties": {
+        "Node name for S&R": "MiniMaxH3Director"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 14
+        },
+        {
+          "name": "video_vae",
+          "type": "VAE",
+          "link": 15
+        },
+        {
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 16
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 17
+        },
+        {
+          "name": "task_type",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "task_type"
+          }
+        },
+        {
+          "name": "global_prompt",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "global_prompt"
+          }
+        },
+        {
+          "name": "bd_grp_sample",
+          "type": "BDGROUP",
+          "link": null,
+          "widget": {
+            "name": "bd_grp_sample"
+          }
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "cfg"
+          }
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "frame_rate"
+          }
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "height"
+          }
+        },
+        {
+          "name": "ref_max_size",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "ref_max_size"
+          }
+        },
+        {
+          "name": "total_frames",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "total_frames"
+          }
+        },
+        {
+          "name": "timeline_data",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "timeline_data"
+          }
+        },
+        {
+          "name": "i2v_groups",
+          "type": "MMX_DIR_GROUP",
+          "link": null
+        },
+        {
+          "name": "r2v_groups",
+          "type": "MMX_DIR_GROUP",
+          "link": null
+        },
+        {
+          "name": "semantic_bridge",
+          "type": "MMX_DIR_SEMANTIC_BRIDGE",
+          "link": null
+        },
+        {
+          "name": "selflift",
+          "type": "MMX_DIR_SELFLIFT",
+          "link": 19
+        },
+        {
+          "name": "refine",
+          "type": "MMX_DIR_REFINE",
+          "link": null
+        },
+        {
+          "name": "face_refine",
+          "type": "MMX_DIR_FACE_REFINE",
+          "link": null
+        },
+        {
+          "name": "bd_grp_advanced",
+          "type": "BDGROUP",
+          "link": null,
+          "widget": {
+            "name": "bd_grp_advanced"
+          }
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "steps"
+          }
+        },
+        {
+          "name": "sampler",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "sampler"
+          }
+        },
+        {
+          "name": "scheduler",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "scheduler"
+          }
+        },
+        {
+          "name": "shift_video",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "shift_video"
+          }
+        },
+        {
+          "name": "shift_audio",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "shift_audio"
+          }
+        },
+        {
+          "name": "bd_grp_perf",
+          "type": "BDGROUP",
+          "link": null,
+          "widget": {
+            "name": "bd_grp_perf"
+          }
+        },
+        {
+          "name": "clear_vram_between_segments",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "clear_vram_between_segments"
+          }
+        },
+        {
+          "name": "clear_vram_before_refine",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "clear_vram_before_refine"
+          }
+        },
+        {
+          "name": "clear_vram_before_face_refine",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "clear_vram_before_face_refine"
+          }
+        },
+        {
+          "name": "cache_frames_codec",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "cache_frames_codec"
+          }
+        },
+        {
+          "name": "export_source_images",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "export_source_images"
+          }
+        },
+        {
+          "name": "export_pre_face_refine",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "export_pre_face_refine"
+          }
+        },
+        {
+          "name": "precise_segment_memory",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "precise_segment_memory"
+          }
+        },
+        {
+          "name": "cache_name",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "cache_name"
+          }
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 18
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            20
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            21
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "links": [
+            22
+          ],
+          "slot_index": 2
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": null,
+          "slot_index": 3
+        },
+        {
+          "name": "source_images",
+          "type": "IMAGE",
+          "links": null,
+          "slot_index": 4
+        },
+        {
+          "name": "report",
+          "type": "STRING",
+          "links": null,
+          "slot_index": 5
+        },
+        {
+          "name": "images_pre_refine",
+          "type": "IMAGE",
+          "links": null,
+          "slot_index": 6
+        },
+        {
+          "name": "images_pre_face_refine",
+          "type": "IMAGE",
+          "links": null,
+          "slot_index": 7
+        }
+      ],
+      "widgets_values": [
+        "r2v — 参考主体生视频(Reference to Video)",
+        "",
+        "采样设置",
+        1.0,
+        29732110694208,
+        "fixed",
+        24,
+        1664,
+        928,
+        1664,
+        294,
+        "{\"version\":5,\"editMode\":\"segment\",\"timelineMode\":\"prompt_batch\",\"totalFrames\":294,\"frameRate\":24,\"width\":1664,\"height\":928,\"refMaxSize\":1664,\"runSelectEnabled\":false,\"runSelection\":[],\"videoClips\":[],\"global\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":false,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}},\"output\":{\"mode\":\"fixed\",\"aspectRatio\":\"16:9 (宽屏)\",\"megapixels\":1.5,\"multiple\":32,\"longEdge\":1664,\"width\":1664,\"height\":928,\"maxExportFrames\":0,\"exportMode\":\"segments\",\"audioMode\":\"generate\",\"exportSourceImages\":false,\"exportPreFaceRefine\":false,\"refImageSize\":\"max\",\"continuityEnabled\":false,\"continuityOverlapFrames\":22,\"continuityMode\":\"continue\",\"continuityRedraw\":0.1,\"continuityKeepTail\":true},\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":294,\"frameCount\":294,\"durationSec\":12.25,\"prompt\":\"\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"keyframes\":[],\"durationSec\":12.25,\"video\":{\"fileName\":\"\",\"frames\":[],\"type\":\"input\",\"subfolder\":\"\",\"sourceFrameCount\":0,\"deletedSourceRanges\":[],\"frameMap\":[]},\"gen\":{\"defaultFrameCount\":294},\"liveTaePreview\":true,\"batchDetailMode\":\"solo\",\"batchWorkspaces\":{\"r2v\":{\"selectedIndex\":0,\"editMode\":\"segment\",\"runSelectEnabled\":false,\"runSelection\":[],\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":294,\"frameCount\":294,\"durationSec\":12.25,\"prompt\":\"\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"globalCommon\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":false,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}}}},\"selectedIndex\":0}",
+        "高级采样",
+        12,
+        "euler",
+        "simple",
+        12.0,
+        3.0,
+        "性能",
+        true,
+        false,
+        false,
+        "ffv1",
+        false,
+        false,
+        true,
+        "YZSelfLift-test-ace0f02571"
+      ],
+      "widgets_values_named": {
+        "task_type": "r2v — 参考主体生视频(Reference to Video)",
+        "global_prompt": "",
+        "bd_grp_sample": "采样设置",
+        "cfg": 1.0,
+        "seed": 29732110694208,
+        "control_after_generate": "fixed",
+        "frame_rate": 24,
+        "width": 1664,
+        "height": 928,
+        "ref_max_size": 1664,
+        "total_frames": 294,
+        "timeline_data": "{\"version\":5,\"editMode\":\"segment\",\"timelineMode\":\"prompt_batch\",\"totalFrames\":294,\"frameRate\":24,\"width\":1664,\"height\":928,\"refMaxSize\":1664,\"runSelectEnabled\":false,\"runSelection\":[],\"videoClips\":[],\"global\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":false,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}},\"output\":{\"mode\":\"fixed\",\"aspectRatio\":\"16:9 (宽屏)\",\"megapixels\":1.5,\"multiple\":32,\"longEdge\":1664,\"width\":1664,\"height\":928,\"maxExportFrames\":0,\"exportMode\":\"segments\",\"audioMode\":\"generate\",\"exportSourceImages\":false,\"exportPreFaceRefine\":false,\"refImageSize\":\"max\",\"continuityEnabled\":false,\"continuityOverlapFrames\":22,\"continuityMode\":\"continue\",\"continuityRedraw\":0.1,\"continuityKeepTail\":true},\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":294,\"frameCount\":294,\"durationSec\":12.25,\"prompt\":\"\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"keyframes\":[],\"durationSec\":12.25,\"video\":{\"fileName\":\"\",\"frames\":[],\"type\":\"input\",\"subfolder\":\"\",\"sourceFrameCount\":0,\"deletedSourceRanges\":[],\"frameMap\":[]},\"gen\":{\"defaultFrameCount\":294},\"liveTaePreview\":true,\"batchDetailMode\":\"solo\",\"batchWorkspaces\":{\"r2v\":{\"selectedIndex\":0,\"editMode\":\"segment\",\"runSelectEnabled\":false,\"runSelection\":[],\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":294,\"frameCount\":294,\"durationSec\":12.25,\"prompt\":\"\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"globalCommon\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":false,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}}}},\"selectedIndex\":0}",
+        "bd_grp_advanced": "高级采样",
+        "steps": 12,
+        "sampler": "euler",
+        "scheduler": "simple",
+        "shift_video": 12.0,
+        "shift_audio": 3.0,
+        "bd_grp_perf": "性能",
+        "clear_vram_between_segments": true,
+        "clear_vram_before_refine": false,
+        "clear_vram_before_face_refine": false,
+        "cache_frames_codec": "ffv1",
+        "export_source_images": false,
+        "export_pre_face_refine": false,
+        "precise_segment_memory": true,
+        "cache_name": "YZSelfLift-test-ace0f02571"
+      }
+    },
+    {
+      "id": 264,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        3260,
+        0
+      ],
+      "size": [
+        640,
+        420
+      ],
+      "flags": {
+        "collapsed": false,
+        "disabled": false
+      },
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "images",
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 20
+        },
+        {
+          "label": "audio",
+          "localized_name": "audio",
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 21
+        },
+        {
+          "label": "meta_batch",
+          "localized_name": "meta_batch",
+          "name": "meta_batch",
+          "shape": 7,
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "label": "vae",
+          "localized_name": "vae",
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "label": "frame_rate",
+          "localized_name": "frame_rate",
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "widget": {
+            "name": "frame_rate"
+          },
+          "link": 22
+        },
+        {
+          "label": "loop_count",
+          "localized_name": "loop_count",
+          "name": "loop_count",
+          "type": "INT",
+          "widget": {
+            "name": "loop_count"
+          },
+          "link": null
+        },
+        {
+          "label": "filename_prefix",
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        },
+        {
+          "label": "format",
+          "localized_name": "format",
+          "name": "format",
+          "type": "COMBO",
+          "widget": {
+            "name": "format"
+          },
+          "link": null
+        },
+        {
+          "label": "pingpong",
+          "localized_name": "pingpong",
+          "name": "pingpong",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "pingpong"
+          },
+          "link": null
+        },
+        {
+          "label": "save_output",
+          "localized_name": "save_output",
+          "name": "save_output",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "save_output"
+          },
+          "link": null
+        },
+        {
+          "name": "pix_fmt",
+          "type": [
+            "yuv420p",
+            "yuv420p10le"
+          ],
+          "widget": {
+            "name": "pix_fmt"
+          },
+          "link": null
+        },
+        {
+          "name": "crf",
+          "type": "INT",
+          "widget": {
+            "name": "crf"
+          },
+          "link": null
+        },
+        {
+          "name": "save_metadata",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "save_metadata"
+          },
+          "link": null
+        },
+        {
+          "name": "trim_to_audio",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "trim_to_audio"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "label": "Filenames",
+          "localized_name": "Filenames",
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine",
+        "widget_ue_connectable": {}
+      },
+      "widgets_values": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "Nora/Tests/YZSelfLift",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true
+      },
+      "widgets_values_named": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "Nora/Tests/YZSelfLift",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true
+      },
+      "color": "#233",
+      "bgcolor": "#355",
+      "title": "15｜测试输出 · 作者H.264／CRF19"
+    },
+    {
+      "id": 900,
+      "type": "Note",
+      "pos": [
+        3260,
+        510
+      ],
+      "size": [
+        640,
+        620
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "实验画布：导演台管理素材、提示词和分组；模型链沿YZ金鱼《终极篇·文武双全》。\n\n当前缺少放大权重：minimax_h3_latent_upscaler_3d_fp16_V2.safetensors。补齐并刷新模型列表后使用；没有自动换成V1。\n\n在导演台第一组添加参考素材并填写提示词。参考图策略max。作者12秒设置对齐为294帧／12.25秒；目标1664×928、24fps。\n\nSelfLift：前6步低清，倍率0.6；后6步高清；rho=0；不接额外Refine。四个武打／修复／速度LoRA沿作者旁路。\n\n固定作者当前种子，便于同素材、同提示词切换节点38的INT8／NVFP4编码器作对照。\n\n此处使用导演台自带SelfLift实现，并非作者外部SelfLiftH3Sampler的逐像素复现；插值和缓存／卸载由导演台实现管理。未提交生成，不能据此声称速度或画质已验证。"
+      ],
+      "title": "测试说明／缺项／操作入口",
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      192,
+      0,
+      53,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      53,
+      0,
+      400,
+      0,
+      "MODEL"
+    ],
+    [
+      3,
+      400,
+      0,
+      342,
+      0,
+      "MODEL"
+    ],
+    [
+      4,
+      342,
+      0,
+      344,
+      0,
+      "MODEL"
+    ],
+    [
+      5,
+      344,
+      0,
+      345,
+      0,
+      "MODEL"
+    ],
+    [
+      6,
+      345,
+      0,
+      343,
+      0,
+      "MODEL"
+    ],
+    [
+      7,
+      343,
+      0,
+      331,
+      0,
+      "MODEL"
+    ],
+    [
+      8,
+      331,
+      0,
+      332,
+      0,
+      "MODEL"
+    ],
+    [
+      9,
+      332,
+      0,
+      333,
+      0,
+      "MODEL"
+    ],
+    [
+      10,
+      333,
+      0,
+      401,
+      0,
+      "MODEL"
+    ],
+    [
+      11,
+      401,
+      0,
+      329,
+      0,
+      "MODEL"
+    ],
+    [
+      12,
+      36,
+      0,
+      329,
+      6,
+      "VAE"
+    ],
+    [
+      13,
+      329,
+      0,
+      261,
+      0,
+      "MODEL"
+    ],
+    [
+      14,
+      329,
+      0,
+      502,
+      0,
+      "MODEL"
+    ],
+    [
+      15,
+      36,
+      0,
+      502,
+      1,
+      "VAE"
+    ],
+    [
+      16,
+      37,
+      0,
+      502,
+      2,
+      "VAE"
+    ],
+    [
+      17,
+      38,
+      0,
+      502,
+      3,
+      "CLIP"
+    ],
+    [
+      18,
+      261,
+      0,
+      502,
+      36,
+      "SIGMAS"
+    ],
+    [
+      19,
+      600,
+      0,
+      502,
+      18,
+      "MMX_DIR_SELFLIFT"
+    ],
+    [
+      20,
+      502,
+      0,
+      264,
+      0,
+      "IMAGE"
+    ],
+    [
+      21,
+      502,
+      1,
+      264,
+      1,
+      "AUDIO"
+    ],
+    [
+      22,
+      502,
+      2,
+      264,
+      4,
+      "FLOAT"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "A｜作者底模与生效LoRA",
+      "bounding": [
+        -30,
+        -80,
+        440,
+        720
+      ],
+      "color": "#355d6f",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "B｜作者旁路选项",
+      "bounding": [
+        405,
+        -80,
+        430,
+        930
+      ],
+      "color": "#66534b",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "C｜作者注意力、Shift与分块",
+      "bounding": [
+        835,
+        -80,
+        440,
+        1470
+      ],
+      "color": "#4b665b",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "D｜编码器与导演台原生SelfLift",
+      "bounding": [
+        1290,
+        -80,
+        500,
+        1840
+      ],
+      "color": "#665d3c",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "E｜导演台管理参考素材与提示词",
+      "bounding": [
+        1800,
+        -80,
+        1430,
+        1670
+      ],
+      "color": "#355d6f",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "F｜测试输出与说明",
+      "bounding": [
+        3235,
+        -80,
+        720,
+        1260
+      ],
+      "color": "#4b665b",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.45,
+      "offset": [
+        80,
+        150
+      ]
+    },
+    "nora_experiment": {
+      "source_workflow": "YZ金鱼-MiniMax H3 终极篇-文武双全.json",
+      "source_id": "eee7ca4f-9198-48dd-b48a-80b3f7191873",
+      "director_source": "https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director",
+      "director_commit": "4c6245e518dd8a494f3afc4f3cccd53f22d82d10",
+      "experimental": true,
+      "missing_model": "minimax_h3_latent_upscaler_3d_fp16_V2.safetensors",
+      "changed_for_comparison": "author seed fixed; references and prompt entered in Director; native Director SelfLift implementation",
+      "validation": {
+        "offline_pair": "passed",
+        "live_node_schemas": "15 API nodes registered; 18 link types checked",
+        "missing_weight": "minimax_h3_latent_upscaler_3d_fp16_V2.safetensors",
+        "generation_executed": false
+      }
+    }
+  },
+  "version": 0.4
+}
