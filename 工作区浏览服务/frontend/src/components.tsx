@@ -20,13 +20,20 @@ export function Result({ loading, error, retry, retrying, page = false }: {
   if (error) return <p className="error" role="alert">资料读取失败，请点击重新读取。 <button disabled={retrying} onClick={() => { void retry(); }}>{retrying ? '正在读取…' : '重新读取'}</button></p>;
   return loading && !error ? <Loading page={page} /> : null;
 }
-export function Rich({ html = '', languages = [] }: { html?: string; languages?: { value: string; label: string; text: string; html?: string }[] }) {
-  const preview = useContext(PreviewContext);
+type LanguageOption = { value: string; label: string; text: string; html?: string };
+type LanguageGroup = { label: string; items: LanguageOption[] };
+function CodeBlock({ text, languages }: { text: string; languages?: LanguageGroup }) {
   const [language, setLanguage] = useState('zh');
+  const selected = languages?.items.find(item => item.value === language);
+  const content = selected ? selected.text : text;
+  return <div className="code-block"><div className="code-toolbar">{languages && <TabNav label={languages.label} items={languages.items} selected={language} onChange={setLanguage} />}<div className="code-copy"><CopyButton key={language} label="复制" text={content} /></div></div><pre><code>{selected ? content.trim().replace(/\n{3,}/g, '\n\n') : content}</code></pre>{selected?.html && <div className="language-notes" dangerouslySetInnerHTML={{ __html: selected.html }} />}</div>;
+}
+export function Rich({ html = '', languages = {} }: { html?: string; languages?: Record<string, LanguageGroup> }) {
+  const preview = useContext(PreviewContext);
   const blocks = useMemo(() => {
     if (!html.includes('<pre>') && !html.includes('<pre ')) return null;
     const document = new DOMParser().parseFromString(html, 'text/html');
-    return Array.from(document.body.children).map(element => ({ html: element.outerHTML, code: element.tagName === 'PRE', text: element.textContent || '', bilingual: element.hasAttribute('data-language-pair') }));
+    return Array.from(document.body.children).map(element => ({ html: element.outerHTML, code: element.tagName === 'PRE', text: element.textContent || '', languageGroup: element.getAttribute('data-language-pair') }));
   }, [html]);
   return <div className="prose" onClick={event => {
     const anchor = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[data-doc]');
@@ -36,8 +43,7 @@ export function Rich({ html = '', languages = [] }: { html?: string; languages?:
     }
   }} dangerouslySetInnerHTML={blocks ? undefined : { __html: html }}>{blocks?.map((block, index) => {
     if (!block.code) return <div className="rich-fragment" key={index} dangerouslySetInnerHTML={{ __html: block.html }} />;
-    const text = block.bilingual ? languages.find(item => item.value === language)!.text : block.text;
-    return <div className="code-block" key={index}><div className="code-toolbar">{block.bilingual && <TabNav label="画风正文语言" items={languages} selected={language} onChange={setLanguage} />}<div className="code-copy"><CopyButton key={block.bilingual ? language : index} label="复制" text={text} /></div></div><pre><code>{block.bilingual ? text.trim().replace(/\n{3,}/g, '\n\n') : text}</code></pre>{block.bilingual && <div className="language-notes" dangerouslySetInnerHTML={{ __html: languages.find(item => item.value === language)!.html || '' }} />}</div>;
+    return <CodeBlock key={index} text={block.text} languages={block.languageGroup ? languages[block.languageGroup] : undefined} />;
   })}</div>;
 }
 export function Original({ url, label = '原文件' }: { url?: string; label?: string }) {
@@ -100,9 +106,9 @@ export function Document({ value: latest }: { value: RecordData }) {
           if (speaker && !['地点', '时间', '人物'].includes(speaker)) element.classList.add('script-dialogue');
         }
       }
-      return { html: document.body.innerHTML, languages: [] };
+      return { html: document.body.innerHTML, languages: {} };
     }
-    if (value.documentKey !== '00-项目定位/项目基本定位.md') return { html: body, languages: [] };
+    if (value.documentKey !== '00-项目定位/项目基本定位.md') return { html: body, languages: {} };
     const document = new DOMParser().parseFromString(body, 'text/html');
     const visual = Array.from(document.querySelectorAll('h3')).find(el => el.textContent?.trim() === '视觉规格');
     if (visual?.nextElementSibling?.tagName === 'UL') {
@@ -111,32 +117,39 @@ export function Document({ value: latest }: { value: RecordData }) {
         if (hiddenFields.has((item.textContent || '').split(/[:：]/, 1)[0].trim())) item.remove();
       });
     }
-    const chinese = Array.from(document.querySelectorAll('h3')).find(el => el.textContent === '画风与美术实现正文');
-    const english = Array.from(document.querySelectorAll('h3')).find(el => el.textContent?.startsWith('画风与美术实现英文适配'));
-    const languages: { value: string; label: string; text: string; html?: string }[] = [];
-    if (chinese?.nextElementSibling?.tagName === 'H4' && chinese.nextElementSibling.textContent === '中文') {
-      const elements: Element[] = [];
-      for (let node: Element | null = chinese.nextElementSibling; node && !['H2', 'H3'].includes(node.tagName); node = node.nextElementSibling) elements.push(node);
-      const englishHeading = elements.findIndex(el => el.tagName === 'H4' && el.textContent === '英文');
-      if (englishHeading > 0) {
-        const chineseBlock = elements.slice(0, englishHeading);
-        const englishBlock = elements.slice(englishHeading);
-        const chineseCode = chineseBlock.find(el => el.tagName === 'PRE')!;
-        const englishCode = englishBlock.find(el => el.tagName === 'PRE')!;
-        languages.push({ value: 'zh', label: '中文', text: chineseCode.textContent || '' }, { value: 'en', label: '英文', text: englishCode.textContent || '', html: englishBlock.filter(el => !['H4', 'PRE'].includes(el.tagName)).map(el => el.outerHTML).join('') });
-        chineseCode.setAttribute('data-language-pair', 'true');
-        elements.filter(el => el !== chineseCode).forEach(el => el.remove());
+    const languages: Record<string, LanguageGroup> = {};
+    const styleHeadings = Array.from(document.querySelectorAll('h3')).filter(el => ['画风与美术实现正文', '视频执行画风短版'].includes(el.textContent || ''));
+    for (const heading of styleHeadings) {
+      const group = heading.textContent!;
+      let items: LanguageOption[] = [];
+      if (heading.nextElementSibling?.tagName === 'H4' && heading.nextElementSibling.textContent === '中文') {
+        const elements: Element[] = [];
+        for (let node: Element | null = heading.nextElementSibling; node && !['H2', 'H3'].includes(node.tagName); node = node.nextElementSibling) elements.push(node);
+        const englishHeading = elements.findIndex(el => el.tagName === 'H4' && el.textContent === '英文');
+        if (englishHeading > 0) {
+          const chineseBlock = elements.slice(0, englishHeading);
+          const englishBlock = elements.slice(englishHeading);
+          const chineseCode = chineseBlock.find(el => el.tagName === 'PRE')!;
+          const englishCode = englishBlock.find(el => el.tagName === 'PRE')!;
+          items = [{ value: 'zh', label: '中文', text: chineseCode.textContent || '' }, { value: 'en', label: '英文', text: englishCode.textContent || '', html: englishBlock.filter(el => !['H4', 'PRE'].includes(el.tagName)).map(el => el.outerHTML).join('') }];
+          chineseCode.setAttribute('data-language-pair', group);
+          elements.filter(el => el !== chineseCode).forEach(el => el.remove());
+        }
+      } else if (group === '画风与美术实现正文' && heading.nextElementSibling?.tagName === 'PRE') {
+        const english = Array.from(document.querySelectorAll('h3')).find(el => el.textContent?.startsWith('画风与美术实现英文适配'));
+        if (english) {
+          const englishBlock = [];
+          for (let node = english.nextElementSibling; node && !['H2', 'H3'].includes(node.tagName); node = node.nextElementSibling) englishBlock.push(node);
+          const code = englishBlock.find(el => el.tagName === 'PRE');
+          if (code) {
+            items = [{ value: 'zh', label: '中文', text: heading.nextElementSibling.textContent || '' }, { value: 'en', label: '英文', text: code.textContent || '' }];
+            heading.nextElementSibling.setAttribute('data-language-pair', group);
+            englishBlock.forEach(el => el.remove());
+            english.remove();
+          }
+        }
       }
-    } else if (chinese?.nextElementSibling?.tagName === 'PRE' && english) {
-      const englishBlock = [];
-      for (let node = english.nextElementSibling; node && !['H2', 'H3'].includes(node.tagName); node = node.nextElementSibling) englishBlock.push(node);
-      const code = englishBlock.find(el => el.tagName === 'PRE');
-      if (code) {
-        languages.push({ value: 'zh', label: '中文', text: chinese.nextElementSibling.textContent || '' }, { value: 'en', label: '英文', text: code.textContent || '' });
-        chinese.nextElementSibling.setAttribute('data-language-pair', 'true');
-        englishBlock.forEach(el => el.remove());
-        english.remove();
-      }
+      if (items.length) languages[group] = { label: group === '视频执行画风短版' ? '视频画风短版语言' : '画风正文语言', items };
     }
     document.querySelectorAll('.style-sample-card').forEach(card => {
       if (card.querySelector('h4')) return;
