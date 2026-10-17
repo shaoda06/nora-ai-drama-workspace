@@ -4,7 +4,25 @@
 
 ## 日常启动
 
-Windows双击本目录的 `启动工作区浏览服务.bat`，后台运行并自动打开 http://127.0.0.1:8782/ 。重复双击复用已经运行的本工作区服务。关闭网页不停止后台；双击 `停止工作区浏览服务.bat` 停止，关机后需再次启动，不设开机自启。日志位于 `runtime/server.log`。端口被其他程序占用时明确报错，不终止其他进程。
+Windows双击本目录的 `启动工作区浏览服务.bat`，macOS双击 `启动工作区浏览服务.command`，就绪后自动打开 http://127.0.0.1:8782/ 。停止时双击对应系统的“停止工作区浏览服务”脚本。重复启动复用本工作区已经运行的服务；端口被其他程序占用时明确报错，不终止其他进程。
+
+启动器自动交给本机系统托管：Windows使用当前用户的任务计划程序，macOS使用当前登录用户的launchd（LaunchAgent），关闭Codex或网页不停止服务。后台项只按需启动，不添加开机、登录、定时或自动重启触发；退出系统账号或关机后，下次需手动启动。日志仍位于 `runtime/server.log`。
+
+首次启动自动注册本机后台项；Windows名称为 `NoraWorkspaceBrowser-{用户SID}-{端口}`，使用当前用户、普通权限及现有登录凭据，不保存账号密码；macOS定义保存在 `~/Library/LaunchAgents/local.nora.workspace-browser.{端口}.plist`，RunAtLoad与KeepAlive均为false。系统项绑定本机实际代码目录，运行配置仍读取本目录的 `runtime/service.json`；同名项指向其他目录时拒绝覆盖。系统注册和本机路径不随Git分发。迁移目录前先停止服务，并从任务计划程序移除对应旧项，或在Mac卸载并移除对应旧LaunchAgent定义，再从新位置启动注册。
+
+旧版直接启动的进程需重启一次才能转为系统托管；对其停止仍核对 `/api/service` 中的代码与资料目录。Agent发布和日常重启统一使用下方命令，不能直接运行uvicorn或内部serve工作进程替代托管启动。托管注册失败时明确报错，不回退到Codex子进程。
+
+```powershell
+# Windows，在工作区浏览服务目录执行
+.venv/Scripts/python.exe scripts/launcher.py restart --no-browser
+```
+
+```sh
+# macOS，在工作区浏览服务目录执行
+.venv/bin/python scripts/launcher.py restart --no-browser
+```
+
+将命令中的 `restart` 换成 `start` 或 `stop` 可单独启动或停止。`--no-browser`供Agent发布使用，错误输出到命令行，不打开网页或错误弹窗；不带此选项的Windows双击入口保留错误弹窗。`restart`先核对并停止旧服务，等待服务退出，再经系统托管启动并等待 `ready=true`；停止失败不启动第二份。Mac双击脚本以Git可执行文件及LF换行分发，若本机通过ZIP复制丢失权限，可先对两个 `.command` 执行 `chmod +x`。当前维护机为Windows，Mac真实系统注册及退出Codex后的存活须在Mac验收，模拟测试不能替代实测。
 
 同一局域网设备访问 `http://本机局域网IP:8782/`。当前机器地址为 `http://192.168.10.15:8782/`，地址随网络可能变化。只读浏览无需登录；用户视频修改意见可自动保存，仅接受本机及局域网IP的同源请求。风格库更新、应用和恢复允许本机及局域网IP访问，仍校验客户端地址、访问地址、同源请求和操作凭证。局域网HTTP可能无法使用自动剪贴板，页面提供可选中的文本供手动复制。
 
@@ -47,7 +65,7 @@ pnpm --dir frontend install --frozen-lockfile
 pnpm --dir frontend build
 ```
 
-日常代码修改默认在主线目录进行；仅在用户明确要求或双方另行约定时使用开发分支。正式发布统一递增版本、构建前端并停止再启动后端；仅前端改动也需让后端加载新版本。代码修改和提交不等于发布，正式构建及重启按本次授权范围执行。项目Markdown、素材和记录变化不需要重启或执行生成脚本。macOS／Linux在创建 `.venv`、安装依赖及构建后，可手动执行 `.venv/bin/python -m uvicorn backend.main:app --host 0.0.0.0 --port 8782`，本版双击入口为Windows提供。
+日常代码修改默认在主线目录进行；仅在用户明确要求或双方另行约定时使用开发分支。正式发布统一递增版本、构建前端并通过托管入口重启后端；仅前端改动也需让后端加载新版本。代码修改和提交不等于发布，正式构建及重启按本次授权范围执行。项目Markdown、素材和记录变化不需要重启或执行生成脚本。macOS在创建 `.venv`、安装依赖及构建后，使用本目录 `.command` 或 `.venv/bin/python scripts/launcher.py start` 经launchd启动。Linux目前未接入系统托管，仍可手动执行 `.venv/bin/python -m uvicorn backend.main:app --host 0.0.0.0 --port 8782`。
 
 ## 换电脑与工作区迁移
 
@@ -89,10 +107,10 @@ runtime已被Git忽略，因此开发配置不会跟着合并进入正式目录�
 # 当前目录为开发工作目录的工作区浏览服务
 pnpm --dir frontend build
 .venv/Scripts/python.exe scripts/launcher.py start
-.venv/Scripts/python.exe scripts/launcher.py stop
+.venv/Scripts/python.exe scripts/launcher.py restart --no-browser
 ```
 
-开发代码重启只影响8783。修改前端后重新构建并刷新开发页；修改后端后停止／启动开发服务。现有Vite前端热更新命令仍可用，但它默认代理8781，使用时须另起指向相同资料目录的8781开发后端；已经配置好的8783使用构建后前端，无需再起Vite。
+开发代码重启只影响8783。修改前端后重新构建并刷新开发页；修改后端后通过启动器的 `restart --no-browser` 重启开发服务。现有Vite前端热更新命令仍可用，但它默认代理8781，使用时须另起指向相同资料目录的8781开发后端；已经配置好的8783使用构建后前端，无需再起Vite。
 
 开发页保存／清空意见会写入正式项目同一文件，不是测试副本。自动化保存与素材更新验证使用临时数据，不在正式项目中制造测试记录。两个服务的修改意见锁目前各自位于进程内，因此不要同时在两套服务里编辑同一场次的意见文件；两个页面同时修改可能互相覆盖。Krea2资源及其更新暂存仍属于各自代码目录，不自动同步到另一环境。
 
@@ -102,7 +120,7 @@ pnpm --dir frontend build
 
 1. 检查开发目录及原工作区的未提交改动，确认本次差异范围；不能覆盖其他会话修改。
 2. 在原工作区main上合并本次约定的开发分支，不在运行中的正式目录切换到开发分支。
-3. 先完成检查与隔离构建验证；在约定更新时段递增统一版本、构建正式前端并使用正式目录停止／启动脚本。核对 `/api/service` 的version为本次版本、ready为true。正式发布仍可能短暂打断使用。
+3. 先完成检查与隔离构建验证；在约定更新时段递增统一版本、构建正式前端并使用正式目录启动器的 `restart --no-browser` 经系统托管重启。核对 `/api/service` 的version为本次版本、ready为true。正式发布仍可能短暂打断使用。
 4. 验证8782的项目、媒体与保存功能；用户浏览器刷新加载新界面。开发端口不替代8782，任务完成后按约定停用开发环境，后续修改仍默认在main进行。
 
 正式更新之前，应先保存正在编辑的意见。Git仅回退代码，不回退用户已写入的项目资料。本次开发环境配置、依赖和构建产物均留在本机，换电脑或恢复工作目录时需按以上步骤重新配置。
@@ -145,7 +163,7 @@ Agent通过[统一入口](../.agents/skills/nora-ai-short-drama/references/comfy
 │   └── services/              # 项目变化检测、修改意见保存、Krea2更新适配
 ├── frontend/src/             # React组件、项目页、风格页、开发记录
 ├── Krea2风格库/               # 风格资源、内部更新模块及操作说明
-├── scripts/launcher.py       # 启动、复用和停止本工作区服务
+├── scripts/launcher.py       # 系统托管启动、复用、停止及发布重启
 ├── tests/                    # API、变化检测与访问边界测试
 ├── docs/                     # 开发计划、版本记录、详细开发记录
 └── runtime/                  # 本机日志及验证附件，不入Git
