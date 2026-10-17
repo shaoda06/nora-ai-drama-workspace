@@ -32,7 +32,19 @@ try {
   }
   await openPositioning();
   assert.ok((await page.title()).includes('Nora'));
+  const cards = page.locator('.style-sample-card');
+  assert.equal(await cards.count(), 2);
+  for (const card of await cards.all()) {
+    assert.equal(await card.locator('img').count(), 1);
+    assert.ok((await card.innerText()).includes('样例版本'));
+    assert.ok(!/确认依据|执行记录/.test(await card.innerText()));
+  }
+  const source = await (await page.request.get(base + '/api/projects/' + encodeURIComponent(project) + '/sections/' + encodeURIComponent('00-项目定位'))).json();
+  assert.ok(source.bodyHtml.includes('确认依据') && source.bodyHtml.includes('执行记录'), 'source records were removed');
+
   await page.screenshot({ path: path.join(out, 'first-viewport.png') });
+  await cards.last().locator('li').last().scrollIntoViewIfNeeded();
+  await page.screenshot({ path: path.join(out, 'sample-fields-hidden.png') });
   const fullNav = page.getByRole('navigation', { name: '画风正文语言', exact: true });
   const shortNav = page.getByRole('navigation', { name: '视频画风短版语言', exact: true });
   const full = fullNav.locator('xpath=../..');
@@ -89,7 +101,7 @@ try {
   assert.deepEqual(errors, []);
   const evidence = { url, title: await page.title(), viewports: ['1280x1000', '390x844'],
     browser: 'Browser plugin not available; bundled Playwright with headless Edge',
-    checks: ['independent language tabs', 'copy matches selected language', 'mobile bounds', 'single-language fallback', 'legacy full-style compatibility'],
+    checks: ['independent language tabs', 'copy matches selected language', 'mobile bounds', 'single-language fallback', 'legacy full-style compatibility', 'sample metadata hidden only in presentation'],
     consoleErrors: errors, productionWrites: 0, shortCharacters: { chinese: shortZh.length, english: shortEn.length } };
   await writeFile(path.join(out, 'evidence.json'), JSON.stringify(evidence, null, 2));
   console.log(JSON.stringify(evidence));

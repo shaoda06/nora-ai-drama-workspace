@@ -152,6 +152,9 @@ export function Document({ value: latest }: { value: RecordData }) {
       if (items.length) languages[group] = { label: group === '视频执行画风短版' ? '视频画风短版语言' : '画风正文语言', items };
     }
     document.querySelectorAll('.style-sample-card').forEach(card => {
+      card.querySelectorAll('li').forEach(item => {
+        if (['确认依据', '执行记录'].includes((item.textContent || '').split(/[:：]/, 1)[0].trim())) item.remove();
+      });
       if (card.querySelector('h4')) return;
       const figure = card.querySelector('figure')!;
       const caption = figure.querySelector('figcaption')!;
