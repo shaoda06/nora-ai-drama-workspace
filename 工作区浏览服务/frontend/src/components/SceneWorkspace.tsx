@@ -14,6 +14,7 @@ import { useRefreshState } from '../refreshPosition';
 import { SceneStoryboardEditor } from './SceneStoryboardEditor';
 import { SceneDownloads } from './SceneDownloads';
 import { SegmentStageStrip } from './SegmentStageStrip';
+import { TabSelect } from './TabSelect';
 import { PREVIOUS_ENDING } from '../previousEpisodeEnding';
 import type { PreviousEpisodeEnding } from '../previousEpisodeEnding';
 
@@ -152,11 +153,11 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
   };
   return <>
     {sceneRounds.length > 0 && <div className="scene-round-selector">
-      <label>修改轮次 <select aria-label="场次修改轮次" value={selectedRound} onChange={event => changeRound(Number(event.target.value))}>
-        {sceneRounds.map(item => <option key={item.number} value={item.number}>第{item.number}轮{item.note ? ` · ${item.note}` : ''}</option>)}
-      </select></label>
+      <TabSelect label="场次修改轮次" selected={String(selectedRound)} onChange={value => changeRound(Number(value))}
+        items={[...sceneRounds].reverse().map(item => ({ value: String(item.number),
+          label: `第${item.number}轮：剧本${item.script?.version || '缺失'} · 分镜${item.storyboard?.version || '缺失'}`,
+          badge: item.number === sceneRounds.at(-1)!.number ? '当前方案' : undefined }))} />
       <button onClick={() => changeRound(sceneRounds.at(-1)!.number)}>最新修改轮次</button>
-      <span>剧本 {productionRound?.script?.version || '缺失'} · 分镜 {productionRound?.storyboard?.version || '缺失'}</span>
       {!!productionRound?.issues.length && <p className="error" role="alert">{productionRound.issues.join('；')}；不会换用当前文档。</p>}
     </div>}
     <div className="scene-workspace-tabs"><UnderlineTabs label="场次内容" items={[{ value: 'segments', label: '分段制作' }, { value: 'storyboard', label: '场次分镜' }, { value: 'dialogue', label: '分镜修改' }, { value: 'downloads', label: '资源下载' }]} selected={view} onChange={value => { setAutoPlay(false); setView(value); }} /></div>
