@@ -13,7 +13,7 @@ from urllib.parse import quote, urlsplit
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, Response
 from fastapi.sse import EventSourceResponse, ServerSentEvent
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
@@ -23,6 +23,7 @@ from backend.services.workflows import catalogue as workflow_catalogue
 from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
 from backend.services.task_details import task_detail
 from backend.services.task_history import task_history
+from backend.services import node_config
 from backend.services.task_resolution import ResolutionInput, resolve_task
 from backend.services.result_summary import summary as result_summary
 from backend.services.result_registration import closeout as result_closeout
@@ -62,6 +63,41 @@ app = FastAPI(title='Nora工作区浏览服务', version=VERSION, docs_url=None,
 @app.get('/api/comfy/tasks')
 async def comfy_tasks(request: Request, include_history: bool = True) -> dict[str, Any]:
     return request.app.state.comfy_tasks.public(include_history=include_history)
+
+
+@app.get('/api/comfy/config')
+async def comfy_config(request: Request, response: Response) -> dict[str, Any]:
+    if not management_request(request):
+        raise HTTPException(403, '仅允许工作台管理操作')
+    response.headers['Cache-Control'] = 'no-store'
+    tasks = request.app.state.comfy_tasks
+    try:
+        return node_config.snapshot(tasks, *node_config.read_config(tasks))
+    except node_config.ConfigConflict as error:
+        raise HTTPException(409, str(error)) from error
+    except (comfy_client.ClientError, OSError, ValueError) as error:
+        raise HTTPException(503, '节点配置读取失败，请核对工作区配置文件') from error
+
+
+@app.put('/api/comfy/config')
+async def save_comfy_config(request: Request, response: Response) -> dict[str, Any]:
+    queue_write(request)
+    response.headers['Cache-Control'] = 'no-store'
+    try:
+        edit = node_config.ConfigEdit.model_validate(await request.json())
+    except (ValidationError, json.JSONDecodeError) as error:
+        # Validation responses must not echo a submitted credential-bearing object.
+        raise HTTPException(422, '节点配置请求格式不正确') from error
+    try:
+        return node_config.save_config(request.app.state.comfy_tasks, edit)
+    except node_config.ConfigConflict as error:
+        raise HTTPException(409, str(error)) from error
+    except comfy_client.ClientError as error:
+        raise HTTPException(422, '节点地址或认证格式不正确；地址须为HTTP或HTTPS，不能包含账号密码、查询参数或片段，且不能重复') from error
+    except ValueError as error:
+        raise HTTPException(422, str(error)) from error
+    except OSError as error:
+        raise HTTPException(503, '节点配置保存失败，原配置保留，请检查文件写入权限后重试') from error
 
 
 @app.get('/api/comfy/history')

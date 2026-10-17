@@ -21,7 +21,7 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-local-tabs>button{padding-top:0}
 .comfy-node-heading{display:flex;align-items:baseline;padding:20px 14px 0;flex:none}
 .comfy-node-tabs{min-width:0;overflow-x:auto;white-space:nowrap}
-.comfy-node-edit{margin-left:auto;flex:none;border:0;background:transparent;padding:6px 0 6px 16px;font-size:13px}
+.comfy-node-edit{margin-left:auto;flex:none;border:0;background:transparent;padding:6px 10px;font-size:13px;text-align:center}
 .comfy-task-content[data-view=nodes]{grid-template-rows:auto minmax(0,1fr)}
 .comfy-node-editor-heading{display:flex;align-items:center;gap:18px;padding:16px 14px;border-bottom:1px solid var(--line)}
 .comfy-node-editor-heading button{border:0;background:transparent;padding:4px 0}

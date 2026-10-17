@@ -4,6 +4,7 @@ import { TaskCard, type Task } from './TaskCard';
 import { LocalQueueCard, localQueueStates, type LocalQueueTask } from './LocalQueueCard';
 import { TaskDetailDialog } from './TaskDetailDialog';
 import { TaskHistory } from './TaskHistory';
+import { NodeEditor } from './NodeEditor';
 import './TaskSidebar.css';
 
 interface RemoteNode {
@@ -175,12 +176,7 @@ export function TaskSidebar() {
         </span>
       </span></button>
     <div id="comfy-task-list" className="comfy-task-content" data-view={editingNodes ? 'nodes' : 'tasks'} hidden={!open}>
-      {editingNodes ? <>
-        <header className="comfy-node-editor-heading">
-          <button autoFocus onClick={() => setEditingNodes(false)}>‹ 返回</button><strong>节点编辑</strong>
-        </header>
-        <section className="comfy-node-editor" aria-label="节点编辑" />
-      </> : <>
+      {editingNodes ? <NodeEditor close={() => setEditingNodes(false)} /> : <>
       <div className="comfy-node-heading"><nav className="underline-tabs comfy-node-tabs" aria-label="远端节点">
         {nodes.map(node => <PointerTooltip key={node.url} text={connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复'}><button  aria-current={node.url === selectedNode?.url ? 'page' : undefined}
           disabled={busy || dragToken.current !== null}

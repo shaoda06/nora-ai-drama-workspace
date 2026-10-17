@@ -25,6 +25,11 @@ def load_config(workspace, *, missing_ok=False):
         raise client.ClientError('missing_config', '工作区根目录缺少comfyui-config.json') from None
     except (ValueError, UnicodeError):
         raise client.ClientError('invalid_config', '工作区ComfyUI配置不是有效JSON') from None
+    return validate_config(data)
+
+
+def validate_config(data):
+    """Validate either supported on-disk format without writing or contacting nodes."""
     if not isinstance(data, dict):
         raise client.ClientError('invalid_config', 'ComfyUI配置必须为对象')
     # Compatibility is restricted to the workspace file, never project overrides.
