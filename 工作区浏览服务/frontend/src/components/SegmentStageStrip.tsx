@@ -38,7 +38,7 @@ export function SegmentStageStrip({ segments, selected, onSelect, vertical = fal
     title={!previousAvailable ? previousEnding.segment ? '暂无可播放视频' : '暂无分段资料' : undefined}>
     <strong>上集末段</strong><span>{previousEnding.segment ? `${previousEnding.segment.duration}秒` : '—秒'}</span>
   </button>;
-  const previousStatus = previousEnding && <div className="segment-stage-cell previous-ending-status" data-selected={previousSelected} role="group" aria-label="上集末段制作进度：一采、二采、后处理">
+  const previousStatus = !vertical && previousEnding && <div className="segment-stage-cell previous-ending-status" data-selected={previousSelected} role="group" aria-label="上集末段制作进度：一采、二采、后处理">
     {stages.map(stage => {
       const status = segmentStageStatus(previousEnding.segment?.videos || [], stage);
       const label = `上集末段 ${status.detail}`;
@@ -46,16 +46,9 @@ export function SegmentStageStrip({ segments, selected, onSelect, vertical = fal
     })}
   </div>;
   if (vertical) return <div ref={rail} className="segment-vertical-strip" role="group" aria-label="本场分段">
-    {previousEnding && <div className="segment-vertical-item is-previous-ending" data-selected={previousSelected}>{previousButton}{previousStatus}</div>}
+    {previousEnding && <div className="segment-vertical-item is-previous-ending" data-selected={previousSelected}>{previousButton}</div>}
     {segments.map(item => <div className="segment-vertical-item" key={item.id} data-selected={item.id === selected}>
       <PointerTooltip text={`${item.id} · 计划时长 ${item.duration}秒`}><button aria-label={`分段 ${item.id}，计划时长 ${item.duration}秒`} aria-pressed={item.id === selected} onClick={() => onSelect(item.id)}><span>{item.id}</span><span>{item.duration}秒</span></button></PointerTooltip>
-      <div className="segment-stage-cell" data-segment={item.id} data-selected={item.id === selected}>
-        {stages.map(stage => {
-          const status = segmentStageStatus(item.videos, stage);
-          const label = `${item.id} ${status.detail}`;
-          return <PointerTooltip key={stage} text={label}><span className={`segment-stage-icon is-${status.state}`} role="img" aria-label={label} tabIndex={0}>{status.symbol}</span></PointerTooltip>;
-        })}
-      </div>
     </div>)}
   </div>;
   return <div className="segment-scroll segment-progress-scroll">

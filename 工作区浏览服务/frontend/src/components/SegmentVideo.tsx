@@ -55,16 +55,16 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
   useEffect(() => {
     if (!autoPlay) video.current?.pause();
   }, [autoPlay]);
-  const label = (item: VideoItem) => item.approved ? '正式版' : candidateLabel(item.candidateNumber);
+  const description = current && `${current.stage} · ${current.run} · ${candidateLabel(current.candidateNumber)}${current.approved ? '（正式版）' : ''}`;
   return <section className="segment-video" aria-label="视频区域">
-    {loaded?.url ? <video ref={video} key={loaded.fileRevision} controls autoPlay={playOnLoad} preload="metadata" src={source} aria-label={`${label(current!)} ${current!.run} ${current!.stage}`} onError={() => { setError(true); onError?.(); }}
+    {loaded?.url ? <video ref={video} key={loaded.fileRevision} controls autoPlay={playOnLoad} preload="metadata" src={source} aria-label={description} onError={() => { setError(true); onError?.(); }}
       onLoadedMetadata={event => { if (pendingSeek.current !== null) seekTo(pendingSeek.current); else onTimeChange(event.currentTarget.currentTime); onFileRevision?.(loaded.fileRevision); }}
       onTimeUpdate={event => onTimeChange(event.currentTarget.currentTime)}
       onSeeked={event => onTimeChange(event.currentTarget.currentTime)}
       onPause={event => onTimeChange(event.currentTarget.currentTime)}
       onEnded={event => { onTimeChange(event.currentTarget.currentTime); onEnded?.(); }} /> : <div className="video-placeholder">{current ? `本轮暂无可播放视频${current.taskStatus && current.taskStatus !== '未记录' ? `（${current.taskStatus}）` : ''}；可查看本轮已关联资料。` : '视频区域'}</div>}
     <div className="video-source">
-      <div className="video-source-summary">{selectorControl}{current && loaded && <span>{current.approved ? '正式版 · 原' : ''}{candidateLabel(current.candidateNumber)} · {current.run} · {current.stage}</span>}</div>
+      <div className="video-source-summary">{selectorControl}{current && loaded && <span>{description}</span>}</div>
       <div className="video-source-actions">
         {continuousControl}
         <button className="video-layout-toggle" aria-pressed={wide} onClick={onToggleWide}>{wide ? '恢复布局' : '宽屏显示'}</button>

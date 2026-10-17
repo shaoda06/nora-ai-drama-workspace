@@ -9,7 +9,6 @@
 .segment-vertical-item:last-child{border-bottom:0}
 .segment-vertical-item>button{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;padding:10px 8px;border:0;border-radius:0;background:transparent;font-size:12px}
 .segment-vertical-item>button[aria-pressed=true]{background:var(--green);color:white}
-.segment-vertical-item>.segment-stage-cell{padding:2px 0 4px;border:0}
 .segment-workspace.is-wide .video-source{flex-wrap:wrap;gap:8px 12px}
 .segment-workspace.is-wide .video-source-summary{flex:1 1 auto;flex-wrap:wrap;overflow:visible;gap:12px}
 .segment-workspace.is-wide .segment-selectors.tabs{margin:0;gap:8px;align-items:center;flex:none}
@@ -22,5 +21,4 @@
  .segment-workspace.is-wide .segment-selectors.tabs{gap:4px;flex-wrap:wrap}
  .segment-workspace.is-wide .video-source-actions{max-width:100%;justify-content:flex-start;margin-left:0;flex-wrap:wrap}
  .segment-vertical-item>button{flex-direction:column;gap:2px;padding:6px 4px}
- .segment-vertical-item .segment-stage-icon{width:17px;font-size:17px}
 }
