@@ -103,6 +103,7 @@ class LocalQueue:
             'id': key, 'project': project.name, 'title': data.title, 'task_type': data.task_type,
             'prompt_id': None, 'client_id': str(uuid.uuid4()), 'status': 'paused' if data.start_paused else 'local_queued',
             'preparation_required': True,
+            'content_review_required': True,
             'scene_round_required': data.task_type.startswith('video-'),
             'queue_order': self.next_order(data.url.rstrip('/')), 'enqueued_url': data.url,
             'connection': 'waiting', 'progress': None, 'node': None,
@@ -224,6 +225,7 @@ class LocalQueue:
         checked_files = {}
         report = checks.check_prepared(self, data, bound=row['state'].get('uploads_bound', False), transferred=transferred,
                                        legacy=not row['state'].get('preparation_required', False),
+                                       require_content_review=row['state'].get('content_review_required', False),
                                        require_scene_round=row['state'].get('scene_round_required', False), file_stamps=checked_files)
         if report is None:
             result = await asyncio.to_thread(checks.prepare_report, self, data, at_execution=True, previous=None)

@@ -29,7 +29,7 @@ def basis(store, data, mapping=None):
         mapping = json.loads(mapping_file.read_text('utf-8-sig')) if mapping_file.exists() else {}
     if mapping:
         payload['mapping'] = recorded_paths(data.project, {name: mapping[name] for name in (
-            'scene', 'task_type', 'screenplay_version', 'scene_storyboard_version', 'scene_modification_round', 'selected_indices', 'segments') if name in mapping}, relative=True)
+            'scene', 'task_type', 'screenplay_version', 'scene_storyboard_version', 'scene_modification_round', 'selected_indices', 'segments', 'content_review') if name in mapping}, relative=True)
         if data.task_type.startswith('video-'):
             revision = store.generation_context.scene_round_basis(data.project, mapping, data.task_type)
             if revision is not None:
@@ -79,7 +79,7 @@ def write_report(data, report):
     write_json(path, report)
 
 
-def check_prepared(store, data, *, bound=False, transferred=False, legacy=False, require_scene_round=True, file_stamps=None):
+def check_prepared(store, data, *, bound=False, transferred=False, legacy=False, require_scene_round=True, require_content_review=True, file_stamps=None):
     observed = {}
     report = read_report(data)
     if report is None:
@@ -87,6 +87,8 @@ def check_prepared(store, data, *, bound=False, transferred=False, legacy=False,
             return None
         raise ValueError('新任务必须先通过准备检查；请使用--prepare-only完成准备，不会在开工时补查')
     expected, actual = report['prepared_input'].copy(), basis(store, data)
+    if not require_content_review and 'content_review' not in expected.get('mapping', {}):
+        actual.get('mapping', {}).pop('content_review', None)
     if 'title' not in expected:  # Reports made before title became a preparation field.
         actual.pop('title', None)
     if transferred:
@@ -98,6 +100,10 @@ def check_prepared(store, data, *, bound=False, transferred=False, legacy=False,
         raise ValueError('新视频任务必须先关联场次修改轮次；请使用--prepare-only补齐准备，旧登记任务仍按原记录恢复')
     if not legacy and not report.get('new_task_ready'):
         raise ValueError('新任务准备报告尚未覆盖完整登记要求；请使用--prepare-only补齐准备，不会在开工时补查')
+    if not legacy and require_content_review and needs_content_review(data):
+        content = report.get('content_checks', {})
+        if content.get('version') != 1 or content.get('ok') is not True:
+            raise ValueError('新H3任务缺少本版内容核对及文本检查；请使用--prepare-only补齐，不上传或提交')
     for name, stamp in report['sources'].items():
         if bound and name.endswith(('.api.json', '.workflow.json')):
             continue  # The upload binder owns and validates these actual path changes.
@@ -292,6 +298,22 @@ def context_checks(store, data, *, mapping=None, bindings=None, timelines=None, 
     return (context or {}).get('files', [])
 
 
+def needs_content_review(data):
+    return data.task_type in ('video-first-pass', 'video-second-pass') and any(
+        node['class_type'] == 'MiniMaxH3Director' for node in data.workflow.values())
+
+
+def content_checks(data, mapping, report):
+    from h3_prompt_checks import audit
+    result = audit(data.project, data.workflow, mapping)
+    report['content_checks'] = result
+    if not result['ok']:
+        issues = result['issues'] + [issue for group in result['groups'] for issue in group['issues']]
+        raise ValueError('H3正文与内容核对未通过：' + '；'.join(
+            dict.fromkeys(issue['code'] + ': ' + issue['detail'] for issue in issues)))
+    return result['sources']
+
+
 def prepare_report(store, data, *, at_execution=False, previous=...):
     """Fixed checks, including legacy execution fallback; never uploads or submits generation."""
     if previous is ...:
@@ -310,12 +332,20 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
         expected = previous['prepared_input'].copy() if previous else {}
         if previous and 'title' not in expected:
             expected['title'] = data.title
+        requires_content = not at_execution and needs_content_review(data)
+        content_current = (not requires_content or previous is not None
+                           and previous.get('content_checks', {}).get('version') == 1
+                           and previous['content_checks'].get('ok') is True)
         if previous and previous['ok'] and expected == report['prepared_input']:
             observed = {}
-            report['sources'] = sources(data, previous.get('context_sources', []), mapping, observed=observed, composition=composition)
+            report['sources'] = sources(data, previous.get('context_sources', []) + previous.get('content_checks', {}).get('sources', []), mapping, observed=observed, composition=composition)
             if previous['sources'] == report['sources']:
                 report.update(previous)
                 changed = False
+                if not content_current:
+                    content_checks(data, mapping, report)
+                    report['sources'] = sources(data, previous.get('context_sources', []) + report['content_checks']['sources'], mapping, observed=observed, composition=composition)
+                    changed = True
                 if not at_execution and not previous.get('new_task_ready'):
                     check_new_targets(data)
                     report['new_task_ready'] = True
@@ -323,16 +353,18 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
                 if data.task_type.startswith('video-') and 'context_sources' not in previous:
                     extra = context_checks(store, data, mapping=mapping, segment_plan_checked=data.segment_plan is not None)
                     report.update(context_sources=extra, context_checked_during='preparation')
-                    report['sources'] = sources(data, extra, mapping, observed=observed, composition=composition)
+                    report['sources'] = sources(data, extra + report.get('content_checks', {}).get('sources', []), mapping, observed=observed, composition=composition)
                     changed = True
                 if changed:
                     write_report(data, report)
                 return {'prepared': True, 'report': REPORT, 'reused': True,
                         'checks': {key: previous[key] for key in ('pair', 'segments')}}
+        if requires_content:
+            content_checks(data, mapping, report)
         report.update(fixed_checks(store, data, mapping=mapping, legacy=at_execution))
         if data.task_type.startswith('video-'):
             report.setdefault('context_sources', [])
-        report['sources'] = sources(data, report.get('context_sources', []), mapping, composition=composition)
+        report['sources'] = sources(data, report.get('context_sources', []) + report.get('content_checks', {}).get('sources', []), mapping, composition=composition)
         report['ok'] = True
         if not at_execution:
             report['new_task_ready'] = True

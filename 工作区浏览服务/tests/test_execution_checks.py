@@ -10,11 +10,13 @@ from backend import main
 from backend.services import execution_checks as checks
 from backend.services import comfy_tasks as t
 from tests import test_comfy_tasks as base
+from tests.prompt_review_fixture import attach_review, replace_prompts
 
 
 class PreparationTests(unittest.IsolatedAsyncioTestCase):
     def video_round(self, data):
         """Local composition fixture for tests that isolate cache/upload checks."""
+        replace_prompts(data.workflow)
         timeline = json.loads(data.workflow['502']['inputs']['timeline_data'])
         selected = sorted(timeline['runSelection']) if timeline.get('runSelectEnabled') else list(range(len(timeline['segments'])))
         document = self.project / 'round-document.md'
@@ -25,6 +27,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         mapping.update(scene='EP001-C001', scene_modification_round=1, screenplay_version='v1', scene_storyboard_version='v1',
                        selected_indices=selected, segments=[{'segment': f'EP001-C001-P{i+1:03d}', 'round': 'R001',
                        'duration_seconds': group['durationSec']} for i, group in enumerate(timeline['segments'])])
+        attach_review(self.project, self.record, data.workflow, mapping)
         text = json.dumps(mapping)
         if not path.exists() or path.read_text('utf-8') != text:
             path.write_text(text, 'utf-8')

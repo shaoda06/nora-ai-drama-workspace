@@ -607,3 +607,61 @@ python -X utf8 .agents/skills/nora-ai-short-drama/scripts/scene_rounds.py --proj
 ```
 
 此项覆盖完整与局部组合、沿用项、执行旧缓存组与播放身份分离、版本与时长不符；准备复用、旧任务恢复和只回写实际成果分别由`tests.test_submission_lifecycle`、`tests.test_result_closeout`覆盖，从`工作区浏览服务`目录运行相应unittest模块。退出码0且显示OK为通过，不调用真实服务、不生成媒体。
+
+
+## H3正文与内容核对检查
+
+用于原生Ref2VA导演台一采、二采的正文准备；业务顺序与证据含义由[内容核对规范](../流程规范/逐集内容制作规范.md#提示词编写与检查顺序)维护。独立离线入口只读本机文件，不联网、不上传、不入队、不调用模型。正常生成仍用已有`--prepare-only`，同一检查自动纳入`执行检查报告.json`的`content_checks`；不能用离线报告代替正式准备报告。
+
+在工作区根目录使用可用Python 3.10＋运行，Windows加`-X utf8`。路径参数相对当前目录；`--basis-file`和输入映射内证据路径相对`--project`且必须在项目内。
+
+```powershell
+python -X utf8 .agents/skills/nora-ai-short-drama/scripts/h3_prompt_checks.py --project "projects/项目名" --workflow "projects/项目名/执行附件/工作流.api.json" --mapping "projects/项目名/执行附件/输入映射.json" --basis-file "09-剧集制作/EP编号/02-本集剧本/本集剧本.md"
+```
+
+`--output`可指定一个尚不存在的JSON报告文件；默认只向标准输出报告，不改写任何输入或历史报告。`--basis-file`可重复，用于返回所选依据文件的指纹，不替Agent填写判断。退出码0表示确定性检查和证据绑定通过，1表示失败；查看`issues`及各`groups[].issues`。输出的`input_sha256`用于标识本次实际启用的公共区与原组输入（含正文、素材、时长和接续）；变化后须先核对再更新记录，不直接刷新指纹冒充检查。
+
+既有`输入映射.json`中的`content_review`使用以下结构。每个选中原组一项，未选中组不纳入；`node`为字符串节点ID，`index`为从0开始的真实原组序。下例是字段说明，示例省略号不能提交。
+
+```json
+{
+  "content_review": {
+    "version": 1,
+    "groups": [{
+      "node": "实际导演台节点ID",
+      "index": 0,
+      "input_sha256": "离线检查返回的当前输入指纹",
+      "subjects": {"1": "来源中的准确中文名称"},
+      "chinese": {
+        "file": "项目内既有提示词文档.md",
+        "sha256": "当前中文正文指纹"
+      },
+      "checks": {
+        "identity": {
+          "status": "pending",
+          "note": "实际检查范围、判断以及问题处理结果",
+          "prompt_quote": "当前模型英文中的准确片段",
+          "sources": [{"file": "上游依据的项目相对路径.md", "sha256": "依据指纹", "quote": "文件内实际原文"}]
+        },
+        "space_action": {"status": "pending", "note": "...", "prompt_quote": "...", "sources": []},
+        "continuity_sound": {"status": "pending", "note": "...", "prompt_quote": "...", "sources": []},
+        "translation": {"status": "pending", "note": "...", "prompt_quote": "...", "chinese_quote": "对应中文准确片段", "sources": []}
+      }
+    }]
+  }
+}
+```
+
+`subjects`覆盖所有已定义Subject，包括人物、场景、道具；来源名称不能根据模型译名反造。四类检查全部完成且有具体依据后才填写`passed`；`sources`引用相应采用剧本、分镜、资产或项目定位，不能引用核对记录自身作为证明。中文使用既有文档的“中文提示词参考版”text围栏；兼容已存在的冻结TXT，不为新任务另建中文正文。指纹按UTF-8解码、去BOM、统一换行为LF后的文本计算SHA-256；中文仅计算抽取后的正文并去除首尾空白。工具返回`chinese_sha256`；初次填写可先填中文路径运行离线检查获取指纹，仍需实际完成转译核对后更新。依据文件指纹由`--basis-file`返回。
+
+确定性检查覆盖六节、Subject中文名称及引用、明确角色代称、全片无字幕指令、逐节中英文标签／镜号／数字对应，以及检查证据原文存在性、当前输入／中文／依据的绑定。空间合理性、动作可实现性、完整翻译语义和参考图身份本身不由正则或指纹证明；`three-quarter view`等正常镜头术语不作为禁词。`passed`、非空备注或摘录存在均不能替代Agent实际连读和推演。
+
+新任务的提交条件与历史兼容只见[内容核对提交条件](../流程规范/ComfyUI-服务配置与任务提交规范.md#内容核对的提交条件)。接口不提供跳过内容检查的参数，不自动修正文或制造通过结论。
+
+回归命令（浏览服务目录）：
+
+```powershell
+.venv/Scripts/python.exe -X utf8 -B -m unittest tests.test_prompt_review tests.test_execution_checks tests.test_preparation_policy tests.test_submission_lifecycle -q
+```
+
+测试使用临时项目与模拟网络，覆盖英文违规、中文摘要、证据缺失、正文／依据变化、旧报告复用、新任务上传前停止及历史恢复，不生成视频。离线检查已有执行资料时使用独立新报告，不覆盖原执行检查报告。

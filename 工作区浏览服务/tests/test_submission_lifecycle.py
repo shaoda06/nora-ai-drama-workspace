@@ -11,6 +11,7 @@ from unittest.mock import AsyncMock, patch
 from backend.services import comfy_tasks as t, execution_checks as checks, comfy_segments as segments
 from backend.services.director_uploads import pairs
 from tests import test_comfy_tasks as base
+from tests.prompt_review_fixture import ENGLISH, attach_review
 
 
 class LifecycleTests(unittest.IsolatedAsyncioTestCase):
@@ -48,7 +49,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         common.update(prompt='', commonEnabled=True, taskType='r2v', refs=[{'index': 0, 'imageFile': 'planned/ref.png'}],
                       refVideos=[], refAudios=[], referenceVideo=None)
         group = timeline['segments'][0]
-        group.update(prompt='<Picture 1> 陈清颜站稳。', durationSec=3, refs=[], refVideos=[], refAudios=[], referenceVideo=None)
+        group.update(prompt=ENGLISH, durationSec=3, refs=[], refVideos=[], refAudios=[], referenceVideo=None)
         timeline.update(segments=[group], runSelectEnabled=True, runSelection=[0], editMode='segment')
         timeline['output']['exportMode'] = 'segments'
         timeline['batchWorkspaces']['r2v'].update(globalCommon=common.copy(), segments=[group.copy()])
@@ -74,6 +75,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             'number': 1, 'script': {'file': 'screenplay.md', 'version': 'v1'},
             'storyboard': {'file': 'storyboard.md', 'version': 'v1'},
             'segments': [{'id': 'P001', 'stage': '一采', 'run': 'R001', 'duration': 3}]}]}), 'utf-8')
+        attach_review(self.project, self.record, workflow, mapping)
         (self.record / '输入映射.json').write_text(json.dumps(mapping), 'utf-8')
         self.data.uploads = [dict(file=str(source), node='502', input='timeline_data', subfolder='task',
             **{'response-name': 'upload.json', 'json-path': ['global', 'refs', 0, 'imageFile']})]

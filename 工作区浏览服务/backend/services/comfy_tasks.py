@@ -292,6 +292,7 @@ class TaskStore(LocalQueue, TaskNotifications):
             for name in ('_prepared_run', '_source_digests', '_collection_ok', '_record_paths'):
                 row.pop(name, None)
             self.record(existing, 'preparation', 'updated', _changes={'error': None, 'uploads_bound': False, 'prepared_files': {},
+                        'content_review_required': True,
                         'scene_round_required': data.task_type.startswith('video-')})
             result['local_task_id'] = existing
         return result
@@ -316,6 +317,7 @@ class TaskStore(LocalQueue, TaskNotifications):
                 'id': key, 'project': project.name, 'title': data.title, 'task_type': data.task_type,
                 'prompt_id': None, 'client_id': str(uuid.uuid4()), 'status': 'submitting',
                 'preparation_required': True,
+                'content_review_required': True,
                 'scene_round_required': data.task_type.startswith('video-'),
                 'connection': 'connecting', 'progress': None, 'node': None, 'error': None,
                 'notification': 'waiting', 'created_at': client.now(), 'started_at': None,
@@ -336,6 +338,7 @@ class TaskStore(LocalQueue, TaskNotifications):
         if registered and workflow is None and state.get('preparation_required', False):
             from backend.services.execution_checks import check_prepared
             check_prepared(self, data, bound=state.get('uploads_bound', False),
+                           require_content_review=state.get('content_review_required', False),
                            transferred=data.url.rstrip('/') != state.get('enqueued_url', data.url).rstrip('/'),
                            require_scene_round=state.get('scene_round_required', False))
         previous = state.copy()

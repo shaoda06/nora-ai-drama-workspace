@@ -50,6 +50,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         """Fixture for registrations persisted before preparation became mandatory."""
         self.store.rows[key]['state'].pop('preparation_required', None)
         self.store.rows[key]['state'].pop('scene_round_required', None)
+        self.store.rows[key]['state'].pop('content_review_required', None)
         self.store.save(key)
 
     async def test_websocket_opens_before_post_and_same_client_id(self):
