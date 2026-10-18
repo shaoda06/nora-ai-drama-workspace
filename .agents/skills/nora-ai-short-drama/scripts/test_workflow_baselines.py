@@ -15,6 +15,41 @@ BASELINES = ROOT / "references/comfyui-workflow"
 RETAINED = BASELINES / "非正式工作流"
 
 class BaselineTests(unittest.TestCase):
+    def test_postprocess_delivery_recommendations_do_not_gate_other_paired_targets(self):
+        stem = 'Nora-RTX-AusBoss-切镜保护超分插帧'
+        for width, height, fps, note_count in ((1920, 1080, 30, 0), (1080, 1920, 30, 0),
+                                             (3840, 2160, 60, 0), (1280, 720, 24, 2)):
+            with self.subTest(width=width, height=height, fps=fps), tempfile.TemporaryDirectory() as tmp:
+                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
+                canvas = json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8'))
+                api['1']['inputs'].update({'resize_type.width': width, 'resize_type.height': height})
+                api['12']['inputs']['target_fps'] = fps
+                for node in canvas['nodes']:
+                    if node['id'] in (1, 12):
+                        values = node['widgets_values_named']
+                        if node['id'] == 1:
+                            values.update({'resize_type.width': width, 'resize_type.height': height})
+                        else:
+                            values['target_fps'] = fps
+                        node['widgets_values'] = list(values.values())
+                Path(tmp, f'{stem}.api.json').write_text(json.dumps(api), encoding='utf-8')
+                Path(tmp, f'{stem}.workflow.json').write_text(json.dumps(canvas), encoding='utf-8')
+                report = wb.verify(tmp)[0]['postprocess_delivery']
+                self.assertEqual((report['width'], report['height'], report['target_fps']), (width, height, fps))
+                self.assertEqual(len(report['recommendation_notes']), note_count)
+                self.assertEqual(report['crf'], 19)
+
+    def test_postprocess_default_uses_30fps_and_preserves_audio_and_output_timing(self):
+        stem = 'Nora-RTX-AusBoss-切镜保护超分插帧'
+        api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
+        graph = wb.Canvas(json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8')))
+        self.assertEqual(wb.semantic(graph.api(16)), wb.semantic(api))
+        self.assertEqual(api['12']['inputs']['target_fps'], 30)
+        self.assertEqual(api['12']['inputs']['source_fps'], ['7', 2])
+        self.assertEqual(api['16']['inputs']['frame_rate'], ['12', 1])
+        self.assertEqual(api['16']['inputs']['audio'], ['7', 1])
+        self.assertFalse(api['16']['inputs']['trim_to_audio'])
+
     def test_rtx_baselines_explicit_required_parameters(self):
         for stem in ('Nora-RTX-图片2倍超分', 'Nora-RTX-AusBoss-切镜保护超分插帧'):
             with self.subTest(stem=stem):

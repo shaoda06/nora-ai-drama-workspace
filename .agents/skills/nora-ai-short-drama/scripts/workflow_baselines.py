@@ -170,7 +170,17 @@ def verify(directory):
        for v in n['inputs'].values():
         if is_link(v):assert v[0] in task
       count+=1
-  results.append({'workflow':stem,'nodes':len(actual),'optional_references':len(refs),'reference_combinations':count})
+  result={'workflow':stem,'nodes':len(actual),'optional_references':len(refs),'reference_combinations':count}
+  if stem=='Nora-RTX-AusBoss-切镜保护超分插帧':
+   resize=actual['1']['inputs'];encode=actual['16']['inputs']
+   width,height=resize['resize_type.width'],resize['resize_type.height'];fps=actual['12']['inputs']['target_fps']
+   notes=[]
+   if min(width,height)<1080:notes.append('低于推荐1080P；按本次选定交付依据核对，不作配对失败')
+   if fps<30:notes.append('低于推荐30fps；按本次选定交付依据核对，不作配对失败')
+   result['postprocess_delivery']={'width':width,'height':height,'target_fps':fps,
+                                 'format':encode['format'],'crf':encode['crf'],
+                                 'recommendation_notes':notes}
+  results.append(result)
   # Compare shared inputs only when both files use the same legacy H3 backbone.
  for folder in (directory,directory/'非正式工作流'):
   first_path=folder/'Nora-MiniMaxH3-多参考视频-仅一采.api.json'
