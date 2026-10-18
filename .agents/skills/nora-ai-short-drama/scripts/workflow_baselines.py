@@ -1,9 +1,42 @@
 #!/usr/bin/env python3
 """Offline verification of bundled canvas/API pairs. Never connects or writes baselines."""
-import argparse, copy, json, math
+import argparse, ast, copy, json, math, zipfile
 from pathlib import Path
 UI_FIELDS={'control_after_generate','upload','choose video to upload','videopreview','image_upload','audioUI','preview'}
 UI_NODES={'Note','MarkdownNote','SetNode','GetNode','Reroute'}
+POSTPROCESS_NODES={'Nora-RTX-RIFE-自动切镜保护超分插帧':'NoraRIFEInterpolationCutTest',
+                   'Nora-RTX-AusBoss-切镜保护超分插帧':'AUSBOSS_NODES_FrameInterpolate'}
+
+def validate_rife_package(path):
+ with zipfile.ZipFile(path) as package:
+  root='ComfyUI-Nora-RIFE-CutTest/'
+  required={'__init__.py','nodes.py','cut_protection.py','preflight.py','smoke_test.py',
+            'tests/test_cut_protection.py','README.md','LICENSE'}
+  assert {root+name for name in required}<=set(package.namelist()), 'Incomplete RIFE node package'
+  assert package.testzip() is None, 'Corrupt RIFE node package'
+  tree=ast.parse(package.read(root+'nodes.py').decode('utf-8'))
+  assert any(isinstance(n,ast.ClassDef) and n.name=='NoraRIFEInterpolationCutTest' for n in tree.body), 'RIFE package class mismatch'
+  for name in package.namelist():
+   if name.endswith('.py'):ast.parse(package.read(name).decode('utf-8'),filename=name)
+
+def validate_postprocess(api,name):
+ interpolation=api['12'];resize=api['1']['inputs'];encode=api['16']['inputs']
+ assert interpolation['class_type']==POSTPROCESS_NODES[name], 'Postprocess interpolation node mismatch'
+ if interpolation['class_type']=='NoraRIFEInterpolationCutTest':
+  assert {'scale','scene_cut_threshold'}<=set(interpolation['inputs']), 'Missing required RIFE inputs'
+ frame_input='images' if interpolation['class_type']=='NoraRIFEInterpolationCutTest' else 'frames'
+ assert interpolation['inputs'][frame_input]==['7',0], 'Postprocess source images mismatch'
+ assert interpolation['inputs']['source_fps']==['7',2], 'Postprocess source FPS mismatch'
+ assert resize['images']==['12',0], 'Postprocess must interpolate before upscaling'
+ assert encode['images']==['1',0], 'Postprocess encoder must use upscaled images'
+ assert encode['frame_rate']==['12',1], 'Postprocess output FPS must follow interpolation'
+ assert encode['audio']==['7',1] and encode['trim_to_audio'] is False, 'Postprocess original audio/timing mismatch'
+ width,height=resize['resize_type.width'],resize['resize_type.height'];fps=interpolation['inputs']['target_fps']
+ notes=[]
+ if min(width,height)<1080:notes.append('低于推荐1080P；按本次选定交付依据核对，不作配对失败')
+ if fps<30:notes.append('低于推荐30fps；按本次选定交付依据核对，不作配对失败')
+ return {'width':width,'height':height,'target_fps':fps,'format':encode['format'],
+         'crf':encode['crf'],'recommendation_notes':notes}
 def is_link(v):return isinstance(v,list) and len(v)==2 and isinstance(v[0],str) and isinstance(v[1],int)
 def link_tuple(l):
  return [l['id'],l['origin_id'],l['origin_slot'],l['target_id'],l['target_slot']] if isinstance(l,dict) else l[:5]
@@ -171,15 +204,12 @@ def verify(directory):
         if is_link(v):assert v[0] in task
       count+=1
   result={'workflow':stem,'nodes':len(actual),'optional_references':len(refs),'reference_combinations':count}
-  if stem=='Nora-RTX-AusBoss-切镜保护超分插帧':
-   resize=actual['1']['inputs'];encode=actual['16']['inputs']
-   width,height=resize['resize_type.width'],resize['resize_type.height'];fps=actual['12']['inputs']['target_fps']
-   notes=[]
-   if min(width,height)<1080:notes.append('低于推荐1080P；按本次选定交付依据核对，不作配对失败')
-   if fps<30:notes.append('低于推荐30fps；按本次选定交付依据核对，不作配对失败')
-   result['postprocess_delivery']={'width':width,'height':height,'target_fps':fps,
-                                 'format':encode['format'],'crf':encode['crf'],
-                                 'recommendation_notes':notes}
+  if stem in POSTPROCESS_NODES:
+   result['postprocess_delivery']=validate_postprocess(actual,stem)
+   if actual['12']['class_type']=='NoraRIFEInterpolationCutTest':
+    package=Path(__file__).resolve().parents[1]/'dependencies/ComfyUI-Nora-RIFE-CutTest.zip'
+    validate_rife_package(package)
+    result['node_package']=package.name
   results.append(result)
   # Compare shared inputs only when both files use the same legacy H3 backbone.
  for folder in (directory,directory/'非正式工作流'):

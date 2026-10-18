@@ -1,0 +1,92 @@
+{
+  "6": {
+    "class_type": "LoadVideo",
+    "inputs": {
+      "file": "{已获批二采分段文件}.mp4"
+    },
+    "_meta": {
+      "title": "01 输入｜获批二采分段（执行前替换）"
+    }
+  },
+  "7": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "6",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "02 分离画面、原音轨和实际帧率"
+    }
+  },
+  "1": {
+    "class_type": "RTXVideoSuperResolution",
+    "inputs": {
+      "resize_type": "target dimensions",
+      "resize_type.width": 1920,
+      "resize_type.height": 1080,
+      "quality": "ULTRA",
+      "images": [
+        "12",
+        0
+      ],
+      "strength": 1.0,
+      "image_encoding": "8-bit RGB"
+    },
+    "_meta": {
+      "title": "04 RTX超分｜1920×1080 · ULTRA"
+    }
+  },
+  "12": {
+    "class_type": "NoraRIFEInterpolationCutTest",
+    "inputs": {
+      "images": [
+        "7",
+        0
+      ],
+      "source_fps": [
+        "7",
+        2
+      ],
+      "target_fps": 30.0,
+      "scale": 1.0,
+      "model_name": "flownet.pkl",
+      "batch_size": 1,
+      "use_fp16": true,
+      "scene_cut_threshold": 0.15
+    },
+    "_meta": {
+      "title": "03 RIFE自动切镜保护｜目标30fps"
+    }
+  },
+  "16": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "frame_rate": [
+        "12",
+        1
+      ],
+      "loop_count": 0,
+      "filename_prefix": "{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 19,
+      "save_metadata": true,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true,
+      "images": [
+        "1",
+        0
+      ],
+      "audio": [
+        "7",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "05 输出｜插帧实际FPS与原音轨"
+    }
+  }
+}
