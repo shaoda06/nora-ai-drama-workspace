@@ -10,7 +10,7 @@
 4. 新增外部技能默认安装到本工作区 `.agents/skills/{技能名}/`，已有可用安装复用。该工作区是本README所在目录，不是某部短剧的项目目录。当前独立安装的外部技能按 `.gitignore` 排除；新增技能默认可被Git发现，提交前核对来源、许可及是否需要随模板提供。
 5. 初始化项目工作区时，按下方[FFmpeg初始化与运行](#ffmpeg初始化与运行)落实媒体处理依赖；服务地址询问及配置按[主技能的工作区ComfyUI配置](.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)执行。
 
-不需要ComfyUI即可进行策划、剧本和资料整理。执行生成时，使用者须自行准备能够运行配套工作流的ComfyUI服务；本工作区不附带模型权重、不安装服务端节点，也不保证任意后端都兼容。具体核对遵循执行规范。
+不需要ComfyUI即可进行策划、剧本和资料整理。执行生成时，使用者须自行准备能够运行配套工作流的ComfyUI服务；本工作区不附带模型权重、不自动安装服务端节点，也不保证任意后端都兼容。随包节点资源的存放、获授权安装及验证按[节点与安装包](.agents/skills/nora-ai-short-drama/维护规范.md#comfyui节点与安装包)执行；任务核对遵循执行规范。
 
 ## 会话组织
 
@@ -22,7 +22,7 @@
 | --- | --- |
 | `AGENTS.md` | 工作区约定、默认依赖安装位置及本地Git提交规则 |
 | `.agents/skills/nora-ai-short-drama/` | 短剧流程、模板、脚本及[配套工作流](.agents/skills/nora-ai-short-drama/references/comfyui-workflow/)；视频工作流用途见[H3执行规范](.agents/skills/nora-ai-short-drama/references/生成规范/ComfyUI-H3视频执行规范.md#0-制作策略与工作流配置) |
-| 主技能内 `dependencies/` | 三个ComfyUI适配技能的单一真源，保留上游及许可证 |
+| 主技能内 `dependencies/` | 三个ComfyUI适配技能的真源及已登记的节点源码目录或ZIP安装包，保留来源、版本与许可证 |
 | `.agents/skills/krea2-style-library/` | 风格库使用与维护指引 |
 | `工作区浏览服务/` | React＋FastAPI浏览服务、双击启动、共用解析器与开发历史 |
 | `工作区浏览服务/Krea2风格库/` | 本地浏览页、当前风格资源、更新程序和启动入口 |
