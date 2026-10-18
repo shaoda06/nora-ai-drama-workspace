@@ -33,7 +33,7 @@ class CompletionDeliveryTests(unittest.IsolatedAsyncioTestCase):
         # Observe actual send boundary, not the later Agent read.
         async def sent(data, operation, prompt=''):
             if operation == 'read':
-                return {'content': [{'type': 'text', 'text': '{"thread":{"status":{"type":"idle"}}}'}]}
+                return {'content': [{'type': 'text', 'text': '{"thread":{"status":{"type":"active"}}}'}]}
             observations.append(prompt)
             self.assertIn('- 决定：待审核', draft.read_text('utf-8'))
             self.assertEqual(self.store.rows['task']['state']['closeout']['status'], 'completed')

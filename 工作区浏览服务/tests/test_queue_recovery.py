@@ -270,7 +270,12 @@ class RecoveryTests(unittest.IsolatedAsyncioTestCase):
             self.assertIn('本地任务ID：task', sent[0])
             self.assertIn('本地任务ID：other', sent[0])
             self.assertIn(30, delays)
-            self.assertIn(15, delays)
+            self.assertNotIn(15, delays)
+            self.assertEqual(len(reads), 2)  # Reconnect then deliver even while the thread stays busy.
+            connection_events = [json.loads(row[0]) for row in self.store.db.execute('SELECT event FROM task_events')
+                                 if json.loads(row[0]).get('result') == 'waiting_connection']
+            self.assertTrue(connection_events)
+            self.assertTrue(all(event['error'] == 'unavailable' for event in connection_events))
             batch = self.store.db.execute('SELECT id FROM notification_batches').fetchone()[0]
             self.assertEqual(self.store.rows['task']['state']['notification'], 'delivery_unknown')
             await self.store.close()

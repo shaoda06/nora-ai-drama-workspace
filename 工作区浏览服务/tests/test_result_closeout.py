@@ -260,17 +260,18 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, '缺少本轮执行章节'):
             register(self.store, 'task')
 
-    async def test_busy_poll_coalesces_once_and_records_only_transitions(self):
+    async def test_busy_thread_coalesces_once_then_sends_without_idle_poll(self):
         self.setup_video()
         busy = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'running'}}})}]}
-        idle = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'idle'}}})}]}
-        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[busy,busy,idle,{}])), \
+        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[busy,{}])) as desktop, \
                 patch('backend.services.task_notifications.asyncio.sleep', AsyncMock()) as sleep, \
                 patch.object(self.store, 'record', wraps=self.store.record) as record:
             self.store.queue_notice('task', 'terminal', 'terminal', 'isolated')
             await self.store.notifiers['task']
-        self.assertEqual([call.args[0] for call in sleep.call_args_list], [2,15,15])
-        self.assertEqual(sum(call.args[2]=='waiting_idle' for call in record.call_args_list), 1)
+        self.assertEqual([call.args[0] for call in sleep.call_args_list], [2])
+        self.assertEqual([call.args[1] for call in desktop.await_args_list], ['read', 'send'])
+        self.assertFalse(any(call.args[2]=='waiting_idle' for call in record.call_args_list))
+        self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
 
     async def test_ack_racing_send_preserves_ack_and_waiter_wakes_without_poll(self):
         self.setup_video()
