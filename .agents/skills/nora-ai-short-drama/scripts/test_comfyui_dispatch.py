@@ -60,6 +60,26 @@ class DispatchTests(unittest.TestCase):
         check.assert_not_called()
         post.assert_not_called()
 
+    def test_prepare_rejects_missing_rtx_inputs_before_backend_handoff(self):
+        self.args.prepare_only = True
+        for field in ('strength', 'image_encoding'):
+            with self.subTest(field=field):
+                inputs = {'strength': 1.0, 'image_encoding': '8-bit RGB'}
+                del inputs[field]
+                self.path.write_text(json.dumps({'1': {'class_type': 'RTXVideoSuperResolution',
+                                                       'inputs': inputs}}))
+                with patch.object(d.browser_tasks, 'submit') as handoff, \
+                        self.assertRaisesRegex(ValueError, field):
+                    d.dispatch(self.args)
+                handoff.assert_not_called()
+
+    def test_prepared_enqueue_does_not_repeat_rtx_checks(self):
+        self.args.prepare_only = False
+        with patch.object(d, 'validate_rtx_inputs', side_effect=AssertionError('repeated check')), \
+                patch.object(d.browser_tasks, 'submit', return_value={}) as handoff:
+            d.dispatch(self.args)
+        handoff.assert_called_once()
+
     def test_path_validation_is_owned_by_backend_boundary(self):
         self.args.record_dir = 'projects/' + self.root.name + '/执行附件/任务'
         with patch.object(d.browser_tasks, 'submit', return_value={}) as handoff:

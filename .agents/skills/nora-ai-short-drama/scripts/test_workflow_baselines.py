@@ -15,6 +15,40 @@ BASELINES = ROOT / "references/comfyui-workflow"
 RETAINED = BASELINES / "非正式工作流"
 
 class BaselineTests(unittest.TestCase):
+    def test_rtx_baselines_explicit_required_parameters(self):
+        for stem in ('Nora-RTX-图片2倍超分', 'Nora-RTX-AusBoss-切镜保护超分插帧'):
+            with self.subTest(stem=stem):
+                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
+                graph = wb.Canvas(json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8')))
+                for inputs in (api['1']['inputs'], graph.nodes[1]['widgets_values_named']):
+                    self.assertEqual(inputs['strength'], 1.0)
+                    self.assertEqual(inputs['image_encoding'], '8-bit RGB')
+                wb.validate_rtx_inputs(api)
+
+    def test_pair_check_rejects_rtx_fields_missing_from_both_representations(self):
+        stem = 'Nora-RTX-AusBoss-切镜保护超分插帧'
+        for field in ('strength', 'image_encoding'):
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as tmp:
+                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
+                canvas = json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8'))
+                del api['1']['inputs'][field]
+                node = next(n for n in canvas['nodes'] if n['id'] == 1)
+                del node['widgets_values_named'][field]
+                node['widgets_values'] = list(node['widgets_values_named'].values())
+                Path(tmp, f'{stem}.api.json').write_text(json.dumps(api), encoding='utf-8')
+                Path(tmp, f'{stem}.workflow.json').write_text(json.dumps(canvas), encoding='utf-8')
+                with self.assertRaisesRegex(ValueError, field):
+                    wb.verify(tmp)
+
+    def test_rtx_rejects_invalid_required_values(self):
+        valid = {'strength': 1.0, 'image_encoding': '8-bit RGB'}
+        for field, value in (('strength', True), ('strength', -0.1), ('strength', 1.1),
+                             ('strength', '1'), ('strength', math.inf), ('image_encoding', 'RGB')):
+            with self.subTest(field=field, value=value):
+                with self.assertRaisesRegex(ValueError, field):
+                    wb.validate_rtx_inputs({'1': {'class_type': 'RTXVideoSuperResolution',
+                                                  'inputs': {**valid, field: value}}})
+
     def test_video_preview_dimensions_and_refine_target(self):
         for variant in ('标准版', '去油版'):
             with self.subTest(variant=variant):
@@ -86,7 +120,8 @@ class BaselineTests(unittest.TestCase):
 
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
-        self.assertEqual(len(results), 11)
+        self.assertEqual(len(results), 12)
+        self.assertIn('Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试', {r['workflow'] for r in results})
         h3 = [r for r in results if r["optional_references"]]
         self.assertEqual(len(h3), 1)
         self.assertTrue(all(r["reference_combinations"] == 147 for r in h3))
@@ -138,7 +173,8 @@ class BaselineTests(unittest.TestCase):
 
     def test_retained_pairs_can_be_checked_directly(self):
         results = wb.verify(RETAINED)
-        self.assertEqual(len(results), 5)
+        self.assertEqual(len(results), 6)
+        self.assertIn('Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试', {r['workflow'] for r in results})
         self.assertEqual(sum(r["reference_combinations"] for r in results), 147)
 
     def test_confirmation_pair_requires_report_output(self):

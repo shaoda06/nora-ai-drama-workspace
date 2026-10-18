@@ -30,7 +30,9 @@
       "images": [
         "12",
         0
-      ]
+      ],
+      "strength": 1.0,
+      "image_encoding": "8-bit RGB"
     },
     "_meta": {
       "title": "04 RTX 超分｜1920×1080 · ULTRA"

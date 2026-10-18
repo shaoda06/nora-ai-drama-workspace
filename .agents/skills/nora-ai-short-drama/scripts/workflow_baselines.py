@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Offline verification of bundled canvas/API pairs. Never connects or writes baselines."""
-import argparse, copy, json
+import argparse, copy, json, math
 from pathlib import Path
 UI_FIELDS={'control_after_generate','upload','choose video to upload','videopreview','image_upload','audioUI','preview'}
 UI_NODES={'Note','MarkdownNote','SetNode','GetNode','Reroute'}
@@ -85,6 +85,20 @@ class Canvas:
   return out
 
 def semantic(api):return {k:{'class_type':v['class_type'],'inputs':v['inputs']} for k,v in api.items()}
+
+def validate_rtx_inputs(api):
+ """Check known required RTX inputs in new tasks, without querying the server."""
+ for key,node in api.items():
+  if node['class_type']!='RTXVideoSuperResolution':continue
+  inputs=node['inputs']
+  for field in ('strength','image_encoding'):
+   if field not in inputs:raise ValueError(f'RTXVideoSuperResolution {key} missing required input: {field}')
+  strength=inputs['strength']
+  if type(strength) not in (int,float) or not math.isfinite(strength) or not 0<=strength<=1:
+   raise ValueError(f'RTXVideoSuperResolution {key} strength must be a number from 0 to 1')
+  if inputs['image_encoding'] not in ('8-bit RGB','10-bit RGB (RGB10A2)'):
+   raise ValueError(f'RTXVideoSuperResolution {key} image_encoding is unsupported')
+
 def output_for(name):return [403,504,506] if name=='Minimax-H3-导演台-视频生成-标准版' else 3 if name=='Nora-RTX-图片2倍超分' else 461 if name.startswith('Qwen') else 403 if name=='Minimax-H3-导演台-视频生成-去油版' else 264 if any(s in name for s in ('仅一采','SelfLift-备用')) else 214 if '仅二采' in name else 16
 
 def director_editor_state(block, common=False):
@@ -116,6 +130,7 @@ def verify(directory):
  for p in sorted([*directory.glob('*.workflow.json'),*(directory/'非正式工作流').glob('*.workflow.json')]):
   stem=p.name.removesuffix('.workflow.json');a=p.with_name(stem+'.api.json');assert a.exists(),f'Missing API: {a.name}'
   canvas=Canvas(json.loads(p.read_text(encoding="utf-8")));expected=canvas.api(output_for(stem));actual=json.loads(a.read_text(encoding="utf-8"))
+  validate_rtx_inputs(actual)
   assert semantic(actual)==semantic(expected),f'Canvas/API mismatch: {stem}'
   for k,n in expected.items():
    if 'nora_optional_reference' in n['_meta']:assert actual[k].get('_meta',{}).get('nora_optional_reference')==n['_meta']['nora_optional_reference']

@@ -245,13 +245,17 @@
         "target dimensions",
         1920,
         1080,
-        "ULTRA"
+        "ULTRA",
+        1.0,
+        "8-bit RGB"
       ],
       "widgets_values_named": {
         "resize_type": "target dimensions",
         "resize_type.width": 1920,
         "resize_type.height": 1080,
-        "quality": "ULTRA"
+        "quality": "ULTRA",
+        "strength": 1.0,
+        "image_encoding": "8-bit RGB"
       },
       "title": "04 RTX 超分｜1920×1080 · ULTRA"
     },
