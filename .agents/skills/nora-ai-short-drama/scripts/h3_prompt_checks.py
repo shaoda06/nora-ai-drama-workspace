@@ -96,7 +96,7 @@ def text_findings(prompt, chinese=None, names=None):
             for section in SECTIONS:
                 if Counter(TAG.findall(english[section])) != Counter(TAG.findall(translated[section])):
                     issue('translation_tags', section + '中英文标签或镜号不对应，不得用摘要替代')
-                if Counter(re.findall(r'\b\d+(?:\.\d+)?\b', english[section])) != Counter(re.findall(r'\d+(?:\.\d+)?', translated[section])):
+                if Counter(re.findall(r'\d+(?:\.\d+)?', english[section])) != Counter(re.findall(r'\d+(?:\.\d+)?', translated[section])):
                     issue('translation_numbers', section + '中英文数字不对应')
                 if not translated[section]:
                     issue('translation_empty', section + '中文正文为空')

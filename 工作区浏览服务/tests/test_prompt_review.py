@@ -11,6 +11,13 @@ from h3_prompt_checks import audit, text_findings
 
 
 class TextChecks(unittest.TestCase):
+    def test_numeric_style_and_chinese_adjacency_use_the_same_tokens(self):
+        english = ENGLISH.replace('detailed_description:', 'detailed_description:\nUse 3D animation for 0.7 seconds.')
+        chinese = CHINESE.replace('detailed_description:', 'detailed_description:\n采用3D动画，保持0.7秒。')
+        self.assertEqual(text_findings(english, chinese), [])
+        codes = {x['code'] for x in text_findings(english, chinese.replace('0.7秒', '0.8秒'))}
+        self.assertIn('translation_numbers', codes)
+
     def test_specific_english_faults_are_blocked_not_just_bad_translation(self):
         broken = ENGLISH.replace('<Subject 1>陈甲', '<Subject 1> is Chen Jia', 1)
         broken = broken.replace('stands screen right', 'stands screen right. The man moves')
