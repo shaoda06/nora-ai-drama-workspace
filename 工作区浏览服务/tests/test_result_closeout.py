@@ -430,14 +430,19 @@ import {appendFileSync} from 'node:fs';
 for await (const line of createInterface({input:process.stdin})) {
  const m=JSON.parse(line); appendFileSync(TRACE,JSON.stringify(m)+'\\n');
  if (!m.id) continue;
- const result=m.method==='tools/call'?{content:[],isError:false}:{};
+ const result=m.method==='tools/call'&&m.params.name==='read_thread'
+   ?{content:[{type:'text',text:JSON.stringify({thread:{id:'isolated-thread',title:'制作会话',status:{type:'active'}},turns:['x'.repeat(262144)]})}],structuredContent:{turns:['x'.repeat(262144)]}}
+   :m.method==='tools/call'?{content:[],isError:false}:{};
  process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,result})+'\\n');
 }'''.replace('TRACE', json.dumps(str(trace))), 'utf-8')
             data = SimpleNamespace(thread_id='isolated-thread', desktop=SimpleNamespace(node=node,
                 server=str(fake), pipe='fake-pipe', caller_thread='isolated-caller'))
             channel = DesktopChannel()
             try:
-                await channel.call(data, 'read')
+                metadata = await channel.call(data, 'read')
+                self.assertLess(len(json.dumps(metadata).encode()), 4096)
+                self.assertEqual(json.loads(metadata['content'][0]['text'])['thread'], {
+                    'id': 'isolated-thread', 'title': '制作会话', 'status': {'type': 'active'}})
                 process = channel.process
                 await channel.call(data, 'send', 'isolated notification')
                 self.assertIs(channel.process, process)
@@ -461,7 +466,8 @@ for await (const line of createInterface({input:process.stdin})) {
             fake.write_text("""import {createInterface} from 'node:readline';
 for await (const line of createInterface({input:process.stdin})) {
  const m=JSON.parse(line); if (!m.id) continue;
- process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,result:{content:[]}})+'\\n');
+ const result={content:[{type:'text',text:JSON.stringify({thread:{id:'isolated-thread',title:'制作会话',status:{type:'active'}},turns:['x'.repeat(262144)]})}]};
+ process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,result})+'\\n');
 }""",'utf-8')
             bridge = Path(t.__file__).resolve().parents[2] / 'scripts/codex_task_bridge.mjs'
             process=await asyncio.create_subprocess_exec(node,str(bridge),stdin=asyncio.subprocess.PIPE,
@@ -469,7 +475,8 @@ for await (const line of createInterface({input:process.stdin})) {
             raw=json.dumps({'server':str(fake),'caller':'isolated-caller','threadId':'isolated-thread','operation':'read'}).encode()
             stdout,stderr=await asyncio.wait_for(process.communicate(raw),10)
             self.assertEqual(process.returncode,0,stderr.decode())
-            self.assertEqual(json.loads(stdout),{'content':[]})
+            self.assertLess(len(stdout), 4096)
+            self.assertEqual(json.loads(json.loads(stdout)['content'][0]['text'])['thread']['title'], '制作会话')
             fake.write_text('process.exit(1);','utf-8')
             data=SimpleNamespace(thread_id='isolated-thread',desktop=SimpleNamespace(node=node,
                 server=str(fake),pipe='fake-pipe',caller_thread='isolated-caller'))
