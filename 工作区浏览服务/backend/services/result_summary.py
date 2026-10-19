@@ -91,7 +91,8 @@ def summary(store, key):
                   record_dir=store.record_paths(key).relative_file(data.record_dir),
                   review_path='/#/projects/' + quote(state['project'], safe=''),
                   next_action=('report-user' if state.get('closeout', {}).get('status') == 'completed' else 'inspect-closeout')
-                  if data.task_type.startswith('video-') else 'image-review-workflow')
+                  if data.task_type.startswith('video-') else
+                  ('display-image' if state.get('closeout', {}).get('status') == 'completed' else 'inspect-closeout'))
     if state['status'] != 'completed':
         result['next_action'] = 'inspect-failure'
     return result

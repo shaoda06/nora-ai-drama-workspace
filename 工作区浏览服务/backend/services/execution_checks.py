@@ -22,6 +22,8 @@ def write_json(path, value):
 
 def basis(store, data, mapping=None):
     payload = store.portable_input(data)
+    if payload.get('image_plan') is None:
+        payload.pop('image_plan', None)  # Existing preparation reports have no image association.
     for name in ('desktop', 'thread_id', 'source_session_name', 'timeout', 'start_paused'):
         payload.pop(name, None)
     mapping_file = Path(data.record_dir) / '输入映射.json'
@@ -223,6 +225,9 @@ def fixed_checks(store, data, *, mapping=None, legacy=False):
     from backend.services.director_uploads import check_pair
     from backend.services import comfy_segments as segments
     fixed_input_checks(store, data)
+    if data.image_plan is not None:
+        from backend.services.image_closeout import validate_plan
+        validate_plan(data)
     path_scope = PreparationPaths.from_resolved(data.project,
                         [data.record_dir, *(item['file'] for item in data.uploads)])
     if not legacy:

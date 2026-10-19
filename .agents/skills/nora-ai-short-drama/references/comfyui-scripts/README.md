@@ -323,7 +323,7 @@ python "实际技能目录/scripts/browser_tasks.py" status --task-id 本地任�
 python "实际技能目录/scripts/browser_tasks.py" report --notification-id 通知批次UUID
 ```
 
-后台在发送前已自动完成视频待审登记和网页核验，或保存具体失败结果。命令读取这份持久报告，同时自动记录收到；返回`notification_id`、`status=acknowledged`、本批`tasks`、`results`、`reported_at`和`user_message_ready`。任务摘要包含实际／预期数量、P／R／阶段、成果／凭据、记录及审核入口；登记／网页失败见`results`及任务的`closeout`。视频只有`user_message_ready=true`才按网页已可审汇报，否则说明失败范围及源文件入口。退出0仅代表报告读取成功，不代替报告中的任务结果。重复读取`reused=true`且不重复确认事件；发送成功、读取成功均不表示用户已批准。图片仍按原审核及展示流程。
+后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。命令读取这份持久报告，同时自动记录收到；返回`notification_id`、`status=acknowledged`、本批`tasks`、`results`、`reported_at`和`user_message_ready`。任务摘要包含实际／预期数量、成果／凭据、记录及审核入口；登记／网页失败见`results`及任务的`closeout`。成功图片的`closeout.display_outputs`包含真实规格和图片路径，正式超分另有`display_path`；相对路径按所属项目根目录解析。只有`user_message_ready=true`才按网页已可审汇报：图片直接展示，视频汇报数量和入口，不重复检查文件或更新记录。异常说明失败范围及源文件入口。退出0仅代表报告读取成功，不代替任务结果。重复读取`reused=true`且不重复确认事件；发送成功、读取成功均不表示用户已批准。
 
 旧通知没有持久报告时返回已有摘要、`legacy_report=true`和`user_message_ready=false`，不会在读取时补做收尾；核对具体缺项后才使用兼容修复入口。
 
@@ -335,7 +335,7 @@ python "实际技能目录/scripts/browser_tasks.py" report --notification-id �
 python "实际技能目录/scripts/browser_tasks.py" ack --notification-id 通知批次UUID
 ```
 
-成功返回`notification_id`、`status=acknowledged`和本批`tasks`摘要：本地／远端ID、阶段、实际／预期数量、成果及凭据路径、失败阶段和记录入口。正常流程读取report已同时确认，不再调用此命令。重复确认返回`reused=true`，不重复追加事件。它只确认Agent收到，不表示已完成业务收尾或用户已批准。按[精简收尾](../流程规范/ComfyUI-任务监控规范.md#视频完成通知后的精简收尾)处理正常视频；异常才展开对应证据，图片仍按原审核流程。
+成功返回`notification_id`、`status=acknowledged`和本批`tasks`摘要。正常流程读取report已同时确认，不再调用此命令。重复确认返回`reused=true`，不重复追加事件。它只确认Agent收到，不表示用户已批准；图片、超分及视频统一按[监控规范](../流程规范/ComfyUI-任务监控规范.md)的对应结果分支交付，异常才展开证据。
 
 ### 后台视频待审登记
 
@@ -394,7 +394,8 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
   --record-dir /实际执行附件 --task-title 'CH001 · 首次生成' \
   --attempt-name 本任务-提交尝试.json --request-name 本任务-请求.json \
   --response-name 本任务-提交响应.json --history-name 本任务-执行结果.json \
-  --output-plan /实际执行附件/成果取回映射.json
+  --output-plan /实际执行附件/成果取回映射.json \
+  --image-plan /实际执行附件/图片收尾计划.json
 ```
 
 | 参数 | 含义 |
@@ -407,12 +408,47 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 | --prepare-only | 只作工具准备检查并写报告；不入队／上传／生成 |
 | --uploads | 可选本机素材与节点输入绑定JSON，后台准备时实际上传 |
 | --output-plan | 必填JSON数组，普通输出明确节点、字段、序号和本机目标；导演台使用空数组及segment-plan |
+| --image-plan | image及image-upscale必填；见下节。图片收尾的章节、目标规格及批准后正式保存关联；非图片任务不传 |
 | --segment-plan | 原生H3分段必填，含导演台、报告节点、核实output根目录及每个选中组的显式本机目标 |
 | --attempt-name、--request-name、--response-name、--history-name | 各种证据的单个文件名，不能重复或占用后台任务状态.json、后台过程记录.json |
 | --timeout | 单次网络操作超时，默认30秒，不是排队或生成时限 |
 | --monitor | 仅支持browser，服务缺失时报告接入问题，不回退legacy |
 | --start-paused | 可选，仅在已授权手动转移等需要先暂停的操作中使用；登记时直接为paused，恢复前不上传或提交；默认不传，自动排队 |
 | --thread-id | 默认真实CODEX_THREAD_ID；通知其他会话须有用户授权 |
+
+### 图片及超分收尾计划
+
+与API、上传及成果映射一起在准备阶段写入原执行附件；`--prepare-only`与正式入队使用同一计划。技术及审批分工以[监控规范第4节](../流程规范/ComfyUI-任务监控规范.md#4-图片处理)为准。路径相对项目根目录，宽高单位为像素。`images`必须与output-plan一一对应；`kind`选择人物、场景、道具或剧集素材，引用对应既有工作稿模板，不改变图片画风。工作稿须已有本次生成条目及审阅区；后台在成功取回后建立实际审阅记录。
+
+```json
+{
+  "draft": "03-人物资料/其他资料/工作稿/CH001-参考图-工作稿.md",
+  "kind": "人物",
+  "generation": "生成记录-001",
+  "review": "审阅-生成记录-001-001",
+  "images": [{"path": "03-人物资料/其他资料/工作稿/素材/CH001-服装参考图-候选-v01.png", "width": 1152, "height": 864}],
+  "record_updates": []
+}
+```
+
+`record_updates`可选，默认空数组；需要同步本批项目进度、资料卡或索引时，在生成前提供实际Markdown的`path`、唯一`old`原文和`new`目标文字，后台在结果成功后执行，不在通知后让Agent补写。支持`{{outputs}}`、`{{specs}}`、`{{evidence}}`、`{{time}}`；超分还支持`{{file}}`。链接按每个目标文档的位置计算。原文不唯一、并发改变或未知占位符停止对应更新，不覆盖其他修改。
+
+获批超分使用原生成及批准章节，images填写超分候选路径和正式尺寸，并增加`upscale`对象：
+
+```json
+{
+  "number": "超分-001",
+  "source": "03-人物资料/其他资料/工作稿/素材/CH001-服装参考图-候选-v01.png",
+  "approval": "03-人物资料/其他资料/工作稿/CH001-参考图-工作稿.md#审阅-生成记录-001-001",
+  "formal": "03-人物资料/CH001-人物/参考图/CH001-日常-服装参考图.png",
+  "archive": "03-人物资料/其他资料/历史版本/CH001-日常-服装参考图-归档-实际时间戳.png",
+  "record_updates": [{"path": "03-人物资料/其他资料/工作稿/CH001-参考图-工作稿.md", "old": "实际待替换的唯一正式资产表行或表头", "new": "实际更新后的表行，正式文件使用{{file}}并引用原批准章节"}]
+}
+```
+
+此对象填入计划的`upscale`字段；示意文字及路径须替换为当次真实值。`source`必须是原批准章节明确批准的具体候选，并实际绑定节点2上传；节点1执行2倍、节点3保存PNG。`formal`为实际正式路径；首次保存可省略archive，替换已有正式图时必须给出真实、未占用的历史路径。`upscale.record_updates`必填，准备当前正式资产表及受影响卡片／索引的实际更新，不改写用户反馈、批准或旧版本事实。后台补超分子记录，保留原审批图，不增加默认画面审批；用户明确要求超分后再审时不得使用自动正式采用计划。
+
+正常结果直接读取report。缺少计划的旧任务只报告缺项，不自动搜索或猜测；明确核对原关联后，可将`{本地任务UUID: 完整计划}`写入原附件，通过`browser_tasks.py register-results --notification-id 通知UUID --image-plans 旧图片收尾关联.json`显式修复。此命令仅允许本通知中的图片任务，不覆盖已有不同关联，不重新生成；返回真实登记及网页结果，不改写已发送的历史报告。
 
 ### 工作稿当前正文集中同步
 

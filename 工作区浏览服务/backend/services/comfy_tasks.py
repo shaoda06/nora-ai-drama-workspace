@@ -72,6 +72,7 @@ class TaskInput(BaseModel):
     uploads: list[dict] = Field(default_factory=list)
     source_session_name: str = ''
     start_paused: bool = False
+    image_plan: dict | None = None
 
 
 class TaskStore(LocalQueue, TaskNotifications):
@@ -234,6 +235,22 @@ class TaskStore(LocalQueue, TaskNotifications):
         for upload in data.uploads:
             if isinstance(upload.get('file'), str):
                 upload['file'] = local(upload['file'])
+        if data.image_plan is not None:
+            plan = data.image_plan
+            def portable(value):
+                return Path(local(value)).relative_to(project).as_posix()
+            plan['draft'] = portable(plan['draft'])
+            for image in plan['images']:
+                image['path'] = portable(image['path'])
+            if plan.get('upscale'):
+                up = plan['upscale']
+                for name in ('source', 'formal', 'archive'):
+                    if up.get(name):
+                        up[name] = portable(up[name])
+                file, heading = up['approval'].split('#', 1)
+                up['approval'] = portable(file) + '#' + heading
+                for update in up['record_updates']:
+                    update['path'] = portable(update['path'])
 
     def portable_input(self, data):
         # Input paths have already crossed the authenticated boundary once.

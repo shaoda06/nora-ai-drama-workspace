@@ -150,12 +150,12 @@ class CompletionDeliveryTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(report['user_message_ready'])
         self.assertEqual(draft.read_bytes(), before)
 
-    async def test_image_keeps_image_review_branch_and_failed_task_does_not_register(self):
+    async def test_image_missing_plan_reports_exception_and_partial_task_does_not_register(self):
         from tests.test_comfy_tasks import TaskTests
         TaskTests.seed(self, status='completed')
-        with patch.object(registration, 'register', side_effect=AssertionError('images not registered')):
-            report = await self.store.prepare_report(['task'])
-        self.assertEqual(report['tasks'][0]['next_action'], 'image-review-workflow')
+        report = await self.store.prepare_report(['task'])
+        self.assertEqual(report['tasks'][0]['next_action'], 'inspect-closeout')
+        self.assertFalse(report['user_message_ready'])
         self.store.rows['task']['state'].update(status='collection_failed', collected=0, error='missing')
         with patch.object(registration, 'register', side_effect=AssertionError('partial not registered')):
             report = await self.store.prepare_report(['task'])
@@ -268,6 +268,7 @@ class CompletionDeliveryTests(unittest.IsolatedAsyncioTestCase):
         await self.store.close()
         self.store = t.TaskStore(self.root / 'runtime', self.root)
         self.store.projects = self.projects
+        self.store.queue_notifications = False
         idle = {'content': [{'type': 'text', 'text': '{"thread":{"status":{"type":"idle"}}}'}]}
         with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[idle, OSError('unknown send')])) as adapter, \
                 patch('backend.services.task_notifications.asyncio.sleep', AsyncMock()):

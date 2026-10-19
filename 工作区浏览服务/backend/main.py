@@ -279,6 +279,7 @@ class NoticeReceipt(BaseModel):
 
 class ResultRegistrationInput(NoticeReceipt):
     record_updates: list[dict[str, str]] = []
+    image_plans: dict[str, dict] = {}
 
 
 @app.post('/api/internal/comfy/notifications/{batch_id}/ack')
@@ -305,7 +306,7 @@ async def agent_register_results(batch_id: str, data: ResultRegistrationInput, r
     try:
         locks = tasks.__dict__.setdefault('_closeout_locks', {})
         async with locks.setdefault(batch_id, asyncio.Lock()):
-            return await result_closeout(tasks, store, batch_id, data.thread_id, data.record_updates)
+            return await result_closeout(tasks, store, batch_id, data.thread_id, data.record_updates, data.image_plans)
     except (ValueError, OSError, KeyError, TypeError) as error:
         raise HTTPException(409, str(error)) from error
 

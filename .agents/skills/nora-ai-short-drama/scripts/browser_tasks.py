@@ -30,6 +30,8 @@ def submit(args, workflow, url, uploads=None):
         thread_id=args.thread_id or caller,
         desktop={'node': node, 'server': str(max(servers, key=lambda path: path.stat().st_mtime)),
                  'pipe': pipe, 'caller_thread': caller, 'cli': os.environ.get('CODEX_CLI_PATH') or shutil.which('codex')})
+    if getattr(args, 'image_plan', None):
+        payload['image_plan'] = json.loads(Path(args.image_plan).read_text('utf-8-sig'))
     preparing = getattr(args, 'prepare_only', False)
     route = '/prepare' if preparing else '/submit'
     request = urllib.request.Request(config['url'] + '/api/internal/comfy' + route,
@@ -69,6 +71,7 @@ def main():
             'ack': '兼容旧通知的独立确认；正常完成不用', 'register-results': '显式修复待审登记或兼容旧任务；正常完成由后台自动执行'}[name])
         item.add_argument('--notification-id', required=True, help='Notification batch UUID from received message')
         if name == 'register-results':
+            item.add_argument('--image-plans', help='Explicit legacy repair only: JSON object from local task UUID to its image closeout plan; cannot replace an accepted association')
             item.add_argument('--record-updates', help='UTF-8 JSON array of exact path/old/new updates for this batch progress or production checks; paths relative to the project')
     item = commands.add_parser('resolve', help='Close an investigated needs_attention task; preserve its original exception')
     item.add_argument('--task-id', required=True, help='Backend local UUID, not remote prompt_id')
@@ -81,6 +84,8 @@ def main():
         payload = {'thread_id': thread}
         if args.command == 'register-results' and args.record_updates:
             payload['record_updates'] = json.loads(Path(args.record_updates).read_text('utf-8-sig'))
+        if args.command == 'register-results' and args.image_plans:
+            payload['image_plans'] = json.loads(Path(args.image_plans).read_text('utf-8-sig'))
         result = service_call('notifications/' + args.notification_id + '/' + args.command, payload)
     elif args.command == 'resolve':
         result = service_call('tasks/' + args.task_id + '/resolve',

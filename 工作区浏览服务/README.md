@@ -225,4 +225,6 @@ HTTP接口测试继承 `tests.http_case.HttpTestCase`，覆写 `setUp` 时先调
 
 测试资源更新使用临时目录，不执行真实上游应用或恢复。浏览器验证与检查结果见[开发记录](docs/开发记录/W001-工作区服务首版.md)。
 
-完成后完整链路回归：`.venv/Scripts/python.exe -X utf8 -B -m unittest tests.test_completion_delivery tests.test_result_reuse tests.test_result_closeout tests.test_collection_retry tests.test_comfy_segments tests.test_comfy_tasks tests.test_task_details -q`。使用临时项目、模拟远端和隔离MCP服务，覆盖取回、重试、重启、通知前自动待审登记／真实网页解析、持久报告读取与确认竞态及兼容异常修复，并断言凭据状态读取、取回初始化、稳定成果条目、工作稿读取及冷／热项目扫描的复用次数；不连接正式生成服务，不向真实会话发送测试通知。
+图片及超分的提交前关联、后台收尾及异常修复参数见[图片收尾计划](../.agents/skills/nora-ai-short-drama/references/comfyui-scripts/README.md#图片及超分收尾计划)，技术与审批规则见[监控规范第4节](../.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-任务监控规范.md#4-图片处理)。正常Agent只读报告并展示成果，网页解析字段和既有审阅模板不变。
+
+完成后完整链路回归：`.venv/Scripts/python.exe -X utf8 -B -m unittest tests.test_image_closeout tests.test_completion_delivery tests.test_result_reuse tests.test_result_closeout tests.test_collection_retry tests.test_comfy_segments tests.test_comfy_tasks tests.test_task_details -q`。使用临时项目、模拟远端和隔离MCP服务，覆盖取回、重试、重启、通知前自动待审登记／真实网页解析、持久报告读取与确认竞态及兼容异常修复，并断言凭据状态读取、取回初始化、稳定成果条目、工作稿读取及冷／热项目扫描的复用次数；不连接正式生成服务，不向真实会话发送测试通知。

@@ -65,16 +65,15 @@ class TaskNotifications:
         return {**report, 'notification_id': batch_id, 'status': 'acknowledged', 'reused': reused}
 
     async def prepare_report(self, ids):
-        """Finish normal videos before delivery; persist bounded retry progress across restarts."""
+        """Finish media before delivery; persist bounded retry progress across restarts."""
         from backend.services.result_registration import closeout_tasks
-        videos = [key for key in ids if self.rows[key]['input'].task_type.startswith('video-')
-                  and self.rows[key]['state']['status'] == 'completed']
-        if videos and not hasattr(self, 'projects'):
+        completed = [key for key in ids if self.rows[key]['state']['status'] == 'completed']
+        if completed and not hasattr(self, 'projects'):
             from backend.services.projects import ProjectStore
             self.projects = ProjectStore(self.workspace / 'projects')
         while True:
             active = []
-            for key in videos:
+            for key in completed:
                 state = self.rows[key]['state']
                 outcome = state.get('closeout', {})
                 if outcome.get('status') == 'completed' or state.get('closeout_retry_stop'):
@@ -110,11 +109,11 @@ class TaskNotifications:
                     due = (datetime.now(timezone.utc) + timedelta(seconds=delay)).isoformat()
                     self.record(key, 'closeout', 'retry_scheduled', _changes={'closeout_next_retry_at': due}, delay_seconds=delay)
         tasks = [summary(self, key) for key in ids]
-        results = [{'task_id': key, **self.rows[key]['state']['closeout']} for key in videos]
+        results = [{'task_id': key, **self.rows[key]['state']['closeout']} for key in completed]
         return {'tasks': tasks, 'results': results, 'reported_at': self.client.now(),
                 'user_message_ready': bool(tasks) and all(
                     task['status'] == 'completed' and
-                    (not task['task_type'].startswith('video-') or task.get('closeout', {}).get('status') == 'completed')
+                    task.get('closeout', {}).get('status') == 'completed'
                     for task in tasks)}
 
     def notification_text(self, key):
@@ -196,7 +195,7 @@ class TaskNotifications:
             prompt = (f'后台任务结果通知。通知ID：{batch_id}；来源会话：{data.thread_id}。\n'
                       '请调用 browser_tasks.py report --notification-id 上述ID，读取已保存的最终报告；读取同时自动确认收到。\n'
                       + '\n'.join(self.notification_text(task) for task in ids)
-                      + '\n视频待审登记与网页核验已由后台执行，以报告结果为准；正常成功直接汇报数量与审核入口，不再调用ack或register-results。图片继续原图片审核与展示流程。成果保存不等于内容获批。'
+                      + '\n图片、超分与视频的技术核验、记录更新及网页核验已由后台执行，以报告结果为准；正常成功只读取report，图片直接展示成果和审核入口，视频汇报数量与审核入口，不再调用ack、register-results或重复查文件／刷新网页。成果保存不等于内容获批。'
                       '失败请从记录中的失败阶段复查；未知任务不自动重新生成。')
             self.db.execute('INSERT INTO notification_batches VALUES (?, ?, ?, ?, ?)',
                             (batch_id, data.thread_id, json.dumps(ids), prompt, 'sending'))

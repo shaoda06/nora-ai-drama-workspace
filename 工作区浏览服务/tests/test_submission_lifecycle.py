@@ -650,6 +650,12 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         uploads.write_text(json.dumps(self.data.uploads), 'utf-8')
         outputs = self.record / 'outputs.json'
         outputs.write_text(json.dumps([out.model_dump() for out in self.data.outputs]), 'utf-8')
+        image_draft = self.project / 'image-draft.md'
+        image_draft.write_text('# 工作稿\n### 生成记录-001\n- 执行状态：等待\n- 输出候选文件：未取得\n'
+            '- 实际尺寸、格式及数量：待核对\n- 文件核对结论：待核对\n- 审阅记录入口：尚无\n## 4. 审阅区\n', 'utf-8')
+        image_plan = self.record / 'image-plan.json'
+        image_plan.write_text(json.dumps(dict(draft='image-draft.md', kind='人物', generation='生成记录-001',
+            review='审阅-生成记录-001-001', images=[dict(path=self.data.outputs[0].path, width=4, height=3)])), 'utf-8')
         adapter = self.root / 'codex/plugins/cache/openai-bundled/codex-app-tools/test/server.mjs'
         adapter.parent.mkdir(parents=True)
         adapter.write_text('// Metadata only; never executed by this test.', 'utf-8')
@@ -662,6 +668,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             command = [sys.executable, '-X', 'utf8', '-B', str(t.SKILL / 'scripts/comfyui_dispatch.py'),
                        '--project', str(self.project), '--task-type', 'image', '--workflow', str(workflow),
                        '--uploads', str(uploads), '--output-plan', str(outputs), '--record-dir', str(self.record),
+                       '--image-plan', str(image_plan),
                        '--task-title', '隔离测试']
             async def cli(*extra):
                 process = await asyncio.create_subprocess_exec(*command, *extra,

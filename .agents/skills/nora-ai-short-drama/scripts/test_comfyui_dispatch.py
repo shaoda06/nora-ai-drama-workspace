@@ -21,7 +21,7 @@ class DispatchTests(unittest.TestCase):
         self.path.write_text(json.dumps(self.workflow))
         self.args = argparse.Namespace(project=str(self.root), workflow=str(self.path), task_type='image',
             output_plan='targets.json', task_title='CH001 · 首次生成', uploads=None, eligible_url=None,
-            timeout=30, segment_plan=None, record_dir=str(self.root/'record'), monitor='browser')
+            timeout=30, segment_plan=None, record_dir=str(self.root/'record'), monitor='browser', image_plan='image-plan.json')
 
     def test_only_backend_handoff_no_remote_upload_or_post(self):
         with patch.object(d.browser_tasks,'submit',return_value={'local_task_id':'uuid'}) as handoff, \
@@ -105,7 +105,7 @@ class DispatchTests(unittest.TestCase):
     def test_start_paused_is_explicit_and_keeps_primary_handoff(self):
         params = ['--project', str(self.root), '--task-type', 'image', '--workflow', str(self.path),
                   '--record-dir', str(self.root / 'record'), '--task-title', 'CH001 · 转移实测',
-                  '--output-plan', 'targets.json']
+                  '--output-plan', 'targets.json', '--image-plan', 'image-plan.json']
         self.assertFalse(d.parser().parse_args(params).start_paused)
         args = d.parser().parse_args([*params, '--start-paused'])
         with patch.object(d.browser_tasks, 'submit', return_value={'status': 'paused'}) as handoff:

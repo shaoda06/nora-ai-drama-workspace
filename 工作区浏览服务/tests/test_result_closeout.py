@@ -306,11 +306,12 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(result['outputs']),1)
         self.assertNotIn('private-pipe', json.dumps(result))
 
-    async def test_image_summary_keeps_original_review_workflow(self):
+    async def test_image_without_association_requires_explicit_repair(self):
         base.TaskTests.seed(self, status='completed')
-        self.assertEqual(summary(self.store, 'task')['next_action'], 'image-review-workflow')
+        self.assertEqual(summary(self.store, 'task')['next_action'], 'inspect-closeout')
         self.store.save('task', collected=1)
-        self.assertEqual(register(self.store, 'task')['status'], 'image-review-workflow')
+        with self.assertRaisesRegex(ValueError, 'image_plan'):
+            register(self.store, 'task')
 
     async def test_same_project_batch_syncs_once_and_reuses_both_registrations(self):
         _, first = self.setup_video()

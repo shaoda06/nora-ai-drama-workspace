@@ -1,4 +1,4 @@
-"""Automatic, resumable registration of downloaded video candidates; never adoption."""
+"""Automatic, resumable closeout of downloaded candidates and approved image upscales."""
 import hashlib
 import json
 import os
@@ -28,7 +28,8 @@ def register(store, key):
     if state['status'] != 'completed' or state['collected'] != state['expected']:
         raise ValueError('只有全部成果取回的任务可以登记待审')
     if not data.task_type.startswith('video-'):
-        return {'task_id': key, 'status': 'image-review-workflow', 'summary': summary(store, key)}
+        from backend.services.image_closeout import register as register_image
+        return register_image(store, key, collected_outputs(store, key), Path(data.record_dir) / REPORT)
     root, record = Path(data.project), Path(data.record_dir)
     report_file = record / REPORT
     previous = json.loads(report_file.read_text('utf-8')) if report_file.exists() else {}
@@ -141,7 +142,35 @@ def verify(projects, store, key, report):
     status = projects.status(name)
     if status['updating'] or status['checking'] or status['error']:
         raise ValueError('源资料已登记，网页尚未同步：' + str(status['error']))
-    for ep in dict.fromkeys(item['episode'] for item in report['items']):
+    images = [item for item in report['items'] if item.get('image')]
+    image_groups = {}
+    for item in images:
+        parts = Path(item['draft']).parts
+        image_groups.setdefault((parts[0], parts[1] if parts[0] == '09-剧集制作' else None), []).append(item)
+    for (scope, episode), members in image_groups.items():
+        parsed = projects.section(name, scope, episode)
+        found = set()
+        def image_entries(value):
+            if isinstance(value, dict):
+                if value.get('key'):
+                    found.add(unquote(value['key']))
+                for child in value.values(): image_entries(child)
+            elif isinstance(value, list):
+                for child in value: image_entries(child)
+        if scope in ('03-人物资料', '04-场景资料', '05-道具资料'):
+            # A loose file in the directory is not a registered review/formal asset.
+            for collection in ('people', 'scenes', 'props'):
+                for asset in parsed.get(collection, []):
+                    if any(asset.get('recordKey') == item['draft'] for item in members):
+                        image_entries(asset.get('candidates', []))
+                        image_entries(asset.get('formal', []))
+                        image_entries(asset.get('auxiliary', []))
+        else:
+            image_entries(parsed)
+        for item in members:
+            if item.get('display_path', item['path']) not in found:
+                raise ValueError('源资料已登记，网页缺少本批图片：' + item['path'])
+    for ep in dict.fromkeys(item['episode'] for item in report['items'] if not item.get('image')):
         parsed = projects.section(name, '09-剧集制作', ep, mode='playback')
         found = set()
         def walk(value):
@@ -153,7 +182,7 @@ def verify(projects, store, key, report):
                 for child in value: walk(child)
         walk(parsed)
         for item in report['items']:
-            if item['episode'] == ep and not any(item['path'] in path for path in found):
+            if item.get('episode') == ep and not any(item['path'] in path for path in found):
                 raise ValueError('源资料已登记，网页缺少本批候选：' + item['identity'])
     return {'status': 'verified', 'verified_at': store.client.now(), 'revision': status['revision'], 'updated': status['updated'],
             'review_path': '/#/projects/' + quote(name, safe='')}
@@ -223,8 +252,18 @@ def apply_record_updates(store, key, updates, episodes, report=None):
     return fingerprint
 
 
-async def closeout(store, projects, batch_id, thread_id, record_updates=()):
+async def closeout(store, projects, batch_id, thread_id, record_updates=(), image_plans=None):
     ids, _ = batch_tasks(store, batch_id, thread_id)
+    for key, plan in (image_plans or {}).items():
+        if key not in ids or store.rows[key]['input'].task_type not in ('image', 'image-upscale'):
+            raise ValueError('补充的图片关联必须属于本通知')
+        row = store.rows[key]
+        existing = row['input'].image_plan or row['state'].get('image_closeout_plan')
+        if existing is not None and existing != plan:
+            raise ValueError('不得改写已接受的图片收尾关联')
+        from backend.services.image_closeout import validate_plan
+        validate_plan(row['input'].model_copy(update={'image_plan': plan}))
+        store.record(key, 'closeout', 'association_repaired', _changes={'image_closeout_plan': plan})
     return await closeout_tasks(store, projects, ids, record_updates, batch_id=batch_id)
 
 
@@ -244,9 +283,6 @@ async def closeout_tasks(store, projects, ids, record_updates=(), *, batch_id=No
                 store.record(key, 'closeout', 'registration_failed', _changes={'closeout': outcome}, error=str(error))
             reports.append({'task_id': key, **outcome})
             continue
-        if report['status'] == 'image-review-workflow':
-            reports.append(report)
-            continue
         groups.setdefault(store.rows[key]['state']['project'], []).append((key, report))
     for group in groups.values():
         key, owner = group[0]
@@ -263,7 +299,7 @@ async def closeout_tasks(store, projects, ids, record_updates=(), *, batch_id=No
         try:
             if record_updates or journal.get('status') == 'applying':
                 fingerprint = await asyncio.to_thread(apply_record_updates, store, key, record_updates,
-                                        {item['episode'] for item in combined['items']}, owner)
+                                        {item['episode'] for item in combined['items'] if not item.get('image')}, owner)
         except (ValueError, OSError, KeyError, TypeError) as error:
             for task, report in group:
                 outcome = {'status': 'registration_failed', 'report': REPORT, 'error': str(error)}
@@ -282,6 +318,8 @@ async def closeout_tasks(store, projects, ids, record_updates=(), *, batch_id=No
             continue
         for task, report in group:
             outcome = {'status': 'completed', 'report': REPORT, 'browser': browser, 'record_updates': fingerprint}
+            if any(item.get('image') for item in report['items']):
+                outcome['display_outputs'] = report['items']
             store.record(task, 'closeout', 'completed', _changes={'closeout': outcome}, notification_id=batch_id, browser=browser)
             reports.append({**report, 'browser': browser})
     return {'notification_id': batch_id, 'results': reports, 'user_message_ready': bool(reports) and all(
