@@ -6,9 +6,11 @@ import tempfile
 import threading
 import time
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from unittest.mock import patch
 
 from backend.services.projects import ProjectStore
+from backend.parsers.project import SourceChangedError, build_data
 from backend.services.revision_notes import NoteInput, RevisionNotes
 
 
@@ -40,6 +42,84 @@ class ProjectScanningTests(unittest.TestCase):
             self.assertEqual(scan.call_count, 1)
         self.assertFalse(first['checking'])
         self.assertEqual(first, second)
+
+    def test_slow_section_keeps_status_and_other_sections_available_and_deduplicates(self):
+        entry = self.store.get('示例项目')
+        started, release = threading.Event(), threading.Event()
+
+        def read(*args, **kwargs):
+            if kwargs.get('load_scope') == '00-项目定位':
+                started.set()
+                release.wait(5)
+            return build_data(*args, **kwargs)
+
+        with patch('backend.services.projects.build_data', side_effect=read) as parse, ThreadPoolExecutor(4) as pool:
+            first = pool.submit(self.store.section, '示例项目', '00-项目定位')
+            try:
+                self.assertTrue(started.wait(1))
+                self.assertTrue(entry['lock'].acquire(blocking=False))
+                entry['lock'].release()
+                self.assertEqual(pool.submit(self.store.status, '示例项目').result(1)['revision'], 1)
+                other = pool.submit(self.store.section, '示例项目', '01-主旨与简介').result(1)
+                self.assertIn('story', other)
+                duplicate = pool.submit(self.store.section, '示例项目', '00-项目定位')
+                self.assertFalse(first.done())
+            finally:
+                release.set()
+            self.assertIs(first.result(2), duplicate.result(2))
+            calls = [c for c in parse.call_args_list if c.kwargs.get('load_scope') == '00-项目定位']
+            self.assertEqual(len(calls), 1)
+
+    def test_source_change_during_section_read_never_publishes_old_data(self):
+        entry = self.store.get('示例项目')
+        started, release = threading.Event(), threading.Event()
+
+        def read(*args, **kwargs):
+            result = build_data(*args, **kwargs)
+            if kwargs.get('load_scope') == '00-项目定位':
+                started.set()
+                release.wait(5)
+            return result
+
+        with patch('backend.services.projects.build_data', side_effect=read), ThreadPoolExecutor(1) as pool:
+            pending = pool.submit(self.store.section, '示例项目', '00-项目定位')
+            try:
+                self.assertTrue(started.wait(1))
+                self.source.write_text('# 定位\n## 正文\n并发修改后的内容。', encoding='utf-8')
+                self.store.refresh('示例项目', entry, self.store.snapshot(self.project))
+                self.assertEqual(entry['revision'], 2)
+            finally:
+                release.set()
+            with self.assertRaises(SourceChangedError):
+                pending.result(2)
+        self.assertNotIn('00-项目定位', entry['sections'])
+        self.assertIn('并发修改后的内容', self.store.section('示例项目', '00-项目定位')['positionHtml'])
+
+    def test_initial_project_read_does_not_hold_state_or_other_project_locks(self):
+        other = self.root / '另一个项目'
+        other.mkdir()
+        started, release = threading.Event(), threading.Event()
+        original = self.store.snapshot
+
+        def snapshot(path):
+            if path == self.project:
+                started.set()
+                release.wait(5)
+            return original(path)
+
+        with patch.object(self.store, 'snapshot', side_effect=snapshot) as scan, ThreadPoolExecutor(3) as pool:
+            first = pool.submit(self.store.get, '示例项目')
+            try:
+                self.assertTrue(started.wait(1))
+                entry = self.store.entries['示例项目']
+                self.assertTrue(entry['lock'].acquire(blocking=False))
+                entry['lock'].release()
+                self.assertIsNotNone(pool.submit(self.store.get, '另一个项目').result(1)['data'])
+                duplicate = pool.submit(self.store.get, '示例项目')
+            finally:
+                release.set()
+            self.assertIs(first.result(2), duplicate.result(2))
+            self.assertEqual([c.args[0] for c in scan.call_args_list].count(self.project), 1)
 
     def test_slow_scan_does_not_hold_project_lock_or_duplicate_work(self):
         entry = self.store.get('示例项目')

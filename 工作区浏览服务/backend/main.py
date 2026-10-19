@@ -17,6 +17,7 @@ from pydantic import BaseModel, ValidationError
 
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
+from backend.services.request_diagnostics import RequestDiagnostics, RequestDiagnosticsMiddleware
 from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response, clear_downloads, video_archive_name
 from backend.services import krea2
 from backend.services.workflows import catalogue as workflow_catalogue
@@ -51,13 +52,17 @@ async def lifespan(app):
         json.dumps({'url': f'http://127.0.0.1:{port}', 'token': tasks.token}), encoding='utf-8')
     await tasks.start()
     await tasks.remote_queues.start()
+    diagnostics = app.state.request_diagnostics = RequestDiagnostics(TOOL / 'runtime')
+    diagnostics.start()
     try:
         yield
     finally:
+        await diagnostics.close()
         await tasks.close()
 
 
 app = FastAPI(title='Nora工作区浏览服务', version=VERSION, docs_url=None, redoc_url=None, lifespan=lifespan)
+app.add_middleware(RequestDiagnosticsMiddleware)
 
 
 @app.get('/api/comfy/tasks')
