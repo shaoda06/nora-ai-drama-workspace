@@ -21,7 +21,7 @@ SIZES = {'人物上半身正面肖像图': (1024, 1024), '人物多视角参考�
 
 class Documents:
     def __init__(self, root):
-        self.root, self.edits = root, {}
+        self.root, self.edits, self.image_sizes = root, {}, {}
 
     def read(self, name):
         path = project_file(self.root, name)
@@ -157,13 +157,14 @@ def image_workflow(skill, spec, refs, width, height, seed, prefix):
                                     **{'response-name': prefix + f'-上传响应-{index + 1:03d}.json'}))
         output_node = '461'
     api = pairs.Canvas(canvas).api(output_node)
-    pairs.validate_rtx_inputs(api)
     return canvas, api, uploads, output_node
 
 
 def reference(root, draft, ref, documents, *, require_seed=True):
     file = project_file(root, ref['file'])
-    size = images.png(file.read_bytes())
+    if file not in documents.image_sizes:
+        documents.image_sizes[file] = images.png(file.read_bytes())
+    size = documents.image_sizes[file]
     if ref.get('user_reference'):
         if not ref.get('basis'):
             raise ValueError('用户参考图须写明本次指定依据与用途')
@@ -236,7 +237,7 @@ def choose_seed(root, spec, refs, documents, generation_link):
     return selected
 
 
-def generation_record(skill, spec, generation, refs, seed, width, height, record, draft, candidate):
+def generation_record(skill, spec, generation, refs, seed, width, height, record, draft, candidate, api):
     template = (skill / 'references/模板' / images.TEMPLATES[spec['kind']]).read_text('utf-8-sig')
     template = re.search(r'````markdown\n(.*?)\n````', template, re.S)[1]
     body = images.section(template, '生成记录-001')[0].replace('### 生成记录-001', '### ' + generation, 1)
@@ -244,6 +245,13 @@ def generation_record(skill, spec, generation, refs, seed, width, height, record
     values = {name: '不适用' for name in names}
     values.update(spec.get('fields', {}))
     native = spec['image_type'] in ('人物多视角参考图', '角色多视角参考图')
+    sampler = api['459:458']['inputs']
+    encoder = next(node['inputs'] for node in api.values() if node['class_type'] == 'TextEncodeQwenImage21')
+    model_names = [node['inputs'][field] for node in api.values() for field in ('unet_name', 'clip_name', 'vae_name') if field in node['inputs']]
+    parameters = '、'.join(str(sampler[name]) for name in ('seed', 'steps', 'cfg', 'sampler_name', 'scheduler'))
+    caches = [node['inputs'] for node in api.values() if node['class_type'] == 'QwenImage21Cache']
+    cache_text = '；'.join(f"缓存device={cache['device']}、dtype={cache['dtype']}" for cache in caches) or '无缓存节点'
+    api_link = images.link(draft, record / (record.name + '.api.json'), '实际API副本')
     values.update({'创建时间': spec['created_at'], '生成／修改授权与计数': spec['authorization'] + '；本次目标1张；实际提交次数及状态见后台记录',
         '图片类型': spec['image_type'], '生成方式与任务用途': ('图生图' if refs else '文生图') + '；' + spec.get('purpose', '基础参考图'),
         '人物状态': spec.get('state', '不适用'), '服装状态': spec.get('costume', '不适用'),
@@ -252,8 +260,15 @@ def generation_record(skill, spec, generation, refs, seed, width, height, record
         '本次工作流副本入口': images.link(draft, record / (record.name + '.api.json'), 'API') + '；' + images.link(draft, record / (record.name + '.workflow.json'), '画布'),
         '本次任务副本入口': images.link(draft, record / (record.name + '.workflow.json'), '画布'),
         '目标尺寸、格式及数量': f'{width}×{height}、PNG、1张',
-        '种子、步数、CFG、采样器及调度器': f'{seed}；其他参数见实际API任务副本',
-        '种子、步数、CFG、采样器、调度器及其他实际参数': f'{seed}；其他参数见实际API任务副本',
+        '实际反向提示词': encoder['negative_prompt'] or '空',
+        '模型及工作流': '；'.join(model_names) + '；' + api_link,
+        '模型与工作流基准': '；'.join(model_names) + '；' + api_link,
+        '种子、步数、CFG、采样器及调度器': parameters,
+        '种子、步数、CFG、采样器、调度器及其他实际参数': parameters + '；denoise=' + str(sampler['denoise']) + '；' + api_link,
+        '其他实际参数（如降噪、缓存设置）': f"denoise={sampler['denoise']}；" + cache_text,
+        '参考图预处理与画布设置': f"明确{width}×{height}；" + (f"参考预处理resolution={encoder['resolution']}；输入顺序见第2节" if refs else '无输入参考；节点13不决定本次宽高'),
+        '请求响应与执行结果入口': '实际通信证据与状态见' + images.link(draft, record / '后台任务状态.json', '后台状态'),
+        '请求、上传／提交响应及执行结果入口': '实际通信证据与状态见' + images.link(draft, record / '后台任务状态.json', '后台状态'),
         '种子选择与输入避重依据': '按项目类别登记；' + '；'.join(f'输入{i+1}原始种子：{r["seed"] if r["seed"] is not None else ("不适用" if r["non_generated"] else "未知；" + r["unknown_seed_basis"])}' for i, r in enumerate(refs)),
         '执行状态': '技术状态见' + images.link(draft, record / '后台任务状态.json', '后台状态'),
         '真实执行状态': '技术状态见' + images.link(draft, record / '后台任务状态.json', '后台状态'),
@@ -360,17 +375,17 @@ def build_image(root, skill, spec, documents, now):
         candidate = project_file(root, spec.get('output', str(draft.parent / '素材' / f'{stem}-候选-v{max(versions, default=0)+1:02d}.png')))
         record = project_file(root, spec.get('record_dir', str(draft.parent.parent / '执行附件' / prefix)))
         seed = choose_seed(root, spec, refs, documents, images.link(root / '00-项目定位/项目基本定位.md', draft, generation)[:-1] + '#' + generation + ')')
-        complete = {**spec, 'created_at': now}
-        body = generation_record(skill, complete, generation, refs, seed, width, height, record, draft, candidate)
-        marker = re.search(r'^## 3\. 讨论与修改\s*$', text, re.M)
-        if not marker:
-            raise ValueError('图片工作稿不符合既有模板：' + spec['draft'])
-        text = text[:marker.start()] + body.rstrip() + '\n\n' + text[marker.start():]
         plan = dict(draft=draft.relative_to(root).as_posix(), kind=spec['kind'], generation=generation,
                     review='审阅-' + generation + '-001', images=[dict(path=candidate.relative_to(root).as_posix(), width=width, height=height)])
     if candidate.exists():
         raise ValueError('候选文件已存在，不能覆盖：' + str(candidate))
     canvas, api, uploads, output_node = image_workflow(skill, spec, refs, width, height, seed, prefix)
+    if spec['task_type'] == 'image':
+        body = generation_record(skill, {**spec, 'created_at': now}, generation, refs, seed, width, height, record, draft, candidate, api)
+        marker = re.search(r'^## 3\. 讨论与修改\s*$', text, re.M)
+        if not marker:
+            raise ValueError('图片工作稿不符合既有模板：' + spec['draft'])
+        text = text[:marker.start()] + body.rstrip() + '\n\n' + text[marker.start():]
     for suffix, content in [('.workflow.json', canvas), ('.api.json', api), ('-上传映射.json', uploads), ('-成果取回映射.json', [dict(node_id=output_node, output_key='images', index=0, path=candidate.relative_to(root).as_posix(), response_name=prefix+'-取回响应.json')]), ('-图片收尾计划.json', plan)]:
         documents.new_json(record / (prefix + suffix), content)
     documents.put(draft, text)
@@ -386,7 +401,6 @@ def build_video(root, spec, documents):
     mapping = spec.get('mapping')
     if mapping is None:
         mapping = json.loads(documents.read(record / '输入映射.json'))
-    pairs.validate_rtx_inputs(api)
     documents.new_json(record / '任务.workflow.json', canvas)
     documents.new_json(record / '任务.api.json', api)
     documents.new_json(record / '输入映射.json', mapping)

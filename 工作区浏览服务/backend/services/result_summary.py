@@ -107,3 +107,21 @@ def batch_tasks(store, batch_id, thread_id):
     if any(key not in store.rows or store.rows[key]['input'].thread_id != thread_id for key in ids):
         raise ValueError('通知任务与来源会话不匹配')
     return ids, batch[2]
+
+
+def image_delivery(store, tasks):
+    """Ready-to-display fields captured before notification; no file reads during report."""
+    if not tasks or any(task['task_type'] not in ('image', 'image-upscale') for task in tasks):
+        return None
+    ready = []
+    for task in tasks:
+        if task.get('closeout', {}).get('status') != 'completed':
+            continue
+        data = store.rows[task['id']]['input']
+        pictures = task['closeout']['display_outputs']
+        ready.append(dict(task_id=task['id'], title=task['title'], review_path=task['review_path'],
+            report_file=str(Path(data.record_dir) / '结果收尾报告.json'),
+            images=[dict(file=str(Path(data.project) / item.get('display_path', item['path'])),
+                candidate_file=str(Path(data.project) / item['path']), width=item['width'], height=item['height'],
+                format=item['format'], bytes=item['bytes'], draft_file=str(Path(data.project) / item['draft'])) for item in pictures]))
+    return dict(completed=len(ready), image_count=sum(len(item['images']) for item in ready), tasks=ready)

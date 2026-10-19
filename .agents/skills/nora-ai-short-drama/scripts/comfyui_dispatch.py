@@ -8,7 +8,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'com
 import comfyui_client as client
 import browser_tasks
 import comfyui_config as config
-from workflow_baselines import validate_rtx_inputs
 
 TASK_TYPES = ('image', 'image-upscale', 'video-first-pass', 'video-second-pass', 'video-postprocess')
 VIDEO_TASK_TYPES = ('video-first-pass', 'video-second-pass')
@@ -30,8 +29,6 @@ def dispatch(args):
     if args.task_type in ('image', 'image-upscale') and not getattr(args, 'image_plan', None):
         raise ValueError('图片及超分入队需要--image-plan，先明确后台收尾关联')
     workflow = client.strict_json(Path(args.workflow).read_bytes())
-    if getattr(args, 'prepare_only', False):
-        validate_rtx_inputs(workflow)
     uploads = client.strict_json(Path(args.uploads).read_bytes()) if args.uploads else []
     url = load_config(args.project, args.timeout)['remote-urls'][0]
     if args.eligible_url and client.Client(args.eligible_url, args.timeout).url != url:

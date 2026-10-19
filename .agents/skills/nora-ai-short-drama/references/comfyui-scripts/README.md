@@ -323,7 +323,7 @@ python "实际技能目录/scripts/browser_tasks.py" status --task-id 本地任�
 python "实际技能目录/scripts/browser_tasks.py" report --notification-id 通知批次UUID
 ```
 
-后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。命令读取这份持久报告，同时自动记录收到；返回`notification_id`、`status=acknowledged`、本批`tasks`、`results`、`reported_at`和`user_message_ready`。任务摘要包含实际／预期数量、成果／凭据、记录及审核入口；登记／网页失败见`results`及任务的`closeout`。成功图片的`closeout.display_outputs`包含真实规格和图片路径，正式超分另有`display_path`；相对路径按所属项目根目录解析。只有`user_message_ready=true`才按网页已可审汇报：图片直接展示，视频汇报数量和入口，不重复检查文件或更新记录。异常说明失败范围及源文件入口。退出0仅代表报告读取成功，不代替任务结果。重复读取`reused=true`且不重复确认事件；发送成功、读取成功均不表示用户已批准。
+后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。命令读取持久报告，同时自动记录收到。正常图片及超分默认只返回`notification_id`、`status=acknowledged`、`reused`、`user_message_ready`和`delivery`，避免展开重复的状态／收尾内容；`delivery`包含完成任务数、图片数，以及每项标题、本地任务ID、成果绝对路径、候选路径、实际宽高／格式／字节数、工作稿／收尾报告绝对路径和可直接打开的`review_url`。Agent直接展示，不再拼路径、数文件、翻记录或查网页。只有`user_message_ready=true`才能按入口已可审汇报，成功读取不表示用户批准。异常和视频仍返回完整`tasks/results`，据失败阶段定位；图片显式追溯时可加`--details`读取完整报告，不触发重新核验或写记录。未带展示清单的历史报告保留原格式。重复读取`reused=true`且不重复确认事件。
 
 旧通知没有持久报告时返回已有摘要、`legacy_report=true`和`user_message_ready=false`，不会在读取时补做收尾；核对具体缺项后才使用兼容修复入口。
 
@@ -397,6 +397,8 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
   --project /实际项目目录 \
   --plan 03-人物资料/其他资料/执行附件/首集角色提交/任务清单.json
 ```
+
+执行职责读取[图片执行分工](../流程规范/ComfyUI-服务配置与任务提交规范.md#图片执行分工)。固定检查由共用准备入口执行一次，Agent不重读种子表或对工作流节点；同批重复输入共用元数据读取，记录中的模型、采样、缓存及预处理字段从实际API生成。
 
 图片条目示例：
 

@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import subprocess
 import uuid
-from backend.services.result_summary import summary, batch_tasks
+from backend.services.result_summary import summary, batch_tasks, image_delivery
 
 
 class TaskNotifications:
@@ -110,11 +110,15 @@ class TaskNotifications:
                     self.record(key, 'closeout', 'retry_scheduled', _changes={'closeout_next_retry_at': due}, delay_seconds=delay)
         tasks = [summary(self, key) for key in ids]
         results = [{'task_id': key, **self.rows[key]['state']['closeout']} for key in completed]
-        return {'tasks': tasks, 'results': results, 'reported_at': self.client.now(),
+        report = {'tasks': tasks, 'results': results, 'reported_at': self.client.now(),
                 'user_message_ready': bool(tasks) and all(
                     task['status'] == 'completed' and
                     task.get('closeout', {}).get('status') == 'completed'
                     for task in tasks)}
+        delivery = image_delivery(self, tasks)
+        if delivery is not None:
+            report['delivery'] = delivery
+        return report
 
     def notification_text(self, key):
         row = self.rows[key]

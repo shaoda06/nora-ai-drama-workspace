@@ -340,3 +340,70 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         result = registration.verify(projects, self.store, 'task', {'items': items})
         self.assertEqual(result['status'], 'verified')
         self.assertEqual(projects.section.call_count, 2)
+
+    async def test_image_cli_report_is_ready_for_display_without_more_agent_file_work(self):
+        import asyncio
+        import os
+        from pathlib import Path
+        import shutil
+        import sys
+        from fastapi import FastAPI
+        from backend import main
+        from tests.test_queue_recovery import serving
+        out = self.setup_image()
+        with patch.object(self.store, 'desktop_call', AsyncMock(return_value={})), patch('backend.services.task_notifications.asyncio.sleep', AsyncMock()):
+            self.store.queue_notice('task', 'terminal', 'terminal', '完成')
+            await self.store.notifiers['task']
+        batch = self.store.rows['task']['state']['notices'][0]['batch_id']
+        app = FastAPI()
+        app.state.comfy_tasks = self.store
+        app.add_api_route('/api/internal/comfy/notifications/{batch_id}/report', main.agent_result_report, methods=['POST'])
+        cli = self.root / '.agents/skills/nora-ai-short-drama/scripts/browser_tasks.py'
+        cli.parent.mkdir(parents=True)
+        shutil.copyfile(tasks.SKILL / 'scripts/browser_tasks.py', cli)
+        async with serving(app) as url:
+            config = self.root / '工作区浏览服务/runtime/task-service.json'
+            config.parent.mkdir(parents=True, exist_ok=True)
+            config.write_text(json.dumps({'url': url, 'token': self.store.token}))
+            with patch.object(registration, 'register', side_effect=AssertionError('report must not register')), patch.object(image, 'png', side_effect=AssertionError('report must not decode')):
+                reports = []
+                for extra in ([], ['--details']):
+                    process = await asyncio.create_subprocess_exec(sys.executable, '-B', str(cli), 'report', '--notification-id', batch, *extra,
+                        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+                        env={**os.environ, 'CODEX_THREAD_ID': self.data.thread_id})
+                    stdout, stderr = await asyncio.wait_for(process.communicate(), 15)
+                    self.assertEqual(process.returncode, 0, stderr.decode())
+                    reports.append(json.loads(stdout))
+        brief, full = reports
+        self.assertNotIn('tasks', brief)
+        self.assertIn('tasks', full)
+        self.assertTrue(brief['user_message_ready'])
+        self.assertEqual(brief['delivery']['image_count'], 1)
+        entry = brief['delivery']['tasks'][0]
+        self.assertEqual(entry['images'][0]['file'], str(out))
+        self.assertEqual(entry['images'][0]['width'], 4)
+        self.assertEqual(entry['review_url'], url + full['tasks'][0]['review_path'])
+        self.assertEqual(full['status'], 'acknowledged')
+
+    async def test_actual_input_binding_and_request_links_are_written_without_agent_edits(self):
+        from copy import deepcopy
+        self.setup_image()
+        text = self.draft.read_text().replace('#### 3. 提示词与执行参数', '- 输入1：用户指定参考；用途：衣装\n\n#### 3. 提示词与执行参数', 1)
+        self.draft.write_text(text)
+        source = self.project / 'source.png'
+        source.write_bytes(png())
+        self.data.uploads = [dict(file=str(source), node='1', input='seed', **{'response-name':'upload.json'})]
+        receipt = self.record / 'upload.json'
+        receipt.write_text(json.dumps({'data':dict(input_path='actual/source.png', sha256=hashlib.sha256(source.read_bytes()).hexdigest())}))
+        workflow = deepcopy(self.data.workflow)
+        workflow['1']['inputs']['seed'] = 'actual/source.png'
+        (self.record/self.data.request_name).write_text(json.dumps(dict(prompt=workflow, client_id='listener-id')))
+        report = registration.register(self.store, 'task')
+        current = self.draft.read_text()
+        self.assertIn('实际上传：actual/source.png；槽位：1.seed', current)
+        self.assertIn('[上传凭据]', current)
+        self.assertNotIn('- 请求响应与执行结果入口：\n', current)
+        self.assertEqual(len([item for item in report['checks'] if item['path']==self.rel(receipt)]), 1)
+        receipt.write_text(receipt.read_text()+' ')
+        with self.assertRaisesRegex(ValueError, '已核验证据发生变化'):
+            registration.register(self.store, 'task')

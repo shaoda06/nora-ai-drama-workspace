@@ -214,13 +214,15 @@ def register(store, key, outputs, report_file):
     request_path = Path(data.record_dir) / data.request_name
     request = json.loads(request_path.read_text('utf-8-sig'))
     accepted = deepcopy(data.workflow)
+    upload_receipts = {}
     for binding in data.uploads:
-        receipt = json.loads((Path(data.record_dir) / binding['response-name']).read_text('utf-8-sig'))['data']
+        receipt_path = Path(data.record_dir) / binding['response-name']
+        receipt = upload_receipts[receipt_path] = json.loads(receipt_path.read_text('utf-8-sig'))['data']
         accepted[binding['node']]['inputs'][binding['input']] = receipt['input_path']
     if request['prompt'] != accepted or request['client_id'] != state['client_id']:
         raise ValueError('图片实际请求与已接受任务不符')
     inspected = []
-    checked = [request_path]
+    checked = [request_path, *upload_receipts]
     for item in outputs:
         candidate = project_file(root, item['path'], recorded=True)
         raw = candidate.read_bytes()
@@ -242,17 +244,26 @@ def register(store, key, outputs, report_file):
     evidence = '；'.join(link(draft, project_file(root, item['receipt']), '取回凭据') for item in inspected)
     evidence += '；' + link(draft, Path(data.record_dir) / data.request_name, '实际请求') + '；远端任务：' + state['prompt_id']
     generation = section(original, plan['generation'])[0]
+    original_generation = generation
     updates = []
     changes = {'实际尺寸、格式及数量': specs, '文件核对结论': '通过', '文件核对证据与异常': evidence,
                'client_id、prompt_id': state.get('client_id', '') + '；' + state['prompt_id'],
                'client ID／prompt ID': state.get('client_id', '') + '；' + state['prompt_id']}
     up = plan.get('upscale')
+    if not up:
+        for index, binding in enumerate(data.uploads, 1):
+            receipt_path = Path(data.record_dir) / binding['response-name']
+            uploaded = upload_receipts[receipt_path]
+            generation = re.sub(r'^- 输入' + str(index) + r'：[^\n]*',
+                lambda match: match[0] + '；实际上传：' + uploaded['input_path'] + '；槽位：' + binding['node'] + '.' + binding['input'] + '；' + link(draft, receipt_path, '上传凭据'), generation, flags=re.M)
+        changes['请求响应与执行结果入口'] = evidence
+        changes['请求、上传／提交响应及执行结果入口'] = evidence
     if up:
         source = project_file(root, up['source'])
         source_bytes = source.read_bytes()
         source_size = png(source_bytes)
-        upload = json.loads((Path(data.record_dir) / data.uploads[0]['response-name']).read_text('utf-8-sig'))['data']
-        checked.extend((source, Path(data.record_dir) / data.uploads[0]['response-name']))
+        upload = upload_receipts[Path(data.record_dir) / data.uploads[0]['response-name']]
+        checked.append(source)
         if upload['sha256'] != hashlib.sha256(source_bytes).hexdigest() or request['prompt']['2']['inputs']['image'] != upload['input_path']:
             raise ValueError('超分实际上传与批准原图不符')
         item = inspected[0]
@@ -293,7 +304,7 @@ def register(store, key, outputs, report_file):
             review = section(original, plan['review'])[0]
             if not any(item['path'].split('/')[-1] in review for item in inspected):
                 raise ValueError('审阅编号已用于其他候选')
-    updates.insert(0, {'path': plan['draft'], 'old': generation, 'new': changed})
+    updates.insert(0, {'path': plan['draft'], 'old': original_generation, 'new': changed})
     for update in [*plan.get('record_updates', []), *(up['record_updates'] if up else [])]:
         update = dict(update)
         target = project_file(root, update['path'])

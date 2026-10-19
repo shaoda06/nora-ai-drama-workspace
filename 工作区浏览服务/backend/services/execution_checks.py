@@ -222,7 +222,7 @@ def check_new_targets(data):
 
 
 def fixed_checks(store, data, *, mapping=None, legacy=False):
-    from backend.services.director_uploads import check_pair
+    from backend.services.director_uploads import check_pair, pairs
     from backend.services import comfy_segments as segments
     fixed_input_checks(store, data)
     if data.image_plan is not None:
@@ -231,6 +231,7 @@ def fixed_checks(store, data, *, mapping=None, legacy=False):
     path_scope = PreparationPaths.from_resolved(data.project,
                         [data.record_dir, *(item['file'] for item in data.uploads)])
     if not legacy:
+        pairs.validate_rtx_inputs(data.workflow)
         check_new_targets(data)
     store.client.validate_workflow(data.workflow)
     if not data.segment_plan and any(node['class_type'] in ('MiniMaxH3Director', 'MiniMaxH3ReferenceToVideo') for node in data.workflow.values()):

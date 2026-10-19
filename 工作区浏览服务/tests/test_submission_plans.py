@@ -308,3 +308,31 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(paths[0].endswith('-v01.png'), paths)
         self.assertTrue(paths[1].endswith('-v02.png'), paths)
         self.assertEqual(len(self.store.rows), 2)
+
+    async def test_actual_api_parameters_and_shared_input_metadata_are_tool_owned(self):
+        source = self.project / '用户参考.png'
+        source.write_bytes(png())
+        task = self.spec()
+        task['parameters'] = {'steps': 17, 'cfg': 1.2}
+        task['references'] = [dict(file='用户参考.png', user_reference=True, source_kind='非生成', purpose='已指定衣装', basis='用户指定非生成素材')]
+        other = deepcopy(task)
+        other.update(object='CH002', title='CH002 · 首集角色六视图', draft=self.spec('CH002')['draft'])
+        self.write_plan(task, other)
+        with patch.object(image, 'png', wraps=image.png) as decoded, patch.object(plans.pairs, 'validate_rtx_inputs', wraps=plans.pairs.validate_rtx_inputs) as rtx:
+            result = await plans.execute(self.store, self.payload)
+        self.assertEqual(decoded.call_count, 1)  # Same input in this batch, not two decodes.
+        self.assertEqual(rtx.call_count, 2)  # One common preparation check per task, none in assembly.
+        for entry in result['tasks']:
+            data = self.store.rows[entry['local_task_id']]['input']
+            text = (self.project/data.image_plan['draft']).read_text()
+            self.assertIn('103、17、1.2、euler、simple', text)
+            self.assertIn('- 实际反向提示词：空', text)
+            self.assertIn('qwen_image_2.1_int8_convrot.safetensors', text)
+            self.assertIn('缓存device=auto、dtype=default', text)
+            self.assertNotIn('- 模型及工作流：不适用', text)
+
+    async def test_common_preparation_rejects_bad_rtx_before_any_enqueue(self):
+        self.data.workflow = {'1': {'class_type':'RTXVideoSuperResolution', 'inputs':{}}}
+        with self.assertRaisesRegex(ValueError, 'strength'):
+            await self.store.prepare_only(self.data)
+        self.assertFalse(self.store.rows)
