@@ -24,7 +24,7 @@ SelfLift采用Simple完整12步，`split_mode=transition_step`、`transition_ste
 | LoRA文件 | 权重 | 用途／状态 |
 | --- | --- | --- |
 | `H3_Combat_V2.safetensors` | 0.65 | Combat打斗；已启用 |
-| `Motion_Repair_V2.safetensors` | 0.35 | 运动修复；已启用 |
+| `minimax_h3\Motion_Repair_V2.safetensors` | 0.35 | 运动修复；已启用 |
 | `H3_Fight_Flow_V1.safetensors` | 0.35 | 打斗衔接；已启用 |
 | `H3_speed_slider_1.1.safetensors` | 3.0 | 速度控制；已启用 |
 

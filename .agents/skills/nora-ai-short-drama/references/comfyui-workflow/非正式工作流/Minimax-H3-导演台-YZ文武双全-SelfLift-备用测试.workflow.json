@@ -291,11 +291,11 @@
         }
       ],
       "widgets_values": [
-        "Motion_Repair_V2.safetensors",
+        "minimax_h3\\Motion_Repair_V2.safetensors",
         0.3500000000000001
       ],
       "widgets_values_named": {
-        "lora_name": "Motion_Repair_V2.safetensors",
+        "lora_name": "minimax_h3\\Motion_Repair_V2.safetensors",
         "strength_model": 0.3500000000000001
       }
     },
