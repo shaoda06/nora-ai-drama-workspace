@@ -192,8 +192,8 @@
       ],
       "flags": {},
       "order": 3,
-      "mode": 4,
-      "title": "可选 Combat · 沿作者旁路",
+      "mode": 0,
+      "title": "武打｜Combat V2 · 0.65（已启用）",
       "properties": {
         "Node name for S&R": "LoraLoaderModelOnly"
       },
@@ -252,8 +252,8 @@
       ],
       "flags": {},
       "order": 4,
-      "mode": 4,
-      "title": "可选 Motion Repair · 沿作者旁路",
+      "mode": 0,
+      "title": "运动修复｜Motion Repair V2 · 0.35（已启用）",
       "properties": {
         "Node name for S&R": "LoraLoaderModelOnly"
       },
@@ -312,8 +312,8 @@
       ],
       "flags": {},
       "order": 5,
-      "mode": 4,
-      "title": "可选 Fight Flow · 沿作者旁路",
+      "mode": 0,
+      "title": "打斗衔接｜Fight Flow V1 · 0.35（已启用）",
       "properties": {
         "Node name for S&R": "LoraLoaderModelOnly"
       },
@@ -372,8 +372,8 @@
       ],
       "flags": {},
       "order": 6,
-      "mode": 4,
-      "title": "可选 Speed Slider · 沿作者旁路",
+      "mode": 0,
+      "title": "速度控制｜Speed Slider 1.1 · 3.0（已启用）",
       "properties": {
         "Node name for S&R": "LoraLoaderModelOnly"
       },
@@ -1019,7 +1019,7 @@
       "flags": {},
       "order": 15,
       "mode": 0,
-      "title": "12｜作者 Simple · 完整10步",
+      "title": "12｜作者 Simple · 完整12步",
       "properties": {
         "Node name for S&R": "BasicScheduler"
       },
@@ -1066,12 +1066,12 @@
       ],
       "widgets_values": [
         "simple",
-        10,
+        12,
         1.0
       ],
       "widgets_values_named": {
         "scheduler": "simple",
-        "steps": 10,
+        "steps": 12,
         "denoise": 1.0
       }
     },
@@ -1089,7 +1089,7 @@
       "flags": {},
       "order": 16,
       "mode": 0,
-      "title": "13｜导演台原生SelfLift · 6低清＋4高清",
+      "title": "13｜导演台原生SelfLift · 6低清＋6高清",
       "properties": {
         "Node name for S&R": "MiniMaxH3DirectorSelfLift"
       },
@@ -1257,7 +1257,7 @@
       "widgets_values": [
         "渐进采样",
         "transition_step",
-        4,
+        6,
         6,
         0.6,
         "euler",
@@ -1277,7 +1277,7 @@
       "widgets_values_named": {
         "bd_grp_selflift_sample": "渐进采样",
         "split_mode": "transition_step",
-        "highres_steps": 4,
+        "highres_steps": 6,
         "transition_step": 6,
         "lowres_scale": 0.6,
         "sampler_mode": "euler",
@@ -1648,7 +1648,7 @@
         294,
         "{\"version\":5,\"editMode\":\"segment\",\"timelineMode\":\"prompt_batch\",\"totalFrames\":294,\"frameRate\":24,\"width\":1664,\"height\":928,\"refMaxSize\":1664,\"runSelectEnabled\":false,\"runSelection\":[],\"videoClips\":[],\"global\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":false,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}},\"output\":{\"mode\":\"fixed\",\"aspectRatio\":\"16:9 (宽屏)\",\"megapixels\":1.5,\"multiple\":32,\"longEdge\":1664,\"width\":1664,\"height\":928,\"maxExportFrames\":0,\"exportMode\":\"segments\",\"audioMode\":\"generate\",\"exportSourceImages\":false,\"exportPreFaceRefine\":false,\"refImageSize\":\"max\",\"continuityEnabled\":false,\"continuityOverlapFrames\":22,\"continuityMode\":\"continue\",\"continuityRedraw\":0.1,\"continuityKeepTail\":true},\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":294,\"frameCount\":294,\"durationSec\":12,\"prompt\":\"\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"keyframes\":[],\"durationSec\":12,\"video\":{\"fileName\":\"\",\"frames\":[],\"type\":\"input\",\"subfolder\":\"\",\"sourceFrameCount\":0,\"deletedSourceRanges\":[],\"frameMap\":[]},\"gen\":{\"defaultFrameCount\":294},\"liveTaePreview\":true,\"batchDetailMode\":\"solo\",\"batchWorkspaces\":{\"r2v\":{\"selectedIndex\":0,\"editMode\":\"segment\",\"runSelectEnabled\":false,\"runSelection\":[],\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":294,\"frameCount\":294,\"durationSec\":12,\"prompt\":\"\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"globalCommon\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":false,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}}}},\"selectedIndex\":0}",
         "高级采样",
-        10,
+        12,
         "euler",
         "simple",
         12.0,
@@ -1677,7 +1677,7 @@
         "total_frames": 294,
         "timeline_data": "{\"version\":5,\"editMode\":\"segment\",\"timelineMode\":\"prompt_batch\",\"totalFrames\":294,\"frameRate\":24,\"width\":1664,\"height\":928,\"refMaxSize\":1664,\"runSelectEnabled\":false,\"runSelection\":[],\"videoClips\":[],\"global\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":false,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}},\"output\":{\"mode\":\"fixed\",\"aspectRatio\":\"16:9 (宽屏)\",\"megapixels\":1.5,\"multiple\":32,\"longEdge\":1664,\"width\":1664,\"height\":928,\"maxExportFrames\":0,\"exportMode\":\"segments\",\"audioMode\":\"generate\",\"exportSourceImages\":false,\"exportPreFaceRefine\":false,\"refImageSize\":\"max\",\"continuityEnabled\":false,\"continuityOverlapFrames\":22,\"continuityMode\":\"continue\",\"continuityRedraw\":0.1,\"continuityKeepTail\":true},\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":294,\"frameCount\":294,\"durationSec\":12,\"prompt\":\"\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"keyframes\":[],\"durationSec\":12,\"video\":{\"fileName\":\"\",\"frames\":[],\"type\":\"input\",\"subfolder\":\"\",\"sourceFrameCount\":0,\"deletedSourceRanges\":[],\"frameMap\":[]},\"gen\":{\"defaultFrameCount\":294},\"liveTaePreview\":true,\"batchDetailMode\":\"solo\",\"batchWorkspaces\":{\"r2v\":{\"selectedIndex\":0,\"editMode\":\"segment\",\"runSelectEnabled\":false,\"runSelection\":[],\"segments\":[{\"id\":\"segment-001\",\"start\":0,\"length\":294,\"frameCount\":294,\"durationSec\":12,\"prompt\":\"\",\"negativePrompt\":\"\",\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"genImage\":{\"imageFile\":\"\",\"fileName\":\"\"},\"startImage\":null,\"endImage\":null,\"continuityFromPrev\":false,\"refImageSize\":\"max\",\"loras\":[],\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"}}],\"globalCommon\":{\"taskType\":\"r2v — 参考主体生视频(Reference to Video)\",\"prompt\":\"\",\"refs\":[],\"refAudios\":[],\"refVideos\":[],\"commonEnabled\":false,\"commonCollapsed\":false,\"referenceVideo\":{\"videoFile\":\"\",\"fileName\":\"\",\"type\":\"input\",\"subfolder\":\"\"},\"continuousReference\":false,\"genImage\":{\"imageFile\":\"\"}}}},\"selectedIndex\":0}",
         "bd_grp_advanced": "高级采样",
-        "steps": 10,
+        "steps": 12,
         "sampler": "euler",
         "scheduler": "simple",
         "shift_video": 12.0,
@@ -1897,7 +1897,7 @@
         "text": ""
       },
       "widgets_values": [
-        "实验画布：导演台管理素材、提示词和分组；模型链沿YZ金鱼《终极篇·文武双全》。\n\n使用放大权重：minimax_h3_latent_upscaler_3d_fp16_V2.safetensors；远端已识别该权重。\n\n在导演台第一组添加参考素材并填写提示词。参考图策略max。导演台界面时长12秒，对应294帧／实际12.25秒；目标1664×928、24fps。\n\nSelfLift：前6步低清，倍率0.6；后4步高清；总计10步；rho=0；不接额外Refine。四个武打／修复／速度LoRA沿作者旁路。\n\n固定作者当前种子，便于同素材、同提示词切换节点38的INT8／NVFP4编码器作对照。\n\n此处使用导演台自带SelfLift实现，并非作者外部SelfLiftH3Sampler的逐像素复现；插值和缓存／卸载由导演台实现管理。未提交生成，不能据此声称速度或画质已验证。"
+        "实验画布：导演台管理素材、提示词和分组；模型链沿YZ金鱼《终极篇·文武双全》。\n\n使用放大权重：minimax_h3_latent_upscaler_3d_fp16_V2.safetensors；远端已识别该权重。\n\n在导演台第一组添加参考素材并填写提示词。参考图策略max。导演台界面时长12秒，对应294帧／实际12.25秒；目标1664×928、24fps。\n\nSelfLift：前6步低清992×544，倍率0.6并对齐×32；后6步高清1664×928；Simple总计12步，transition_step=6；rho=0；不接额外Refine。低清尺寸为配置计算值，非运行实测。\n\n武打与运动LoRA组：Combat V2=0.65、Motion Repair V2=0.35、Fight Flow V1=0.35、Speed Slider 1.1=3.0；四个均已启用，按上述权重参与前后两阶段的同一模型链。\n\n固定作者当前种子，便于同素材、同提示词切换节点38的INT8／NVFP4编码器作对照。\n\n此处使用导演台自带SelfLift实现，并非作者外部SelfLiftH3Sampler的逐像素复现；插值和缓存／卸载由导演台实现管理。未提交生成，不能据此声称速度或画质已验证。\n\n与原版的差异：原版为外部SelfLiftH3Sampler，本画布为导演台原生MiniMaxH3DirectorSelfLift；原版随机更新种子，本画布固定种子；原版最近邻插值，本画布为bilinear。两者不是逐像素复现。"
       ],
       "title": "测试说明／缺项／操作入口",
       "color": "#432",
@@ -2096,7 +2096,7 @@
       "flags": {}
     },
     {
-      "title": "B｜作者旁路选项",
+      "title": "B｜武打与运动LoRA · 全部启用",
       "bounding": [
         405,
         -80,

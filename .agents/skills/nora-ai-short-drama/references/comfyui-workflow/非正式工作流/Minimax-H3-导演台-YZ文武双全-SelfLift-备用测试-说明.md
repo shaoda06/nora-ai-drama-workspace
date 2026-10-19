@@ -8,7 +8,25 @@
 
 在导演台第一组添加参考素材并填写提示词。参考图策略max。导演台界面时长12秒，对应294帧／实际12.25秒；目标1664×928、24fps。
 
-SelfLift：前6步低清，倍率0.6；后4步高清；总计10步；rho=0；不接额外Refine。四个武打／修复／速度LoRA沿作者旁路。
+SelfLift采用Simple完整12步，`split_mode=transition_step`、`transition_step=6`、`highres_steps=6`、`lowres_scale=0.6`；rho=0，不接额外Refine。
+
+| 阶段 | 配置对应的分辨率 | 采样步数 |
+| --- | --- | --- |
+| 低清前段 | 992×544 | 前6步 |
+| 高清后段 | 1664×928 | 后6步 |
+
+低清尺寸按高清画布的0.6倍率及×32对齐计算，由SelfLift自动确定，不是另设独立画布；以上不是视频运行实测。BasicScheduler与导演台步数均为12，命名控件和序列控件保持一致。
+
+## 武打与运动LoRA组
+
+画布B组以下四个节点全部启用（mode=0），按所列权重串入模型链；前后两阶段共用该模型，未另接model_hires。原版文件中这四个节点处于旁路，本测试配置将它们启用。
+
+| LoRA文件 | 权重 | 用途／状态 |
+| --- | --- | --- |
+| `H3_Combat_V2.safetensors` | 0.65 | Combat打斗；已启用 |
+| `Motion_Repair_V2.safetensors` | 0.35 | 运动修复；已启用 |
+| `H3_Fight_Flow_V1.safetensors` | 0.35 | 打斗衔接；已启用 |
+| `H3_speed_slider_1.1.safetensors` | 3.0 | 速度控制；已启用 |
 
 固定作者当前种子，便于同素材、同提示词切换节点38的INT8／NVFP4编码器作对照。
 
@@ -18,7 +36,7 @@ SelfLift：前6步低清，倍率0.6；后4步高清；总计10步；rho=0；不
 
 - 作者工作流：`YZ金鱼-MiniMax H3 终极篇-文武双全.json`，工程ID `eee7ca4f-9198-48dd-b48a-80b3f7191873`。
 - 导演台原生模块：[MiniMaxH3DirectorSelfLift](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/4c6245e518dd8a494f3afc4f3cccd53f22d82d10/nodes/director_selflift.py)。
-- 底模与两类VAE、DMAD 0.8、MysticXXX 0.35、NVFP4 AWQ、Kitchen＋sol-attn、Shift 12/3、前馈2块、H.264 CRF19沿作者设置；Simple采样设为10步（前6后4）。
+- 底模与两类VAE、DMAD 0.8、MysticXXX 0.35、NVFP4 AWQ、Kitchen＋sol-attn、Shift 12/3、前馈2块、H.264 CRF19沿作者设置；Simple采样为12步（前6后6）。
 - 未引入本地标准版的Turbo v4、TE-Speed、SplitSigmas或额外Refine。
 - 作者的ResolutionSelector 1.5MP解析值1664×928已填入导演台；作者时长公式解析为294帧，实际12.25秒。
 - 仅用导演台原生素材组；不接外部r2v_groups覆盖素材管理。测试组为空，填入自己的素材和提示词后再运行。
@@ -29,12 +47,28 @@ INT8 ConvRot和NVFP4 AWQ是同一32B编码器的不同量化版本。NVFP4模型
 
 ## 验证范围
 
-- 现有离线配对校验与技能校验通过。20个画布节点包含4个旁路LoRA和1个说明节点，API有效节点15个。
-- 对照当前主节点schema，15个API节点均已注册，18条有效连线的类型和槽位已核对。
-- 当前远端节点列表已识别SelfLift的V2权重；文件可选不等于模型加载或生成已通过。
-- 浏览器重新打开检查通过：导演台素材组界面正常，40个数值控件均为有限数值；实际帧数保持294帧。未启动生成。
-- 权重目录：`ComfyUI/models/latent_upscale_models/minimax_h3_latent_upscaler_3d_fp16_V2.safetensors`。模型实际加载及视频效果仍须后续测试。
-- 没有安装插件、下载模型、重启服务器或提交生成。
+- 本地画布与API按配对校验检查。20个画布节点包含1个说明节点，API有效节点19个；4个武打与运动LoRA均在有效API模型链中。
+- BasicScheduler和导演台均设为12步，SelfLift在第6步后由992×544低清转入1664×928高清；低清尺寸按倍率0.6与×32网格计算，不是运行实测。
+- 本地静态检查不代表目标服务器已加载LoRA或完成视频生成。未更改或重新验证远端节点、模型安装与远端保存画布。
+- 放大权重：`ComfyUI/models/latent_upscale_models/minimax_h3_latent_upscaler_3d_fp16_V2.safetensors`。
+
+## 与原版的对应与差异
+
+| 项目 | 对应关系 |
+| --- | --- |
+| 底模与VAE | 相同：INT8 H3底模、INT8视频VAE、FP32音频VAE |
+| 编码器 | 相同：Qwen3-VL 32B NVFP4 AWQ，minimax类型 |
+| 基础LoRA | 相同：DMAD v4 0.8、MysticXXX 0.35 |
+| 武打与运动LoRA | 文件、权重与串联顺序相同；原版4个旁路，本测试4个全部启用 |
+| 注意力与Shift | 相同：Kitchen、sol-attn及其参数，Shift 12/3 |
+| 前馈分块 | 相同：2块，阈值4096 |
+| 分辨率与帧率 | 相同：1664×928、24fps；低清0.6倍率对应992×544 |
+| 采样 | 相同：Euler、Simple 12步、CFG 1、前6后6 |
+| 提升参数 | 相同：V2潜变量放大模型、rho=0、w_min=0.5、w_max=1、高清分块关闭 |
+| SelfLift实现 | 原版外部`SelfLiftH3Sampler`；本测试为导演台配套`MiniMaxH3DirectorSelfLift`。接口与内部实现不同，不声明逐像素等同 |
+| 插值 | 原版外部采样器采用nearest；本测试保留导演台bilinear配置 |
+| 种子控制 | 起始种子数值相同；原版randomize，本测试fixed，便于同输入对照 |
+| 素材、条件与导出 | 原版外接参考输入、零条件节点及音视频解码；本测试由导演台管理。输出命名与缓存机制不同；H.264、CRF19、yuv420p及24fps相同 |
 
 ## 编码器的已知依据
 
@@ -47,7 +81,7 @@ INT8 ConvRot和NVFP4 AWQ是同一32B编码器的不同量化版本。NVFP4模型
 ## 远端测试画布
 
 - 保存位置：`01-自用/02-视频生成/Nora-测试-导演台-YZ文武双全-SelfLift-20261018.workflow.json`。
-- 已通过 ComfyUI 用户文件接口另存，并回读核对与本地画布一致；未启动生成。
+- 这是独立的远端副本；本地修改不会自动更新它。使用当前配置时加载本地画布，不把该远端旧副本当作本地最新版。
 
 ## 打开画布
 
