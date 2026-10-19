@@ -95,7 +95,7 @@ def main():
         if name == 'register-results':
             item.add_argument('--image-plans', help='Explicit legacy repair only: JSON object from local task UUID to its image closeout plan; cannot replace an accepted association')
             item.add_argument('--record-updates', help='UTF-8 JSON array of exact path/old/new updates for this batch progress or production checks; paths relative to the project')
-    commands.choices['report'].add_argument('--details', action='store_true', help='显式读取完整报告；正常图片报告只返回可直接展示的成果、规格、数量和入口，异常自动保留完整报告')
+    commands.choices['report'].add_argument('--details', action='store_true', help='显式读取完整报告；正常图片／视频报告只返回成果、数量和审核入口，异常自动保留完整报告')
     item = commands.add_parser('resolve', help='Close an investigated needs_attention task; preserve its original exception')
     item.add_argument('--task-id', required=True, help='Backend local UUID, not remote prompt_id')
     item.add_argument('--resolution', required=True, help='UTF-8 JSON resolution file with original prompt ID, evidence and replacement IDs')

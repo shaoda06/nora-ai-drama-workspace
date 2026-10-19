@@ -397,13 +397,27 @@ def build_image(root, skill, spec, documents, now):
 def build_video(root, spec, documents):
     record = project_file(root, spec['record_dir'])
     canvas = json.loads(project_file(root, spec['canvas']).read_text('utf-8-sig'))
-    api = pairs.Canvas(canvas).api(spec['output_nodes'])
-    mapping = spec.get('mapping')
+    mapping = deepcopy(spec.get('mapping'))
     if mapping is None:
         mapping = json.loads(documents.read(record / '输入映射.json'))
+    if spec.get('sync_timing'):
+        from backend.services.video_records import sync_timing
+        sync_timing(canvas, mapping, spec['task_type'])
+    api = pairs.Canvas(canvas).api(spec['output_nodes'])
+    unbound_mapping = deepcopy(mapping)
+    if spec.get('content_review'):
+        if mapping.get('content_review'):
+            raise ValueError('已有内容核对映射不自动覆盖；新核对请明确使用本次无绑定映射及注释')
+        from h3_prompt_checks import bind_review
+        mapping['content_review'] = bind_review(root, api, spec['content_review'])
     documents.new_json(record / '任务.workflow.json', canvas)
     documents.new_json(record / '任务.api.json', api)
-    documents.new_json(record / '输入映射.json', mapping)
+    mapping_file = record / '输入映射.json'
+    existing_mapping = documents.read(mapping_file)
+    if spec.get('content_review') and existing_mapping is not None and json.loads(existing_mapping) == unbound_mapping:
+        documents.put(mapping_file, json.dumps(mapping, ensure_ascii=False, indent=2))
+    else:
+        documents.new_json(mapping_file, mapping)
     outputs = spec.get('outputs', [])
     segment_plan = spec.get('segment_plan')
     if spec['task_type'] in ('video-first-pass', 'video-second-pass') and segment_plan is None:
@@ -415,7 +429,16 @@ def build_video(root, spec, documents):
             identity = f"{entry['segment']}-{entry['round']}-{stage}"
             targets.append(dict(index=index, path=f"09-剧集制作/{identity.split('-')[0]}/其他资料/候选视频/{identity}.mp4", response_name=f'最终取回-{index:03d}.json'))
         segment_plan = dict(director_node=director, report_node=str(spec['report_node']), output_root=spec['output_root'], targets=targets)
+    if spec['task_type'] == 'video-postprocess' and not outputs:
+        savers = [key for key,node in api.items() if node['class_type']=='VHS_VideoCombine' and node['inputs'].get('format')=='video/h264-mp4']
+        if len(mapping['selected_indices']) != 1 or len(savers) != 1:
+            raise ValueError('非标准单段MP4后处理须显式提供outputs，不猜测保存节点')
+        entry = mapping['segments'][mapping['selected_indices'][0]]
+        identity = entry['segment']+'-'+entry['round']+'-后处理'
+        outputs = [dict(node_id=savers[0], output_key='gifs', index=0,
+            path=f"09-剧集制作/{identity.split('-')[0]}/其他资料/候选视频/{identity}.mp4", response_name='最终取回-000.json')]
     uploads = list(spec.get('uploads', []))
+    timelines = {key: json.loads(node['inputs']['timeline_data']) for key,node in api.items() if node['class_type']=='MiniMaxH3Director'}
     for ref in spec.get('references', []):
         file = project_file(root, ref['file'])
         placeholder, matched = ref['placeholder'], False
@@ -425,7 +448,7 @@ def build_video(root, spec, documents):
                 if content == placeholder:
                     slots.append(None)
                 elif node['class_type'] == 'MiniMaxH3Director' and name == 'timeline_data':
-                    timeline = json.loads(content)
+                    timeline = timelines[key]
                     for area, block in [(['global'], timeline['global']), *[(['segments', i], item) for i, item in enumerate(timeline['segments'])]]:
                         for array, field in [('refs', 'imageFile'), ('refVideos', 'videoFile'), ('refAudios', 'audioFile')]:
                             for index, item in enumerate(block.get(array, [])):
@@ -440,8 +463,11 @@ def build_video(root, spec, documents):
                     matched = True
         if not matched:
             raise ValueError('视频参考未对应实际画布槽位：' + placeholder)
+    from backend.services.comfy_tasks import SKILL
+    from backend.services.video_records import prepare_records
+    prepare_records(root, SKILL, spec, api, mapping, record, documents)
     return dict(project=str(root), task_type=spec['task_type'], title=spec['title'], workflow=api, record_dir=str(record),
-        uploads=uploads, outputs=outputs, segment_plan=segment_plan, attempt_name='提交尝试.json',
+        video_plan={'metadata': 'ffprobe'}, uploads=uploads, outputs=outputs, segment_plan=segment_plan, attempt_name='提交尝试.json',
         request_name='请求.json', response_name='提交响应.json', history_name='执行结果.json')
 
 
@@ -486,7 +512,7 @@ async def execute(store, payload):
         for entry in source['tasks']:
             if not payload.prepare_only and not entry.get('authorization'):
                 raise ValueError('生成任务必须写明本次执行授权依据')
-            spec = {**entry, 'authorization': entry.get('authorization', '仅准备，尚未执行授权')}
+            spec = {**entry, 'authorization': entry.get('authorization', '仅准备，尚未执行授权'), 'submission_plan': str(plan_file)}
             task = build_image(root, SKILL, spec, documents, store.client.now()) if spec['task_type'].startswith('image') else build_video(root, spec, documents)
             tasks.append(task)
         journal = dict(source=source, thread_id=payload.thread_id, tasks=tasks, writes=documents.writes())

@@ -1,6 +1,7 @@
 """Offline Ref2VA text checks and evidence binding; never uploads or generates."""
 import argparse
 from collections import Counter
+from copy import deepcopy
 import hashlib
 import json
 from pathlib import Path
@@ -107,6 +108,32 @@ def text_findings(prompt, chinese=None, names=None):
     return errors
 
 
+def bind_review(project, workflow, annotations):
+    """Bind new semantic notes to actual inputs; never invent passed judgements."""
+    review = deepcopy(annotations)
+    signatures = {(node,index): signature for node,index,_,signature in selected_groups(workflow)}
+    nodes = {node for node,_ in signatures}
+    texts = {}
+    def read(name):
+        path = project_file(project, name)
+        if path not in texts:
+            text = path.read_text('utf-8-sig')
+            texts[path] = text, digest(text)
+        return texts[path]
+    for row in review['groups']:
+        if 'node' not in row and len(nodes)==1:
+            row['node'] = next(iter(nodes))
+        if 'input_sha256' in row or 'sha256' in row['chinese'] or any('sha256' in source for check in row['checks'].values() for source in check.get('sources',[])):
+            raise ValueError('已绑定的内容核对记录应保留原映射，不自动重新绑定；新核对只传判断、原文与路径')
+        row['input_sha256'] = signatures[row['node'],row['index']]
+        row['chinese']['sha256'] = digest(chinese_text(read(row['chinese']['file'])[0]))
+        for check in row['checks'].values():
+            for source in check.get('sources', []):
+                source['sha256'] = read(source['file'])[1]
+    review['version'] = 1
+    return review
+
+
 def audit(project, workflow, mapping):
     """Validate facts and evidence presence, not the truth of a reviewer's judgement."""
     project = Path(project).resolve()
@@ -119,12 +146,19 @@ def audit(project, workflow, mapping):
             not isinstance(r, dict) or not isinstance(r.get('node'), str) or type(r.get('index')) is not int for r in rows):
         failures.append({'code': 'review_missing', 'detail': '输入映射缺少version=1的content_review及逐组核对证据'})
         rows = []
+    texts = {}
+    def read_once(path):
+        if path not in texts:
+            text = path.read_text('utf-8-sig')
+            texts[path] = text, digest(text)
+        return texts[path]
+    chinese_versions = {}
     expected_keys = []
     for node, index, prompt, signature in selected_groups(workflow):
         key = (node, index)
         expected_keys.append(key)
         matching = [r for r in rows if (r.get('node'), r.get('index')) == key]
-        errors, chinese = [], None
+        errors, chinese, chinese_signature = [], None, None
         row = matching[0] if len(matching) == 1 else {}
         def issue(code, detail):
             errors.append({'code': code, 'detail': detail})
@@ -143,8 +177,11 @@ def audit(project, workflow, mapping):
         try:
             path = project_file(project, chinese_info['file'])
             files.add(str(path))
-            chinese = chinese_text(path.read_text('utf-8-sig'))
-            if chinese_info.get('sha256') != digest(chinese):
+            if path not in chinese_versions:
+                chinese = chinese_text(read_once(path)[0])
+                chinese_versions[path] = chinese, digest(chinese)
+            chinese, chinese_signature = chinese_versions[path]
+            if chinese_info.get('sha256') != chinese_signature:
                 issue('translation_stale', '中文核对记录与当前中文正文不一致')
         except (KeyError, OSError, ValueError, TypeError) as exc:
             issue('translation_missing', '缺少可读取的中文参考版：' + str(exc))
@@ -183,8 +220,8 @@ def audit(project, workflow, mapping):
                 try:
                     path = project_file(project, source['file'])
                     files.add(str(path))
-                    text = path.read_text('utf-8-sig')
-                    if source.get('sha256') != digest(text):
+                    text, source_signature = read_once(path)
+                    if source.get('sha256') != source_signature:
                         issue('review_source_stale', category + '的依据已变化：' + source['file'])
                     quote = source.get('quote', '')
                     if not isinstance(quote, str) or not quote.strip() or quote not in text:
@@ -192,7 +229,7 @@ def audit(project, workflow, mapping):
                 except (KeyError, OSError, ValueError) as exc:
                     issue('review_evidence', category + '依据不可读取：' + str(exc))
         results.append({'node': node, 'index': index, 'input_sha256': signature,
-                        'chinese_sha256': digest(chinese) if chinese is not None else None,
+                        'chinese_sha256': chinese_signature,
                         'ok': not errors, 'issues': errors})
     if sorted((r.get('node', ''), r.get('index', -1)) for r in rows) != sorted(expected_keys):
         failures.append({'code': 'review_scope', 'detail': '核对记录必须准确覆盖本次选中原组，不含重复或未选中组'})

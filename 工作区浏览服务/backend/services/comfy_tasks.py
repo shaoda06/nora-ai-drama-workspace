@@ -73,6 +73,7 @@ class TaskInput(BaseModel):
     source_session_name: str = ''
     start_paused: bool = False
     image_plan: dict | None = None
+    video_plan: dict | None = None
 
 
 class TaskStore(LocalQueue, TaskNotifications):

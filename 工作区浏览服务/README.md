@@ -64,6 +64,8 @@ Windows入口使用`pythonw`等待启动结果；构建通过`npm.cmd`执行，�
 
 草稿生成依赖[pyJianYingDraft](https://github.com/GuanYixuan/pyJianYingDraft) 0.3.0（Apache-2.0）及[pymediainfo](https://github.com/sbraz/pymediainfo) 7.0.1（MIT），版本固定在requirements.txt；只使用文件生成和媒体信息读取，不调用剪映UI自动化。Windows的pymediainfo wheel包含MediaInfo运行库；其他平台按该库说明准备libmediainfo。固定目录占位符参考[ZenStory实现](https://github.com/zenstory-ai/video-recap-skills/blob/539168622918e058bd250c793b82f043eced31e0/skills/video-assemble/scripts/jianying/writer.py#L14)，未安装整套技能。
 
+视频任务清单的结果媒体信息由本机PATH中的`ffprobe`读取，只读取stream／container元数据；缺少工具时返回明确技术异常，不自动安装、不交给Agent手测。浏览项目及已接受历史任务不因本项追加媒体探测。
+
 当前工作区已安装依赖并构建。其他电脑首次使用，在本目录执行以下命令；Python 3.10＋、Node.js 22＋、pnpm 11为开发环境要求，普通浏览启动仅使用 `.venv` 和已构建前端；ComfyUI后台的Codex会话通知在macOS需要支持queue的Codex CLI，其他平台需要本机Node及已安装的桌面适配器，见下方后台任务说明。
 
 ```powershell

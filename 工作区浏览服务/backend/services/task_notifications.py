@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import subprocess
 import uuid
-from backend.services.result_summary import summary, batch_tasks, image_delivery
+from backend.services.result_summary import summary, batch_tasks, image_delivery, video_delivery
 
 
 class TaskNotifications:
@@ -115,7 +115,7 @@ class TaskNotifications:
                     task['status'] == 'completed' and
                     task.get('closeout', {}).get('status') == 'completed'
                     for task in tasks)}
-        delivery = image_delivery(self, tasks)
+        delivery = image_delivery(self, tasks) or video_delivery(self, tasks)
         if delivery is not None:
             report['delivery'] = delivery
         return report

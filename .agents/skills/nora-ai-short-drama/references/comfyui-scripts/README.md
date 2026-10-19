@@ -323,7 +323,7 @@ python "实际技能目录/scripts/browser_tasks.py" status --task-id 本地任�
 python "实际技能目录/scripts/browser_tasks.py" report --notification-id 通知批次UUID
 ```
 
-后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。命令读取持久报告，同时自动记录收到。正常图片及超分默认只返回`notification_id`、`status=acknowledged`、`reused`、`user_message_ready`和`delivery`，避免展开重复的状态／收尾内容；`delivery`包含完成任务数、图片数，以及每项标题、本地任务ID、成果绝对路径、候选路径、实际宽高／格式／字节数、工作稿／收尾报告绝对路径和可直接打开的`review_url`。Agent直接展示，不再拼路径、数文件、翻记录或查网页。只有`user_message_ready=true`才能按入口已可审汇报，成功读取不表示用户批准。异常和视频仍返回完整`tasks/results`，据失败阶段定位；图片显式追溯时可加`--details`读取完整报告，不触发重新核验或写记录。未带展示清单的历史报告保留原格式。重复读取`reused=true`且不重复确认事件。
+后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。命令读取持久报告，同时自动记录收到。正常图片及超分默认只返回`notification_id`、`status=acknowledged`、`reused`、`user_message_ready`和`delivery`，避免展开重复的状态／收尾内容；`delivery`包含完成任务数、图片数，以及每项标题、本地任务ID、成果绝对路径、候选路径、实际宽高／格式／字节数、工作稿／收尾报告绝对路径和可直接打开的`review_url`。Agent直接展示，不再拼路径、数文件、翻记录或查网页。只有`user_message_ready=true`才能按入口已可审汇报，成功读取不表示用户批准。正常视频同样只返回`delivery`：`video_count`为本批实际完成数量，`tasks`含标题、阶段身份、文件绝对路径、媒体信息及可直接打开的审核链接；对话只汇报数量和入口。异常仍返回完整`tasks/results`，据失败阶段定位；显式追溯时可加`--details`读取完整报告，不触发重新核验或写记录。未带展示清单的历史报告保留原格式。重复读取`reused=true`且不重复确认事件。
 
 旧通知没有持久报告时返回已有摘要、`legacy_report=true`和`user_message_ready=false`，不会在读取时补做收尾；核对具体缺项后才使用兼容修复入口。
 
@@ -444,6 +444,13 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
  "output_nodes":["403","504","506"],"report_node":"403","output_root":"E:/ComfyUI/output",
  "references":[{"file":"03-人物资料/CH001-男主/参考图/当前角色.png","placeholder":"planned/CH001.png"}]}
 ```
+
+视频执行职责见[视频执行分工](../流程规范/ComfyUI-服务配置与任务提交规范.md#视频执行分工)。任务清单自动建立或补齐各P本R本阶段的技术条目，已有非空说明、用户反馈及决定保持；记录从实际API、语义映射和后台事实生成，不手填模型参数、ID、秒数／帧数或冻结资料入口。
+
+- 新一采可传`sync_timing:true`，以内容画布中已核定的各组durationSec计算17k+5帧格、start、length、总帧数并同步根字段及r2v编辑区。使用新的执行目录保存副本，原内容画布不改写；二采、返修或带历史source／materials_from的任务不使用此选项，保持来源与缓存身份。
+- 新核对可在任务条目的`content_review`传逐组语义注释：`groups`中每项含`index`、`chinese:{file}`、`subjects`、四类`checks`及各自真实note／prompt_quote／chinese_quote／sources的file和quote；单导演台可省node。**不手填input_sha256、中文或依据sha256**，脚本按本次实际API和文件绑定。既有已绑定记录继续在原mapping使用，不自动刷新，不由脚本补passed；未做语义核对仍会失败。详细字段含义见[内容核对检查](#h3正文与内容核对检查)。
+- 标准单段H.264 MP4后处理可不传outputs，工具从唯一VHS_VideoCombine保存节点和已选P／R派生目标及取回凭据；其他保存结构须显式提供实际输出映射，不猜节点。
+- 清单视频任务自动带媒体信息读取计划：通知前仅用本机ffprobe读取一次stream／container事实，将实测值写入原结果收尾报告和分段记录；网页重试复用未变化的测量，report读取不再测量。缺少ffprobe、无法读视频轨或文件变化返回技术异常，不转交Agent手测或自动重生成；不安装依赖、不抽帧或运行内容／质量评价。既有已接受任务不追溯补测。
 
 `output_nodes`为本次画布的实际执行输出节点；标准版示例的403／504／506不能照搬到不同工作流。`output_root`为已核实的远端真实目录。既有`输入映射.json`复用，不复制粘贴；新映射可在`mapping`传入既定语义信息。分镜版本、场次修改轮次、组与P／R对应、内容核对证据仍须准备；工具不替代这些内容决定。工具导出配套API，按已选原始组序、P／R／阶段派生候选路径与取回凭据，按`references`中的占位值定位图片／音视频素材槽位、组装上传映射；原映射和冻结资料仍由既有后台保存。二采使用指定来源画布及既有批准关系，不能换成新的基准。后处理或特定输出可显式提供原格式的`outputs`／`segment_plan`／`uploads`，仍共用本次装配、准备和入队。
 
@@ -758,7 +765,7 @@ python -X utf8 .agents/skills/nora-ai-short-drama/scripts/h3_prompt_checks.py --
 }
 ```
 
-`subjects`覆盖所有已定义Subject，包括人物、场景、道具；来源名称不能根据模型译名反造。四类检查全部完成且有具体依据后才填写`passed`；`sources`引用相应采用剧本、分镜、资产或项目定位，不能引用核对记录自身作为证明。中文使用既有文档的“中文提示词参考版”text围栏；兼容已存在的冻结TXT，不为新任务另建中文正文。指纹按UTF-8解码、去BOM、统一换行为LF后的文本计算SHA-256；中文仅计算抽取后的正文并去除首尾空白。工具返回`chinese_sha256`；初次填写可先填中文路径运行离线检查获取指纹，仍需实际完成转译核对后更新。依据文件指纹由`--basis-file`返回。
+`subjects`覆盖所有已定义Subject，包括人物、场景、道具；来源名称不能根据模型译名反造。四类检查全部完成且有具体依据后才填写`passed`；`sources`引用相应采用剧本、分镜、资产或项目定位，不能引用核对记录自身作为证明。中文使用既有文档的“中文提示词参考版”text围栏；兼容已存在的冻结TXT，不为新任务另建中文正文。指纹按UTF-8解码、去BOM、统一换行为LF后的文本计算SHA-256；中文仅计算抽取后的正文并去除首尾空白。工具返回`chinese_sha256`；使用任务清单的新`content_review`注释方式时，工具自动填写这些既有指纹字段，不先运行离线检查取值再人工抄写。下方带指纹对象供已绑定映射及独立核对复用；独立检查仍可用`--basis-file`取得依据指纹，不能以刷新指纹代替实际核对。
 
 确定性检查覆盖六节、Subject中文名称及引用、明确角色代称、全片无字幕指令、逐节中英文标签／镜号／数字对应，以及检查证据原文存在性、当前输入／中文／依据的绑定。空间合理性、动作可实现性、完整翻译语义和参考图身份本身不由正则或指纹证明；`three-quarter view`等正常镜头术语不作为禁词。`passed`、非空备注或摘录存在均不能替代Agent实际连读和推演。
 

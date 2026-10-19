@@ -35,6 +35,10 @@ def register(store, key):
     previous = json.loads(report_file.read_text('utf-8')) if report_file.exists() else {}
     if previous and (previous.get('task_id') != key or previous.get('prompt_id') != state['prompt_id']):
         raise ValueError('收尾报告不属于本次执行，不覆盖')
+    for name, info in previous.get('probes', {}).items():
+        current = project_file(root, name).stat()
+        if [current.st_size,current.st_mtime_ns] != info['stamp']:
+            raise ValueError('已读取媒体信息的视频发生变化，不复用旧测量：'+name)
     if previous.get('status') == 'registered':
         return previous
     stamp = previous.get('recorded_at') or store.client.now()
@@ -45,6 +49,7 @@ def register(store, key):
     template_file = SKILL / 'references/模板/视频人工审阅区模板.md'
     template = re.search(r'```markdown\n(.*?)\n```', template_file.read_text('utf-8-sig'), re.S)[1]
     edits, items = {}, []
+    probes = previous.get('probes', {})
     for output in outputs:
         candidate = project_file(root, output['path'], recorded=True)
         identity = output['identity']
@@ -55,6 +60,16 @@ def register(store, key):
         # Downloads already established technical identity. No rehash or remote query.
         if not candidate.is_file() or not receipt.is_file():
             raise ValueError('成果或取回凭据缺失：' + identity)
+        metadata = None
+        if data.video_plan is not None:
+            from backend.services.video_records import probe
+            if data.video_plan['metadata'] != 'ffprobe':
+                raise ValueError('视频媒体信息计划必须使用ffprobe')
+            if output['path'] not in probes:
+                probes[output['path']] = probe(candidate)
+                previous.update(task_id=key, prompt_id=state['prompt_id'], recorded_at=stamp, status='measuring', probes=probes)
+                write_json(report_file, previous)
+            metadata = probes[output['path']]
         draft = root / '09-剧集制作' / ep / '其他资料/工作稿' / f'{ep}-{scene}-{part}-视频制作-工作稿.md'
         if not draft.is_file():
             raise ValueError('缺少已准备的分段工作稿：' + identity)
@@ -71,6 +86,17 @@ def register(store, key):
             body = field(body, '输出当前入口及取回／展示情况', link + '；网页集中审核。')
             body = field(body, '远端实际输出信息与本地输出的对应关系', proof)
             body = field(body, '取回核对状态', '已取回；内容由用户人工审核。')
+            if metadata is not None:
+                measured = '[媒体信息]('+relative(draft, report_file)+')'
+                seconds = metadata['duration']
+                duration = str(seconds)+'秒' if seconds is not None else '容器未提供'
+                if seconds is not None and seconds > 60:
+                    duration += '（'+str(int(seconds//60))+'分'+format(seconds%60,'.6f').rstrip('0').rstrip('.')+'秒）'
+                body = field(body, '实测时长及数值来源', duration+'；'+measured)
+                body = field(body, '实际尺寸及数值来源', f"{metadata['width']}×{metadata['height']}；"+measured)
+                body = field(body, '实际帧率及数值来源', (str(metadata['frame_rate'])+'fps' if metadata['frame_rate'] is not None else '容器未提供帧率')+'；'+measured)
+                body = field(body, '实际平均码率及数值来源', f"视频轨{metadata['video_mbps'] if metadata['video_mbps'] is not None else '未提供'}Mbps；文件总{metadata['total_mbps'] if metadata['total_mbps'] is not None else '未提供'}Mbps；"+measured)
+                body = field(body, '音轨情况及信息来源', (f"{len(metadata['audio'])}条音轨" if metadata['audio'] else '无音轨')+'；'+measured)
             body = field(body, '共同任务证据与状态入口',
                          f'[后台共同状态]({relative(draft, record / "后台任务状态.json")})')
             if output is outputs[0]:
@@ -100,7 +126,7 @@ def register(store, key):
             text = text.rstrip() + '\n\n' + review + '\n'
         edits[draft] = (original, text)
         items.append({'identity': identity, 'path': output['path'], 'receipt': output['receipt'],
-                      'draft': draft.relative_to(root).as_posix(), 'episode': ep})
+                      'draft': draft.relative_to(root).as_posix(), 'episode': ep, 'metadata': metadata})
     old_files = previous.get('files', {})
     files = {}
     for path, (before, after) in edits.items():
@@ -112,7 +138,7 @@ def register(store, key):
         if old and files[path.relative_to(root).as_posix()]['before'] not in old.values():
             raise ValueError('登记期间源资料已被修改，请核对：' + str(path))
     report = {'task_id': key, 'prompt_id': state['prompt_id'], 'recorded_at': stamp,
-              'status': 'registering', 'files': files, 'items': items}
+              'status': 'registering', 'files': files, 'items': items, 'probes': probes}
     write_json(report_file, report)
     for path, (before, after) in edits.items():
         if before == after:
@@ -320,6 +346,8 @@ async def closeout_tasks(store, projects, ids, record_updates=(), *, batch_id=No
             outcome = {'status': 'completed', 'report': REPORT, 'browser': browser, 'record_updates': fingerprint}
             if any(item.get('image') for item in report['items']):
                 outcome['display_outputs'] = report['items']
+            else:
+                outcome['video_outputs'] = report['items']
             store.record(task, 'closeout', 'completed', _changes={'closeout': outcome}, notification_id=batch_id, browser=browser)
             reports.append({**report, 'browser': browser})
     return {'notification_id': batch_id, 'results': reports, 'user_message_ready': bool(reports) and all(

@@ -115,7 +115,7 @@ def image_delivery(store, tasks):
         return None
     ready = []
     for task in tasks:
-        if task.get('closeout', {}).get('status') != 'completed':
+        if (task.get('closeout') or {}).get('status') != 'completed':
             continue
         data = store.rows[task['id']]['input']
         pictures = task['closeout']['display_outputs']
@@ -125,3 +125,22 @@ def image_delivery(store, tasks):
                 candidate_file=str(Path(data.project) / item['path']), width=item['width'], height=item['height'],
                 format=item['format'], bytes=item['bytes'], draft_file=str(Path(data.project) / item['draft'])) for item in pictures]))
     return dict(completed=len(ready), image_count=sum(len(item['images']) for item in ready), tasks=ready)
+
+
+def video_delivery(store, tasks):
+    """One ready-to-report video list, already registered and linked to review."""
+    if not tasks or any(not task['task_type'].startswith('video-') for task in tasks):
+        return None
+    ready = []
+    for task in tasks:
+        if (task.get('closeout') or {}).get('status') != 'completed':
+            continue
+        data = store.rows[task['id']]['input']
+        videos = task['closeout'].get('video_outputs')
+        if videos is None:
+            return None  # Old completed states retain their original full report.
+        ready.append(dict(task_id=task['id'], title=task['title'], review_path=task['review_path'],
+            report_file=str(Path(data.record_dir)/'结果收尾报告.json'),
+            videos=[dict(identity=item['identity'], file=str(Path(data.project)/item['path']),
+                draft_file=str(Path(data.project)/item['draft']), metadata=item.get('metadata')) for item in videos]))
+    return dict(completed=len(ready), video_count=sum(len(item['videos']) for item in ready), tasks=ready)

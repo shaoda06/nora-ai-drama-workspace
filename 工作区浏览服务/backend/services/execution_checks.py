@@ -22,8 +22,9 @@ def write_json(path, value):
 
 def basis(store, data, mapping=None):
     payload = store.portable_input(data)
-    if payload.get('image_plan') is None:
-        payload.pop('image_plan', None)  # Existing preparation reports have no image association.
+    for name in ('image_plan', 'video_plan'):
+        if payload.get(name) is None:
+            payload.pop(name, None)  # Existing reports have no newer media associations.
     for name in ('desktop', 'thread_id', 'source_session_name', 'timeout', 'start_paused'):
         payload.pop(name, None)
     mapping_file = Path(data.record_dir) / '输入映射.json'
