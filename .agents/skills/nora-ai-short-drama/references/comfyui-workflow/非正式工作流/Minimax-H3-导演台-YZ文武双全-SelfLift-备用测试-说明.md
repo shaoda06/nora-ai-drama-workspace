@@ -8,7 +8,7 @@
 
 在导演台第一组添加参考素材并填写提示词。参考图策略max。导演台界面时长12秒，对应294帧／实际12.25秒；目标1664×928、24fps。
 
-SelfLift采用Simple完整12步，`split_mode=transition_step`、`transition_step=6`、`highres_steps=6`、`lowres_scale=0.6`；rho=0，不接额外Refine。
+SelfLift采用Simple完整12步，`split_mode=transition_step`、`transition_step=6`、`highres_steps=6`、`lowres_scale=0.6`、`latent_upsample=nearest`；rho=0，不接额外Refine。
 
 | 阶段 | 配置对应的分辨率 | 采样步数 |
 | --- | --- | --- |
@@ -66,9 +66,17 @@ INT8 ConvRot和NVFP4 AWQ是同一32B编码器的不同量化版本。NVFP4模型
 | 采样 | 相同：Euler、Simple 12步、CFG 1、前6后6 |
 | 提升参数 | 相同：V2潜变量放大模型、rho=0、w_min=0.5、w_max=1、高清分块关闭 |
 | SelfLift实现 | 原版外部`SelfLiftH3Sampler`；本测试为导演台配套`MiniMaxH3DirectorSelfLift`。接口与内部实现不同，不声明逐像素等同 |
-| 插值 | 原版外部采样器采用nearest；本测试保留导演台bilinear配置 |
+| 插值 | 相同：nearest最近邻；原版采样器内固定使用，本测试在SelfLift控件中显式设置 |
 | 种子控制 | 起始种子数值相同；原版randomize，本测试fixed，便于同输入对照 |
 | 素材、条件与导出 | 原版外接参考输入、零条件节点及音视频解码；本测试由导演台管理。输出命名与缓存机制不同；H.264、CRF19、yuv420p及24fps相同 |
+
+## 原版采样器的接入边界
+
+当前`MiniMaxH3Director`的输出是已采样的图像、音频及报告，没有原版`SelfLiftH3Sampler`所需的`CONDITIONING`和`LATENT`。它的`selflift`输入接收的是`MMX_DIR_SELFLIFT`配置包，不是外部采样器或采样后的潜变量，不能直接互换节点。
+
+同插件的`MiniMaxH3DirectorConditioning`可以输出条件和潜变量，但不读取当前导演台的公共区、分组素材和时间线，也不提供该分组管理界面，不能只替换名称就保留原有功能。
+
+要保留导演台素材／提示词／分组界面并由原版节点采样，需要额外实现“分组数据→原版条件与潜变量”的导出适配，并对齐公共和本组素材合并、选中组、时长与逐组执行。当前备用画布尚未实现这条外部采样链，不将内置SelfLift标注为原版节点。节点接口依据：[导演台](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/4c6245e518dd8a494f3afc4f3cccd53f22d82d10/nodes/director.py)、[Conditioning](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/4c6245e518dd8a494f3afc4f3cccd53f22d82d10/nodes/conditioning.py)。
 
 ## 编码器的已知依据
 

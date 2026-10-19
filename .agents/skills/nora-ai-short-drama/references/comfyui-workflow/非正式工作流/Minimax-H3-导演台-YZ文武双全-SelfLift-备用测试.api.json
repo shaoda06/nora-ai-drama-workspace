@@ -218,7 +218,7 @@
       "native_low_carry": false,
       "bd_grp_selflift_lift": "提升 / 3D",
       "latent_upscale_model": "minimax_h3_latent_upscaler_3d_fp16_V2.safetensors",
-      "latent_upsample": "bilinear",
+      "latent_upsample": "nearest",
       "rho": 0.0,
       "w_min": 0.5,
       "w_max": 1.0,
