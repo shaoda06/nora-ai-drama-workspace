@@ -9,7 +9,7 @@ Portable adaptation of [MCKRUZ/ComfyUI-Expert](https://github.com/MCKRUZ/ComfyUI
 
 ## Connection and refresh
 
-For Nora projects, use the [workspace authentication adapter](../../references/comfyui-scripts/README.md#nora-工作区配置与分享边界); configuration and invocation boundaries follow the [submission specification](../../references/流程规范/ComfyUI-服务配置与任务提交规范.md#固定通信工具与证据). The command below is for standalone use.
+For Nora projects, use the [workspace authentication adapter](../../references/comfyui-scripts/README.md#nora-工作区配置与分享边界); configuration and invocation boundaries follow the [submission specification](../../../nora-generation/references/ComfyUI-服务配置与任务提交规范.md#固定通信工具与证据). The command below is for standalone use.
 
 For standalone use, take the address explicitly supplied for the task, then `COMFYUI_URL`, then `http://127.0.0.1:8188`. Localhost means the machine running this script. The caller supplies its selected address; this skill does not require a project layout. Resource paths are relative to this SKILL.md, not the task working directory.
 

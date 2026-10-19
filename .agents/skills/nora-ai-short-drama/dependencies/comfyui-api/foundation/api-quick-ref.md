@@ -2,7 +2,7 @@
 
 可移植适配日期：2026-09-26。原始结构来自 [ComfyUI-Expert](https://github.com/MCKRUZ/ComfyUI-Expert/blob/dee27dc3d69b609c0006a8a12e71aadfc475ae95/foundation/api-quick-ref.md)，接口依据 [ComfyUI 官方路由说明](https://docs.comfy.org/development/comfyui-server/comms_routes) 和 [消息说明](https://docs.comfy.org/development/comfyui-server/comms_messages)。
 
-Nora项目的地址、认证和调用入口以[服务配置与任务提交规范](../../../references/流程规范/ComfyUI-服务配置与任务提交规范.md#固定通信工具与证据)为准。以下为独立协议使用说明：地址优先级是当前任务明确地址 → `COMFYUI_URL` → `http://127.0.0.1:8188`，调用方显式传入所选地址，本技能不读取项目配置。`127.0.0.1` 指运行客户端的机器。请求超时默认30秒；任务运行时间与单次HTTP请求超时分开处理。
+Nora项目的地址、认证和调用入口以[服务配置与任务提交规范](../../../../nora-generation/references/ComfyUI-服务配置与任务提交规范.md#固定通信工具与证据)为准。以下为独立协议使用说明：地址优先级是当前任务明确地址 → `COMFYUI_URL` → `http://127.0.0.1:8188`，调用方显式传入所选地址，本技能不读取项目配置。`127.0.0.1` 指运行客户端的机器。请求超时默认30秒；任务运行时间与单次HTTP请求超时分开处理。
 
 | 方法与路径 | 用途 |
 | --- | --- |

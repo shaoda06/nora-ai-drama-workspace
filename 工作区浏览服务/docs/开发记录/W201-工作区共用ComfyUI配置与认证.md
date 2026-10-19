@@ -3,7 +3,7 @@
 - 版本：0.6.64
 - 日期：2026-10-16
 
-Agent与后台共同复用主技能scripts/comfyui_config.py，从实际资料工作区根目录读取配置，取消项目文件扫描与覆盖。工作区旧地址数组格式仅作读取兼容；项目文件不是回退来源。配置结构及迁移规则仅在[服务配置规范](../../../.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)维护。
+Agent与后台共同复用主技能scripts/comfyui_config.py，从实际资料工作区根目录读取配置，取消项目文件扫描与覆盖。工作区旧地址数组格式仅作读取兼容；项目文件不是回退来源。配置结构及迁移规则仅在[服务配置规范](../../../.agents/skills/nora-generation/references/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)维护。
 
 通信客户端在不改变原请求正文的前提下支持Basic认证；队列查询、上传、生成POST、history、download及任务／节点WebSocket共用凭据。节点凭据变更触发监听重连；未填账号密码时本地返回missing_auth，不进行远端请求。既有任务仍沿原地址查询，未配置旧地址不会借用主节点凭据。明确直接通信及场次定稿导出也复用同一读取器。
 

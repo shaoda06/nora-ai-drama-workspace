@@ -1,0 +1,35 @@
+---
+name: nora-generation
+description: 为 Nora 调用固定工具准备和提交图片视频任务、查询后台状态、接收结果、恢复异常及执行获授权后处理和导演包；只按当前动作读取，不重做已备内容。
+---
+
+# Nora 生成执行
+
+直接调用遵循[主控读取范围](../nora-ai-short-drama/SKILL.md#读取范围)、[规则优先级](../nora-ai-short-drama/SKILL.md#外部技能协作与规则优先级)及[看图边界](../nora-ai-short-drama/SKILL.md#看图能力调用边界)。先区分当前动作，查询和结果通知不加载创作、完整提交准备或远端API技能。
+
+## 按动作直达
+
+| 本次动作 | 必要入口 |
+| --- | --- |
+| 已备内容的图片或超分提交 | [一次装配入队](../nora-ai-short-drama/references/comfyui-scripts/README.md#一次装配与批量入队)、[图片执行分工](references/ComfyUI-服务配置与任务提交规范.md#图片执行分工)；当前任务数据与授权 |
+| 已备内容的视频提交 | 同一装配工具及[视频执行分工](references/ComfyUI-服务配置与任务提交规范.md#视频执行分工)；不重新读节点全规范 |
+| 首次完整准备图片分支 | [图片执行](references/图片生成执行规范.md)，根据T2I／Edit进入对应执行规则；内容缺项交资产或首帧负责人 |
+| 首次完整准备H3任务或调整导演台 | [H3执行](references/H3视频执行规范.md)及其按阶段引用；内容核对交[视频提示词](../nora-video-prompts/SKILL.md) |
+| 仅准备、不生成 | [准备分工](references/ComfyUI-服务配置与任务提交规范.md#执行前检查与复用)，固定入口使用--prepare-only |
+| 仅查进度 | [后台查询](../nora-ai-short-drama/references/comfyui-scripts/README.md#后台状态查询)及[查询分支](references/进度查询与结果处理规范.md)，读取实际任务状态和更新时间 |
+| 收到正常结果 | [最终报告](../nora-ai-short-drama/references/comfyui-scripts/README.md#后台最终报告读取)及[通知处理](references/进度查询与结果处理规范.md)，从delivery取得展示与审核入口 |
+| 异常、取回失败或恢复 | [异常分支](references/进度查询与结果处理规范.md)，定位失败阶段后读对应证据；仅取回失败使用取回重试 |
+| 已批准图片超分和正式保存 | [图片批准后处理](references/图片批准后处理规范.md)及其专项；画风样例沿定位规则 |
+| 视频阶段切换、返修或后处理 | [阶段与返修执行](references/视频阶段与返修执行规范.md)、[H3执行规范](references/ComfyUI-H3视频执行规范.md)的当前阶段；平台要求、推荐值与选定值分别记录 |
+| 导演包或场次阶段定稿 | [导演包](references/导演包规范.md)，按实际授权区分留档、导出与导入测试 |
+| 服务节点配置 | [工作区配置](references/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)，不因纯文本任务缺配置而阻塞 |
+
+## 工具与依赖
+
+准备、提交或获授权直接操作远端API时，读取随包[comfyui-api](../nora-ai-short-drama/dependencies/comfyui-api/SKILL.md)及当前调用说明；普通后台查询和通知不需要它。异常按需使用[comfyui-troubleshooter](../nora-ai-short-drama/dependencies/comfyui-troubleshooter/SKILL.md)，明确要求能力盘点或依赖诊断时才使用[comfyui-inventory](../nora-ai-short-drama/dependencies/comfyui-inventory/SKILL.md)。沿现有真源，不另复制安装。
+
+Agent确定内容、实际素材用途、必要业务字段及授权；固定工具装配API／画布、映射、技术记录并检查入队。默认一次--plan完成装配检查与入队，只有单独准备才加--prepare-only；技术报告不能代替内容判断。规范与调用接口详见[职责分工](references/ComfyUI-服务配置与任务提交规范.md#agent与工具的职责)。
+
+返回enqueued及本批ID后简要汇报并结束；后台负责上传、远端提交、取回、正常技术收尾和网页核验。正常通知只读报告并展示或汇报，不重测文件、补记录、查网页或重审正文。异常才查对应证据，不整批重提，不创建同任务轮询或heartbeat。历史任务沿原身份和恢复范围，不改成新任务准备。
+
+本技能不决定故事、机位、画风、素材批准或下一阶段授权。采用与本集完成时按[逐集目录与采用规则](../nora-ai-short-drama/references/流程规范/逐集目录与资产管理规范.md)定位对应章节；视频任务形成／引用场次组合时读取[场次版本组合](../nora-ai-short-drama/references/共用规则/场次版本组合规范.md)。固定脚本的日常调用边界见[工具调用](../nora-ai-short-drama/SKILL.md#固定脚本调用)。

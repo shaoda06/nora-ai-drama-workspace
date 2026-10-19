@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nora剧本写作"
+  short_description: "创作因果清楚、人物声音鲜明、动作可表演的中文短剧剧本"
+  default_prompt: "使用 $short-drama-write 按Nora模板创作或修订本集故事剧本，落实场景因果、人物声音和对白表演。"

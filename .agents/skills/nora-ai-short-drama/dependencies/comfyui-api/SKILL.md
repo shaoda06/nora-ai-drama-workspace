@@ -12,7 +12,7 @@ Portable adaptation of [ComfyUI-Expert](https://github.com/MCKRUZ/ComfyUI-Expert
 
 ## Configuration
 
-For Nora projects, follow the [workspace configuration and submission entry](../../references/流程规范/ComfyUI-服务配置与任务提交规范.md#固定通信工具与证据), including authenticated diagnostics. The raw API and CLI examples below describe standalone protocol use; they are not an alternative Nora task submission path.
+For Nora projects, follow the [workspace configuration and submission entry](../../../nora-generation/references/ComfyUI-服务配置与任务提交规范.md#固定通信工具与证据), including authenticated diagnostics. The raw API and CLI examples below describe standalone protocol use; they are not an alternative Nora task submission path.
 
 - **Default URL**: `http://127.0.0.1:8188` (the machine running the API client)
 - **Custom URL (standalone use)**: An address explicitly supplied for the current task takes precedence, followed by `COMFYUI_URL` if set, then the default above. Resolve the address before calling the API. The caller supplies its selected configuration; this skill does not read a project layout. Set `COMFYUI_URL` to that resolved address for the examples below; they show localhost only as a placeholder default.
