@@ -1,7 +1,10 @@
+import base64
 import importlib.util
 import json
 from pathlib import Path
 import plistlib
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import MagicMock, patch
@@ -108,19 +111,23 @@ class LauncherIdentityTests(unittest.TestCase):
             with patch.object(launcher, 'ROOT', root), patch.object(launcher, 'WORKSPACE', root), \
                     patch.object(launcher, 'ensure_frontend', return_value='current'), \
                     patch.object(launcher, 'RUNTIME', root / 'runtime'), patch.object(launcher.socket, 'socket'), \
-                    patch.object(launcher, 'running', side_effect=[None, {'ready': False}, {'ready': True}]), \
+                    patch.object(launcher, 'running', side_effect=[None, {'version': 'old', 'ready': True},
+                                                                  {'version': 'current', 'ready': False},
+                                                                  {'version': 'current', 'ready': True}]), \
                     patch.object(launcher, 'managed') as manager, patch.object(launcher.webbrowser, 'open') as browser, \
-                    patch.object(launcher.time, 'sleep'):
+                    patch.object(launcher.time, 'sleep') as sleep:
                 launcher.start(False)
                 manager.assert_called_once_with('start')
                 browser.assert_not_called()
+                self.assertEqual(sleep.call_count, 2)
 
 
 class FrontendBuildTests(unittest.TestCase):
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
-        self.root = Path(temporary.name)
+        self.root = Path(temporary.name) / 'Nora 中文 with spaces/工作区浏览服务'
+        self.root.mkdir(parents=True)
         self.frontend = self.root / 'frontend'
         self.frontend.mkdir()
         (self.root / 'projects').mkdir()
@@ -196,6 +203,105 @@ class FrontendBuildTests(unittest.TestCase):
             launcher.start(False)
             self.assertEqual(events, ['build', 'stop', 'start'])
             stop.assert_called_once()
+
+    def test_windows_build_uses_cmd_with_unicode_and_spaced_paths(self):
+        npm = r'C:\Program Files\nodejs\npm.cmd'
+        with patch.object(launcher, 'ROOT', self.root), patch.object(launcher.sys, 'platform', 'win32'), \
+                patch.object(launcher.shutil, 'which', return_value=npm) as which, \
+                patch.object(launcher, 'command', side_effect=lambda *args, **kwargs: self.built()) as build:
+            launcher.ensure_frontend()
+        which.assert_called_once_with('npm.cmd')
+        build.assert_called_once_with([npm, '--prefix', str(self.frontend), 'run', 'build'], cwd=self.root, shell=True)
+
+    def test_consoleless_commands_capture_errors_without_inheriting_stdin(self):
+        result = subprocess.CompletedProcess(['npm.cmd'], 1, stdout='编译失败', stderr='')
+        with patch.object(launcher.sys, 'platform', 'win32'), \
+                patch.object(launcher.subprocess, 'CREATE_NO_WINDOW', 0x08000000, create=True), \
+                patch.object(launcher.subprocess, 'run', return_value=result) as run:
+            with self.assertRaisesRegex(RuntimeError, '编译失败'):
+                launcher.command(['npm.cmd'], shell=True)
+        self.assertEqual(run.call_args.kwargs['stdin'], subprocess.DEVNULL)
+        self.assertEqual(run.call_args.kwargs['creationflags'], 0x08000000)
+
+    def test_powershell_receives_script_and_paths_without_command_interpolation(self):
+        root = Path(__file__).resolve().parents[1]
+        source = (root / 'scripts/windows_service.ps1').read_text('utf-8-sig')
+        with patch.object(launcher, 'ROOT', root), patch.object(launcher, 'PORT', 9876), \
+                patch.object(launcher, 'command', return_value='{"name":"test"}') as command:
+            self.assertEqual(launcher.windows_task('start'), {'name': 'test'})
+        arguments = command.call_args.args[0]
+        self.assertEqual(arguments[:4], ['powershell.exe', '-NoProfile', '-NonInteractive', '-EncodedCommand'])
+        self.assertEqual(base64.b64decode(arguments[4]).decode('utf-16-le'), source)
+        environment = command.call_args.kwargs['env']
+        self.assertEqual(environment['NORA_LAUNCH_ROOT'], str(root))
+        self.assertEqual(environment['NORA_LAUNCH_PORT'], '9876')
+        self.assertEqual(environment['NORA_LAUNCH_ACTION'], 'start')
+
+    def test_windows_task_failure_after_build_is_reported_without_starting_worker_directly(self):
+        source = (Path(__file__).resolve().parents[1] / 'scripts/windows_service.ps1').read_text('utf-8-sig')
+        (self.root / 'scripts').mkdir()
+        (self.root / 'scripts/windows_service.ps1').write_text(source, encoding='utf-8')
+
+        def run_command(arguments, **options):
+            if arguments[0].endswith('npm.cmd'):
+                self.built()
+                return ''
+            raise RuntimeError('Task Scheduler denied')
+
+        with patch.object(launcher.sys, 'platform', 'win32'), \
+                patch.object(launcher, 'WORKSPACE', self.root), \
+                patch.object(launcher, 'RUNTIME', self.root / 'runtime'), \
+                patch.object(launcher.shutil, 'which', return_value=r'C:\Program Files\nodejs\npm.cmd'), \
+                patch.object(launcher, 'running', return_value=None), patch.object(launcher.socket, 'socket'), \
+                patch.object(launcher, 'command', side_effect=run_command) as command, \
+                patch.object(launcher.subprocess, 'Popen') as popen, patch.object(launcher.webbrowser, 'open') as browser:
+            with self.assertRaisesRegex(RuntimeError, 'Task Scheduler denied'):
+                launcher.start()
+        self.assertEqual([call.args[0][0] for call in command.call_args_list],
+                         [r'C:\Program Files\nodejs\npm.cmd', 'powershell.exe'])
+        popen.assert_not_called()
+        browser.assert_not_called()
+
+    def test_pythonw_failure_uses_native_dialog_and_nonzero_exit(self):
+        native = MagicMock()
+        with patch.object(launcher.sys, 'argv', ['launcher.py', 'start']), \
+                patch.object(launcher.sys, 'platform', 'win32'), \
+                patch.object(launcher, 'start', side_effect=RuntimeError('构建失败，保留旧服务')), \
+                patch.dict(sys.modules, ctypes=native):
+            self.assertEqual(launcher.main(), 1)
+        native.windll.user32.MessageBoxW.assert_called_once_with(
+            None, '构建失败，保留旧服务', 'Nora 工作区浏览服务', 0x10)
+
+    def test_agent_failure_uses_stderr_without_dialog(self):
+        native = MagicMock()
+        with patch.object(launcher.sys, 'argv', ['launcher.py', 'restart', '--no-browser']), \
+                patch.object(launcher.sys, 'platform', 'win32'), \
+                patch.object(launcher, 'restart', side_effect=RuntimeError('npm failed')), \
+                patch.object(launcher.sys, 'stderr') as stderr, patch.dict(sys.modules, ctypes=native):
+            self.assertEqual(launcher.main(), 1)
+        self.assertIn('npm failed', ''.join(call.args[0] for call in stderr.write.call_args_list))
+        native.windll.user32.MessageBoxW.assert_not_called()
+
+    @unittest.skipUnless(sys.platform == 'win32', 'Requires real Windows cmd.exe')
+    def test_real_cmd_build_in_unicode_and_spaced_directory(self):
+        npm_dir = self.root / 'Node 中文 with spaces'
+        npm_dir.mkdir()
+        npm = npm_dir / 'npm.cmd'
+        # Exercise cmd.exe quoting and npm exit status without installing Node or dependencies.
+        npm.write_text('@echo off\nif not "%~1"=="--prefix" exit /b 2\n'
+                       'if not "%~3 %~4"=="run build" exit /b 3\n'
+                       'mkdir "%~2\\dist"\necho html>"%~2\\dist\\index.html"\n'
+                       'echo {"version":"current"}>"%~2\\dist\\release.json"\n', encoding='ascii')
+        with patch.object(launcher.shutil, 'which', return_value=str(npm)), \
+                patch.object(launcher, 'WORKSPACE', self.root):
+            self.assertEqual(launcher.ensure_frontend(), 'current')
+            npm.write_text('@echo off\necho build failed 1>&2\nexit /b 7\n', encoding='ascii')
+            (self.frontend / 'dist/index.html').unlink()
+            with patch.object(launcher, 'stop') as stop, patch.object(launcher, 'managed') as manager:
+                with self.assertRaisesRegex(RuntimeError, 'build failed'):
+                    launcher.restart(False)
+                stop.assert_not_called()
+                manager.assert_not_called()
 
 
 class MacManagerTests(unittest.TestCase):

@@ -8,6 +8,8 @@ Windows双击本目录的 `启动（Windows）.bat`，macOS双击 `启动（Mac�
 
 自动构建通过Node.js自带的npm调用现有`build`命令，需要本机已安装Node.js及前端依赖，不自动安装或升级依赖；构建失败时显示具体错误，不停止原有服务。已构建且版本一致时不要求构建工具。重复启动复用同版本且就绪的本工作区服务；旧服务版本不一致时，构建成功后自动重启本工作区服务。端口被其他程序占用时明确报错，不终止其他进程。
 
+Windows入口使用`pythonw`等待启动结果；构建通过`npm.cmd`执行，支持带空格和中文的工作区路径。构建或系统托管失败时显示Windows原生错误弹窗，批处理保留失败提示；子命令不读取控制台输入、不另开命令窗口。版本检查和构建在共用启动器中完成，任务计划程序仍只运行`serve`工作进程。
+
 启动器自动交给本机系统托管：Windows使用当前用户的任务计划程序，macOS使用当前登录用户的launchd（LaunchAgent），关闭Codex或网页不停止服务。后台项只按需启动，不添加开机、登录、定时或自动重启触发；退出系统账号或关机后，下次需手动启动。日志仍位于 `runtime/server.log`。
 
 首次启动自动注册本机后台项；Windows名称为 `NoraWorkspaceBrowser-{用户SID}-{端口}`，使用当前用户、普通权限及现有登录凭据，不保存账号密码；macOS定义保存在 `~/Library/LaunchAgents/local.nora.workspace-browser.{端口}.plist`，RunAtLoad与KeepAlive均为false。系统项绑定本机实际代码目录，运行配置仍读取本目录的 `runtime/service.json`；同名项指向其他目录时拒绝覆盖。系统注册和本机路径不随Git分发。迁移目录前先停止服务，并从任务计划程序移除对应旧项，或在Mac卸载并移除对应旧LaunchAgent定义，再从新位置启动注册。
@@ -24,7 +26,7 @@ Windows双击本目录的 `启动（Windows）.bat`，macOS双击 `启动（Mac�
 .venv/bin/python scripts/launcher.py restart --no-browser
 ```
 
-将命令中的 `restart` 换成 `start` 或 `stop` 可单独启动或停止。`--no-browser`供Agent发布使用，错误输出到命令行，不打开网页或错误弹窗；不带此选项的Windows双击入口保留错误弹窗。`restart`先核对并停止旧服务，等待服务退出，再经系统托管启动并等待 `ready=true`；停止失败不启动第二份。Mac双击脚本以Git可执行文件及LF换行分发，若本机通过ZIP复制丢失权限，可先对两个 `.command` 执行 `chmod +x`。当前维护机为Windows，Mac真实系统注册及退出Codex后的存活须在Mac验收，模拟测试不能替代实测。
+将命令中的 `restart` 换成 `start` 或 `stop` 可单独启动或停止。`--no-browser`供Agent发布使用，错误输出到命令行，不打开网页或错误弹窗；不带此选项的Windows双击入口保留错误弹窗。`restart`先完成必要构建，再核对并停止旧服务，等待服务退出，经系统托管启动并等待目标版本的 `ready=true`；停止失败不启动第二份。Mac双击脚本以Git可执行文件及LF换行分发，若本机通过ZIP复制丢失权限，可先对两个 `.command` 执行 `chmod +x`。本次Windows适配的隔离检查与实机验收缺项见[W233](docs/开发记录/W233-Windows启动自动构建适配.md)，模拟测试不能替代实测。
 
 ### 慢请求与停顿诊断
 

@@ -1,5 +1,6 @@
 """Start this workspace through the current user's operating-system manager."""
 import argparse
+import base64
 import json
 import os
 from pathlib import Path
@@ -25,7 +26,9 @@ URL = f'http://127.0.0.1:{PORT}'
 
 
 def command(arguments, **options):
-    result = subprocess.run(arguments, capture_output=True, text=True, encoding='utf-8', **options)
+    result = subprocess.run(arguments, stdin=subprocess.DEVNULL, capture_output=True, text=True,
+                            encoding='utf-8', errors='replace',
+                            creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == 'win32' else 0, **options)
     if result.returncode:
         raise RuntimeError(result.stderr.strip() or result.stdout.strip() or f'{arguments[0]} failed')
     return result.stdout
@@ -33,9 +36,10 @@ def command(arguments, **options):
 
 def windows_task(action):
     script = (ROOT / 'scripts/windows_service.ps1').read_text('utf-8-sig')
-    output = command(['powershell.exe', '-NoProfile', '-NonInteractive', '-Command', script],
+    encoded = base64.b64encode(script.encode('utf-16-le')).decode('ascii')
+    output = command(['powershell.exe', '-NoProfile', '-NonInteractive', '-EncodedCommand', encoded],
                      env={**os.environ, 'NORA_LAUNCH_ACTION': action, 'NORA_LAUNCH_ROOT': str(ROOT),
-                          'NORA_LAUNCH_PORT': str(PORT)}, creationflags=subprocess.CREATE_NO_WINDOW)
+                          'NORA_LAUNCH_PORT': str(PORT)})
     return json.loads(output)
 
 
@@ -104,7 +108,7 @@ def ensure_frontend():
     release = frontend / 'dist/release.json'
     if index.is_file() and release.is_file() and json.loads(release.read_text('utf-8')).get('version') == version:
         return version
-    npm = shutil.which('npm')
+    npm = shutil.which('npm.cmd' if sys.platform == 'win32' else 'npm')
     if not npm:
         raise RuntimeError('前端需要构建，但未找到npm；请按README安装Node.js并完成前端依赖安装。')
     print('前端构建缺失或版本过期，正在自动构建…', flush=True)
@@ -135,7 +139,7 @@ def start(open_browser=True, *, force_restart=False):
     managed('start')
     for _ in range(40):
         data = running()
-        if data and data.get('ready'):
+        if data and data.get('version') == version and data.get('ready'):
             if open_browser:
                 webbrowser.open(URL)
             return
@@ -166,7 +170,7 @@ def restart(open_browser=True):
     start(open_browser, force_restart=True)
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('action', choices=['start', 'stop', 'restart', 'serve'])
     parser.add_argument('--no-browser', action='store_true', help='Start or restart without opening a browser (Agent releases).')
@@ -178,10 +182,15 @@ if __name__ == '__main__':
             stop()
         else:
             (start if args.action == 'start' else restart)(not args.no_browser)
-    except (OSError, RuntimeError) as error:
-        if os.name == 'nt' and not args.no_browser and args.action != 'serve':
-            import tkinter.messagebox
-            tkinter.messagebox.showerror('Nora 工作区浏览服务', str(error))
+    except (OSError, RuntimeError, ValueError) as error:
+        if sys.platform == 'win32' and not args.no_browser and args.action != 'serve':
+            import ctypes
+            ctypes.windll.user32.MessageBoxW(None, str(error), 'Nora 工作区浏览服务', 0x10)
         else:
             print(str(error), file=sys.stderr)
-        sys.exit(1)
+        return 1
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
