@@ -39,7 +39,7 @@
 
 ### 本工作区技能与风格资源
 
-[Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md)与[Krea2风格库技能](.agents/skills/krea2-style-library/SKILL.md)由本工作区维护并随仓库提供。Krea2技能是独立工具入口，不额外计入Nora的17个按需依赖。
+[Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md)与[Krea2风格库技能](.agents/skills/krea2-style-library/SKILL.md)由本工作区维护并随仓库提供。Krea2技能是独立工具入口，不额外计入Nora的18个按需依赖。
 
 | 资源 | 来源与作者 |
 | --- | --- |
@@ -54,19 +54,19 @@
 - [Python](https://www.python.org/downloads/)：原固定脚本使用3.9及以上标准库；新浏览服务使用3.10及以上和独立虚拟环境，依赖见服务目录。
 - [FFmpeg](https://ffmpeg.org/download.html)：本地音视频裁剪、解码及合成依赖；安装与调用统一按[FFmpeg初始化与运行](#ffmpeg初始化与运行)。
 - [Node.js](https://nodejs.org/)：浏览服务构建使用22及以上。
-- [ComfyUI](https://github.com/Comfy-Org/ComfyUI)：由使用者独立部署的图片／视频生成后端。本仓库携带工作流，不携带模型权重和服务端自定义节点。服务地址与认证按[工作区共用配置](.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)执行；节点、模型与兼容性问题按执行规范处理，这里的技能依赖清单不是后端安装清单。
+- [ComfyUI](https://github.com/Comfy-Org/ComfyUI)：由使用者独立部署的图片／视频生成后端。本仓库携带工作流及[已登记的节点源码或安装包](.agents/skills/nora-ai-short-drama/维护规范.md#comfyui节点与安装包)，不携带模型权重，不自动部署服务端节点或依赖。服务地址与认证按[工作区共用配置](.agents/skills/nora-ai-short-drama/references/流程规范/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)执行；节点、模型与兼容性问题按执行规范处理，这里的技能依赖清单不是后端安装清单。
 
 ## 环境
 
 | 用途 | 要求 |
 | --- | --- |
 | 阅读规则与创作 | 可读写工作区文件的agent；对应阶段按需读取技能 |
-| ComfyUI客户端、库存脚本、项目浏览页、Krea2工具 | Python 3.9及以上，运行脚本仅使用标准库 |
+| ComfyUI客户端、库存脚本、Krea2更新工具 | Python 3.9及以上，运行脚本仅使用标准库 |
 | 本地音视频处理 | FFmpeg；按[初始化与运行规则](#ffmpeg初始化与运行)落实 |
 | 本地版本维护 | Git；完成任务后按AGENTS规则提交，推送另需用户要求 |
 | GitHub发布 | GitHub账号及仓库权限，可通过插件或已授权的GitHub CLI操作 |
 | 浏览风格库和项目页 | 现代浏览器及工作区浏览服务；资源更新另需联网 |
-| 项目浏览页的维护测试 | Node.js 18及以上的 `node --test`；不是普通制作的运行依赖 |
+| 浏览服务的Node测试 | 使用下方浏览服务开发环境中的Node.js 22＋运行 `node --test` |
 | 工作区浏览服务 | Python 3.10＋及requirements.txt依赖；前端构建使用Node.js 22＋、pnpm 11，普通浏览运行不使用Node；ComfyUI会话通知使用本机Node |
 | 技能格式校验 | 使用平台提供的 `skill-creator` 及其校验工具；按工具本身要求准备依赖 |
 
@@ -84,7 +84,7 @@ FFmpeg是工作区的本地音视频处理依赖。只在初始化项目工作�
 
 Windows双击 [启动（Windows）.bat](工作区浏览服务/启动（Windows）.bat)，Mac双击 [启动（Mac）.command](工作区浏览服务/启动（Mac）.command)，由系统托管启动后自动打开 `http://127.0.0.1:8782/`。首页自动发现 `projects/` 项目，统一提供项目浏览、Krea2风格库及开发记录。页面打开期间自动检测文件变化，局部更新列表；正在阅读的文档由用户选择切换新版本，不自动整页刷新。局域网使用本机局域网IP加8782端口，风格库管理开放本机及局域网IP地址，保留同源请求和操作凭证校验。双击对应系统的停止脚本结束本工作区服务；关闭Codex或网页不停止服务，不设开机或登录自启。Agent发布重启也走同一托管入口，详见[日常启动](工作区浏览服务/README.md#日常启动)。
 
-首次安装、构建、开发及测试说明见[服务README](工作区浏览服务/README.md)。服务需要Python 3.10＋及项目依赖，前端构建需要Node.js 22＋、pnpm 11；已构建后普通浏览不需要Node.js；ComfyUI后台的Codex会话通知需要本机Node，具体接入见服务README。原有静态导出入口继续可用，和服务共用解析器。
+首次安装、构建、开发及测试说明见[服务README](工作区浏览服务/README.md)。服务需要Python 3.10＋及项目依赖，前端构建需要Node.js 22＋、pnpm 11；已构建后普通浏览不需要Node.js；ComfyUI后台的Codex会话通知需要本机Node，具体接入见服务README。项目页面由浏览服务读取源资料展示，不再生成或维护项目静态HTML。
 
 ## Krea2风格库
 
