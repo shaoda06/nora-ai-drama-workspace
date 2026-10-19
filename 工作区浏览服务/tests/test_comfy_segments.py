@@ -121,6 +121,45 @@ class SegmentTests(unittest.IsolatedAsyncioTestCase):
         await s.finish(self.store, 'task', result)
         self.assertEqual([item[0] for item in self.downloads], ['seg_0000.mp4', 'seg_0002.mp4'])
 
+    async def test_selflift_without_refine_retries_original_final_exports_without_generation(self):
+        self.data.workflow['502']['inputs']['selflift'] = ['600', 0]
+        self.data.workflow['600'] = {'class_type': 'MiniMaxH3DirectorSelfLift', 'inputs': {}}
+        result = self.result()
+        result['history']['outputs']['403']['text'][0] = result['history']['outputs']['403']['text'][0].replace(
+            '一采 mp4', 'mp4').replace('_pre.mp4', '.mp4')
+        self.store.save('task', status='collection_failed')
+        (self.record / self.data.history_name).write_text(json.dumps({'data': result}), 'utf8')
+        original_id = self.store.rows['task']['state']['prompt_id']
+        with patch.object(t.client, 'submit') as submit, patch.object(t.client, 'status') as status:
+            await self.store.retry_collection('task')
+            await self.store.workers['task']
+        self.assertEqual(self.store.rows['task']['state']['status'], 'completed')
+        self.assertEqual(self.store.rows['task']['state']['prompt_id'], original_id)
+        self.assertEqual([item[0] for item in self.downloads], ['seg_0000.mp4', 'seg_0002.mp4'])
+        submit.assert_not_called()
+        status.assert_not_called()
+
+    async def test_selflift_with_refine_still_selects_pre_refine_first_pass(self):
+        self.data.workflow['502']['inputs'].update(selflift=['600', 0], refine=['407', 0])
+        self.data.workflow['600'] = {'class_type': 'MiniMaxH3DirectorSelfLift', 'inputs': {}}
+        self.data.workflow['407'] = {'class_type': 'MiniMaxH3DirectorRefine', 'inputs': {}}
+        result = self.result()
+        text = result['history']['outputs']['403']['text'][0]
+        result['history']['outputs']['403']['text'][0] += '\n'+text.replace('一采 mp4','mp4').replace('_pre.mp4','.mp4')
+        self.assertEqual(await s.finish(self.store, 'task', result), [])
+        self.assertEqual([item[0] for item in self.downloads], ['seg_0000_pre.mp4', 'seg_0002_pre.mp4'])
+
+    async def test_selflift_final_export_still_checks_segment_filename(self):
+        self.data.workflow['502']['inputs']['selflift'] = ['600', 0]
+        self.data.workflow['600'] = {'class_type': 'MiniMaxH3DirectorSelfLift', 'inputs': {}}
+        result = self.result()
+        result['history']['outputs']['403']['text'][0] = result['history']['outputs']['403']['text'][0].replace(
+            '一采 mp4', 'mp4').replace('_pre.mp4', '.mp4').replace('seg_0000.mp4', 'seg_0001.mp4')
+        problems = await s.finish(self.store, 'task', result)
+        self.assertEqual(len(problems), 1)
+        self.assertIn('分段身份不一致', problems[0]['error'])
+        self.assertEqual([item[0] for item in self.downloads], ['seg_0002.mp4'])
+
     async def test_occupied_target_is_not_overwritten(self):
         target = self.project / '候选/agent-0.mp4'
         target.parent.mkdir()

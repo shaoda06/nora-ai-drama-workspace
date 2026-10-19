@@ -95,13 +95,18 @@ async def finish(store, key, result):
     from backend.services.comfy_tasks import paths as project_paths
     data, state = store.rows[key]['input'], store.rows[key]['state']
     row = store.rows[key]
+    # Standalone SelfLift exports its completed first pass as the final segment MP4.
+    pre_refine = data.task_type == 'video-first-pass'
+    if pre_refine:
+        director_inputs = data.workflow[data.segment_plan.director_node]['inputs']
+        pre_refine = not (director_inputs.get('selflift') and not director_inputs.get('refine'))
     if row.get('_segment_result') is not result:
         outputs = result['history'].get('outputs', {}).get(data.segment_plan.report_node, {})
         text = '\n'.join(value for values in outputs.values() if isinstance(values, list)
                          for value in values if isinstance(value, str))
         paths = {}
         for match in REPORT.finditer(text):
-            if (match[2] == '一采 mp4') == (data.task_type == 'video-first-pass'):
+            if (match[2] == '一采 mp4') == pre_refine:
                 paths[int(match[1]) - 1] = match[4].strip()
         row['_segment_paths'], row['_segment_result'] = paths, result
         row['_segment_sources'] = {}
@@ -125,7 +130,7 @@ async def finish(store, key, result):
                     if index not in paths:
                         raise ValueError('最终报告缺少该段的保存路径')
                     source = remote_file(data.segment_plan.output_root, paths[index])
-                    expected = f"seg_{index:04d}{'_pre' if data.task_type == 'video-first-pass' else ''}.mp4"
+                    expected = f"seg_{index:04d}{'_pre' if pre_refine else ''}.mp4"
                     if source['filename'] != expected:
                         raise ValueError('最终报告路径与分段身份不一致')
                     sources[index] = source
