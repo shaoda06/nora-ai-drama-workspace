@@ -7,13 +7,13 @@ import stat
 import threading
 import time
 
-from backend.parsers.project import SourceChangedError, build_data, live_task_record, FORMAL_SECTIONS
+from backend.parsers.project import SourceChangedError, build_data, live_task_record, live_revision_notes, FORMAL_SECTIONS
 from backend.parsers.generation import load_context
 
 logger = logging.getLogger(__name__)
 
 # Increment only when the parsed project data or interpretation becomes incompatible.
-CACHE_SCHEMA = 2
+CACHE_SCHEMA = 3
 
 class ProjectStore:
     """Parse on demand; keep the last complete result while a change is read."""
@@ -49,6 +49,8 @@ class ProjectStore:
                     if item.name.startswith('.') or not prefix and item.name == '99-综合资料':
                         continue
                     key = prefix + item.name
+                    if live_revision_notes(key):
+                        continue
                     if item.is_dir():
                         if item.is_symlink():
                             continue
@@ -109,20 +111,25 @@ class ProjectStore:
             entry = self.entries.get(name)
             if entry is None:
                 entry = {'data': None, 'revision': 0, 'error': None, 'error_kind': None, 'updating': False,
-                         'scanning': False, 'sections': {}, 'snapshot': None, 'checked': 0.0, 'retry_at': 0.0, 'retry_at_time': 0.0, 'lock': threading.Lock()}
+                         'scanning': False, 'sections': {}, 'snapshot': None, 'checked': 0.0, 'retry_at': 0.0, 'retry_at_time': 0.0,
+                         'lock': threading.Lock(), 'initialization_lock': threading.Lock(), 'section_locks': {}}
                 self.entries[name] = entry
         initialized = False
         with entry['lock']:
-            if entry['data'] is None and not entry['updating']:
-                entry['snapshot'] = self.snapshot(path)
-                data = self.load_cache(name, entry['snapshot'])
-                if data is None:
-                    data = build_data(path, web_episode_navigation=True, load_scope="overview")
-                    self.save_cache(name, entry['snapshot'], data)
-                entry['data'] = data
-                entry['revision'] = 1
-                entry['checked'] = time.monotonic()
-                initialized = True
+            needs_initialization = entry['data'] is None
+        if needs_initialization:
+            # Only the first readers wait here. Directory reads and parsing must
+            # never hold the short lock used by status and refresh publication.
+            with entry['initialization_lock']:
+                if entry['data'] is None:
+                    snapshot = self.snapshot(path)
+                    data = self.load_cache(name, snapshot)
+                    if data is None:
+                        data = build_data(path, web_episode_navigation=True, load_scope="overview")
+                        self.save_cache(name, snapshot, data)
+                    with entry['lock']:
+                        entry.update(snapshot=snapshot, data=data, revision=1, checked=time.monotonic())
+                    initialized = True
         if synchronize and not initialized:
             with entry['lock']:
                 if entry['scanning']:
@@ -198,23 +205,35 @@ class ProjectStore:
         entry = self.get(name)
         if candidate is not None and not re.fullmatch(re.escape(episode) + r'-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)', candidate):
             raise FileNotFoundError('候选版本不存在')
-        playback = self.section(name, scope, episode, mode='playback') if candidate else None
         key = scope + ('--' + episode if episode else '') + ('--context--' + candidate if candidate else '--' + mode if mode != 'full' else '')
         with entry['lock']:
-            if key not in entry['sections']:
-                data = self.load_cache(name, entry['snapshot'], part=key)
+            if key in entry['sections']:
+                return entry['sections'][key]
+            section_lock = entry['section_locks'].setdefault(key, threading.Lock())
+        # Deduplicate the same section while allowing status, other sections,
+        # and source-change discovery to proceed independently.
+        with section_lock:
+            try:
+                playback = self.section(name, scope, episode, mode='playback') if candidate else None
+                with entry['lock']:
+                    if key in entry['sections']:
+                        return entry['sections'][key]
+                    if candidate and entry['sections'].get(scope + '--' + episode + '--playback') is not playback:
+                        raise SourceChangedError('项目资料在候选关联读取期间发生变化：' + key)
+                    snapshot = entry['snapshot']
+                data = self.load_cache(name, snapshot, part=key)
                 if data is None:
-                    try:
-                        data = (load_context(self.project(name), candidate, playback['generationContexts']) if candidate else
-                                build_data(self.project(name), web_episode_navigation=True, load_scope=scope, episode_id=episode, episode_mode=mode))
-                        self.save_cache(name, entry['snapshot'], data, part=key)
-                    except (OSError, ValueError, RuntimeError, UnicodeError) as error:
-                        entry.update(error=str(error),
-                                     error_kind='source_changed' if isinstance(error, SourceChangedError) else 'read_failed',
-                                     retry_at=time.monotonic() + 30, retry_at_time=(time.time() + 30) * 1000)
-                        raise
-                entry['sections'][key] = data
-            return entry['sections'][key]
+                    data = (load_context(self.project(name), candidate, playback['generationContexts']) if candidate else
+                            build_data(self.project(name), web_episode_navigation=True, load_scope=scope, episode_id=episode, episode_mode=mode))
+                    self.save_cache(name, snapshot, data, part=key)
+                with entry['lock']:
+                    if self.cache_snapshot(snapshot, key, data) != self.cache_snapshot(entry['snapshot'], key, data):
+                        raise SourceChangedError('项目资料在栏目读取期间发生变化，请重新读取：' + key)
+                    entry['sections'][key] = data
+                return data
+            except (OSError, ValueError, RuntimeError, UnicodeError) as error:
+                self.read_failed(name, entry, error)
+                raise
 
     def file(self, name: str, relative: str, revision: str | None = None):
         root = self.project(name)

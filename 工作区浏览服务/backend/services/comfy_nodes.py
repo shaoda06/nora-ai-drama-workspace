@@ -29,6 +29,7 @@ class RemoteQueues:
         self.workers = {}
         self.manager = None
         self.refreshes = {}
+        self.config_changed = asyncio.Event()
 
     async def start(self):
         await self.sync()
@@ -53,7 +54,11 @@ class RemoteQueues:
 
     async def follow_config(self):
         while True:
-            await asyncio.sleep(CONFIG_INTERVAL)
+            try:
+                await asyncio.wait_for(self.config_changed.wait(), CONFIG_INTERVAL)
+            except asyncio.TimeoutError:
+                pass
+            self.config_changed.clear()
             try:
                 await self.sync()
             except (self.client.ClientError, OSError, ValueError):

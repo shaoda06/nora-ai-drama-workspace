@@ -137,12 +137,16 @@
       "widgets_values": [
         "scale by multiplier",
         2,
-        "ULTRA"
+        "ULTRA",
+        1.0,
+        "8-bit RGB"
       ],
       "widgets_values_named": {
         "resize_type": "scale by multiplier",
         "resize_type.scale": 2,
-        "quality": "ULTRA"
+        "quality": "ULTRA",
+        "strength": 1.0,
+        "image_encoding": "8-bit RGB"
       }
     },
     {

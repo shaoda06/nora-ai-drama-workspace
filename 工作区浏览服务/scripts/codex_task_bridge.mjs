@@ -53,6 +53,14 @@ try {
       name: operation === 'read' ? 'read_thread' : 'send_message_to_thread', arguments: args,
       _meta: { 'openai/threadId': request.caller },
     });
+    if (operation === 'read' && !result.isError) {
+      // The backend only consumes thread metadata. Long in-flight turns can
+      // exceed Python's pipe line limit even with includeOutputs=false.
+      const { thread } = JSON.parse(result.content.find(item => item.type === 'text').text);
+      return { content: [{ type: 'text', text: JSON.stringify({ thread: {
+        id: thread.id, title: thread.title, status: thread.status,
+      } }) }] };
+    }
     return result;
   }
   if (request.operation === 'session') {

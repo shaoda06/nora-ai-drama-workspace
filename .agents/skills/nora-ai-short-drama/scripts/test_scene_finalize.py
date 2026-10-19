@@ -88,7 +88,7 @@ class FinalizeTests(unittest.TestCase):
             path.write_text(data if isinstance(data, str) else json.dumps(data, ensure_ascii=False), encoding='utf-8')
 
     def pair(self, stage, part, identity):
-        name = 'Nora-RTX-AusBoss-切镜保护超分插帧' if stage == '后处理' else 'Minimax-H3-导演台-视频生成-标准版'
+        name = 'Nora-RTX-RIFE-自动切镜保护超分插帧' if stage == '后处理' else 'Minimax-H3-导演台-视频生成-标准版'
         api = tool.adopt.load(BASE / (name + '.api.json'))
         canvas = tool.adopt.load(BASE / (name + '.workflow.json'))
         if stage == '后处理':
@@ -311,7 +311,7 @@ class FinalizeTests(unittest.TestCase):
                 canvas = tool.adopt.load(Path(result['canvas']))
                 if stage == '后处理':
                     self.assertEqual(sum(n['type'] == 'RTXVideoSuperResolution' for n in canvas['nodes']), 2)
-                    self.assertEqual(sum(n['type'] == 'AUSBOSS_NODES_FrameInterpolate' for n in canvas['nodes']), 2)
+                    self.assertEqual(sum(n['type'] == 'NoraRIFEInterpolationCutTest' for n in canvas['nodes']), 2)
                 for path, data in self.originals.items():
                     self.assertEqual(path.read_bytes(), data)
 

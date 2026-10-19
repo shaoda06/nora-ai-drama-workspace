@@ -2,7 +2,7 @@
   "id": "c5386777-92fd-43db-8890-a0418a656da2",
   "revision": 1,
   "last_node_id": 24,
-  "last_link_id": 28,
+  "last_link_id": 7,
   "nodes": [
     {
       "id": 7,
@@ -24,7 +24,7 @@
           "localized_name": "视频",
           "name": "video",
           "type": "VIDEO",
-          "link": 5
+          "link": 1
         }
       ],
       "outputs": [
@@ -34,7 +34,7 @@
           "name": "images",
           "type": "IMAGE",
           "links": [
-            28
+            3
           ]
         },
         {
@@ -43,7 +43,7 @@
           "name": "audio",
           "type": "AUDIO",
           "links": [
-            25
+            7
           ]
         },
         {
@@ -52,7 +52,7 @@
           "name": "fps",
           "type": "FLOAT",
           "links": [
-            19
+            4
           ]
         },
         {
@@ -83,7 +83,7 @@
         "secondTabWidth": 65,
         "tabXOffset": 10
       },
-      "title": "02 分离画面、原音轨和帧率"
+      "title": "02 分离画面、原音轨和实际帧率"
     },
     {
       "id": 6,
@@ -127,7 +127,7 @@
           "name": "VIDEO",
           "type": "VIDEO",
           "links": [
-            5
+            1
           ]
         }
       ],
@@ -145,14 +145,14 @@
         "tabXOffset": 10
       },
       "widgets_values": [
-        "__待替换_输入素材_6__.mp4",
+        "{已获批二采分段文件}.mp4",
         true
       ],
       "widgets_values_named": {
-        "file": "__待替换_输入素材_6__.mp4",
+        "file": "{已获批二采分段文件}.mp4",
         "upload": true
       },
-      "title": "01 输入｜获批二采分段（示例须替换）"
+      "title": "01 输入｜获批二采分段（执行前替换）"
     },
     {
       "id": 1,
@@ -176,7 +176,7 @@
           "localized_name": "images",
           "name": "images",
           "type": "IMAGE",
-          "link": 21
+          "link": 2
         },
         {
           "label": "resize_type",
@@ -224,7 +224,7 @@
           "name": "upscaled_images",
           "type": "IMAGE",
           "links": [
-            24
+            6
           ]
         }
       ],
@@ -245,15 +245,19 @@
         "target dimensions",
         1920,
         1080,
-        "ULTRA"
+        "ULTRA",
+        1.0,
+        "8-bit RGB"
       ],
       "widgets_values_named": {
         "resize_type": "target dimensions",
         "resize_type.width": 1920,
         "resize_type.height": 1080,
-        "quality": "ULTRA"
+        "quality": "ULTRA",
+        "strength": 1.0,
+        "image_encoding": "8-bit RGB"
       },
-      "title": "04 RTX 超分｜1920×1080 · ULTRA"
+      "title": "04 RTX超分｜1920×1080 · ULTRA"
     },
     {
       "id": 16,
@@ -275,7 +279,7 @@
           "localized_name": "images",
           "name": "images",
           "type": "IMAGE",
-          "link": 24
+          "link": 6
         },
         {
           "label": "audio",
@@ -283,7 +287,7 @@
           "name": "audio",
           "shape": 7,
           "type": "AUDIO",
-          "link": 25
+          "link": 7
         },
         {
           "label": "meta_batch",
@@ -309,7 +313,7 @@
           "widget": {
             "name": "frame_rate"
           },
-          "link": 20
+          "link": 5
         },
         {
           "label": "loop_count",
@@ -410,22 +414,22 @@
         "Node name for S&R": "VHS_VideoCombine",
         "widget_ue_connectable": {}
       },
-      "widgets_values": {
-        "frame_rate": 60,
-        "loop_count": 0,
-        "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
-        "format": "video/h264-mp4",
-        "pix_fmt": "yuv420p",
-        "crf": 19,
-        "save_metadata": true,
-        "trim_to_audio": false,
-        "pingpong": false,
-        "save_output": true
-      },
+      "widgets_values": [
+        30.0,
+        0,
+        "{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
+        "video/h264-mp4",
+        "yuv420p",
+        19,
+        true,
+        false,
+        false,
+        true
+      ],
       "widgets_values_named": {
-        "frame_rate": 60,
+        "frame_rate": 30.0,
         "loop_count": 0,
-        "filename_prefix": "Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
+        "filename_prefix": "{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
         "format": "video/h264-mp4",
         "pix_fmt": "yuv420p",
         "crf": 19,
@@ -434,12 +438,12 @@
         "pingpong": false,
         "save_output": true
       },
-      "title": "05 正式输出｜插帧实际 FPS＋原音轨"
+      "title": "05 输出｜插帧实际FPS与原音轨"
     },
     {
       "id": 12,
-      "type": "AUSBOSS_NODES_FrameInterpolate",
-      "title": "03 AusBoss 切镜保护｜光流 · 源帧率→60fps",
+      "type": "NoraRIFEInterpolationCutTest",
+      "title": "03 RIFE自动切镜保护｜目标30fps",
       "pos": [
         740,
         290
@@ -453,9 +457,9 @@
       "mode": 0,
       "inputs": [
         {
-          "name": "frames",
+          "name": "images",
           "type": "IMAGE",
-          "link": 28
+          "link": 3
         },
         {
           "name": "source_fps",
@@ -463,7 +467,7 @@
           "widget": {
             "name": "source_fps"
           },
-          "link": 19
+          "link": 4
         },
         {
           "name": "target_fps",
@@ -474,10 +478,10 @@
           "link": null
         },
         {
-          "name": "method",
-          "type": "COMBO",
+          "name": "scale",
+          "type": "FLOAT",
           "widget": {
-            "name": "method"
+            "name": "scale"
           },
           "link": null
         },
@@ -490,50 +494,71 @@
           "link": null
         },
         {
+          "name": "model_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "model_name"
+          },
+          "link": null
+        },
+        {
           "name": "batch_size",
           "type": "INT",
           "widget": {
             "name": "batch_size"
           },
           "link": null
+        },
+        {
+          "name": "use_fp16",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "use_fp16"
+          },
+          "link": null
         }
       ],
       "outputs": [
         {
-          "name": "frames",
+          "name": "images",
           "type": "IMAGE",
           "links": [
-            21
-          ],
-          "slot_index": 0
+            2
+          ]
         },
         {
           "name": "fps",
           "type": "FLOAT",
           "links": [
-            20
-          ],
-          "slot_index": 1
+            5
+          ]
+        },
+        {
+          "name": "cut_report",
+          "type": "STRING",
+          "links": []
         }
       ],
       "properties": {
-        "Node name for S&R": "AUSBOSS_NODES_FrameInterpolate",
-        "cnr_id": "ausboss-nodes",
-        "ver": "2.1.0"
+        "Node name for S&R": "NoraRIFEInterpolationCutTest"
       },
       "widgets_values": [
-        24,
-        60,
-        "optical flow (requires cached RAFT weights)",
+        24.0,
+        30.0,
+        1.0,
         0.15,
-        1
+        "flownet.pkl",
+        1,
+        true
       ],
       "widgets_values_named": {
-        "source_fps": 24,
-        "target_fps": 60,
-        "method": "optical flow (requires cached RAFT weights)",
+        "source_fps": 24.0,
+        "target_fps": 30.0,
+        "scale": 1.0,
         "scene_cut_threshold": 0.15,
-        "batch_size": 1
+        "model_name": "flownet.pkl",
+        "batch_size": 1,
+        "use_fp16": true
       }
     },
     {
@@ -554,16 +579,16 @@
       "outputs": [],
       "properties": {},
       "widgets_values": [
-        "正式后处理：获批二采分段 → AusBoss RAFT光流 / 60fps → RTX 1920×1080 / ULTRA → 保留原音轨输出。\n画面连接：7.images → 12.frames → 1.images → 16.images。切镜阈值0.15，batch_size=1。\nsource_fps接源片实际fps；VideoCombine的frame_rate接插帧输出fps，audio接原音轨。固定输出1920×1080、60fps；取回后核对实际规格、时长及来源，不把提高播放帧率当作插帧。\n依赖AUSBOSS_NODES_FrameInterpolate兼容接口及已缓存RAFT权重；使用前按H3执行规范核对节点能力，缺失时报告，不自动安装或切换方法。\n输入文件名须替换为本次获批二采视频；输出前缀按Nora/{项目代号}/{EP编号}-{C编号}-{P编号}-{R编号}-后处理填写。\n任务完成后取回全部成果并展示，由用户人工审核；agent不抽帧、ASR、完整解码或做质量初审。配置更新不授权提交生成任务。"
+        "输入已获批二采原片，先在源尺寸以RIFE插帧到30fps，再由RTX超分到1920×1080，保留原音轨。自动检测真实切镜并保持源帧，不按预设秒数拆片，不跨切镜混合。切镜阈值0.15；0表示关闭，需按本次任务明确选择。节点依赖：dependencies/ComfyUI-Nora-RIFE-CutTest.zip；类名NoraRIFEInterpolationCutTest。安装、验证与回退见维护规范的ComfyUI节点安装包章节。执行前替换输入文件及输出身份，并按本次画幅同步尺寸。"
       ],
-      "title": "后处理说明｜先插帧60fps → 超分1920×1080",
+      "title": "RIFE自动切镜保护后处理｜使用说明",
       "color": "#432",
       "bgcolor": "#653"
     }
   ],
   "links": [
     [
-      5,
+      1,
       6,
       0,
       7,
@@ -571,15 +596,7 @@
       "VIDEO"
     ],
     [
-      28,
-      7,
-      0,
-      12,
-      0,
-      "IMAGE"
-    ],
-    [
-      21,
+      2,
       12,
       0,
       1,
@@ -587,7 +604,15 @@
       "IMAGE"
     ],
     [
-      19,
+      3,
+      7,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      4,
       7,
       2,
       12,
@@ -595,15 +620,7 @@
       "FLOAT"
     ],
     [
-      24,
-      1,
-      0,
-      16,
-      0,
-      "IMAGE"
-    ],
-    [
-      20,
+      5,
       12,
       1,
       16,
@@ -611,7 +628,15 @@
       "FLOAT"
     ],
     [
-      25,
+      6,
+      1,
+      0,
+      16,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
       7,
       1,
       16,

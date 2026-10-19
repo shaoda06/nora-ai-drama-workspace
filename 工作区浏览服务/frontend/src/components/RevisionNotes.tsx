@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { SegmentVideo } from '../api';
 import { Dialog } from '../components';
-import { editNote, loadNotes, noteKey, saveNote, useSceneNotes } from '../revisionNotes';
+import { editNote, loadNotes, noteKey, prepareNotesExport, saveNote, saveNotesExport, useSceneNotes } from '../revisionNotes';
+import type { NoteInput } from '../revisionNotes';
 import { CopyButton } from './CopyButton';
 import { candidateLabel } from './SegmentVideo';
 import { TabNav } from './TabNav';
@@ -54,60 +55,102 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
 
 export type ReviewVersions = Record<string, Pick<SegmentVideo, 'stage' | 'run' | 'key'> | null>;
 type ExportMode = 'round' | 'history';
-type ExportDraft = { original: string; text: string };
+type ExportNote = NoteInput & { key: string; title: string; original: string };
+type ExportOverall = { number: number; text: string; original: string };
+type ExportDraft = { notes: ExportNote[]; rounds: ExportOverall[]; roundKeys: string[]; number?: number; label: string; scope: NoteScope; url: string };
 
-export function useRevisionNotesExport(scope: NoteScope, segments: { id: string; videos: SegmentVideo[] }[], review: { stage: string; versions: ReviewVersions } | null, loadHistorySegments?: () => Promise<{ id: string; videos: SegmentVideo[] }[]>) {
+export function useRevisionNotesExport(scope: NoteScope, segments: { id: string; videos: SegmentVideo[] }[], review: { stage: string; label?: string; number?: number; versions: ReviewVersions } | null, loadHistorySegments?: () => Promise<{ id: string; videos: SegmentVideo[] }[]>) {
   const data = useSceneNotes(scope.project, scope.episode, scope.scene);
-  const [draft, setDraft] = useState<Record<ExportMode, ExportDraft> | null>(null);
+  const [draft, setDraft] = useState<ExportDraft | null>(null);
   const [mode, setMode] = useState<ExportMode>('round');
   const [confirmClose, setConfirmClose] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const [exportError, setExportError] = useState(false);
-  const changed = draft !== null && Object.values(draft).some(item => item.text !== item.original);
-  const close = () => { if (changed) setConfirmClose(true); else setDraft(null); };
-  const buildExport = (mode: ExportMode, exportSegments = segments): ExportDraft => {
-    const values = { ...data.notes, ...Object.fromEntries(Object.entries(data.drafts).map(([key, draft]) => [key, draft.value])) };
-    const ids = mode === 'round' && review ? Object.keys(review.versions) : exportSegments.map(segment => segment.id);
-    const notes = Object.values(values).filter(note => {
-      if (!note.text.trim()) return false;
-      if (mode === 'history') return true;
-      const version = review?.versions[note.segment];
-      return version?.stage === note.stage && version.run === note.run;
-    }).sort((a, b) => {
-      const order = (id: string) => { const index = ids.indexOf(id); return index < 0 ? ids.length + Number(id.slice(1)) : index; };
-      return order(a.segment) - order(b.segment) || ['一采', '二采', '后处理'].indexOf(a.stage) - ['一采', '二采', '后处理'].indexOf(b.stage) || Number(b.run.slice(1)) - Number(a.run.slice(1));
-    });
-    const text = `${scope.project} / ${scope.episode} / ${scope.scene} ${mode === 'round' ? '本轮审看意见' : '全部历史意见'}\n\n` + (notes.length ? notes.map(note => {
-      const video = exportSegments.find(segment => segment.id === note.segment)?.videos.find(video => video.stage === note.stage && video.run === note.run);
-      const label = video ? (video.approved ? '正式版' : candidateLabel(video.candidateNumber)) : '';
-      const status = data.drafts[noteKey(note)]?.status;
-      return `【${note.segment} / ${note.stage} / ${note.run}${label ? ' / ' + label : ''}${status && status !== 'saved' ? ' / 未保存草稿' : ''}】\n${note.text}`;
-    }).join('\n\n') : mode === 'history' ? '本场次暂无修改意见。' : review ? '本轮审看版本暂无修改意见。' : '尚未固定本轮版本，请先开启连续播放。');
-    return { original: text, text };
-  };
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState('');
+  const [exportError, setExportError] = useState('');
+  const changed = draft !== null && [...draft.notes, ...draft.rounds].some(item => item.text !== item.original);
+  useEffect(() => {
+    if (!changed) return;
+    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [changed]);
+  const close = () => { if (saving) return; if (changed) setConfirmClose(true); else setDraft(null); };
   const exportNotes = async () => {
     setExporting(true);
-    setExportError(false);
+    setExportError('');
     try {
-      const exportSegments = loadHistorySegments ? await loadHistorySegments() : segments;
-      setDraft({ round: buildExport('round', exportSegments), history: buildExport('history', exportSegments) });
+      const [saved, exportSegments] = await Promise.all([prepareNotesExport(data.url), loadHistorySegments ? loadHistorySegments() : Promise.resolve(segments)]);
+      const values: Record<string, NoteInput> = { ...saved.notes };
+      const roundKeys: string[] = [];
+      for (const [segment, version] of Object.entries(review?.versions || {})) {
+        if (!version) continue;
+        const key = noteKey({ segment, ...version });
+        roundKeys.push(key);
+      }
+      const ids = exportSegments.map(segment => segment.id);
+      const order = (id: string) => { const index = ids.indexOf(id); return index < 0 ? ids.length + Number(id.slice(1)) : index; };
+      const notes = Object.values(values).filter(note => note.text.trim()).sort((a, b) => order(a.segment) - order(b.segment) || ['一采', '二采', '后处理'].indexOf(a.stage) - ['一采', '二采', '后处理'].indexOf(b.stage) || Number(b.run.slice(1)) - Number(a.run.slice(1))).map(note => {
+        const video = exportSegments.find(item => item.id === note.segment)?.videos.find(item => item.stage === note.stage && item.run === note.run);
+        const label = video ? (video.approved ? '正式版' : candidateLabel(video.candidateNumber)) : '';
+        return { ...note, key: noteKey(note), title: `${note.segment} / ${note.stage} / ${note.run}${label ? ' / ' + label : ''}`, original: note.text };
+      });
+      const rounds: ExportOverall[] = Object.values(saved.rounds).map(item => ({ number: item.number, text: item.text, original: item.text }));
+      if (review?.number && !rounds.some(item => item.number === review.number)) rounds.push({ number: review.number, text: '', original: '' });
+      rounds.sort((a, b) => a.number - b.number);
+      setDraft({ notes, rounds, roundKeys, number: review?.number, label: review?.label || '浏览片单', scope: { ...scope }, url: data.url });
       setMode('round');
       setConfirmClose(false);
-    } catch {
-      setExportError(true);
+      setMessage('');
+    } catch (error) {
+      setExportError(String(error));
     } finally {
       setExporting(false);
     }
   };
+  const visibleNotes = draft?.notes.filter(item => mode === 'history' || draft.roundKeys.includes(item.key)) || [];
+  const visibleRounds = draft?.rounds.filter(item => mode === 'history' || item.number === draft.number) || [];
+  const text = draft ? `${draft.scope.project} / ${draft.scope.episode} / ${draft.scope.scene} ${mode === 'round' ? draft.label + '审看意见' : '全部历史意见'}\n\n` + [
+    ...visibleNotes.filter(item => item.text.trim()).map(item => `【${item.title}】\n${item.text}`),
+    ...visibleRounds.filter(item => item.text.trim()).map(item => `【第${item.number}轮 · 整场总体意见】\n${item.text}`),
+  ].join('\n\n') : '';
+  const save = async () => {
+    const opened = draft!;
+    setSaving(true);
+    setConfirmClose(false);
+    setMessage('');
+    try {
+      await saveNotesExport(opened.url, {
+        notes: opened.notes.filter(item => item.text !== item.original).map(({ segment, stage, run, text, fileRevision, original }) => ({ segment, stage, run, text, fileRevision, expectedText: original })),
+        rounds: opened.rounds.filter(item => item.text !== item.original).map(({ number, text, original }) => ({ number, text, expectedText: original })),
+      });
+      setDraft({ ...opened, notes: opened.notes.map(item => ({ ...item, original: item.text })), rounds: opened.rounds.map(item => ({ ...item, original: item.text })) });
+      setMessage('已保存。');
+      setConfirmClose(false);
+    } catch (error) {
+      setMessage(`未保存：${error instanceof Error ? error.message : String(error)}`);
+    } finally {
+      setSaving(false);
+    }
+  };
   return { control: <><button disabled={!data.loaded || exporting} onClick={() => { void exportNotes(); }}>{exporting ? '正在读取意见…' : '导出修改意见'}</button>
-    {exportError && <span className="error">导出资料读取失败，请重试。</span>}
+    {exportError && <span className="error" role="alert">导出资料读取失败：{exportError}</span>}
     {data.error && <span className="error">意见读取失败<button onClick={() => { void loadNotes(data.url); }}>重试</button></span>}</>,
-    dialog: draft !== null && <Dialog title={`${scope.episode} · ${scope.scene} 导出修改意见`} close={close} headerActions={confirmClose ? <div className="revision-export-close-actions"><button autoFocus onClick={() => setConfirmClose(false)}>继续编辑</button><button className="revision-export-discard" onClick={() => { setDraft(null); setConfirmClose(false); }}>放弃修改并关闭</button></div> : undefined}>
+    dialog: draft !== null && <Dialog title={`${draft.scope.episode} · ${draft.scope.scene} 导出修改意见`} close={close} headerActions={confirmClose ? <div className="revision-export-close-actions"><button autoFocus onClick={() => setConfirmClose(false)}>继续编辑</button><button className="revision-export-discard" onClick={() => { setDraft(null); setConfirmClose(false); }}>放弃修改并关闭</button></div> : undefined}>
       <TabNav compact label="意见导出范围" items={[{ value: 'round', label: '本轮意见' }, { value: 'history', label: '全部历史意见' }]} selected={mode} onChange={value => { setMode(value as ExportMode); setConfirmClose(false); }} />
-      <p className="muted">{mode === 'history' ? '本场次全部画质、全部版本中已填写的意见。' : review ? `仅包含本轮固定的${review.stage}审看版本；没有填写意见时不补入旧版本意见。` : '尚未固定本轮版本，请先开启连续播放，或选择全部历史意见。'}此处编辑只影响本次导出稿。</p>
-      <div className="revision-export-editor">
-        <div className="revision-export-actions"><CopyButton label="复制" text={draft[mode].text} />{draft[mode].text !== draft[mode].original && <button onClick={() => { setDraft({ ...draft, [mode]: { ...draft[mode], text: draft[mode].original } }); setConfirmClose(false); }}>还原</button>}</div>
-        <textarea className="revision-notes-export" aria-label="导出修改意见文本" value={draft[mode].text} onChange={event => { setDraft({ ...draft, [mode]: { ...draft[mode], text: event.target.value } }); setConfirmClose(false); }} />
+      {confirmClose && <p className="notice" role="alert">尚有未保存的修改。放弃修改并关闭后，这些修改不会保留。</p>}
+      <div className="revision-export-structured">
+        <fieldset disabled={saving} className="revision-export-fields">
+          {visibleNotes.map(item => <section className="revision-export-note" key={item.key}>
+            <label><strong>{item.title}</strong><textarea aria-label={`${item.title} 修改意见`} maxLength={20000} value={item.text} onChange={event => { setDraft({ ...draft, notes: draft.notes.map(note => note.key === item.key ? { ...note, text: event.target.value } : note) }); setConfirmClose(false); setMessage(''); }} /></label>
+          </section>)}
+          {!visibleNotes.length && <p className="muted">{mode === 'round' ? '本轮暂无可编辑的分段意见。' : '暂无分段意见。'}</p>}
+          <section className="revision-export-overall" aria-label="整场总体意见">
+            {visibleRounds.map(item => <label key={item.number}><strong>第{item.number}轮 · 整场总体意见</strong><textarea aria-label={`第${item.number}轮 整场总体意见`} placeholder="填写整场共用的意见…" maxLength={20000} value={item.text} onChange={event => { setDraft({ ...draft, rounds: draft.rounds.map(note => note.number === item.number ? { ...note, text: event.target.value } : note) }); setConfirmClose(false); setMessage(''); }} /></label>)}
+            {!visibleRounds.length && <p className="muted">{mode === 'round' ? '整场总体意见按已登记的场次轮次保存；请先选择本场次的修改轮次。' : '暂无按轮次保存的整场总体意见。'}</p>}
+          </section>
+        </fieldset>
+        <footer className="revision-export-save"><button disabled={!changed || saving} onClick={() => { void save(); }}>{saving ? '保存中…' : '保存'}</button><button disabled={!changed || saving} onClick={() => { setDraft({ ...draft, notes: draft.notes.map(item => ({ ...item, text: item.original })), rounds: draft.rounds.map(item => ({ ...item, text: item.original })) }); setConfirmClose(false); setMessage(''); }}>还原</button><div className="revision-export-toolbar"><CopyButton label="复制" text={text} /></div><span role="status" className={message.startsWith('未保存') ? 'error' : 'muted'}>{message || (changed ? '有未保存的修改' : '')}</span></footer>
       </div>
     </Dialog> };
 }

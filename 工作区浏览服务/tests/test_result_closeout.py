@@ -70,6 +70,10 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_http_ack_register_and_real_parser_review_page(self):
         candidate, draft = self.setup_video()
+        composition_before = self.scene_rounds_file.read_bytes()
+        unselected = draft.with_name('EP001-C001-P002-视频制作-工作稿.md')
+        unselected.write_text('### R009-一采\n- 人工决定：保留原批准及原话。\n', 'utf-8')
+        unselected_before = unselected.read_bytes()
         batch = await self.collect_and_notice()
         app = FastAPI()
         app.state.comfy_tasks = self.store
@@ -96,6 +100,8 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn('- 原文：保留。', text)
         self.assertIn('- 决定：待审核', text)
         self.assertNotIn('- 决定：批准采用', text)
+        self.assertEqual(self.scene_rounds_file.read_bytes(), composition_before)
+        self.assertEqual(unselected.read_bytes(), unselected_before)
 
     async def test_ack_is_idempotent_and_rejects_other_thread(self):
         self.setup_video()
@@ -254,17 +260,18 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, '缺少本轮执行章节'):
             register(self.store, 'task')
 
-    async def test_busy_poll_coalesces_once_and_records_only_transitions(self):
+    async def test_busy_thread_coalesces_once_then_sends_without_idle_poll(self):
         self.setup_video()
         busy = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'running'}}})}]}
-        idle = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': 'idle'}}})}]}
-        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[busy,busy,idle,{}])), \
+        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[busy,{}])) as desktop, \
                 patch('backend.services.task_notifications.asyncio.sleep', AsyncMock()) as sleep, \
                 patch.object(self.store, 'record', wraps=self.store.record) as record:
             self.store.queue_notice('task', 'terminal', 'terminal', 'isolated')
             await self.store.notifiers['task']
-        self.assertEqual([call.args[0] for call in sleep.call_args_list], [2,15,15])
-        self.assertEqual(sum(call.args[2]=='waiting_idle' for call in record.call_args_list), 1)
+        self.assertEqual([call.args[0] for call in sleep.call_args_list], [2])
+        self.assertEqual([call.args[1] for call in desktop.await_args_list], ['read', 'send'])
+        self.assertFalse(any(call.args[2]=='waiting_idle' for call in record.call_args_list))
+        self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
 
     async def test_ack_racing_send_preserves_ack_and_waiter_wakes_without_poll(self):
         self.setup_video()
@@ -423,14 +430,19 @@ import {appendFileSync} from 'node:fs';
 for await (const line of createInterface({input:process.stdin})) {
  const m=JSON.parse(line); appendFileSync(TRACE,JSON.stringify(m)+'\\n');
  if (!m.id) continue;
- const result=m.method==='tools/call'?{content:[],isError:false}:{};
+ const result=m.method==='tools/call'&&m.params.name==='read_thread'
+   ?{content:[{type:'text',text:JSON.stringify({thread:{id:'isolated-thread',title:'制作会话',status:{type:'active'}},turns:['x'.repeat(262144)]})}],structuredContent:{turns:['x'.repeat(262144)]}}
+   :m.method==='tools/call'?{content:[],isError:false}:{};
  process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,result})+'\\n');
 }'''.replace('TRACE', json.dumps(str(trace))), 'utf-8')
             data = SimpleNamespace(thread_id='isolated-thread', desktop=SimpleNamespace(node=node,
                 server=str(fake), pipe='fake-pipe', caller_thread='isolated-caller'))
             channel = DesktopChannel()
             try:
-                await channel.call(data, 'read')
+                metadata = await channel.call(data, 'read')
+                self.assertLess(len(json.dumps(metadata).encode()), 4096)
+                self.assertEqual(json.loads(metadata['content'][0]['text'])['thread'], {
+                    'id': 'isolated-thread', 'title': '制作会话', 'status': {'type': 'active'}})
                 process = channel.process
                 await channel.call(data, 'send', 'isolated notification')
                 self.assertIs(channel.process, process)
@@ -454,7 +466,8 @@ for await (const line of createInterface({input:process.stdin})) {
             fake.write_text("""import {createInterface} from 'node:readline';
 for await (const line of createInterface({input:process.stdin})) {
  const m=JSON.parse(line); if (!m.id) continue;
- process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,result:{content:[]}})+'\\n');
+ const result={content:[{type:'text',text:JSON.stringify({thread:{id:'isolated-thread',title:'制作会话',status:{type:'active'}},turns:['x'.repeat(262144)]})}]};
+ process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,result})+'\\n');
 }""",'utf-8')
             bridge = Path(t.__file__).resolve().parents[2] / 'scripts/codex_task_bridge.mjs'
             process=await asyncio.create_subprocess_exec(node,str(bridge),stdin=asyncio.subprocess.PIPE,
@@ -462,7 +475,8 @@ for await (const line of createInterface({input:process.stdin})) {
             raw=json.dumps({'server':str(fake),'caller':'isolated-caller','threadId':'isolated-thread','operation':'read'}).encode()
             stdout,stderr=await asyncio.wait_for(process.communicate(raw),10)
             self.assertEqual(process.returncode,0,stderr.decode())
-            self.assertEqual(json.loads(stdout),{'content':[]})
+            self.assertLess(len(stdout), 4096)
+            self.assertEqual(json.loads(json.loads(stdout)['content'][0]['text'])['thread']['title'], '制作会话')
             fake.write_text('process.exit(1);','utf-8')
             data=SimpleNamespace(thread_id='isolated-thread',desktop=SimpleNamespace(node=node,
                 server=str(fake),pipe='fake-pipe',caller_thread='isolated-caller'))

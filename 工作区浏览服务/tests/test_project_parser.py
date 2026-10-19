@@ -15,6 +15,16 @@ class ProjectParserTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.addCleanup(self.temp.cleanup)
 
+    def test_live_review_notes_are_not_compiled_into_episode_sources(self):
+        note = '09-剧集制作/EP001/其他资料/工作稿/EP001-C001-视频修改意见.json'
+        mapping = '09-剧集制作/EP001/其他资料/执行附件/批次/输入映射.json'
+        self.put(note, '{"notes": {}}')
+        self.put(mapping, '{}')
+        data = portal.build_data(self.root)
+        self.assertNotIn(note, data['sources'])
+        self.assertNotIn('EP001-C001-视频修改意见.json', json.dumps(data, ensure_ascii=False))
+        self.assertIn('输入映射.json', json.dumps(data, ensure_ascii=False))
+
     def test_root_history_is_not_a_web_section_and_source_is_preserved(self):
         self.put('历史版本/旧稿.md', '# 原归档\n保留内容')
         self.put('00-项目定位/其他资料/历史版本/定位旧稿.md', '# 阶段归档')

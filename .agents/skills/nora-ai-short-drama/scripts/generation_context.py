@@ -9,6 +9,28 @@ from project_paths import PreparationPaths
 STAGES = {'video-first-pass': '一采', 'video-second-pass': '二采', 'video-postprocess': '后处理'}
 
 
+def scene_round_basis(project, mapping, task_type):
+    """Execution groups retain cache slots; only selected groups bind to the scene plan."""
+    if mapping.get('scene_modification_round') is None:
+        return None  # Compatibility for already registered tasks, not new-task readiness.
+    from scene_rounds import referenced_round
+    revision = referenced_round(project, mapping['scene'], mapping['scene_modification_round'])
+    if revision['script']['version'] != mapping.get('screenplay_version'):
+        raise ValueError('输入映射剧本版本与场次修改轮次不一致')
+    if revision['storyboard']['version'] != mapping.get('scene_storyboard_version'):
+        raise ValueError('输入映射分镜版本与场次修改轮次不一致')
+    expected = {item['id']: item for item in revision['segments']}
+    for index in mapping['selected_indices']:
+        item = mapping['segments'][index]
+        fixed = expected.get(item['segment'].split('-')[-1])
+        if fixed is None or fixed['stage'] != STAGES[task_type] or fixed['run'] != item['round']:
+            raise ValueError('执行分段身份与场次修改轮次不一致：' + item['segment'])
+        duration = item.get('duration_seconds', item.get('durationSec'))
+        if duration != fixed['duration']:
+            raise ValueError('执行分段计划时长与场次修改轮次不一致：' + item['segment'])
+    return revision
+
+
 def validate_segment_context(project, workflow, task_type, mapping, *, timelines=None, path_scope=None):
     """Shared fixed facts for segment retrieval and generation input records."""
     path_scope = path_scope if path_scope is not None else PreparationPaths(project)
@@ -33,6 +55,13 @@ def validate_segment_context(project, workflow, task_type, mapping, *, timelines
         if directory.name != identity and not (directory.parent.name == identity and re.fullmatch(r'执行-\d{8}-\d{6}', directory.name)):
             raise ValueError('本段执行附件目录与执行身份不一致')
         entries[index] = {'identity': identity, 'directory': directory}
+    revision = scene_round_basis(path_scope.project, mapping, task_type)
+    if revision is not None:
+        expected = {item['id']: item for item in revision['segments']}
+        for index in indices:
+            segment = mapping['segments'][index]['segment']
+            if timeline['segments'][index]['durationSec'] != expected[segment.split('-')[-1]]['duration']:
+                raise ValueError('实际执行选中段计划时长与场次修改轮次不一致：' + segment)
     return {'director': director, 'timeline': timeline, 'indices': indices, 'entries': entries, 'project': path_scope.project}
 
 

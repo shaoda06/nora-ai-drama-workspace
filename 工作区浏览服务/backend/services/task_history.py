@@ -1,15 +1,17 @@
-"""Node-specific history search and pagination over the existing task records."""
+"""History search and pagination over the existing task records."""
 from datetime import datetime
 from backend.services.comfy_tasks import TERMINAL
 
 
-def task_history(store, url, search='', result='all', offset=0, limit=20):
+def task_history(store, url=None, search='', result='all', offset=0, limit=20):
     needle = search.strip().casefold()
     rows = []
     for row in store.rows.values():
         state = row['state']
         status = state['status']
-        if row['input'].url.rstrip('/') != url.rstrip('/') or status not in TERMINAL and status != 'collecting':
+        if url is not None and row['input'].url.rstrip('/') != url.rstrip('/'):
+            continue
+        if status not in TERMINAL and status != 'collecting':
             continue
         if result == 'completed' and status != 'completed' or result == 'cancelled' and status != 'cancelled':
             continue

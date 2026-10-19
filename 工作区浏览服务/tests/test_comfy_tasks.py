@@ -49,6 +49,8 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
     def legacy_registration(self, key):
         """Fixture for registrations persisted before preparation became mandatory."""
         self.store.rows[key]['state'].pop('preparation_required', None)
+        self.store.rows[key]['state'].pop('scene_round_required', None)
+        self.store.rows[key]['state'].pop('content_review_required', None)
         self.store.save(key)
 
     async def test_websocket_opens_before_post_and_same_client_id(self):
@@ -126,8 +128,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.seed(status='completed')
         (self.root / 'comfyui-config.json').write_text(json.dumps({'remote-nodes': [{'url': 'https://new.invalid'}]}))
         snapshot = self.store.public(include_history=False)
-        self.assertEqual([node['url'] for node in snapshot['remote_nodes']], ['https://new.invalid', old_url])
-        self.assertEqual(snapshot['remote_nodes'][1]['connection'], 'unconfigured')
+        self.assertEqual([node['url'] for node in snapshot['remote_nodes']], ['https://new.invalid'])
         self.assertEqual(snapshot['local_counts'][old_url]['history'], 1)
         self.assertEqual(self.store.rows['task']['input'].url, old_url)
         self.assertEqual(self.store.remote_urls(), ['https://new.invalid'])
@@ -265,23 +266,38 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(run.call_args.args[0], ['/codex/service/cli', 'queue', '--thread', 'authorized-target', '--message', '完成通知'])
         self.assertIsNone(self.data.desktop.cli)
 
-    async def test_busy_thread_waits_before_one_send(self):
-        self.seed('completed')
-        def read(status):
-            return {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': status}}})}]}
-        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[read('active'), read('idle'), {'isError': False}])) as bridge, patch.object(t.asyncio, 'sleep', AsyncMock()):
-            await self.store.notify('task')
-            self.assertEqual([call.args[1] for call in bridge.await_args_list], ['read', 'read', 'send'])
-        self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
+    async def test_busy_thread_sends_once_without_waiting_for_idle(self):
+        for status in ('active', 'inProgress', 'waitingForApproval'):
+            with self.subTest(status=status):
+                self.seed('completed')
+                read = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': status}}})}]}
+                with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[read, {'isError': False}])) as bridge, \
+                        patch.object(t.asyncio, 'sleep', AsyncMock()) as sleep:
+                    await self.store.notify('task')
+                    await self.store.notify('task')
+                self.assertEqual([call.args[1] for call in bridge.await_args_list], ['read', 'send'])
+                self.assertNotIn(15, [call.args[0] for call in sleep.await_args_list])
+                self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
 
-    async def test_desktop_adapter_keeps_node_pipe_and_busy_check_with_optional_cli(self):
+    async def test_legacy_waiting_idle_notice_is_delivered_to_busy_thread(self):
+        self.seed('completed', notification='waiting_idle')
+        self.store.rows['task']['state']['notice_wait_reason'] = 'busy'
+        active = {'content': [{'type': 'text', 'text': '{"thread":{"status":{"type":"active"}}}'}]}
+        with patch.object(self.store, 'desktop_call', AsyncMock(side_effect=[active, {}])) as bridge, \
+                patch.object(t.asyncio, 'sleep', AsyncMock()):
+            await self.store.notify('task')
+        self.assertEqual([call.args[1] for call in bridge.await_args_list], ['read', 'send'])
+        self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
+        self.assertIsNone(self.store.rows['task']['state']['notice_wait_reason'])
+
+    async def test_desktop_adapter_keeps_node_pipe_and_sends_while_busy_with_optional_cli(self):
         for cli in (None, '/must-not-run/codex'):
             with self.subTest(cli=cli):
                 self.seed('completed')
                 self.data.desktop.cli = cli
                 responses = [
                     {'content': [{'type': 'text', 'text': json.dumps({'thread': {'status': {'type': status}}})}]}
-                    for status in ('active', 'idle')]
+                    for status in ('active',)]
                 responses.append({'content': [], 'isError': False})
                 with patch('backend.services.desktop_channel.DesktopChannel') as factory, patch.object(t.asyncio, 'sleep', AsyncMock()):
                     channel = factory.return_value
@@ -289,7 +305,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
                     channel.close = AsyncMock()
                     await self.store.notify('task')
                     await self.store.notify('task')
-                self.assertEqual([call.args[1] for call in channel.call.await_args_list], ['read', 'read', 'send'])
+                self.assertEqual([call.args[1] for call in channel.call.await_args_list], ['read', 'send'])
                 for call in channel.call.await_args_list:
                     self.assertEqual(call.args[0].desktop.node, 'node')
                     self.assertEqual(call.args[0].desktop.pipe, 'private-pipe')

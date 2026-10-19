@@ -38,7 +38,7 @@ class RevisionNotesTests(HttpTestCase):
         return self.client.put(url or self.url, json=value or self.value, headers={'Origin': 'http://localhost:8782'})
 
     def test_read_empty_does_not_create_files(self):
-        self.assertEqual(self.client.get(self.url).json(), {'episode': 'EP001', 'scene': 'C001', 'notes': {}})
+        self.assertEqual(self.client.get(self.url).json(), {'episode': 'EP001', 'scene': 'C001', 'notes': {}, 'rounds': {}})
         self.assertFalse((self.project / '09-剧集制作/EP001/其他资料').exists())
 
     def test_disk_persistence_unicode_and_independent_versions(self):
@@ -106,6 +106,64 @@ class RevisionNotesTests(HttpTestCase):
         self.assertEqual(len(results), 16)
         self.assertEqual(len(service.read(self.project, 'EP001', 'C001').notes), 16)
         self.assertEqual(list(self.project.rglob('*.json')), [service.path(self.project, 'EP001', 'C001')])
+
+    def round_manifest(self):
+        path = self.project / '09-剧集制作/EP001/其他资料/工作稿/EP001-C001-场次修改轮次.json'
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({'episode': 'EP001', 'scene': 'C001', 'rounds': [
+            {'number': number, 'script': {'file': 'script.md', 'version': 'v1'}, 'storyboard': {'file': 'board.md', 'version': 'v1'},
+             'segments': [{'id': 'P001', 'stage': '一采', 'run': 'R001', 'duration': 3}]} for number in (1, 2)
+        ]}), 'utf-8')
+
+    def export_put(self, notes=None, rounds=None):
+        return self.client.put(self.url + '/export', json={'notes': notes or [], 'rounds': rounds or []}, headers={'Origin': 'http://localhost:8782'})
+
+    def test_export_batch_and_rounds_persist_without_changing_other_entries(self):
+        self.round_manifest()
+        self.put()
+        self.put(self.value | {'segment': 'P002', 'text': '别动这一条'})
+        self.put(self.value | {'fileRevision': 'new-file-mark'})
+        change = self.value | {'text': '改好的分段意见', 'expectedText': self.value['text']}
+        response = self.export_put([change], [{'number': 1, 'text': '整场不要字幕', 'expectedText': ''}])
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()['notes']['P001/一采/R001']['text'], change['text'])
+        self.assertEqual(response.json()['notes']['P001/一采/R001']['fileRevision'], 'new-file-mark')
+        self.assertEqual(response.json()['notes']['P002/一采/R001']['text'], '别动这一条')
+        self.assertEqual(self.export_put(rounds=[{'number': 2, 'text': '第二轮总体', 'expectedText': ''}]).status_code, 200)
+        self.put(self.value | {'segment': 'P003'})
+        saved = RevisionNotes().read(self.project, 'EP001', 'C001')
+        self.assertEqual(saved.rounds['1'].text, '整场不要字幕')
+        self.assertEqual(saved.rounds['2'].text, '第二轮总体')
+        self.assertEqual(self.export_put(rounds=[{'number': 1, 'text': '', 'expectedText': '整场不要字幕'}]).status_code, 200)
+        self.assertEqual(RevisionNotes().read(self.project, 'EP001', 'C001').rounds['2'].text, '第二轮总体')
+
+    def test_export_conflict_and_failed_write_are_atomic(self):
+        self.round_manifest()
+        self.put()
+        change = self.value | {'text': '新文字', 'expectedText': self.value['text']}
+        self.assertEqual(self.export_put([change], [{'number': 1, 'text': '整体', 'expectedText': '过时的内容'}]).status_code, 409)
+        self.assertEqual(self.client.get(self.url).json()['notes']['P001/一采/R001']['text'], self.value['text'])
+        self.put(self.value | {'text': '其他页面的新文字'})
+        self.assertEqual(self.export_put([change]).status_code, 409)
+        change['expectedText'] = '其他页面的新文字'
+        target = main.revision_notes.path(self.project, 'EP001', 'C001')
+        original = target.read_bytes()
+        with patch('backend.services.revision_notes.os.replace', side_effect=OSError('磁盘不可写')):
+            self.assertEqual(self.export_put([change], [{'number': 1, 'text': '整体', 'expectedText': ''}]).status_code, 503)
+        self.assertEqual(target.read_bytes(), original)
+
+    def test_legacy_file_and_export_write_boundary(self):
+        self.put()
+        target = main.revision_notes.path(self.project, 'EP001', 'C001')
+        legacy = json.loads(target.read_text('utf-8'))
+        legacy.pop('rounds')
+        target.write_text(json.dumps(legacy), 'utf-8')
+        self.assertEqual(self.client.get(self.url).json()['rounds'], {})
+        payload = {'notes': [], 'rounds': []}
+        self.assertEqual(self.client.put(self.url + '/export', json=payload).status_code, 403)
+        self.round_manifest()
+        self.assertEqual(self.export_put(rounds=[{'number': 0, 'text': '', 'expectedText': ''}]).status_code, 422)
+        self.assertEqual(self.export_put(rounds=[{'number': 9, 'text': '', 'expectedText': ''}]).status_code, 503)
 
 
 if __name__ == '__main__':

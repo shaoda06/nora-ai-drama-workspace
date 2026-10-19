@@ -11,6 +11,7 @@ from unittest.mock import AsyncMock, patch
 from backend.services import comfy_tasks as t, execution_checks as checks, comfy_segments as segments
 from backend.services.director_uploads import pairs
 from tests import test_comfy_tasks as base
+from tests.prompt_review_fixture import ENGLISH, attach_review
 
 
 class LifecycleTests(unittest.IsolatedAsyncioTestCase):
@@ -48,7 +49,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         common.update(prompt='', commonEnabled=True, taskType='r2v', refs=[{'index': 0, 'imageFile': 'planned/ref.png'}],
                       refVideos=[], refAudios=[], referenceVideo=None)
         group = timeline['segments'][0]
-        group.update(prompt='<Picture 1> 陈清颜站稳。', durationSec=3, refs=[], refVideos=[], refAudios=[], referenceVideo=None)
+        group.update(prompt=ENGLISH, durationSec=3, refs=[], refVideos=[], refAudios=[], referenceVideo=None)
         timeline.update(segments=[group], runSelectEnabled=True, runSelection=[0], editMode='segment')
         timeline['output']['exportMode'] = 'segments'
         timeline['batchWorkspaces']['r2v'].update(globalCommon=common.copy(), segments=[group.copy()])
@@ -63,12 +64,101 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         (self.record / 'task.api.json').write_text(json.dumps(workflow), 'utf-8')
         script = self.project / 'storyboard.md'
         script.write_text('- 文档版本：v1\n镜头正文。', 'utf-8')
+        (self.project / 'screenplay.md').write_text('- 文档版本：v1\n剧本正文。', 'utf-8')
         mapping = dict(scene='EP001-C001', scene_storyboard_version='v1', selected_indices=[0], storyboard_file='storyboard.md',
-            uploads=[], segments=[dict(segment='EP001-C001-P001', round='R001', local_execution_dir=str(self.record))])
+            screenplay_version='v1', scene_modification_round=1,
+            uploads=[], segments=[dict(segment='EP001-C001-P001', round='R001', duration_seconds=3, local_execution_dir=str(self.record))])
+        manifest = self.project / '09-剧集制作/EP001/其他资料/工作稿/EP001-C001-场次修改轮次.json'
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        self.scene_rounds_file = manifest
+        manifest.write_text(json.dumps({'episode': 'EP001', 'scene': 'C001', 'rounds': [{
+            'number': 1, 'script': {'file': 'screenplay.md', 'version': 'v1'},
+            'storyboard': {'file': 'storyboard.md', 'version': 'v1'},
+            'segments': [{'id': 'P001', 'stage': '一采', 'run': 'R001', 'duration': 3}]}]}), 'utf-8')
+        attach_review(self.project, self.record, workflow, mapping)
         (self.record / '输入映射.json').write_text(json.dumps(mapping), 'utf-8')
         self.data.uploads = [dict(file=str(source), node='502', input='timeline_data', subfolder='task',
             **{'response-name': 'upload.json', 'json-path': ['global', 'refs', 0, 'imageFile']})]
         return script
+
+    async def test_new_video_requires_round_before_any_upload_or_submission(self):
+        self.video()
+        path = self.record / '输入映射.json'
+        mapping = json.loads(path.read_text('utf-8')); mapping.pop('scene_modification_round')
+        path.write_text(json.dumps(mapping), 'utf-8')
+        with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as submit:
+            with self.assertRaisesRegex(ValueError, 'scene_modification_round'):
+                await self.store.prepare_only(self.data)
+            upload.assert_not_called(); submit.assert_not_called()
+        self.assertFalse(self.store.rows)
+
+    async def test_preparation_pins_referenced_round_not_entire_round_history(self):
+        self.video()
+        original = json.loads(self.scene_rounds_file.read_text('utf-8'))
+        original['rounds'][0]['segments'].append({'id': 'P002', 'stage': '一采', 'run': 'R009', 'duration': 3})
+        self.scene_rounds_file.write_text(json.dumps(original), 'utf-8')
+        await self.store.prepare_only(self.data)
+        report = checks.read_report(self.data)
+        self.assertIn('scene_composition', report['prepared_input'])
+        self.assertNotIn(self.scene_rounds_file.relative_to(self.project).as_posix(), report['sources'])
+        self.assertIn('screenplay.md', report['sources'])
+        data = json.loads(self.scene_rounds_file.read_text('utf-8'))
+        data['rounds'].append({**data['rounds'][0], 'number': 2})
+        self.scene_rounds_file.write_text(json.dumps(data), 'utf-8')
+        with patch.object(checks, 'fixed_checks', side_effect=AssertionError('adding a round must not repeat fixed checks')):
+            self.assertTrue(checks.check_prepared(self.store, self.data)['ok'])
+            self.assertTrue((await self.store.prepare_only(self.data))['reused'])
+        data['rounds'][0]['segments'][1]['run'] = 'R010'
+        self.scene_rounds_file.write_text(json.dumps(data), 'utf-8')
+        with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as submit:
+            with self.assertRaisesRegex(ValueError, '准备资料已变化'):
+                checks.check_prepared(self.store, self.data)
+            upload.assert_not_called(); submit.assert_not_called()
+
+    async def test_old_preparation_without_round_can_resume_but_cannot_ready_a_new_task(self):
+        self.video()
+        path = self.record / '输入映射.json'
+        mapping = json.loads(path.read_text('utf-8')); mapping.pop('scene_modification_round')
+        path.write_text(json.dumps(mapping), 'utf-8')
+        before = path.read_bytes()
+        checks.prepare_report(self.store, self.data, at_execution=True)
+        report = checks.read_report(self.data)
+        self.assertTrue(report['ok'])
+        self.assertNotIn('scene_composition', report['prepared_input'])
+        self.assertNotIn('new_task_ready', report)
+        self.assertTrue(checks.check_prepared(self.store, self.data, legacy=True)['ok'])
+        with self.assertRaisesRegex(ValueError, '新视频任务必须先关联场次修改轮次'):
+            checks.check_prepared(self.store, self.data)
+        self.assertEqual(path.read_bytes(), before)
+
+    async def test_round_requirement_survives_restart_and_does_not_reclassify_older_prepared_jobs(self):
+        self.video()
+        await self.store.prepare_only(self.data)
+        path = self.record / '输入映射.json'
+        mapping = json.loads(path.read_text('utf-8')); mapping.pop('scene_modification_round')
+        path.write_text(json.dumps(mapping), 'utf-8')
+        report = checks.read_report(self.data)
+        report['prepared_input']['mapping'].pop('scene_modification_round')
+        report['prepared_input'].pop('scene_composition')
+        checks.write_report(self.data, report)
+        key = (await self.store.enqueue(self.data))['local_task_id']
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        self.assertTrue(self.store.rows[key]['state']['scene_round_required'])
+        with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as submit:
+            with self.assertRaisesRegex(ValueError, '新视频任务必须先关联场次修改轮次'):
+                await self.store.prepare(key)
+            upload.assert_not_called(); submit.assert_not_called()
+        # A pre-existing prepared job has the original preparation marker, but no new round marker.
+        self.store.rows[key]['state'].pop('scene_round_required')
+        self.store.save(key)
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        self.assertTrue(self.store.rows[key]['state']['preparation_required'])
+        with patch.object(t.client.Client, 'json', side_effect=self.respond), patch.object(t.client, 'submit') as submit:
+            await self.store.prepare(key)
+            submit.assert_not_called()
+        self.assertNotIn('scene_round_required', self.store.rows[key]['state'])
 
     def respond(self, route, *args, **kwargs):
         if route == '/upload/image':
@@ -198,9 +288,12 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         report = checks.read_report(self.data)
         report.pop('context_sources')
         report['prepared_input']['mapping'].pop('scene_storyboard_version')
+        report['prepared_input']['mapping'].pop('scene_modification_round')
+        report['prepared_input'].pop('scene_composition')
         mapping_file = self.record / '输入映射.json'
         mapping = json.loads(mapping_file.read_text('utf-8'))
         mapping.pop('scene_storyboard_version')
+        mapping.pop('scene_modification_round')
         mapping_file.write_text(json.dumps(mapping), 'utf-8')
         checks.write_report(self.data, report)
         key = (await self.store.enqueue(self.data))['local_task_id']

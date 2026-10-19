@@ -21,7 +21,8 @@ class TaskNotifications:
                 item['delivery'] = 'superseded'
         notices.append({'id': str(uuid.uuid4()), 'event': event_id, 'kind': kind,
                         'message': message, 'delivery': 'pending'})
-        self.record(key, 'notification', 'pending', message=message, _changes={'notification': 'waiting_idle'})
+        self.record(key, 'notification', 'pending', message=message,
+                    _changes={'notification': 'waiting', 'notice_wait_reason': None})
         if key not in self.notifiers or self.notifiers[key].done():
             self.notifiers[key] = asyncio.create_task(self.notify(key))
 
@@ -171,25 +172,19 @@ class TaskNotifications:
             if signature != prepared_notices:
                 report = await self.prepare_report(list(dict.fromkeys(task for task, _ in pending)))
                 prepared_notices = signature
-            # macOS uses Codex's durable message queue, which schedules the turn itself.
-            # Do not gate it on the private Desktop pipe that rejects background callers.
+            # Probe Desktop connectivity before attempting a send, so an unavailable
+            # adapter remains retryable without an ambiguous delivery. Conversation
+            # status is not a delivery gate: Codex handles input to an active turn.
+            # macOS uses the CLI queue and does not need this Desktop connection.
             if not self.queue_notifications:
                 try:
-                    result = await self.desktop_call(data, 'read')
-                    response = json.loads(next(item['text'] for item in result['content'] if item['type'] == 'text'))
-                    status = response['thread']['status']['type']
-                except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, TypeError, IndexError, StopIteration) as error:
+                    await self.desktop_call(data, 'read')
+                except (OSError, subprocess.TimeoutExpired, ValueError) as error:
                     for task, _ in self.notification_pending(data.thread_id):
                         if self.rows[task]['state'].get('notification') != 'waiting_connection':
-                            self.record(task, 'notification', 'waiting_connection', _changes={'notification': 'waiting_connection'})
+                            self.record(task, 'notification', 'waiting_connection', error=str(error),
+                                        _changes={'notification': 'waiting_connection', 'notice_wait_reason': 'connection'})
                     await asyncio.sleep(30)
-                    continue
-                if status not in ('idle', 'notLoaded'):
-                    for task, _ in self.notification_pending(data.thread_id):
-                        if self.rows[task]['state'].get('notice_wait_reason') != 'busy':
-                            self.record(task, 'notification', 'waiting_idle', _changes={'notification': 'waiting_idle',
-                                        'notice_wait_reason': 'busy'})
-                    await asyncio.sleep(15)
                     continue
             pending = self.notification_pending(data.thread_id)
             if not pending:

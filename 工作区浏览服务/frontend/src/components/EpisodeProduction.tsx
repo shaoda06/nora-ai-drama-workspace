@@ -34,10 +34,20 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
   useEffect(() => {
     if (selected && !selectedItem) onSelect(null);
   }, [selected, selectedItem, onSelect]);
-  const script = current?.script;
+  const [roundNumbers, setRoundNumbers] = useRefreshState<Record<string, number>>(`project/${project}/production/rounds`, {});
   const scenes = current?.scenes || [];
   const selectedScene = scenes.includes(scene) ? scene : scenes[0] || '';
   const segments = current?.segments?.[selectedScene] || [];
+  const sceneRounds = current?.sceneRounds?.[selectedScene] || [];
+  const selectedRound = roundNumbers[(current?.name || '') + '/' + selectedScene] ?? sceneRounds.at(-1)?.number;
+  const round = sceneRounds.find(item => item.number === selectedRound);
+  useEffect(() => {
+    const key = (current?.name || '') + '/' + selectedScene;
+    if (current && selectedScene && sceneRounds.length && roundNumbers[key] === undefined)
+      setRoundNumbers(previous => ({ ...previous, [key]: sceneRounds.at(-1)!.number }));
+  }, [current?.name, selectedScene, sceneRounds, roundNumbers, setRoundNumbers]);
+  const script = round ? round.script : current?.script;
+  const selectRound = (number: number) => setRoundNumbers(previous => ({ ...previous, [current!.name + '/' + selectedScene]: number }));
   const issues = (current?.productionIssues || []).filter(issue => !issue.scene || issue.scene === selectedScene);
   const episodeComplete = current?.productionComplete && !current.productionIssues?.length && scenes.length > 0 && scenes.every(id => {
     const sceneSegments = current.segments?.[id] || [];
@@ -71,7 +81,7 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
         <PointerTooltip text={issue.key}><button className="link"  onClick={() => preview({ kind: 'document', key: issue.key, name: issue.key.split('/').pop()! })}>{issue.key.split('/').pop()}</button></PointerTooltip>：{issue.message}
       </li>)}</ul>
     </div> : null}
-    {selectedScene ? <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} storyboardDocument={current.storyboards?.[selectedScene]?.doc} />
+    {selectedScene ? <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
       : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
   </div> : <>
     <div ref={cards} className="episode-grid">{items.slice((page - 1) * 36, page * 36).map(item => <EpisodeButton key={item.key} item={item} onSelect={open} />)}</div>

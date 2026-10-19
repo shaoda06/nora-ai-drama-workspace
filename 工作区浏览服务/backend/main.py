@@ -13,21 +13,23 @@ from urllib.parse import quote, urlsplit
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, Response
 from fastapi.sse import EventSourceResponse, ServerSentEvent
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
+from backend.services.request_diagnostics import RequestDiagnostics, RequestDiagnosticsMiddleware
 from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response, clear_downloads, video_archive_name
 from backend.services import krea2
 from backend.services.workflows import catalogue as workflow_catalogue
 from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
 from backend.services.task_details import task_detail
 from backend.services.task_history import task_history
+from backend.services import node_config
 from backend.services.task_resolution import ResolutionInput, resolve_task
 from backend.services.result_summary import summary as result_summary
 from backend.services.result_registration import closeout as result_closeout
 from websockets.exceptions import WebSocketException
-from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes
+from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes, ExportChanges, NotesChangedError
 
 TOOL = Path(__file__).resolve().parent.parent
 WORKSPACE = Path(os.environ.get('NORA_WORKSPACE', TOOL.parent)).resolve()
@@ -50,13 +52,17 @@ async def lifespan(app):
         json.dumps({'url': f'http://127.0.0.1:{port}', 'token': tasks.token}), encoding='utf-8')
     await tasks.start()
     await tasks.remote_queues.start()
+    diagnostics = app.state.request_diagnostics = RequestDiagnostics(TOOL / 'runtime')
+    diagnostics.start()
     try:
         yield
     finally:
+        await diagnostics.close()
         await tasks.close()
 
 
 app = FastAPI(title='Nora工作区浏览服务', version=VERSION, docs_url=None, redoc_url=None, lifespan=lifespan)
+app.add_middleware(RequestDiagnosticsMiddleware)
 
 
 @app.get('/api/comfy/tasks')
@@ -64,8 +70,53 @@ async def comfy_tasks(request: Request, include_history: bool = True) -> dict[st
     return request.app.state.comfy_tasks.public(include_history=include_history)
 
 
+@app.get('/api/comfy/config')
+async def comfy_config(request: Request, response: Response) -> dict[str, Any]:
+    if not management_request(request):
+        raise HTTPException(403, '仅允许工作台管理操作')
+    return node_config_response(request, response)
+
+
+@app.post('/api/comfy/config/read')
+async def read_comfy_config(request: Request, response: Response) -> dict[str, Any]:
+    queue_write(request)
+    return node_config_response(request, response, credentials=True)
+
+
+def node_config_response(request: Request, response: Response, *, credentials=False):
+    response.headers['Cache-Control'] = 'no-store'
+    tasks = request.app.state.comfy_tasks
+    try:
+        return node_config.snapshot(tasks, *node_config.read_config(tasks), credentials=credentials)
+    except node_config.ConfigConflict as error:
+        raise HTTPException(409, str(error)) from error
+    except (comfy_client.ClientError, OSError, ValueError) as error:
+        raise HTTPException(503, '节点配置读取失败，请核对工作区配置文件') from error
+
+
+@app.put('/api/comfy/config')
+async def save_comfy_config(request: Request, response: Response) -> dict[str, Any]:
+    queue_write(request)
+    response.headers['Cache-Control'] = 'no-store'
+    try:
+        edit = node_config.ConfigEdit.model_validate(await request.json())
+    except (ValidationError, json.JSONDecodeError) as error:
+        # Validation responses must not echo a submitted credential-bearing object.
+        raise HTTPException(422, '节点配置请求格式不正确') from error
+    try:
+        return node_config.save_config(request.app.state.comfy_tasks, edit, credentials=True)
+    except node_config.ConfigConflict as error:
+        raise HTTPException(409, str(error)) from error
+    except comfy_client.ClientError as error:
+        raise HTTPException(422, '节点地址或认证格式不正确；地址须为HTTP或HTTPS，不能包含账号密码、查询参数或片段，且不能重复') from error
+    except ValueError as error:
+        raise HTTPException(422, str(error)) from error
+    except OSError as error:
+        raise HTTPException(503, '节点配置保存失败，原配置保留，请检查文件写入权限后重试') from error
+
+
 @app.get('/api/comfy/history')
-async def comfy_history(request: Request, url: str, q: str = '',
+async def comfy_history(request: Request, url: str | None = None, q: str = '',
                         result: Literal['all', 'completed', 'abnormal', 'cancelled', 'resolved'] = 'all',
                         offset: Annotated[int, Query(ge=0)] = 0,
                         limit: Annotated[int, Query(ge=1, le=100)] = 20) -> dict[str, Any]:
@@ -511,6 +562,20 @@ def save_revision_note(name: str, episode: Episode, scene: Scene, value: NoteInp
         raise HTTPException(403, '修改意见仅限本机或局域网地址，并要求同源请求')
     try:
         return revision_notes.save(store.project(name), episode, scene, value)
+    except FileNotFoundError as error:
+        raise HTTPException(404, str(error)) from error
+    except (OSError, ValueError, UnicodeError) as error:
+        raise HTTPException(503, '修改意见未保存：' + str(error)) from error
+
+
+@app.put('/api/projects/{name}/revision-notes/{episode}/{scene}/export')
+def save_revision_export(name: str, episode: Episode, scene: Scene, value: ExportChanges, request: Request) -> SceneNotes:
+    if not local_write_request(request):
+        raise HTTPException(403, '修改意见仅限本机或局域网地址，并要求同源请求')
+    try:
+        return revision_notes.save_export(store.project(name), episode, scene, value)
+    except NotesChangedError as error:
+        raise HTTPException(409, str(error)) from error
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except (OSError, ValueError, UnicodeError) as error:

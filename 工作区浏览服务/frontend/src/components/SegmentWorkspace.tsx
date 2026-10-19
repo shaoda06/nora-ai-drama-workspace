@@ -31,13 +31,13 @@ function SegmentReferences({ context }: { context?: GenerationContext }) {
   </section>;
 }
 
-export function SegmentWorkspace({ scope, segment, revision, items, selection: { stage, key: selected }, onSelectionChange, tab, onTabChange, notesExportControl, segmentNavigation, autoPlay, onVideoEnded, onVideoError, cachedSources, retainSource, wideVideo, onToggleWide, continuousControl }: {
+export function SegmentWorkspace({ scope, segment, revision, items, selection: { stage, key: selected }, onSelectionChange, tab, onTabChange, notesExportControl, plannedScript, segmentNavigation, autoPlay, onVideoEnded, onVideoError, cachedSources, retainSource, wideVideo, onToggleWide, continuousControl }: {
   scope: NoteScope; segment: string;
   revision: number;
   items: VideoItem[]; selection: { stage: string; key: string }; onSelectionChange: (selection: { stage: string; key: string }) => void;
   tab: string; onTabChange: (tab: string) => void;
   wideVideo: boolean; onToggleWide: () => void; continuousControl: ReactNode;
-  notesExportControl: ReactNode; segmentNavigation: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
+  plannedScript?: { html: string; url?: string }; notesExportControl: ReactNode; segmentNavigation: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
   cachedSources: Record<string, string>;
   retainSource: (source: string) => () => void;
 }) {
@@ -49,15 +49,17 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
   const scriptContent = useRef<HTMLDivElement>(null);
   const shotTimeline = useRef<HTMLDivElement>(null);
   const player = useRef<SegmentVideoHandle>(null);
-  const latest = latestVideo(items);
+  const latest = latestVideo(items.filter(item => item.stage === stage));
   const versions = items.filter(item => item.stage === stage).sort((a, b) => Number(b.approved) - Number(a.approved) || b.candidateNumber - a.candidateNumber);
   const current = versions.find(item => item.key === selected);
   const identity = current && `${scope.episode}-${scope.scene}-${segment}-${current.run}-${current.stage}`;
   const detail = useQuery({ queryKey: ['generation-context', scope.project, identity, revision],
     queryFn: () => get<GenerationContext>(`${projectUrl(scope.project)}/episodes/${scope.episode}/contexts/${encodeURIComponent(identity!)}`),
+    placeholderData: (previous, query) => query?.queryKey[1] === scope.project && query.queryKey[2] === identity ? previous : undefined,
     enabled: !!current && !current.context });
   const context = current?.context || (current ? detail.data : undefined);
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
+  const scriptHtml = context?.scriptHtml || plannedScript?.html || '';
   const shots = context?.shots || [];
   const canAlign = !!current?.url && shots.length > 0 && shots.every(shot => shot.duration !== null);
   const time = playback.key === current?.key ? playback.time : 0;
@@ -84,7 +86,7 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
   const selectors = <div className="segment-selectors tabs tabs-grouped">
       <TabSelect label="画质选择" selected={stage} onChange={value => onSelectionChange({ stage: value, key: '' })} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
       <TabSelect label="版本切换" disabled={!stage} selected={current?.key || ''} onChange={key => onSelectionChange({ stage, key })} items={versions.map(item => ({ value: item.key, label: item.approved ? '正式版' : candidateLabel(item.candidateNumber) }))} />
-      <button disabled={!latest} onClick={() => onSelectionChange({ stage: latest!.stage, key: latest!.key })}>最新</button>
+      <button disabled={!latest} onClick={() => onSelectionChange({ stage: latest!.stage, key: latest!.key })}>本段最新版本</button>
     </div>;
   return <>
     {!wideVideo && selectors}
@@ -98,7 +100,7 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
         <div className="segment-script-header">
           <UnderlineTabs label="分段文字内容" items={[{ value: 'script', label: '分镜脚本' }, { value: 'prompt', label: '提示词' }, { value: 'notes', label: '修改意见' }]} selected={tab} onChange={onTabChange} disabled={!current} />
           {editingNotes && <div className="segment-notes-export">{notesExportControl}</div>}
-          {!editingNotes && <Original url={tab === 'script' ? context?.scriptUrl : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />}
+          {!editingNotes && <Original url={tab === 'script' ? (context?.scriptUrl || plannedScript?.url) : context?.prompts[language === 'zh' ? 'chineseUrl' : 'englishUrl']} label="查看原文件" />}
         </div>
         {showShotTimeline && <div className="shot-timeline-scroll" ref={shotTimeline}>
           <div className="shot-timeline" role="group" aria-label="分镜跳转"
@@ -115,10 +117,10 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
         </div>}
         <div className={'segment-script-content' + (aligned && tab === 'script' ? ' is-aligned' : '')} ref={scriptContent}>
         {current && !current.context && <Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />}
-        {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} time={time} shot={activeShot?.id.match(/SH\d+$/)?.[0] || activeShot?.id} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? <div className="script-placeholder">{editingNotes ? '修改意见区域' : tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
+        {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} time={time} shot={activeShot?.id.match(/SH\d+$/)?.[0] || activeShot?.id} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? tab === 'script' && scriptHtml ? <Rich html={scriptHtml} /> : <div className="script-placeholder">{editingNotes ? '修改意见区域' : tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
           {context.issues.length > 0 && <details className="notice generation-context-issues"><summary>{segment} / {current!.stage} / {current!.run} 资料关联提示</summary>{context.issues.map(issue => <p key={issue}>{issue}</p>)}</details>}
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}
-          {tab === 'script' ? context.scriptHtml ? <Rich html={aligned ? activeShot!.html : context.scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
+          {tab === 'script' ? scriptHtml ? <Rich html={aligned ? activeShot!.html : scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
             <div className="segment-prompt-actions">
               <TabNav compact label="提示词语言" items={[{ value: 'zh', label: '中文' }, { value: 'en', label: '英文' }]} selected={language} onChange={setLanguage} />
               {prompt && <CopyButton label="复制" text={prompt} />}
