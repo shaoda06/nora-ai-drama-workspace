@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import plistlib
+import shutil
 import signal
 import socket
 import subprocess
@@ -96,16 +97,36 @@ def running():
     return data if Path(data['workspace']).resolve() == WORKSPACE and tool == ROOT else None
 
 
-def start(open_browser=True):
-    if running():
-        if open_browser:
-            webbrowser.open(URL)
-        return
+def ensure_frontend():
+    frontend = ROOT / 'frontend'
+    version = json.loads((frontend / 'package.json').read_text('utf-8'))['version']
+    index = frontend / 'dist/index.html'
+    release = frontend / 'dist/release.json'
+    if index.is_file() and release.is_file() and json.loads(release.read_text('utf-8')).get('version') == version:
+        return version
+    npm = shutil.which('npm')
+    if not npm:
+        raise RuntimeError('前端需要构建，但未找到npm；请按README安装Node.js并完成前端依赖安装。')
+    print('前端构建缺失或版本过期，正在自动构建…', flush=True)
+    command([npm, '--prefix', str(frontend), 'run', 'build'], cwd=ROOT, shell=sys.platform == 'win32')
+    if not index.is_file() or not release.is_file() or json.loads(release.read_text('utf-8')).get('version') != version:
+        raise RuntimeError('前端构建未生成与当前源码版本一致的网页，请查看构建输出。')
+    return version
+
+
+def start(open_browser=True, *, force_restart=False):
     if not (WORKSPACE / 'projects').is_dir():
         raise RuntimeError('资料工作区缺少projects目录，请检查runtime/service.json中的workspace。')
-    if not (ROOT / 'frontend/dist/index.html').is_file():
-        raise RuntimeError('前端尚未构建，请按工作区浏览服务/README.md完成安装。')
+    version = ensure_frontend()
+    data = running()
+    if data:
+        if not force_restart and data.get('version') == version and data.get('ready'):
+            if open_browser:
+                webbrowser.open(URL)
+            return
+        stop()
     with socket.socket() as probe:
+        probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
             probe.bind(('0.0.0.0', PORT))
         except OSError as error:
@@ -131,15 +152,18 @@ def stop():
         os.kill(data['pid'], signal.SIGTERM)
     for _ in range(40):
         if not running():
-            return
+            if sys.platform != 'darwin':
+                return
+            try:
+                os.kill(data['pid'], 0)
+            except ProcessLookupError:
+                return
         time.sleep(.5)
     raise RuntimeError('服务未在20秒内停止，未启动第二个进程。')
 
 
 def restart(open_browser=True):
-    if running():
-        stop()
-    start(open_browser)
+    start(open_browser, force_restart=True)
 
 
 if __name__ == '__main__':

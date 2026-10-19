@@ -44,6 +44,7 @@ class LauncherIdentityTests(unittest.TestCase):
 
     def test_stop_uses_manager_and_waits_for_service_to_leave(self):
         with patch.object(launcher, 'running', side_effect=[{'pid': 123}, {'pid': 123}, None]), \
+                patch.object(launcher.sys, 'platform', 'win32'), \
                 patch.object(launcher, 'managed', return_value=True) as manager, \
                 patch.object(launcher.os, 'kill') as kill, patch.object(launcher.time, 'sleep'):
             launcher.stop()
@@ -52,19 +53,32 @@ class LauncherIdentityTests(unittest.TestCase):
 
     def test_legacy_stop_signals_only_the_verified_process(self):
         with patch.object(launcher, 'running', side_effect=[{'pid': 123}, None]), \
+                patch.object(launcher.sys, 'platform', 'win32'), \
                 patch.object(launcher, 'managed', return_value=False), patch.object(launcher.os, 'kill') as kill:
             launcher.stop()
             kill.assert_called_once_with(123, launcher.signal.SIGTERM)
 
+    def test_mac_stop_waits_for_worker_exit_after_http_closes(self):
+        with patch.object(launcher, 'running', side_effect=[{'pid': 123}, None, None]), \
+                patch.object(launcher.sys, 'platform', 'darwin'), \
+                patch.object(launcher, 'managed', return_value=True), \
+                patch.object(launcher.os, 'kill', side_effect=[None, ProcessLookupError()]) as kill, \
+                patch.object(launcher.time, 'sleep') as sleep:
+            launcher.stop()
+            self.assertEqual([call.args for call in kill.call_args_list], [(123, 0), (123, 0)])
+            sleep.assert_called_once_with(.5)
+
     def test_failed_stop_prevents_restart(self):
-        with patch.object(launcher, 'running', return_value={'pid': 123}), \
-                patch.object(launcher, 'stop', side_effect=RuntimeError('stop failed')), patch.object(launcher, 'start') as start:
+        with patch.object(launcher, 'ensure_frontend', return_value='current'), \
+                patch.object(launcher, 'running', return_value={'pid': 123}), \
+                patch.object(launcher, 'stop', side_effect=RuntimeError('stop failed')), patch.object(launcher, 'managed') as manager:
             with self.assertRaisesRegex(RuntimeError, 'stop failed'):
                 launcher.restart(False)
-            start.assert_not_called()
+            manager.assert_not_called()
 
     def test_existing_service_no_browser_does_not_launch_again(self):
-        with patch.object(launcher, 'running', return_value={'pid': 123}), \
+        with patch.object(launcher, 'ensure_frontend', return_value='current'), \
+                patch.object(launcher, 'running', return_value={'pid': 123, 'version': 'current', 'ready': True}), \
                 patch.object(launcher, 'managed') as manager, patch.object(launcher.webbrowser, 'open') as browser:
             launcher.start(False)
             manager.assert_not_called()
@@ -77,6 +91,7 @@ class LauncherIdentityTests(unittest.TestCase):
             (root / 'frontend/dist').mkdir(parents=True)
             (root / 'frontend/dist/index.html').touch()
             with patch.object(launcher, 'ROOT', root), patch.object(launcher, 'WORKSPACE', root), \
+                    patch.object(launcher, 'ensure_frontend', return_value='current'), \
                     patch.object(launcher, 'running', return_value=None), patch.object(launcher.socket, 'socket') as socket, \
                     patch.object(launcher, 'managed') as manager:
                 socket.return_value.__enter__.return_value.bind.side_effect = OSError('in use')
@@ -91,6 +106,7 @@ class LauncherIdentityTests(unittest.TestCase):
             (root / 'frontend/dist').mkdir(parents=True)
             (root / 'frontend/dist/index.html').touch()
             with patch.object(launcher, 'ROOT', root), patch.object(launcher, 'WORKSPACE', root), \
+                    patch.object(launcher, 'ensure_frontend', return_value='current'), \
                     patch.object(launcher, 'RUNTIME', root / 'runtime'), patch.object(launcher.socket, 'socket'), \
                     patch.object(launcher, 'running', side_effect=[None, {'ready': False}, {'ready': True}]), \
                     patch.object(launcher, 'managed') as manager, patch.object(launcher.webbrowser, 'open') as browser, \
@@ -98,6 +114,88 @@ class LauncherIdentityTests(unittest.TestCase):
                 launcher.start(False)
                 manager.assert_called_once_with('start')
                 browser.assert_not_called()
+
+
+class FrontendBuildTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.frontend = self.root / 'frontend'
+        self.frontend.mkdir()
+        (self.root / 'projects').mkdir()
+        (self.frontend / 'package.json').write_text(json.dumps({'version': 'current'}), encoding='utf-8')
+        override = patch.object(launcher, 'ROOT', self.root)
+        override.start()
+        self.addCleanup(override.stop)
+
+    def built(self, version='current'):
+        dist = self.frontend / 'dist'
+        dist.mkdir(exist_ok=True)
+        (dist / 'index.html').write_text('<html></html>', encoding='utf-8')
+        (dist / 'release.json').write_text(json.dumps({'version': version}), encoding='utf-8')
+
+    def test_missing_or_outdated_build_is_built_once(self):
+        for state in ['missing', 'outdated', 'missing-index', 'missing-release']:
+            with self.subTest(state=state):
+                if state != 'missing':
+                    self.built('old' if state == 'outdated' else 'current')
+                    if state.startswith('missing-'):
+                        (self.frontend / 'dist' / ('index.html' if state == 'missing-index' else 'release.json')).unlink()
+                with patch.object(launcher.shutil, 'which', return_value='/tools/npm') as which, \
+                        patch.object(launcher, 'command', side_effect=lambda *args, **kwargs: self.built()) as build:
+                    self.assertEqual(launcher.ensure_frontend(), 'current')
+                    build.assert_called_once_with(['/tools/npm', '--prefix', str(self.frontend), 'run', 'build'],
+                                                  cwd=self.root, shell=launcher.sys.platform == 'win32')
+                    launcher.ensure_frontend()
+                    self.assertEqual(build.call_count, 1)
+                    self.assertEqual(which.call_count, 1)
+
+    def test_current_build_does_not_require_build_tools(self):
+        self.built()
+        with patch.object(launcher.shutil, 'which') as which, patch.object(launcher, 'command') as build:
+            self.assertEqual(launcher.ensure_frontend(), 'current')
+            which.assert_not_called()
+            build.assert_not_called()
+
+    def test_missing_npm_reports_setup_instead_of_starting(self):
+        with patch.object(launcher.shutil, 'which', return_value=None), \
+                patch.object(launcher, 'managed') as manager:
+            with self.assertRaisesRegex(RuntimeError, '未找到npm'):
+                launcher.start(False)
+            manager.assert_not_called()
+
+    def test_failed_build_keeps_existing_service_running(self):
+        with patch.object(launcher.shutil, 'which', return_value='/tools/npm'), \
+                patch.object(launcher, 'command', side_effect=RuntimeError('build failed')), \
+                patch.object(launcher, 'stop') as stop, patch.object(launcher, 'managed') as manager:
+            with self.assertRaisesRegex(RuntimeError, 'build failed'):
+                launcher.restart(False)
+            stop.assert_not_called()
+            manager.assert_not_called()
+
+    def test_successful_command_without_current_output_is_not_ready(self):
+        with patch.object(launcher.shutil, 'which', return_value='/tools/npm'), \
+                patch.object(launcher, 'command', return_value=''):
+            with self.assertRaisesRegex(RuntimeError, '未生成与当前源码版本一致'):
+                launcher.ensure_frontend()
+
+    def test_start_updates_old_service_after_build_and_reuses_updated_service(self):
+        events = []
+        ready = {'version': 'current', 'ready': True}
+        with patch.object(launcher, 'WORKSPACE', self.root), \
+                patch.object(launcher, 'RUNTIME', self.root / 'runtime'), \
+                patch.object(launcher.shutil, 'which', return_value='/tools/npm'), \
+                patch.object(launcher, 'command', side_effect=lambda *args, **kwargs: (events.append('build'), self.built())), \
+                patch.object(launcher, 'running', side_effect=[{'version': 'old', 'ready': False}, ready, ready]), \
+                patch.object(launcher, 'stop', side_effect=lambda: events.append('stop')) as stop, \
+                patch.object(launcher, 'managed', side_effect=lambda action: events.append(action)), \
+                patch.object(launcher.socket, 'socket'):
+            launcher.start(False)
+            self.assertEqual(events, ['build', 'stop', 'start'])
+            launcher.start(False)
+            self.assertEqual(events, ['build', 'stop', 'start'])
+            stop.assert_called_once()
 
 
 class MacManagerTests(unittest.TestCase):
