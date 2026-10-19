@@ -21,7 +21,7 @@ from backend.services.request_diagnostics import RequestDiagnostics, RequestDiag
 from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response, clear_downloads, video_archive_name
 from backend.services import krea2
 from backend.services.workflows import catalogue as workflow_catalogue
-from backend.services.comfy_tasks import TaskInput, TaskStore, client as comfy_client
+from backend.services.comfy_tasks import DesktopConnection, TaskInput, TaskStore, client as comfy_client
 from backend.services.task_details import task_detail
 from backend.services.task_history import task_history
 from backend.services import node_config
@@ -270,6 +270,26 @@ async def agent_resolve_task(key: str, data: ResolutionInput, request: Request) 
     try:
         return resolve_task(tasks, key, data)
     except (ValueError, OSError) as error:
+        raise HTTPException(409, str(error)) from error
+
+
+class SubmissionPlanInput(BaseModel):
+    project: str
+    plan_file: str
+    timeout: float = 30
+    thread_id: str
+    desktop: DesktopConnection
+    prepare_only: bool = False
+    start_paused: bool = False
+
+
+@app.post('/api/internal/comfy/submit-plan')
+async def agent_submit_plan(request: Request, data: SubmissionPlanInput) -> dict[str, Any]:
+    tasks = agent_request(request)
+    from backend.services.submission_plans import execute
+    try:
+        return await execute(tasks, data)
+    except (ValueError, OSError, KeyError, TypeError, AssertionError, comfy_client.ClientError) as error:
         raise HTTPException(409, str(error)) from error
 
 

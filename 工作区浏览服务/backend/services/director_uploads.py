@@ -40,7 +40,8 @@ def check_pair(record, workflow, *, timelines=None, path_scope=None):
 
 
 def save_uploaded_workflow(project, record, original, workflow, uploaded_materials, binding_results, *, path_scope=None):
-    if not any(node['class_type'] == 'MiniMaxH3Director' for node in workflow.values()):
+    director = any(node['class_type'] == 'MiniMaxH3Director' for node in workflow.values())
+    if not director and not list(record.glob('*.api.json')):
         return
     path_scope = path_scope if path_scope is not None else PreparationPaths(project)
     project, record = path_scope.project, path_scope.file(record)
@@ -103,7 +104,7 @@ def save_uploaded_workflow(project, record, original, workflow, uploaded_materia
                     node['widgets_values'][field] = named[field]
             path_scope.io_file(api_file).write_text(json.dumps(workflow, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
             path_scope.io_file(canvas_file).write_text(json.dumps(canvas, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    if not uploaded_materials:
+    if not director or not uploaded_materials:
         return
     mapping_file = record / '输入映射.json'
     original_text = path_scope.io_file(mapping_file).read_text(encoding='utf-8-sig')

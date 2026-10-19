@@ -20,6 +20,11 @@ def load_config(project, timeout):
 
 
 def dispatch(args):
+    if getattr(args, 'plan', None):
+        return browser_tasks.submit_plan(args)
+    for name in ('task_type', 'workflow', 'record_dir', 'task_title'):
+        if not getattr(args, name, None):
+            raise ValueError('旧式参数入口缺少--' + name.replace('_', '-'))
     if not args.output_plan:
         raise ValueError('入队需要--output-plan；导演台提供空数组及--segment-plan')
     if args.task_type in ('image', 'image-upscale') and not getattr(args, 'image_plan', None):
@@ -38,12 +43,13 @@ def dispatch(args):
 def parser():
     p = client.Parser(description=__doc__)
     p.add_argument('--project', required=True, help='Project root under workspace/projects; relative to cwd; uses workspace comfyui-config.json')
-    p.add_argument('--task-type', required=True, choices=TASK_TYPES, help='Authorized task stage; all tasks use the workspace primary endpoint')
-    p.add_argument('--workflow', required=True, help='Prepared API JSON; unchanged except declared uploaded input paths')
+    p.add_argument('--plan', help='Preferred one-call task list JSON, project-relative or absolute: builds artifacts, checks the whole batch, queues authorized tasks and returns end-turn; --prepare-only stops before queueing')
+    p.add_argument('--task-type', choices=TASK_TYPES, help='Legacy prepared-input mode only: authorized task stage')
+    p.add_argument('--workflow', help='Legacy prepared-input mode only: prepared API JSON')
     p.add_argument('--eligible-url', help='Optional expected primary address; identity check only, no capability probe')
     p.add_argument('--uploads', help='Optional upload bindings; file paths relative to the project root')
     p.add_argument('--prepare-only', action='store_true', help='Tool checks and writes 执行检查报告.json; no upload, queue entry or generation POST')
-    p.add_argument('--record-dir', required=True, help='Evidence directory relative to --project, or an absolute path within it; never prefix a relative path with projects/project-name. Video tasks require 输入映射.json before POST')
+    p.add_argument('--record-dir', help='Legacy prepared-input mode: evidence directory relative to project; video tasks require 输入映射.json')
     p.add_argument('--attempt-name', default='submit-attempt.json', help='Exclusive attempt evidence filename')
     p.add_argument('--request-name', default='request.json', help='Actual request evidence filename')
     p.add_argument('--response-name', default='response.json', help='Actual submission response filename')
@@ -54,7 +60,7 @@ def parser():
     p.add_argument('--image-plan', help='Image/image-upscale closeout JSON: draft, generation, review, kind, images; approved upscale also supplies source, approval, formal and record_updates. Paths relative to project; backend finishes before notification')
     p.add_argument('--segment-plan', help='Native H3 plan; targets specify index, project-relative path and response_name; output_root belongs to the remote server')
     p.add_argument('--history-name', default='执行结果.json', help='Terminal history evidence filename inside record-dir; use the project-required prefix for image tasks')
-    p.add_argument('--task-title', required=True, help='Nonempty task title: object number plus short description')
+    p.add_argument('--task-title', help='Legacy prepared-input mode: object number plus short description')
     p.add_argument('--thread-id', help='Authorized destination Codex thread; defaults to genuine CODEX_THREAD_ID; never changes model settings')
     return p
 
@@ -62,8 +68,9 @@ def parser():
 def main(argv=None):
     try:
         data = dispatch(parser().parse_args(argv))
-        result = {'ok': True, 'time': client.now(), 'data': data}
-        code = 0
+        success = data.get('status') not in ('partial', 'failed')
+        result = {'ok': success, 'time': client.now(), 'data': data}
+        code = 0 if success else 1
     except (client.ClientError, OSError, ValueError) as exc:
         result = {'ok': False, 'time': client.now(), 'error': {
             'code': exc.code if isinstance(exc, client.ClientError) else type(exc).__name__,

@@ -7,7 +7,7 @@ import urllib.error
 import urllib.request
 
 
-def submit(args, workflow, url, uploads=None):
+def connection(args):
     project = Path(args.project).resolve()
     service = project.parent.parent / '工作区浏览服务'
     config = json.loads((service / 'runtime/task-service.json').read_text('utf-8'))
@@ -21,29 +21,48 @@ def submit(args, workflow, url, uploads=None):
                     'plugins/cache/openai-bundled/codex-app-tools').glob('*/server.mjs'))
     if not node or not servers:
         raise ValueError('缺少Node或Codex桌面适配器；未提交')
+    desktop = {'node': node, 'server': str(max(servers, key=lambda path: path.stat().st_mtime)),
+               'pipe': pipe, 'caller_thread': caller, 'cli': os.environ.get('CODEX_CLI_PATH') or shutil.which('codex')}
+    return project, config, args.thread_id or caller, desktop
+
+
+def submit_plan(args):
+    project, config, thread, desktop = connection(args)
+    plan = Path(args.plan)
+    # The one plan parameter is project-relative, like all files inside its task entries.
+    plan = plan.resolve() if plan.is_absolute() else (project / plan).resolve()
+    payload = dict(project=project.name, plan_file=plan.relative_to(project).as_posix(), thread_id=thread,
+                   desktop=desktop, timeout=args.timeout, prepare_only=args.prepare_only, start_paused=args.start_paused)
+    return local_post(config, '/submit-plan', payload, args.timeout)
+
+
+def submit(args, workflow, url, uploads=None):
+    project, config, thread, desktop = connection(args)
     payload = {name: getattr(args, name) for name in
                ('project', 'task_type', 'record_dir', 'attempt_name', 'request_name', 'response_name', 'history_name', 'timeout')}
     payload.update(project=project.name, record_dir=args.record_dir,
         workflow=workflow, url=url, title=args.task_title, uploads=[] if uploads is None else uploads, start_paused=args.start_paused,
         outputs=json.loads(Path(args.output_plan).read_text('utf-8')),
         segment_plan=json.loads(Path(args.segment_plan).read_text('utf-8')) if args.segment_plan else None,
-        thread_id=args.thread_id or caller,
-        desktop={'node': node, 'server': str(max(servers, key=lambda path: path.stat().st_mtime)),
-                 'pipe': pipe, 'caller_thread': caller, 'cli': os.environ.get('CODEX_CLI_PATH') or shutil.which('codex')})
+        thread_id=thread, desktop=desktop)
     if getattr(args, 'image_plan', None):
         payload['image_plan'] = json.loads(Path(args.image_plan).read_text('utf-8-sig'))
     preparing = getattr(args, 'prepare_only', False)
     route = '/prepare' if preparing else '/submit'
+    return local_post(config, route, payload, args.timeout)
+
+
+def local_post(config, route, payload, timeout):
     request = urllib.request.Request(config['url'] + '/api/internal/comfy' + route,
         data=json.dumps(payload, ensure_ascii=False, allow_nan=False).encode('utf-8'),
         headers={'Content-Type': 'application/json', 'x-nora-task-token': config['token']})
     # Bypass system proxies for local service. Never retry a possibly accepted POST.
     try:
-        with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(request, timeout=2 * args.timeout + 15) as response:
+        with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(request, timeout=2 * timeout + 15) as response:
             return json.load(response)
     except urllib.error.HTTPError as error:
         detail = json.load(error).get('detail')
-        raise ValueError(('准备检查失败：' if preparing else '本地入队未成功，检查后台任务状态：') + str(detail)) from error
+        raise ValueError(('准备检查失败：' if route == '/prepare' else '本地入队未成功，检查后台任务状态：') + str(detail)) from error
 
 
 def service_call(route, payload=None):

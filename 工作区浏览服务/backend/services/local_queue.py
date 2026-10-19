@@ -341,7 +341,7 @@ class LocalQueue:
         for (node, field), document in documents.items():
             workflow[node]['inputs'][field] = json.dumps(document, ensure_ascii=False, allow_nan=False)
         await self.check_target_cache(key, workflow)
-        if data.task_type.startswith('video-'):
+        if data.task_type.startswith('video-') or (data.image_plan is not None and list(Path(data.record_dir).glob('*.api.json'))):
             from backend.services.director_uploads import save_uploaded_workflow
             from project_paths import PreparationPaths
             # Address reuse belongs to this save phase; each IO still checks scope.
@@ -351,6 +351,7 @@ class LocalQueue:
             await asyncio.to_thread(save_uploaded_workflow, data.project, Path(data.record_dir), data.workflow, workflow,
                                     uploaded_materials, binding_results, path_scope=path_scope)
             self.record(key, 'upload_binding', 'success', _changes={'uploads_bound': True})
+        if data.task_type.startswith('video-'):
             self.save(key, phase='generation_context')
             await asyncio.to_thread(self.generation_context.prepare_generation_context,
                                     data.project, Path(data.record_dir), workflow, data.task_type, uploaded_materials,

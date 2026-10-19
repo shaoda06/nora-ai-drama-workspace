@@ -119,5 +119,21 @@ class DispatchTests(unittest.TestCase):
         (self.workspace/'comfyui-config.json').write_text(json.dumps({'remote-url':'http://main.invalid:8188'}))
         self.assertEqual(len(d.load_config(self.root,30)['remote-urls']),1)
 
+    def test_task_list_is_one_handoff_without_manual_legacy_artifacts(self):
+        args = d.parser().parse_args(['--project', str(self.root), '--plan', '任务清单.json'])
+        with patch.object(d.browser_tasks, 'submit_plan', return_value={'status': 'enqueued', 'next_action': 'end-turn'}) as call, \
+                patch.object(d.browser_tasks, 'submit', side_effect=AssertionError('no legacy handoff')), \
+                patch.object(d.client, 'submit', side_effect=AssertionError('no remote')):
+            result = d.dispatch(args)
+        call.assert_called_once_with(args)
+        self.assertEqual(result['next_action'], 'end-turn')
+
+    def test_task_list_prepare_only_and_paused_flags_survive_handoff(self):
+        args = d.parser().parse_args(['--project', str(self.root), '--plan', '任务清单.json', '--prepare-only', '--start-paused'])
+        with patch.object(d.browser_tasks, 'submit_plan', return_value={'status': 'prepared'}) as call:
+            d.dispatch(args)
+        self.assertTrue(call.call_args.args[0].prepare_only)
+        self.assertTrue(call.call_args.args[0].start_paused)
+
 
 if __name__=='__main__': unittest.main()

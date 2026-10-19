@@ -1,5 +1,6 @@
 """Image technical checks and prepared document associations; no visual judgement."""
 import hashlib
+from copy import deepcopy
 import json
 import os
 from pathlib import Path
@@ -212,7 +213,11 @@ def register(store, key, outputs, report_file):
     stamp = store.client.now()
     request_path = Path(data.record_dir) / data.request_name
     request = json.loads(request_path.read_text('utf-8-sig'))
-    if request['prompt'] != data.workflow or request['client_id'] != state['client_id']:
+    accepted = deepcopy(data.workflow)
+    for binding in data.uploads:
+        receipt = json.loads((Path(data.record_dir) / binding['response-name']).read_text('utf-8-sig'))['data']
+        accepted[binding['node']]['inputs'][binding['input']] = receipt['input_path']
+    if request['prompt'] != accepted or request['client_id'] != state['client_id']:
         raise ValueError('图片实际请求与已接受任务不符')
     inspected = []
     checked = [request_path]
