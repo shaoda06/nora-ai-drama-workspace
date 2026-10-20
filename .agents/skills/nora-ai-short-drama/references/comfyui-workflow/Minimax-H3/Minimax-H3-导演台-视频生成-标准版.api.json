@@ -6,7 +6,7 @@
       "weight_dtype": "default"
     },
     "_meta": {
-      "title": "192｜底模加载 · Hybrid INT8｜UNETLoader"
+      "title": "底模加载｜UNETLoader"
     }
   },
   "406": {
@@ -20,7 +20,7 @@
       ]
     },
     "_meta": {
-      "title": "406｜通用Sage注意力 · auto｜PathchSageAttentionKJ"
+      "title": "通用Sage注意力｜PathchSageAttentionKJ"
     }
   },
   "58": {
@@ -32,7 +32,7 @@
       ]
     },
     "_meta": {
-      "title": "58｜H3专用Sage注意力｜MiniMaxH3MemoryEfficientSageAttentionPatch"
+      "title": "H3专用Sage注意力｜MiniMaxH3MemoryEfficientSageAttentionPatch"
     }
   },
   "53": {
@@ -46,7 +46,7 @@
       ]
     },
     "_meta": {
-      "title": "53｜DMAD加速LoRA · 0.8（常开）｜LoraLoaderModelOnly"
+      "title": "DMAD加速LoRA｜LoraLoaderModelOnly"
     }
   },
   "343": {
@@ -60,7 +60,7 @@
       ]
     },
     "_meta": {
-      "title": "343｜动作速度LoRA · 3.0（常开）｜LoraLoaderModelOnly"
+      "title": "动作速度LoRA｜LoraLoaderModelOnly"
     }
   },
   "405": {
@@ -78,7 +78,7 @@
       ]
     },
     "_meta": {
-      "title": "405｜TE加速 · 8步模式 · auto｜TESpeedMiniMaxH3"
+      "title": "TE加速｜TESpeedMiniMaxH3"
     }
   },
   "36": {
@@ -87,7 +87,7 @@
       "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
     },
     "_meta": {
-      "title": "36｜视频VAE加载 · INT8｜VAELoader"
+      "title": "视频VAE加载｜VAELoader"
     }
   },
   "37": {
@@ -96,7 +96,7 @@
       "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
     },
     "_meta": {
-      "title": "37｜音频VAE加载 · FP32｜VAELoader"
+      "title": "音频VAE加载｜VAELoader"
     }
   },
   "38": {
@@ -107,7 +107,7 @@
       "device": "default"
     },
     "_meta": {
-      "title": "38｜文本与视觉编码器 · INT8 ConvRot · 默认设备｜CLIPLoader"
+      "title": "文本与视觉编码器｜CLIPLoader"
     }
   },
   "261": {
@@ -122,7 +122,7 @@
       ]
     },
     "_meta": {
-      "title": "261｜Beta噪声调度 · 12步｜BasicScheduler"
+      "title": "噪声调度｜BasicScheduler"
     }
   },
   "289": {
@@ -135,7 +135,7 @@
       ]
     },
     "_meta": {
-      "title": "289｜噪声表分段 · 一采9步／二采4步｜SplitSigmas"
+      "title": "噪声表分段｜SplitSigmas"
     }
   },
   "407": {
@@ -168,7 +168,7 @@
       ]
     },
     "_meta": {
-      "title": "407｜二采放大 · 4步 · 1536×864 · 一采确认｜MiniMaxH3DirectorRefine"
+      "title": "二采放大｜MiniMaxH3DirectorRefine"
     }
   },
   "502": {
@@ -227,7 +227,7 @@
       "cache_name": ""
     },
     "_meta": {
-      "title": "502｜标准版导演台 · 一采确认与二采｜MiniMaxH3Director"
+      "title": "标准版导演台｜MiniMaxH3Director"
     }
   },
   "403": {
@@ -239,7 +239,7 @@
       ]
     },
     "_meta": {
-      "title": "403｜导演台执行报告｜PreviewAny"
+      "title": "导演台执行报告｜PreviewAny"
     }
   },
   "408": {
@@ -252,7 +252,7 @@
       "head_chunks": 4
     },
     "_meta": {
-      "title": "408｜二采注意力头分组 · 4组｜MiniMaxLowVRAMAttention"
+      "title": "二采注意力头分组｜MiniMaxLowVRAMAttention"
     }
   },
   "409": {
@@ -266,7 +266,7 @@
       "seq_threshold": 4096
     },
     "_meta": {
-      "title": "409｜二采前馈分块 · 2块｜MiniMaxChunkFeedForward"
+      "title": "二采前馈分块｜MiniMaxChunkFeedForward"
     }
   },
   "503": {
@@ -289,7 +289,7 @@
       ]
     },
     "_meta": {
-      "title": "503｜一采画面与音频合成｜CreateVideo"
+      "title": "一采画面与音频合成｜CreateVideo"
     }
   },
   "504": {
@@ -305,7 +305,7 @@
       ]
     },
     "_meta": {
-      "title": "504｜一采视频保存与预览｜SaveVideo"
+      "title": "一采视频保存与预览｜SaveVideo"
     }
   },
   "505": {
@@ -328,7 +328,7 @@
       ]
     },
     "_meta": {
-      "title": "505｜二采画面与音频合成｜CreateVideo"
+      "title": "二采画面与音频合成｜CreateVideo"
     }
   },
   "506": {
@@ -344,7 +344,7 @@
       ]
     },
     "_meta": {
-      "title": "506｜二采视频保存与预览｜SaveVideo"
+      "title": "二采视频保存与预览｜SaveVideo"
     }
   }
 }
