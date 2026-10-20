@@ -218,8 +218,13 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(standard["343"]["inputs"]["strength_model"], 3.0)
         self.assertEqual(standard["343"]["inputs"]["model"], ["53", 0])
         self.assertEqual(standard["405"]["inputs"]["model"], ["343", 0])
+        self.assertEqual(standard["261"]["inputs"]["steps"], 10)
+        self.assertEqual(standard["289"]["inputs"]["step"], 6)
+        self.assertEqual(standard["502"]["inputs"]["steps"], 6)
+        self.assertEqual(standard["502"]["inputs"]["sigmas"], ["289", 0])
+        self.assertEqual(standard["407"]["inputs"]["sigmas"], ["289", 1])
 
-    def test_standard_lora_presets_export_only_selected_models_in_both_stages(self):
+    def test_standard_presets_export_selected_models_and_sampling_in_both_stages(self):
         baseline = json.loads(workflow_file('Minimax-H3-导演台-视频生成-标准版', 'workflow').read_text(encoding='utf-8'))
         optional = {128, 342, 344, 345}
         defaults = {node['id']: node for node in baseline['nodes']}
@@ -238,6 +243,15 @@ class BaselineTests(unittest.TestCase):
                 for node in canvas_data['nodes']:
                     if node['id'] in optional:
                         node['mode'] = 0 if node['id'] in chain else 4
+                    field_value = {
+                        261: ('steps', 10 if choice == 1 else 12),
+                        289: ('step', 6 if choice == 1 else 8),
+                        502: ('steps', 6 if choice == 1 else 8),
+                    }.get(node['id'])
+                    if field_value:
+                        field, value = field_value
+                        node['widgets_values_named'][field] = value
+                        node['widgets_values'] = list(node['widgets_values_named'].values())
                 canvas = wb.Canvas(canvas_data)
                 self.assertEqual(len(canvas.api([403, 504, 506])), count)
                 for output in (504, 506):
@@ -248,6 +262,14 @@ class BaselineTests(unittest.TestCase):
                         self.assertEqual(graph[str(node)]['inputs']['model'], [str(parent), 0])
                     self.assertEqual(graph['53']['inputs']['strength_model'], 0.8)
                     self.assertEqual(graph['343']['inputs']['strength_model'], 3.0)
+                    total_steps = graph['261']['inputs']['steps']
+                    split_step = graph['289']['inputs']['step']
+                    self.assertEqual(total_steps, 10 if choice == 1 else 12)
+                    self.assertEqual(split_step, 6 if choice == 1 else 8)
+                    self.assertEqual(total_steps - split_step, 4)
+                    self.assertEqual(graph['502']['inputs']['steps'], split_step)
+                    self.assertEqual(graph['502']['inputs']['sigmas'], ['289', 0])
+                    self.assertEqual(graph['407']['inputs']['sigmas'], ['289', 1])
                     for node, strength in ((128, 0.5), (342, 0.65), (344, 0.35), (345, 0.35)):
                         if node in chain:
                             self.assertEqual(graph[str(node)]['inputs']['strength_model'], strength)
@@ -256,6 +278,9 @@ class BaselineTests(unittest.TestCase):
         canvas = wb.Canvas(json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'workflow')).read_text(encoding="utf-8")))
         first = canvas.api(504)
         second = canvas.api(506)
+        self.assertEqual(first["261"]["inputs"]["steps"], 10)
+        self.assertEqual(first["289"]["inputs"]["step"], 6)
+        self.assertEqual(first["502"]["inputs"]["steps"], 6)
         self.assertNotIn("505", first)
         self.assertNotIn("503", second)
         self.assertEqual(first["503"]["inputs"]["images"], ["502", 6])
