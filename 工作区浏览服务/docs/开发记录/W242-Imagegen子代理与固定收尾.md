@@ -26,3 +26,9 @@ TMPDIR=/private/tmp .venv/bin/python -B -m unittest tests.test_imagegen_results 
 ```
 
 实际生图测试记录保存在本机runtime/imagegen-smoke-*中，不随技能或仓库分发；工具原生文件保留在该子代理专属生成目录。工作区中其他会话的H3工作流和规则修改不属于本次任务。
+
+## 提示词路径自动解析
+
+后续修复将complete的`--actual-prompt-file`改为兼容可选参数，默认读取执行清单的`prompt_file`；仍严格核对提示词全文，路径不再由子代理重复填写。prepare返回可直接执行的`complete_command`参数数组，子代理只追加实际输出文件路径，用参数列表执行，避免重新拼接项目与清单路径。
+
+13项Imagegen回归通过，包含人物与EP001多层目录、中文／空格路径、生成命令直接执行、旧显式参数兼容及默认提示词文件被修改时的拦截。使用前次真实生图及原清单，不传提示词路径再次运行complete成功，复用原报告，没有重新生图或改写用户决定。此次不改共享后台或网页代码。

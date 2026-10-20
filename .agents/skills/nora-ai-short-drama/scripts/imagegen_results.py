@@ -25,7 +25,7 @@ def main():
             item.add_argument('--manifest', required=True, help='prepare返回的项目内Imagegen执行清单路径')
         if command == 'complete':
             item.add_argument('--source', required=True, help='内置Imagegen实际返回的本机原生PNG绝对路径；只复制，不改原图')
-            item.add_argument('--actual-prompt-file', required=True, help='本次实际逐字提交的UTF-8提示词文件；与交接正文核对')
+            item.add_argument('--actual-prompt-file', help='可选；默认从执行清单读取提示词文件，无需重复填写长路径；仍核对正文')
         if command == 'fail':
             item.add_argument('--error-file', required=True, help='实际错误的UTF-8文件；不自动重试或改换模型／能力')
     args = parser.parse_args()
@@ -33,10 +33,13 @@ def main():
     if args.command == 'prepare':
         job = native.prepare(root, args.request)
         result = {name: job[name] for name in ('manifest', 'executor', 'generation', 'candidate', 'prompt_file', 'report')}
+        result['complete_command'] = [sys.executable, str(Path(__file__).resolve()), 'complete',
+            '--project', str(root), '--manifest', job['manifest']]
     else:
         job = json.loads(project_file(root, args.manifest).read_text('utf-8-sig'))
         if args.command == 'complete':
-            actual = Path(args.actual_prompt_file).read_text('utf-8-sig')
+            prompt_file = Path(args.actual_prompt_file) if args.actual_prompt_file else project_file(root, job['prompt_file'])
+            actual = prompt_file.read_text('utf-8-sig')
             if actual != job['request']['prompt']:
                 raise ValueError('实际提示词与交接不符，未保存或登记候选')
             receipt = project_file(root, str(Path(job['record']) / 'Imagegen实际调用结果.json'))

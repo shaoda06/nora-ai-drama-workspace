@@ -179,8 +179,29 @@ class NativeImageTests(unittest.TestCase):
             result = subprocess.run([sys.executable, '-B', str(script), *args, '--project', str(self.project)], text=True, capture_output=True)
             self.assertEqual(result.returncode, 0, result.stderr)
             return json.loads(result.stdout)
-        job = call('prepare', '--request', str(self.request))
-        report = call('complete', '--manifest', job['manifest'], '--source', str(self.source),
-                      '--actual-prompt-file', str(self.project / job['prompt_file']))
-        self.assertTrue(report['user_message_ready'])
-        self.assertEqual(call('report', '--manifest', job['manifest']), report)
+        for scope in ('人物', '剧集素材'):
+            with self.subTest(scope=scope):
+                if scope == '剧集素材':
+                    self.spec.update(kind='剧集素材', object='EP001-C001-P001', image_type='剧集专用参考图',
+                        draft='09-剧集制作/EP001/其他资料/工作稿/EP001-专用素材制作-工作稿.md',
+                        output='09-剧集制作/EP001/其他资料/工作稿/素材/EP001-专用图-候选-v01.png')
+                    self.request = self.request.with_name('剧集请求.json')
+                    self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+                job = call('prepare', '--request', str(self.request))
+                result = subprocess.run(job['complete_command'] + ['--source', str(self.source)], text=True, capture_output=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                report = json.loads(result.stdout)
+                self.assertTrue(report['user_message_ready'])
+                self.assertEqual(call('report', '--manifest', job['manifest']), report)
+                self.assertEqual(call('complete', '--manifest', job['manifest'], '--source', str(self.source),
+                    '--actual-prompt-file', str(self.project / job['prompt_file'])), report)
+
+    def test_cli_default_prompt_path_still_rejects_changed_text(self):
+        self.prepare()
+        (self.project / self.job['prompt_file']).write_text('被改过的正文')
+        result = subprocess.run([sys.executable, '-B', str(native.SKILL / 'scripts/imagegen_results.py'),
+            'complete', '--project', str(self.project), '--manifest', self.job['manifest'], '--source', str(self.source)],
+            text=True, capture_output=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('实际提示词与交接不符', result.stderr)
+        self.assertFalse((self.project / self.job['candidate']).exists())
