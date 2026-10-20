@@ -138,10 +138,20 @@ def validate_plan(data):
             raise ValueError('超分上传必须绑定获批原图到节点2')
         workflow = data.workflow
         if (workflow['1']['class_type'] != 'RTXVideoSuperResolution' or workflow['1']['inputs']['images'] != ['2', 0]
-                or workflow['1']['inputs']['resize_type'] != 'scale by multiplier' or workflow['1']['inputs']['resize_type.scale'] != 2
                 or workflow['3']['class_type'] != 'SaveImage' or workflow['3']['inputs']['images'] != ['1', 0]
                 or data.outputs[0].node_id != '3'):
-            raise ValueError('超分必须为批准原图→节点1两倍→节点3')
+            raise ValueError('超分必须为批准原图→RTX节点1→节点3')
+        resize = workflow['1']['inputs']
+        if resize['resize_type'] == 'scale by multiplier':
+            if resize['resize_type.scale'] != 2:
+                raise ValueError('倍数超分只支持2倍')
+        elif resize['resize_type'] == 'target dimensions':
+            target = (resize['resize_type.width'], resize['resize_type.height'])
+            output = next(iter(planned.values()))
+            if any(type(n) is not int for n in target) or target != (output['width'], output['height']):
+                raise ValueError('RTX指定尺寸与成果计划不符')
+        else:
+            raise ValueError('不支持的RTX图片尺寸模式')
         formal = project_file(root, up['formal'])
         if formal == source or formal in planned or formal.is_relative_to(Path(data.record_dir)):
             raise ValueError('超分正式文件必须与审批原图、候选及执行附件分开')
@@ -267,21 +277,24 @@ def register(store, key, outputs, report_file):
         if upload['sha256'] != hashlib.sha256(source_bytes).hexdigest() or request['prompt']['2']['inputs']['image'] != upload['input_path']:
             raise ValueError('超分实际上传与批准原图不符')
         item = inspected[0]
-        if (item['width'], item['height']) != tuple(n * 2 for n in source_size):
+        resize = data.workflow['1']['inputs']
+        if resize['resize_type'] == 'scale by multiplier' and (item['width'], item['height']) != tuple(n * 2 for n in source_size):
             raise ValueError('超分实际尺寸不是批准原图的两倍')
+        processing = f"指定尺寸{item['width']}×{item['height']}" if resize['resize_type'] == 'target dimensions' else '2倍'
         formal = project_file(root, up['formal'])
         changes = {'批准后超分': '成功', '超分输出文件及实际规格': links + '；' + specs,
-                   '超分请求响应与执行结果入口': evidence, '超分工作流、参数与任务ID': 'RTXVideoSuperResolution；2倍；' + state['prompt_id'],
+                   '超分请求响应与执行结果入口': evidence, '超分工作流、参数与任务ID': 'RTXVideoSuperResolution；' + processing + '；' + state['prompt_id'],
                    '正式文件入口': link(draft, formal), '用户采用状态': '已采用'}
         changed = fields(generation, changes)
         subrecord = ('##### ' + up['number'] + '\n\n- 超分本地任务与远端任务：' + key + '；' + state['prompt_id']
                      + '\n- 批准输入与原批准：' + link(draft, source) + '；[批准记录](#' + plan['review'] + ')'
+                     + f'\n- 尺寸处理方式与原图规格：{processing}；原图{source_size[0]}×{source_size[1]}'
                      + '\n- 超分成果与文件核对：' + links + '；' + specs + '\n- 执行证据：' + evidence + '\n\n')
         if re.search(r'^##### ' + re.escape(up['number']) + r'\s*$', changed, re.M):
             raise ValueError('超分子记录编号已使用')
         changed = changed.replace('#### 5. 检查与采用', subrecord + '#### 5. 检查与采用', 1)
         review = section(original, plan['review'])[0]
-        new_review = fields(review, {'批准后超分状态与关联': '成功；批准后2倍超分；' + links,
+        new_review = fields(review, {'批准后超分状态与关联': '成功；批准后' + processing + '超分；' + links,
                   '超分文件核对与交付': specs + '；' + evidence, '正式保存位置': link(draft, formal),
                   '批准后超分状态及执行入口': '成功；' + evidence, '超分输出及实际规格': specs})
         updates.append({'path': plan['draft'], 'old': review, 'new': new_review})

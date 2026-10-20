@@ -257,6 +257,34 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(result['user_message_ready'])
         self.assertFalse(formal.exists())
 
+    async def test_target_dimensions_plan_must_match_workflow(self):
+        _, formal = self.setup_upscale()
+        self.data.workflow['1']['inputs'].update({'resize_type': 'target dimensions',
+            'resize_type.width': 9, 'resize_type.height': 6})
+        self.request()
+        with self.assertRaisesRegex(ValueError, 'RTX指定尺寸与成果计划不符'):
+            image.validate_plan(self.data)
+        self.assertFalse(formal.exists())
+
+    async def test_target_dimensions_rejects_wrong_actual_pixels(self):
+        _, formal = self.setup_upscale()
+        self.data.workflow['1']['inputs'].update({'resize_type': 'target dimensions',
+            'resize_type.width': 11, 'resize_type.height': 8})
+        self.data.image_plan['images'][0].update(width=11, height=8)
+        self.request()
+        result = await self.store.prepare_report(['task'])
+        self.assertFalse(result['user_message_ready'])
+        self.assertFalse(formal.exists())
+
+    async def test_target_dimensions_keeps_source_approval_required(self):
+        _, formal = self.setup_upscale()
+        self.data.workflow['1']['inputs'].update({'resize_type': 'target dimensions',
+            'resize_type.width': 8, 'resize_type.height': 6})
+        self.draft.write_text(self.draft.read_text().replace('- 结论：批准采用', '- 结论：待确认'))
+        with self.assertRaisesRegex(ValueError, '没有明确批准'):
+            image.validate_plan(self.data)
+        self.assertFalse(formal.exists())
+
     async def test_changed_evidence_stops_interrupted_resume(self):
         out = self.setup_image()
         with patch.object(image, 'apply', side_effect=OSError('temporary write failure')), self.assertRaises(OSError):

@@ -121,6 +121,19 @@ def image_workflow(skill, spec, refs, width, height, seed, prefix, remote_output
     if upscale:
         canvas = json.loads(workflow_file(base, root=workflow_root(skill)).read_text('utf-8-sig'))
         nodes = {n['id']: n for n in canvas['nodes']}
+        if 'size' in spec:
+            resize = nodes[1]
+            settings = resize['widgets_values_named']
+            resize['widgets_values_named'] = {
+                'resize_type': 'target dimensions', 'resize_type.width': width, 'resize_type.height': height,
+                **{k: v for k, v in settings.items() if not k.startswith('resize_type')}}
+            resize['widgets_values'] = list(resize['widgets_values_named'].values())
+            scale = next(i for i in resize['inputs'] if i['name'] == 'resize_type.scale')
+            index = resize['inputs'].index(scale)
+            resize['inputs'][index:index + 1] = [
+                {**deepcopy(scale), 'name': 'resize_type.' + axis, 'localized_name': axis,
+                 'type': 'INT', 'widget': {'name': 'resize_type.' + axis}}
+                for axis in ('width', 'height')]
         widget(canvas, nodes[2], image=refs[0]['file'].name)
         widget(canvas, nodes[3], filename_prefix=remote_output)
         uploads = [dict(file=str(refs[0]['file']), node='2', input='image', subfolder=prefix,
@@ -346,7 +359,11 @@ def build_image(root, skill, spec, documents, now):
         numbers = [int(n) for n in re.findall(r'超分-(\d+)', images.section(text, generation)[0])]
         number = spec.get('upscale_number', f'超分-{max(numbers, default=0)+1:03d}')
         prefix = spec['object'] + '-' + generation + '-' + number
-        width, height = (n * 2 for n in refs[0]['size'])
+        target = spec.get('size', [n * 2 for n in refs[0]['size']])
+        if not isinstance(target, (list, tuple)) or len(target) != 2 or any(type(n) is not int or n <= 0 for n in target):
+            raise ValueError('超分size须为两个正整数像素宽高')
+        width, height = target
+        processing = f'RTX指定尺寸{width}×{height}' if 'size' in spec else '固定RTX2倍'
         candidate = project_file(root, spec.get('output', str(refs[0]['file'].with_name(refs[0]['file'].stem + '-' + number + '.png'))))
         record = project_file(root, spec.get('record_dir', str(draft.parent.parent / '执行附件' / prefix)))
         plan = dict(draft=draft.relative_to(root).as_posix(), kind=spec['kind'], generation=generation, review=heading,
@@ -358,7 +375,7 @@ def build_image(root, skill, spec, documents, now):
         body = images.section(text, generation)[0]
         changed = images.fields(body, {'批准后超分': '已批准待超分；进度见后台状态',
             '超分编号及批准输入': number + '；' + images.link(draft, refs[0]['file']) + '；[原批准](#' + heading + ')',
-            '超分工作流、参数与任务ID': '固定RTX2倍；任务状态见' + images.link(draft, record / '后台任务状态.json', '后台状态')})
+            '超分工作流、参数与任务ID': processing + '；任务状态见' + images.link(draft, record / '后台任务状态.json', '后台状态')})
         text = text.replace(body, changed, 1)
         seed = None
     else:

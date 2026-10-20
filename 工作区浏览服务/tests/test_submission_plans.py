@@ -476,9 +476,24 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(self.store.rows), 1)
 
     async def test_upscale_builds_formal_adoption_and_closes_bound_upload(self):
+        await self.check_upscale_adoption()
+
+    async def test_target_dimensions_builds_paired_workflow_and_closes_approved_imagegen_source(self):
+        await self.check_upscale_adoption(size=[11, 8])
+
+    async def test_target_dimensions_rejects_invalid_size_before_enqueue(self):
+        with patch.object(self.store, 'enqueue', side_effect=AssertionError('invalid size cannot enqueue')):
+            with self.assertRaisesRegex(ValueError, '超分size须为两个正整数'):
+                await self.check_upscale_adoption(size=[11, 0])
+
+    async def check_upscale_adoption(self, size=None):
         source = image_tests.ImageCloseoutTests.setup_image(self)
         result_registration.register(self.store, 'task')
         text = self.draft.read_text()
+        if size is not None:
+            body = image.section(text, '生成记录-001')[0]
+            text = text.replace(body, image.fields(body, {'模型及工作流': 'Codex内置Imagegen',
+                '种子、步数、CFG、采样器及调度器': '未提供；不适用'}), 1)
         review = image.section(text, '审阅-生成记录-001-001')[0]
         approved = image.fields(review, {'结论': '批准采用', '批准的具体候选': image.link(self.draft, source), '确认时间与依据': '用户同意这版'})
         self.draft.write_text(text.replace(review, approved))
@@ -487,10 +502,22 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
             draft=self.rel(self.draft), authorization='原图已批准，按固定流程2倍超分', formal=self.rel(formal),
             adoption_fields={'适用范围': '第一集'}, references=[dict(file=self.rel(source), purpose='获批原图',
             approval=self.rel(self.draft)+'#审阅-生成记录-001-001')])
+        if size is not None:
+            task['size'] = size
         self.write_plan(task)
         result = await plans.execute(self.store, self.payload)
         key = result['tasks'][0]['local_task_id']
         data = self.store.rows[key]['input']
+        target = size if size is not None else [8, 6]
+        self.assertEqual([data.image_plan['images'][0][axis] for axis in ('width', 'height')], target)
+        resize = data.workflow['1']['inputs']
+        self.assertEqual(resize['resize_type'], 'target dimensions' if size else 'scale by multiplier')
+        self.assertEqual((resize['quality'], resize['strength'], resize['image_encoding']), ('ULTRA', 1.0, '8-bit RGB'))
+        if size:
+            self.assertEqual([resize['resize_type.' + axis] for axis in ('width', 'height')], target)
+            self.assertNotIn('resize_type.scale', resize)
+        else:
+            self.assertEqual(resize['resize_type.scale'], 2)
         self.assertEqual(data.image_plan['upscale']['record_updates'][0]['path'], self.rel(self.draft))
         self.assertIn('| 服装参考图 | 大学 | 日常 | {{file}} | v01／超分-001 | 第一集 |',
                       data.image_plan['upscale']['record_updates'][0]['new'])
@@ -506,6 +533,7 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         save_uploaded_workflow(data.project, record, data.workflow, workflow, {}, [(data.uploads[0], receipt['data'])])
         self.assertEqual(json.loads(next(record.glob('*.api.json')).read_text())['2']['inputs']['image'], uploaded)
         saved_canvas = json.loads(next(record.glob('*.workflow.json')).read_text())
+        self.assertEqual(plans.pairs.Canvas(saved_canvas).api(3), workflow)
         image_loader = next(node for node in saved_canvas['nodes'] if node['id'] == 2)
         self.assertEqual(image_loader['widgets_values_named']['image'], uploaded)
         (record/data.request_name).write_text(json.dumps({'prompt': workflow, 'client_id': 'listener-id'}))
@@ -513,7 +541,7 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         self.data, self.record = data, record
         out = Path(data.outputs[0].path)
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_bytes(png(8, 6))
+        out.write_bytes(png(*target))
         remote = dict(filename='result.png', subfolder='batch', type='output')
         receiptfile = record / data.outputs[0].response_name
         receiptfile.write_text(json.dumps({'data': dict(path=self.rel(out), bytes=out.stat().st_size,
@@ -522,6 +550,10 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         report = await self.store.prepare_report([key])
         self.assertTrue(report['user_message_ready'], report)
         self.assertEqual(formal.read_bytes(), out.read_bytes())
+        self.assertEqual(source.read_bytes(), png())
+        if size:
+            self.assertIn('指定尺寸11×8', self.draft.read_text())
+            self.assertIn('原图4×3', self.draft.read_text())
         self.assertIn('### 超分-001', self.draft.read_text())
 
     async def test_http_route_returns_ids_and_rejects_browser_or_bad_token(self):
