@@ -128,7 +128,6 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 
 .revision-export-structured{position:relative}
 .revision-export-toolbar{display:contents}
-.revision-export-toolbar .notice{flex-basis:100%;order:1;margin:0}
 .revision-export-toolbar>textarea:not(.clipboard-buffer){flex-basis:100%;order:2;width:100%}
 .revision-export-fields{border:0;padding:0;margin:0;min-width:0}
 .revision-export-fields label{display:block}

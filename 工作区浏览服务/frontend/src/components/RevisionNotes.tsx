@@ -150,7 +150,7 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
             {!visibleRounds.length && <p className="muted">{mode === 'round' ? '整场总体意见按已登记的场次轮次保存；请先选择本场次的修改轮次。' : '暂无按轮次保存的整场总体意见。'}</p>}
           </section>
         </fieldset>
-        <footer className="revision-export-save"><button disabled={!changed || saving} onClick={() => { void save(); }}>{saving ? '保存中…' : '保存'}</button><button disabled={!changed || saving} onClick={() => { setDraft({ ...draft, notes: draft.notes.map(item => ({ ...item, text: item.original })), rounds: draft.rounds.map(item => ({ ...item, text: item.original })) }); setConfirmClose(false); setMessage(''); }}>还原</button><div className="revision-export-toolbar"><CopyButton label="复制" text={text} /></div><span role="status" className={message.startsWith('未保存') ? 'error' : 'muted'}>{message || (changed ? '有未保存的修改' : '')}</span></footer>
+        <footer className="revision-export-save"><button disabled={!changed || saving} onClick={() => { void save(); }}>{saving ? '保存中…' : '保存'}</button><button disabled={!changed || saving} onClick={() => { setDraft({ ...draft, notes: draft.notes.map(item => ({ ...item, text: item.original })), rounds: draft.rounds.map(item => ({ ...item, text: item.original })) }); setConfirmClose(false); setMessage(''); }}>还原</button><div className="revision-export-toolbar"><CopyButton label="复制" text={text} onMessage={value => setMessage(value === '已复制' && changed ? '已复制；有未保存的修改' : value)} /></div><span role="status" className={message.startsWith('未保存') || message.startsWith('复制失败') ? 'error' : 'muted'}>{message || (changed ? '有未保存的修改' : '')}</span></footer>
       </div>
     </Dialog> };
 }
