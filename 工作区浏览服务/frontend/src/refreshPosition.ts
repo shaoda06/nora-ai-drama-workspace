@@ -19,7 +19,10 @@ export function useRefreshState<T>(key: string, initial: T): [T, Dispatch<SetSta
   }, [key, entry.value]);
   useEffect(() => () => { delete values[key]; }, [key]);
   const setValue = useCallback<Dispatch<SetStateAction<T>>>(next => {
-    setEntry(current => ({ key, value: typeof next === 'function' ? (next as (value: T) => T)(current.value) : next }));
+    setEntry(current => {
+      const value = typeof next === 'function' ? (next as (value: T) => T)(current.value) : next;
+      return current.key === key && Object.is(current.value, value) ? current : { key, value };
+    });
   }, [key]);
   return [entry.value, setValue];
 }
