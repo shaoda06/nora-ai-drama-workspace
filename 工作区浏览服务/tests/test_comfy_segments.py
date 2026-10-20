@@ -20,6 +20,8 @@ import uvicorn
 class SegmentTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         await base.TaskTests.asyncSetUp(self)
+        self.root, self.project, self.record = self.root.resolve(), self.project.resolve(), self.record.resolve()
+        self.data.project, self.data.record_dir = str(self.project), str(self.record)
         self.data.task_type = 'video-first-pass'
         self.data.outputs = []
         self.data.segment_plan = s.SegmentPlan(director_node='502', report_node='403', output_root='E:/Comfy/output', targets=[
@@ -143,6 +145,53 @@ class SegmentTests(unittest.IsolatedAsyncioTestCase):
         self.data.workflow['502']['inputs'].update(selflift=['600', 0], refine=['407', 0])
         self.data.workflow['600'] = {'class_type': 'MiniMaxH3DirectorSelfLift', 'inputs': {}}
         self.data.workflow['407'] = {'class_type': 'MiniMaxH3DirectorRefine', 'inputs': {}}
+        result = self.result()
+        text = result['history']['outputs']['403']['text'][0]
+        result['history']['outputs']['403']['text'][0] += '\n'+text.replace('一采 mp4','mp4').replace('_pre.mp4','.mp4')
+        self.assertEqual(await s.finish(self.store, 'task', result), [])
+        self.assertEqual([item[0] for item in self.downloads], ['seg_0000_pre.mp4', 'seg_0002_pre.mp4'])
+
+    async def test_fl2v_skip_refine_recovers_final_export_without_regenerating(self):
+        self.data.workflow['502']['inputs']['refine'] = ['407', 0]
+        self.data.workflow['407'] = {'class_type': 'MiniMaxH3DirectorRefine', 'inputs': {'skip_fl2v': True}}
+        timeline = json.loads(self.data.workflow['502']['inputs']['timeline_data'])
+        for group in timeline['segments']:
+            group['taskType'] = 'fl2v — 首尾帧'
+        self.data.workflow['502']['inputs']['timeline_data'] = json.dumps(timeline)
+        result = self.result()
+        result['history']['outputs']['403']['text'][0] = result['history']['outputs']['403']['text'][0].replace(
+            '一采 mp4', 'mp4').replace('_pre.mp4', '.mp4')
+        self.store.save('task', status='collection_failed')
+        (self.record / self.data.history_name).write_text(json.dumps({'data': result}), 'utf8')
+        original_id = self.store.rows['task']['state']['prompt_id']
+        with patch.object(t.client, 'submit') as submit, patch.object(t.client, 'status') as status:
+            await self.store.retry_collection('task')
+            await self.store.workers['task']
+        self.assertEqual(self.store.rows['task']['state']['status'], 'completed')
+        self.assertEqual(self.store.rows['task']['state']['prompt_id'], original_id)
+        self.assertEqual([item[0] for item in self.downloads], ['seg_0000.mp4', 'seg_0002.mp4'])
+        submit.assert_not_called(); status.assert_not_called()
+
+    async def test_mixed_modes_choose_pre_or_final_per_segment(self):
+        self.data.workflow['502']['inputs']['refine'] = ['407', 0]
+        self.data.workflow['407'] = {'class_type': 'MiniMaxH3DirectorRefine', 'inputs': {'skip_fl2v': True}}
+        timeline = json.loads(self.data.workflow['502']['inputs']['timeline_data'])
+        timeline['segments'][0]['taskType'] = 'r2v'
+        timeline['segments'][2]['taskType'] = 'fl2v'
+        self.data.workflow['502']['inputs']['timeline_data'] = json.dumps(timeline)
+        result = self.result()
+        text = result['history']['outputs']['403']['text'][0]
+        result['history']['outputs']['403']['text'][0] += '\n'+text.replace('一采 mp4','mp4').replace('_pre.mp4','.mp4')
+        self.assertEqual(await s.finish(self.store, 'task', result), [])
+        self.assertEqual([item[0] for item in self.downloads], ['seg_0000_pre.mp4', 'seg_0002.mp4'])
+
+    async def test_fl2v_without_skip_keeps_pre_refine_selection(self):
+        self.data.workflow['502']['inputs']['refine'] = ['407', 0]
+        self.data.workflow['407'] = {'class_type': 'MiniMaxH3DirectorRefine', 'inputs': {'skip_fl2v': False}}
+        timeline = json.loads(self.data.workflow['502']['inputs']['timeline_data'])
+        for group in timeline['segments']:
+            group['taskType'] = 'fl2v'
+        self.data.workflow['502']['inputs']['timeline_data'] = json.dumps(timeline)
         result = self.result()
         text = result['history']['outputs']['403']['text'][0]
         result['history']['outputs']['403']['text'][0] += '\n'+text.replace('一采 mp4','mp4').replace('_pre.mp4','.mp4')

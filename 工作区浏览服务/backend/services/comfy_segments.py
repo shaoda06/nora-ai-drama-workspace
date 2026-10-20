@@ -97,16 +97,22 @@ async def finish(store, key, result):
     row = store.rows[key]
     # Standalone SelfLift exports its completed first pass as the final segment MP4.
     pre_refine = data.task_type == 'video-first-pass'
+    director_inputs = data.workflow[data.segment_plan.director_node]['inputs']
     if pre_refine:
-        director_inputs = data.workflow[data.segment_plan.director_node]['inputs']
         pre_refine = not (director_inputs.get('selflift') and not director_inputs.get('refine'))
+    timeline = json.loads(director_inputs['timeline_data'])
+    refine = data.workflow[director_inputs['refine'][0]]['inputs'] if director_inputs.get('refine') else {}
+    pre_refine_by_index = {}
+    for index, group in enumerate(timeline['segments']):
+        mode = group.get('taskType') or group.get('task_type') or timeline.get('global', {}).get('taskType') or director_inputs.get('task_type', 'r2v')
+        pre_refine_by_index[index] = pre_refine and not (mode.startswith('fl2v') and refine.get('skip_fl2v'))
     if row.get('_segment_result') is not result:
         outputs = result['history'].get('outputs', {}).get(data.segment_plan.report_node, {})
         text = '\n'.join(value for values in outputs.values() if isinstance(values, list)
                          for value in values if isinstance(value, str))
         paths = {}
         for match in REPORT.finditer(text):
-            if (match[2] == '一采 mp4') == pre_refine:
+            if (match[2] == '一采 mp4') == pre_refine_by_index[int(match[1]) - 1]:
                 paths[int(match[1]) - 1] = match[4].strip()
         row['_segment_paths'], row['_segment_result'] = paths, result
         row['_segment_sources'] = {}
@@ -125,6 +131,7 @@ async def finish(store, key, result):
         try:
             sources = row['_segment_sources']
             index = target['index']
+            pre_refine = pre_refine_by_index[index]
             if index not in sources:
                 try:
                     if index not in paths:
