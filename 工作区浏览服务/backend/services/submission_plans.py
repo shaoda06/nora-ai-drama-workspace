@@ -8,6 +8,7 @@ import tempfile
 from urllib.parse import unquote
 
 from project_paths import project_file
+from workflow_paths import workflow_file, workflow_root
 from backend.services.director_uploads import pairs
 from backend.services.execution_checks import write_json
 from backend.services import image_closeout as images
@@ -97,7 +98,7 @@ def disconnect(graph, slot):
 def image_workflow(skill, spec, refs, width, height, seed, prefix):
     upscale = spec['task_type'] == 'image-upscale'
     base = 'Nora-RTX-图片2倍超分' if upscale else 'Qwen2.1-' + ('图生图' if refs else '文生图') + '-普通版'
-    canvas = json.loads((skill / 'references/comfyui-workflow' / (base + '.workflow.json')).read_text('utf-8-sig'))
+    canvas = json.loads(workflow_file(base, root=workflow_root(skill)).read_text('utf-8-sig'))
     nodes = {n['id']: n for n in canvas['nodes']}
     uploads = []
     if upscale:

@@ -32,8 +32,8 @@
 
 | 文件 | 用途 |
 | --- | --- |
-| [普通画布版](../../nora-ai-short-drama/references/comfyui-workflow/Qwen2.1-文生图-普通版.workflow.json) | 保留节点布局与子工作流，供可视化检查和后续修改 |
-| [API 执行版](../../nora-ai-short-drama/references/comfyui-workflow/Qwen2.1-文生图-普通版.api.json) | 已展开子工作流，供程序配置参数并提交执行 |
+| [普通画布版](../../nora-ai-short-drama/references/comfyui-workflow/Qwen-image-2-1/Qwen2.1-文生图-普通版.workflow.json) | 保留节点布局与子工作流，供可视化检查和后续修改 |
+| [API 执行版](../../nora-ai-short-drama/references/comfyui-workflow/Qwen-image-2-1/Qwen2.1-文生图-普通版.api.json) | 已展开子工作流，供程序配置参数并提交执行 |
 
 **基准文件不可直接提交。** 两个导出版本保留1024×1024方图配置和占位提示词，不是当前参考图任务的成品配置。每次必须在任务副本中替换为本次实际提示词、比例、像素规模和输出前缀，并核对数量及采样参数；不得沿用示例内容直接生成。
 

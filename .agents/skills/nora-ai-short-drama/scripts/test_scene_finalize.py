@@ -11,8 +11,8 @@ from unittest.mock import patch
 import zipfile
 
 import scene_finalize as tool
+from workflow_paths import workflow_file
 
-BASE = Path(__file__).resolve().parents[1] / 'references/comfyui-workflow'
 
 
 class NativeClient:
@@ -89,8 +89,8 @@ class FinalizeTests(unittest.TestCase):
 
     def pair(self, stage, part, identity):
         name = 'Nora-RTX-RIFE-自动切镜保护超分插帧' if stage == '后处理' else 'Minimax-H3-导演台-视频生成-标准版'
-        api = tool.adopt.load(BASE / (name + '.api.json'))
-        canvas = tool.adopt.load(BASE / (name + '.workflow.json'))
+        api = tool.adopt.load(workflow_file(name, 'api'))
+        canvas = tool.adopt.load(workflow_file(name))
         if stage == '后处理':
             key = next(k for k, n in api.items() if n['class_type'] == 'LoadVideo')
             file = f'EP001-C001-{part}-R001-二采.mp4'

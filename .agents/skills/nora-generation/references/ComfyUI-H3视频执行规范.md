@@ -1,6 +1,6 @@
 # ComfyUI-H3视频执行规范
 
-版本：v1.76；更新日期：2026-10-20。
+版本：v1.77；更新日期：2026-10-20。
 
 本规范管理视频工作流的填写、执行与记录。制作顺序及审批读取[开发流程第二部分第7节](视频阶段与返修执行规范.md#7-生成视频验收与衔接修改)，后处理与其他视频修改的阶段归属读取[阶段与当前版本修改](视频阶段与返修执行规范.md#视频阶段与当前版本修改)；提示词正文读取[视频提示词制作规范](../../nora-video-prompts/references/视频提示词制作规范.md#6-分段视频提示词文档)及 `h3-prompt-writing`。准备资料、实际任务和人工审核按[逐集目录规范](../../nora-ai-short-drama/references/流程规范/逐集目录与资产管理规范.md)保存，不把技术成功写成内容获批。
 
@@ -26,12 +26,12 @@
 
 | 阶段 | 画布 | API | API节点数 |
 | --- | --- | --- | ---: |
-| 标准版：正式默认一采确认与二采 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.api.json) | 19 |
-| 去油版：仅用户明确指定 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3-导演台-视频生成-去油版.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3-导演台-视频生成-去油版.api.json) | 16 |
+| 标准版：正式默认一采确认与二采 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-标准版.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-标准版.api.json) | 19 |
+| 去油版：仅用户明确指定 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-去油版.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-去油版.api.json) | 16 |
 | SelfLift备用 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-SelfLift-备用.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-SelfLift-备用.api.json) | 13 |
 | 旧版仅一采（追溯／恢复） | [画布](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅一采.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅一采.api.json) | 13 |
 | 旧版独立二采（追溯／恢复） | [画布](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅二采.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Nora-MiniMaxH3-多参考视频-仅二采.api.json) | 41（26＋15可选加载器） |
-| 后处理：正式默认RIFE | [画布](../../nora-ai-short-drama/references/comfyui-workflow/Nora-RTX-RIFE-自动切镜保护超分插帧.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/Nora-RTX-RIFE-自动切镜保护超分插帧.api.json) | 5 |
+| 后处理：正式默认RIFE | [画布](../../nora-ai-short-drama/references/comfyui-workflow/后处理综合/Nora-RTX-RIFE-自动切镜保护超分插帧.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/后处理综合/Nora-RTX-RIFE-自动切镜保护超分插帧.api.json) | 5 |
 | 后处理：AusBoss备用回退 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Nora-RTX-AusBoss-切镜保护超分插帧.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Nora-RTX-AusBoss-切镜保护超分插帧.api.json) | 5 |
 
 正式一采不使用外部图片、音频、视频加载节点；素材通过导演台的 `timeline_data` 传入原生公共区和本组区。502是基准节点编号，任务副本的场次缓存名填写、来源身份保持与缓存定位按[节点缓存规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#75-缓存检查与清理接口)处理。画布中的三组、11/15/14秒和种子是填写样例，不是所有任务的规定；执行前按获批资料替换提示词、素材、组与P映射、时长、实际种子及输出标识。API和画布的同名控件值须一致；连接输入覆盖控件默认值。
@@ -46,9 +46,9 @@
 python3 -B "/技能实际安装目录/nora-ai-short-drama/scripts/workflow_baselines.py"
 ```
 
-可选 `--directory "/待检查工作流目录"`，扫描指定目录及其直属 `非正式工作流/`，不扫描其他子目录。默认检查该技能的 `references/comfyui-workflow/`；直接指定非正式目录时只检查其中配对。普通任务准备无需重跑整套检查。不使用 `-O`。
+可选 `--directory "/待检查工作流目录"`，扫描指定目录中的配对及[统一目录入口](../../nora-ai-short-drama/scripts/workflow_paths.py)登记的直属分类，不扫描其他或更深子目录。默认检查该技能的 `references/comfyui-workflow/`；直接指定某一技术分类或非正式目录时，只检查该目录中的配对。普通任务准备无需重跑整套检查。不使用 `-O`。
 
-输出每套配对一行JSON和PASS；退出0后还须核对实际覆盖了目标。当前主目录6套、非正式目录7套，共13套配对；标准版为19个API节点，执行输出包含403报告、504一采保存及506二采保存；去油版为16个API节点，以403报告为执行输出入口，校验实际控件保存值、固定种子的画布控制值、全部启用的执行节点（含预览输出）、子图内被外部输入覆盖的控件保存值，以及公共正文、尺寸、总帧数、根时间线与编辑工作区的对应持久化内容、选择状态。工作区可以是原生序列化后的精简快照，不要求与根对象完整相等，比较范围读取[导演台状态同步规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#5-时长帧数与编辑状态同步)。保留二采的15个可选加载器检查147种合法参考数量组合。不同结构的一采与二采不以同号节点强行比较，也不据静态通过宣称两者已可衔接。
+输出每套配对一行JSON和PASS；退出0后还须核对实际覆盖了目标。当前Qwen、H3、后处理三个正式分类各2套，非正式目录7套，共13套配对；标准版为19个API节点，执行输出包含403报告、504一采保存及506二采保存；去油版为16个API节点，以403报告为执行输出入口，校验实际控件保存值、固定种子的画布控制值、全部启用的执行节点（含预览输出）、子图内被外部输入覆盖的控件保存值，以及公共正文、尺寸、总帧数、根时间线与编辑工作区的对应持久化内容、选择状态。工作区可以是原生序列化后的精简快照，不要求与根对象完整相等，比较范围读取[导演台状态同步规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#5-时长帧数与编辑状态同步)。保留二采的15个可选加载器检查147种合法参考数量组合。不同结构的一采与二采不以同号节点强行比较，也不据静态通过宣称两者已可衔接。
 
 后处理配对检查覆盖插帧后超分、实际源帧率、输出帧率及原音轨连接；正式RIFE还检查随包ZIP的必需文件、CRC完整性、节点类名和Python语法，不加载模型或运行GPU。节点运行验证沿用[节点安装说明](../../nora-ai-short-drama/维护规范.md#comfyui节点与安装包)。
 

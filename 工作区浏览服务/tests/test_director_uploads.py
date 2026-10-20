@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from backend.services.comfy_tasks import SKILL
 from backend.services.director_uploads import save_uploaded_workflow, check_pair, pairs
+from workflow_paths import workflow_file
 
 
 class DirectorUploadsTests(unittest.TestCase):
@@ -16,8 +17,7 @@ class DirectorUploadsTests(unittest.TestCase):
             record = project / 'record'
             record.mkdir()
             stem = 'Minimax-H3-导演台-视频生成-标准版'
-            baseline = SKILL / 'references/comfyui-workflow'
-            canvas = json.loads((baseline / (stem + '.workflow.json')).read_text(encoding='utf-8'))
+            canvas = json.loads((workflow_file(stem)).read_text(encoding='utf-8'))
             removed = {503, 504, 505, 506}
             canvas['nodes'] = [node for node in canvas['nodes'] if node['id'] not in removed]
             canvas['links'] = [link for link in canvas['links'] if link[1] not in removed and link[3] not in removed]
@@ -46,9 +46,8 @@ class DirectorUploadsTests(unittest.TestCase):
             record = project / 'record'
             record.mkdir()
             stem = 'Minimax-H3-导演台-视频生成-标准版'
-            baseline = SKILL / 'references/comfyui-workflow'
             for suffix in ('.api.json', '.workflow.json'):
-                (record / (stem + suffix)).write_bytes((baseline / (stem + suffix)).read_bytes())
+                (record / (stem + suffix)).write_bytes((workflow_file(stem, suffix.removeprefix('.').removesuffix('.json'))).read_bytes())
             original = json.loads((record / (stem + '.api.json')).read_text(encoding='utf-8'))
             timeline = json.loads(original['502']['inputs']['timeline_data'])
             media = {'imageFile': 'planned/reference.png', 'fileName': 'reference.png', 'subfolder': 'planned', 'type': 'input', 'index': 0}

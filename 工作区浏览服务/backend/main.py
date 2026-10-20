@@ -20,8 +20,9 @@ from backend.services.projects import ProjectStore
 from backend.services.request_diagnostics import RequestDiagnostics, RequestDiagnosticsMiddleware
 from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response, clear_downloads, video_archive_name
 from backend.services import krea2
-from backend.services.workflows import catalogue as workflow_catalogue
 from backend.services.comfy_tasks import DesktopConnection, TaskInput, TaskStore, client as comfy_client
+from backend.services.workflows import catalogue as workflow_catalogue
+from workflow_paths import workflow_directories, workflow_root
 from backend.services.task_details import task_detail
 from backend.services.task_history import task_history
 from backend.services import node_config
@@ -33,7 +34,7 @@ from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionN
 
 TOOL = Path(__file__).resolve().parent.parent
 WORKSPACE = Path(os.environ.get('NORA_WORKSPACE', TOOL.parent)).resolve()
-WORKFLOWS = WORKSPACE / '.agents/skills/nora-ai-short-drama/references/comfyui-workflow'
+WORKFLOWS = workflow_root(WORKSPACE / '.agents/skills/nora-ai-short-drama')
 ENVIRONMENT = os.environ.get('NORA_SERVICE_ENV', 'production')
 revision_notes = RevisionNotes()
 VERSION = json.loads((TOOL / 'frontend/package.json').read_text('utf-8'))['version']
@@ -407,7 +408,7 @@ def workflows() -> list[dict]:
 def workflow_file(filename: str) -> FileResponse:
     path = (WORKFLOWS / filename).resolve()
     if (not path.is_relative_to(WORKFLOWS.resolve())
-            or path.parent not in (WORKFLOWS.resolve(), (WORKFLOWS / '非正式工作流').resolve()) or not path.is_file()
+            or path.parent not in tuple(folder.resolve() for folder, _ in workflow_directories(WORKFLOWS)) or not path.is_file()
             or not filename.endswith(('.workflow.json', '.api.json'))):
         raise HTTPException(404, '工作流文件不存在')
     return FileResponse(path, media_type='application/json', filename=path.name)

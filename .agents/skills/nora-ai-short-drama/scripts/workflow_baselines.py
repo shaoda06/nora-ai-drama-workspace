@@ -2,6 +2,7 @@
 """Offline verification of bundled canvas/API pairs. Never connects or writes baselines."""
 import argparse, ast, copy, json, math, zipfile
 from pathlib import Path
+from workflow_paths import workflow_directories, workflow_root
 UI_FIELDS={'control_after_generate','upload','choose video to upload','videopreview','image_upload','audioUI','preview'}
 UI_NODES={'Note','MarkdownNote','SetNode','GetNode','Reroute'}
 POSTPROCESS_NODES={'Nora-RTX-RIFE-自动切镜保护超分插帧':'NoraRIFEInterpolationCutTest',
@@ -159,8 +160,9 @@ def director_editor_state(block, common=False):
 
 def verify(directory):
  directory=Path(directory)
+ folders=[directory, *(folder for folder,_ in workflow_directories(directory))]
  results=[]
- for p in sorted([*directory.glob('*.workflow.json'),*(directory/'非正式工作流').glob('*.workflow.json')]):
+ for p in sorted(p for folder in folders for p in folder.glob('*.workflow.json')):
   stem=p.name.removesuffix('.workflow.json');a=p.with_name(stem+'.api.json');assert a.exists(),f'Missing API: {a.name}'
   canvas=Canvas(json.loads(p.read_text(encoding="utf-8")));expected=canvas.api(output_for(stem));actual=json.loads(a.read_text(encoding="utf-8"))
   validate_rtx_inputs(actual)
@@ -212,7 +214,7 @@ def verify(directory):
     result['node_package']=package.name
   results.append(result)
   # Compare shared inputs only when both files use the same legacy H3 backbone.
- for folder in (directory,directory/'非正式工作流'):
+ for folder in folders:
   first_path=folder/'Nora-MiniMaxH3-多参考视频-仅一采.api.json'
   second_path=folder/'Nora-MiniMaxH3-多参考视频-仅二采.api.json'
   if first_path.exists() and second_path.exists():
@@ -222,7 +224,7 @@ def verify(directory):
  return results
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__, epilog='Python 3.9+, standard library; do not use -O. Prints one JSON line per scanned pair, then PASS; exit 0 on success, nonzero on error. Check expected workflow coverage: an empty directory can also pass.')
- p.add_argument('--directory',type=Path,default=Path(__file__).resolve().parents[1]/'references/comfyui-workflow',help='Scan bundled-name *.workflow.json / *.api.json pairs in this directory and its immediate 非正式工作流 subdirectory, excluding other subdirectories. Default: references/comfyui-workflow under this skill; relative paths use the current working directory. Point directly at 非正式工作流 to check retained pairs only.')
+ p.add_argument('--directory',type=Path,default=workflow_root(),help='Scan bundled-name *.workflow.json / *.api.json pairs in this directory and its immediate category directories registered in workflow_paths.py, excluding other or deeper directories. Default: references/comfyui-workflow under this skill; relative paths use the current working directory. Point directly at a category directory to check only its pairs.')
  args=p.parse_args()
  for r in verify(args.directory):print(json.dumps(r,ensure_ascii=False))
  print('PASS: offline pair consistency only; remote compatibility and execution not tested.')

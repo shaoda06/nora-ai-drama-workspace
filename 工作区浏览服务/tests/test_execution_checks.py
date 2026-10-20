@@ -11,6 +11,7 @@ from backend.services import execution_checks as checks
 from backend.services import comfy_tasks as t
 from tests import test_comfy_tasks as base
 from tests.prompt_review_fixture import attach_review, replace_prompts
+from workflow_paths import workflow_file
 
 
 class PreparationTests(unittest.IsolatedAsyncioTestCase):
@@ -232,7 +233,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.store.rows[key]['state']['error_details'], details)
 
     async def test_same_endpoint_first_pass_cache_is_checked_by_tool(self):
-        workflow = json.loads((t.SKILL / 'references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.api.json').read_text('utf-8'))
+        workflow = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')).read_text('utf-8'))
         self.data.workflow = workflow
         # Register a normal test queue item, then provide the director test fixture.
         image = self.data.model_copy(deep=True)
@@ -252,7 +253,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
             post.assert_not_called()
 
     async def test_continuity_distinguishes_first_pass_source_from_refine_settings(self):
-        workflow = json.loads((t.SKILL / 'references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.api.json').read_text('utf-8'))
+        workflow = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')).read_text('utf-8'))
         timeline = json.loads(workflow['502']['inputs']['timeline_data'])
         timeline.update(runSelectEnabled=True, runSelection=[1])
         timeline['segments'][1]['continuityFromPrev'] = True
@@ -297,7 +298,7 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         source = self.project / 'source.png'
         source.write_bytes(b'reference')
         key = (await self.store.enqueue(self.data))['local_task_id']
-        workflow = json.loads((t.SKILL / 'references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.api.json').read_text('utf-8'))
+        workflow = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')).read_text('utf-8'))
         timeline = json.loads(workflow['502']['inputs']['timeline_data'])
         media = {'imageFile': 'planned.png', 'fileName': 'planned.png', 'subfolder': '', 'type': 'input', 'index': 0}
         timeline['global']['refs'] = [media.copy()]

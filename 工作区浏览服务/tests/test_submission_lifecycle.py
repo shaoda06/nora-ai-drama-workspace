@@ -12,6 +12,7 @@ from backend.services import comfy_tasks as t, execution_checks as checks, comfy
 from backend.services.director_uploads import pairs
 from tests import test_comfy_tasks as base
 from tests.prompt_review_fixture import ENGLISH, attach_review
+from workflow_paths import workflow_file
 
 
 class LifecycleTests(unittest.IsolatedAsyncioTestCase):
@@ -41,7 +42,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         self.data.record_dir = str(self.record)
         source = self.project / 'reference.png'
         source.write_bytes(b'isolated picture')
-        canvas = json.loads((t.SKILL / 'references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.workflow.json').read_text('utf-8'))
+        canvas = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'workflow')).read_text('utf-8'))
         node = next(node for node in canvas['nodes'] if node['id'] == 502)
         inputs = node['widgets_values_named']
         timeline = json.loads(inputs['timeline_data'])

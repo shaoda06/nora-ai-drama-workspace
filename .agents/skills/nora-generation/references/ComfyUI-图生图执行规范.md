@@ -25,8 +25,8 @@
 
 | 文件 | 用途 |
 | --- | --- |
-| [普通画布版](../../nora-ai-short-drama/references/comfyui-workflow/Qwen2.1-图生图-普通版.workflow.json) | 保留远端布局、说明、比对节点和子工作流 |
-| [API执行版](../../nora-ai-short-drama/references/comfyui-workflow/Qwen2.1-图生图-普通版.api.json) | 展开后的13个生成节点；省略说明和界面对比节点 |
+| [普通画布版](../../nora-ai-short-drama/references/comfyui-workflow/Qwen-image-2-1/Qwen2.1-图生图-普通版.workflow.json) | 保留远端布局、说明、比对节点和子工作流 |
+| [API执行版](../../nora-ai-short-drama/references/comfyui-workflow/Qwen-image-2-1/Qwen2.1-图生图-普通版.api.json) | 展开后的13个生成节点；省略说明和界面对比节点 |
 
 **基准不可原样提交。** 当前保留换装示例提示词和两个示例文件名，均为须替换的占位内容。每次复制为任务副本，替换实际图片、提示词、画幅、输出前缀与本次参数。执行副本不回写本地基准，也不保存或覆盖远端工作流。
 

@@ -13,6 +13,7 @@ from backend.services import comfy_tasks as tasks, submission_plans, result_regi
 from tests import test_submission_plans as plan_tests, test_submission_lifecycle as lifecycle, test_result_closeout as closeout
 from tests.test_queue_recovery import serving
 import h3_prompt_checks
+from workflow_paths import workflow_file
 
 
 class VideoExecutionTests(unittest.IsolatedAsyncioTestCase):
@@ -177,7 +178,7 @@ class VideoExecutionTests(unittest.IsolatedAsyncioTestCase):
     async def test_standard_postprocess_derives_output_and_execution_fields(self):
         task=self.new_task()
         canvas=self.project/'后处理输入.workflow.json'
-        canvas.write_bytes((tasks.SKILL/'references/comfyui-workflow/Nora-RTX-RIFE-自动切镜保护超分插帧.workflow.json').read_bytes())
+        canvas.write_bytes((workflow_file('Nora-RTX-RIFE-自动切镜保护超分插帧', 'workflow')).read_bytes())
         task.update(task_type='video-postprocess',canvas=self.rel(canvas),output_nodes=['16'],
             record_dir=self.rel(self.record.with_name('EP001-C001-P001-R001-后处理')))
         task.pop('references')

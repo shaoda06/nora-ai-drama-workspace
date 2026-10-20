@@ -15,6 +15,7 @@ from backend import main
 from backend.services import comfy_tasks as t
 from tests import test_local_queue as local
 from tests.test_queue_recovery import serving
+from workflow_paths import workflow_file
 
 
 class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
@@ -200,7 +201,7 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
             submit.assert_awaited_once()
 
     async def test_target_second_pass_cache_is_checked_with_actual_workflow(self):
-        workflow = json.loads((t.SKILL / 'references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.api.json').read_text('utf8'))
+        workflow = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')).read_text('utf8'))
         key = await self.add('second-pass', self.backup)
         self.store.rows[key]['input'].workflow = workflow
         self.store.rows[key]['input'].task_type = 'video-second-pass'
@@ -246,7 +247,7 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual((await client.post(route, json={'url': self.backup}, headers=headers)).status_code, 409)
 
     async def test_transferred_first_pass_checks_stage_and_unselected_previous_cache(self):
-        workflow = json.loads((t.SKILL / 'references/comfyui-workflow/Minimax-H3-导演台-视频生成-标准版.api.json').read_text('utf8'))
+        workflow = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')).read_text('utf8'))
         key = await self.add('partial-first', self.backup)
         self.store.rows[key]['input'].workflow = workflow
         self.store.rows[key]['input'].task_type = 'video-first-pass'

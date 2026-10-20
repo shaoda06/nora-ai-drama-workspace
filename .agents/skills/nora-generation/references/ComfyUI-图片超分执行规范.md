@@ -26,7 +26,7 @@
 
 ## 2. 配套工作流与参数
 
-本地[画布基准](../../nora-ai-short-drama/references/comfyui-workflow/Nora-RTX-图片2倍超分.workflow.json)和[API基准](../../nora-ai-short-drama/references/comfyui-workflow/Nora-RTX-图片2倍超分.api.json)配套维护。每次复制API任务副本，替换输入路径及输出前缀，不改写基准或远端保存的工作流。
+本地[画布基准](../../nora-ai-short-drama/references/comfyui-workflow/后处理综合/Nora-RTX-图片2倍超分.workflow.json)和[API基准](../../nora-ai-short-drama/references/comfyui-workflow/后处理综合/Nora-RTX-图片2倍超分.api.json)配套维护。每次复制API任务副本，替换输入路径及输出前缀，不改写基准或远端保存的工作流。
 
 | 节点 | 类名与输入 | 固定要求 |
 | --- | --- | --- |

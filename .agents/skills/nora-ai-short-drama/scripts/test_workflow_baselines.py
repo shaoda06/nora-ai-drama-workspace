@@ -10,9 +10,10 @@ import unittest
 import zipfile
 from unittest.mock import patch
 import workflow_baselines as wb
+from workflow_paths import workflow_file, workflow_root, workflow_directories
 
 ROOT = Path(__file__).resolve().parents[1]
-BASELINES = ROOT / "references/comfyui-workflow"
+BASELINES = workflow_root(ROOT)
 RETAINED = BASELINES / "非正式工作流"
 
 class BaselineTests(unittest.TestCase):
@@ -20,7 +21,7 @@ class BaselineTests(unittest.TestCase):
         results = {item['workflow']: item for item in wb.verify(BASELINES)}
         formal = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
         retained = 'Nora-RTX-AusBoss-切镜保护超分插帧'
-        self.assertTrue((BASELINES / f'{formal}.api.json').is_file())
+        self.assertTrue(workflow_file(formal, 'api').is_file())
         self.assertFalse((BASELINES / f'{retained}.api.json').exists())
         self.assertTrue((RETAINED / f'{retained}.api.json').is_file())
         self.assertEqual(results[formal]['node_package'], 'ComfyUI-Nora-RIFE-CutTest.zip')
@@ -28,7 +29,7 @@ class BaselineTests(unittest.TestCase):
 
     def test_postprocess_rejects_bypassed_processing_and_wrong_timing(self):
         name = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
-        original = json.loads((BASELINES / f'{name}.api.json').read_text(encoding='utf-8'))
+        original = json.loads((workflow_file(name, 'api')).read_text(encoding='utf-8'))
         for field in ('scale', 'scene_cut_threshold'):
             changed = copy.deepcopy(original)
             del changed['12']['inputs'][field]
@@ -63,8 +64,8 @@ class BaselineTests(unittest.TestCase):
         for width, height, fps, note_count in ((1920, 1080, 30, 0), (1080, 1920, 30, 0),
                                              (3840, 2160, 60, 0), (1280, 720, 24, 2)):
             with self.subTest(width=width, height=height, fps=fps), tempfile.TemporaryDirectory() as tmp:
-                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
-                canvas = json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8'))
+                api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
+                canvas = json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8'))
                 api['1']['inputs'].update({'resize_type.width': width, 'resize_type.height': height})
                 api['12']['inputs']['target_fps'] = fps
                 for node in canvas['nodes']:
@@ -84,8 +85,8 @@ class BaselineTests(unittest.TestCase):
 
     def test_postprocess_default_uses_30fps_and_preserves_audio_and_output_timing(self):
         stem = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
-        api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
-        graph = wb.Canvas(json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8')))
+        api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
+        graph = wb.Canvas(json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8')))
         self.assertEqual(wb.semantic(graph.api(16)), wb.semantic(api))
         self.assertEqual(api['12']['inputs']['target_fps'], 30)
         self.assertEqual(api['12']['class_type'], 'NoraRIFEInterpolationCutTest')
@@ -99,8 +100,8 @@ class BaselineTests(unittest.TestCase):
     def test_rtx_baselines_explicit_required_parameters(self):
         for stem in ('Nora-RTX-图片2倍超分', 'Nora-RTX-RIFE-自动切镜保护超分插帧'):
             with self.subTest(stem=stem):
-                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
-                graph = wb.Canvas(json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8')))
+                api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
+                graph = wb.Canvas(json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8')))
                 for inputs in (api['1']['inputs'], graph.nodes[1]['widgets_values_named']):
                     self.assertEqual(inputs['strength'], 1.0)
                     self.assertEqual(inputs['image_encoding'], '8-bit RGB')
@@ -110,8 +111,8 @@ class BaselineTests(unittest.TestCase):
         stem = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
         for field in ('strength', 'image_encoding'):
             with self.subTest(field=field), tempfile.TemporaryDirectory() as tmp:
-                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
-                canvas = json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8'))
+                api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
+                canvas = json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8'))
                 del api['1']['inputs'][field]
                 node = next(n for n in canvas['nodes'] if n['id'] == 1)
                 del node['widgets_values_named'][field]
@@ -134,8 +135,8 @@ class BaselineTests(unittest.TestCase):
         for variant in ('标准版', '去油版'):
             with self.subTest(variant=variant):
                 stem = f'Minimax-H3-导演台-视频生成-{variant}'
-                canvas = wb.Canvas(json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8')))
-                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
+                canvas = wb.Canvas(json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8')))
+                api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
                 # Check both persisted representations, including the UI's named values.
                 director = canvas.nodes[502]['widgets_values_named']
                 self.assertEqual(wb.semantic(canvas.api(wb.output_for(stem))), wb.semantic(api))
@@ -168,8 +169,8 @@ class BaselineTests(unittest.TestCase):
         for variant in ('标准版', '去油版'):
             with self.subTest(variant=variant), tempfile.TemporaryDirectory() as tmp:
                 stem = f'Minimax-H3-导演台-视频生成-{variant}'
-                canvas = json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8'))
-                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
+                canvas = json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8'))
+                api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
                 director = next(node for node in canvas['nodes'] if node['type'] == 'MiniMaxH3Director')
                 api_director = next(node for node in api.values() if node['class_type'] == 'MiniMaxH3Director')
                 name = '测试项目-EP003-C001'
@@ -189,8 +190,8 @@ class BaselineTests(unittest.TestCase):
         for variant in ('标准版', '去油版'):
             with self.subTest(variant=variant), tempfile.TemporaryDirectory() as tmp:
                 stem = f'Minimax-H3-导演台-视频生成-{variant}'
-                canvas = json.loads((BASELINES / f'{stem}.workflow.json').read_text(encoding='utf-8'))
-                api = json.loads((BASELINES / f'{stem}.api.json').read_text(encoding='utf-8'))
+                canvas = json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8'))
+                api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
                 director = next(node for node in canvas['nodes'] if node['type'] == 'MiniMaxH3Director')
                 director['widgets_values_named'].pop('cache_name')
                 director['widgets_values'] = list(director['widgets_values_named'].values())
@@ -202,14 +203,16 @@ class BaselineTests(unittest.TestCase):
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
         self.assertEqual(len(results), 13)
+        for folder, group in workflow_directories(BASELINES):
+            self.assertEqual(len(wb.verify(folder)), 7 if group == "backup" else 2)
         self.assertIn('Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试', {r['workflow'] for r in results})
         h3 = [r for r in results if r["optional_references"]]
         self.assertEqual(len(h3), 1)
         self.assertTrue(all(r["reference_combinations"] == 147 for r in h3))
 
     def test_video_variants_share_generation_backbone(self):
-        standard = json.loads((BASELINES / "Minimax-H3-导演台-视频生成-标准版.api.json").read_text(encoding="utf-8"))
-        deoiled = json.loads((BASELINES / "Minimax-H3-导演台-视频生成-去油版.api.json").read_text(encoding="utf-8"))
+        standard = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')).read_text(encoding="utf-8"))
+        deoiled = json.loads((workflow_file('Minimax-H3-导演台-视频生成-去油版', 'api')).read_text(encoding="utf-8"))
         self.assertNotIn("128", standard)
         self.assertEqual(deoiled["128"]["class_type"], "LoraLoaderModelOnly")
         self.assertEqual(deoiled["128"]["inputs"]["model"], ["58", 0])
@@ -222,7 +225,7 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(wb.semantic(standard), wb.semantic(deoiled))
 
     def test_standard_saves_both_stages_without_final_output_dependency_in_first_pass(self):
-        canvas = wb.Canvas(json.loads((BASELINES / "Minimax-H3-导演台-视频生成-标准版.workflow.json").read_text(encoding="utf-8")))
+        canvas = wb.Canvas(json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'workflow')).read_text(encoding="utf-8")))
         first = canvas.api(504)
         second = canvas.api(506)
         self.assertNotIn("505", first)
@@ -243,7 +246,7 @@ class BaselineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             name = "Minimax-H3-导演台-视频生成-标准版"
             for suffix in ("workflow", "api"):
-                source = BASELINES / f"{name}.{suffix}.json"
+                source = workflow_file(name, suffix)
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             api_path = Path(tmp, f"{name}.api.json")
             api = json.loads(api_path.read_text(encoding="utf-8"))
@@ -262,7 +265,7 @@ class BaselineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             name = "Minimax-H3-导演台-视频生成-标准版"
             for suffix in ("workflow", "api"):
-                source = BASELINES / f"{name}.{suffix}.json"
+                source = workflow_file(name, suffix)
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             api_path = Path(tmp, f"{name}.api.json")
             api = json.loads(api_path.read_text(encoding="utf-8"))
@@ -275,7 +278,7 @@ class BaselineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             name = "Qwen2.1-文生图-普通版"
             for suffix in ("workflow", "api"):
-                source = BASELINES / f"{name}.{suffix}.json"
+                source = workflow_file(name, suffix)
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             api_path = Path(tmp, f"{name}.api.json")
             api = json.loads(api_path.read_text(encoding="utf-8"))
@@ -288,7 +291,7 @@ class BaselineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             name = "Nora-RTX-图片2倍超分"
             for suffix in ("workflow", "api"):
-                source = BASELINES / f"{name}.{suffix}.json"
+                source = workflow_file(name, suffix)
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             api_path = Path(tmp, f"{name}.api.json")
             api = json.loads(api_path.read_text(encoding="utf-8"))
@@ -313,7 +316,7 @@ class BaselineTests(unittest.TestCase):
                 wb.verify(tmp)
 
     def test_detects_broken_canvas_link(self):
-        source = BASELINES / "Qwen2.1-文生图-普通版.workflow.json"
+        source = workflow_file('Qwen2.1-文生图-普通版', 'workflow')
         canvas = json.loads(source.read_text(encoding="utf-8"))
         canvas["links"][0][1] = 987654321
         with self.assertRaises(AssertionError):
@@ -391,7 +394,7 @@ class BaselineTests(unittest.TestCase):
                     self.verify_director_timeline(timeline)
 
     def test_detects_canvas_widget_value_drift_inside_subgraph(self):
-        source = BASELINES / "Qwen2.1-文生图-普通版.workflow.json"
+        source = workflow_file('Qwen2.1-文生图-普通版', 'workflow')
         canvas = json.loads(source.read_text(encoding="utf-8"))
         encoder = next(n for n in canvas["definitions"]["subgraphs"][0]["nodes"] if n["id"] == 452)
         encoder["widgets_values"][1] = encoder["widgets_values"][0]
@@ -402,7 +405,7 @@ class BaselineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             name = "Nora-RTX-图片2倍超分"
             for suffix in ("workflow", "api"):
-                source = BASELINES / f"{name}.{suffix}.json"
+                source = workflow_file(name, suffix)
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             path = Path(tmp, f"{name}.workflow.json")
             canvas = json.loads(path.read_text(encoding="utf-8"))
@@ -415,7 +418,7 @@ class BaselineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             name = "Qwen2.1-图生图-普通版"
             for suffix in ("workflow", "api"):
-                source = BASELINES / f"{name}.{suffix}.json"
+                source = workflow_file(name, suffix)
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             path = Path(tmp, f"{name}.workflow.json")
             canvas = json.loads(path.read_text(encoding="utf-8"))
@@ -430,7 +433,7 @@ class BaselineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             name = "Qwen2.1-图生图-普通版"
             for suffix in ("workflow", "api"):
-                source = BASELINES / f"{name}.{suffix}.json"
+                source = workflow_file(name, suffix)
                 Path(tmp, source.name).write_bytes(source.read_bytes())
             path = Path(tmp, f"{name}.workflow.json")
             canvas = json.loads(path.read_text(encoding="utf-8"))
