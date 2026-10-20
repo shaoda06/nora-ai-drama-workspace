@@ -195,10 +195,9 @@ class BaselineTests(unittest.TestCase):
 
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
-        self.assertEqual(len(results), 6)
+        self.assertEqual(len(results), 5)
         for folder, group in workflow_directories(BASELINES):
-            self.assertEqual(len(wb.verify(folder)), 1 if group == 'backup' or folder.name == 'Minimax-H3' else 2)
-        self.assertIn('Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试', {r['workflow'] for r in results})
+            self.assertEqual(len(wb.verify(folder)), 0 if group == 'backup' else 1 if folder.name == 'Minimax-H3' else 2)
         h3 = [r for r in results if r["optional_references"]]
         self.assertEqual(h3, [])
 
@@ -289,11 +288,8 @@ class BaselineTests(unittest.TestCase):
             with self.assertRaisesRegex(AssertionError, "Missing API output"):
                 wb.verify(tmp)
 
-    def test_retained_pairs_can_be_checked_directly(self):
-        results = wb.verify(RETAINED)
-        self.assertEqual(len(results), 1)
-        self.assertIn('Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试', {r['workflow'] for r in results})
-        self.assertEqual(sum(r["reference_combinations"] for r in results), 0)
+    def test_empty_backup_directory_has_no_workflows(self):
+        self.assertEqual(wb.verify(RETAINED), [])
 
     def test_confirmation_pair_requires_report_output(self):
         with tempfile.TemporaryDirectory() as tmp:
