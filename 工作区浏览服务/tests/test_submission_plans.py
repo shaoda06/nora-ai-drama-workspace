@@ -63,6 +63,8 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(result['tasks']), 2)
         for row in self.store.rows.values():
             data = row['input']
+            self.assertEqual(data.image_batch_id, self.rel(self.plan_file))
+            self.assertEqual(data.image_batch_size, 2)
             self.assertEqual(data.workflow['459:456']['inputs']['width'], 2048)
             self.assertEqual(data.workflow['459:458']['inputs']['seed'], 103)
             record = Path(data.record_dir)

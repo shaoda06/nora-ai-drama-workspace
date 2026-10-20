@@ -323,7 +323,7 @@ python "实际技能目录/scripts/browser_tasks.py" status --task-id 本地任�
 python "实际技能目录/scripts/browser_tasks.py" report --notification-id 通知批次UUID
 ```
 
-后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。命令读取持久报告，同时自动记录收到。正常图片及超分默认只返回`notification_id`、`status=acknowledged`、`reused`、`user_message_ready`和`delivery`，避免展开重复的状态／收尾内容；`delivery`包含完成任务数、图片数，以及每项标题、本地任务ID、成果绝对路径、候选路径、实际宽高／格式／字节数、工作稿／收尾报告绝对路径和可直接打开的`review_url`。Agent直接展示，不再拼路径、数文件、翻记录或查网页。只有`user_message_ready=true`才能按入口已可审汇报，成功读取不表示用户批准。正常视频同样只返回`delivery`：`video_count`为本批实际完成数量，`tasks`含标题、阶段身份、文件绝对路径、媒体信息及可直接打开的审核链接；对话只汇报数量和入口。异常仍返回完整`tasks/results`，据失败阶段定位；显式追溯时可加`--details`读取完整报告，不触发重新核验或写记录。未带展示清单的历史报告保留原格式。重复读取`reused=true`且不重复确认事件。
+后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。命令读取持久报告，同时自动记录收到。正常图片及超分默认只返回`notification_id`、`status=acknowledged`、`reused`、`user_message_ready`和`delivery`，避免展开重复的状态／收尾内容；`delivery`包含完成任务数、图片数，以及每项标题、本地任务ID、成果绝对路径、候选路径、实际宽高／格式／字节数、工作稿／收尾报告绝对路径和可直接打开的`review_url`。普通图片按[批次通知规则](../../../nora-generation/references/ComfyUI-任务监控规范.md#图片批次通知与超分静默)集中展示，不再拼路径、数文件、翻记录或查网页；正常超分不发送通知，历史正常超分通知只读确认，不输出进度、完成消息或图片。只有`user_message_ready=true`才能按入口已可审汇报，成功读取不表示用户批准。正常视频同样只返回`delivery`：`video_count`为本批实际完成数量，`tasks`含标题、阶段身份、文件绝对路径、媒体信息及可直接打开的审核链接；对话只汇报数量和入口。异常仍返回完整`tasks/results`，据失败阶段定位；显式追溯时可加`--details`读取完整报告，不触发重新核验或写记录。未带展示清单的历史报告保留原格式。重复读取`reused=true`且不重复确认事件。
 
 旧通知没有持久报告时返回已有摘要、`legacy_report=true`和`user_message_ready=false`，不会在读取时补做收尾；核对具体缺项后才使用兼容修复入口。
 
@@ -419,6 +419,7 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 
 - `kind`为人物／场景／道具／剧集素材，沿用各自既有工作稿模板。工具自动建工作稿或追加下一生成编号、候选版本及同前缀执行附件；不另建人工调度台账。`fields`可提供该模板中特有的已确认业务内容，技术字段由工具填写。`record_dir`、`generation`、`output`只在明确指定既定入口时填写。
 - 人物肖像默认1024×1024、本体六视图和角色六视图默认2048×2048、服装默认1152×864；其他类型或用户明确变更须填`size:[宽,高]`，沿用原规格。`prompt`仍按Qwen规则填写文生图两字段／编辑三字段及准确画幅；工具只注入正文，不优化或扩写。`parameters`仅传已获准改变的模型控件，不得覆盖正文、尺寸、种子及输入模式。
+- 同一清单的所有`task_type:image`由工具登记相同`image_batch_id`及完整`image_batch_size`；这两个后台关联字段无需Agent手填，不影响生成参数。超分和视频不计入本批图片范围。恢复同清单保留原关联，正常结果按[图片批次通知规则](../../../nora-generation/references/ComfyUI-任务监控规范.md#图片批次通知与超分静默)等齐集中通知。无批次关联的历史或旧式单任务按单任务处理，不追溯猜测合批。
 - 不传`seed`时由工具读取项目七类默认种子表；首次类别选定、登记并在同批复用，输入原始种子从批准记录读取。七类之外的图传`supplementary:true`，每次选择新种子，不新增类别默认值。来源／类别冲突停止，不暗中改已确认种子。用户指定参考图改用`user_reference:true,basis:"真实指定依据"`；可提供`source_seed`，非生成图写`source_kind:"非生成"`，生成来源种子未知须有`unknown_seed_basis:"用户明确允许按未知继续的依据"`。既有审批与未知来源处理规则保持。
 
 超分条目只需关联已批准原图及正式目标，不手填RTX工作流、上传／输出映射、收尾JSON或正式表的整行替换：

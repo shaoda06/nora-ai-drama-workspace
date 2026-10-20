@@ -516,6 +516,10 @@ async def execute(store, payload):
             spec = {**entry, 'authorization': entry.get('authorization', '仅准备，尚未执行授权'), 'submission_plan': str(plan_file)}
             task = build_image(root, SKILL, spec, documents, store.client.now()) if spec['task_type'].startswith('image') else build_video(root, spec, documents)
             tasks.append(task)
+        image_count = sum(task['task_type'] == 'image' for task in tasks)
+        for task in tasks:
+            if task['task_type'] == 'image':
+                task.update(image_batch_id=plan_file.relative_to(root).as_posix(), image_batch_size=image_count)
         journal = dict(source=source, thread_id=payload.thread_id, tasks=tasks, writes=documents.writes())
         write_json(journal_file, journal)
     if not payload.prepare_only and any(not entry.get('authorization') for entry in source['tasks']):

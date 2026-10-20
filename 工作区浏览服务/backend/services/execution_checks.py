@@ -25,7 +25,8 @@ def basis(store, data, mapping=None):
     for name in ('image_plan', 'video_plan'):
         if payload.get(name) is None:
             payload.pop(name, None)  # Existing reports have no newer media associations.
-    for name in ('desktop', 'thread_id', 'source_session_name', 'timeout', 'start_paused'):
+    for name in ('desktop', 'thread_id', 'source_session_name', 'timeout', 'start_paused',
+                 'image_batch_id', 'image_batch_size'):
         payload.pop(name, None)
     mapping_file = Path(data.record_dir) / '输入映射.json'
     if mapping is None:

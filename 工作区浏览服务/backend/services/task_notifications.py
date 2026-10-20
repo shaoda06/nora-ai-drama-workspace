@@ -9,6 +9,45 @@ from backend.services.result_summary import summary, batch_tasks, image_delivery
 
 
 class TaskNotifications:
+    def image_batch_waiting(self, key):
+        row = self.rows[key]
+        data, state = row['input'], row['state']
+        if (data.task_type != 'image' or not data.image_batch_id or state['status'] != 'completed'
+                or state.get('closeout', {}).get('status') != 'completed'):
+            return False
+        members = [item for item in self.rows.values()
+                   if item['input'].project == data.project and item['input'].thread_id == data.thread_id
+                   and item['input'].task_type == 'image' and item['input'].image_batch_id == data.image_batch_id]
+        return len(members) != data.image_batch_size or any(
+            item['state']['status'] != 'completed' or item['state'].get('closeout', {}).get('status') != 'completed'
+            for item in members)
+
+    def ready_notices(self, thread_id):
+        ready = []
+        for key, notice in self.notification_pending(thread_id):
+            row = self.rows[key]
+            state, data = row['state'], row['input']
+            if (data.task_type == 'image-upscale' and state['status'] == 'completed'
+                    and state.get('closeout', {}).get('status') == 'completed'):
+                notice['delivery'] = 'not_required'
+                self.record(key, 'notification', 'not_required', message='超分完成并正式保存，正常结果静默',
+                            _changes={'notification': 'not_required', 'notice_wait_reason': None})
+            elif self.image_batch_waiting(key):
+                if state.get('notice_wait_reason') != 'image_batch':
+                    self.record(key, 'notification', 'waiting_batch',
+                                _changes={'notice_wait_reason': 'image_batch'})
+            else:
+                ready.append((key, notice))
+        if not ready:
+            return []
+        first = self.rows[ready[0][0]]['input']
+        if first.task_type == 'image' and first.image_batch_id:
+            return [(key, notice) for key, notice in ready
+                    if self.rows[key]['input'].project == first.project
+                    and self.rows[key]['input'].image_batch_id == first.image_batch_id]
+        return [(key, notice) for key, notice in ready
+                if not (self.rows[key]['input'].task_type == 'image' and self.rows[key]['input'].image_batch_id)]
+
     def queue_notice(self, key, event_id, kind, message):
         state = self.rows[key]['state']
         event_id = f'{event_id}:{state.get("collection_attempt", 1)}:{state.get("dispatch_attempt", 0)}:{state.get("preparation_attempt", 0)}'
@@ -108,6 +147,10 @@ class TaskNotifications:
                     delay = (2, 5, 10)[attempts - 1]
                     due = (datetime.now(timezone.utc) + timedelta(seconds=delay)).isoformat()
                     self.record(key, 'closeout', 'retry_scheduled', _changes={'closeout_next_retry_at': due}, delay_seconds=delay)
+        return self.result_report(ids)
+
+    def result_report(self, ids):
+        completed = [key for key in ids if self.rows[key]['state']['status'] == 'completed']
         tasks = [summary(self, key) for key in ids]
         results = [{'task_id': key, **self.rows[key]['state']['closeout']} for key in completed]
         report = {'tasks': tasks, 'results': results, 'reported_at': self.client.now(),
@@ -152,7 +195,8 @@ class TaskNotifications:
                 channels.pop(thread_id, None)
                 await channel.close()
                 # A new outcome may arrive while the old channel is closing.
-                if not cancelled and any(task == key for task, _ in self.notification_pending(thread_id)):
+                if not cancelled and any(task == key and not self.image_batch_waiting(task)
+                                         for task, _ in self.notification_pending(thread_id)):
                     self.notifiers[key] = asyncio.create_task(self.notify(key))
 
     async def _notify_pending(self, key):
@@ -166,15 +210,22 @@ class TaskNotifications:
         if not self.notification_pending(data.thread_id):
             return
         await asyncio.sleep(2)
-        prepared_notices, report = None, None
+        prepared_notices, prepared_ids, prepared_report = None, [], None
         while self.notification_pending(data.thread_id):
             data = max((row for row in self.rows.values() if row['input'].thread_id == data.thread_id),
                        key=lambda row: row['state']['created_at'])['input']
             pending = self.notification_pending(data.thread_id)
             signature = tuple(notice['id'] for _, notice in pending)
             if signature != prepared_notices:
-                report = await self.prepare_report(list(dict.fromkeys(task for task, _ in pending)))
+                prepared_ids = list(dict.fromkeys(task for task, _ in pending))
+                prepared_report = await self.prepare_report(prepared_ids)
                 prepared_notices = signature
+            pending = self.ready_notices(data.thread_id)
+            if not pending:
+                return
+            signature = tuple(notice['id'] for _, notice in pending)
+            ids = list(dict.fromkeys(task for task, _ in pending))
+            report = prepared_report if ids == prepared_ids else self.result_report(ids)
             # Probe Desktop connectivity before attempting a send, so an unavailable
             # adapter remains retryable without an ambiguous delivery. Conversation
             # status is not a delivery gate: Codex handles input to an active turn.
@@ -183,23 +234,23 @@ class TaskNotifications:
                 try:
                     await self.desktop_call(data, 'read')
                 except (OSError, subprocess.TimeoutExpired, ValueError) as error:
-                    for task, _ in self.notification_pending(data.thread_id):
+                    for task, _ in pending:
                         if self.rows[task]['state'].get('notification') != 'waiting_connection':
                             self.record(task, 'notification', 'waiting_connection', error=str(error),
                                         _changes={'notification': 'waiting_connection', 'notice_wait_reason': 'connection'})
                     await asyncio.sleep(30)
                     continue
-            pending = self.notification_pending(data.thread_id)
+            pending = self.ready_notices(data.thread_id)
             if not pending:
                 return
-            if tuple(notice['id'] for _, notice in pending) != prepared_notices:
+            if tuple(notice['id'] for _, notice in pending) != signature:
                 continue
             ids = list(dict.fromkeys(task for task, _ in pending))
             batch_id = str(uuid.uuid4())
             prompt = (f'后台任务结果通知。通知ID：{batch_id}；来源会话：{data.thread_id}。\n'
                       '请调用 browser_tasks.py report --notification-id 上述ID，读取已保存的最终报告；读取同时自动确认收到。\n'
                       + '\n'.join(self.notification_text(task) for task in ids)
-                      + '\n图片、超分与视频的技术核验、记录更新及网页核验已由后台执行，以报告结果为准；正常成功只读取report，图片直接展示成果和审核入口，视频汇报数量与审核入口，不再调用ack、register-results或重复查文件／刷新网页。成果保存不等于内容获批。'
+                      + '\n图片、超分与视频的技术核验、记录更新及网页核验已由后台执行，以报告结果为准；正常成功只读取report，图片按本批完整清单集中展示成果和审核入口，视频汇报数量与审核入口。正常超分静默；历史已发出的正常超分通知只读确认，不发处理进度、完成回复或图片。不再调用ack、register-results或重复查文件／刷新网页。成果保存不等于内容获批。'
                       '失败请从记录中的失败阶段复查；未知任务不自动重新生成。')
             self.db.execute('INSERT INTO notification_batches VALUES (?, ?, ?, ?, ?)',
                             (batch_id, data.thread_id, json.dumps(ids), prompt, 'sending'))

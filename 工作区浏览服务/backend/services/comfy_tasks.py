@@ -74,6 +74,8 @@ class TaskInput(BaseModel):
     start_paused: bool = False
     image_plan: dict | None = None
     video_plan: dict | None = None
+    image_batch_id: str | None = None
+    image_batch_size: int = Field(default=1, ge=1)
 
 
 class TaskStore(LocalQueue, TaskNotifications):
