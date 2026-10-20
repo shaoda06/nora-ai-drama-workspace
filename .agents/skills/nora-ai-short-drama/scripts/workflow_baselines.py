@@ -34,8 +34,8 @@ def validate_postprocess(api,name):
  assert encode['audio']==['7',1] and encode['trim_to_audio'] is False, 'Postprocess original audio/timing mismatch'
  width,height=resize['resize_type.width'],resize['resize_type.height'];fps=interpolation['inputs']['target_fps']
  notes=[]
- if min(width,height)<1080:notes.append('低于推荐1080P；按本次选定交付依据核对，不作配对失败')
- if fps<30:notes.append('低于推荐30fps；按本次选定交付依据核对，不作配对失败')
+ if min(width,height)<1080:notes.append('低于推荐1080P；按本次选定交付依据核对，不因此拒绝本次交付配置')
+ if fps<30:notes.append('低于推荐30fps；按本次选定交付依据核对，不因此拒绝本次交付配置')
  return {'width':width,'height':height,'target_fps':fps,'format':encode['format'],
          'crf':encode['crf'],'recommendation_notes':notes}
 def is_link(v):return isinstance(v,list) and len(v)==2 and isinstance(v[0],str) and isinstance(v[1],int)

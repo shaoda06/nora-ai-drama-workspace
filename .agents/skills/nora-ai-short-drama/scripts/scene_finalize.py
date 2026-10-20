@@ -489,7 +489,7 @@ def finalize_one(root, plan, p, apply, timeout):
         mapped.setdefault('scene_finalizations', {})[plan['stage']] = str(p['record'])
         save_json(actual['mapping_path'], mapped)
     save_json(p['record'], {**record, 'state': 'completed', 'verified_at': stamp,
-                           'checks': '全部P段实际批准／实际提交来源／API画布配对／原生包正文与素材字节／记录入口',
+                           'checks': '全部P段实际批准／实际提交来源／原生包正文与素材字节／记录入口',
                            'records': [str(path) for path in [*p['drafts'], p['summary'], p['progress']]],
                            'receipt': str(p['receipt'])})
     result['state'] = 'completed'

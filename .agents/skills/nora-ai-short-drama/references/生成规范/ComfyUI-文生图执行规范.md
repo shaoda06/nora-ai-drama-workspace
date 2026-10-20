@@ -30,11 +30,11 @@
 
 <a id="提交前"></a>
 
-- [提交前](../../../nora-generation/references/ComfyUI-文生图执行规范.md#提交前)
+- [提交前](../../../nora-generation/references/ComfyUI-文生图执行规范.md#5-检查与验收)
 
 <a id="生成后"></a>
 
-- [生成后](../../../nora-generation/references/ComfyUI-文生图执行规范.md#生成后)
+- [生成后](../../../nora-generation/references/ComfyUI-文生图执行规范.md#5-检查与验收)
 
 <a id="本地配套基准"></a>
 
