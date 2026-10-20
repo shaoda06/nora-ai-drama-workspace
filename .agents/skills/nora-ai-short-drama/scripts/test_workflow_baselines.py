@@ -17,15 +17,12 @@ BASELINES = workflow_root(ROOT)
 RETAINED = BASELINES / "非正式工作流"
 
 class BaselineTests(unittest.TestCase):
-    def test_formal_rife_and_retained_ausboss_are_both_checked(self):
+    def test_formal_rife_is_checked(self):
         results = {item['workflow']: item for item in wb.verify(BASELINES)}
         formal = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
-        retained = 'Nora-RTX-AusBoss-切镜保护超分插帧'
         self.assertTrue(workflow_file(formal, 'api').is_file())
-        self.assertFalse((BASELINES / f'{retained}.api.json').exists())
-        self.assertTrue((RETAINED / f'{retained}.api.json').is_file())
         self.assertEqual(results[formal]['node_package'], 'ComfyUI-Nora-RIFE-CutTest.zip')
-        self.assertEqual(results[retained]['postprocess_delivery']['target_fps'], 30)
+        self.assertEqual(results[formal]['postprocess_delivery']['target_fps'], 30)
 
     def test_postprocess_rejects_bypassed_processing_and_wrong_timing(self):
         name = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
@@ -199,9 +196,9 @@ class BaselineTests(unittest.TestCase):
 
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
-        self.assertEqual(len(results), 11)
+        self.assertEqual(len(results), 8)
         for folder, group in workflow_directories(BASELINES):
-            self.assertEqual(len(wb.verify(folder)), 5 if group == "backup" else 2)
+            self.assertEqual(len(wb.verify(folder)), 2)
         self.assertIn('Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试', {r['workflow'] for r in results})
         h3 = [r for r in results if r["optional_references"]]
         self.assertEqual(h3, [])
@@ -253,7 +250,7 @@ class BaselineTests(unittest.TestCase):
 
     def test_retained_pairs_can_be_checked_directly(self):
         results = wb.verify(RETAINED)
-        self.assertEqual(len(results), 5)
+        self.assertEqual(len(results), 2)
         self.assertIn('Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试', {r['workflow'] for r in results})
         self.assertEqual(sum(r["reference_combinations"] for r in results), 0)
 

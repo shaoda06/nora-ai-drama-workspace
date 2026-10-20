@@ -5,8 +5,7 @@ from pathlib import Path
 from workflow_paths import workflow_directories, workflow_root
 UI_FIELDS={'control_after_generate','upload','choose video to upload','videopreview','image_upload','audioUI','preview'}
 UI_NODES={'Note','MarkdownNote','SetNode','GetNode','Reroute'}
-POSTPROCESS_NODES={'Nora-RTX-RIFE-自动切镜保护超分插帧':'NoraRIFEInterpolationCutTest',
-                   'Nora-RTX-AusBoss-切镜保护超分插帧':'AUSBOSS_NODES_FrameInterpolate'}
+POSTPROCESS_NODES={'Nora-RTX-RIFE-自动切镜保护超分插帧':'NoraRIFEInterpolationCutTest'}
 
 def validate_rife_package(path):
  with zipfile.ZipFile(path) as package:
