@@ -145,6 +145,9 @@ class BaselineTests(unittest.TestCase):
             self.assertEqual(output['refImageSize'], '1536')
             for segment in timeline['segments']:
                 self.assertEqual(segment['refImageSize'], '1536')
+        self.assertEqual(api['408']['inputs']['head_chunks'], 4)
+        self.assertEqual(api['409']['inputs']['chunks'], 2)
+        self.assertEqual(api['409']['inputs']['seq_threshold'], 4096)
         refine = api['407']['inputs']
         self.assertEqual((refine['mode'], refine['upscale_method']), ('upscale', 'h3_latent'))
         self.assertEqual((refine['width'], refine['height']), (1536, 864))
@@ -259,6 +262,7 @@ class BaselineTests(unittest.TestCase):
                 self.assertNotIn(node, graph)
             self.assertEqual(graph["343"]["inputs"]["model"], ["53", 0])
             self.assertEqual(graph["405"]["inputs"]["model"], ["343", 0])
+            self.assertEqual(graph["409"]["inputs"]["chunks"], 2)
             self.assertEqual(graph[create_id]["inputs"]["audio"], ["502", 1])
             self.assertEqual(graph[create_id]["inputs"]["fps"], ["502", 2])
             self.assertEqual(graph[save_id]["inputs"]["video"], [create_id, 0])
