@@ -76,7 +76,7 @@ class CollectionTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual((download.call_count, sleep.await_count, notice.call_count), (4, 3, 1))
         state = self.store.rows['task']['state']
         self.assertEqual((state['status'], state['collection_retry_stop']), ('collection_failed', 'exhausted'))
-        self.assertIn('本轮自动重试：3/3', self.store.notification_text('task'))
+        self.assertEqual(self.store.result_report(['task'])['tasks'][0]['collection_auto_retry'], 3)
         with patch.object(t.client, 'download', self.download), patch.object(self.store, 'queue_notice') as notice:
             await self.store.retry_collection('task')
             await self.store.workers['task']

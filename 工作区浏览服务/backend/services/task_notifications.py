@@ -95,13 +95,34 @@ class TaskNotifications:
 
     def read_report(self, batch_id, thread_id):
         ids, delivery = batch_tasks(self, batch_id, thread_id)
+        reused = self.mark_received(batch_id, ids, delivery)
+        self.refresh_reports(ids)
         saved = self.db.execute('SELECT report FROM notification_reports WHERE batch_id=?', (batch_id,)).fetchone()
         # Old delivered notices have no snapshot. Reading them never restarts collection/registration.
         report = json.loads(saved[0]) if saved else {
             'tasks': [summary(self, key) for key in ids], 'legacy_report': True,
             'user_message_ready': False, 'results': []}
-        reused = self.mark_received(batch_id, ids, delivery)
         return {**report, 'notification_id': batch_id, 'status': 'acknowledged', 'reused': reused}
+
+    def refresh_reports(self, ids):
+        """Refresh existing reports from task state, without media work or a new notice."""
+        affected = set(ids)
+        threads = {self.rows[key]['input'].thread_id for key in ids}
+        for thread in threads:
+            batches = self.db.execute(
+                'SELECT b.id, b.task_ids, r.report FROM notification_batches b '
+                'JOIN notification_reports r ON r.batch_id=b.id WHERE b.thread_id=?', (thread,)).fetchall()
+            for batch_id, task_ids, saved in batches:
+                members = json.loads(task_ids)
+                if not affected.intersection(members):
+                    continue
+                previous = json.loads(saved)
+                report = self.result_report(members)
+                if all(previous.get(name) == value for name, value in report.items() if name != 'reported_at'):
+                    continue
+                self.db.execute('UPDATE notification_reports SET report=? WHERE batch_id=?',
+                                (json.dumps(report, ensure_ascii=False), batch_id))
+        self.db.commit()
 
     async def prepare_report(self, ids):
         """Finish media before delivery; persist bounded retry progress across restarts."""
@@ -152,11 +173,14 @@ class TaskNotifications:
     def result_report(self, ids):
         completed = [key for key in ids if self.rows[key]['state']['status'] == 'completed']
         tasks = [summary(self, key) for key in ids]
-        results = [{'task_id': key, **self.rows[key]['state']['closeout']} for key in completed]
+        for task in tasks:
+            task['closeout'] = self.record_paths(task['id']).convert(task['closeout'], relative=True)
+        results = [{'task_id': task['id'], **(task['closeout'] or {})}
+                   for task in tasks if task['id'] in completed]
         report = {'tasks': tasks, 'results': results, 'reported_at': self.client.now(),
                 'user_message_ready': bool(tasks) and all(
                     task['status'] == 'completed' and
-                    task.get('closeout', {}).get('status') == 'completed'
+                    (task.get('closeout') or {}).get('status') == 'completed'
                     for task in tasks)}
         delivery = image_delivery(self, tasks) or video_delivery(self, tasks)
         if delivery is not None:
@@ -167,16 +191,7 @@ class TaskNotifications:
         row = self.rows[key]
         state, data = row['state'], row['input']
         return (f'本地任务ID：{key}；项目：{state["project"]}；任务：{data.title}\n'
-                f'当前状态：{state["status"]}；远端ID：{state.get("prompt_id")}；'
-                f'成果：{state["collected"]}/{state["expected"]}\n'
-                f'失败阶段：{state.get("failure_stage") or "无"}；原因：{state.get("error") or "预期成果已保存"}\n'
-                + (f'取回累计尝试：{state["collection_attempt"]}轮；本轮自动重试：{state.get("collection_auto_retry", 0)}/3；'
-                   f'停止原因：{state.get("collection_retry_stop") or "无"}\n' if state.get('collection_attempt') else '')
-                + f'收尾结果：{state.get("closeout", {}).get("status", "不适用")}；'
-                  f'原因：{state.get("closeout", {}).get("error") or "无"}\n'
-                + f'最终报告与凭据入口：读取报告时一次返回。记录位置：{data.record_dir}\n'
-                + ('此前问题通知已被最新结果替代，完整经过见过程记录。\n' if any(item['delivery'] == 'superseded' for item in state.get('notices', [])) else '')
-                + ('可用本地任务ID请求重试取回，无需重新生成。\n' if state['status'] == 'collection_failed' else ''))
+                f'记录位置：{data.record_dir}\n')
 
     async def notify(self, key):
         from backend.services.desktop_channel import DesktopChannel
@@ -210,22 +225,19 @@ class TaskNotifications:
         if not self.notification_pending(data.thread_id):
             return
         await asyncio.sleep(2)
-        prepared_notices, prepared_ids, prepared_report = None, [], None
+        prepared_notices = None
         while self.notification_pending(data.thread_id):
             data = max((row for row in self.rows.values() if row['input'].thread_id == data.thread_id),
                        key=lambda row: row['state']['created_at'])['input']
             pending = self.notification_pending(data.thread_id)
             signature = tuple(notice['id'] for _, notice in pending)
             if signature != prepared_notices:
-                prepared_ids = list(dict.fromkeys(task for task, _ in pending))
-                prepared_report = await self.prepare_report(prepared_ids)
+                await self.prepare_report(list(dict.fromkeys(task for task, _ in pending)))
                 prepared_notices = signature
             pending = self.ready_notices(data.thread_id)
             if not pending:
                 return
             signature = tuple(notice['id'] for _, notice in pending)
-            ids = list(dict.fromkeys(task for task, _ in pending))
-            report = prepared_report if ids == prepared_ids else self.result_report(ids)
             # Probe Desktop connectivity before attempting a send, so an unavailable
             # adapter remains retryable without an ambiguous delivery. Conversation
             # status is not a delivery gate: Codex handles input to an active turn.
@@ -246,9 +258,11 @@ class TaskNotifications:
             if tuple(notice['id'] for _, notice in pending) != signature:
                 continue
             ids = list(dict.fromkeys(task for task, _ in pending))
+            report = self.result_report(ids)
             batch_id = str(uuid.uuid4())
             prompt = (f'后台任务结果通知。通知ID：{batch_id}；来源会话：{data.thread_id}。\n'
-                      '请调用 browser_tasks.py report --notification-id 上述ID，读取已保存的最终报告；读取同时自动确认收到。\n'
+                      '请调用 browser_tasks.py report --notification-id 上述ID，读取后台已保存的最新结果；读取同时自动确认收到。\n'
+                      '通知可能延迟送达，当前状态、异常是否已修复及成果清单以本次report为准，历史经过保留在过程记录。\n'
                       + '\n'.join(self.notification_text(task) for task in ids)
                       + '\n图片、超分与视频的技术核验、记录更新及网页核验已由后台执行，以报告结果为准；正常成功只读取report，图片按本批完整清单集中展示成果和审核入口，视频汇报数量与审核入口。正常超分静默；历史已发出的正常超分通知只读确认，不发处理进度、完成回复或图片。不再调用ack、register-results或重复查文件／刷新网页。成果保存不等于内容获批。'
                       '失败请从记录中的失败阶段复查；未知任务不自动重新生成。')

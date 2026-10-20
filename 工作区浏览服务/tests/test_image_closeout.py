@@ -94,6 +94,61 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, '凭据不符'):
             registration.register(self.store, 'task')
 
+    async def test_repaired_closeout_refreshes_old_notice_and_report_after_restart(self):
+        self.setup_image()
+        index = self.project / '03-人物资料/人物索引.md'
+        original = index.read_text()
+        index.unlink()
+        with patch.object(self.store, 'desktop_call', AsyncMock(return_value={})), \
+                patch('backend.services.task_notifications.asyncio.sleep', AsyncMock()):
+            self.store.queue_notice('task', 'terminal', 'terminal', '完成')
+            await self.store.notifiers['task']
+        batch = self.store.rows['task']['state']['notices'][0]['batch_id']
+        stale = self.store.db.execute('SELECT report FROM notification_reports WHERE batch_id=?', (batch,)).fetchone()[0]
+        self.assertEqual(json.loads(stale)['results'][0]['status'], 'browser_pending')
+        self.assertFalse(self.store.read_report(batch, self.data.thread_id)['user_message_ready'])
+        index.write_text(original)
+        with patch.object(self.store, 'desktop_call', AsyncMock()) as send:
+            repaired = await registration.closeout(self.store, self.store.projects, batch, self.data.thread_id)
+            self.assertTrue(repaired['user_message_ready'])
+            saved = json.loads(self.store.db.execute('SELECT report FROM notification_reports WHERE batch_id=?', (batch,)).fetchone()[0])
+            self.assertTrue(saved['user_message_ready'])
+            send.assert_not_awaited()
+        # Existing installations already have stale snapshots alongside repaired tasks.
+        self.store.db.execute('UPDATE notification_reports SET report=? WHERE batch_id=?', (stale, batch))
+        self.store.db.commit()
+        await self.store.close()
+        self.store = tasks.TaskStore(self.root / 'runtime', self.root)
+        with patch.object(registration, 'register', side_effect=AssertionError('no registration')), \
+                patch.object(ProjectStore, 'snapshot', side_effect=AssertionError('no scan')), \
+                patch.object(tasks.client, 'status', side_effect=AssertionError('no remote')):
+            changes = self.store.db.total_changes
+            with self.assertRaises(ValueError):
+                self.store.read_report(batch, 'another-thread')
+            self.assertEqual(self.store.db.total_changes, changes)
+            current = self.store.read_report(batch, self.data.thread_id)
+            self.assertTrue(current['user_message_ready'])
+            self.assertEqual(current['results'][0]['status'], 'completed')
+            self.assertEqual(current['delivery']['image_count'], 1)
+            changes = self.store.db.total_changes
+            self.assertEqual(self.store.read_report(batch, self.data.thread_id), current)
+            self.assertEqual(self.store.db.total_changes, changes)
+
+    async def test_queued_notice_contains_identity_not_expiring_status(self):
+        self.setup_image()
+        self.store.save('task', closeout={'status': 'browser_pending', 'error': '网页缺少本批图片'},
+                        closeout_retry_stop='exhausted')
+        with patch.object(self.store, 'desktop_call', AsyncMock(return_value={})) as send, \
+                patch('backend.services.task_notifications.asyncio.sleep', AsyncMock()):
+            self.store.queue_notice('task', 'terminal', 'terminal', '完成')
+            await self.store.notifiers['task']
+        prompt = next(c.args[2] for c in send.call_args_list if c.args[1] == 'send')
+        self.assertIn('本地任务ID：task', prompt)
+        self.assertIn('最新', prompt)
+        self.assertNotIn('browser_pending', prompt)
+        self.assertNotIn('网页缺少本批图片', prompt)
+        self.assertNotIn('当前状态：', prompt)
+
     async def test_browser_retry_does_not_repeat_png_or_record_work(self):
         self.setup_image()
         original, calls = registration.verify, []

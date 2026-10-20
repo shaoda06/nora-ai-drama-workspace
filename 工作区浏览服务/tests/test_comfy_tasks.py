@@ -331,7 +331,8 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
             self.store.queue_notice('task', 'terminal', 'terminal', '现在成功')
             await self.store.notifiers['task']
             sent = call.await_args_list[-1].args[2]
-            self.assertIn('completed', sent)
+            report = json.loads(self.store.db.execute('SELECT report FROM notification_reports').fetchone()[0])
+            self.assertEqual(report['tasks'][0]['status'], 'completed')
             self.assertNotIn('旧取回失败', sent)
             self.assertEqual(sum(item.args[1] == 'send' for item in call.await_args_list), 1)
         self.assertEqual([item['delivery'] for item in self.store.rows['task']['state']['notices']], ['superseded', 'sent'])

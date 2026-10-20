@@ -49,6 +49,19 @@ class ImageNotificationTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(self.reports()[0]['user_message_ready'])
         self.assertEqual(len(self.reports()), 1)
 
+    async def test_repair_during_connection_probe_updates_report_before_send(self):
+        self.task('first', size=1, status='completed')
+        self.store.save('first', closeout={'status': 'browser_pending', 'error': '网页缺项'},
+                        closeout_retry_stop='exhausted')
+        async def desktop(data, operation, prompt=''):
+            if operation == 'read':
+                self.complete('first')
+            else:
+                self.assertTrue(self.reports()[0]['user_message_ready'])
+            return {}
+        with patch.object(self.store, 'desktop_call', side_effect=desktop):
+            await self.notify('first')
+
     async def test_batch_wait_survives_restart(self):
         self.task('first'); self.task('second'); self.complete('first')
         with patch.object(self.store, 'desktop_call', AsyncMock()) as send:

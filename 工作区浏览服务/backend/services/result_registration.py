@@ -350,5 +350,6 @@ async def closeout_tasks(store, projects, ids, record_updates=(), *, batch_id=No
                 outcome['video_outputs'] = report['items']
             store.record(task, 'closeout', 'completed', _changes={'closeout': outcome}, notification_id=batch_id, browser=browser)
             reports.append({**report, 'browser': browser})
+    store.refresh_reports(ids)
     return {'notification_id': batch_id, 'results': reports, 'user_message_ready': bool(reports) and all(
         item.get('browser', {}).get('status') == 'verified' for item in reports)}

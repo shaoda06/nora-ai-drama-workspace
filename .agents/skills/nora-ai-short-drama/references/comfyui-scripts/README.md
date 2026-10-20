@@ -323,7 +323,7 @@ python "实际技能目录/scripts/browser_tasks.py" status --task-id 本地任�
 python "实际技能目录/scripts/browser_tasks.py" report --notification-id 通知批次UUID
 ```
 
-后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。命令读取持久报告，同时自动记录收到。正常图片及超分默认只返回`notification_id`、`status=acknowledged`、`reused`、`user_message_ready`和`delivery`，避免展开重复的状态／收尾内容；`delivery`包含完成任务数、图片数，以及每项标题、本地任务ID、成果绝对路径、候选路径、实际宽高／格式／字节数、工作稿／收尾报告绝对路径和可直接打开的`review_url`。普通图片按[批次通知规则](../../../nora-generation/references/ComfyUI-任务监控规范.md#图片批次通知与超分静默)集中展示，不再拼路径、数文件、翻记录或查网页；正常超分不发送通知，历史正常超分通知只读确认，不输出进度、完成消息或图片。只有`user_message_ready=true`才能按入口已可审汇报，成功读取不表示用户批准。正常视频同样只返回`delivery`：`video_count`为本批实际完成数量，`tasks`含标题、阶段身份、文件绝对路径、媒体信息及可直接打开的审核链接；对话只汇报数量和入口。异常仍返回完整`tasks/results`，据失败阶段定位；显式追溯时可加`--details`读取完整报告，不触发重新核验或写记录。未带展示清单的历史报告保留原格式。重复读取`reused=true`且不重复确认事件。
+后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。通知只提供任务身份和报告入口；命令按后台已有的最新任务状态刷新持久报告并自动记录收到，异常修复后的旧通知也返回当前结果，不重新收尾、扫描或发送。原通知和错误经过保留在过程记录。正常图片及超分默认只返回`notification_id`、`status=acknowledged`、`reused`、`user_message_ready`和`delivery`，避免展开重复的状态／收尾内容；`delivery`包含完成任务数、图片数，以及每项标题、本地任务ID、成果绝对路径、候选路径、实际宽高／格式／字节数、工作稿／收尾报告绝对路径和可直接打开的`review_url`。普通图片按[批次通知规则](../../../nora-generation/references/ComfyUI-任务监控规范.md#图片批次通知与超分静默)集中展示，不再拼路径、数文件、翻记录或查网页；正常超分不发送通知，历史正常超分通知只读确认，不输出进度、完成消息或图片。只有`user_message_ready=true`才能按入口已可审汇报，成功读取不表示用户批准。正常视频同样只返回`delivery`：`video_count`为本批实际完成数量，`tasks`含标题、阶段身份、文件绝对路径、媒体信息及可直接打开的审核链接；对话只汇报数量和入口。异常仍返回完整`tasks/results`，据失败阶段定位；显式追溯时可加`--details`读取完整报告，不触发重新核验或写记录。未带展示清单的历史报告保留原格式。重复读取`reused=true`且不重复确认事件。
 
 旧通知没有持久报告时返回已有摘要、`legacy_report=true`和`user_message_ready=false`，不会在读取时补做收尾；核对具体缺项后才使用兼容修复入口。
 
