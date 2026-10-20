@@ -9,30 +9,17 @@
       "title": "底模加载｜UNETLoader"
     }
   },
-  "406": {
-    "class_type": "PathchSageAttentionKJ",
+  "331": {
+    "class_type": "ModelAttentionBackend",
     "inputs": {
-      "sage_attention": "auto",
-      "allow_compile": false,
+      "attention": "comfy kitchen attention",
       "model": [
         "192",
         0
       ]
     },
     "_meta": {
-      "title": "通用Sage注意力｜PathchSageAttentionKJ"
-    }
-  },
-  "58": {
-    "class_type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
-    "inputs": {
-      "model": [
-        "406",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "H3专用Sage注意力｜MiniMaxH3MemoryEfficientSageAttentionPatch"
+      "title": "完整注意力后端｜ModelAttentionBackend"
     }
   },
   "53": {
@@ -41,7 +28,7 @@
       "lora_name": "minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors",
       "strength_model": 0.8,
       "model": [
-        "58",
+        "331",
         0
       ]
     },

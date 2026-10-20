@@ -209,7 +209,11 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(standard["53"]["class_type"], "LoraLoaderModelOnly")
         self.assertEqual(standard["53"]["inputs"]["lora_name"], "minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors")
         self.assertEqual(standard["53"]["inputs"]["strength_model"], 0.8)
-        self.assertEqual(standard["53"]["inputs"]["model"], ["58", 0])
+        self.assertEqual(standard["53"]["inputs"]["model"], ["331", 0])
+        self.assertEqual(standard["331"]["class_type"], "ModelAttentionBackend")
+        self.assertEqual(standard["331"]["inputs"], {"attention": "comfy kitchen attention", "model": ["192", 0]})
+        for node in ("406", "58", "332"):
+            self.assertNotIn(node, standard)
         self.assertEqual(standard["343"]["class_type"], "LoraLoaderModelOnly")
         self.assertEqual(standard["343"]["inputs"]["lora_name"], "H3_speed_slider_1.1.safetensors")
         self.assertEqual(standard["343"]["inputs"]["strength_model"], 3.0)
@@ -224,10 +228,10 @@ class BaselineTests(unittest.TestCase):
         for key in (53, 343):
             self.assertEqual(defaults[key]['mode'], 0)
         expected = {
-            1: ([53, 343], 20),
-            2: ([53, 128, 343], 21),
-            3: ([53, 342, 344, 345, 343], 23),
-            4: ([53, 128, 342, 344, 345, 343], 24),
+            1: ([53, 343], 19),
+            2: ([53, 128, 343], 20),
+            3: ([53, 342, 344, 345, 343], 22),
+            4: ([53, 128, 342, 344, 345, 343], 23),
         }
         for choice, (chain, count) in expected.items():
             with self.subTest(choice=choice):
@@ -241,7 +245,7 @@ class BaselineTests(unittest.TestCase):
                     graph = canvas.api(output)
                     for key in optional:
                         self.assertEqual(str(key) in graph, key in chain)
-                    for parent, node in zip([58, *chain], [*chain, 405]):
+                    for parent, node in zip([331, *chain], [*chain, 405]):
                         self.assertEqual(graph[str(node)]['inputs']['model'], [str(parent), 0])
                     self.assertEqual(graph['53']['inputs']['strength_model'], 0.8)
                     self.assertEqual(graph['343']['inputs']['strength_model'], 3.0)
