@@ -46,12 +46,15 @@ try {
     { id: 'P003', videos: [video('P003', 'R001', '/fixture-current.mp4', '成功', '已取回')] },
     { id: 'P004', videos: [video('P004', 'R001', '', '排队中', '未取回')] },
   ].map(segment => ({ ...segment, duration: 3, scriptHtml: '本轮分镜' }));
+  for (const video of [segments[0].videos[1], segments[1].videos[0]]) video.context = {
+    ...context, scriptHtml: '', prompts: { english: '', chinese: '' }, issues: ['该次生成的资料关联尚未记录。'],
+  };
   await page.route('**/episodes/EP001', async route => {
     const response = await route.fetch();
     const data = await response.json();
     data.scenes = ['C001']; data.previousEpisode = null; data.productionIssues = []; data.warnings = [];
     data.segments = { C001: segments };
-    data.sceneRounds = { C001: [{ number: 1, issues: [], script: null, storyboard: null,
+    data.sceneRounds = { C001: [{ number: 1, issues: [], script: null, storyboard: { kind: 'document', name: '分镜', version: 'v06' },
       segments: segments.map(segment => ({ id: segment.id, duration: 3, stage: '一采', run: segment.id === 'P001' ? 'R004' : 'R001', scriptHtml: '本轮分镜' })) }] };
     await route.fulfill({ response, json: data });
   });
@@ -71,12 +74,23 @@ try {
   assert.ok((await scene.locator('.scene-video-preparation').innerText()).includes('3段尚无可播放视频'));
   assert.ok(!(await scene.innerText()).includes('视频已不可播放'));
   assert.equal(await page.locator('.segment-video video').count(), 0, 'must not fall back to old R003');
+  const script = page.locator('.segment-script-content');
+  await script.getByRole('status').filter({ hasText: '现在看到的是第1轮保存的分镜（v06），不是生成视频时留下的记录。' }).waitFor();
+  assert.equal(await script.locator('.generation-context-issues').count(), 0, 'unsubmitted plan labeled as a missing execution record');
+  assert.ok((await script.innerText()).includes('本轮分镜'));
+  assert.ok(!(await script.innerText()).includes('该次生成的资料关联尚未记录。'));
+  await page.getByRole('button', { name: '提示词', exact: true }).click();
+  await script.getByRole('status').filter({ hasText: '还没有实际生成时使用的提示词和素材记录。' }).waitFor();
+  assert.ok(!(await script.innerText()).includes('现在看到的是第1轮保存的分镜'));
+  assert.ok(!(await script.innerText()).includes('已缺失'));
+  await page.getByRole('button', { name: '分镜脚本', exact: true }).click();
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).click();
   assert.equal(await page.getByRole('checkbox', { name: '连续播放', exact: true }).isChecked(), false);
   assert.equal(await scene.getByText('尚未生成视频；可查看已关联资料。', { exact: true }).count(), 1, 'continuous start duplicates player status');
   assert.ok(!(await scene.locator('[role=alert]').allTextContents()).some(text => text.includes('尚未生成')));
   await select('P002');
   assert.equal(await placeholder.innerText(), '已有视频不可播放，请检查视频文件及取回记录。');
+  assert.equal(await script.locator('.generation-context-issues').count(), 1, 'real missing execution records must remain visible');
   assert.ok(!(await scene.innerText()).includes('尚未生成'));
   await page.screenshot({ path: path.join(out, 'unavailable.png') });
   await select('P004');

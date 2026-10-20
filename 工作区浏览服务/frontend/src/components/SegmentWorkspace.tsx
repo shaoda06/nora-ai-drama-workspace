@@ -7,7 +7,7 @@ import { Original, PreviewContext, Rich, Result } from '../components';
 import { TabNav } from './TabNav';
 import { UnderlineTabs } from './UnderlineTabs';
 import { TabSelect } from './TabSelect';
-import { candidateLabel, latestVideo, SegmentVideo } from './SegmentVideo';
+import { candidateLabel, latestVideo, missingVideoState, SegmentVideo } from './SegmentVideo';
 import type { SegmentVideoHandle } from './SegmentVideo';
 import { CopyButton } from './CopyButton';
 import { PromptSections } from './PromptSections';
@@ -37,7 +37,7 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
   items: VideoItem[]; selection: { stage: string; key: string }; onSelectionChange: (selection: { stage: string; key: string }) => void;
   tab: string; onTabChange: (tab: string) => void;
   wideVideo: boolean; onToggleWide: () => void; continuousControl: ReactNode;
-  plannedScript?: { html: string; url?: string }; notesExportControl: ReactNode; segmentNavigation: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
+  plannedScript?: { html: string; url?: string; label: string }; notesExportControl: ReactNode; segmentNavigation: ReactNode; autoPlay: boolean; onVideoEnded: () => void; onVideoError: () => void;
   cachedSources: Record<string, string>;
   retainSource: (source: string) => () => void;
 }) {
@@ -58,6 +58,8 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
     placeholderData: (previous, query) => query?.queryKey[1] === scope.project && query.queryKey[2] === identity ? previous : undefined,
     enabled: !!current && !current.context });
   const context = current?.context || (current ? detail.data : undefined);
+  const awaitingGeneration = current && !current.url && !missingVideoState(current).unavailable
+    && context?.issues.includes('该次生成的资料关联尚未记录。');
   const prompt = context?.prompts[language === 'zh' ? 'chinese' : 'english'];
   const scriptHtml = context?.scriptHtml || plannedScript?.html || '';
   const shots = context?.shots || [];
@@ -118,16 +120,21 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
         <div className={'segment-script-content' + (aligned && tab === 'script' ? ' is-aligned' : '')} ref={scriptContent}>
         {current && !current.context && <Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />}
         {editingNotes && current ? <RevisionNoteEditor key={`${current.stage}/${current.run}`} scope={scope} segment={segment} current={current} time={time} shot={activeShot?.id.match(/SH\d+$/)?.[0] || activeShot?.id} fileRevision={loadedFile.key === current.key ? loadedFile.revision : current.fileRevision} /> : !context ? tab === 'script' && scriptHtml ? <Rich html={scriptHtml} /> : <div className="script-placeholder">{editingNotes ? '修改意见区域' : tab === 'script' ? '分镜脚本区域' : '提示词区域'}</div> : <>
-          {context.issues.length > 0 && <details className="notice generation-context-issues"><summary>{segment} / {current!.stage} / {current!.run} 资料关联提示</summary>{context.issues.map(issue => <p key={issue}>{issue}</p>)}</details>}
+          {awaitingGeneration ? <p className="notice" role="status">这版视频还没生成。{tab === 'script' && plannedScript?.html
+            ? `现在看到的是${plannedScript.label}，不是生成视频时留下的记录。`
+            : '还没有实际生成时使用的提示词和素材记录。'}</p>
+            : context.issues.length > 0 && <details className="notice generation-context-issues"><summary>{segment} / {current!.stage} / {current!.run} 资料关联提示</summary>{context.issues.map(issue => <p key={issue}>{issue}</p>)}</details>}
           {context.source && <p className="muted">生成资料来源：{context.source}</p>}
           {tab === 'script' ? scriptHtml ? <Rich html={aligned ? activeShot!.html : scriptHtml} /> : <div className="script-placeholder">该次分镜原文尚未关联或已缺失。</div> : <>
             <div className="segment-prompt-actions">
               <TabNav compact label="提示词语言" items={[{ value: 'zh', label: '中文' }, { value: 'en', label: '英文' }]} selected={language} onChange={setLanguage} />
               {prompt && <CopyButton label="复制" text={prompt} />}
             </div>
-            {prompt ? <PromptSections key={`${current!.key}/${language}`} text={prompt} language={language} /> : <div className="script-placeholder">该次{language === 'zh' ? '中文参考版' : '实际提交的英文提示词'}尚未关联或已缺失。</div>}
+            {prompt ? <PromptSections key={`${current!.key}/${language}`} text={prompt} language={language} /> : <div className="script-placeholder">{awaitingGeneration
+              ? `生成时，这里会记录实际使用的${language === 'zh' ? '提示词中文参考版' : '英文提示词'}。`
+              : `该次${language === 'zh' ? '中文参考版' : '实际提交的英文提示词'}尚未关联或已缺失。`}</div>}
           </>}
-          {context.issues.length > 0 && <div className="notice">{context.issues.map(issue => <p key={issue}>{issue}</p>)}</div>}
+          {!awaitingGeneration && context.issues.length > 0 && <div className="notice">{context.issues.map(issue => <p key={issue}>{issue}</p>)}</div>}
         </>}
         </div>
       </section>
