@@ -168,7 +168,30 @@ def verify(projects, store, key, report):
     status = projects.status(name)
     if status['updating'] or status['checking'] or status['error']:
         raise ValueError('源资料已登记，网页尚未同步：' + str(status['error']))
-    images = [item for item in report['items'] if item.get('image')]
+    verify_image_entries(projects, name, [item for item in report['items'] if item.get('image')])
+    for ep in dict.fromkeys(item['episode'] for item in report['items'] if not item.get('image')):
+        parsed = projects.section(name, '09-剧集制作', ep, mode='playback')
+        found = set()
+        def walk(value):
+            if isinstance(value, dict):
+                if value.get('productionIssues'):
+                    raise ValueError('源资料已登记，网页制作资料需要修正：' + '；'.join(
+                        issue['key'] + '：' + issue['message'] for issue in value['productionIssues']))
+                if value.get('run') and value.get('stage') and value.get('url'):
+                    found.add(unquote(value['url']))
+                for child in value.values(): walk(child)
+            elif isinstance(value, list):
+                for child in value: walk(child)
+        walk(parsed)
+        for item in report['items']:
+            if item.get('episode') == ep and not any(item['path'] in path for path in found):
+                raise ValueError('源资料已登记，网页缺少本批候选：' + item['identity'])
+    return {'status': 'verified', 'verified_at': store.client.now(), 'revision': status['revision'], 'updated': status['updated'],
+            'review_path': '/#/projects/' + quote(name, safe='')}
+
+
+def verify_image_entries(projects, name, images):
+    """Verify native and downloaded images against their actual parsed review entries."""
     image_groups = {}
     for item in images:
         parts = Path(item['draft']).parts
@@ -196,25 +219,6 @@ def verify(projects, store, key, report):
         for item in members:
             if item.get('display_path', item['path']) not in found:
                 raise ValueError('源资料已登记，网页缺少本批图片：' + item['path'])
-    for ep in dict.fromkeys(item['episode'] for item in report['items'] if not item.get('image')):
-        parsed = projects.section(name, '09-剧集制作', ep, mode='playback')
-        found = set()
-        def walk(value):
-            if isinstance(value, dict):
-                if value.get('productionIssues'):
-                    raise ValueError('源资料已登记，网页制作资料需要修正：' + '；'.join(
-                        issue['key'] + '：' + issue['message'] for issue in value['productionIssues']))
-                if value.get('run') and value.get('stage') and value.get('url'):
-                    found.add(unquote(value['url']))
-                for child in value.values(): walk(child)
-            elif isinstance(value, list):
-                for child in value: walk(child)
-        walk(parsed)
-        for item in report['items']:
-            if item.get('episode') == ep and not any(item['path'] in path for path in found):
-                raise ValueError('源资料已登记，网页缺少本批候选：' + item['identity'])
-    return {'status': 'verified', 'verified_at': store.client.now(), 'revision': status['revision'], 'updated': status['updated'],
-            'review_path': '/#/projects/' + quote(name, safe='')}
 
 
 def apply_record_updates(store, key, updates, episodes, report=None):

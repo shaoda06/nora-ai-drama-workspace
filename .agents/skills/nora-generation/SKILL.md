@@ -13,7 +13,7 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 
 | 本次动作 | 必要入口 |
 | --- | --- |
-| 已明确选用Imagegen生成／编辑 | [Imagegen分支](references/Imagegen生成与尺寸处理规范.md)及当前可用的imagegen技能；不装配为Qwen任务 |
+| 已明确选用Imagegen生成／编辑 | [Imagegen子代理执行](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)；主控准备，固定6 Luna／medium执行，固定脚本收尾，不装配为Qwen任务 |
 | 已备内容的ComfyUI图片或超分提交 | [一次装配入队](../nora-ai-short-drama/references/comfyui-scripts/README.md#一次装配与批量入队)、[图片执行分工](references/ComfyUI-服务配置与任务提交规范.md#图片执行分工)；当前任务数据与授权 |
 | 已备内容的视频提交 | 标准版先按[标准版配置选择](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)询问本次四选一（已有明确选择沿用），再用同一装配工具及[视频执行分工](references/ComfyUI-服务配置与任务提交规范.md#视频执行分工)；不重新读节点全规范 |
 | 首次完整准备图片分支 | [图片执行](references/图片生成执行规范.md)，先按已选能力分支；Qwen再根据T2I／Edit进入对应执行规则；内容缺项交资产或首帧负责人 |
@@ -35,7 +35,7 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 
 标准版视频生成前按[四种配置与生成前询问](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)取得本次选择；DMAD和343常开，Mystic及打戏组由用户选择开启。
 
-Imagegen原生生成与编辑由当前会话内置工具执行，保存与交付职责见[Imagegen分支](references/Imagegen生成与尺寸处理规范.md)；以下API装配、入队和后台收尾适用于ComfyUI任务。
+Imagegen原生生成与编辑由固定执行子代理调用内置工具，保存与交付职责见[Imagegen分支](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)；主控接收报告后交付，不重复收尾。以下API装配、入队和后台收尾适用于ComfyUI任务。
 
 Agent确定内容、实际素材用途、必要业务字段及授权；固定工具装配API／画布、映射、技术记录并检查入队。默认一次--plan完成装配检查与入队，只有单独准备才加--prepare-only；技术报告不能代替内容判断。规范与调用接口详见[职责分工](references/ComfyUI-服务配置与任务提交规范.md#agent与工具的职责)。
 

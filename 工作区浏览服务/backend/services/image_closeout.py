@@ -1,6 +1,7 @@
 """Image technical checks and prepared document associations; no visual judgement."""
 import hashlib
 from copy import deepcopy
+from datetime import datetime
 import json
 import os
 from pathlib import Path
@@ -350,7 +351,11 @@ def register(store, key, outputs, report_file):
 
 def apply(store, key, report, report_file):
     """Resume only exact unfinished edits; preserve feedback and stop on concurrent changes."""
-    root = Path(store.rows[key]['input'].project)
+    return apply_updates(Path(store.rows[key]['input'].project), report, report_file)
+
+
+def apply_updates(root, report, report_file):
+    """Apply shared image record/publication updates for remote and native providers."""
     edits = {}
     for update in report['updates']:
         path = project_file(root, update['path'])
@@ -423,6 +428,6 @@ def apply(store, key, report, report_file):
             if temporary is not None:
                 temporary.unlink(missing_ok=True)
     report['status'] = 'registered'
-    report['registered_at'] = store.client.now()
+    report['registered_at'] = datetime.now().astimezone().isoformat()
     write_json(report_file, report)
     return report
