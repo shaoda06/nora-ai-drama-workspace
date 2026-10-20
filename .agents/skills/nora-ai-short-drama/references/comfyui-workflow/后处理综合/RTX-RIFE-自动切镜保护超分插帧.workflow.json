@@ -414,18 +414,18 @@
         "Node name for S&R": "VHS_VideoCombine",
         "widget_ue_connectable": {}
       },
-      "widgets_values": [
-        30.0,
-        0,
-        "{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
-        "video/h264-mp4",
-        "yuv420p",
-        19,
-        true,
-        false,
-        false,
-        true
-      ],
+      "widgets_values": {
+        "frame_rate": 30.0,
+        "loop_count": 0,
+        "filename_prefix": "{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true
+      },
       "widgets_values_named": {
         "frame_rate": 30.0,
         "loop_count": 0,

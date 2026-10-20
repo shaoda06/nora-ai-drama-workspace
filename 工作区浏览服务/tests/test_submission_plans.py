@@ -152,10 +152,25 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
             segments=[dict(segment='EP001-C001-P002', round='R003')])
         task = dict(task_type='video-postprocess', title='后处理', record_dir='执行附件/后处理测试',
             canvas='post.workflow.json', mapping=mapping, output_nodes=['16'])
+        documents = plans.Documents(self.project)
         with patch('backend.services.video_records.prepare_records'):
-            result = plans.build_video(self.project, task, plans.Documents(self.project))
-        self.assertEqual(result['workflow']['16']['inputs']['filename_prefix'],
-            '测试项目/视频生成/EP001/C001/后处理/EP001-C001-P002-R003-后处理')
+            result = plans.build_video(self.project, task, documents)
+        prefix = '测试项目/视频生成/EP001/C001/后处理/EP001-C001-P002-R003-后处理'
+        self.assertEqual(result['workflow']['16']['inputs']['filename_prefix'], prefix)
+        canvas = json.loads(documents.read(self.project / task['record_dir'] / '任务.workflow.json'))
+        saver = next(node for node in canvas['nodes'] if node['id'] == 16)
+        # VHS restores object storage by name; its legacy list converter treats
+        # slots 4 and 5 as pingpong/save_output rather than H.264 options.
+        stored = saver['widgets_values']
+        self.assertIsInstance(stored, dict)
+        self.assertEqual(stored['filename_prefix'], prefix)
+        for values in (stored, result['workflow']['16']['inputs']):
+            self.assertEqual(values['pix_fmt'], 'yuv420p')
+            self.assertEqual(values['crf'], 19)
+            self.assertIs(values['pingpong'], False)
+            self.assertIs(values['save_output'], True)
+            self.assertIs(values['save_metadata'], True)
+            self.assertIs(values['trim_to_audio'], False)
 
     async def test_missing_authorization_stops_before_writes_or_queue(self):
         task = self.spec()
