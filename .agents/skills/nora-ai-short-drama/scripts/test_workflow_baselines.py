@@ -244,9 +244,9 @@ class BaselineTests(unittest.TestCase):
                     if node['id'] in optional:
                         node['mode'] = 0 if node['id'] in chain else 4
                     field_value = {
-                        261: ('steps', 10 if choice == 1 else 12),
-                        289: ('step', 6 if choice == 1 else 8),
-                        502: ('steps', 6 if choice == 1 else 8),
+                        261: ('steps', 10 if choice in (1, 2) else 12),
+                        289: ('step', 6),
+                        502: ('steps', 6),
                     }.get(node['id'])
                     if field_value:
                         field, value = field_value
@@ -264,9 +264,9 @@ class BaselineTests(unittest.TestCase):
                     self.assertEqual(graph['343']['inputs']['strength_model'], 3.0)
                     total_steps = graph['261']['inputs']['steps']
                     split_step = graph['289']['inputs']['step']
-                    self.assertEqual(total_steps, 10 if choice == 1 else 12)
-                    self.assertEqual(split_step, 6 if choice == 1 else 8)
-                    self.assertEqual(total_steps - split_step, 4)
+                    self.assertEqual(total_steps, 10 if choice in (1, 2) else 12)
+                    self.assertEqual(split_step, 6)
+                    self.assertEqual(total_steps - split_step, 4 if choice in (1, 2) else 6)
                     self.assertEqual(graph['502']['inputs']['steps'], split_step)
                     self.assertEqual(graph['502']['inputs']['sigmas'], ['289', 0])
                     self.assertEqual(graph['407']['inputs']['sigmas'], ['289', 1])
