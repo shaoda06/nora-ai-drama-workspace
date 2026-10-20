@@ -39,7 +39,9 @@ export function Rich({ html = '', languages = {} }: { html?: string; languages?:
     const anchor = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[data-doc]');
     if (anchor && anchor.target !== '_blank') {
       event.preventDefault();
-      preview({ kind: 'markdown', name: anchor.textContent || '文档', key: anchor.dataset.doc + new URL(anchor.href).hash, url: anchor.href });
+      const key = anchor.dataset.doc!;
+      const kind = /\.(png|jpe?g|webp|gif)$/i.test(key) ? 'image' : 'markdown';
+      preview({ kind, name: anchor.textContent || '文档', key: key + new URL(anchor.href).hash, url: anchor.href });
     }
   }} dangerouslySetInnerHTML={blocks ? undefined : { __html: html }}>{blocks?.map((block, index) => {
     if (!block.code) return <div className="rich-fragment" key={index} dangerouslySetInnerHTML={{ __html: block.html }} />;

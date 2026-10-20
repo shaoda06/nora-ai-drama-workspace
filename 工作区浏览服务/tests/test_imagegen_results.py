@@ -188,6 +188,8 @@ class NativeImageTests(unittest.TestCase):
                     self.request = self.request.with_name('剧集请求.json')
                     self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
                 job = call('prepare', '--request', str(self.request))
+                self.assertTrue((self.project / job['generation_call_file']).is_file())
+                self.assertTrue(job['result_store_key'].startswith('imagegen:'))
                 result = subprocess.run(job['complete_command'] + ['--source', str(self.source)], text=True, capture_output=True)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 report = json.loads(result.stdout)
@@ -205,3 +207,40 @@ class NativeImageTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('实际提示词与交接不符', result.stderr)
         self.assertFalse((self.project / self.job['candidate']).exists())
+
+    def test_generation_call_preserves_native_result_before_display(self):
+        self.spec['prompt'] = '杯子写着"测试"。\n只改颜色，保留原图。'
+        self.spec['references'] = []
+        for name in ('参考 白杯.png', '参考 蓝杯.png'):
+            file = self.project / name
+            file.write_bytes(png())
+            self.spec['references'].append(dict(file=name, purpose=name,
+                user_reference=True, basis='用户指定的独立测试输入'))
+        self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+        self.prepare()
+        source = (self.project / self.job['generation_call_file']).read_text()
+        expected = dict(prompt=self.spec['prompt'], referenced_image_paths=[
+            str(self.project / ref['file']) for ref in self.spec['references']])
+        # Imagegen returns image_url/output_hint, not MCP content blocks.
+        for display_fails in (False, True):
+            with self.subTest(display_fails=display_fails):
+                harness = '''
+const events = [], saved = {};
+const output = {image_url: 'data:image/png;base64,dGVzdA==', output_hint: 'native result'};
+const tools = {image_gen__imagegen: async args => {events.push(['call', args]); return output;}};
+const store = (key, value) => {events.push(['store', key]); saved[key] = value;};
+const generatedImage = value => {events.push(['display', value]); DISPLAY_FAILURE};
+let failure = null;
+try { GENERATION_CALL } catch (error) {failure = error.message;}
+process.stdout.write(JSON.stringify({events, saved, output, failure}));
+'''.replace('DISPLAY_FAILURE', "throw new Error('display interrupted')" if display_fails else '')
+                harness = harness.replace('GENERATION_CALL', source)
+                result = subprocess.run(['node', '--input-type=module', '-e', harness],
+                    text=True, capture_output=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                data = json.loads(result.stdout)
+                self.assertEqual([event[0] for event in data['events']], ['call', 'store', 'display'])
+                self.assertEqual(data['events'][0][1], expected)
+                self.assertEqual(data['saved'][self.job['result_store_key']], data['output'])
+                self.assertEqual(data['events'][2][1], data['output'])
+                self.assertEqual(data['failure'], 'display interrupted' if display_fails else None)

@@ -32,7 +32,8 @@ def main():
     root = Path(args.project).resolve()
     if args.command == 'prepare':
         job = native.prepare(root, args.request)
-        result = {name: job[name] for name in ('manifest', 'executor', 'generation', 'candidate', 'prompt_file', 'report')}
+        result = {name: job[name] for name in ('manifest', 'executor', 'generation', 'candidate', 'prompt_file',
+                  'generation_call_file', 'result_store_key', 'report') if name in job}
         result['complete_command'] = [sys.executable, str(Path(__file__).resolve()), 'complete',
             '--project', str(root), '--manifest', job['manifest']]
     else:

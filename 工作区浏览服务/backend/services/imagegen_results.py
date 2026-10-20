@@ -90,10 +90,20 @@ def prepare(project, request_file):
         'draft': draft.relative_to(root).as_posix(), 'kind': spec['kind'], 'generation': generation,
         'review': '审阅-' + generation + '-001', 'candidate': candidate.relative_to(root).as_posix(),
         'record': record.relative_to(root).as_posix(), 'report': (record / 'Imagegen结果报告.json').relative_to(root).as_posix(),
-        'prompt_file': (record / 'Imagegen实际提示词.txt').relative_to(root).as_posix()}
+        'prompt_file': (record / 'Imagegen实际提示词.txt').relative_to(root).as_posix(),
+        'generation_call_file': (record / 'Imagegen内置调用.js').relative_to(root).as_posix(),
+        'result_store_key': 'imagegen:' + root.name + ':' + manifest.relative_to(root).as_posix()}
     if documents.read(job['prompt_file']) is not None:
         raise ValueError('Imagegen提示词附件已占用，不覆盖')
     documents.put(job['prompt_file'], spec['prompt'])
+    arguments = {'prompt': spec['prompt']}
+    if refs:
+        arguments['referenced_image_paths'] = [str(ref['file']) for ref in refs]
+    call = ('// @exec: {"yield_time_ms": 120000, "max_output_tokens": 1000}\n'
+            'const imagegenResult = await tools.image_gen__imagegen(' + json.dumps(arguments, ensure_ascii=False) + ');\n'
+            'store(' + json.dumps(job['result_store_key'], ensure_ascii=False) + ', imagegenResult);\n'
+            'generatedImage(imagegenResult);\n')
+    documents.put(job['generation_call_file'], call)
     documents.new_json(manifest, job)
     publish(root, documents.writes())
     return job

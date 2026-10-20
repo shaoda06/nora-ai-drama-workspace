@@ -43,7 +43,9 @@ Nora项目的调用入口和授权边界统一见[固定通信工具与证据](.
   --project /实际项目目录 --request 相对执行附件/请求.json
 ```
 
-`prepare`只准备既有生成条目、实际提示词文件与Imagegen执行清单，不调用工具或创建ComfyUI任务。返回`manifest`、`executor`、`generation`、`candidate`、`prompt_file`、`report`入口及`complete_command`参数数组。主控将执行清单和此数组交给固定子代理；执行时只追加`["--source", 实际原生输出路径]`，用参数列表启动，不重新拼写项目、清单或提示词长路径。相同请求复用交接，不重复分配生成编号。已交接请求改变时另存新请求，不覆盖原调用依据。准备好后未执行的条目如实保留待执行，不记生成成功。
+`prepare`只准备既有生成条目、实际提示词文件与Imagegen执行清单，不调用工具或创建ComfyUI任务。新交接返回`manifest`、`executor`、`generation`、`candidate`、`prompt_file`、`generation_call_file`、`result_store_key`、`report`入口及`complete_command`参数数组。主控将执行清单、内置调用文件和此数组交给固定子代理；执行时只追加`["--source", 实际原生输出路径]`，用参数列表启动，不重新拼写项目、清单或提示词长路径。相同请求复用交接，不重复分配生成编号。已交接请求改变时另存新请求，不覆盖原调用依据。准备好后未执行的条目如实保留待执行，不记生成成功。
+
+`generation_call_file`是项目相对路径，内容用于子代理原样提交到functions.exec，不在shell或Node中调用真实生图。固定正文已包含实际提示词和按用途清单顺序排列的绝对参考图路径；同次exec先`store(result_store_key, 完整返回值)`，再`generatedImage(完整返回值)`。内置Imagegen结果不按MCP的`content`数组解析，不打印base64或用字段名代替实际结果。需要恢复显示时只执行`generatedImage(load(result_store_key))`；原生文件定位和父子交付边界仍按Imagegen规范。历史清单没有这两个字段时保留原记录与complete恢复入口，不因此新增一次生图。
 
 子代理取得原生PNG后，使用上述`complete_command`数组追加`--source`并执行。以下仅展示`complete`的参数含义，不作为手工重拼路径的步骤：
 
