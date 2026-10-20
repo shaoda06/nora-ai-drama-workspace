@@ -132,7 +132,7 @@ def validate_rtx_inputs(api):
   if inputs['image_encoding'] not in ('8-bit RGB','10-bit RGB (RGB10A2)'):
    raise ValueError(f'RTXVideoSuperResolution {key} image_encoding is unsupported')
 
-def output_for(name):return [403,504,506] if name=='Minimax-H3-导演台-视频生成-标准版' else 3 if name=='RTX-图片2倍超分' else 508 if name=='Qwen2.1-文生图-普通版' else 487 if name=='Qwen2.1-图生图-普通版' else 461 if name.startswith('Qwen') else 403 if name=='Minimax-H3-导演台-视频生成-去油版' else 264 if 'SelfLift-备用' in name else 16
+def output_for(name):return [403,504,506] if name=='Minimax-H3-导演台-视频生成-标准版' else 3 if name=='RTX-图片2倍超分' else 508 if name=='Qwen2.1-文生图-普通版' else 487 if name=='Qwen2.1-图生图-普通版' else 461 if name.startswith('Qwen') else 264 if 'SelfLift-备用' in name else 16
 
 def director_editor_state(block, common=False):
  """Compare persisted Director content, excluding preview blobs and root-only fields."""

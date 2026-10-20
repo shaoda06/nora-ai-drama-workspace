@@ -24,7 +24,7 @@ class WorkflowTests(HttpTestCase):
 
     def test_list_and_download_formal_and_backup_pairs(self):
         content = '{"节点": 128}\n'.encode('utf-8')
-        for category, name in (('Qwen-image-2-1', '图片'), ('Minimax-H3', '视频-去油版'),
+        for category, name in (('Qwen-image-2-1', '图片'), ('Minimax-H3', '视频'),
                                ('后处理综合', '后处理'), ('非正式工作流', '备用')):
             directory = self.root / category
             directory.mkdir()
@@ -44,7 +44,6 @@ class WorkflowTests(HttpTestCase):
         items = self.client.get('/api/workflows').json()
         self.assertEqual(len(items), 4)
         self.assertEqual([item['group'] for item in items], ['formal', 'formal', 'formal', 'backup'])
-        self.assertTrue(next(item for item in items if item['name'] == '视频-去油版')['explicitOnly'])
         for item in items:
             for key in ('canvasUrl', 'apiUrl'):
                 response = self.client.get(item[key])

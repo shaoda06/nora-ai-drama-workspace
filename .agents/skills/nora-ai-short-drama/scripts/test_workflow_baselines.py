@@ -128,111 +128,90 @@ class BaselineTests(unittest.TestCase):
                                                   'inputs': {**valid, field: value}}})
 
     def test_video_preview_dimensions_and_refine_target(self):
-        for variant in ('标准版', '去油版'):
-            with self.subTest(variant=variant):
-                stem = f'Minimax-H3-导演台-视频生成-{variant}'
-                canvas = wb.Canvas(json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8')))
-                api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
-                # Check both persisted representations, including the UI's named values.
-                director = canvas.nodes[502]['widgets_values_named']
-                for inputs in (director, api['502']['inputs']):
-                    self.assertEqual((inputs['width'], inputs['height'], inputs['frame_rate']), (864, 480, 24))
-                    timeline = json.loads(inputs['timeline_data'])
-                    self.assertEqual((timeline['width'], timeline['height'], timeline['frameRate']), (864, 480, 24))
-                    output = timeline['output']
-                    for key, value in {'mode': 'fixed', 'width': 864, 'height': 480, 'longEdge': 864,
-                                       'megapixels': 0.4, 'multiple': 32, 'aspectRatio': '16:9 (宽屏)'}.items():
-                        self.assertEqual(output[key], value, key)
-                    self.assertEqual(inputs['ref_max_size'], 864)
-                    self.assertEqual(output['refImageSize'], '1536')
-                    for segment in timeline['segments']:
-                        self.assertEqual(segment['refImageSize'], '1536')
-                refine = api['407']['inputs']
-                self.assertEqual((refine['mode'], refine['upscale_method']), ('upscale', 'h3_latent'))
-                self.assertEqual((refine['width'], refine['height']), (1536, 864))
-                self.assertEqual(refine['megapixels'], 1.265625)
-                self.assertTrue(refine['confirm_first_pass'])
-                self.assertEqual(refine['passes'], 1)
-                # Refine resolves dimensions from source aspect and MP, then snaps to 32.
-                pixels = refine['megapixels'] * 1024 ** 2
-                aspect = director['width'] / director['height']
-                resolved = (round(math.sqrt(pixels * aspect) / 32) * 32,
-                            round(math.sqrt(pixels / aspect) / 32) * 32)
-                self.assertEqual(resolved, (1536, 864))
+        stem = 'Minimax-H3-导演台-视频生成-标准版'
+        canvas = wb.Canvas(json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8')))
+        api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
+        # Check both persisted representations, including the UI's named values.
+        director = canvas.nodes[502]['widgets_values_named']
+        for inputs in (director, api['502']['inputs']):
+            self.assertEqual((inputs['width'], inputs['height'], inputs['frame_rate']), (864, 480, 24))
+            timeline = json.loads(inputs['timeline_data'])
+            self.assertEqual((timeline['width'], timeline['height'], timeline['frameRate']), (864, 480, 24))
+            output = timeline['output']
+            for key, value in {'mode': 'fixed', 'width': 864, 'height': 480, 'longEdge': 864,
+                               'megapixels': 0.4, 'multiple': 32, 'aspectRatio': '16:9 (宽屏)'}.items():
+                self.assertEqual(output[key], value, key)
+            self.assertEqual(inputs['ref_max_size'], 864)
+            self.assertEqual(output['refImageSize'], '1536')
+            for segment in timeline['segments']:
+                self.assertEqual(segment['refImageSize'], '1536')
+        refine = api['407']['inputs']
+        self.assertEqual((refine['mode'], refine['upscale_method']), ('upscale', 'h3_latent'))
+        self.assertEqual((refine['width'], refine['height']), (1536, 864))
+        self.assertEqual(refine['megapixels'], 1.265625)
+        self.assertTrue(refine['confirm_first_pass'])
+        self.assertEqual(refine['passes'], 1)
+        # Refine resolves dimensions from source aspect and MP, then snaps to 32.
+        pixels = refine['megapixels'] * 1024 ** 2
+        aspect = director['width'] / director['height']
+        resolved = (round(math.sqrt(pixels * aspect) / 32) * 32,
+                    round(math.sqrt(pixels / aspect) / 32) * 32)
+        self.assertEqual(resolved, (1536, 864))
 
     def test_director_named_cache_pair_and_conflicting_api(self):
-        for variant in ('标准版', '去油版'):
-            with self.subTest(variant=variant), tempfile.TemporaryDirectory() as tmp:
-                stem = f'Minimax-H3-导演台-视频生成-{variant}'
-                canvas = json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8'))
-                api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
-                director = next(node for node in canvas['nodes'] if node['type'] == 'MiniMaxH3Director')
-                api_director = next(node for node in api.values() if node['class_type'] == 'MiniMaxH3Director')
-                name = '测试项目-EP003-C001'
-                director['widgets_values_named']['cache_name'] = name
-                director['widgets_values'] = list(director['widgets_values_named'].values())
-                api_director['inputs']['cache_name'] = name
-                Path(tmp, f'{stem}.workflow.json').write_text(json.dumps(canvas), encoding='utf-8')
-                api_path = Path(tmp, f'{stem}.api.json')
-                api_path.write_text(json.dumps(api), encoding='utf-8')
-                self.assertEqual(len(wb.verify(tmp)), 1)
-                api_director['inputs']['cache_name'] = '测试项目-EP003-C002'
-                api_path.write_text(json.dumps(api), encoding='utf-8')
-                self.assertEqual(len(wb.verify(tmp)), 1)
+        with tempfile.TemporaryDirectory() as tmp:
+            stem = 'Minimax-H3-导演台-视频生成-标准版'
+            canvas = json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8'))
+            api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
+            director = next(node for node in canvas['nodes'] if node['type'] == 'MiniMaxH3Director')
+            api_director = next(node for node in api.values() if node['class_type'] == 'MiniMaxH3Director')
+            name = '测试项目-EP003-C001'
+            director['widgets_values_named']['cache_name'] = name
+            director['widgets_values'] = list(director['widgets_values_named'].values())
+            api_director['inputs']['cache_name'] = name
+            Path(tmp, f'{stem}.workflow.json').write_text(json.dumps(canvas), encoding='utf-8')
+            api_path = Path(tmp, f'{stem}.api.json')
+            api_path.write_text(json.dumps(api), encoding='utf-8')
+            self.assertEqual(len(wb.verify(tmp)), 1)
+            api_director['inputs']['cache_name'] = '测试项目-EP003-C002'
+            api_path.write_text(json.dumps(api), encoding='utf-8')
+            self.assertEqual(len(wb.verify(tmp)), 1)
 
     def test_legacy_director_pair_without_cache_name(self):
-        for variant in ('标准版', '去油版'):
-            with self.subTest(variant=variant), tempfile.TemporaryDirectory() as tmp:
-                stem = f'Minimax-H3-导演台-视频生成-{variant}'
-                canvas = json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8'))
-                api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
-                director = next(node for node in canvas['nodes'] if node['type'] == 'MiniMaxH3Director')
-                director['widgets_values_named'].pop('cache_name')
-                director['widgets_values'] = list(director['widgets_values_named'].values())
-                next(node for node in api.values() if node['class_type'] == 'MiniMaxH3Director')['inputs'].pop('cache_name')
-                Path(tmp, f'{stem}.workflow.json').write_text(json.dumps(canvas), encoding='utf-8')
-                Path(tmp, f'{stem}.api.json').write_text(json.dumps(api), encoding='utf-8')
-                self.assertEqual(len(wb.verify(tmp)), 1)
+        with tempfile.TemporaryDirectory() as tmp:
+            stem = 'Minimax-H3-导演台-视频生成-标准版'
+            canvas = json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8'))
+            api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
+            director = next(node for node in canvas['nodes'] if node['type'] == 'MiniMaxH3Director')
+            director['widgets_values_named'].pop('cache_name')
+            director['widgets_values'] = list(director['widgets_values_named'].values())
+            next(node for node in api.values() if node['class_type'] == 'MiniMaxH3Director')['inputs'].pop('cache_name')
+            Path(tmp, f'{stem}.workflow.json').write_text(json.dumps(canvas), encoding='utf-8')
+            Path(tmp, f'{stem}.api.json').write_text(json.dumps(api), encoding='utf-8')
+            self.assertEqual(len(wb.verify(tmp)), 1)
 
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
-        self.assertEqual(len(results), 7)
+        self.assertEqual(len(results), 6)
         for folder, group in workflow_directories(BASELINES):
-            self.assertEqual(len(wb.verify(folder)), 1 if group == 'backup' else 2)
+            self.assertEqual(len(wb.verify(folder)), 1 if group == 'backup' or folder.name == 'Minimax-H3' else 2)
         self.assertIn('Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试', {r['workflow'] for r in results})
         h3 = [r for r in results if r["optional_references"]]
         self.assertEqual(h3, [])
 
-    def test_video_variants_share_generation_backbone(self):
-        standard = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')).read_text(encoding="utf-8"))
-        deoiled = json.loads((workflow_file('Minimax-H3-导演台-视频生成-去油版', 'api')).read_text(encoding="utf-8"))
+    def test_standard_default_lora_chain(self):
+        standard = json.loads(workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api').read_text(encoding='utf-8'))
         for node in ("128", "342", "344", "345"):
             self.assertNotIn(node, standard)
+        self.assertEqual(standard["53"]["class_type"], "LoraLoaderModelOnly")
+        self.assertEqual(standard["53"]["inputs"]["lora_name"], "minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors")
+        self.assertEqual(standard["53"]["inputs"]["strength_model"], 0.8)
+        self.assertEqual(standard["53"]["inputs"]["model"], ["58", 0])
         self.assertEqual(standard["343"]["class_type"], "LoraLoaderModelOnly")
         self.assertEqual(standard["343"]["inputs"]["lora_name"], "H3_speed_slider_1.1.safetensors")
         self.assertEqual(standard["343"]["inputs"]["strength_model"], 3.0)
         self.assertEqual(standard["343"]["inputs"]["model"], ["53", 0])
         self.assertEqual(standard["405"]["inputs"]["model"], ["343", 0])
-        self.assertEqual(deoiled["128"]["class_type"], "LoraLoaderModelOnly")
-        self.assertEqual(deoiled["128"]["inputs"]["lora_name"], "MysticXXX_MMH3-V1.safetensors")
-        self.assertAlmostEqual(deoiled["128"]["inputs"]["strength_model"], 0.5)
-        self.assertEqual(deoiled["405"]["inputs"]["model"], ["53", 0])
-        self.assertEqual(deoiled["128"]["inputs"]["model"], ["58", 0])
-        self.assertEqual(deoiled["53"]["inputs"]["model"], ["128", 0])
-        self.assertEqual(standard["53"]["inputs"]["model"], ["58", 0])
-        for node in ("503", "504", "505", "506", "343"):
-            standard.pop(node)
-        standard["405"]["inputs"]["model"] = ["53", 0]
-        deoiled.pop("128")
-        for graph, lora, strength in (
-            (standard, "minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors", 0.8),
-            (deoiled, "minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors", 1.0),
-        ):
-            self.assertEqual(graph["53"]["class_type"], "LoraLoaderModelOnly")
-            self.assertEqual(graph["53"]["inputs"]["lora_name"], lora)
-            self.assertAlmostEqual(graph["53"]["inputs"]["strength_model"], strength)
-        deoiled["53"]["inputs"] = dict(standard["53"]["inputs"])
-        self.assertEqual(wb.semantic(standard), wb.semantic(deoiled))
 
     def test_standard_lora_presets_export_only_selected_models_in_both_stages(self):
         baseline = json.loads(workflow_file('Minimax-H3-导演台-视频生成-标准版', 'workflow').read_text(encoding='utf-8'))

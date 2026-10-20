@@ -1,17 +1,16 @@
 # ComfyUI-H3视频执行规范
 
-版本：v1.87；更新日期：2026-10-20。
+版本：v1.88；更新日期：2026-10-20。
 
 本规范管理视频工作流的填写、执行与记录。制作顺序及审批读取[开发流程第二部分第7节](视频阶段与返修执行规范.md#7-生成视频验收与衔接修改)，后处理与其他视频修改的阶段归属读取[阶段与当前版本修改](视频阶段与返修执行规范.md#视频阶段与当前版本修改)；提示词正文读取[视频提示词制作规范](../../nora-video-prompts/references/视频提示词制作规范.md#6-分段视频提示词文档)及 `h3-prompt-writing`。准备资料、实际任务和人工审核按[逐集目录规范](../../nora-ai-short-drama/references/流程规范/逐集目录与资产管理规范.md)保存，不把技术成功写成内容获批。
 
 ## 0. 制作策略与工作流配置
 
-视频生成的唯一默认入口为“Minimax-H3-导演台-视频生成-标准版”；去油版仅在用户明确指定该工作流时使用，不因画面观感或内容判断自动切换。两版均为“一采确认与二采”配套工作流。正式生成使用原生MiniMax H3导演台，一采与二采通过同一画布分轮执行，输入模式默认为r2v / Ref2VA。准备或修改节点内容时按[导演台任务阅读路径](ComfyUI-MiniMaxH3导演台节点使用规范.md#任务阅读路径)选读，覆盖本次组与P映射、素材、正文、时间线及执行所需条件。
+视频生成的默认入口为“Minimax-H3-导演台-视频生成-标准版”，使用同一画布的四种LoRA配置，并按“一采确认与二采”分轮执行。正式生成使用原生MiniMax H3导演台，一采与二采通过同一画布分轮执行，输入模式默认为r2v / Ref2VA。准备或修改节点内容时按[导演台任务阅读路径](ComfyUI-MiniMaxH3导演台节点使用规范.md#任务阅读路径)选读，覆盖本次组与P映射、素材、正文、时间线及执行所需条件。
 
 | 工作流 | 当前用途 |
 | --- | --- |
 | Minimax-H3-导演台-视频生成-标准版 | 正式默认多功能画布，DMAD与343常开，Mystic和打戏组按本次选项启用；502为导演台，407为Refine；首次只一采，人工确认后再次执行二采；默认分段导出，403报告驱动执行 |
-| Minimax-H3-导演台-视频生成-去油版 | 用户明确指定时使用；保留节点128 Mystic LoRA，用于角色去油；LoRA配置见第2节，审核流程与标准版一致 |
 | Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试 | 实验备用，仅明确选择时使用；单次渐进采样直接输出高清，不能中途送审低清 |
 | RTX-RIFE-自动切镜保护超分插帧 | 正式默认后处理；按[开发流程的整场后处理安排](视频阶段与返修执行规范.md#7-生成视频验收与衔接修改)逐段输入选定二采，按需先插帧后超分；默认1080P、30fps，自动检测切镜；配置见[后处理交付规格](#后处理交付规格) |
 
@@ -24,7 +23,6 @@
 | 阶段 | 画布 | API | API节点数 |
 | --- | --- | --- | ---: |
 | 标准版：正式默认一采确认与二采 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-标准版.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-标准版.api.json) | 默认20；全开24 |
-| 去油版：仅用户明确指定 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-去油版.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-去油版.api.json) | 16 |
 | SelfLift备用测试 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试.api.json) | 19 |
 | 后处理：正式默认RIFE | [画布](../../nora-ai-short-drama/references/comfyui-workflow/后处理综合/RTX-RIFE-自动切镜保护超分插帧.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/后处理综合/RTX-RIFE-自动切镜保护超分插帧.api.json) | 5 |
 
@@ -41,7 +39,7 @@ python3 -B /实际技能目录/scripts/workflow_baselines.py
 python3 -B -m unittest discover -s /实际技能目录/scripts -p test_workflow_baselines.py -v
 ```
 
-可选`--directory /待检查目录`，扫描其中API及统一目录入口登记的直属分类，不递归扫描其他目录。默认覆盖7份API（正式6份、非正式1份）；每份输出一行JSON，成功输出PASS并退出0。空目录也可返回成功，须确认目标有被覆盖。修改API或相关脚本时运行；普通提交不重复跑整套测试。不使用`-O`。
+可选`--directory /待检查目录`，扫描其中API及统一目录入口登记的直属分类，不递归扫描其他目录。默认覆盖6份API（正式5份、非正式1份）；每份输出一行JSON，成功输出PASS并退出0。空目录也可返回成功，须确认目标有被覆盖。修改API或相关脚本时运行；普通提交不重复跑整套测试。不使用`-O`。
 
 后处理报告列出宽高、目标帧率和编码参数；低于交付建议只提示，不强制改写用户已确认目标。正式RIFE同时检查随包ZIP的必需文件、完整性和Python语法，不加载模型、不运行GPU。测试不连接远端，不证明实际生成或用户批准。
 
@@ -63,14 +61,14 @@ python3 -B -m unittest discover -s /实际技能目录/scripts -p test_workflow_
 
 ## 2. 参数边界
 
-两版一采确认与二采的固定生成设置如下；用户未明确改变时沿用基准保存值，不用节点出厂值替代：
+标准版一采确认与二采的生成设置如下；用户未明确改变时沿用基准保存值，不用节点出厂值替代：
 
 | 项目 | 节点及固定值 |
 | --- | --- |
 | 模型 | 192：minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors，weight_dtype=default |
 | 通用Sage | 406：PathchSageAttentionKJ，auto，allow_compile=false，启用 |
 | H3专用Sage | 58：MiniMaxH3MemoryEfficientSageAttentionPatch，启用 |
-| LoRA | 标准版53：minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors，0.8；去油版53：minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors，1.0；128：MysticXXX_MMH3-V1.safetensors，0.5，标准版默认旁路、按所选配置启用；去油版保持启用，接入顺序见下文 |
+| LoRA | 53：minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors，0.8，常开；128：MysticXXX_MMH3-V1.safetensors，0.5，默认旁路、按所选配置启用，接入顺序见下文 |
 | 武打与运动LoRA（标准版） | 128后依次加载342：H3_Combat_V2.safetensors，0.65 → 344：minimax_h3\Motion_Repair_V2.safetensors，0.35 → 345：H3_Fight_Flow_V1.safetensors，0.35 → 343：H3_speed_slider_1.1.safetensors，3.0；342/344/345作为一组默认旁路、按所选配置启用；343常开，默认3.0，范围-10～10，数值越大动作越快、越小越慢 |
 | TE | 405：0.08 / 0.1 / 0.9 / mcs=2 / device=auto / mode=8-step LoRA，启用 |
 | 编码器 | 38：qwen3vl_32b_minimax_h3_int8_convrot.safetensors，type=minimax，device=default |
@@ -84,7 +82,7 @@ python3 -B -m unittest discover -s /实际技能目录/scripts -p test_workflow_
 | Refine | 407：upscale / h3_latent / minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors / Euler / passes=1 / seed_mode=inherit / megapixels=1.265625 / width=1536 / height=864；跟随一采比例，目标1536×864；confirm_first_pass=true；skip_fl2v=true；时间与空间分块关闭 |
 | 导出 | 默认output.exportMode=segments；导演台逐组MP4为完整交付来源，按[导演台输出规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#731-导出方式与逐组文件)核对；403报告为逐组取回依据；标准版还包含504一采与506二采预览保存，404仅为画布说明 |
 
-标准版画布完整接线为192 → 406 → 58 → 53 → 128 → 342 → 344 → 345 → 343 → 405，默认将128、342、344、345旁路，实际执行链为192 → 406 → 58 → 53 → 343 → 405；去油版为192 → 406 → 58 → 128 → 53 → 405。两版的53号LoRA及343配置不同，标准版的可选LoRA按下节选择；其他生成参数和时间线一致；405直接接261和502；二采独立支路为405 → 408 → 409 → 407.refine_model。执行端须提供上述两个分块节点及对应参数接口，不用Refine的时间／空间分块开关替代模型分块。58接管H3主干注意力；通用节点的加入不表示叠加两次加速。`allow_compile`仅允许参与编译，不是节点总开关；`disabled`直接传递模型。407连接502.refine；没有SelfLift、FaceRefine或语义桥连接。一采实际9步加二采4步，不能把调度器显示12步登记成两轮实际总步数。
+标准版画布完整接线为192 → 406 → 58 → 53 → 128 → 342 → 344 → 345 → 343 → 405，默认将128、342、344、345旁路，实际执行链为192 → 406 → 58 → 53 → 343 → 405。可选LoRA按下节选择，其他生成参数和时间线保持不变；405直接接261和502；二采独立支路为405 → 408 → 409 → 407.refine_model。执行端须提供上述两个分块节点及对应参数接口，不用Refine的时间／空间分块开关替代模型分块。58接管H3主干注意力；通用节点的加入不表示叠加两次加速。`allow_compile`仅允许参与编译，不是节点总开关；`disabled`直接传递模型。407连接502.refine；没有SelfLift、FaceRefine或语义桥连接。一采实际9步加二采4步，不能把调度器显示12步登记成两轮实际总步数。
 
 Refine当前实现先按一采比例及 `megapixels × 1024²` 计算目标宽高，再分别对齐32；仅填写width/height不会覆盖这一计算。864×480配合megapixels=1.265625，对齐后得到1536×864；一采实际9:5，二采目标16:9，对齐后的结果并非与一采严格等比例。核对解析目标与实际输出均为1536×864，不为凑整比例拉伸一采文件或改变其缓存输入。任务执行使用API中保存的MP数值。
 
@@ -92,11 +90,11 @@ Refine当前实现先按一采比例及 `megapixels × 1024²` 计算目标宽�
 
 执行端的清理实现须在模型GC／卸载前清空动态显存预取队列，按阶段保留／卸载模型，并支持 `precise_segment_memory`。精确调度按模型权重大小与物理内存总量的比例选择策略，不是按当前内存占用率决定。节点缺少所需接口时报告兼容性问题，不静默删掉参数、覆盖插件或更改启动配置。
 
-基准更新及版本选择用于后续获授权任务，不自动改写已有任务副本、请求或批准来源。已有一采的二采接续沿用原工作流版本和原一采尺寸，不自动切换标准版或去油版；需要切换时先核对模型链与缓存影响。参考图策略属于一采缓存输入；已有一采接续二采时按[制作变更时的缓存保护](ComfyUI-MiniMaxH3导演台节点使用规范.md#751-制作变更时的缓存保护)及第5节保留来源配置并核对缓存，不套用新基准导致重新一采。不同分辨率的一采即使使用同一种子也可能产生不同构图和动作，既有内容批准不自动转用于另一尺寸的新结果。
+基准更新及版本选择用于后续获授权任务，不自动改写已有任务副本、请求或批准来源。已有一采的二采接续沿用原工作流版本和原一采尺寸，不自动改用当前基准或其他LoRA配置；需要切换时先核对模型链与缓存影响。参考图策略属于一采缓存输入；已有一采接续二采时按[制作变更时的缓存保护](ComfyUI-MiniMaxH3导演台节点使用规范.md#751-制作变更时的缓存保护)及第5节保留来源配置并核对缓存，不套用新基准导致重新一采。不同分辨率的一采即使使用同一种子也可能产生不同构图和动作，既有内容批准不自动转用于另一尺寸的新结果。
 
 ### 标准版四种配置与生成前询问
 
-每次准备新的标准版视频生成任务前，Agent先问用户：“本次生成使用哪一种工作流配置？”并给出以下四个选项。它们共用同一张标准版画布，只切换LoRA节点；不以“去油版”旧文件代替选项2。文戏默认是保存的初始状态，未作选择时仍须询问，不能把沉默视为选项1。
+每次准备新的标准版视频生成任务前，Agent先问用户：“本次生成使用哪一种工作流配置？”并给出以下四个选项。它们共用同一张标准版画布，只切换LoRA节点。文戏默认是保存的初始状态，未作选择时仍须询问，不能把沉默视为选项1。
 
 | 选项 | 名称 | 128 Mystic | 342／344／345打戏组 | 实际模型链（58之后、405之前） | API节点数 |
 | --- | --- | --- | --- | --- | ---: |
@@ -166,7 +164,7 @@ R的分配、阶段转换及同配置补做读取[视频修订编号与执行过
 服务配置、选端与恢复地址执行[工作区ComfyUI配置](ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)。新任务的准备与入队按[服务与任务提交入口](ComfyUI服务与任务提交规范.md#comfyui服务与任务提交)执行，不向远端发布基准。已有后台任务按[查询与结果处理入口](进度查询与结果处理规范.md#进度查询与结果处理)选择[状态查询](../../nora-ai-short-drama/references/comfyui-scripts/README.md#后台状态查询)、[通知确认](../../nora-ai-short-drama/references/comfyui-scripts/README.md#后台通知确认)或[取回重试](../../nora-ai-short-drama/references/comfyui-scripts/README.md#后台取回重试)，无需加载上传、提交或完整comfyui-api说明。
 
 1. **准备**：内容已备时，工具从指定内容画布制作任务副本并自动建立分段阶段技术条目；内容尚未准备时先从正式基准配置当前内容，替换全部业务占位符，保存组与EP/C/P映射、获批资料版本、完整模型正文、实际素材、种子和输出范围。冻结任务按[逐集目录规范第4节](../../nora-ai-short-drama/references/流程规范/逐集目录与资产管理规范.md#4-视频执行输出审核与采用)保存，05不维护运行流水。
-2. **准备核对**：内容合理性由Agent在准备阶段完成，可程序判断的格式和执行条件调用工具生成报告；按[执行前检查与复用](ComfyUI-服务配置与任务提交规范.md#执行前检查与复用)复用本地工具报告，不预查远端节点／模型能力；由工具按实际选择检查标准版按所选配置20／21／23／24个或去油版16个节点的API结构、素材身份和数量/时长、标签、时间线与输出位置；按[模型提示词长度规则](../../nora-video-prompts/references/视频提示词制作规范.md#模型提示词长度)核对各分段最终正文并记录结果；内容与格式分别核对、分别记录结论，语言适配读取[语言与命名](../../nora-video-prompts/references/视频提示词制作规范.md#h3模型正文的语言与命名)，检查要求及结论留存直达[模型正文的内容核对](../../nora-video-prompts/references/视频提示词制作规范.md#模型正文的内容核对)，资料包的其他交付项按[交付核对](../../short-drama-review/references/交付核对规范.md#交付核对)执行。不能用UI注册或上传成功证明全组合可运行。
+2. **准备核对**：内容合理性由Agent在准备阶段完成，可程序判断的格式和执行条件调用工具生成报告；按[执行前检查与复用](ComfyUI-服务配置与任务提交规范.md#执行前检查与复用)复用本地工具报告，不预查远端节点／模型能力；由工具按所选标准版配置检查20／21／23／24个节点的API结构、素材身份和数量/时长、标签、时间线与输出位置；按[模型提示词长度规则](../../nora-video-prompts/references/视频提示词制作规范.md#模型提示词长度)核对各分段最终正文并记录结果；内容与格式分别核对、分别记录结论，语言适配读取[语言与命名](../../nora-video-prompts/references/视频提示词制作规范.md#h3模型正文的语言与命名)，检查要求及结论留存直达[模型正文的内容核对](../../nora-video-prompts/references/视频提示词制作规范.md#模型正文的内容核对)，资料包的其他交付项按[交付核对](../../short-drama-review/references/交付核对规范.md#交付核对)执行。不能用UI注册或上传成功证明全组合可运行。
 3. **入队**：本次生成获授权后直接使用已核对资料通过统一入口登记，不重新通读内容或手工重跑技术检查；登记只做必要边界校验并保存本地任务ID；轮到执行时由工具统一比较准备依据并复用未变结论，上传后只核对实际改写的素材绑定，不比较画布与API，具体边界按[执行前检查与复用](ComfyUI-服务配置与任务提交规范.md#执行前检查与复用)执行。Agent只提交已备内容及语义映射；脚本导出API、装配绑定和成果目标、自动维护执行条目；后台轮到任务时上传，在POST前按[生成版本的资料关联](../../nora-ai-short-drama/references/流程规范/逐集目录与资产管理规范.md#生成版本的资料关联)冻结当次资料，保存实际地址与远端ID。参数见[视频资料自动保存](../../nora-ai-short-drama/references/comfyui-scripts/README.md#视频资料自动保存)。
 4. **跟进**：后台按[任务监控规范](ComfyUI-任务监控规范.md)监听、重连及核对，Agent不另开定时器。收到结果通知后只调用report，在同次读取中确认收到，直接汇报数量和审核入口；不再读常规记录或补写；失败从具体失败阶段复查，不自动安装、重启、清队列或替换模型。
 

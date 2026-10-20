@@ -6,7 +6,7 @@ import { PageHeader } from './components/PageHeader';
 import { DownloadButton, type DownloadState } from './components/DownloadButton';
 import './Workflows.css';
 
-type Workflow = { name: string; group: 'formal' | 'backup'; explicitOnly: boolean; canvasUrl: string; apiUrl: string | null };
+type Workflow = { name: string; group: 'formal' | 'backup'; canvasUrl: string; apiUrl: string | null };
 const groups = [
   { id: 'formal', title: '正式工作流', description: '日常制作使用的工作流。' },
   { id: 'backup', title: '备用工作流', description: '来自「非正式工作流」目录，按具体需要选用。' },
