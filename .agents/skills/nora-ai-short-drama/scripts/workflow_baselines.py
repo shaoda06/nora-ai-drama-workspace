@@ -133,7 +133,7 @@ def validate_rtx_inputs(api):
   if inputs['image_encoding'] not in ('8-bit RGB','10-bit RGB (RGB10A2)'):
    raise ValueError(f'RTXVideoSuperResolution {key} image_encoding is unsupported')
 
-def output_for(name):return [403,504,506] if name=='Minimax-H3-导演台-视频生成-标准版' else 3 if name=='Nora-RTX-图片2倍超分' else 508 if name=='Qwen2.1-文生图-普通版' else 487 if name=='Qwen2.1-图生图-普通版' else 461 if name.startswith('Qwen') else 403 if name=='Minimax-H3-导演台-视频生成-去油版' else 264 if any(s in name for s in ('仅一采','SelfLift-备用')) else 214 if '仅二采' in name else 16
+def output_for(name):return [403,504,506] if name=='Minimax-H3-导演台-视频生成-标准版' else 3 if name=='Nora-RTX-图片2倍超分' else 508 if name=='Qwen2.1-文生图-普通版' else 487 if name=='Qwen2.1-图生图-普通版' else 461 if name.startswith('Qwen') else 403 if name=='Minimax-H3-导演台-视频生成-去油版' else 264 if 'SelfLift-备用' in name else 16
 
 def director_editor_state(block, common=False):
  """Compare persisted Director content, excluding preview blobs and root-only fields."""
@@ -211,14 +211,6 @@ def verify(directory):
     validate_rife_package(package)
     result['node_package']=package.name
   results.append(result)
-  # Compare shared inputs only when both files use the same legacy H3 backbone.
- for folder in folders:
-  first_path=folder/'Nora-MiniMaxH3-多参考视频-仅一采.api.json'
-  second_path=folder/'Nora-MiniMaxH3-多参考视频-仅二采.api.json'
-  if first_path.exists() and second_path.exists():
-   first=semantic(json.loads(first_path.read_text(encoding="utf-8")));second=semantic(json.loads(second_path.read_text(encoding="utf-8")))
-   if first.get('265',{}).get('class_type')==second.get('265',{}).get('class_type') and '265' in first:
-    for node_id in first.keys() & second.keys():assert first[node_id]==second[node_id], ('Shared H3 mismatch',node_id)
  return results
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__, epilog='Python 3.9+, standard library; do not use -O. Prints one JSON line per scanned API, then PASS; exit 0 on success, nonzero on error. Check expected workflow coverage: an empty directory can also pass.')

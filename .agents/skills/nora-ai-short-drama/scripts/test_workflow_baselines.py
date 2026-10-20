@@ -199,13 +199,12 @@ class BaselineTests(unittest.TestCase):
 
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
-        self.assertEqual(len(results), 13)
+        self.assertEqual(len(results), 11)
         for folder, group in workflow_directories(BASELINES):
-            self.assertEqual(len(wb.verify(folder)), 7 if group == "backup" else 2)
+            self.assertEqual(len(wb.verify(folder)), 5 if group == "backup" else 2)
         self.assertIn('Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试', {r['workflow'] for r in results})
         h3 = [r for r in results if r["optional_references"]]
-        self.assertEqual(len(h3), 1)
-        self.assertTrue(all(r["reference_combinations"] == 147 for r in h3))
+        self.assertEqual(h3, [])
 
     def test_video_variants_share_generation_backbone(self):
         standard = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')).read_text(encoding="utf-8"))
@@ -254,9 +253,9 @@ class BaselineTests(unittest.TestCase):
 
     def test_retained_pairs_can_be_checked_directly(self):
         results = wb.verify(RETAINED)
-        self.assertEqual(len(results), 7)
+        self.assertEqual(len(results), 5)
         self.assertIn('Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试', {r['workflow'] for r in results})
-        self.assertEqual(sum(r["reference_combinations"] for r in results), 147)
+        self.assertEqual(sum(r["reference_combinations"] for r in results), 0)
 
     def test_confirmation_pair_requires_report_output(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -284,21 +283,6 @@ class BaselineTests(unittest.TestCase):
             with self.assertRaisesRegex(AssertionError, '2x'):
                 wb.verify(tmp)
 
-    def test_detects_missing_optional_loader(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            name = "Nora-MiniMaxH3-多参考视频-仅二采"
-            retained = Path(tmp, "非正式工作流")
-            retained.mkdir()
-            for suffix in ("workflow", "api"):
-                source = RETAINED / f"{name}.{suffix}.json"
-                (retained / source.name).write_bytes(source.read_bytes())
-            api_path = retained / f"{name}.api.json"
-            api = json.loads(api_path.read_text(encoding="utf-8"))
-            del api["51"]
-            api_path.write_text(json.dumps(api), encoding="utf-8")
-            with self.assertRaises(AssertionError):
-                wb.verify(tmp)
-
     def test_detects_broken_canvas_link(self):
         source = workflow_file('Qwen2.1-文生图-普通版', 'workflow')
         canvas = json.loads(source.read_text(encoding="utf-8"))
@@ -307,38 +291,24 @@ class BaselineTests(unittest.TestCase):
             wb.Canvas(canvas)
 
     def test_detects_director_timeline_size_conflict(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            source = RETAINED / "Nora-MiniMaxH3-多参考视频-仅一采.workflow.json"
-            canvas = json.loads(source.read_text(encoding="utf-8"))
-            director = next(n for n in canvas["nodes"] if n["id"] == 402)
-            timeline = json.loads(director["widgets_values_named"]["timeline_data"])
-            timeline["width"] = 960
-            director["widgets_values_named"]["timeline_data"] = json.dumps(timeline)
-            names = list(director["widgets_values_named"])
-            director["widgets_values"][names.index("timeline_data")] = director["widgets_values_named"]["timeline_data"]
-            Path(tmp, source.name).write_text(json.dumps(canvas), encoding="utf-8")
-            api = wb.Canvas(canvas).api(264)
-            Path(tmp, source.name.replace(".workflow.", ".api.")).write_text(json.dumps(api), encoding="utf-8")
-            with self.assertRaisesRegex(AssertionError, "Director timeline mismatch"):
-                wb.verify(tmp)
+        source = workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')
+        api = json.loads(source.read_text(encoding="utf-8"))
+        timeline = json.loads(api['502']['inputs']['timeline_data'])
+        timeline['width'] = 960
+        with self.assertRaisesRegex(AssertionError, "Director timeline mismatch"):
+            self.verify_director_timeline(timeline)
 
     def verify_director_timeline(self, timeline):
-        source = RETAINED / "Nora-MiniMaxH3-多参考视频-仅一采.workflow.json"
-        canvas = json.loads(source.read_text(encoding="utf-8"))
-        director = next(n for n in canvas["nodes"] if n["id"] == 402)
-        value = json.dumps(timeline)
-        names = list(director["widgets_values_named"])
-        director["widgets_values_named"]["timeline_data"] = value
-        director["widgets_values"][names.index("timeline_data")] = value
+        source = workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')
+        api = json.loads(source.read_text(encoding="utf-8"))
+        api['502']['inputs']['timeline_data'] = json.dumps(timeline)
         with tempfile.TemporaryDirectory() as tmp:
-            Path(tmp, source.name).write_text(json.dumps(canvas), encoding="utf-8")
-            api = wb.Canvas(canvas).api(264)
-            Path(tmp, source.name.replace(".workflow.", ".api.")).write_text(json.dumps(api), encoding="utf-8")
+            Path(tmp, source.name).write_text(json.dumps(api), encoding="utf-8")
             return wb.verify(tmp)
 
     def test_accepts_native_director_workspace_projection(self):
-        source = RETAINED / "Nora-MiniMaxH3-多参考视频-仅一采.api.json"
-        timeline = json.loads(json.loads(source.read_text(encoding="utf-8"))["402"]["inputs"]["timeline_data"])
+        source = workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')
+        timeline = json.loads(json.loads(source.read_text(encoding="utf-8"))["502"]["inputs"]["timeline_data"])
         timeline["global"]["refs"] = [{"index": 0, "imageFile": "cast.png", "fileName": "cast.png", "previewB64": "ui-only"}]
         workspace = timeline["batchWorkspaces"]["r2v"]
         # The native editor stores shared content only, with media defaults and no previews.
@@ -355,8 +325,8 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(len(self.verify_director_timeline(timeline)), 1)
 
     def test_detects_director_workspace_content_drift(self):
-        source = RETAINED / "Nora-MiniMaxH3-多参考视频-仅一采.api.json"
-        original = json.loads(json.loads(source.read_text(encoding="utf-8"))["402"]["inputs"]["timeline_data"])
+        source = workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')
+        original = json.loads(json.loads(source.read_text(encoding="utf-8"))["502"]["inputs"]["timeline_data"])
         for change in ("public_prompt", "public_media", "segment_prompt", "segment_media", "duration", "selection"):
             with self.subTest(change=change):
                 timeline = copy.deepcopy(original)
