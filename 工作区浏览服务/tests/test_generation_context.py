@@ -1,4 +1,5 @@
 import json
+import hashlib
 import importlib.util
 from pathlib import Path
 import tempfile
@@ -301,7 +302,7 @@ class GenerationContextTests(HttpTestCase):
         self.assertNotIn('EP001-C001', other)
         self.assertEqual((self.project / old['storyboard']['file']).read_bytes(), old_bytes)
 
-    def automatic_task(self, selected=(0, 1), common_enabled=True):
+    def automatic_task(self, selected=(0, 1), common_enabled=True, document_chinese=False):
         root = self.project / (self.episode + '/其他资料/执行附件/EP001-C001-P001-R004-一采')
         script = self.episode + '/03-分镜脚本/EP001-C001-场次分镜.md'
         self.write(script, self.storyboard('v21', '当次第一段') + '**时间**：00:11-00:14\n**时长**：3秒\n第二段原文。\n')
@@ -324,13 +325,71 @@ class GenerationContextTests(HttpTestCase):
             mapping['segments'].append({'segment': f'EP001-C001-P{number:03d}', 'round': run,
                                         'local_execution_dir': str(self.project / directory)})
             if number - 1 in selected:
-                self.write(directory + '/中文提示词参考版.txt', f'当次中文{number}')
+                if document_chinese:
+                    document = self.episode + f'/05-视频提示词/EP001-C001-P{number:03d}-视频提示词.md'
+                    english = '\n\n'.join([common['prompt'], groups[number - 1]['prompt']] if common_enabled
+                                           else [groups[number - 1]['prompt']])
+                    chinese = f'当次中文{number}'
+                    self.write(document, '## 提交给模型的完整提示词\n```text\n' + english
+                               + '\n```\n\n## 中文提示词参考版\n```text\n' + chinese + '\n```\n')
+                    mapping.setdefault('content_review', {'version': 1, 'groups': []})['groups'].append({
+                        'node': '105001', 'index': number - 1,
+                        'chinese': {'file': document, 'sha256': hashlib.sha256(chinese.encode()).hexdigest()}})
+                else:
+                    self.write(directory + '/中文提示词参考版.txt', f'当次中文{number}')
                 self.write(self.episode + '/其他资料/候选视频/' + identity + '.mp4', identity)
         self.write(str((root / '输入映射.json').relative_to(self.project)), json.dumps(mapping, ensure_ascii=False))
         timeline = {'global': common, 'segments': groups, 'editMode': 'segment', 'runSelectEnabled': len(selected) != 2, 'runSelection': list(selected)}
         workflow = {'105001': {'class_type': 'MiniMaxH3Director',
                               'inputs': {'global_prompt': common['prompt'], 'timeline_data': json.dumps(timeline)}}}
         return root, workflow, mapping
+
+    def test_reviewed_document_chinese_is_frozen_and_available_in_browser(self):
+        root, workflow, original = self.automatic_task(document_chinese=True)
+        checked = writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass', check_only=True)
+        for review in original['content_review']['groups']:
+            self.assertIn(str((self.project / review['chinese']['file']).resolve()), checked['files'])
+        self.assertFalse((root / '中文提示词参考版.txt').exists())
+        self.assertEqual(json.loads((root / '输入映射.json').read_text()), original)
+
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass', fixed_checked=True)
+        saved = (root / '输入映射.json').read_bytes()
+        mapping = json.loads(saved)
+        for number, context in enumerate(mapping['generation_contexts'], 1):
+            chinese = self.project / context['prompts']['chinese']
+            self.assertEqual(chinese.parent, self.project / original['segments'][number - 1]['local_execution_dir'])
+            self.assertEqual(chinese.read_text(), f'当次中文{number}')
+        # Later document edits must not change this execution's frozen inputs.
+        for review in original['content_review']['groups']:
+            self.write(review['chinese']['file'], '后来修改的正文')
+        writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass')
+        self.assertEqual((root / '输入映射.json').read_bytes(), saved)
+        with patch.object(main, 'store', ProjectStore(self.project.parent)), TestClient(main.app) as client:
+            for number, context in enumerate(mapping['generation_contexts'], 1):
+                response = client.get('/api/projects/示例项目/episodes/EP001/contexts/' + context['identity'])
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.json()['prompts']['chinese'], f'当次中文{number}')
+                self.assertIn('chineseUrl', response.json()['prompts'])
+
+    def test_document_chinese_rejects_a_different_submitted_english_before_any_freeze(self):
+        root, workflow, mapping = self.automatic_task(document_chinese=True)
+        source = self.project / mapping['content_review']['groups'][1]['chinese']['file']
+        source.write_text(source.read_text().replace('第二段实际英文', '另一版英文'))
+        for check_only in (True, False):
+            with self.subTest(check_only=check_only), self.assertRaisesRegex(ValueError, '中文参考文档.*实际.*英文'):
+                writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass', check_only=check_only)
+        self.assertEqual(json.loads((root / '输入映射.json').read_text()), mapping)
+        self.assertFalse((root / '模型提示词.txt').exists())
+        self.assertFalse((root / '中文提示词参考版.txt').exists())
+
+    def test_document_chinese_cannot_change_after_its_content_review(self):
+        root, workflow, mapping = self.automatic_task(document_chinese=True)
+        source = self.project / mapping['content_review']['groups'][0]['chinese']['file']
+        source.write_text(source.read_text().replace('当次中文1', '另一版中文'))
+        with self.assertRaisesRegex(ValueError, '中文参考版与内容核对'):
+            writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass', fixed_checked=True)
+        self.assertNotIn('generation_contexts', json.loads((root / '输入映射.json').read_text()))
+        self.assertFalse((root / '中文提示词参考版.txt').exists())
 
     def test_automatic_submission_inputs_are_read_as_frozen_history(self):
         root, workflow, before = self.automatic_task()

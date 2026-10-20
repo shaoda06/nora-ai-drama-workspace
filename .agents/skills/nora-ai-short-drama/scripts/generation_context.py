@@ -5,6 +5,7 @@ from pathlib import Path
 import re
 import stat
 from project_paths import PreparationPaths
+from h3_prompt_checks import chinese_text, digest
 
 STAGES = {'video-first-pass': '一采', 'video-second-pass': '二采', 'video-postprocess': '后处理'}
 
@@ -132,6 +133,9 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
             timeline = timelines[id(director)] if timelines is not None else json.loads(inputs['timeline_data'])
             indices = sorted(timeline['runSelection']) if timeline.get('runSelectEnabled', False) else list(range(len(timeline['segments'])))
         groups = timeline['segments']
+        director_id = next(key for key, node in workflow.items() if node['class_type'] == 'MiniMaxH3Director')
+        review = mapping.get('content_review', {})
+        reviewed_groups = {row['index']: row for row in review.get('groups', []) if row['node'] == director_id} if isinstance(review, dict) else {}
         storyboard = inside(mapping.get('storyboard_file') or f"09-剧集制作/{scene.split('-')[0]}/03-分镜脚本/{scene}-场次分镜.md")
         if not fixed_checked:
             text = read_once(storyboard).decode('utf-8-sig')
@@ -206,7 +210,22 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
             english = snapshot(english_file, read_once(english_file) if has_english else prompt.encode('utf-8'))
             prompts = {'english': english}
             chinese = inside(reused['prompts']['chinese']) if reused and 'chinese' in reused['prompts'] else directory / '中文提示词参考版.txt'
-            if is_file(chinese):
+            if not reused and 'generation_contexts' not in mapping and index in reviewed_groups:
+                reviewed = reviewed_groups[index]['chinese']
+                document = inside(reviewed['file'])
+                text = read_once(document).decode('utf-8-sig').replace('\r\n', '\n').replace('\r', '\n')
+                if document.suffix == '.md':
+                    paired_english = re.search(r'^## 提交给(?:模型|节点263)的完整提示词\s*\n```text\s*\n(.*?)```', text, re.M | re.S)
+                    if not paired_english or paired_english[1].strip() != prompt:
+                        raise ValueError('中文参考文档中的英文与实际提交英文不一致：' + str(document))
+                translation = chinese_text(text)
+                if digest(translation) != reviewed['sha256']:
+                    raise ValueError('中文参考版与内容核对时的版本不一致：' + str(document))
+                frozen = translation.encode('utf-8')
+                if is_file(chinese) and chinese_text(read_once(chinese).decode('utf-8-sig')) == translation:
+                    frozen = read_once(chinese)
+                prompts['chinese'] = snapshot(chinese, frozen)
+            elif is_file(chinese):
                 prompts['chinese'] = chinese.relative_to(project).as_posix()
             script_file = snapshot(inside(reused['storyboard']['file']) if reused else record / '分镜脚本.md', b'' if check_only else read_once(storyboard))
             refs = references(group, reused['references'] if reused else {})

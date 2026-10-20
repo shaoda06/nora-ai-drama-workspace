@@ -33,7 +33,8 @@ N/A'''
 def attach_review(project, record, workflow, mapping):
     project, record = Path(project), Path(record)
     chinese = record / 'review-document.md'
-    chinese.write_text('## 中文提示词参考版\n\n```text\n' + CHINESE + '\n```\n', 'utf-8')
+    chinese.write_text('## 提交给模型的完整提示词\n\n```text\n' + ENGLISH
+                       + '\n```\n\n## 中文提示词参考版\n\n```text\n' + CHINESE + '\n```\n', 'utf-8')
     source = project / 'review-source.md'
     source.write_text('陈甲在门边等待，固定镜头看空通道，无人说话。', 'utf-8')
     proof = {'file': source.relative_to(project).as_posix(), 'sha256': digest(source.read_text('utf-8')),

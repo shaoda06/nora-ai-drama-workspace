@@ -132,7 +132,10 @@ class ContentPreparationTests(unittest.IsolatedAsyncioTestCase):
         report = checks.read_report(self.data)
         report.pop('content_checks')
         report['sources'].pop('review-source.md')
-        report['sources'].pop((self.record / 'review-document.md').relative_to(self.project).as_posix())
+        document = self.record / 'review-document.md'
+        report['sources'].pop(document.relative_to(self.project).as_posix())
+        # Older context checks did not read the document used by the content review.
+        report['context_sources'] = [name for name in report['context_sources'] if name != str(document)]
         checks.write_report(self.data, report)
         with self.assertRaisesRegex(ValueError, '内容核对'):
             checks.check_prepared(self.store, self.data)
