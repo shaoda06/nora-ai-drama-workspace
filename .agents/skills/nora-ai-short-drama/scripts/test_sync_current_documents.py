@@ -115,6 +115,67 @@ class SyncCurrentDocumentsTests(unittest.TestCase):
         self.assertTrue(json.loads(run.stdout)['ok'])
         self.assertEqual(self.target.read_text(encoding='utf-8'), '# 正文\n资料内容\n')
 
+    def storyboard_plan(self, segment='EP002-C001-P001', scene='EP002-C001'):
+        base = '09-剧集制作/EP002'
+        script = self.project / base / '02-剧集剧本/EP002-本集剧本.md'
+        script.parent.mkdir(parents=True, exist_ok=True)
+        script.write_text('# EP002\n\n## 1. 故事剧本正文\n\n### EP002-C001\n对白\n', encoding='utf-8')
+        draft = self.project / base / '其他资料/工作稿/EP002-分镜索引-工作稿.md'
+        draft.parent.mkdir(parents=True, exist_ok=True)
+        draft.write_text('## 1. 当前内容\n\n### EP002-分镜索引\n\n'
+                         '| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+                         f'| {scene} | {segment} | 14 |\n', encoding='utf-8')
+        target = self.project / base / '03-分镜脚本/EP002-分镜索引.md'
+        return script, draft, target, [{'draft': str(draft), 'target': str(target)}]
+
+    def test_invalid_index_blocks_entire_batch_before_any_write(self):
+        self.write_draft('### 提示词\n新正文')
+        self.target.write_bytes(b'keep formal')
+        for segment, scene in [('P001', 'EP002-C001'),
+                               ('EP001-C001-P001', 'EP002-C001'),
+                               ('EP002-C002-P001', 'EP002-C001'),
+                               ('EP002-C002-P001', 'EP002-C002')]:
+            with self.subTest(segment=segment, scene=scene):
+                _, _, target, plan = self.storyboard_plan(segment, scene)
+                with self.assertRaisesRegex(ValueError, 'EP002-分镜索引.md.*分段'):
+                    sync.sync_documents(self.project, self.plan + plan, self.archive)
+                self.assertEqual(self.target.read_bytes(), b'keep formal')
+                self.assertFalse(target.exists())
+                self.assertFalse((self.project / self.archive).exists())
+
+    def test_index_checks_use_same_batch_script_instead_of_old_formal(self):
+        script, draft, target, plan = self.storyboard_plan()
+        script.write_text('## 1. 故事剧本正文\n### EP002-C009\n旧场次\n', encoding='utf-8')
+        script_draft = draft.with_name('EP002-本集剧本-工作稿.md')
+        script_draft.write_text('## 1. 当前内容\n### EP002\n#### 1. 故事剧本正文\n'
+                                '##### EP002-C001\n新场次\n', encoding='utf-8')
+        result = sync.sync_documents(self.project, plan + [{'draft': str(script_draft), 'target': str(script)}], self.archive)
+        self.assertIn('EP002-C001-P001', target.read_text(encoding='utf-8'))
+        self.assertEqual(len(result['written']), 2)
+
+    def test_storyboard_only_publish_checks_existing_formal_index(self):
+        _, draft, target, _ = self.storyboard_plan('P001')
+        target.parent.mkdir(parents=True)
+        target.write_text(''.join(draft.read_text(encoding='utf-8').splitlines(keepends=True)[2:]), encoding='utf-8')
+        scene_draft = draft.with_name('EP002-C001-场次分镜-工作稿.md')
+        scene_draft.write_text('## 1. 当前内容\n### 场次分镜\n镜头\n', encoding='utf-8')
+        scene_target = target.with_name('EP002-C001-场次分镜.md')
+        plan = [{'draft': str(scene_draft), 'target': str(scene_target)}]
+        with self.assertRaisesRegex(ValueError, '分段'):
+            sync.sync_documents(self.project, plan, self.archive)
+        self.assertFalse(scene_target.exists())
+
+    def test_empty_index_and_missing_script_scenes_are_rejected(self):
+        script, draft, target, plan = self.storyboard_plan()
+        script.write_text('# 没有场次正文\n', encoding='utf-8')
+        with self.assertRaisesRegex(ValueError, 'EP002-本集剧本.md.*场次'):
+            sync.sync_documents(self.project, plan, self.archive)
+        script.write_text('## 1. 故事剧本正文\n### EP002-C001\n对白\n', encoding='utf-8')
+        draft.write_text('## 1. 当前内容\n### EP002-分镜索引\n尚无分段\n', encoding='utf-8')
+        with self.assertRaisesRegex(ValueError, 'EP002-分镜索引.md.*分段表'):
+            sync.sync_documents(self.project, plan, self.archive)
+        self.assertFalse(target.exists())
+
 
 if __name__ == '__main__':
     unittest.main()

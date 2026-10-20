@@ -1,5 +1,6 @@
 """Publish explicitly selected current workdraft sections, without adopting content."""
 import argparse
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -121,6 +122,7 @@ def sync_documents(project, plan, archive_dir):
         pending.append((target, rendered, previous))
     if destinations.intersection(paths.file(entry['draft']) for entry in plan):
         raise ValueError('同批目标不能同时作为工作稿来源')
+    validate_storyboard_indexes(paths, pending, read)
     changes = [(target, data, old) for target, data, old in pending if data != old]
     backups = {}
     for target, _, old in changes:
@@ -158,6 +160,48 @@ def sync_documents(project, plan, archive_dir):
             'written': [p.relative_to(paths.project).as_posix() for p, _, _ in changes],
             'unchanged': [p.relative_to(paths.project).as_posix() for p, data, old in pending if data == old],
             'archives': [p.relative_to(paths.project).as_posix() for p in backups.values()]}
+
+
+def validate_storyboard_indexes(paths, pending, read):
+    """Check proposed formal documents before any archive or publication writes."""
+    episodes = set()
+    proposed = {target: data for target, data, _ in pending}
+    for target in proposed:
+        match = re.fullmatch(r'09-剧集制作/(EP\d{3,})/03-分镜脚本/'
+                             r'(?:\1-分镜索引|\1-C\d{3,}-场次分镜)\.md',
+                             target.relative_to(paths.project).as_posix())
+        if match:
+            episodes.add(match[1])
+    if not episodes:
+        return
+    # Use the same table and identity checks as the browser; no running server needed.
+    source = Path(__file__).resolve().parents[4] / '工作区浏览服务/backend/parsers/project.py'
+    spec = importlib.util.spec_from_file_location('nora_project_parser', source)
+    parser = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(parser)
+    for episode in sorted(episodes):
+        base = '09-剧集制作/' + episode
+        script_key = base + '/02-剧集剧本/' + episode + '-本集剧本.md'
+        index_key = base + '/03-分镜脚本/' + episode + '-分镜索引.md'
+        documents = {}
+        for key in (script_key, index_key):
+            path = paths.file(key)
+            data = proposed[path] if path in proposed else read(path, required=True)
+            documents[key] = data.decode('utf-8-sig')
+        body = re.search(r'^##[ \t]+1\.[ \t]*故事剧本正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)',
+                         documents[script_key], re.M | re.S)
+        scenes = re.findall(r'^###[ \t]+' + re.escape(episode) + r'-(C\d{3,})[ \t]*$',
+                            body[1] if body else '', re.M)
+        if not scenes:
+            raise ValueError(script_key + '：缺少故事剧本正文或完整场次标题')
+        rows = parser.table_records(documents[index_key], ('场次', '分段', '分段计划时长（秒）'))
+        if not rows:
+            raise ValueError(index_key + '：没有可读取的分段表')
+        for row in rows:
+            try:
+                parser.storyboard_index_identity(episode, scenes, row)
+            except ValueError as error:
+                raise ValueError(index_key + '：' + str(error)) from error
 
 
 def main():
