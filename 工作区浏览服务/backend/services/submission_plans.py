@@ -553,7 +553,8 @@ async def execute(store, payload):
         if payload.reprepare:
             if journal.get('accepted') or any(
                     row['input'].record_dir == str(project_file(root, task['record_dir']))
-                    for row in store.rows.values() for task in [*journal['tasks'], *source['tasks']]):
+                    for row in store.rows.values() for task in [*journal['tasks'], *source['tasks']]
+                    if 'record_dir' in task):
                 raise ValueError('任务已登记，不能重装原清单；请使用原任务ID接续')
             documents = Documents(root, journal['writes'])
             archive = deepcopy(journal)

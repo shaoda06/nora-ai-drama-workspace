@@ -407,6 +407,31 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result['status'], 'enqueued')
         self.assertEqual(len(self.store.rows), 1)
 
+    async def test_reprepare_implicit_record_dir_with_unrelated_registered_task(self):
+        self.write_plan(self.spec())
+        self.payload.prepare_only = True
+        await plans.execute(self.store, self.payload)
+        journal_file = self.plan_file.with_name('任务清单-装配结果.json')
+        original = json.loads(journal_file.read_text())
+        self.assertNotIn('record_dir', original['source']['tasks'][0])
+        self.data.record_dir = str(self.record.resolve())
+        self.payload.reprepare = True
+        with patch.dict(self.store.rows, {'unrelated': {'input': self.data}}), \
+                patch.object(self.store, 'enqueue', side_effect=AssertionError('no enqueue')), \
+                patch.object(t.client.Client, 'json', side_effect=AssertionError('no remote')):
+            result = await plans.execute(self.store, self.payload)
+        self.assertEqual(result['status'], 'prepared')
+        saved = json.loads(journal_file.read_text())
+        self.assertEqual(saved['tasks'][0]['record_dir'], original['tasks'][0]['record_dir'])
+        self.assertFalse(self.store.rows)
+
+        explicit = self.spec()
+        explicit['record_dir'] = self.rel(self.record)
+        self.write_plan(explicit)
+        with patch.dict(self.store.rows, {'unrelated': {'input': self.data}}):
+            with self.assertRaisesRegex(ValueError, '已登记'):
+                await plans.execute(self.store, self.payload)
+
     async def test_reprepare_rejects_registered_tasks_even_if_journal_id_is_missing(self):
         self.write_plan(self.spec())
         await plans.execute(self.store, self.payload)
