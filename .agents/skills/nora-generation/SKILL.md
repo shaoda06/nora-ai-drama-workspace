@@ -9,6 +9,8 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 
 ## 按动作直达
 
+实际图片生成或编辑先执行[统一分流与生成前确认](../nora-ai-short-drama/SKILL.md#当前参考图生成选型)，能力已明确的本批任务再进入下表；获批后超分不重新选择生图能力。
+
 | 本次动作 | 必要入口 |
 | --- | --- |
 | 已明确选用Imagegen生成／编辑 | [Imagegen分支](references/Imagegen生成与尺寸处理规范.md)及当前可用的imagegen技能；不装配为Qwen任务 |
