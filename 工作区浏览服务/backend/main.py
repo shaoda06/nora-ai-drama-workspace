@@ -1,6 +1,5 @@
 from pathlib import Path
 from contextlib import asynccontextmanager
-from collections.abc import AsyncIterable
 import asyncio
 import secrets
 from typing import Annotated, Any, Literal
@@ -12,7 +11,6 @@ from urllib.parse import quote, urlsplit
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, Response
-from fastapi.sse import EventSourceResponse, ServerSentEvent
 from pydantic import BaseModel, ValidationError
 
 from backend.parsers import project as parser
@@ -134,19 +132,11 @@ async def comfy_task_detail(key: str, request: Request) -> dict[str, Any]:
         raise HTTPException(503, '任务详情读取失败：' + str(error)) from error
 
 
-@app.get('/api/comfy/events', response_class=EventSourceResponse)
-async def comfy_events(request: Request, include_history: bool = True) -> AsyncIterable[ServerSentEvent]:
-    tasks = request.app.state.comfy_tasks
-    event = asyncio.Event()
-    tasks.subscribers.add(event)
-    try:
-        yield ServerSentEvent(data=tasks.public(include_history=include_history), event='tasks')
-        while True:
-            await event.wait()
-            event.clear()
-            yield ServerSentEvent(data=tasks.public(include_history=include_history), event='tasks')
-    finally:
-        tasks.subscribers.remove(event)
+@app.get('/api/comfy/events')
+async def comfy_events() -> Response:
+    # HTTP 204 stops EventSource reconnection in pages from older releases,
+    # freeing their sockets so version detection can load the new frontend.
+    return Response(status_code=204)
 
 
 @app.post('/api/internal/comfy/submit')

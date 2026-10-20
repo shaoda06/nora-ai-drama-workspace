@@ -1,5 +1,6 @@
 import { PointerTooltip } from './PointerTooltip';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { TaskCard, type Task } from './TaskCard';
 import { LocalQueueCard, localQueueStates, type LocalQueueTask } from './LocalQueueCard';
 import { TaskDetailDialog } from './TaskDetailDialog';
@@ -33,11 +34,23 @@ export function TaskSidebar() {
   const [counts, setCounts] = useState<Record<string, { queued: number; paused: number; history: number }>>({});
   const [historyUpdates, setHistoryUpdates] = useState<Record<string, string | null>>({});
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
-  const [connection, setConnection] = useState<'loading' | 'connected' | 'reconnecting'>('loading');
+  const taskQuery = useQuery({
+    queryKey: ['task-sidebar'],
+    queryFn: async ({ signal }) => {
+      const response = await fetch('/api/comfy/tasks?include_history=false', { signal });
+      if (!response.ok) throw new Error('任务列表刷新失败');
+      return response.json();
+    },
+    staleTime: 0,
+    refetchInterval: 3000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: 'always',
+  });
+  const connection = taskQuery.isError ? 'reconnecting' : taskQuery.data ? 'connected' : 'loading';
+  const { refetch: refreshTasks } = taskQuery;
   useEffect(() => {
-    const source = new EventSource('/api/comfy/events?include_history=false');
-    source.addEventListener('tasks', event => {
-      const snapshot = JSON.parse((event as MessageEvent).data);
+    const snapshot = taskQuery.data;
+    if (snapshot) {
       setTasks(snapshot.tasks);
       const incoming: LocalQueueTask[] = snapshot.local_tasks ?? snapshot.tasks.filter((task: Task | LocalQueueTask) => 'queue' in task);
       if (!dragToken.current) {
@@ -47,11 +60,10 @@ export function TaskSidebar() {
       setNodes(snapshot.remote_nodes);
       setCounts(snapshot.local_counts);
       setHistoryUpdates(snapshot.history_updated_at);
-      setConnection('connected');
-    });
-    source.onerror = () => setConnection('reconnecting');
+    }
+  }, [taskQuery.data]);
+  useEffect(() => {
     return () => {
-      source.close();
       window.clearInterval(dragTimer.current);
       if (dragToken.current) void fetch('/api/comfy/drag', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: dragToken.current, release: true }) });
@@ -89,16 +101,14 @@ export function TaskSidebar() {
     return data;
   }, []);
   const reload = useCallback(async () => {
-    const response = await fetch('/api/comfy/tasks?include_history=false');
-    if (!response.ok) throw new Error('任务列表刷新失败');
-    const snapshot = await response.json();
+    const snapshot = (await refreshTasks({ throwOnError: true })).data!;
     localRef.current = snapshot.local_tasks;
     setLocalRows(snapshot.local_tasks);
     setTasks(snapshot.tasks);
     setCounts(snapshot.local_counts);
     setHistoryUpdates(snapshot.history_updated_at);
     return snapshot.local_tasks as LocalQueueTask[];
-  }, []);
+  }, [refreshTasks]);
   const action = useCallback(async (id: string, operation: string) => {
     setBusy(true); setActionError('');
     try { await write(`/api/comfy/tasks/${id}/action`, { action: operation }); await reload(); }

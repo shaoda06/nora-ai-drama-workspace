@@ -10,6 +10,13 @@ from backend import main
 
 
 class ReleaseTests(HttpTestCase):
+    def test_legacy_task_stream_stops_reconnecting(self):
+        with TestClient(main.app) as client:
+            response = client.get('/api/comfy/events?include_history=false')
+            self.assertEqual(response.status_code, 204)
+            self.assertEqual(response.content, b'')
+            self.assertNotIn('text/event-stream', response.headers.get('content-type', ''))
+
     def test_only_matching_built_frontend_is_ready(self):
         with tempfile.TemporaryDirectory() as directory:
             manifest = Path(directory) / 'release.json'
