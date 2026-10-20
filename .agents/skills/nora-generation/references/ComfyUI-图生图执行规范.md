@@ -1,11 +1,11 @@
 # ComfyUI-图生图执行规范
 
 状态：现行图生图执行规范。\
-版本：v1.56。
+版本：v1.57。
 更新日期：2026-10-20。
 用途：执行 Qwen Image 2.1 普通版带参考图编辑，涵盖单图与多图输入、画布设置、任务执行和验收。
 
-提示词按 [Qwen Image 2.1 提示词规范](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md) 第 4 节整理，并依其[接入与适配](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#13-qwen-image-2-1-prompter接入与适配)使用qwen-image-2-1-prompter的Edit分支；素材规格、连续性和正式命名按 [开发流程第 8 节](../../nora-ai-short-drama/references/流程规范/短剧开发流程规范.md)。本文不重复规定提示词写法。
+提示词按 [Qwen Image 2.1 提示词规范](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md) 第 4 节整理，并依其[接入与适配](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#13-qwen-image-2-1-prompter接入与适配)使用qwen-image-2-1-prompter的Edit分支；素材规格、连续性和正式命名按 [核心参考图制作规范](../../nora-drama-assets/references/核心参考图制作规范.md)的实际资产类型。本文不重复规定提示词写法。
 
 本执行规范的适用类型和源素材由[固定生成方式索引](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#11-图片类型专用模板索引)确定；修订任务执行[参考图统一修订规则](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#25-参考图统一修订规则)。下文节点能力和参数说明不扩大业务适用范围。
 

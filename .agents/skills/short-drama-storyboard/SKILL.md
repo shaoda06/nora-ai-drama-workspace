@@ -12,8 +12,8 @@ license: MIT
 
 | 任务 | 规则与产出 |
 | --- | --- |
-| 新建完整场次分镜 | [场次分镜制作规范](references/场次分镜制作规范.md)及[场次分镜模板](../nora-ai-short-drama/references/模板/场次分镜模板.md)，从已批准剧本落实SH镜头及P段 |
-| 局部镜头、空间或动作修订 | 上述规则中的受影响章节及必要上下游；完整重做先读[完整重做要求](../nora-ai-short-drama/references/共用规则/制作返修与完整重做规范.md#完整重做的范围与完成要求) |
+| 新建完整场次分镜 | [分镜阶段接续](references/分镜阶段接续规范.md#4-整理场次分镜并划分视频生成分段)，依其顺序进入场次规则、分段规则及模板，从已批准剧本落实SH镜头及P段 |
+| 局部镜头、空间或动作修订 | [场次分镜规则](references/场次分镜制作规范.md)中的受影响章节及必要上下游；完整重做先读[完整重做要求](../nora-ai-short-drama/references/共用规则/制作返修与完整重做规范.md#完整重做的范围与完成要求) |
 | 分段、拆段或输入容量调整 | [视频分段规划规范](references/视频分段规划规范.md)，核对当前及相邻段、真实素材与模型容量 |
 | 首帧提示词或已有素材复用 | [分段素材与首帧规范](references/分段素材与首帧规范.md)、[首帧参考图规范](references/首帧参考图规范.md)；写Qwen正文时调用[图片提示词入口](../nora-drama-assets/references/图片提示词规范.md#图片提示词) |
 | 场景机位需求及选图 | [视图规划与复用](../nora-drama-assets/references/场景资料与参考图规范.md#42-视图规划与复用)；分镜维护本次镜头选择，缺图交[资产技能](../nora-drama-assets/SKILL.md) |
@@ -37,4 +37,4 @@ license: MIT
 
 剧情、原台词及决定因果的必要动作回[剧本写作](../short-drama-write/SKILL.md)维护；取景、镜头和P段由本技能维护。参考图由[资产设计](../nora-drama-assets/SKILL.md)补齐，已确认镜头交[视频提示词](../nora-video-prompts/SKILL.md)转写。不得为迁就参考图、旧P段或缓存保留不合理镜头；具体完整重做范围沿上方规则。
 
-按[文本自检](../short-drama-review/references/文本自检与订正规范.md#文本交付前的自检与订正)合并检查，必要时读取[审查方法](../short-drama-review/SKILL.md#合并自检与专项审查)。送审或完整制作组合形成时读[场次修改轮次](../nora-ai-short-drama/references/共用规则/场次版本组合规范.md#场次修改轮次)，使用既有工具登记；不将执行缓存组当成播放组合。写入后按[主控完成标准](../nora-ai-short-drama/SKILL.md#完成标准)交付，文本完成不授权生成。
+按[文本自检](../short-drama-review/references/文本自检与订正规范.md#文本交付前的自检与订正)落实当前阶段的必需检查和方法，合并订正后交付。送审或完整制作组合形成时读[场次修改轮次](../nora-ai-short-drama/references/共用规则/场次版本组合规范.md#场次修改轮次)，使用既有工具登记；不将执行缓存组当成播放组合。写入后按[主控完成标准](../nora-ai-short-drama/SKILL.md#完成标准)交付，文本完成不授权生成。
