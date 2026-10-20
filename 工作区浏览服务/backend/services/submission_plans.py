@@ -459,6 +459,7 @@ def build_video(root, spec, documents):
     if mapping is None:
         mapping = json.loads(documents.read(record / '输入映射.json'))
     unbound_mapping = deepcopy(mapping)
+    unbound_mapping.setdefault('uploads', [])
     source_index = mapping.setdefault('uploads', [])
     for ref in spec.get('references', []):
         file = project_file(root, ref['file']).relative_to(root.resolve()).as_posix()
@@ -495,7 +496,10 @@ def build_video(root, spec, documents):
     documents.new_json(record / '任务.api.json', api)
     mapping_file = record / '输入映射.json'
     existing_mapping = documents.read(mapping_file)
-    if existing_mapping is not None and json.loads(existing_mapping) == unbound_mapping:
+    existing_unbound = json.loads(existing_mapping) if existing_mapping is not None else None
+    if existing_unbound is not None:
+        existing_unbound.setdefault('uploads', [])
+    if existing_unbound == unbound_mapping:
         documents.put(mapping_file, json.dumps(mapping, ensure_ascii=False, indent=2))
     else:
         documents.new_json(mapping_file, mapping)
@@ -520,7 +524,7 @@ def build_video(root, spec, documents):
             path=f"09-剧集制作/{identity.split('-')[0]}/其他资料/候选视频/{identity}.mp4", response_name='最终取回-000.json')]
     uploads = list(spec.get('uploads', []))
     timelines = {key: json.loads(node['inputs']['timeline_data']) for key,node in api.items() if node['class_type']=='MiniMaxH3Director'}
-    for ref in spec.get('references', []):
+    for ref in {item['placeholder']: item for item in spec.get('references', [])}.values():
         file = project_file(root, ref['file'])
         placeholder, matched = ref['placeholder'], False
         for key, node in api.items():

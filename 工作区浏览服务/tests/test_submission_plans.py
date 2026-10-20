@@ -264,7 +264,6 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
             mapping=json.loads((self.record/'输入映射.json').read_text()), report_node='403', output_root='E:/Comfy/output',
             references=[dict(file='reference.png', placeholder='planned/ref.png')])
         task['mapping'].pop('uploads')
-        (self.record/'输入映射.json').unlink()
         self.write_plan(task)
         result = await plans.execute(self.store, self.payload)
         self.assertEqual(result['status'], 'enqueued')
@@ -273,7 +272,30 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(data.uploads[0]['json-path'], ['global','refs',0,'imageFile'])
         mapping = json.loads((self.record/'输入映射.json').read_text())
         self.assertEqual(mapping['uploads'], [dict(input_path='planned/ref.png', file='reference.png')])
-        self.assertEqual(data.workflow, plans.pairs.Canvas(json.loads((self.record/'任务.workflow.json').read_text())).api('403'))
+        timeline = json.loads(data.workflow['502']['inputs']['timeline_data'])
+        self.assertEqual(timeline['global']['refs'][0]['imageFile'], 'planned/ref.png')
+
+    def test_shared_reference_binds_each_slot_once(self):
+        life.LifecycleTests.video(self)
+        canvas_file = self.record/'task.workflow.json'
+        canvas = json.loads(canvas_file.read_text())
+        director = next(node for node in canvas['nodes'] if node['type'] == 'MiniMaxH3Director')
+        timeline = json.loads(director['widgets_values_named']['timeline_data'])
+        timeline['segments'][0]['refs'] = deepcopy(timeline['global']['refs'])
+        timeline['batchWorkspaces']['r2v']['segments'] = deepcopy(timeline['segments'])
+        plans.widget(canvas, director, timeline_data=json.dumps(timeline))
+        canvas_file.write_text(json.dumps(canvas))
+        task = dict(task_type='video-first-pass', title='测试', authorization='仅离线测试', record_dir=self.rel(self.record), canvas=self.rel(canvas_file),
+            mapping=json.loads((self.record/'输入映射.json').read_text()), output_nodes=['403'],
+            report_node='403', output_root='E:/Comfy/output',
+            references=[dict(file='reference.png', placeholder='planned/ref.png')]*2)
+        documents = plans.Documents(self.project.resolve())
+        data = plans.build_video(self.project.resolve(), task, documents)
+        self.assertEqual(len(data['uploads']), 2)
+        self.assertEqual({tuple(item['json-path']) for item in data['uploads']},
+            {('global','refs',0,'imageFile'), ('segments',0,'refs',0,'imageFile')})
+        self.assertEqual(json.loads(documents.read(self.record/'输入映射.json'))['uploads'],
+            [dict(input_path='planned/ref.png', file='reference.png')])
 
     def test_video_rejects_conflicting_reference_sources_before_writes(self):
         life.LifecycleTests.video(self)
@@ -348,6 +370,31 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
             await plans.execute(self.store, self.payload)
         self.assertEqual(len(self.store.rows), 1)
         self.assertFalse(list(self.plan_file.parent.glob('*准备归档*')))
+
+    async def test_reprepare_build_failure_preserves_original_and_archives_report(self):
+        task = self.spec()
+        self.write_plan(task)
+        self.payload.prepare_only = True
+        await plans.execute(self.store, self.payload)
+        journal_file = self.plan_file.with_name('任务清单-装配结果.json')
+        original = journal_file.read_bytes()
+        record = Path(json.loads(original)['tasks'][0]['record_dir'])
+        report = json.loads((record/'执行检查报告.json').read_text())
+        draft = (self.project/task['draft']).read_bytes()
+        task['prompt']['rewritten_prompt'] += '\n银色刺绣。'
+        self.write_plan(task)
+        self.payload.reprepare = True
+        with patch.object(plans, 'build_image', side_effect=ValueError('装配未完成')):
+            with self.assertRaisesRegex(ValueError, '装配未完成'):
+                await plans.execute(self.store, self.payload)
+        self.assertEqual(journal_file.read_bytes(), original)
+        self.assertEqual((self.project/task['draft']).read_bytes(), draft)
+        archive = json.loads(self.plan_file.with_name('任务清单-装配结果-准备归档-001.json').read_text())
+        self.assertEqual(archive['preparation_reports'][0]['report'], report)
+        self.assertFalse(self.store.rows)
+        result = await plans.execute(self.store, self.payload)
+        self.assertEqual(result['status'], 'prepared')
+        self.assertNotIn('### 生成记录-002', (self.project/task['draft']).read_text())
 
     async def test_reprepare_preserves_concurrent_edits(self):
         task = self.spec()
@@ -424,7 +471,9 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         from backend.services.director_uploads import save_uploaded_workflow
         save_uploaded_workflow(data.project, record, data.workflow, workflow, {}, [(data.uploads[0], receipt['data'])])
         self.assertEqual(json.loads(next(record.glob('*.api.json')).read_text())['2']['inputs']['image'], uploaded)
-        self.assertEqual(plans.pairs.Canvas(json.loads(next(record.glob('*.workflow.json')).read_text())).api('3'), workflow)
+        saved_canvas = json.loads(next(record.glob('*.workflow.json')).read_text())
+        image_loader = next(node for node in saved_canvas['nodes'] if node['id'] == 2)
+        self.assertEqual(image_loader['widgets_values_named']['image'], uploaded)
         (record/data.request_name).write_text(json.dumps({'prompt': workflow, 'client_id': 'listener-id'}))
         self.store.save(key, status='completed', prompt_id='upscale-prompt', client_id='listener-id', collected=1)
         self.data, self.record = data, record

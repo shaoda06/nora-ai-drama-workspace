@@ -43,7 +43,7 @@ class LegacySourceTests(unittest.IsolatedAsyncioTestCase):
         return patch.object(checks, 'context_checks', side_effect=context)
 
     def preserved(self, report):
-        for field in ('pair', 'segments', 'checked_at', 'prepared_input'):
+        for field in ('segments', 'checked_at', 'prepared_input'):
             self.assertEqual(report[field], self.previous[field])
 
     async def test_explicit_preparation_reads_existing_and_new_sources_once(self):

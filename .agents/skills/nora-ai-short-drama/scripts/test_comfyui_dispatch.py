@@ -139,5 +139,14 @@ class DispatchTests(unittest.TestCase):
             d.dispatch(args)
         self.assertTrue(handoff.call_args.args[0].reprepare)
 
+    def test_reprepare_flags_reach_backend_payload(self):
+        args = d.parser().parse_args(['--project', str(self.root), '--plan', '任务清单.json', '--prepare-only', '--reprepare'])
+        with patch.object(d.browser_tasks, 'connection', return_value=(self.root.resolve(), {}, 'caller', {})), \
+                patch.object(d.browser_tasks, 'local_post', return_value={'status': 'prepared'}) as post:
+            d.dispatch(args)
+        self.assertEqual(post.call_args.args[1], '/submit-plan')
+        self.assertTrue(post.call_args.args[2]['reprepare'])
+        self.assertTrue(post.call_args.args[2]['prepare_only'])
+
 
 if __name__=='__main__': unittest.main()

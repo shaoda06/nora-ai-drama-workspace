@@ -16,6 +16,7 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 | 首次完整准备图片分支 | [图片执行](references/图片生成执行规范.md)，根据T2I／Edit进入对应执行规则；内容缺项交资产或首帧负责人 |
 | 首次完整准备H3任务或调整导演台 | [H3执行](references/H3视频执行规范.md)及其按阶段引用；内容核对交[视频提示词](../nora-video-prompts/SKILL.md) |
 | 仅准备、不生成 | [准备分工](references/ComfyUI-服务配置与任务提交规范.md#执行前检查与复用)，固定入口使用--prepare-only |
+| 准备失败后修正输入 | 未登记清单进入[清单重新准备](../nora-ai-short-drama/references/comfyui-scripts/README.md#未登记清单的重新准备)；已有本地ID进入[原任务重新准备与恢复](references/ComfyUI-服务配置与任务提交规范.md#重新调度与失败恢复) |
 | 仅查进度 | [查询分支](references/进度查询与结果处理规范.md#主动查询进度)，读取实际任务状态和更新时间 |
 | 收到正常图片或超分结果 | [图片结果](references/进度查询与结果处理规范.md#正常图片结果)，沿[图片批次通知与超分静默](references/ComfyUI-任务监控规范.md#图片批次通知与超分静默)处理，普通图片读report后集中展示；正常超分静默 |
 | 收到正常视频结果 | [视频结果](references/进度查询与结果处理规范.md#正常视频结果)，读取report并按通知要求汇报数量及审核入口 |
