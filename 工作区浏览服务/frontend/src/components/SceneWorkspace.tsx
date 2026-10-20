@@ -78,7 +78,6 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     const issue = missingVideoState(roundVideo(id), version && 'key' in version ? version.key : '');
     return { ...issue, message: `${id === PREVIOUS_ENDING ? '上集末段' : id}的本轮${version?.stage || reviewRound?.stage || ''}${version ? ` ${version.run}` : ''}${issue.message}` };
   };
-  const currentVideoIssue = (reviewRound?.versions[segment] || roundEntry) && !roundVideo(segment)?.url ? roundVideoIssue(segment) : null;
   const missingRoundVideos = productionRound ? productionRound.segments.filter(entry => !roundVideo(entry.id)?.url).length : 0;
   const preparationOrder = reviewRound?.order || [
     ...(previousVideo ? [PREVIOUS_ENDING] : []), ...segments.map(item => item.id),
@@ -112,15 +111,14 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     setSelections(previous => ({ ...previous, ...Object.fromEntries(entries.map(item => [item.id, { stage: chosen.stage, key: versions[item.id]?.key || '' }])) }));
     setAutoPlay(false);
     setContinuous(playContinuously && !!versions[segment]);
-    const issue = missingVideoState(latestVideo((currentSegment?.videos || []).filter(video => video.stage === chosen.stage)));
-    setError(versions[segment] ? null : { ...issue, message: `${viewingPrevious ? '上集末段' : segment}的${chosen.stage}${issue.message}本轮不会换用其他画质。` });
+    setError(null);
   };
   const toggleContinuous = (checked: boolean) => {
     setAutoPlay(false);
     if (!checked) { setContinuous(false); return; }
     if (!reviewRound) { beginReview(true); return; }
     const video = roundVideo(segment);
-    if (!video?.url) { setContinuous(false); setError(roundVideoIssue(segment)); return; }
+    if (!video?.url) { setContinuous(false); setError(null); return; }
     setSelections(previous => ({ ...previous, [segment]: { stage: video.stage, key: video.key } }));
     setContinuous(true);
     setError(null);
@@ -180,13 +178,11 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
       {productionRound ? `第${productionRound.number}轮视频已准备 ${videoCache.ready}／${productionRound.segments.length}${missingRoundVideos ? `，${missingRoundVideos}段尚无可播放视频` : ''}${videoCache.failures.length ? `，${videoCache.failures.length}个准备失败` : ''}` : videoCache.failures.length ? `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
         : videoCache.ready === videoCache.total ? `${reviewRound ? '本轮' : '最新'}视频已全部准备好` : `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}`}{(reviewRound ? !!roundVideo(PREVIOUS_ENDING)?.url : !!previousVideo) ? '（含上集末段）' : ''}
     </p></PointerTooltip>}
-    <div className="scene-review-round">
-      {!reviewRound ? <span role="status">尚未登记场次修改轮次；开启连续播放可临时固定当前画质的浏览片单。</span> : reviewRound.order.some(id => !roundVideo(id)?.url) && <span role="status">部分分段暂无本轮视频。</span>}
-      {reviewRound && !productionRound && <button disabled={!chosen.stage} onClick={() => beginReview(false)}>重新固定浏览片单</button>}
-      {reviewRound && savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key && <span>当前查看版本不属于本轮，导出仍按本轮版本。</span>}
-    </div>
+    {reviewRound && (!productionRound || (savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key)) && <div className="scene-review-round">
+      {!productionRound && <button disabled={!chosen.stage} onClick={() => beginReview(false)}>重新固定浏览片单</button>}
+      {savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key && <span>当前查看版本不属于本轮，导出仍按本轮版本。</span>}
+    </div>}
     {error && <p className={error.unavailable ? 'error' : 'muted'} role={error.unavailable ? 'alert' : 'status'}>{error.message}</p>}
-    {currentVideoIssue && <p className={currentVideoIssue.unavailable ? 'error' : 'muted'} role={currentVideoIssue.unavailable ? 'alert' : 'status'}>{currentVideoIssue.message}</p>}
     {viewingPrevious && <p className="previous-ending-context">上集末段{productionRound ? '（接续参考，不属于本场修改轮次）' : ''} · {previousEnding!.episode} · {previousEnding!.scene} · {currentSegment!.id} <span>点击本集分段返回</span></p>}
     {currentSegment && <SegmentWorkspace key={`${displayScope.episode}/${displayScope.scene}/${currentSegment.id}`} scope={displayScope} segment={currentSegment.id} revision={revision} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources} retainSource={videoCache.retainSource}
       tab={segmentTab} onTabChange={setSegmentTab}
