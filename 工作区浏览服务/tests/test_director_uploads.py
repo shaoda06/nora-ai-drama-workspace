@@ -11,6 +11,23 @@ from workflow_paths import workflow_file
 
 
 class DirectorUploadsTests(unittest.TestCase):
+    def test_image_edit_upload_saves_actual_api_without_task_canvas(self):
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            record = project / 'record'
+            record.mkdir()
+            original = json.loads(workflow_file('Qwen2.1-图生图-普通版', 'api').read_text())
+            target = record / 'edit.api.json'
+            target.write_text(json.dumps(original))
+            workflow = copy.deepcopy(original)
+            workflow['475']['inputs']['image'] = 'uploaded/renamed.png'
+            bindings = [({'node': '475', 'input': 'image'}, {'input_path': 'uploaded/renamed.png'})]
+            with patch.object(pairs, 'Canvas', side_effect=AssertionError('no canvas')):
+                save_uploaded_workflow(project, record, original, workflow, {}, bindings)
+                save_uploaded_workflow(project, record, original, workflow, {}, bindings)
+            self.assertEqual(json.loads(target.read_text()), workflow)
+            self.assertFalse(list(record.glob('*.workflow.json')))
+
     def test_report_only_standard_task_copy_remains_usable(self):
         with tempfile.TemporaryDirectory() as directory:
             project = Path(directory)

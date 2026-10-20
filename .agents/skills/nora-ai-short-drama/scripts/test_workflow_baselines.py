@@ -378,12 +378,13 @@ class BaselineTests(unittest.TestCase):
                     self.verify_director_timeline(timeline)
 
     def test_detects_canvas_widget_value_drift_inside_subgraph(self):
-        source = workflow_file('Qwen2.1-图生图-普通版', 'workflow')
-        canvas = json.loads(source.read_text(encoding="utf-8"))
-        encoder = next(n for n in canvas["definitions"]["subgraphs"][0]["nodes"] if n["id"] == 474)
-        encoder["widgets_values"][1] = encoder["widgets_values"][0]
+        canvas = {'nodes': [{'id': 1, 'type': 'child'}], 'links': [],
+                  'definitions': {'subgraphs': [{'id': 'child', 'nodes': [
+                      {'id': 2, 'type': 'PrimitiveStringMultiline',
+                       'widgets_values_named': {'value': 'actual'}, 'widgets_values': ['stale']}
+                  ], 'links': []}]}}
         with self.assertRaisesRegex(AssertionError, "widget mismatch"):
-            wb.Canvas(canvas).api(461)
+            wb.Canvas(canvas["definitions"]["subgraphs"][0])
 
     @unittest.skipUnless(hasattr(time, "tzset"), "requires local timezone switching")
     def test_client_timestamp_follows_machine_timezone(self):

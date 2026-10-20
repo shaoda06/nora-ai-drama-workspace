@@ -118,85 +118,47 @@ def image_workflow(skill, spec, refs, width, height, seed, prefix, remote_output
     upscale = spec['task_type'] == 'image-upscale'
     base = 'Nora-RTX-图片2倍超分' if upscale else 'Qwen2.1-' + ('图生图' if refs else '文生图') + '-普通版'
     remote_output = prefix if remote_output is None else remote_output
-    if not upscale and not refs:
-        prompt = spec['prompt']
-        from fractions import Fraction
-        if set(prompt) not in ({'rewritten_prompt', 'wh_ratio'}, {'rewritten_prompt', 'wh_ratio', 'ratio_follow'}) or not prompt['rewritten_prompt'] or not prompt['wh_ratio'] or prompt.get('ratio_follow'):
-            raise ValueError('文生图须提供最终正文和明确画幅')
-        if Fraction(prompt['wh_ratio'].replace(':', '/')) != Fraction(width, height):
-            raise ValueError('提示词画幅元数据与目标宽高不一致')
-        api = json.loads(workflow_file(base, 'api', root=workflow_root(skill)).read_text('utf-8-sig'))
-        api['672']['inputs']['value'] = prompt['rewritten_prompt']
-        api['514']['inputs'].update(width=width, height=height)
-        api['515']['inputs']['seed'] = seed
-        for name, content in spec.get('parameters', {}).items():
-            if name == 'negative_prompt':
-                api['522']['inputs'][name] = content
-            else:
-                raise ValueError('文生图任务不能覆盖固定配置：' + name)
-        api['508']['inputs']['filename_prefix'] = remote_output
-        return None, api, [], '508'
-    canvas = json.loads(workflow_file(base, root=workflow_root(skill)).read_text('utf-8-sig'))
-    nodes = {n['id']: n for n in canvas['nodes']}
-    uploads = []
     if upscale:
+        canvas = json.loads(workflow_file(base, root=workflow_root(skill)).read_text('utf-8-sig'))
+        nodes = {n['id']: n for n in canvas['nodes']}
         widget(canvas, nodes[2], image=refs[0]['file'].name)
         widget(canvas, nodes[3], filename_prefix=remote_output)
-        uploads.append(dict(file=str(refs[0]['file']), node='2', input='image', subfolder=prefix,
-                            **{'response-name': prefix + '-上传响应.json'}))
-        output_node = '3'
-    else:
-        prompt = spec['prompt']
-        if set(prompt) not in ({'rewritten_prompt', 'wh_ratio'}, {'rewritten_prompt', 'wh_ratio', 'ratio_follow'}):
-            raise ValueError('图片提示词须使用现行Qwen JSON字段')
-        if not prompt['rewritten_prompt'] or not prompt['wh_ratio'] or prompt.get('ratio_follow'):
-            raise ValueError('任务清单须先明确目标画幅，不能同时跟随输入画幅')
-        from fractions import Fraction
-        if Fraction(prompt['wh_ratio'].replace(':', '/')) != Fraction(width, height):
-            raise ValueError('提示词画幅元数据与目标宽高不一致')
-        widget(canvas, nodes[459], prompt=prompt['rewritten_prompt'], width=width, height=height, seed=seed)
-        if refs:
-            widget(canvas, nodes[459], switch=True, resolution=0)
-        for name, content in spec.get('parameters', {}).items():
-            if name in ('prompt', 'width', 'height', 'seed', 'switch', 'resolution'):
-                raise ValueError('parameters不能覆盖已确定的正文、尺寸、种子或输入模式：' + name)
-            widget(canvas, nodes[459], **{name: content})
-        widget(canvas, nodes[461], filename_prefix=remote_output)
-        for group in canvas.get('definitions', {}).get('subgraphs', []):
-            for node in group['nodes']:
-                if node['type'] == 'KSampler':
-                    # Linked seed comes from the outer widget; control is still fixed in the reopenable canvas.
-                    node['widgets_values_named']['seed'] = seed
-                    node['widgets_values_named']['control_after_generate'] = 'fixed'
-                    node['widgets_values'] = list(node['widgets_values_named'].values())
-        if refs:
-            slots = [slot for slot in nodes[459]['inputs'] if slot['name'].startswith('images.image_')]
-            if len(refs) > len(slots):
-                raise ValueError('参考图数量超过既有画布入口')
-            canvas['links'] = [list(pairs.link_tuple(link)) for link in canvas['links']]
-            for index, slot in enumerate(slots):
-                if index >= len(refs):
-                    disconnect(canvas, slot)
-                    continue
-                if slot['link'] is None:
-                    loader = deepcopy(nodes[470])
-                    loader['id'] = max(n['id'] for n in canvas['nodes']) + 1
-                    loader['outputs'][0]['links'] = []
-                    canvas['nodes'].append(loader)
-                    number = max(link[0] for link in canvas['links']) + 1
-                    canvas['links'].append([number, loader['id'], 0, 459, nodes[459]['inputs'].index(slot), 'IMAGE'])
-                    loader['outputs'][0]['links'].append(number)
-                    slot['link'] = number
-                    canvas['last_node_id'], canvas['last_link_id'] = loader['id'], number
-                else:
-                    edge = next(link for link in canvas['links'] if link[0] == slot['link'])
-                    loader = next(n for n in canvas['nodes'] if n['id'] == edge[1])
-                widget(canvas, loader, image=refs[index]['file'].name)
-                uploads.append(dict(file=str(refs[index]['file']), node=str(loader['id']), input='image', subfolder=prefix,
-                                    **{'response-name': prefix + f'-上传响应-{index + 1:03d}.json'}))
-        output_node = '461'
-    api = pairs.Canvas(canvas).api(output_node)
-    return canvas, api, uploads, output_node
+        uploads = [dict(file=str(refs[0]['file']), node='2', input='image', subfolder=prefix,
+                        **{'response-name': prefix + '-上传响应.json'})]
+        return canvas, pairs.Canvas(canvas).api(3), uploads, '3'
+
+    prompt = spec['prompt']
+    from fractions import Fraction
+    if set(prompt) not in ({'rewritten_prompt', 'wh_ratio'}, {'rewritten_prompt', 'wh_ratio', 'ratio_follow'}) or not prompt['rewritten_prompt'] or not prompt['wh_ratio'] or prompt.get('ratio_follow'):
+        raise ValueError('任务清单须提供最终正文和明确画幅，不能同时跟随输入画幅')
+    if Fraction(prompt['wh_ratio'].replace(':', '/')) != Fraction(width, height):
+        raise ValueError('提示词画幅元数据与目标宽高不一致')
+    api = json.loads(workflow_file(base, 'api', root=workflow_root(skill)).read_text('utf-8-sig'))
+    text, latent, sampler, encoder, output = ('680', '479', '481', '497', '487') if refs else ('672', '514', '515', '522', '508')
+    api[text]['inputs']['value'] = prompt['rewritten_prompt']
+    api[latent]['inputs'].update(width=width, height=height)
+    api[sampler]['inputs']['seed'] = seed
+    for name, content in spec.get('parameters', {}).items():
+        if name == 'negative_prompt':
+            api[encoder]['inputs'][name] = content
+        else:
+            raise ValueError('图片任务不能覆盖固定配置：' + name)
+    api[output]['inputs']['filename_prefix'] = remote_output
+    uploads = []
+    if len(refs) > 10:
+        raise ValueError('参考图数量超过现行10图入口')
+    for index, ref in enumerate(refs):
+        loader = '475' if index == 0 else str(700 + (index - 1) * 2)
+        scale = '532' if index == 0 else str(701 + (index - 1) * 2)
+        if index:
+            api[loader] = deepcopy(api['475'])
+            api[scale] = deepcopy(api['532'])
+        api[loader]['inputs']['image'] = ref['file'].name
+        api[scale]['inputs']['image'] = [loader, 0]
+        api[encoder]['inputs'][f'images.image_{index + 1}'] = [scale, 0]
+        uploads.append(dict(file=str(ref['file']), node=loader, input='image', subfolder=prefix,
+                            **{'response-name': prefix + f'-上传响应-{index + 1:03d}.json'}))
+    return None, api, uploads, output
 
 
 def reference(root, draft, ref, documents, *, require_seed=True):
@@ -295,10 +257,7 @@ def generation_record(skill, spec, generation, refs, seed, width, height, record
         cache_text += '；TE加速：' + json.dumps({key: value for key, value in acceleration[0].items() if key != 'model'}, ensure_ascii=False)
     api_link = images.link(draft, record / (record.name + '.api.json'), '实际API副本')
     workflow_entry = images.link(draft, record / (record.name + '.api.json'), 'API')
-    if refs:
-        workflow_entry += '；' + images.link(draft, record / (record.name + '.workflow.json'), '画布')
-    else:
-        workflow_entry += '；原始文生图画布仅保存在技能工作流目录'
+    workflow_entry += '；原始' + ('图生图' if refs else '文生图') + '画布仅保存在技能工作流目录'
     values.update({'创建时间': spec['created_at'], '生成／修改授权与计数': spec['authorization'] + '；本次目标1张；实际提交次数及状态见后台记录',
         '图片类型': spec['image_type'], '生成方式与任务用途': ('图生图' if refs else '文生图') + '；' + spec.get('purpose', '基础参考图'),
         '人物状态': spec.get('state', '不适用'), '服装状态': spec.get('costume', '不适用'),
@@ -313,7 +272,7 @@ def generation_record(skill, spec, generation, refs, seed, width, height, record
         '种子、步数、CFG、采样器及调度器': parameters,
         '种子、步数、CFG、采样器、调度器及其他实际参数': parameters + '；denoise=' + str(sampler['denoise']) + '；' + api_link,
         '其他实际参数（如降噪、缓存设置）': f"denoise={sampler['denoise']}；" + cache_text,
-        '参考图预处理与画布设置': f"明确{width}×{height}；" + (f"参考预处理resolution={encoder['resolution']}；输入顺序见第2节" if refs else '无输入参考；API节点514直接设置宽高'),
+        '参考图预处理与画布设置': f"明确{width}×{height}；" + (f"每张参考图lanczos缩放至1.5MP、32对齐；编码器resolution={encoder['resolution']}；API节点479直接设置宽高；输入顺序见第2节" if refs else '无输入参考；API节点514直接设置宽高'),
         '请求响应与执行结果入口': '实际通信证据与状态见' + images.link(draft, record / '后台任务状态.json', '后台状态'),
         '请求、上传／提交响应及执行结果入口': '实际通信证据与状态见' + images.link(draft, record / '后台任务状态.json', '后台状态'),
         '种子选择与输入避重依据': '按项目类别登记；' + '；'.join(f'输入{i+1}原始种子：{r["seed"] if r["seed"] is not None else ("不适用" if r["non_generated"] else "未知；" + r["unknown_seed_basis"])}' for i, r in enumerate(refs)),

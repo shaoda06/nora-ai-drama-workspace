@@ -57,6 +57,9 @@ def save_uploaded_workflow(project, record, original, workflow, uploaded_materia
             if json.loads(path_scope.io_file(api_file).read_text('utf-8-sig')) == workflow:
                 continue  # Durable phase recovery: the actual inputs were already saved.
             canvas_file = api_file.with_name(api_file.name.removesuffix('.api.json') + '.workflow.json')
+            if not director and not canvas_file.exists():
+                path_scope.io_file(api_file).write_text(json.dumps(workflow, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+                continue
             canvas = json.loads(path_scope.io_file(canvas_file).read_text('utf-8-sig'))
             definitions = {group['id']: group for group in canvas.get('definitions', {}).get('subgraphs', [])}
             # Locate only affected widgets, without constructing or comparing the workflow graph.

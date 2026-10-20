@@ -221,9 +221,11 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         self.write_plan(task)
         result = await plans.execute(self.store, self.payload)
         data = self.store.rows[result['tasks'][0]['local_task_id']]['input']
-        self.assertEqual(data.uploads[0]['node'], '470')
-        self.assertEqual(data.workflow['459:474']['inputs']['images.image_1'], ['470',0])
-        self.assertNotIn('images.image_2', data.workflow['459:474']['inputs'])
+        self.assertEqual(data.uploads[0]['node'], '475')
+        self.assertEqual(data.workflow['497']['inputs']['images.image_1'], ['532',0])
+        self.assertEqual(data.workflow['481']['inputs']['seed'], 103)
+        self.assertFalse(list(Path(data.record_dir).glob('*.workflow.json')))
+        self.assertNotIn('images.image_2', data.workflow['497']['inputs'])
         text = (self.project / task['draft']).read_text()
         self.assertIn('原始种子：987', text)
         self.assertIn('人物本体身份', text)
@@ -249,11 +251,43 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(seeds[0], seeds[1])
         self.assertIn(str(seeds[0]), self.position.read_text())
 
-    async def test_multi_reference_slots_and_canvas_api_are_consistent(self):
-        refs = [dict(file=Path(str(n)+'.png')) for n in range(10)]
-        canvas, api, uploads, output = plans.image_workflow(t.SKILL, self.spec(), refs, 2048, 2048, 123, 'many')
-        self.assertEqual(len(uploads), 10)
-        self.assertEqual(len([k for k in api['459:474']['inputs'] if k.startswith('images.image_')]), 10)
+    def test_image_edit_dimensions_seeds_and_order_use_api_only(self):
+        for width, height, ratio in [(1024, 1024, '1:1'), (2048, 2048, '1:1'),
+                                     (1152, 864, '4:3'), (1376, 768, '43:24'),
+                                     (1536, 864, '16:9'), (1536, 1024, '3:2')]:
+            for count in (1, 3, 10):
+                with self.subTest(size=(width, height), references=count), patch.object(plans.pairs, 'Canvas', side_effect=AssertionError('图生图不读取画布')):
+                    refs = [dict(file=Path(str(n)+'.png')) for n in range(count)]
+                    spec = self.spec()
+                    spec['prompt']['wh_ratio'] = ratio
+                    canvas, api, uploads, output = plans.image_workflow(t.SKILL, spec, refs,
+                        width, height, 2**53-1, 'many', '测试项目/图片生成/人物/CH001/本次候选')
+                self.assertIsNone(canvas)
+                self.assertEqual(output, '487')
+                self.assertEqual(len(uploads), count)
+                self.assertEqual((api['479']['inputs']['width'], api['479']['inputs']['height']), (width, height))
+                self.assertEqual(api['481']['inputs']['seed'], 2**53-1)
+                self.assertEqual(api['481']['inputs']['steps'], 40)
+                self.assertEqual(api['680']['inputs']['value'], spec['prompt']['rewritten_prompt'])
+                self.assertEqual(api['487']['inputs']['images'], ['480', 0])
+                self.assertEqual(api['487']['inputs']['filename_prefix'], '测试项目/图片生成/人物/CH001/本次候选')
+                self.assertEqual(len([k for k in api['497']['inputs'] if k.startswith('images.image_')]), count)
+                for index, upload in enumerate(uploads):
+                    scale = api[api['497']['inputs'][f'images.image_{index+1}'][0]]['inputs']
+                    self.assertEqual(scale['image'], [upload['node'], 0])
+                    self.assertEqual((scale['megapixels'], scale['resolution_steps']), (1.5, 32))
+                    self.assertEqual(api[upload['node']]['inputs']['image'], refs[index]['file'].name)
+                self.assertFalse({'13', '502', '530', '565', '569', '661', '671', '672', '673', '674'} & set(api))
+
+    def test_image_edit_rejects_fixed_parameter_override_and_excess_references(self):
+        refs = [dict(file=Path('input.png'))]
+        for field in ('steps', 'seed', 'resolution', 'megapixels', 'batch_size'):
+            spec = self.spec()
+            spec['parameters'] = {field: 1}
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, '固定配置'):
+                plans.image_workflow(t.SKILL, spec, refs, 2048, 2048, 103, 'one')
+        with self.assertRaisesRegex(ValueError, '10图'):
+            plans.image_workflow(t.SKILL, self.spec(), refs * 11, 2048, 2048, 103, 'many')
 
     async def test_video_uses_preconfigured_canvas_and_same_one_call_checks(self):
         # Reuse the canonical isolated H3 fixture, including content review and scene-round dependencies.
@@ -520,7 +554,7 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         source = self.project / '用户参考.png'
         source.write_bytes(png())
         task = self.spec()
-        task['parameters'] = {'steps': 17, 'cfg': 1.2}
+        task['parameters'] = {'negative_prompt': '本次明确的反向条件'}
         task['references'] = [dict(file='用户参考.png', user_reference=True, source_kind='非生成', purpose='已指定衣装', basis='用户指定非生成素材')]
         other = deepcopy(task)
         other.update(object='CH002', title='CH002 · 首集角色六视图', draft=self.spec('CH002')['draft'])
@@ -532,8 +566,10 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         for entry in result['tasks']:
             data = self.store.rows[entry['local_task_id']]['input']
             text = (self.project/data.image_plan['draft']).read_text()
-            self.assertIn('103、17、1.2、euler、simple', text)
-            self.assertIn('- 实际反向提示词：空', text)
+            self.assertIn('103、40、1、euler、simple', text)
+            self.assertIn('- 实际反向提示词：本次明确的反向条件', text)
+            self.assertIn('每张参考图lanczos缩放至1.5MP', text)
+            self.assertIn('原始图生图画布仅保存在技能工作流目录', text)
             self.assertIn('qwen_image_2.1_int8_convrot.safetensors', text)
             self.assertIn('缓存device=auto、dtype=default', text)
             self.assertNotIn('- 模型及工作流：不适用', text)
