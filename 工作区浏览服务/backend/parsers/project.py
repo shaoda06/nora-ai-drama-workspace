@@ -1439,15 +1439,20 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                 for video in videos:
                     body = video_record_body(record, video["run"], video["stage"])
                     task_body = body
+                    task_record_key = record_key
                     for link in markdown_links(field(body, "共同任务证据与状态入口"), record_key):
                         anchor = unquote(urlsplit(link["url"]).fragment)
                         if (link["key"].endswith("-视频制作-工作稿.md")
                                 and re.fullmatch(r"r\d{3,}(?:-(?:一采|二采|后处理))?", anchor, re.I)):
-                            owner = read(link["key"]) or ""
+                            task_record_key = link["key"]
+                            owner = read(task_record_key) or ""
                             task_body = video_record_body(owner, anchor.split('-')[0].upper(), video["stage"])
                             break
                     video.update(deliveryStatus=field(body, "取回核对状态"), taskStatus=field(task_body, "任务状态"),
                                  checkedAt=field(task_body, "最近检查时间"))
+                    state_links = markdown_links(field(task_body, "共同任务证据与状态入口") + " " + field(task_body, "任务状态"), task_record_key)
+                    video["taskStateUrl"] = next((link["url"] for link in state_links
+                                                  if Path(link["key"]).name == "后台任务状态.json"), "")
                     video["candidateNumber"] = int(video["run"][1:])
                     if episode_mode == 'full':
                         video["context"] = resolve_context(segment_identity + "-" + video["run"] + "-" + video["stage"],

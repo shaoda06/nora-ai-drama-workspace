@@ -52,6 +52,25 @@ class SceneRoundTests(unittest.TestCase):
         data = build_data(self.project, web_episode_navigation=True, load_scope='09-剧集制作', episode_id='EP001')
         return data['catalogues']['09-剧集制作']['children'][0]
 
+    def test_video_task_links_follow_candidate_stage_and_shared_owner(self):
+        from urllib.parse import unquote
+        draft = self.root + '/其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md'
+        self.write(draft, '# 工作稿\n### R001-一采\n- 任务状态：已准备；实际执行见[状态](../执行附件/first/后台任务状态.json)\n'
+                   '### R001-二采\n- 共同任务证据与状态入口：[状态](../执行附件/second/后台任务状态.json)\n'
+                   '### R002-后处理\n- 共同任务证据与状态入口：[共同任务](../历史版本/EP001-C001-P002-视频制作-工作稿.md#r009-后处理)\n')
+        self.write(self.root + '/其他资料/历史版本/EP001-C001-P002-视频制作-工作稿.md',
+                   '# 工作稿\n### R009-后处理\n- 任务状态：已准备\n'
+                   '- 共同任务证据与状态入口：[状态](../执行附件/shared/后台任务状态.json)\n')
+        before = (self.project / draft).read_bytes()
+        videos = self.episode()['segments']['C001'][0]['videos']
+        links = {(v['run'], v['stage']): unquote(v['taskStateUrl']) for v in videos}
+        prefix = self.root + '/其他资料/执行附件/'
+        self.assertEqual(links[('R001', '一采')], prefix + 'first/后台任务状态.json')
+        self.assertEqual(links[('R001', '二采')], prefix + 'second/后台任务状态.json')
+        self.assertEqual(links[('R002', '后处理')], prefix + 'shared/后台任务状态.json')
+        self.assertEqual((self.project / draft).read_bytes(), before)
+        self.assertTrue(all(v['taskStateUrl'] == '' for v in self.episode()['segments']['C001'][1]['videos']))
+
     def test_compositions_keep_independent_runs_and_original_reviews(self):
         record = self.project / (self.root + '/其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md')
         before = record.read_bytes()

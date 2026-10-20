@@ -49,6 +49,22 @@ try {
   for (const video of [segments[0].videos[1], segments[1].videos[0]]) video.context = {
     ...context, scriptHtml: '', prompts: { english: '', chinese: '' }, issues: ['该次生成的资料关联尚未记录。'],
   };
+  // The draft remains "prepared" while this candidate's actual task advances.
+  const stateUrl = '/api/fixture-video-task';
+  segments[3].videos[0].taskStateUrl = stateUrl;
+  segments[3].videos[0].taskStatus = '已准备；实际执行见[后台共同状态及任务ID](../执行附件/private/后台任务状态.json)';
+  let liveStatus = 'local_queued';
+  let brokenStatus = false;
+  await page.route('**/api/fixture-video-task', route => route.fulfill({ contentType: 'application/json',
+    body: brokenStatus ? '{' : JSON.stringify({ id: 'fixture-task', status: liveStatus, updated_at: liveStatus }),
+  }));
+  await page.route('**/api/comfy/tasks/fixture-task/detail', route => route.fulfill({ json: {
+    summary: { id: 'fixture-task', project, title: '候选任务详情', task_type: 'video-first-pass', status: 'failed',
+      remote_url: 'https://example.invalid', enqueued_url: 'https://example.invalid',
+      collected: 0, expected: 1, failure_stage: 'execution', error: '夹具中的详细失败原因' },
+    events: [], outputs: [], records: [{ name: '完整过程记录', url: '/fixture-record' }],
+    notification_batches: [], resolution_evidence: [], replacement_tasks: [],
+  } }));
   await page.route('**/episodes/EP001', async route => {
     const response = await route.fetch();
     const data = await response.json();
@@ -67,7 +83,7 @@ try {
   const select = id => page.getByRole('button', { name: new RegExp('^分段 ' + id + '，') }).first().click();
   await select('P001');
   await page.screenshot({ path: path.join(out, 'not-generated.png') });
-  assert.equal(await placeholder.innerText(), '尚未生成视频；可查看已关联资料。', 'planned revision mislabeled as lost media');
+  assert.equal(await placeholder.innerText(), '尚未生成视频', 'planned revision mislabeled as lost media');
   assert.equal(await scene.getByText('部分分段暂无本轮视频。', { exact: true }).count(), 0);
   assert.equal(await scene.locator('.scene-review-round').count(), 0, 'empty duplicate notice container remains');
   assert.equal(await scene.getByText('P001的本轮一采 R004尚未生成视频', { exact: false }).count(), 0);
@@ -86,7 +102,7 @@ try {
   await page.getByRole('button', { name: '分镜脚本', exact: true }).click();
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).click();
   assert.equal(await page.getByRole('checkbox', { name: '连续播放', exact: true }).isChecked(), false);
-  assert.equal(await scene.getByText('尚未生成视频；可查看已关联资料。', { exact: true }).count(), 1, 'continuous start duplicates player status');
+  assert.equal(await scene.getByText('尚未生成视频', { exact: true }).count(), 1, 'continuous start duplicates player status');
   assert.ok(!(await scene.locator('[role=alert]').allTextContents()).some(text => text.includes('尚未生成')));
   await select('P002');
   assert.equal(await placeholder.innerText(), '已有视频不可播放，请检查视频文件及取回记录。');
@@ -94,7 +110,38 @@ try {
   assert.ok(!(await scene.innerText()).includes('尚未生成'));
   await page.screenshot({ path: path.join(out, 'unavailable.png') });
   await select('P004');
-  assert.ok((await scene.innerText()).includes('尚未生成视频（排队中）'));
+  await placeholder.getByRole('status').filter({ hasText: /^排队中$/ }).waitFor();
+  for (const [status, message] of [
+    ['queued', '任务已提交'], ['running', '正在生成中'], ['collecting', '正在取回视频'],
+    ['completed', '生成已完成'], ['failed', '生成失败，请查看任务详情'],
+    ['collection_failed', '视频取回失败，请查看任务详情'], ['paused', '任务已暂停'],
+    ['cancelled', '任务已取消'],
+  ]) {
+    liveStatus = status;
+    await placeholder.getByRole('status').filter({ hasText: new RegExp('^' + message + '$') }).waitFor({ timeout: 10000 });
+    assert.ok(!(await placeholder.innerText()).includes('执行附件'));
+    if (status === 'running') {
+      await placeholder.scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(out, 'running.png') });
+      await page.setViewportSize({ width: 390, height: 844 });
+      await placeholder.scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(out, 'mobile-running.png') });
+      await page.setViewportSize({ width: 1355, height: 925 });
+    }
+    assert.equal(await placeholder.getByRole('button', { name: '查看任务详情' }).count(), 1);
+  }
+  await placeholder.getByRole('button', { name: '查看任务详情' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByText('夹具中的详细失败原因', { exact: true }).waitFor();
+  await dialog.getByText('技术记录', { exact: true }).click();
+  await dialog.getByText('fixture-task', { exact: true }).waitFor();
+  await dialog.getByRole('link', { name: '完整过程记录' }).waitFor();
+  await dialog.getByRole('button', { name: '关闭', exact: true }).click();
+  brokenStatus = true;
+  await placeholder.getByRole('status').filter({ hasText: /^任务状态暂不可用$/ }).waitFor({ timeout: 10000 });
+  brokenStatus = false;
+  liveStatus = 'queued';
+  await placeholder.getByRole('status').filter({ hasText: /^任务已提交$/ }).waitFor({ timeout: 10000 });
   assert.ok(!(await scene.innerText()).includes('已有视频不可播放'));
   await select('P003');
   await page.locator('.segment-video video').dispatchEvent('error');
@@ -102,7 +149,7 @@ try {
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).check();
   await page.locator('.segment-video video').dispatchEvent('ended');
   assert.equal(await page.getByRole('button', { name: /^分段 P003，/ }).first().getAttribute('aria-pressed'), 'true');
-  await scene.getByText('P004的本轮一采 R001尚未生成视频（排队中）', { exact: false }).waitFor();
+  await scene.getByText('P004的本轮一采 R001等待提交', { exact: false }).waitFor();
   assert.ok(!(await scene.locator('[role=alert]').allTextContents()).some(text => text.includes('尚未生成')));
   await select('P001');
   await page.getByRole('combobox', { name: '版本切换', exact: true }).selectOption({ label: '候选三' });
@@ -117,5 +164,5 @@ try {
   assert.deepEqual(writes, []);
   assert.ok((await page.title()).includes('Nora'));
   assert.ok(!(await page.locator('body').innerText()).includes('Internal Server Error'));
-  console.log(JSON.stringify({ passed: true, checks: ['planned candidate', 'old candidate not substituted', 'queued candidate', 'missing retrieved video', 'player error', 'continuous start and next segment', 'desktop and mobile'], url: page.url(), pageErrors: errors, consoleErrors, fixtureMediaErrors, productionWrites: writes.length, screenshots: out }));
+  console.log(JSON.stringify({ passed: true, checks: ['planned candidate', 'old candidate not substituted', 'queued candidate', 'missing retrieved video', 'player error', 'continuous start and next segment', 'desktop and mobile', 'live task transitions', 'read failure and recovery', 'details retain technical evidence'], url: page.url(), pageErrors: errors, consoleErrors, fixtureMediaErrors, productionWrites: writes.length, screenshots: out }));
 } finally { await browser.close(); }

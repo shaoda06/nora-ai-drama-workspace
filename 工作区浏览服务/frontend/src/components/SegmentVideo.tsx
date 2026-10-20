@@ -1,5 +1,7 @@
 import { useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode, Ref } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { TaskDetailDialog } from './TaskDetailDialog';
 import type { SegmentVideo as VideoItem } from '../api';
 import { Original } from '../components';
 
@@ -30,10 +32,23 @@ export function missingVideoState(current?: VideoItem, recordedKey = '') {
   // successful generation/collection record establishes an existing output.
   const unavailable = !!current?.fileRevision || current?.taskStatus === '成功'
     || !!current?.deliveryStatus.includes('已取回') || /\.(mp4|webm|mov)$/.test(recordedKey);
-  const status = current?.taskStatus && current.taskStatus !== '未记录' ? `（${current.taskStatus}）` : '';
+  const recorded = current?.taskStatus?.split(/[；;]/)[0];
+  const status: Record<string, string> = { 已准备: '等待提交', 等待提交: '等待提交', 排队中: '排队中',
+    已提交: '任务已提交', 运行中: '正在生成中', 正在生成: '正在生成中', 生成中: '正在生成中',
+    取回中: '正在取回视频', 失败: '生成失败，请查看任务详情', 已取消: '任务已取消', 暂停中: '任务已暂停' };
   return { unavailable, message: unavailable ? '已有视频不可播放，请检查视频文件及取回记录。'
-    : `尚未生成视频${status}；可查看已关联资料。` };
+    : status[recorded || ''] || '尚未生成视频' };
 }
+
+export interface VideoTaskState { id: string; status: string; updated_at: string }
+
+export const videoTaskMessages: Record<string, string> = {
+  local_queued: '排队中', preparing: '准备提交中', submitting: '正在提交任务', queued: '任务已提交',
+  running: '正在生成中', collecting: '正在取回视频', completed: '生成已完成', paused: '任务已暂停',
+  failed: '生成失败，请查看任务详情', rejected: '提交失败，请查看任务详情',
+  collection_failed: '视频取回失败，请查看任务详情', cancelled: '任务已取消', resolved: '任务已结案',
+  needs_attention: '任务状态待核对', submission_unknown: '提交结果待核对',
+};
 
 export interface SegmentVideoHandle { seekTo: (time: number) => void }
 
@@ -46,6 +61,29 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
   playerRef: Ref<SegmentVideoHandle>;
 }) {
   const [error, setError] = useState(false);
+  const [detailId, setDetailId] = useState('');
+  const queryClient = useQueryClient();
+  const task = useQuery<VideoTaskState>({
+    queryKey: ['video-task', current?.taskStateUrl],
+    queryFn: async ({ signal }) => {
+      const response = await fetch(current!.taskStateUrl!, { signal, cache: 'no-store' });
+      if (!response.ok) throw new Error('任务状态读取失败');
+      return response.json();
+    },
+    enabled: !!current?.taskStateUrl && !current.url,
+    staleTime: 0, retry: false, refetchInterval: 3000,
+    refetchIntervalInBackground: false, refetchOnWindowFocus: 'always',
+  });
+  useEffect(() => {
+    if (task.data?.status === 'completed') void queryClient.invalidateQueries({ queryKey: ['episode'] });
+  }, [task.data?.status, task.data?.updated_at, queryClient]);
+  const missing = missingVideoState(current);
+  const status = current?.taskStateUrl && !current.url
+    ? task.isError ? '任务状态暂不可用' : task.data
+      ? missing.unavailable && task.data.status === 'completed' ? missing.message
+        : videoTaskMessages[task.data.status] || '任务状态待核对'
+      : '正在读取任务状态'
+    : current?.url ? '视频已生成，请加载新文件' : missing.message;
   const [loaded, setLoaded] = useState(current);
   const [source, setSource] = useState(cachedSource || current?.url);
   useLayoutEffect(() => source ? retainSource(source) : undefined, [source, retainSource]);
@@ -72,7 +110,8 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
       onTimeUpdate={event => onTimeChange(event.currentTarget.currentTime)}
       onSeeked={event => onTimeChange(event.currentTarget.currentTime)}
       onPause={event => onTimeChange(event.currentTarget.currentTime)}
-      onEnded={event => { onTimeChange(event.currentTarget.currentTime); onEnded?.(); }} /> : <div className="video-placeholder">{current ? missingVideoState(current).message : '视频区域'}</div>}
+      onEnded={event => { onTimeChange(event.currentTarget.currentTime); onEnded?.(); }} /> : <div className="video-placeholder video-task-placeholder"><span role="status">{current ? status : '尚未生成视频'}</span>
+      {current?.taskStateUrl && task.data && <button onClick={() => setDetailId(task.data.id)}>查看任务详情</button>}</div>}
     <div className="video-source">
       <div className="video-source-summary">{selectorControl}{current && loaded && <span>{description}</span>}</div>
       <div className="video-source-actions">
@@ -82,6 +121,7 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
       </div>
     </div>
     {updated && <div className="video-update" role="status"><span>视频已有更新</span><button onClick={() => { setPlayOnLoad(video.current ? !video.current.paused : false); setLoaded(current); setSource(cachedSource || current.url); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></div>}
+    {detailId && <TaskDetailDialog id={detailId} updatedAt={task.data?.updated_at} nodes={[]} close={() => setDetailId('')} openTask={setDetailId} />}
     {error && <p className="error" role="alert">已有视频不可播放，请打开原文件检查。</p>}
   </section>;
 }
