@@ -179,7 +179,7 @@ class VideoExecutionTests(unittest.IsolatedAsyncioTestCase):
     async def test_standard_postprocess_derives_output_and_execution_fields(self):
         task=self.new_task()
         canvas=self.project/'后处理输入.workflow.json'
-        canvas.write_bytes((workflow_file('Nora-RTX-RIFE-自动切镜保护超分插帧', 'workflow')).read_bytes())
+        canvas.write_bytes((workflow_file('RTX-RIFE-自动切镜保护超分插帧', 'workflow')).read_bytes())
         task.update(task_type='video-postprocess',canvas=self.rel(canvas),output_nodes=['16'],
             record_dir=self.rel(self.record.with_name('EP001-C001-P001-R001-后处理')))
         task.pop('references')

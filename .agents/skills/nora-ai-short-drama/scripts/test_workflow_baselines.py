@@ -19,13 +19,13 @@ RETAINED = BASELINES / "非正式工作流"
 class BaselineTests(unittest.TestCase):
     def test_formal_rife_is_checked(self):
         results = {item['workflow']: item for item in wb.verify(BASELINES)}
-        formal = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
+        formal = 'RTX-RIFE-自动切镜保护超分插帧'
         self.assertTrue(workflow_file(formal, 'api').is_file())
         self.assertEqual(results[formal]['node_package'], 'ComfyUI-Nora-RIFE-CutTest.zip')
         self.assertEqual(results[formal]['postprocess_delivery']['target_fps'], 30)
 
     def test_postprocess_rejects_bypassed_processing_and_wrong_timing(self):
-        name = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
+        name = 'RTX-RIFE-自动切镜保护超分插帧'
         original = json.loads((workflow_file(name, 'api')).read_text(encoding='utf-8'))
         for field in ('scale', 'scene_cut_threshold'):
             changed = copy.deepcopy(original)
@@ -57,7 +57,7 @@ class BaselineTests(unittest.TestCase):
                 wb.validate_rife_package(broken)
 
     def test_postprocess_delivery_recommendations_do_not_gate_other_paired_targets(self):
-        stem = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
+        stem = 'RTX-RIFE-自动切镜保护超分插帧'
         for width, height, fps, note_count in ((1920, 1080, 30, 0), (1080, 1920, 30, 0),
                                              (3840, 2160, 60, 0), (1280, 720, 24, 2)):
             with self.subTest(width=width, height=height, fps=fps), tempfile.TemporaryDirectory() as tmp:
@@ -81,7 +81,7 @@ class BaselineTests(unittest.TestCase):
                 self.assertEqual(report['crf'], 19)
 
     def test_postprocess_default_uses_30fps_and_preserves_audio_and_output_timing(self):
-        stem = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
+        stem = 'RTX-RIFE-自动切镜保护超分插帧'
         api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
         graph = wb.Canvas(json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8')))
         self.assertEqual(api['12']['inputs']['target_fps'], 30)
@@ -94,7 +94,7 @@ class BaselineTests(unittest.TestCase):
         self.assertFalse(api['16']['inputs']['trim_to_audio'])
 
     def test_rtx_baselines_explicit_required_parameters(self):
-        for stem in ('Nora-RTX-图片2倍超分', 'Nora-RTX-RIFE-自动切镜保护超分插帧'):
+        for stem in ('RTX-图片2倍超分', 'RTX-RIFE-自动切镜保护超分插帧'):
             with self.subTest(stem=stem):
                 api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
                 graph = wb.Canvas(json.loads((workflow_file(stem, 'workflow')).read_text(encoding='utf-8')))
@@ -104,7 +104,7 @@ class BaselineTests(unittest.TestCase):
                 wb.validate_rtx_inputs(api)
 
     def test_pair_check_rejects_rtx_fields_missing_from_both_representations(self):
-        stem = 'Nora-RTX-RIFE-自动切镜保护超分插帧'
+        stem = 'RTX-RIFE-自动切镜保护超分插帧'
         for field in ('strength', 'image_encoding'):
             with self.subTest(field=field), tempfile.TemporaryDirectory() as tmp:
                 api = json.loads((workflow_file(stem, 'api')).read_text(encoding='utf-8'))
@@ -269,7 +269,7 @@ class BaselineTests(unittest.TestCase):
 
     def test_detects_upscale_factor_drift(self):
         with tempfile.TemporaryDirectory() as tmp:
-            name = "Nora-RTX-图片2倍超分"
+            name = "RTX-图片2倍超分"
             for suffix in ("workflow", "api"):
                 source = workflow_file(name, suffix)
                 Path(tmp, source.name).write_bytes(source.read_bytes())

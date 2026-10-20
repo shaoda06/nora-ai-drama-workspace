@@ -1,6 +1,6 @@
 # ComfyUI-H3视频执行规范
 
-版本：v1.82；更新日期：2026-10-20。
+版本：v1.83；更新日期：2026-10-20。
 
 本规范管理视频工作流的填写、执行与记录。制作顺序及审批读取[开发流程第二部分第7节](视频阶段与返修执行规范.md#7-生成视频验收与衔接修改)，后处理与其他视频修改的阶段归属读取[阶段与当前版本修改](视频阶段与返修执行规范.md#视频阶段与当前版本修改)；提示词正文读取[视频提示词制作规范](../../nora-video-prompts/references/视频提示词制作规范.md#6-分段视频提示词文档)及 `h3-prompt-writing`。准备资料、实际任务和人工审核按[逐集目录规范](../../nora-ai-short-drama/references/流程规范/逐集目录与资产管理规范.md)保存，不把技术成功写成内容获批。
 
@@ -13,7 +13,7 @@
 | Minimax-H3-导演台-视频生成-标准版 | 正式默认视频生成，不加载节点128；502为导演台，407为Refine；首次只一采，人工确认后再次执行二采；默认分段导出，403报告驱动执行 |
 | Minimax-H3-导演台-视频生成-去油版 | 用户明确指定时使用；保留节点128 Mystic LoRA，用于角色去油；其余参数及审核流程与标准版一致 |
 | Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试 | 实验备用，仅明确选择时使用；单次渐进采样直接输出高清，不能中途送审低清 |
-| Nora-RTX-RIFE-自动切镜保护超分插帧 | 正式默认后处理；按[开发流程的整场后处理安排](视频阶段与返修执行规范.md#7-生成视频验收与衔接修改)逐段输入选定二采，按需先插帧后超分；默认1080P、30fps，自动检测切镜；配置见[后处理交付规格](#后处理交付规格) |
+| RTX-RIFE-自动切镜保护超分插帧 | 正式默认后处理；按[开发流程的整场后处理安排](视频阶段与返修执行规范.md#7-生成视频验收与衔接修改)逐段输入选定二采，按需先插帧后超分；默认1080P、30fps，自动检测切镜；配置见[后处理交付规格](#后处理交付规格) |
 
 一采参数和工作流确认不等于具体视频获批，也不授权下一批任务。二采与后处理仍需指定获批来源和对应执行授权；各阶段尺寸、Refine设置与执行端条件见第2节。
 
@@ -26,7 +26,7 @@
 | 标准版：正式默认一采确认与二采 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-标准版.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-标准版.api.json) | 19 |
 | 去油版：仅用户明确指定 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-去油版.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/Minimax-H3/Minimax-H3-导演台-视频生成-去油版.api.json) | 16 |
 | SelfLift备用测试 | [画布](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/非正式工作流/Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试.api.json) | 19 |
-| 后处理：正式默认RIFE | [画布](../../nora-ai-short-drama/references/comfyui-workflow/后处理综合/Nora-RTX-RIFE-自动切镜保护超分插帧.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/后处理综合/Nora-RTX-RIFE-自动切镜保护超分插帧.api.json) | 5 |
+| 后处理：正式默认RIFE | [画布](../../nora-ai-short-drama/references/comfyui-workflow/后处理综合/RTX-RIFE-自动切镜保护超分插帧.workflow.json) | [API](../../nora-ai-short-drama/references/comfyui-workflow/后处理综合/RTX-RIFE-自动切镜保护超分插帧.api.json) | 5 |
 
 正式一采不使用外部图片、音频、视频加载节点；素材通过导演台的 `timeline_data` 传入原生公共区和本组区。502是基准节点编号，任务副本的场次缓存名填写、来源身份保持与缓存定位按[节点缓存规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#75-缓存检查与清理接口)处理。画布中的三组、11/15/14秒和种子是填写样例，不是所有任务的规定；执行前按获批资料替换提示词、素材、组与P映射、时长、实际种子及输出标识。执行参数以实际API为准；连接输入覆盖控件默认值。
 

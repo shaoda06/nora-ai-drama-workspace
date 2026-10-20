@@ -88,7 +88,7 @@ class FinalizeTests(unittest.TestCase):
             path.write_text(data if isinstance(data, str) else json.dumps(data, ensure_ascii=False), encoding='utf-8')
 
     def pair(self, stage, part, identity):
-        name = 'Nora-RTX-RIFE-自动切镜保护超分插帧' if stage == '后处理' else 'Minimax-H3-导演台-视频生成-标准版'
+        name = 'RTX-RIFE-自动切镜保护超分插帧' if stage == '后处理' else 'Minimax-H3-导演台-视频生成-标准版'
         api = tool.adopt.load(workflow_file(name, 'api'))
         canvas = tool.adopt.load(workflow_file(name))
         if stage == '后处理':

@@ -5,7 +5,7 @@ from pathlib import Path
 from workflow_paths import workflow_directories, workflow_root
 UI_FIELDS={'control_after_generate','upload','choose video to upload','videopreview','image_upload','audioUI','preview'}
 UI_NODES={'Note','MarkdownNote','SetNode','GetNode','Reroute'}
-POSTPROCESS_NODES={'Nora-RTX-RIFE-自动切镜保护超分插帧':'NoraRIFEInterpolationCutTest'}
+POSTPROCESS_NODES={'RTX-RIFE-自动切镜保护超分插帧':'NoraRIFEInterpolationCutTest'}
 
 def validate_rife_package(path):
  with zipfile.ZipFile(path) as package:
@@ -132,7 +132,7 @@ def validate_rtx_inputs(api):
   if inputs['image_encoding'] not in ('8-bit RGB','10-bit RGB (RGB10A2)'):
    raise ValueError(f'RTXVideoSuperResolution {key} image_encoding is unsupported')
 
-def output_for(name):return [403,504,506] if name=='Minimax-H3-导演台-视频生成-标准版' else 3 if name=='Nora-RTX-图片2倍超分' else 508 if name=='Qwen2.1-文生图-普通版' else 487 if name=='Qwen2.1-图生图-普通版' else 461 if name.startswith('Qwen') else 403 if name=='Minimax-H3-导演台-视频生成-去油版' else 264 if 'SelfLift-备用' in name else 16
+def output_for(name):return [403,504,506] if name=='Minimax-H3-导演台-视频生成-标准版' else 3 if name=='RTX-图片2倍超分' else 508 if name=='Qwen2.1-文生图-普通版' else 487 if name=='Qwen2.1-图生图-普通版' else 461 if name.startswith('Qwen') else 403 if name=='Minimax-H3-导演台-视频生成-去油版' else 264 if 'SelfLift-备用' in name else 16
 
 def director_editor_state(block, common=False):
  """Compare persisted Director content, excluding preview blobs and root-only fields."""
@@ -172,7 +172,7 @@ def verify(directory):
     if is_link(value):assert value[0] in actual, ('Missing API input',stem,value[0])
   refs=[(key,node['_meta']['nora_optional_reference']) for key,node in actual.items() if 'nora_optional_reference' in node.get('_meta',{})]
   assert len(refs)==(15 if '265' in actual and '多参考视频' in stem else 0)
-  if stem=='Nora-RTX-图片2倍超分':
+  if stem=='RTX-图片2倍超分':
    assert actual['1']['inputs']['resize_type.scale']==2, 'Image upscale must remain 2x'
   for director in (n for n in actual.values() if n['class_type']=='MiniMaxH3Director'):
    inputs=director['inputs'];timeline=json.loads(inputs['timeline_data'])

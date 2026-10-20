@@ -116,7 +116,7 @@ def remote_prefix(root, *parts):
 
 def image_workflow(skill, spec, refs, width, height, seed, prefix, remote_output=None):
     upscale = spec['task_type'] == 'image-upscale'
-    base = 'Nora-RTX-图片2倍超分' if upscale else 'Qwen2.1-' + ('图生图' if refs else '文生图') + '-普通版'
+    base = 'RTX-图片2倍超分' if upscale else 'Qwen2.1-' + ('图生图' if refs else '文生图') + '-普通版'
     remote_output = prefix if remote_output is None else remote_output
     if upscale:
         canvas = json.loads(workflow_file(base, root=workflow_root(skill)).read_text('utf-8-sig'))

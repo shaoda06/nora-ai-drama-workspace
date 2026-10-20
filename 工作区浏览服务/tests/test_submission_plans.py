@@ -147,7 +147,7 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
 
     def test_remote_video_postprocess_folder_uses_existing_segment_and_round(self):
         source = self.project / 'post.workflow.json'
-        source.write_bytes(plans.workflow_file('Nora-RTX-RIFE-自动切镜保护超分插帧').read_bytes())
+        source.write_bytes(plans.workflow_file('RTX-RIFE-自动切镜保护超分插帧').read_bytes())
         mapping = dict(scene='EP001-C001', selected_indices=[0],
             segments=[dict(segment='EP001-C001-P002', round='R003')])
         task = dict(task_type='video-postprocess', title='后处理', record_dir='执行附件/后处理测试',
