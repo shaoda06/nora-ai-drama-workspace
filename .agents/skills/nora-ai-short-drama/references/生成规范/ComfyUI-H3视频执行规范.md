@@ -12,9 +12,9 @@
 
 - [1. 当前固定基准与任务副本](../../../nora-generation/references/ComfyUI-H3视频执行规范.md#1-当前固定基准与任务副本)
 
-<a id="11-离线配对校验与回归测试"></a>
+<a id="11-离线API检查与回归测试"></a>
 
-- [1.1 离线配对校验与回归测试](../../../nora-generation/references/ComfyUI-H3视频执行规范.md#11-离线配对校验与回归测试)
+- [1.1 离线API检查与回归测试](../../../nora-generation/references/ComfyUI-H3视频执行规范.md#11-离线api检查与回归测试)
 
 <a id="12-任务参数来源与准备提交"></a>
 

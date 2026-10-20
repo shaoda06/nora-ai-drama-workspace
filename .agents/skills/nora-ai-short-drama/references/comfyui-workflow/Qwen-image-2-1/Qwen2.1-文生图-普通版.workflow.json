@@ -1,180 +1,215 @@
 {
-  "id": "54bb395d-3e60-4c94-b525-85523901575b",
+  "id": "b500acb9-9f77-4786-932c-3afe3510dc2b",
   "revision": 0,
-  "last_node_id": 469,
-  "last_link_id": 680,
+  "last_node_id": 672,
+  "last_link_id": 926,
   "nodes": [
     {
-      "id": 13,
-      "type": "ResolutionSelector",
+      "id": 508,
+      "type": "SaveImage",
       "pos": [
-        560,
-        2830
+        5322.179615401491,
+        2025.3116254979236
       ],
       "size": [
-        300,
-        190
+        668.6104489883364,
+        1270.851405998395
       ],
-      "flags": {},
-      "order": 0,
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 18,
       "mode": 0,
-      "showAdvanced": true,
       "inputs": [
         {
-          "localized_name": "宽高比",
-          "name": "aspect_ratio",
-          "type": "COMBO",
-          "widget": {
-            "name": "aspect_ratio"
-          },
-          "link": null
-        },
-        {
-          "localized_name": "百万像素",
-          "name": "megapixels",
-          "type": "FLOAT",
-          "widget": {
-            "name": "megapixels"
-          },
-          "link": null
-        },
-        {
-          "localized_name": "倍数",
-          "name": "multiple",
-          "type": "INT",
-          "widget": {
-            "name": "multiple"
-          },
-          "link": null
-        },
-        {
-          "localized_name": "预览",
-          "name": "preview",
-          "shape": 7,
-          "type": "RESOLUTION_PREVIEW",
-          "widget": {
-            "name": "preview"
-          },
-          "link": null
+          "name": "images",
+          "type": "IMAGE",
+          "link": 775
         }
       ],
       "outputs": [
         {
-          "localized_name": "宽度",
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveImage",
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0"
+      },
+      "widgets_values": [
+        "QW21-%date:yyyyMMddhhmmss%"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "QW21-%date:yyyyMMddhhmmss%"
+      }
+    },
+    {
+      "id": 512,
+      "type": "ResolutionSelector",
+      "pos": [
+        4280.409542209996,
+        2758.7114682930846
+      ],
+      "size": [
+        515.7363640210646,
+        150
+      ],
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 0,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [],
+      "outputs": [
+        {
           "name": "width",
           "type": "INT",
           "links": [
-            670
+            776
           ]
         },
         {
-          "localized_name": "高度",
           "name": "height",
           "type": "INT",
           "links": [
-            671
+            777
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "ResolutionSelector"
+        "Node name for S&R": "ResolutionSelector",
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
       },
       "widgets_values": [
-        "1:1 (Square)",
-        1,
-        8
+        "16:9 (Widescreen)",
+        2.2,
+        32
       ],
       "widgets_values_named": {
-        "aspect_ratio": "1:1 (Square)",
-        "megapixels": 1,
-        "multiple": 8
-      }
+        "aspect_ratio": "16:9 (Widescreen)",
+        "megapixels": 2.2,
+        "multiple": 32
+      },
+      "color": "#233",
+      "bgcolor": "#355"
     },
     {
-      "id": 459,
-      "type": "c291ceec-b98f-4751-9d0b-7bc288f27b30",
+      "id": 514,
+      "type": "EmptyLatentImage",
       "pos": [
-        920,
-        2470
+        4860.343566422674,
+        2765.546494468859
       ],
       "size": [
-        410,
-        610
+        210,
+        106
       ],
-      "flags": {},
-      "order": 3,
+      "flags": {
+        "collapsed": true,
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
-          "label": "positive_prompt",
-          "localized_name": "prompt",
-          "name": "prompt",
-          "type": "STRING",
-          "widget": {
-            "name": "prompt"
-          },
-          "link": null
-        },
-        {
-          "name": "negative_prompt",
-          "type": "STRING",
-          "widget": {
-            "name": "negative_prompt"
-          },
-          "link": null
-        },
-        {
-          "name": "cfg",
-          "type": "FLOAT",
-          "widget": {
-            "name": "cfg"
-          },
-          "link": null
-        },
-        {
-          "label": "steps",
-          "name": "steps",
-          "type": "INT",
-          "widget": {
-            "name": "steps"
-          },
-          "link": null
-        },
-        {
-          "localized_name": "width",
           "name": "width",
           "type": "INT",
           "widget": {
             "name": "width"
           },
-          "link": 670
+          "link": 776
         },
         {
-          "localized_name": "height",
           "name": "height",
           "type": "INT",
           "widget": {
             "name": "height"
           },
-          "link": 671
+          "link": 777
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            792
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage",
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        1
+      ],
+      "widgets_values_named": {
+        "width": 1024,
+        "height": 1024,
+        "batch_size": 1
+      },
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 515,
+      "type": "KSampler",
+      "pos": [
+        4870.053248777357,
+        2917.463293490697
+      ],
+      "size": [
+        391.6645211978939,
+        363.4647841933087
+      ],
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 915
         },
         {
-          "label": "sampler",
-          "name": "scheduler",
-          "type": "COMBO",
-          "widget": {
-            "name": "scheduler"
-          },
-          "link": null
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 779
         },
         {
-          "label": "scheduler",
-          "name": "scheduler_1",
-          "type": "COMBO",
-          "widget": {
-            "name": "scheduler_1"
-          },
-          "link": null
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 780
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 792
         },
         {
           "name": "seed",
@@ -182,1198 +217,1077 @@
           "widget": {
             "name": "seed"
           },
-          "link": null
-        },
-        {
-          "name": "unet_name",
-          "type": "COMBO",
-          "widget": {
-            "name": "unet_name"
-          },
-          "link": null
-        },
-        {
-          "name": "clip_name",
-          "type": "COMBO",
-          "widget": {
-            "name": "clip_name"
-          },
-          "link": null
-        },
-        {
-          "name": "vae_name",
-          "type": "COMBO",
-          "widget": {
-            "name": "vae_name"
-          },
-          "link": null
+          "link": 782
         }
       ],
       "outputs": [
         {
-          "localized_name": "IMAGE",
-          "name": "IMAGE",
-          "type": "IMAGE",
+          "name": "LATENT",
+          "type": "LATENT",
           "links": [
-            672
+            785
           ]
         }
       ],
       "properties": {
-        "previewExposures": []
+        "Node name for S&R": "KSampler",
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
       },
       "widgets_values": [
-        "待填写：本次任务的完整中文提示词",
-        "",
+        869732124356504,
+        "randomize",
+        40,
         1,
-        25,
-        1024,
-        1024,
         "euler",
         "simple",
-        593103825222985,
-        "qwen_image_2.1_int8_convrot.safetensors",
-        "qwen3vl_8b_bf16.safetensors",
-        "qwen_image_2.1_vae_bf16.safetensors"
+        1
       ],
       "widgets_values_named": {
-        "prompt": "待填写：本次任务的完整中文提示词",
-        "negative_prompt": "",
+        "seed": 869732124356504,
+        "control_after_generate": "randomize",
+        "steps": 40,
         "cfg": 1,
-        "steps": 25,
-        "width": 1024,
-        "height": 1024,
-        "scheduler": "euler",
-        "scheduler_1": "simple",
-        "seed": 593103825222985,
-        "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
-        "clip_name": "qwen3vl_8b_bf16.safetensors",
-        "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1
       }
     },
     {
-      "id": 461,
-      "type": "SaveImageAdvanced",
+      "id": 518,
+      "type": "CLIPLoader",
       "pos": [
-        1400,
-        2470
+        4870.053248777357,
+        2154.927947752379
       ],
       "size": [
-        850,
-        130
+        391.6645211978939,
+        106.87524108948901
       ],
-      "flags": {},
-      "order": 4,
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            788
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader",
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        },
+        "models": [
+          {
+            "name": "qwen3vl_8b_bf16.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/text_encoders/qwen3vl_8b_bf16.safetensors",
+            "directory": "text_encoders"
+          }
+        ]
+      },
+      "widgets_values": [
+        "qwen3vl_8b_bf16.safetensors",
+        "qwen_image",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3vl_8b_bf16.safetensors",
+        "type": "qwen_image",
+        "device": "default"
+      },
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 519,
+      "type": "VAELoader",
+      "pos": [
+        4870.053248777357,
+        2318.517573438417
+      ],
+      "size": [
+        391.6645211978939,
+        58
+      ],
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            786
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader",
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        },
+        "models": [
+          {
+            "name": "qwen_image_2.1_vae_bf16.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/vae/qwen_image_2.1_vae_bf16.safetensors",
+            "directory": "vae"
+          }
+        ]
+      },
+      "widgets_values": [
+        "qwen_image_2.1_vae_bf16.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
+      },
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 520,
+      "type": "VAEDecode",
+      "pos": [
+        5051.248177361632,
+        2760.8222205108887
+      ],
+      "size": [
+        145.54027612264395,
+        46
+      ],
+      "flags": {
+        "collapsed": false,
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
-          "localized_name": "图像",
-          "name": "images",
-          "type": "IMAGE",
-          "link": 672
+          "name": "samples",
+          "type": "LATENT",
+          "link": 785
         },
         {
-          "localized_name": "文件名前缀",
-          "name": "filename_prefix",
-          "type": "STRING",
-          "widget": {
-            "name": "filename_prefix"
-          },
-          "link": null
-        },
-        {
-          "localized_name": "格式",
-          "name": "format",
-          "type": "COMFY_DYNAMICCOMBO_V3",
-          "widget": {
-            "name": "format"
-          },
-          "link": null
-        },
-        {
-          "localized_name": "位深度",
-          "name": "format.bit_depth",
-          "type": "COMBO",
-          "widget": {
-            "name": "format.bit_depth"
-          },
-          "link": null
-        },
-        {
-          "localized_name": "输入色彩空间",
-          "name": "format.input_color_space",
-          "type": "COMBO",
-          "widget": {
-            "name": "format.input_color_space"
-          },
-          "link": null
+          "name": "vae",
+          "type": "VAE",
+          "link": 786
         }
       ],
       "outputs": [
         {
-          "localized_name": "images",
-          "name": "images",
+          "name": "IMAGE",
           "type": "IMAGE",
+          "links": [
+            775
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode",
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "color": "#332922",
+      "bgcolor": "#593930"
+    },
+    {
+      "id": 522,
+      "type": "TextEncodeQwenImage21",
+      "pos": [
+        4870.053248777357,
+        2462.789828610814
+      ],
+      "size": [
+        391.6645211978939,
+        206
+      ],
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 788
+        },
+        {
+          "name": "images.image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 925
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            779
+          ]
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            780
+          ]
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
           "links": []
         }
       ],
       "properties": {
-        "Node name for S&R": "SaveImageAdvanced"
+        "Node name for S&R": "TextEncodeQwenImage21",
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0"
       },
       "widgets_values": [
-        "Qwen_image_2.1",
-        "png",
-        "8-bit",
-        "sRGB"
+        "",
+        "",
+        0
       ],
       "widgets_values_named": {
-        "filename_prefix": "Qwen_image_2.1",
-        "format": "png",
-        "format.bit_depth": "8-bit",
-        "format.input_color_space": "sRGB"
+        "prompt": "",
+        "negative_prompt": "",
+        "resolution": 0
+      },
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 523,
+      "type": "UNETLoader",
+      "pos": [
+        4870.053248777357,
+        2021.2287274569142
+      ],
+      "size": [
+        391.6645211978939,
+        82
+      ],
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            920
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader",
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.8",
+          "input_ue_unconnectable": {}
+        },
+        "models": [
+          {
+            "name": "qwen_image_2.1_int8_convrot.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/diffusion_models/qwen_image_2.1_int8_convrot.safetensors",
+            "directory": "diffusion_models"
+          }
+        ]
+      },
+      "widgets_values": [
+        "qwen_image_2.1_int8_convrot.safetensors",
+        "default"
+      ],
+      "widgets_values_named": {
+        "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      },
+      "color": "#323",
+      "bgcolor": "#535"
+    },
+    {
+      "id": 524,
+      "type": "Seed (rgthree)",
+      "pos": [
+        4280.409542209996,
+        2531.702235889108
+      ],
+      "size": [
+        515.7363640210646,
+        130
+      ],
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "dir": 4,
+          "label": "随机种",
+          "name": "SEED",
+          "shape": 3,
+          "type": "INT",
+          "links": [
+            782
+          ]
+        }
+      ],
+      "properties": {
+        "randomMax": 1125899906842624,
+        "randomMin": 0,
+        "aux_id": "rgthree/rgthree-comfy",
+        "ver": "8ff50e4521881eca1fe26aec9615fc9362474931",
+        "cnr_id": "rgthree-comfy",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.5.2",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        -1,
+        "",
+        "",
+        ""
+      ],
+      "widgets_values_named": {
+        "seed": -1,
+        "🎲 Randomize Each Time": "",
+        "🎲 New Fixed Random": "",
+        "USE_LAST_SEED": ""
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 582,
+      "type": "TE_text_display",
+      "pos": [
+        3677.873581245037,
+        3003.9022978992675
+      ],
+      "size": [
+        527.1015246954171,
+        695.1580747337675
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 14,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "input_text",
+          "shape": 7,
+          "type": "STRING",
+          "link": 848
+        }
+      ],
+      "outputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            925
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TE_text_display",
+        "aux_id": "tl2012tl/TE_MAN",
+        "ver": "1431635e9620c362555ed56ae93178451d805d2f",
+        "te_text_display_saved_text": "画面呈现为一幅七夕传统节日主题的中国风海报，整体采用横向长卷式构图，背景是深青灰色的夜空与璀璨星空。画面上方悬挂一轮巨大的满月，呈暖白色与淡金色，表面有细腻的云纹肌理和发光晕圈；月亮右侧及周围散布着大小不一的星辰，包括多处十字星芒点缀。画面中段横跨一座巨大的鹊桥，由无数黑色、灰褐色和棕色的喜鹊紧密排列搭成，鸟身相互交错形成拱形桥面，桥梁从左侧山坡延伸至右侧山坡，成为牛郎织女相会的核心通道。桥上站立着两位古装人物：左侧为牛郎，一位年轻成年男性，肤色较浅，黑发束起并戴冠饰，身着深青色长袍，衣摆飘逸，正面向右侧女子，姿态专注；右侧为织女，一位年轻成年女性，身材纤细，黑发高盘并装饰繁复发簪与流苏，身着粉紫色与淡粉色汉服，袖口宽大，裙摆拖曳在桥边，侧身面向男子，二人隔桥相望，神情温柔静默。远景中可见朦胧的山峦、云雾和古代楼阁剪影，营造出仙境般的中秋夜氛围。整张图色彩以冷色调为主，搭配暖月、鹊群和服饰亮色形成对比，光影柔和，细节丰富，具有浓厚的国风浪漫意境。"
+      },
+      "widgets_values": [
+        "画面呈现为一幅七夕传统节日主题的中国风海报，整体采用横向长卷式构图，背景是深青灰色的夜空与璀璨星空。画面上方悬挂一轮巨大的满月，呈暖白色与淡金色，表面有细腻的云纹肌理和发光晕圈；月亮右侧及周围散布着大小不一的星辰，包括多处十字星芒点缀。画面中段横跨一座巨大的鹊桥，由无数黑色、灰褐色和棕色的喜鹊紧密排列搭成，鸟身相互交错形成拱形桥面，桥梁从左侧山坡延伸至右侧山坡，成为牛郎织女相会的核心通道。桥上站立着两位古装人物：左侧为牛郎，一位年轻成年男性，肤色较浅，黑发束起并戴冠饰，身着深青色长袍，衣摆飘逸，正面向右侧女子，姿态专注；右侧为织女，一位年轻成年女性，身材纤细，黑发高盘并装饰繁复发簪与流苏，身着粉紫色与淡粉色汉服，袖口宽大，裙摆拖曳在桥边，侧身面向男子，二人隔桥相望，神情温柔静默。远景中可见朦胧的山峦、云雾和古代楼阁剪影，营造出仙境般的中秋夜氛围。整张图色彩以冷色调为主，搭配暖月、鹊群和服饰亮色形成对比，光影柔和，细节丰富，具有浓厚的国风浪漫意境。",
+        false,
+        ""
+      ],
+      "widgets_values_named": {
+        "text": "画面呈现为一幅七夕传统节日主题的中国风海报，整体采用横向长卷式构图，背景是深青灰色的夜空与璀璨星空。画面上方悬挂一轮巨大的满月，呈暖白色与淡金色，表面有细腻的云纹肌理和发光晕圈；月亮右侧及周围散布着大小不一的星辰，包括多处十字星芒点缀。画面中段横跨一座巨大的鹊桥，由无数黑色、灰褐色和棕色的喜鹊紧密排列搭成，鸟身相互交错形成拱形桥面，桥梁从左侧山坡延伸至右侧山坡，成为牛郎织女相会的核心通道。桥上站立着两位古装人物：左侧为牛郎，一位年轻成年男性，肤色较浅，黑发束起并戴冠饰，身着深青色长袍，衣摆飘逸，正面向右侧女子，姿态专注；右侧为织女，一位年轻成年女性，身材纤细，黑发高盘并装饰繁复发簪与流苏，身着粉紫色与淡粉色汉服，袖口宽大，裙摆拖曳在桥边，侧身面向男子，二人隔桥相望，神情温柔静默。远景中可见朦胧的山峦、云雾和古代楼阁剪影，营造出仙境般的中秋夜氛围。整张图色彩以冷色调为主，搭配暖月、鹊群和服饰亮色形成对比，光影柔和，细节丰富，具有浓厚的国风浪漫意境。",
+        "use_edited_text": false,
+        "edited_from_text": ""
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 583,
+      "type": "TE_Qwen_Image_2_1_Prompt_Enhancer",
+      "pos": [
+        3119.89108091506,
+        3003.3207559866128
+      ],
+      "size": [
+        515.7363640210646,
+        696.321158559077
+      ],
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 12,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "图片",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "图片2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "图片3",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "图片4",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "图片5",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "图片6",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "图片7",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "图片8",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "输入提示词",
+          "type": "STRING",
+          "widget": {
+            "name": "输入提示词"
+          },
+          "link": 926
+        }
+      ],
+      "outputs": [
+        {
+          "name": "增强提示词",
+          "type": "STRING",
+          "links": [
+            848
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TE_Qwen_Image_2_1_Prompt_Enhancer",
+        "aux_id": "tl2012tl/TE_MAN",
+        "ver": "1431635e9620c362555ed56ae93178451d805d2f"
+      },
+      "widgets_values": [
+        "生成张海报，七夕主题，画面为牛郎和织女在鹊桥相会，国风",
+        "文生图",
+        "中文",
+        "本地官方PE",
+        "",
+        "",
+        "",
+        "qwen3.5_9b_qwen_image_2.1_pe_t2i.int8_convrot.safetensors",
+        "qwen3.5_9b_qwen_image_2.1_pe_i2i.int8_convrot.safetensors",
+        "LLM\\Qwen3.5-4B-UD-Q4_K_XL.gguf",
+        "Qwen3.5-4B-mmproj-BF16.gguf",
+        4096,
+        8192,
+        666,
+        "fixed",
+        true,
+        false
+      ],
+      "widgets_values_named": {
+        "输入提示词": "生成张海报，七夕主题，画面为牛郎和织女在鹊桥相会，国风",
+        "任务模式": "文生图",
+        "输出语言": "中文",
+        "增强方式": "本地官方PE",
+        "api_key": "",
+        "api_base_url": "",
+        "model": "",
+        "文生图PE模型": "qwen3.5_9b_qwen_image_2.1_pe_t2i.int8_convrot.safetensors",
+        "图生图PE模型": "qwen3.5_9b_qwen_image_2.1_pe_i2i.int8_convrot.safetensors",
+        "主模型": "LLM\\Qwen3.5-4B-UD-Q4_K_XL.gguf",
+        "mmproj": "Qwen3.5-4B-mmproj-BF16.gguf",
+        "最大生成token": 4096,
+        "上下文长度": 8192,
+        "seed": 666,
+        "control_after_generate": "fixed",
+        "生成后自动卸载模型": true,
+        "启用思考": false
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 652,
+      "type": "Label (rgthree)",
+      "pos": [
+        4266.245397296917,
+        2127.8635623217165
+      ],
+      "size": [
+        290.9189453125,
+        38
+      ],
+      "flags": {
+        "allow_interaction": false,
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "▼加速节点(可选)",
+      "properties": {
+        "fontSize": 38,
+        "fontFamily": "Arial",
+        "fontColor": "#FF6347",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0,
+        "angle": 0,
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
+      },
+      "color": "#fff0",
+      "bgcolor": "#fff0"
+    },
+    {
+      "id": 653,
+      "type": "TESpeedQwenImage21",
+      "pos": [
+        4280.409542209996,
+        2206.587797281119
+      ],
+      "size": [
+        515.7363640210646,
+        228.10520620401257
+      ],
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 921
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            915
+          ]
+        },
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TESpeedQwenImage21",
+        "aux_id": "tl2012tl/TE-Speed-QwenImage21",
+        "ver": "12a8dd3692d7563865bcfa4fcabff5acf3c8c463"
+      },
+      "widgets_values": [
+        "kitchen_int8",
+        "te_predictor",
+        0.06,
+        0,
+        0,
+        0.08,
+        true
+      ],
+      "widgets_values_named": {
+        "attention": "kitchen_int8",
+        "step_cache": "te_predictor",
+        "reuse_threshold": 0.06,
+        "start_percent": 0,
+        "end_percent": 0,
+        "predictor_error_limit": 0.08,
+        "verbose": true
+      },
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 654,
+      "type": "Note",
+      "pos": [
+        3677.873581245037,
+        1920.2079487500985
+      ],
+      "size": [
+        527.1015246954171,
+        849.8311081477068
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "◆生成这个角色的三视图，包含正面，侧面，背面，灰色背景\n◆生成这个角色的四视图，从左到右分别为：面部特写，全身正面，全身侧面，全身背面，灰色背景\n\n◆提取图中完整人物，仅保留人物，去除背景，透明背景\n\n◆对这张老照片进行完整修复与上色：彻底去除画面中所有划痕、缺损、污渍与霉点，将模糊的面部五官、衣物与背景重建为清晰锐利的高清细节，恢复自然的皮肤纹理、皱纹层次、头发丝与布料质感；随后为整张照片上自然真实的色彩，还原为干净通透的彩色人像，肤色红润真实、衣物呈现可信的固有色，整体色彩明亮干净、清晰通透，如同清晰彩色照片；完整保留人物的脸型、五官比例与相对位置、表情与神态、姿态以及衣物的款式结构，保持构图、取景与画面缩放完全不变，人物始终为同一可辨认的本人。\n\n◆对图中的产品进行精修，去除产品所有划痕、缺损、污渍、锈迹与杂质，恢复产品崭新的状态，清晰呈现产品原有的材质与结构细节，精细的光照效果与质感，表面干净。构图保持原图产品摆放与视角不变。\n同时对产品进行抠图，将产品从场景中提取出来，输出仅保留产品，透明背景。保留产品完整主体，边缘干净利落、无残留背景色边或锯齿。\n\n◆参考图二的风格，生成一张电影海报，包含图二和图一两个人物背靠背，主题文字为：新的征程，暗金色书法大字\n\n◆让图一的人物穿上图二的衣服\n\n◆根据图中人物制作九宫格表情包，表情依次为：开心，吐舌，愤怒，悲伤，生气，恐惧，哭泣，微笑，害羞。最终输出包含9个表情的九宫格图片\n\n◆按照图中人物的1/7比例，在写实的风格和环境下，制作一个商业化的全身逼真人物模型。保持人物姿势不变，将人物模型放置在电脑桌上，使用圆形透明亚克力底座，底座上不带任何文字。在电脑屏幕上，展示人物模型的ZBrush建模过程。在电脑屏幕旁边，放置一个印有原画的BANDAI风格玩具包装盒。\n\n◆基于提供的 IP 形象，设计 9 种风格各异的姿势，涵盖站立、坐姿、动态动作（如跳跃、挥手）、静态姿态（如托腮、叉腰）等不同类型，每种姿势需贴合该 IP 的核心特征与性格特质，清晰呈现 IP 在各姿势下的整体形态与细节，最终输出包含9个姿势的九宫格图片。\n\n◆图1的人物手里拿着图2的产品进行展示，专业影棚，光线和色调符合所在场景环境\n\n◆根据图片内容生成漫画故事，九格漫画，文本气泡中带有中文剧情，有特写与大场景切换，分镜之间避免雷同，Q版风格\n\n◆把图2的人物头部和发型替换到图1，肤色，比例，和图1保持一致\n\n◆让图一的人物和图二的人物，拥抱在一起，在城市街道\n\n◆生成四格电影分镜，全程人物形象保持统一：\n第1格：少女单膝跪在粗糙黑岩石上，拉满弓弦，目光锁定远处目标，蓄势待发，神情严肃，风吹长发。\n第2格：松开弓弦，弓身震动，箭矢向前射出，长发猛烈飞扬。\n第3格：特写镜头，发光箭矢带着淡青色光尾破空飞行，背景里少女虚化，箭矢带动态速度模糊。\n第4格：少女望向远方，远处目标迸发出橙色小型爆炸，神情放松平静。\n"
+      ],
+      "widgets_values_named": {
+        "text": "◆生成这个角色的三视图，包含正面，侧面，背面，灰色背景\n◆生成这个角色的四视图，从左到右分别为：面部特写，全身正面，全身侧面，全身背面，灰色背景\n\n◆提取图中完整人物，仅保留人物，去除背景，透明背景\n\n◆对这张老照片进行完整修复与上色：彻底去除画面中所有划痕、缺损、污渍与霉点，将模糊的面部五官、衣物与背景重建为清晰锐利的高清细节，恢复自然的皮肤纹理、皱纹层次、头发丝与布料质感；随后为整张照片上自然真实的色彩，还原为干净通透的彩色人像，肤色红润真实、衣物呈现可信的固有色，整体色彩明亮干净、清晰通透，如同清晰彩色照片；完整保留人物的脸型、五官比例与相对位置、表情与神态、姿态以及衣物的款式结构，保持构图、取景与画面缩放完全不变，人物始终为同一可辨认的本人。\n\n◆对图中的产品进行精修，去除产品所有划痕、缺损、污渍、锈迹与杂质，恢复产品崭新的状态，清晰呈现产品原有的材质与结构细节，精细的光照效果与质感，表面干净。构图保持原图产品摆放与视角不变。\n同时对产品进行抠图，将产品从场景中提取出来，输出仅保留产品，透明背景。保留产品完整主体，边缘干净利落、无残留背景色边或锯齿。\n\n◆参考图二的风格，生成一张电影海报，包含图二和图一两个人物背靠背，主题文字为：新的征程，暗金色书法大字\n\n◆让图一的人物穿上图二的衣服\n\n◆根据图中人物制作九宫格表情包，表情依次为：开心，吐舌，愤怒，悲伤，生气，恐惧，哭泣，微笑，害羞。最终输出包含9个表情的九宫格图片\n\n◆按照图中人物的1/7比例，在写实的风格和环境下，制作一个商业化的全身逼真人物模型。保持人物姿势不变，将人物模型放置在电脑桌上，使用圆形透明亚克力底座，底座上不带任何文字。在电脑屏幕上，展示人物模型的ZBrush建模过程。在电脑屏幕旁边，放置一个印有原画的BANDAI风格玩具包装盒。\n\n◆基于提供的 IP 形象，设计 9 种风格各异的姿势，涵盖站立、坐姿、动态动作（如跳跃、挥手）、静态姿态（如托腮、叉腰）等不同类型，每种姿势需贴合该 IP 的核心特征与性格特质，清晰呈现 IP 在各姿势下的整体形态与细节，最终输出包含9个姿势的九宫格图片。\n\n◆图1的人物手里拿着图2的产品进行展示，专业影棚，光线和色调符合所在场景环境\n\n◆根据图片内容生成漫画故事，九格漫画，文本气泡中带有中文剧情，有特写与大场景切换，分镜之间避免雷同，Q版风格\n\n◆把图2的人物头部和发型替换到图1，肤色，比例，和图1保持一致\n\n◆让图一的人物和图二的人物，拥抱在一起，在城市街道\n\n◆生成四格电影分镜，全程人物形象保持统一：\n第1格：少女单膝跪在粗糙黑岩石上，拉满弓弦，目光锁定远处目标，蓄势待发，神情严肃，风吹长发。\n第2格：松开弓弦，弓身震动，箭矢向前射出，长发猛烈飞扬。\n第3格：特写镜头，发光箭矢带着淡青色光尾破空飞行，背景里少女虚化，箭矢带动态速度模糊。\n第4格：少女望向远方，远处目标迸发出橙色小型爆炸，神情放松平静。\n"
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 663,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        4280.409542209996,
+        2027.5785648771423
+      ],
+      "size": [
+        515.7363640210646,
+        82
+      ],
+      "flags": {
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 11,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 920
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            921
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly",
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0"
+      },
+      "widgets_values": [
+        "Qwen\\Qwen-Image-2.1-viggle-turbo-4step-lora-r64.safetensors",
+        1
+      ],
+      "widgets_values_named": {
+        "lora_name": "Qwen\\Qwen-Image-2.1-viggle-turbo-4step-lora-r64.safetensors",
+        "strength_model": 1
       }
     },
     {
-      "id": 463,
-      "type": "MarkdownNote",
+      "id": 664,
+      "type": "Label (rgthree)",
       "pos": [
-        -350,
-        2470
+        4266.245397296917,
+        1947.11415680538
       ],
       "size": [
-        420,
-        620
+        261.4169921875,
+        38
       ],
-      "flags": {},
-      "order": 1,
+      "flags": {
+        "allow_interaction": false,
+        "disabled": false,
+        "pinned": true
+      },
+      "order": 7,
       "mode": 0,
       "inputs": [],
       "outputs": [],
-      "title": "Note: Model links",
-      "properties": {},
-      "widgets_values": [
-        "Guide: [Subgraph](https://docs.comfy.org/interface/features/subgraph)\n\n## Model Links\n\n- [Hugging Face:Comfy-Org/Qwen-Image-2.1](https://huggingface.co/Comfy-Org/Qwen-Image-2.1)\n- [ModelScope:Comfy-Org/Qwen-Image-2.1](https://modelscope.cn/models/Comfy-Org/Qwen-Image-2.1)\n\n**diffusion_models**\n\n- [qwen_image_2.1_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/diffusion_models/qwen_image_2.1_bf16.safetensors)\n- [qwen_image_2.1_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/diffusion_models/qwen_image_2.1_int8_convrot.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_8b_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/text_encoders/qwen3vl_8b_bf16.safetensors)\n- [qwen3vl_8b_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/text_encoders/qwen3vl_8b_int8_convrot.safetensors) \n\n**vae**\n\n- [qwen_image_2.1_vae_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/vae/qwen_image_2.1_vae_bf16.safetensors)\n\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   ├── qwen_image_2.1_bf16.safetensors\n│   │   └── qwen_image_2.1_int8_convrot.safetensors\n│   ├── 📂 text_encoders/\n│   │   ├── qwen3vl_8b_bf16.safetensors\n│   │   └── qwen3vl_8b_int8_convrot.safetensors\n│   └── 📂 vae/\n│       └── qwen_image_2.1_vae_bf16.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
-      ],
-      "widgets_values_named": {
-        "text": "Guide: [Subgraph](https://docs.comfy.org/interface/features/subgraph)\n\n## Model Links\n\n- [Hugging Face:Comfy-Org/Qwen-Image-2.1](https://huggingface.co/Comfy-Org/Qwen-Image-2.1)\n- [ModelScope:Comfy-Org/Qwen-Image-2.1](https://modelscope.cn/models/Comfy-Org/Qwen-Image-2.1)\n\n**diffusion_models**\n\n- [qwen_image_2.1_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/diffusion_models/qwen_image_2.1_bf16.safetensors)\n- [qwen_image_2.1_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/diffusion_models/qwen_image_2.1_int8_convrot.safetensors)\n\n**text_encoders**\n\n- [qwen3vl_8b_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/text_encoders/qwen3vl_8b_bf16.safetensors)\n- [qwen3vl_8b_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/text_encoders/qwen3vl_8b_int8_convrot.safetensors) \n\n**vae**\n\n- [qwen_image_2.1_vae_bf16.safetensors](https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/vae/qwen_image_2.1_vae_bf16.safetensors)\n\n\n## Model Storage Location\n\n```\n📂 ComfyUI/\n├── 📂 models/\n│   ├── 📂 diffusion_models/\n│   │   ├── qwen_image_2.1_bf16.safetensors\n│   │   └── qwen_image_2.1_int8_convrot.safetensors\n│   ├── 📂 text_encoders/\n│   │   ├── qwen3vl_8b_bf16.safetensors\n│   │   └── qwen3vl_8b_int8_convrot.safetensors\n│   └── 📂 vae/\n│       └── qwen_image_2.1_vae_bf16.safetensors\n```\n\n## Report Issue\n\nNote: Please update ComfyUI first ([guide](https://docs.comfy.org/installation/update_comfyui)) and prepare required models. Desktop/Cloud updates follow stable releases, so some nightly-supported models may not be available yet.\n\n- Cannot run / runtime errors: [ComfyUI/issues](https://github.com/comfyanonymous/ComfyUI/issues)\n- UI / frontend issues: [ComfyUI_frontend/issues](https://github.com/Comfy-Org/ComfyUI_frontend/issues)\n- Workflow issues: [workflow_templates/issues](https://github.com/Comfy-Org/workflow_templates/issues)\n"
+      "title": "▼4步lora(可选)",
+      "properties": {
+        "fontSize": 38,
+        "fontFamily": "Arial",
+        "fontColor": "#FF6347",
+        "textAlign": "left",
+        "backgroundColor": "transparent",
+        "padding": 0,
+        "borderRadius": 0,
+        "angle": 0,
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        }
       },
-      "color": "#222",
-      "bgcolor": "#000"
+      "color": "#fff0",
+      "bgcolor": "#fff0"
     },
     {
-      "id": 468,
-      "type": "MarkdownNote",
+      "id": 671,
+      "type": "忽略多组孤海",
       "pos": [
-        100,
-        2470
+        3677.873581245037,
+        2854.9706773985363
       ],
       "size": [
-        420,
-        220
+        527.1015246954171,
+        64
       ],
-      "flags": {},
-      "order": 2,
-      "mode": 0,
+      "flags": {
+        "pinned": true
+      },
+      "order": 8,
+      "mode": 4,
       "inputs": [],
       "outputs": [],
-      "title": "Note: Usage",
-      "properties": {},
+      "properties": {
+        "Node name for S&R": "忽略多组孤海",
+        "guhai_ig_filter": "提示词",
+        "guhai_ig_mode": "default",
+        "guhai_ig_active": null,
+        "guhai_ig_active_set": [],
+        "guhai_ig_name_color": "#a89961",
+        "guhai_ig_disable": false,
+        "guhai_ig_sort_order": "position",
+        "guhai_ig_color_filter": "none",
+        "guhai_ig_ui_scale": 1
+      },
       "widgets_values": [
-        "## Size\nQwen Image 2.1 has native 2K (2048*2048) support for direct output.\n\nOutput size comes from ResolutionSelector (width/height). Default is 1 megapixel (1024*1024). For native 2K, set 1:1 and 4 megapixels (2048*2048). Prefer multiples of 32.\n\n## Transparent Image\n\nTo generate a transparent image, wrap the prompt like this and replace the middle with the subject:\n\n---\nThis is an RGBA format image with transparency. `[your description]`. The image has an alpha channel and a transparent background.\n\n---\nSave as PNG to keep the alpha channel.\n\n## Parameters\n\n- prompt: what to generate. For RGBA, see Note: transparent.\n- negative_prompt: unused while cfg is 1.\n- cfg: keep 1 for the Qwen Image 2.1 official path. Raise it only if you use a negative prompt.\n- steps: Qwen Image 2.1 official  pipeline uses about 40-50 with euler. This template starts at 25. More advanced samplers need fewer steps.\n"
+        ""
       ],
       "widgets_values_named": {
-        "text": "## Size\nQwen Image 2.1 has native 2K (2048*2048) support for direct output.\n\nOutput size comes from ResolutionSelector (width/height). Default is 1 megapixel (1024*1024). For native 2K, set 1:1 and 4 megapixels (2048*2048). Prefer multiples of 32.\n\n## Transparent Image\n\nTo generate a transparent image, wrap the prompt like this and replace the middle with the subject:\n\n---\nThis is an RGBA format image with transparency. `[your description]`. The image has an alpha channel and a transparent background.\n\n---\nSave as PNG to keep the alpha channel.\n\n## Parameters\n\n- prompt: what to generate. For RGBA, see Note: transparent.\n- negative_prompt: unused while cfg is 1.\n- cfg: keep 1 for the Qwen Image 2.1 official path. Raise it only if you use a negative prompt.\n- steps: Qwen Image 2.1 official  pipeline uses about 40-50 with euler. This template starts at 25. More advanced samplers need fewer steps.\n"
+        "guhai_ig": ""
       },
-      "color": "#222",
-      "bgcolor": "#000"
+      "color": "#4E464A",
+      "bgcolor": "#4E464A"
+    },
+    {
+      "id": 672,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        4280.409542209996,
+        3005.720700697061
+      ],
+      "size": [
+        527.1015246954171,
+        695.1580747337675
+      ],
+      "flags": {
+        "pinned": true
+      },
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            926
+          ]
+        }
+      ],
+      "title": "提示词",
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline",
+        "cnr_id": "comfy-core",
+        "ver": "0.16.3",
+        "enableTabs": false,
+        "tabWidth": 65,
+        "tabXOffset": 10,
+        "hasSecondTab": false,
+        "secondTabText": "Send Back",
+        "secondTabOffset": 80,
+        "secondTabWidth": 65,
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.7",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "让图一中的人物摆出图二的姿态"
+      ],
+      "widgets_values_named": {
+        "value": "让图一中的人物摆出图二的姿态"
+      },
+      "color": "#232",
+      "bgcolor": "#353"
     }
   ],
   "links": [
     [
-      672,
-      459,
+      775,
+      520,
       0,
-      461,
+      508,
       0,
       "IMAGE"
     ],
     [
-      670,
-      13,
+      776,
+      512,
       0,
-      459,
+      514,
+      0,
+      "INT"
+    ],
+    [
+      777,
+      512,
+      1,
+      514,
+      1,
+      "INT"
+    ],
+    [
+      779,
+      522,
+      0,
+      515,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      780,
+      522,
+      1,
+      515,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      782,
+      524,
+      0,
+      515,
       4,
       "INT"
     ],
     [
-      671,
-      13,
+      785,
+      515,
+      0,
+      520,
+      0,
+      "LATENT"
+    ],
+    [
+      786,
+      519,
+      0,
+      520,
       1,
-      459,
-      5,
-      "INT"
+      "VAE"
+    ],
+    [
+      788,
+      518,
+      0,
+      522,
+      0,
+      "CLIP"
+    ],
+    [
+      792,
+      514,
+      0,
+      515,
+      3,
+      "LATENT"
+    ],
+    [
+      848,
+      583,
+      0,
+      582,
+      0,
+      "STRING"
+    ],
+    [
+      915,
+      653,
+      0,
+      515,
+      0,
+      "MODEL"
+    ],
+    [
+      920,
+      523,
+      0,
+      663,
+      0,
+      "MODEL"
+    ],
+    [
+      921,
+      663,
+      0,
+      653,
+      0,
+      "MODEL"
+    ],
+    [
+      925,
+      582,
+      0,
+      522,
+      3,
+      "STRING"
+    ],
+    [
+      926,
+      672,
+      0,
+      583,
+      8,
+      "STRING"
     ]
   ],
-  "groups": [],
-  "definitions": {
-    "subgraphs": [
-      {
-        "id": "c291ceec-b98f-4751-9d0b-7bc288f27b30",
-        "version": 1,
-        "state": {
-          "lastGroupId": 37,
-          "lastNodeId": 469,
-          "lastLinkId": 680,
-          "lastRerouteId": 9
-        },
-        "revision": 0,
-        "config": {},
-        "name": "Text to Image (Qwen Image 2.1)",
-        "inputNode": {
-          "id": -10,
-          "bounding": [
-            -660,
-            610,
-            143.044921875,
-            288
-          ]
-        },
-        "outputNode": {
-          "id": -20,
-          "bounding": [
-            1960,
-            640,
-            128,
-            68
-          ]
-        },
-        "inputs": [
-          {
-            "id": "6a73de3b-f4cd-43a4-9076-76648c6902f0",
-            "name": "prompt",
-            "type": "STRING",
-            "linkIds": [
-              656
-            ],
-            "localized_name": "prompt",
-            "label": "positive_prompt",
-            "pos": [
-              -540.955078125,
-              634
-            ]
-          },
-          {
-            "id": "d4c1377f-7fbc-4519-b83c-9a3b9c2de104",
-            "name": "negative_prompt",
-            "type": "STRING",
-            "linkIds": [
-              657
-            ],
-            "pos": [
-              -540.955078125,
-              654
-            ]
-          },
-          {
-            "id": "420ee896-17c3-4e07-95fc-0ff309a6b836",
-            "name": "cfg",
-            "type": "FLOAT",
-            "linkIds": [
-              658
-            ],
-            "pos": [
-              -540.955078125,
-              674
-            ]
-          },
-          {
-            "id": "349c3f72-ba7a-4277-84ff-8029faa16019",
-            "name": "steps",
-            "type": "INT",
-            "linkIds": [
-              659
-            ],
-            "label": "steps",
-            "pos": [
-              -540.955078125,
-              694
-            ]
-          },
-          {
-            "id": "91c96cf8-057b-4da2-b71e-305541a3527e",
-            "name": "width",
-            "type": "INT",
-            "linkIds": [
-              660
-            ],
-            "localized_name": "width",
-            "pos": [
-              -540.955078125,
-              714
-            ]
-          },
-          {
-            "id": "661cc520-6bd0-4925-90ec-cecaa188b57d",
-            "name": "height",
-            "type": "INT",
-            "linkIds": [
-              661
-            ],
-            "localized_name": "height",
-            "pos": [
-              -540.955078125,
-              734
-            ]
-          },
-          {
-            "id": "9f0e91b8-5a4a-4f5a-a2a4-4ddc180df0fd",
-            "name": "scheduler",
-            "type": "COMBO",
-            "linkIds": [
-              662
-            ],
-            "label": "sampler",
-            "pos": [
-              -540.955078125,
-              754
-            ]
-          },
-          {
-            "id": "4710583f-3cb0-4091-87ab-dadd8a2e657c",
-            "name": "scheduler_1",
-            "type": "COMBO",
-            "linkIds": [
-              668
-            ],
-            "label": "scheduler",
-            "pos": [
-              -540.955078125,
-              774
-            ]
-          },
-          {
-            "id": "977ce57d-3764-491c-8d2d-543754cfbaf1",
-            "name": "seed",
-            "type": "INT",
-            "linkIds": [
-              667
-            ],
-            "pos": [
-              -540.955078125,
-              794
-            ]
-          },
-          {
-            "id": "143494fb-a40e-423f-be3b-ecc808b408b0",
-            "name": "unet_name",
-            "type": "COMBO",
-            "linkIds": [
-              663
-            ],
-            "pos": [
-              -540.955078125,
-              814
-            ]
-          },
-          {
-            "id": "d8528289-e121-45ed-9c31-e6370ce4ba5e",
-            "name": "clip_name",
-            "type": "COMBO",
-            "linkIds": [
-              664
-            ],
-            "pos": [
-              -540.955078125,
-              834
-            ]
-          },
-          {
-            "id": "f03d1fb0-d592-4997-b55e-e7a2549c36e5",
-            "name": "vae_name",
-            "type": "COMBO",
-            "linkIds": [
-              665
-            ],
-            "pos": [
-              -540.955078125,
-              854
-            ]
-          }
-        ],
-        "outputs": [
-          {
-            "id": "f6f3effc-0961-4c17-b52c-a77c16ca6aa4",
-            "name": "IMAGE",
-            "type": "IMAGE",
-            "linkIds": [
-              650
-            ],
-            "localized_name": "IMAGE",
-            "pos": [
-              1984,
-              664
-            ]
-          }
-        ],
-        "widgets": [],
-        "nodes": [
-          {
-            "id": 451,
-            "type": "UNETLoader",
-            "pos": [
-              -190,
-              410
-            ],
-            "size": [
-              510,
-              90
-            ],
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "UNet名称",
-                "name": "unet_name",
-                "type": "COMBO",
-                "widget": {
-                  "name": "unet_name"
-                },
-                "link": 663
-              },
-              {
-                "localized_name": "数据类型",
-                "name": "weight_dtype",
-                "type": "COMBO",
-                "widget": {
-                  "name": "weight_dtype"
-                },
-                "link": null
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "模型",
-                "name": "MODEL",
-                "type": "MODEL",
-                "links": [
-                  675
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "UNETLoader",
-              "models": [
-                {
-                  "name": "qwen_image_2.1_int8_convrot.safetensors",
-                  "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/diffusion_models/qwen_image_2.1_int8_convrot.safetensors",
-                  "directory": "diffusion_models"
-                }
-              ]
-            },
-            "widgets_values": [
-              "qwen_image_2.1_int8_convrot.safetensors",
-              "default"
-            ],
-            "widgets_values_named": {
-              "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
-              "weight_dtype": "default"
-            }
-          },
-          {
-            "id": 452,
-            "type": "TextEncodeQwenImage21",
-            "pos": [
-              440,
-              410
-            ],
-            "size": [
-              530,
-              680
-            ],
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "clip",
-                "name": "clip",
-                "type": "CLIP",
-                "link": 647
-              },
-              {
-                "localized_name": "image_1",
-                "name": "images.image_1",
-                "shape": 7,
-                "type": "IMAGE",
-                "link": null
-              },
-              {
-                "localized_name": "vae",
-                "name": "vae",
-                "shape": 7,
-                "type": "VAE",
-                "link": null
-              },
-              {
-                "localized_name": "prompt",
-                "name": "prompt",
-                "type": "STRING",
-                "widget": {
-                  "name": "prompt"
-                },
-                "link": 656
-              },
-              {
-                "localized_name": "negative_prompt",
-                "name": "negative_prompt",
-                "type": "STRING",
-                "widget": {
-                  "name": "negative_prompt"
-                },
-                "link": 657
-              },
-              {
-                "localized_name": "resolution",
-                "name": "resolution",
-                "type": "INT",
-                "widget": {
-                  "name": "resolution"
-                },
-                "link": null
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "positive",
-                "name": "positive",
-                "type": "CONDITIONING",
-                "links": [
-                  653
-                ]
-              },
-              {
-                "localized_name": "negative",
-                "name": "negative",
-                "type": "CONDITIONING",
-                "links": [
-                  655
-                ]
-              },
-              {
-                "localized_name": "latent",
-                "name": "latent",
-                "type": "LATENT",
-                "links": null
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "TextEncodeQwenImage21"
-            },
-            "widgets_values": [
-              "待填写：本次任务的完整中文提示词",
-              "",
-              1024
-            ],
-            "widgets_values_named": {
-              "prompt": "待填写：本次任务的完整中文提示词",
-              "negative_prompt": "",
-              "resolution": 1024
-            }
-          },
-          {
-            "id": 453,
-            "type": "CLIPLoader",
-            "pos": [
-              -190,
-              570
-            ],
-            "size": [
-              510,
-              120
-            ],
-            "flags": {},
-            "order": 2,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "CLIP名称",
-                "name": "clip_name",
-                "type": "COMBO",
-                "widget": {
-                  "name": "clip_name"
-                },
-                "link": 664
-              },
-              {
-                "localized_name": "类型",
-                "name": "type",
-                "type": "COMBO",
-                "widget": {
-                  "name": "type"
-                },
-                "link": null
-              },
-              {
-                "localized_name": "设备",
-                "name": "device",
-                "shape": 7,
-                "type": "COMBO",
-                "widget": {
-                  "name": "device"
-                },
-                "link": null
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "CLIP",
-                "name": "CLIP",
-                "type": "CLIP",
-                "links": [
-                  647
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "CLIPLoader",
-              "models": [
-                {
-                  "name": "qwen3vl_8b_bf16.safetensors",
-                  "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/text_encoders/qwen3vl_8b_bf16.safetensors",
-                  "directory": "text_encoders"
-                }
-              ]
-            },
-            "widgets_values": [
-              "qwen3vl_8b_bf16.safetensors",
-              "qwen_image",
-              "default"
-            ],
-            "widgets_values_named": {
-              "clip_name": "qwen3vl_8b_bf16.safetensors",
-              "type": "qwen_image",
-              "device": "default"
-            }
-          },
-          {
-            "id": 454,
-            "type": "VAELoader",
-            "pos": [
-              -190,
-              770
-            ],
-            "size": [
-              510,
-              70
-            ],
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "vae名称",
-                "name": "vae_name",
-                "type": "COMBO",
-                "widget": {
-                  "name": "vae_name"
-                },
-                "link": 665
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "VAE",
-                "name": "VAE",
-                "type": "VAE",
-                "links": [
-                  649
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "VAELoader",
-              "models": [
-                {
-                  "name": "qwen_image_2.1_vae_bf16.safetensors",
-                  "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/main/vae/qwen_image_2.1_vae_bf16.safetensors",
-                  "directory": "vae"
-                }
-              ]
-            },
-            "widgets_values": [
-              "qwen_image_2.1_vae_bf16.safetensors"
-            ],
-            "widgets_values_named": {
-              "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
-            }
-          },
-          {
-            "id": 456,
-            "type": "EmptyLatentImage",
-            "pos": [
-              -70,
-              1010
-            ],
-            "size": [
-              300,
-              120
-            ],
-            "flags": {},
-            "order": 4,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "宽度",
-                "name": "width",
-                "type": "INT",
-                "widget": {
-                  "name": "width"
-                },
-                "link": 660
-              },
-              {
-                "localized_name": "高度",
-                "name": "height",
-                "type": "INT",
-                "widget": {
-                  "name": "height"
-                },
-                "link": 661
-              },
-              {
-                "localized_name": "批量大小",
-                "name": "batch_size",
-                "type": "INT",
-                "widget": {
-                  "name": "batch_size"
-                },
-                "link": null
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "Latent",
-                "name": "LATENT",
-                "type": "LATENT",
-                "links": [
-                  654
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "EmptyLatentImage"
-            },
-            "widgets_values": [
-              1024,
-              1024,
-              1
-            ],
-            "widgets_values_named": {
-              "width": 1024,
-              "height": 1024,
-              "batch_size": 1
-            }
-          },
-          {
-            "id": 457,
-            "type": "VAEDecode",
-            "pos": [
-              1620,
-              660
-            ],
-            "size": [
-              230,
-              60
-            ],
-            "flags": {},
-            "order": 5,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "Latent",
-                "name": "samples",
-                "type": "LATENT",
-                "link": 651
-              },
-              {
-                "localized_name": "vae",
-                "name": "vae",
-                "type": "VAE",
-                "link": 649
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "图像",
-                "name": "IMAGE",
-                "type": "IMAGE",
-                "links": [
-                  650
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "VAEDecode"
-            }
-          },
-          {
-            "id": 458,
-            "type": "KSampler",
-            "pos": [
-              1180,
-              640
-            ],
-            "size": [
-              270,
-              270
-            ],
-            "flags": {},
-            "order": 6,
-            "mode": 0,
-            "inputs": [
-              {
-                "localized_name": "模型",
-                "name": "model",
-                "type": "MODEL",
-                "link": 675
-              },
-              {
-                "localized_name": "正面条件",
-                "name": "positive",
-                "type": "CONDITIONING",
-                "link": 653
-              },
-              {
-                "localized_name": "负面条件",
-                "name": "negative",
-                "type": "CONDITIONING",
-                "link": 655
-              },
-              {
-                "localized_name": "Latent图像",
-                "name": "latent_image",
-                "type": "LATENT",
-                "link": 654
-              },
-              {
-                "localized_name": "种子",
-                "name": "seed",
-                "type": "INT",
-                "widget": {
-                  "name": "seed"
-                },
-                "link": 667
-              },
-              {
-                "localized_name": "步数",
-                "name": "steps",
-                "type": "INT",
-                "widget": {
-                  "name": "steps"
-                },
-                "link": 659
-              },
-              {
-                "localized_name": "cfg",
-                "name": "cfg",
-                "type": "FLOAT",
-                "widget": {
-                  "name": "cfg"
-                },
-                "link": 658
-              },
-              {
-                "localized_name": "采样器名称",
-                "name": "sampler_name",
-                "type": "COMBO",
-                "widget": {
-                  "name": "sampler_name"
-                },
-                "link": 662
-              },
-              {
-                "localized_name": "调度器",
-                "name": "scheduler",
-                "type": "COMBO",
-                "widget": {
-                  "name": "scheduler"
-                },
-                "link": 668
-              },
-              {
-                "localized_name": "降噪",
-                "name": "denoise",
-                "type": "FLOAT",
-                "widget": {
-                  "name": "denoise"
-                },
-                "link": null
-              }
-            ],
-            "outputs": [
-              {
-                "localized_name": "Latent",
-                "name": "LATENT",
-                "type": "LATENT",
-                "links": [
-                  651
-                ]
-              }
-            ],
-            "properties": {
-              "Node name for S&R": "KSampler"
-            },
-            "widgets_values": [
-              593103825222985,
-              "fixed",
-              25,
-              1,
-              "euler",
-              "simple",
-              1
-            ],
-            "widgets_values_named": {
-              "seed": 593103825222985,
-              "control_after_generate": "fixed",
-              "steps": 25,
-              "cfg": 1,
-              "sampler_name": "euler",
-              "scheduler": "simple",
-              "denoise": 1
-            }
-          }
-        ],
-        "groups": [
-          {
-            "id": 34,
-            "title": "Models",
-            "bounding": [
-              -200,
-              300,
-              530,
-              590
-            ],
-            "color": "#3f789e",
-            "flags": {}
-          },
-          {
-            "id": 35,
-            "title": "Image Size",
-            "bounding": [
-              -200,
-              920,
-              530,
-              250
-            ],
-            "color": "#3f789e",
-            "flags": {}
-          },
-          {
-            "id": 36,
-            "title": "Conditioning",
-            "bounding": [
-              360,
-              300,
-              700,
-              860
-            ],
-            "color": "#3f789e",
-            "flags": {}
-          },
-          {
-            "id": 37,
-            "title": "Sampling",
-            "bounding": [
-              1090,
-              300,
-              470,
-              860
-            ],
-            "color": "#3f789e",
-            "flags": {}
-          }
-        ],
-        "links": [
-          {
-            "id": 647,
-            "origin_id": 453,
-            "origin_slot": 0,
-            "target_id": 452,
-            "target_slot": 0,
-            "type": "CLIP"
-          },
-          {
-            "id": 649,
-            "origin_id": 454,
-            "origin_slot": 0,
-            "target_id": 457,
-            "target_slot": 1,
-            "type": "VAE"
-          },
-          {
-            "id": 650,
-            "origin_id": 457,
-            "origin_slot": 0,
-            "target_id": -20,
-            "target_slot": 0,
-            "type": "IMAGE"
-          },
-          {
-            "id": 651,
-            "origin_id": 458,
-            "origin_slot": 0,
-            "target_id": 457,
-            "target_slot": 0,
-            "type": "LATENT"
-          },
-          {
-            "id": 653,
-            "origin_id": 452,
-            "origin_slot": 0,
-            "target_id": 458,
-            "target_slot": 1,
-            "type": "CONDITIONING"
-          },
-          {
-            "id": 654,
-            "origin_id": 456,
-            "origin_slot": 0,
-            "target_id": 458,
-            "target_slot": 3,
-            "type": "LATENT"
-          },
-          {
-            "id": 655,
-            "origin_id": 452,
-            "origin_slot": 1,
-            "target_id": 458,
-            "target_slot": 2,
-            "type": "CONDITIONING"
-          },
-          {
-            "id": 656,
-            "origin_id": -10,
-            "origin_slot": 0,
-            "target_id": 452,
-            "target_slot": 3,
-            "type": "STRING"
-          },
-          {
-            "id": 657,
-            "origin_id": -10,
-            "origin_slot": 1,
-            "target_id": 452,
-            "target_slot": 4,
-            "type": "STRING"
-          },
-          {
-            "id": 658,
-            "origin_id": -10,
-            "origin_slot": 2,
-            "target_id": 458,
-            "target_slot": 6,
-            "type": "FLOAT"
-          },
-          {
-            "id": 659,
-            "origin_id": -10,
-            "origin_slot": 3,
-            "target_id": 458,
-            "target_slot": 5,
-            "type": "INT"
-          },
-          {
-            "id": 660,
-            "origin_id": -10,
-            "origin_slot": 4,
-            "target_id": 456,
-            "target_slot": 0,
-            "type": "INT"
-          },
-          {
-            "id": 661,
-            "origin_id": -10,
-            "origin_slot": 5,
-            "target_id": 456,
-            "target_slot": 1,
-            "type": "INT"
-          },
-          {
-            "id": 662,
-            "origin_id": -10,
-            "origin_slot": 6,
-            "target_id": 458,
-            "target_slot": 7,
-            "type": "COMBO"
-          },
-          {
-            "id": 668,
-            "origin_id": -10,
-            "origin_slot": 7,
-            "target_id": 458,
-            "target_slot": 8,
-            "type": "COMBO"
-          },
-          {
-            "id": 667,
-            "origin_id": -10,
-            "origin_slot": 8,
-            "target_id": 458,
-            "target_slot": 4,
-            "type": "INT"
-          },
-          {
-            "id": 663,
-            "origin_id": -10,
-            "origin_slot": 9,
-            "target_id": 451,
-            "target_slot": 0,
-            "type": "COMBO"
-          },
-          {
-            "id": 664,
-            "origin_id": -10,
-            "origin_slot": 10,
-            "target_id": 453,
-            "target_slot": 0,
-            "type": "COMBO"
-          },
-          {
-            "id": 665,
-            "origin_id": -10,
-            "origin_slot": 11,
-            "target_id": 454,
-            "target_slot": 0,
-            "type": "COMBO"
-          },
-          {
-            "id": 675,
-            "origin_id": 451,
-            "origin_slot": 0,
-            "target_id": 458,
-            "target_slot": 0,
-            "type": "MODEL"
-          }
-        ],
-        "extra": {}
-      }
-    ]
-  },
+  "groups": [
+    {
+      "id": 3,
+      "title": "Qwen-image21-生图",
+      "bounding": [
+        4256.245397296917,
+        1882.48170678151,
+        1744.5446670929105,
+        1830.5530950077152
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 13,
+      "title": "提示词PE-文生",
+      "bounding": [
+        3109.89108091506,
+        2933.3207559866128,
+        1126.6597654381626,
+        776.321158559077
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    }
+  ],
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.3396396977188647,
+      "scale": 0.42199934703592173,
       "offset": [
-        2130.681397801849,
-        -1493.8038557339962
+        -2082.1335710098747,
+        -1667.6493940005773
       ]
     },
-    "frontendVersion": "1.53.6",
+    "frontendVersion": "1.55.17",
     "VHS_latentpreview": false,
     "VHS_latentpreviewrate": 0,
     "VHS_MetadataImage": true,
-    "VHS_KeepIntermediate": true
+    "VHS_KeepIntermediate": true,
+    "ue_links": []
   },
-  "version": 0.4
+  "extensions": {
+    "seed_widgets": {
+      "481": 0
+    }
+  },
+  "version": 0.4,
+  "seed_widgets": {
+    "515": 0,
+    "524": 0,
+    "583": 13
+  }
 }

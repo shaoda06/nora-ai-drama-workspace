@@ -330,7 +330,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         checks.write_report(self.data, report)
         with patch.object(self.store.generation_context, 'validate_segment_context', side_effect=AssertionError('already checked')):
             checked = checks.check_prepared(self.store, self.data, legacy=True)
-        for name in ('pair', 'segments', 'checked_at', 'prepared_input'):
+        for name in ('segments', 'checked_at', 'prepared_input'):
             self.assertEqual(checked[name], report[name])
         # Change the registered input, not the source file: no supplement may use
         # a previously successful report for different data.

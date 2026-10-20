@@ -38,15 +38,6 @@ def save_json(path, value):
     replace_file(path, json.dumps(value, ensure_ascii=False, indent=2) + '\n')
 
 
-def canvas_api(canvas, workflow):
-    graph = pairs.Canvas(canvas)
-    actual = {}
-    for key in workflow:
-        actual.update(graph.api(key, optional=False))
-    if pairs.semantic(actual) != pairs.semantic(workflow):
-        raise ValueError('实际 API 与来源画布不配对')
-
-
 def postprocess_uploads(root, record):
     """从本任务成功上传记录读取实际素材，不扫描或猜测上传响应文件名。"""
     events_file = record / '后台过程记录.json'
@@ -80,22 +71,16 @@ def source(root, item):
     if item['identity'].endswith('-后处理') and not mapping.get('uploads'):
         mapping['uploads'] = postprocess_uploads(root, mapping_path.parent)
         restoration.append('依据本任务后台成功上传记录关联实际 input_path 与本地来源；原映射保留')
+    # Populate the export copy from the actual API; source canvas bytes stay untouched.
     for stored in canvas['nodes']:
         named = stored.get('widgets_values_named', {})
-        values = stored.get('widgets_values', [])
-        if named and isinstance(values, list) and values != list(named.values()):
-            key = str(stored['id'])
-            positional = dict(zip(named, values))
-            if key not in workflow or not any(all(block.get(k) == v for k, v in workflow[key]['inputs'].items()
-                                                  if not pairs.is_link(v)) for block in (named, positional)):
-                raise ValueError('来源画布两套控件不一致，无法依据实际API恢复：' + item['identity'])
-            named.update({k: v for k, v in workflow[key]['inputs'].items() if not pairs.is_link(v)})
+        key = str(stored['id'])
+        if named and key in workflow:
+            named.update({k: v for k, v in workflow[key]['inputs'].items() if k in named and not pairs.is_link(v)})
             stored['widgets_values'] = list(named.values())
-            restoration.append('画布一套控件与来源API一致；据此同步过期控件副本，原画布保留')
     if pairs.semantic(request['prompt']) != pairs.semantic(workflow) and item['identity'].endswith('-后处理'):
         # Some saved preparation pairs precede the upload. Restore only the exact
         # LoadVideo path recorded by that task's upload and submitted request.
-        canvas_api(canvas, workflow)
         restored = copy.deepcopy(workflow)
         for key, node in restored.items():
             if node['class_type'] == 'LoadVideo':
@@ -114,7 +99,6 @@ def source(root, item):
     if (not mapping.get('prompt_id') or accepted.get('prompt_id') != mapping['prompt_id']
             or pairs.semantic(request['prompt']) != pairs.semantic(workflow)):
         raise ValueError('来源 API／提交响应与实际获批任务不一致：' + item['identity'])
-    canvas_api(canvas, workflow)
     return {'identity': item['identity'], 'mapping_path': mapping_path, 'mapping': mapping,
             'context': contexts[0], 'api_path': api_path, 'canvas_path': canvas_path,
             'api': workflow, 'canvas': canvas, 'restoration': restoration}
@@ -357,7 +341,6 @@ def prepare(root, plan, batch_parts=None, batch_name=None):
             merge_graph(canvas, workflow, actual, 2200 * (i + 1))
     canvas.setdefault('extra', {})['nora_scene_finalization'] = {'stage': stage, 'sources': evidence,
                                                               'purpose': '整场汇总工程；不是单次执行原始画布；不恢复一采缓存'}
-    canvas_api(canvas, workflow)
     urls = {content['mapping']['url'].rstrip('/') for _, content in sources}
     if len(urls) != 1:
         raise ValueError('引用媒体分属不同服务，不能用单一服务原生导出')

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline verification of bundled canvas/API pairs. Never connects or writes baselines."""
+"""Offline checks of bundled API structure and execution parameters. Never reads canvas files or connects."""
 import argparse, ast, copy, json, math, zipfile
 from pathlib import Path
 from workflow_paths import workflow_directories, workflow_root
@@ -133,7 +133,7 @@ def validate_rtx_inputs(api):
   if inputs['image_encoding'] not in ('8-bit RGB','10-bit RGB (RGB10A2)'):
    raise ValueError(f'RTXVideoSuperResolution {key} image_encoding is unsupported')
 
-def output_for(name):return [403,504,506] if name=='Minimax-H3-导演台-视频生成-标准版' else 3 if name=='Nora-RTX-图片2倍超分' else 461 if name.startswith('Qwen') else 403 if name=='Minimax-H3-导演台-视频生成-去油版' else 264 if any(s in name for s in ('仅一采','SelfLift-备用')) else 214 if '仅二采' in name else 16
+def output_for(name):return [403,504,506] if name=='Minimax-H3-导演台-视频生成-标准版' else 3 if name=='Nora-RTX-图片2倍超分' else 508 if name=='Qwen2.1-文生图-普通版' else 461 if name.startswith('Qwen') else 403 if name=='Minimax-H3-导演台-视频生成-去油版' else 264 if any(s in name for s in ('仅一采','SelfLift-备用')) else 214 if '仅二采' in name else 16
 
 def director_editor_state(block, common=False):
  """Compare persisted Director content, excluding preview blobs and root-only fields."""
@@ -162,21 +162,19 @@ def verify(directory):
  directory=Path(directory)
  folders=[directory, *(folder for folder,_ in workflow_directories(directory))]
  results=[]
- for p in sorted(p for folder in folders for p in folder.glob('*.workflow.json')):
-  stem=p.name.removesuffix('.workflow.json');a=p.with_name(stem+'.api.json');assert a.exists(),f'Missing API: {a.name}'
-  canvas=Canvas(json.loads(p.read_text(encoding="utf-8")));expected=canvas.api(output_for(stem));actual=json.loads(a.read_text(encoding="utf-8"))
+ for a in sorted(p for folder in folders for p in folder.glob('*.api.json')):
+  stem=a.name.removesuffix('.api.json');actual=json.loads(a.read_text(encoding="utf-8"))
   validate_rtx_inputs(actual)
-  assert semantic(actual)==semantic(expected),f'Canvas/API mismatch: {stem}'
-  for k,n in expected.items():
-   if 'nora_optional_reference' in n['_meta']:assert actual[k].get('_meta',{}).get('nora_optional_reference')==n['_meta']['nora_optional_reference']
-  refs=[(k,n['_meta']['nora_optional_reference']) for k,n in expected.items() if 'nora_optional_reference' in n['_meta']]
-  assert set(canvas.active_nodes())|{k for k,_ in refs}==set(actual), f'Canvas active node mismatch: {stem}'
-  for key,item in actual.items():
-   graph,node_id=canvas.find(key);named=graph.nodes[node_id].get('widgets_values_named',{})
-   if 'seed' in item['inputs'] and 'control_after_generate' in named:assert named['control_after_generate']=='fixed', ('Canvas seed control mismatch',stem,key)
-   for field,value in item['inputs'].items():
-    if field in named and not is_link(value):assert named[field]==value, ('Canvas stored parameter mismatch',stem,key,field)
+  outputs=output_for(stem)
+  for key in outputs if isinstance(outputs,list) else [outputs]:
+   assert str(key) in actual, ('Missing API output',stem,key)
+  for node in actual.values():
+   for value in node['inputs'].values():
+    if is_link(value):assert value[0] in actual, ('Missing API input',stem,value[0])
+  refs=[(key,node['_meta']['nora_optional_reference']) for key,node in actual.items() if 'nora_optional_reference' in node.get('_meta',{})]
   assert len(refs)==(15 if '265' in actual and '多参考视频' in stem else 0)
+  if stem=='Nora-RTX-图片2倍超分':
+   assert actual['1']['inputs']['resize_type.scale']==2, 'Image upscale must remain 2x'
   for director in (n for n in actual.values() if n['class_type']=='MiniMaxH3Director'):
    inputs=director['inputs'];timeline=json.loads(inputs['timeline_data'])
    for field,key in [('width','width'),('height','height'),('ref_max_size','refMaxSize'),('frame_rate','frameRate'),('total_frames','totalFrames')]:
@@ -223,8 +221,8 @@ def verify(directory):
     for node_id in first.keys() & second.keys():assert first[node_id]==second[node_id], ('Shared H3 mismatch',node_id)
  return results
 if __name__=='__main__':
- p=argparse.ArgumentParser(description=__doc__, epilog='Python 3.9+, standard library; do not use -O. Prints one JSON line per scanned pair, then PASS; exit 0 on success, nonzero on error. Check expected workflow coverage: an empty directory can also pass.')
- p.add_argument('--directory',type=Path,default=workflow_root(),help='Scan bundled-name *.workflow.json / *.api.json pairs in this directory and its immediate category directories registered in workflow_paths.py, excluding other or deeper directories. Default: references/comfyui-workflow under this skill; relative paths use the current working directory. Point directly at a category directory to check only its pairs.')
+ p=argparse.ArgumentParser(description=__doc__, epilog='Python 3.9+, standard library; do not use -O. Prints one JSON line per scanned API, then PASS; exit 0 on success, nonzero on error. Check expected workflow coverage: an empty directory can also pass.')
+ p.add_argument('--directory',type=Path,default=workflow_root(),help='Scan bundled-name *.api.json files in this directory and its immediate category directories registered in workflow_paths.py, excluding other or deeper directories. Default: references/comfyui-workflow under this skill; relative paths use the current working directory. Point directly at a category directory to check only its APIs.')
  args=p.parse_args()
  for r in verify(args.directory):print(json.dumps(r,ensure_ascii=False))
- print('PASS: offline pair consistency only; remote compatibility and execution not tested.')
+ print('PASS: offline API checks only; remote compatibility and execution not tested.')

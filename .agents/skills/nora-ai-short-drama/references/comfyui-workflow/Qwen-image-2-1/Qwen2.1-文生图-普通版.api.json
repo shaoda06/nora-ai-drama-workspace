@@ -1,5 +1,5 @@
 {
-  "459:451": {
+  "523": {
     "class_type": "UNETLoader",
     "inputs": {
       "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
@@ -9,7 +9,35 @@
       "title": "UNETLoader"
     }
   },
-  "459:453": {
+  "653": {
+    "class_type": "TESpeedQwenImage21",
+    "inputs": {
+      "attention": "kitchen_int8",
+      "step_cache": "te_predictor",
+      "reuse_threshold": 0.06,
+      "start_percent": 0,
+      "end_percent": 0,
+      "predictor_error_limit": 0.08,
+      "verbose": true,
+      "model": [
+        "523",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "TESpeedQwenImage21"
+    }
+  },
+  "672": {
+    "class_type": "PrimitiveStringMultiline",
+    "inputs": {
+      "value": "__PROMPT__"
+    },
+    "_meta": {
+      "title": "提示词"
+    }
+  },
+  "518": {
     "class_type": "CLIPLoader",
     "inputs": {
       "clip_name": "qwen3vl_8b_bf16.safetensors",
@@ -20,14 +48,17 @@
       "title": "CLIPLoader"
     }
   },
-  "459:452": {
+  "522": {
     "class_type": "TextEncodeQwenImage21",
     "inputs": {
-      "prompt": "待填写：本次任务的完整中文提示词",
+      "prompt": [
+        "672",
+        0
+      ],
       "negative_prompt": "",
-      "resolution": 1024,
+      "resolution": 0,
       "clip": [
-        "459:453",
+        "518",
         0
       ]
     },
@@ -35,57 +66,40 @@
       "title": "TextEncodeQwenImage21"
     }
   },
-  "13": {
-    "class_type": "ResolutionSelector",
-    "inputs": {
-      "aspect_ratio": "1:1 (Square)",
-      "megapixels": 1,
-      "multiple": 8
-    },
-    "_meta": {
-      "title": "ResolutionSelector"
-    }
-  },
-  "459:456": {
+  "514": {
     "class_type": "EmptyLatentImage",
     "inputs": {
-      "width": [
-        "13",
-        0
-      ],
-      "height": [
-        "13",
-        1
-      ],
+      "width": 1024,
+      "height": 1024,
       "batch_size": 1
     },
     "_meta": {
       "title": "EmptyLatentImage"
     }
   },
-  "459:458": {
+  "515": {
     "class_type": "KSampler",
     "inputs": {
-      "seed": 593103825222985,
-      "steps": 25,
+      "seed": 0,
+      "steps": 40,
       "cfg": 1,
       "sampler_name": "euler",
       "scheduler": "simple",
       "denoise": 1,
       "model": [
-        "459:451",
+        "653",
         0
       ],
       "positive": [
-        "459:452",
+        "522",
         0
       ],
       "negative": [
-        "459:452",
+        "522",
         1
       ],
       "latent_image": [
-        "459:456",
+        "514",
         0
       ]
     },
@@ -93,7 +107,7 @@
       "title": "KSampler"
     }
   },
-  "459:454": {
+  "519": {
     "class_type": "VAELoader",
     "inputs": {
       "vae_name": "qwen_image_2.1_vae_bf16.safetensors"
@@ -102,15 +116,15 @@
       "title": "VAELoader"
     }
   },
-  "459:457": {
+  "520": {
     "class_type": "VAEDecode",
     "inputs": {
       "samples": [
-        "459:458",
+        "515",
         0
       ],
       "vae": [
-        "459:454",
+        "519",
         0
       ]
     },
@@ -118,20 +132,17 @@
       "title": "VAEDecode"
     }
   },
-  "461": {
-    "class_type": "SaveImageAdvanced",
+  "508": {
+    "class_type": "SaveImage",
     "inputs": {
-      "filename_prefix": "Qwen_image_2.1",
-      "format": "png",
-      "format.bit_depth": "8-bit",
-      "format.input_color_space": "sRGB",
+      "filename_prefix": "__PROJECT__/图片生成/__CATEGORY__/__OBJECT__/__OUTPUT__",
       "images": [
-        "459:457",
+        "520",
         0
       ]
     },
     "_meta": {
-      "title": "SaveImageAdvanced"
+      "title": "SaveImage"
     }
   }
 }

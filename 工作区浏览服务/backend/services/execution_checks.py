@@ -224,7 +224,7 @@ def check_new_targets(data):
 
 
 def fixed_checks(store, data, *, mapping=None, legacy=False):
-    from backend.services.director_uploads import check_pair, pairs
+    from backend.services.director_uploads import pairs
     from backend.services import comfy_segments as segments
     fixed_input_checks(store, data)
     if data.image_plan is not None:
@@ -278,8 +278,7 @@ def fixed_checks(store, data, *, mapping=None, legacy=False):
             raise ValueError('分段计划或输入映射字段不完整：' + str(error)) from error
         if data.outputs:
             raise ValueError('原生分段任务使用segment-plan，不混用末段保存节点作为全组输出')
-    result = {'pair': check_pair(Path(data.record_dir), data.workflow, timelines=timelines, path_scope=path_scope),
-              'segments': director_checks(data.workflow, timelines)}
+    result = {'segments': director_checks(data.workflow, timelines)}
     if data.task_type.startswith('video-'):
         result['context_sources'] = context_checks(store, data, mapping=mapping, bindings=bindings,
                                                   timelines=timelines, segment_context=segment_context, path_scope=path_scope)
@@ -366,7 +365,7 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
                 if changed:
                     write_report(data, report)
                 return {'prepared': True, 'report': REPORT, 'reused': True,
-                        'checks': {key: previous[key] for key in ('pair', 'segments')}}
+                        'checks': {'segments': previous['segments']}}
         if requires_content:
             content_checks(data, mapping, report)
         report.update(fixed_checks(store, data, mapping=mapping, legacy=at_execution))
@@ -387,7 +386,7 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
         write_report(data, report)
         raise ValueError(report['error']) from error
     write_report(data, report)
-    result = {'prepared': True, 'report': REPORT, 'checks': {key: report[key] for key in ('pair', 'segments')}}
+    result = {'prepared': True, 'report': REPORT, 'checks': {'segments': report['segments']}}
     if at_execution:
         result['sources'] = report['sources']
     return result

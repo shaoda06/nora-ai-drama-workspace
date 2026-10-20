@@ -106,15 +106,42 @@ def disconnect(graph, slot):
     slot['link'] = None
 
 
-def image_workflow(skill, spec, refs, width, height, seed, prefix):
+def remote_prefix(root, *parts):
+    """Build output-relative paths; each supplied identity is one path component."""
+    names = (root.name, *parts)
+    if any(not name or name in ('.', '..') or re.search(r'[<>:"/\\|?*\x00-\x1f]', name) or name.endswith(('.', ' ')) for name in names):
+        raise ValueError('远端输出名称须为合法的单个目录名或文件前缀')
+    return '/'.join(names)
+
+
+def image_workflow(skill, spec, refs, width, height, seed, prefix, remote_output=None):
     upscale = spec['task_type'] == 'image-upscale'
     base = 'Nora-RTX-图片2倍超分' if upscale else 'Qwen2.1-' + ('图生图' if refs else '文生图') + '-普通版'
+    remote_output = prefix if remote_output is None else remote_output
+    if not upscale and not refs:
+        prompt = spec['prompt']
+        from fractions import Fraction
+        if set(prompt) not in ({'rewritten_prompt', 'wh_ratio'}, {'rewritten_prompt', 'wh_ratio', 'ratio_follow'}) or not prompt['rewritten_prompt'] or not prompt['wh_ratio'] or prompt.get('ratio_follow'):
+            raise ValueError('文生图须提供最终正文和明确画幅')
+        if Fraction(prompt['wh_ratio'].replace(':', '/')) != Fraction(width, height):
+            raise ValueError('提示词画幅元数据与目标宽高不一致')
+        api = json.loads(workflow_file(base, 'api', root=workflow_root(skill)).read_text('utf-8-sig'))
+        api['672']['inputs']['value'] = prompt['rewritten_prompt']
+        api['514']['inputs'].update(width=width, height=height)
+        api['515']['inputs']['seed'] = seed
+        for name, content in spec.get('parameters', {}).items():
+            if name == 'negative_prompt':
+                api['522']['inputs'][name] = content
+            else:
+                raise ValueError('文生图任务不能覆盖固定配置：' + name)
+        api['508']['inputs']['filename_prefix'] = remote_output
+        return None, api, [], '508'
     canvas = json.loads(workflow_file(base, root=workflow_root(skill)).read_text('utf-8-sig'))
     nodes = {n['id']: n for n in canvas['nodes']}
     uploads = []
     if upscale:
         widget(canvas, nodes[2], image=refs[0]['file'].name)
-        widget(canvas, nodes[3], filename_prefix=prefix)
+        widget(canvas, nodes[3], filename_prefix=remote_output)
         uploads.append(dict(file=str(refs[0]['file']), node='2', input='image', subfolder=prefix,
                             **{'response-name': prefix + '-上传响应.json'}))
         output_node = '3'
@@ -134,7 +161,7 @@ def image_workflow(skill, spec, refs, width, height, seed, prefix):
             if name in ('prompt', 'width', 'height', 'seed', 'switch', 'resolution'):
                 raise ValueError('parameters不能覆盖已确定的正文、尺寸、种子或输入模式：' + name)
             widget(canvas, nodes[459], **{name: content})
-        widget(canvas, nodes[461], filename_prefix=prefix)
+        widget(canvas, nodes[461], filename_prefix=remote_output)
         for group in canvas.get('definitions', {}).get('subgraphs', []):
             for node in group['nodes']:
                 if node['type'] == 'KSampler':
@@ -257,20 +284,28 @@ def generation_record(skill, spec, generation, refs, seed, width, height, record
     values = {name: '不适用' for name in names}
     values.update(spec.get('fields', {}))
     native = spec['image_type'] in ('人物多视角参考图', '角色多视角参考图')
-    sampler = api['459:458']['inputs']
+    sampler = next(node['inputs'] for node in api.values() if node['class_type'] == 'KSampler')
     encoder = next(node['inputs'] for node in api.values() if node['class_type'] == 'TextEncodeQwenImage21')
     model_names = [node['inputs'][field] for node in api.values() for field in ('unet_name', 'clip_name', 'vae_name') if field in node['inputs']]
     parameters = '、'.join(str(sampler[name]) for name in ('seed', 'steps', 'cfg', 'sampler_name', 'scheduler'))
     caches = [node['inputs'] for node in api.values() if node['class_type'] == 'QwenImage21Cache']
     cache_text = '；'.join(f"缓存device={cache['device']}、dtype={cache['dtype']}" for cache in caches) or '无缓存节点'
+    acceleration = [node['inputs'] for node in api.values() if node['class_type'] == 'TESpeedQwenImage21']
+    if acceleration:
+        cache_text += '；TE加速：' + json.dumps({key: value for key, value in acceleration[0].items() if key != 'model'}, ensure_ascii=False)
     api_link = images.link(draft, record / (record.name + '.api.json'), '实际API副本')
+    workflow_entry = images.link(draft, record / (record.name + '.api.json'), 'API')
+    if refs:
+        workflow_entry += '；' + images.link(draft, record / (record.name + '.workflow.json'), '画布')
+    else:
+        workflow_entry += '；原始文生图画布仅保存在技能工作流目录'
     values.update({'创建时间': spec['created_at'], '生成／修改授权与计数': spec['authorization'] + '；本次目标1张；实际提交次数及状态见后台记录',
         '图片类型': spec['image_type'], '生成方式与任务用途': ('图生图' if refs else '文生图') + '；' + spec.get('purpose', '基础参考图'),
         '人物状态': spec.get('state', '不适用'), '服装状态': spec.get('costume', '不适用'),
         '本次目标': spec.get('description', spec['title']), '本次目标、保留与变化': spec.get('description', spec['title']),
         '依据的资料卡及版本': spec.get('basis', '任务清单所列当前需求及已批准输入'),
-        '本次工作流副本入口': images.link(draft, record / (record.name + '.api.json'), 'API') + '；' + images.link(draft, record / (record.name + '.workflow.json'), '画布'),
-        '本次任务副本入口': images.link(draft, record / (record.name + '.workflow.json'), '画布'),
+        '本次工作流副本入口': workflow_entry,
+        '本次任务副本入口': workflow_entry,
         '目标尺寸、格式及数量': f'{width}×{height}、PNG、1张',
         '实际反向提示词': encoder['negative_prompt'] or '空',
         '模型及工作流': '；'.join(model_names) + '；' + api_link,
@@ -278,7 +313,7 @@ def generation_record(skill, spec, generation, refs, seed, width, height, record
         '种子、步数、CFG、采样器及调度器': parameters,
         '种子、步数、CFG、采样器、调度器及其他实际参数': parameters + '；denoise=' + str(sampler['denoise']) + '；' + api_link,
         '其他实际参数（如降噪、缓存设置）': f"denoise={sampler['denoise']}；" + cache_text,
-        '参考图预处理与画布设置': f"明确{width}×{height}；" + (f"参考预处理resolution={encoder['resolution']}；输入顺序见第2节" if refs else '无输入参考；节点13不决定本次宽高'),
+        '参考图预处理与画布设置': f"明确{width}×{height}；" + (f"参考预处理resolution={encoder['resolution']}；输入顺序见第2节" if refs else '无输入参考；API节点514直接设置宽高'),
         '请求响应与执行结果入口': '实际通信证据与状态见' + images.link(draft, record / '后台任务状态.json', '后台状态'),
         '请求、上传／提交响应及执行结果入口': '实际通信证据与状态见' + images.link(draft, record / '后台任务状态.json', '后台状态'),
         '种子选择与输入避重依据': '按项目类别登记；' + '；'.join(f'输入{i+1}原始种子：{r["seed"] if r["seed"] is not None else ("不适用" if r["non_generated"] else "未知；" + r["unknown_seed_basis"])}' for i, r in enumerate(refs)),
@@ -391,7 +426,17 @@ def build_image(root, skill, spec, documents, now):
                     review='审阅-' + generation + '-001', images=[dict(path=candidate.relative_to(root).as_posix(), width=width, height=height)])
     if candidate.exists():
         raise ValueError('候选文件已存在，不能覆盖：' + str(candidate))
-    canvas, api, uploads, output_node = image_workflow(skill, spec, refs, width, height, seed, prefix)
+    image_type = spec.get('image_type') or images.value(images.section(text, generation)[0], '图片类型')
+    remote_name = spec['object'] + '-' + image_type + '-' + prefix[len(spec['object']) + 1:]
+    category = '剧集专用' if spec['kind'] == '剧集素材' else spec['kind']
+    if image_type == '画风样例':
+        remote_output = remote_prefix(root, '图片生成', '画风样例', prefix)
+    elif category == '剧集专用':
+        episode = re.search(r'EP\d+', spec['object'])[0]
+        remote_output = remote_prefix(root, '图片生成', category, episode, remote_name)
+    else:
+        remote_output = remote_prefix(root, '图片生成', category, spec['object'], remote_name)
+    canvas, api, uploads, output_node = image_workflow(skill, spec, refs, width, height, seed, prefix, remote_output)
     if spec['task_type'] == 'image':
         body = generation_record(skill, {**spec, 'created_at': now}, generation, refs, seed, width, height, record, draft, candidate, api)
         marker = re.search(r'^## 3\. 讨论与修改\s*$', text, re.M)
@@ -399,7 +444,8 @@ def build_image(root, skill, spec, documents, now):
             raise ValueError('图片工作稿不符合既有模板：' + spec['draft'])
         text = text[:marker.start()] + body.rstrip() + '\n\n' + text[marker.start():]
     for suffix, content in [('.workflow.json', canvas), ('.api.json', api), ('-上传映射.json', uploads), ('-成果取回映射.json', [dict(node_id=output_node, output_key='images', index=0, path=candidate.relative_to(root).as_posix(), response_name=prefix+'-取回响应.json')]), ('-图片收尾计划.json', plan)]:
-        documents.new_json(record / (prefix + suffix), content)
+        if content is not None:
+            documents.new_json(record / (prefix + suffix), content)
     documents.put(draft, text)
     return dict(project=str(root), task_type=spec['task_type'], title=spec['title'], workflow=api, uploads=uploads, image_plan=plan,
         record_dir=str(record), outputs=[dict(node_id=output_node, output_key='images', index=0, path=str(candidate), response_name=prefix+'-取回响应.json')],
@@ -424,6 +470,21 @@ def build_video(root, spec, documents):
     if spec.get('sync_timing'):
         from backend.services.video_records import sync_timing
         sync_timing(canvas, mapping, spec['task_type'])
+    stage = {'video-first-pass': '一采', 'video-second-pass': '二采', 'video-postprocess': '后处理'}[spec['task_type']]
+    episode, scene = mapping['scene'].split('-')
+    native = any(node['type'] == 'MiniMaxH3Director' for node in canvas['nodes'])
+    selected = [mapping['segments'][index] for index in mapping['selected_indices']]
+    for node in canvas['nodes']:
+        if node['type'] not in ('SaveVideo', 'VHS_VideoCombine', 'SaveImage') or node.get('mode', 0) in (2, 4):
+            continue
+        if native:
+            saved_stage = {504: '一采', 506: '二采'}.get(node['id'], stage)
+            folder = '辅助预览'
+            identity = f"{mapping['scene']}-{record.name}-{saved_stage}-辅助预览-节点{node['id']}"
+        else:
+            folder = stage
+            identity = (selected[0]['segment'] + '-' + selected[0]['round'] if len(selected) == 1 else mapping['scene'] + '-' + record.name) + '-' + stage
+        widget(canvas, node, filename_prefix=remote_prefix(root, '视频生成', episode, scene, folder, identity))
     api = pairs.Canvas(canvas).api(spec['output_nodes'])
     if spec.get('content_review'):
         if mapping.get('content_review'):

@@ -385,7 +385,7 @@ class FinalizeTests(unittest.TestCase):
         self.assertEqual(result['state'], 'completed')
         self.assertIn('定稿留档完成', summary.read_text(encoding='utf-8'))
 
-    def test_restore_canvas_from_matching_widget_copy_without_changing_source(self):
+    def test_export_uses_api_values_without_comparing_or_changing_source_canvas(self):
         self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
         for i, item in enumerate(self.plan['items']):
             canvas = tool.adopt.load(Path(item['canvas']))
@@ -398,16 +398,9 @@ class FinalizeTests(unittest.TestCase):
             self.put(Path(item['canvas']), canvas)
             self.originals[Path(item['canvas'])] = Path(item['canvas']).read_bytes()
         result = self.run_plan()
-        self.assertTrue(all(s['restoration'] for s in result['sources']))
+        self.assertEqual(result['state'], 'completed')
         for item in self.plan['items']:
             self.assertEqual(Path(item['canvas']).read_bytes(), self.originals[Path(item['canvas'])])
-        canvas = tool.adopt.load(Path(self.plan['items'][0]['canvas']))
-        node = next(n for n in canvas['nodes'] if n['type'] == 'MiniMaxH3Director')
-        node['widgets_values'][list(node['widgets_values_named']).index('seed')] += 2
-        self.put(Path(self.plan['items'][0]['canvas']), canvas)
-        with self.assertRaisesRegex(ValueError, '无法依据实际API恢复'):
-            self.run_plan()
-
     def test_post_upload_path_restored_only_with_exact_request_and_upload(self):
         contents = [self.item(p, '二采') for p in ('P001', 'P002')]
         self.plan['stage'] = '后处理'

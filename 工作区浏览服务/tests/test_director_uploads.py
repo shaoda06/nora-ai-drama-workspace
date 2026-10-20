@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 
 from backend.services.comfy_tasks import SKILL
-from backend.services.director_uploads import save_uploaded_workflow, check_pair, pairs
+from backend.services.director_uploads import save_uploaded_workflow, pairs
 from workflow_paths import workflow_file
 
 
@@ -61,7 +61,6 @@ class DirectorUploadsTests(unittest.TestCase):
             node['widgets_values_named']['timeline_data'] = original['502']['inputs']['timeline_data']
             node['widgets_values'] = list(node['widgets_values_named'].values())
             canvas_file.write_text(json.dumps(canvas), 'utf-8')
-            self.assertEqual(check_pair(record, original)['result'], 'passed')
             workflow = copy.deepcopy(original)
             for refs in (timeline['segments'][0]['refs'], timeline['batchWorkspaces']['r2v']['segments'][0]['refs']):
                 refs[0].update(imageFile='real/renamed.png', fileName='renamed.png', subfolder='real', type='input')
@@ -76,7 +75,6 @@ class DirectorUploadsTests(unittest.TestCase):
                     patch.object(pairs, 'semantic', side_effect=AssertionError('上传后不比较完整工作流')):
                 save_uploaded_workflow(project, record, original, workflow, uploads, bindings)
                 save_uploaded_workflow(project, record, original, workflow, uploads, bindings)
-            self.assertEqual(check_pair(record, workflow)['result'], 'passed')
             self.assertEqual(len(pairs.verify(record)), 1)
             mapping = json.loads((record / '输入映射.json').read_text(encoding='utf-8'))
             self.assertEqual(mapping['uploads'], [{'file': 'reference.png', 'input_path': 'real/renamed.png'}])

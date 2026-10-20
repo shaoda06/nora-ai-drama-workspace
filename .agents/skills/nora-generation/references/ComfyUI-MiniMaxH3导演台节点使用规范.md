@@ -1,6 +1,6 @@
 # ComfyUI-MiniMaxH3导演台节点使用规范
 
-版本：v1.38；更新日期：2026-10-17。
+版本：v1.39；更新日期：2026-10-17。
 
 用于填写、修改和检查 `MiniMaxH3Director` 节点的网页画布与API任务副本。接口说明入口为[节点仓库](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director)。正式基准、固定生成参数、种子策略、执行授权和输出命名读取[H3执行规范](ComfyUI-H3视频执行规范.md)；模型正文及中文参考版读取[逐集内容制作规范第6节](../../nora-video-prompts/references/视频提示词制作规范.md#6-分段视频提示词文档)及 `h3-prompt-writing`，语言适配读取[语言与命名](../../nora-video-prompts/references/视频提示词制作规范.md#h3模型正文的语言与命名)，镜头表达读取[切镜与接续](../../nora-video-prompts/references/视频提示词制作规范.md#h3切镜与接续表达)。本文件不复制这些规则。
 
@@ -229,7 +229,7 @@ frameCount = max(5, round(durationSec * 24))
 
 编辑工作区是经原生序列化整理后的业务快照，不是根对象的完整复制。globalCommon不必包含global的taskType、genImage、referenceVideo等模式根字段；素材预览数据可以被删除，type、subfolder、空图像字段等可以按接口补默认值，null首尾帧可以被省略。比较对应持久化内容，不要求两份原始JSON对象完全相等，也不能为追求相等把根专有字段强塞进工作区。未知字段不擅自删除；实际序列化格式见[网页编辑状态实现](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/main/web/js/minimax_timeline.js)。
 
-只修改根segments而保留工作区旧正文，会使重新打开画布时恢复出另一套内容。修改画布的 `widgets_values_named` 与对应 `widgets_values` 时保持同值；API的timeline_data使用JSON序列化得到的字符串，不拼接转义。删除无关旧预览、旧报告及生成缓存引用，不把它们当作本次结果。离线配对校验检查对应公共内容、分组内容和选择状态，能接受原生快照的精简形式；不能用忽略业务字段的方法规避内容不同步。
+只修改根segments而保留工作区旧正文，会使重新打开画布时恢复出另一套内容。修改画布的 `widgets_values_named` 与对应 `widgets_values` 时保持同值；API的timeline_data使用JSON序列化得到的字符串，不拼接转义。删除无关旧预览、旧报告及生成缓存引用，不把它们当作本次结果。离线API检查核对API内部的公共内容、分组内容和选择状态，能接受原生快照的精简形式；不能用忽略业务字段的方法规避内容不同步。
 
 实际种子填写导演台的seed，设置及复用读取[种子策略](ComfyUI-H3视频执行规范.md#场次基准种子与实际任务种子)。模板里的三组、时长、id和种子均为填写样例，不限制其他任务的组数。
 

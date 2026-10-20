@@ -55,10 +55,18 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         post.assert_not_called()
         self.assertFalse((self.record / '输入映射.json').exists())
 
+    async def test_prepare_does_not_read_or_compare_canvas_with_api(self):
+        (self.record / 'task.api.json').write_text(json.dumps(self.data.workflow))
+        canvas = self.record / 'task.workflow.json'
+        canvas.write_text('原始画布内容不参与API准备检查')
+        result = await self.store.prepare_only(self.data)
+        self.assertTrue(result['prepared'])
+        self.assertNotIn('pair', result['checks'])
+        self.assertEqual(canvas.read_text(), '原始画布内容不参与API准备检查')
+
     async def test_prepared_input_reused_without_pair_or_network_recheck(self):
         await self.store.prepare_only(self.data)
         with patch.object(t.client.Client, 'json') as network, \
-                patch('backend.services.director_uploads.check_pair') as pair, \
                 patch.object(checks, 'fixed_checks', side_effect=AssertionError('固定检查不得重复')), \
                 patch.object(t.client, 'validate_workflow', side_effect=AssertionError('结构检查不得重复')), \
                 patch.object(checks, 'check_prepared', wraps=checks.check_prepared) as compare:
@@ -67,7 +75,6 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
             await self.store.prepare(key)
             compare.assert_called_once()
         network.assert_not_called()
-        pair.assert_not_called()
         events = json.loads((self.record / '后台过程记录.json').read_text('utf-8'))
         event = next(event for event in events if event['stage'] == 'preparation')
         self.assertEqual(event['result'], 'reused')

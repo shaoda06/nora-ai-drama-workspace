@@ -65,10 +65,10 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
             data = row['input']
             self.assertEqual(data.image_batch_id, self.rel(self.plan_file))
             self.assertEqual(data.image_batch_size, 2)
-            self.assertEqual(data.workflow['459:456']['inputs']['width'], 2048)
-            self.assertEqual(data.workflow['459:458']['inputs']['seed'], 103)
+            self.assertEqual(data.workflow['514']['inputs']['width'], 2048)
+            self.assertEqual(data.workflow['515']['inputs']['seed'], 103)
             record = Path(data.record_dir)
-            self.assertTrue((record / (record.name+'.workflow.json')).is_file())
+            self.assertFalse((record / (record.name+'.workflow.json')).exists())
             body = (self.project / data.image_plan['draft']).read_text()
             self.assertIn('### 生成记录-001', body)
             self.assertIn('- 用户采用状态：未送审', body)
@@ -96,6 +96,66 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         result = await plans.execute(self.store, self.payload)
         self.assertEqual(result['status'], 'enqueued')
         self.assertEqual(len(self.store.rows), 1)
+
+    def test_text_to_image_uses_api_without_reading_or_rewriting_canvas(self):
+        source = plans.workflow_file('Qwen2.1-文生图-普通版')
+        original = source.read_bytes()
+        for width, height, ratio in [(1024, 1024, '1:1'), (1152, 864, '4:3'),
+                                     (1376, 768, '43:24'), (1536, 864, '16:9'), (1536, 1024, '3:2')]:
+            with self.subTest(size=(width, height)), patch.object(plans.pairs, 'Canvas', side_effect=AssertionError('文生图不读取画布')):
+                spec = dict(task_type='image', prompt=dict(rewritten_prompt='已确认的完整正文', wh_ratio=ratio))
+                canvas, api, uploads, output = plans.image_workflow(t.SKILL, spec, [], width, height, 2**53-1,
+                    'CH001-生成记录-001', '测试项目/图片生成/人物/CH001/CH001-肖像-生成记录-001')
+            self.assertIsNone(canvas)
+            self.assertEqual(uploads, [])
+            self.assertEqual(output, '508')
+            self.assertEqual((api['514']['inputs']['width'], api['514']['inputs']['height']), (width, height))
+            self.assertEqual(api['515']['inputs']['seed'], 2**53-1)
+            self.assertEqual(api['515']['inputs']['steps'], 40)
+            self.assertEqual(api['672']['inputs']['value'], '已确认的完整正文')
+            self.assertEqual(api['653']['inputs']['step_cache'], 'te_predictor')
+            self.assertFalse({'512', '524', '583', '663'} & set(api))
+        self.assertEqual(source.read_bytes(), original)
+
+    async def test_remote_image_folder_does_not_change_local_evidence_names(self):
+        self.write_plan(self.spec())
+        self.payload.prepare_only = True
+        await plans.execute(self.store, self.payload)
+        api_file = next(self.project.rglob('CH001-生成记录-001.api.json'))
+        workflow = json.loads(api_file.read_text())
+        self.assertEqual(workflow['508']['inputs']['filename_prefix'],
+            '测试项目/图片生成/人物/CH001/CH001-角色多视角参考图-生成记录-001')
+        self.assertEqual(api_file.parent.name, 'CH001-生成记录-001')
+        self.assertFalse(api_file.with_name('CH001-生成记录-001.workflow.json').exists())
+
+    def test_remote_video_outputs_leave_director_segment_export_and_cache_unchanged(self):
+        life.LifecycleTests.video(self)
+        source = self.record / 'task.workflow.json'
+        raw = source.read_bytes()
+        original = plans.pairs.Canvas(json.loads(raw)).api(['403', '504', '506'])
+        mapping = json.loads((self.record / '输入映射.json').read_text())
+        task = dict(task_type='video-first-pass', title='目录测试', record_dir=self.rel(self.record / '新任务'),
+            canvas=self.rel(source), mapping=mapping, output_nodes=['403', '504', '506'], segment_plan={})
+        with patch('backend.services.video_records.prepare_records'):
+            result = plans.build_video(self.project, task, plans.Documents(self.project))
+        api = result['workflow']
+        for key in ('504', '506'):
+            self.assertTrue(api[key]['inputs']['filename_prefix'].startswith('测试项目/视频生成/EP001/C001/辅助预览/'))
+        for field in ('cache_name', 'timeline_data'):
+            self.assertEqual(api['502']['inputs'][field], original['502']['inputs'][field])
+        self.assertEqual(source.read_bytes(), raw)
+
+    def test_remote_video_postprocess_folder_uses_existing_segment_and_round(self):
+        source = self.project / 'post.workflow.json'
+        source.write_bytes(plans.workflow_file('Nora-RTX-RIFE-自动切镜保护超分插帧').read_bytes())
+        mapping = dict(scene='EP001-C001', selected_indices=[0],
+            segments=[dict(segment='EP001-C001-P002', round='R003')])
+        task = dict(task_type='video-postprocess', title='后处理', record_dir='执行附件/后处理测试',
+            canvas='post.workflow.json', mapping=mapping, output_nodes=['16'])
+        with patch('backend.services.video_records.prepare_records'):
+            result = plans.build_video(self.project, task, plans.Documents(self.project))
+        self.assertEqual(result['workflow']['16']['inputs']['filename_prefix'],
+            '测试项目/视频生成/EP001/C001/后处理/EP001-C001-P002-R003-后处理')
 
     async def test_missing_authorization_stops_before_writes_or_queue(self):
         task = self.spec()
@@ -185,7 +245,7 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         self.position.write_text(self.position.read_text().replace('| 角色六视图 | 103 |','| 角色六视图 | 首次生成时确定 |'))
         self.write_plan(self.spec(), self.spec('CH002'))
         await plans.execute(self.store, self.payload)
-        seeds = [row['input'].workflow['459:458']['inputs']['seed'] for row in self.store.rows.values()]
+        seeds = [row['input'].workflow['515']['inputs']['seed'] for row in self.store.rows.values()]
         self.assertEqual(seeds[0], seeds[1])
         self.assertIn(str(seeds[0]), self.position.read_text())
 
@@ -194,7 +254,6 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         canvas, api, uploads, output = plans.image_workflow(t.SKILL, self.spec(), refs, 2048, 2048, 123, 'many')
         self.assertEqual(len(uploads), 10)
         self.assertEqual(len([k for k in api['459:474']['inputs'] if k.startswith('images.image_')]), 10)
-        self.assertEqual(api, plans.pairs.Canvas(canvas).api(output))
 
     async def test_video_uses_preconfigured_canvas_and_same_one_call_checks(self):
         # Reuse the canonical isolated H3 fixture, including content review and scene-round dependencies.

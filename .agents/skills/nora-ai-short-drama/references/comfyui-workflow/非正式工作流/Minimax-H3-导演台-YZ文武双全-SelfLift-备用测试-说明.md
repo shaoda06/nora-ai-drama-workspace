@@ -47,7 +47,7 @@ INT8 ConvRot和NVFP4 AWQ是同一32B编码器的不同量化版本。NVFP4模型
 
 ## 验证范围
 
-- 本地画布与API按配对校验检查。20个画布节点包含1个说明节点，API有效节点19个；4个武打与运动LoRA均在有效API模型链中。
+- 本地API按结构和执行参数检查，不比较画布与API。20个画布节点包含1个说明节点，API有效节点19个；4个武打与运动LoRA均在有效API模型链中。
 - BasicScheduler和导演台均设为12步，SelfLift在第6步后由992×544低清转入1664×928高清；低清尺寸按倍率0.6与×32网格计算，不是运行实测。
 - 本地静态检查不代表目标服务器已加载LoRA或完成视频生成。未更改或重新验证远端节点、模型安装与远端保存画布。
 - 放大权重：`ComfyUI/models/latent_upscale_models/minimax_h3_latent_upscaler_3d_fp16_V2.safetensors`。
