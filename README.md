@@ -24,7 +24,7 @@
 | `.agents/skills/nora-ai-short-drama/` | 短剧主控、共用规则、模板、脚本及[配套工作流](.agents/skills/nora-ai-short-drama/references/comfyui-workflow)；视频工作流用途见[H3执行规范](.agents/skills/nora-generation/references/ComfyUI-H3视频执行规范.md#0-制作策略与工作流配置) |
 | 主控同级的7个业务技能 | [开发、写作、资产、分镜、视频提示词、生成执行、审查](.agents/skills/nora-ai-short-drama/SKILL.md#按任务读取)；现行规则归所属技能，四个适配short-drama技能随仓库保存 |
 | `sd-combat-engine/`、`sd-xuanhuan-engine/`、`sd-real-engine/` | 位于 `.agents/skills/`，由业务技能按戏型选择通用、玄幻、写实打戏方法 |
-| 主技能内 `dependencies/` | 三个ComfyUI适配技能的真源及已登记的节点源码目录或ZIP安装包，保留来源、版本与许可证 |
+| 主技能内 `dependencies/` | 三个ComfyUI适配技能的真源；节点源码目录或ZIP安装包统一放在其 `ComfyUI节点资源/` 子目录，保留来源、版本与许可证 |
 | `.agents/skills/krea2-style-library/` | 风格库使用与维护指引 |
 | `工作区浏览服务/` | React＋FastAPI浏览服务、双击启动、共用解析器与开发历史 |
 | `工作区浏览服务/Krea2风格库/` | 本地浏览页、当前风格资源、更新程序和启动入口 |

@@ -207,7 +207,7 @@ def verify(directory):
   if stem in POSTPROCESS_NODES:
    result['postprocess_delivery']=validate_postprocess(actual,stem)
    if actual['12']['class_type']=='NoraRIFEInterpolationCutTest':
-    package=Path(__file__).resolve().parents[1]/'dependencies/ComfyUI-Nora-RIFE-CutTest.zip'
+    package=Path(__file__).resolve().parents[1]/'dependencies/ComfyUI节点资源/ComfyUI-Nora-RIFE-CutTest.zip'
     validate_rife_package(package)
     result['node_package']=package.name
   results.append(result)

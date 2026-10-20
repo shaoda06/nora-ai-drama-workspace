@@ -47,7 +47,7 @@ class BaselineTests(unittest.TestCase):
             wb.validate_postprocess(original, name)
 
     def test_rife_package_requires_complete_installable_contents(self):
-        package = ROOT / 'dependencies/ComfyUI-Nora-RIFE-CutTest.zip'
+        package = ROOT / 'dependencies/ComfyUI节点资源/ComfyUI-Nora-RIFE-CutTest.zip'
         wb.validate_rife_package(package)
         with tempfile.TemporaryDirectory() as tmp:
             broken = Path(tmp, 'incomplete.zip')
