@@ -206,13 +206,20 @@ class BaselineTests(unittest.TestCase):
     def test_video_variants_share_generation_backbone(self):
         standard = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')).read_text(encoding="utf-8"))
         deoiled = json.loads((workflow_file('Minimax-H3-导演台-视频生成-去油版', 'api')).read_text(encoding="utf-8"))
-        self.assertNotIn("128", standard)
-        self.assertEqual(deoiled["128"]["class_type"], "LoraLoaderModelOnly")
+        for graph in (standard, deoiled):
+            self.assertEqual(graph["128"]["class_type"], "LoraLoaderModelOnly")
+            self.assertEqual(graph["128"]["inputs"]["lora_name"], "MysticXXX_MMH3-V1.safetensors")
+            self.assertAlmostEqual(graph["128"]["inputs"]["strength_model"], 0.5)
+        self.assertEqual(standard["128"]["inputs"]["model"], ["53", 0])
+        self.assertEqual(standard["405"]["inputs"]["model"], ["128", 0])
+        self.assertEqual(deoiled["405"]["inputs"]["model"], ["53", 0])
         self.assertEqual(deoiled["128"]["inputs"]["model"], ["58", 0])
         self.assertEqual(deoiled["53"]["inputs"]["model"], ["128", 0])
         self.assertEqual(standard["53"]["inputs"]["model"], ["58", 0])
         for node in ("503", "504", "505", "506"):
             standard.pop(node)
+        standard.pop("128")
+        standard["405"]["inputs"]["model"] = ["53", 0]
         deoiled.pop("128")
         for graph, lora, strength in (
             (standard, "minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors", 0.8),
@@ -233,6 +240,8 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(first["503"]["inputs"]["images"], ["502", 6])
         self.assertEqual(second["505"]["inputs"]["images"], ["502", 0])
         for graph, create_id, save_id in ((first, "503", "504"), (second, "505", "506")):
+            self.assertEqual(graph["128"]["inputs"]["model"], ["53", 0])
+            self.assertEqual(graph["405"]["inputs"]["model"], ["128", 0])
             self.assertEqual(graph[create_id]["inputs"]["audio"], ["502", 1])
             self.assertEqual(graph[create_id]["inputs"]["fps"], ["502", 2])
             self.assertEqual(graph[save_id]["inputs"]["video"], [create_id, 0])

@@ -49,6 +49,20 @@
       "title": "04｜LoRA · DMAD v4 0.8"
     }
   },
+  "128": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "lora_name": "MysticXXX_MMH3-V1.safetensors",
+      "strength_model": 0.5,
+      "model": [
+        "53",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "128｜角色去油 LoRA · Mystic 0.5"
+    }
+  },
   "405": {
     "class_type": "TESpeedMiniMaxH3",
     "inputs": {
@@ -59,7 +73,7 @@
       "device": "auto",
       "mode": "8-step LoRA",
       "model": [
-        "53",
+        "128",
         0
       ]
     },
