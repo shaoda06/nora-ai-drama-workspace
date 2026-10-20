@@ -746,7 +746,9 @@ python -X utf8 .agents/skills/nora-ai-short-drama/scripts/scene_rounds.py --proj
 
 ## H3正文与内容核对检查
 
-用于原生Ref2VA导演台一采、二采的正文准备；业务顺序与证据含义由[内容核对规范](../../../nora-video-prompts/references/视频提示词制作规范.md#提示词编写与检查顺序)维护。独立离线入口只读本机文件，不联网、不上传、不入队、不调用模型。正常生成仍用已有`--prepare-only`，同一检查自动纳入`执行检查报告.json`的`content_checks`；不能用离线报告代替正式准备报告。
+用于原生H3导演台一采、二采的正文准备；业务顺序与证据含义由[内容核对规范](../../../nora-video-prompts/references/视频提示词制作规范.md#提示词编写与检查顺序)维护。逐组优先读取`taskType`／`task_type`，未指定时沿用公共区及导演台模式；同一画布不同模式分别检查。r2v／v2v／rv2v使用Ref2VA六节及Subject对应；t2v／i2v／fl2v使用基础三节，按实际首尾图槽位检查首行对齐说明、结束时点和镜号。基础模式不强制Subject表，可填写`subjects:{}`；四类内容核对及中英文对应仍完整保留。fl2v支持首尾、仅首、仅尾及无图文本组，不将普通r2v参考误当作首尾帧。具体正文结构按[h3-prompt-writing模式指南](../../../h3-prompt-writing/SKILL.md)执行。
+
+独立离线入口只读本机文件，不联网、不上传、不入队、不调用模型。正常生成仍用已有`--prepare-only`，同一检查自动纳入`执行检查报告.json`的`content_checks`；不能用离线报告代替正式准备报告。模式与首尾图包含在本次内容绑定中，修改后需重新准备；不回写历史任务的原正文或批准事实。
 
 在工作区根目录使用可用Python 3.10＋运行，Windows加`-X utf8`。路径参数相对当前目录；`--basis-file`和输入映射内证据路径相对`--project`且必须在项目内。
 

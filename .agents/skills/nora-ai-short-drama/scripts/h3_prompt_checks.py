@@ -1,4 +1,4 @@
-"""Offline Ref2VA text checks and evidence binding; never uploads or generates."""
+"""Offline mode-aware H3 text checks and evidence binding; never generates."""
 import argparse
 from collections import Counter
 from copy import deepcopy
@@ -11,6 +11,8 @@ from project_paths import project_file
 
 SECTIONS = ('subject_definitions', 'summary', 'retention_analysis',
             'detailed_description', 'overall_soundscape', 'non_diegetic_music')
+BASE_SECTIONS = ('integrated_multimodal_description', 'overall_soundscape', 'non_diegetic_music')
+REFERENCE_MODES = ('r2v', 'v2v', 'rv2v')
 REVIEW_ITEMS = ('identity', 'space_action', 'continuity_sound', 'translation')
 TAG = re.compile(r'<(?:Subject|Picture|Audio|Video) \d+>|\[Shot \d+\]|\(S\d+\)')
 SUBJECT = re.compile(r'<Subject (\d+)>')
@@ -21,12 +23,35 @@ def digest(text):
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 
-def sections(text):
-    matches = list(re.finditer(r'^(' + '|'.join(SECTIONS) + r'):[ \t]*', text, re.M))
-    if [m[1] for m in matches] != list(SECTIONS) or text[:matches[0].start()].strip():
+def sections(text, headings=SECTIONS, allow_prefix=False):
+    matches = list(re.finditer(r'^(' + '|'.join(headings) + r'):[ \t]*', text, re.M))
+    if [m[1] for m in matches] != list(headings) or (not allow_prefix and text[:matches[0].start()].strip()):
         return None
     return {m[1]: text[m.end():matches[i+1].start() if i+1 < len(matches) else len(text)].strip()
             for i, m in enumerate(matches)}
+
+
+def group_mode(workflow, node, index):
+    inputs = workflow[node]['inputs']
+    timeline = json.loads(inputs['timeline_data'])
+    group = timeline['segments'][index]
+    raw = group.get('taskType') or group.get('task_type') or timeline['global'].get('taskType') or inputs['task_type']
+    match = re.match(r'^(r2v|rv2v|v2v|t2v|i2v|fl2v)\b', raw.strip().lower())
+    if not match:
+        raise ValueError('无法识别H3分段模式：' + raw)
+    return match[1], group
+
+
+def keyframe_slots(group):
+    images = {item['index']: item for item in group.get('refs', [])}
+    for index, field in ((0, 'startImage'), (1, 'endImage')):
+        image = group.get(field)
+        if image and (image.get('imageFile') or image.get('imageB64')):
+            images[index] = image
+    image = group.get('genImage')
+    if 0 not in images and image and (image.get('imageFile') or image.get('imageB64')):
+        images[0] = image
+    return {index for index, image in images.items() if image.get('imageFile') or image.get('imageB64')}
 
 
 def chinese_text(text):
@@ -51,27 +76,55 @@ def selected_groups(workflow):
             group = timeline['segments'][index]
             prompt = '\n\n'.join(p.strip() for p in (common.get('prompt', ''), group['prompt']) if p.strip())
             # Bind the text, duration, references and continuity settings that were reviewed.
-            signature = digest(json.dumps({'common': common, 'group': group}, ensure_ascii=False, sort_keys=True))
+            mode, _ = group_mode(workflow, str(node_id), index)
+            reviewed = {'common': common, 'group': group}
+            if mode != 'r2v':
+                reviewed['mode'] = mode
+            signature = digest(json.dumps(reviewed, ensure_ascii=False, sort_keys=True))
             yield str(node_id), index, prompt, signature
 
 
-def text_findings(prompt, chinese=None, names=None):
+def text_findings(prompt, chinese=None, names=None, *, mode='r2v', images=None, duration=None):
     errors = []
     def issue(code, detail):
         errors.append({'code': code, 'detail': detail})
-    english = sections(prompt)
+    reference = mode in REFERENCE_MODES
+    headings = SECTIONS if reference else BASE_SECTIONS
+    english = sections(prompt, headings, allow_prefix=not reference)
     if english is None:
-        issue('sections', '英文必须包含完整且有序的Ref2VA六节')
+        issue('sections', '英文必须包含完整且有序的' + ('Ref2VA六节' if reference else '基础模式三节'))
         return errors
+    prefix = prompt[:prompt.index(headings[0] + ':')].strip()
+    if not reference:
+        slots = images if images is not None else ({0, 1} if mode == 'fl2v' else {0} if mode == 'i2v' else set())
+        if mode == 'fl2v':
+            if slots == {0, 1}:
+                valid = prefix.startswith('How the reference pictures align with the target video — Picture 1 (from Shot 1) aligns with the 0.00-second mark of the target video; Picture 2 ')
+            elif slots == {0}:
+                valid = prefix == 'For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.'
+            elif slots == {1}:
+                valid = prefix.startswith('How the reference pictures align with the target video — <Picture 1> ')
+            else:
+                valid = not slots and not prefix
+        elif mode == 'i2v':
+            valid = slots == {0} and prefix == 'For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.'
+        else:
+            valid = mode == 't2v' and not prefix and not slots
+        if not valid:
+            issue('keyframe_alignment', '模式、首尾图槽位与首行对齐指令不对应')
+        if mode == 'fl2v' and 1 in slots:
+            ending = re.search(r'\(from (?:\[)?Shot (\d+)(?:\])?\) aligns with the (\d+\.\d{2})-second mark of the target video\.$', prefix)
+            if not ending or int(ending[1]) != len(re.findall(r'\[Shot \d+\]', english[headings[0]])) or (duration is not None and abs(float(ending[2]) - duration) > .011):
+                issue('keyframe_timing', '尾帧对齐时间或最后镜号与本段不一致')
     definitions = {}
-    for match in SUBJECT.finditer(english['subject_definitions']):
+    for match in SUBJECT.finditer(english.get('subject_definitions', '')):
         tail = english['subject_definitions'][match.end():]
         name = re.match(r'\s*([\u3400-\u9fff][\u3400-\u9fffA-Za-z0-9·]*)', tail)
         if name:
             definitions[match[1]] = name[1]
         else:
             issue('subject_name', f'{match[0]}定义后必须紧接准确中文名称，不能用拼音或译名')
-    if names is not None and definitions != names:
+    if reference and names is not None and definitions != names:
         issue('subject_mapping', '正文Subject中文名称与核对记录的主体表不一致')
     for section, body in english.items():
         for match in SUBJECT.finditer(body):
@@ -80,7 +133,7 @@ def text_findings(prompt, chinese=None, names=None):
                 issue('subject_reference', f'{section}中{match[0]}缺少对应中文全名')
     # Only unequivocal named-role substitutions; ordinary pronouns and quoted dialogue
     # are left to the semantic review, not rejected by a broad natural-language regex.
-    action = re.sub(r'<d>.*?</d>|“[^”]*”|"[^"\n]*"', '', english['detailed_description'], flags=re.S)
+    action = re.sub(r'<d>.*?</d>|“[^”]*”|"[^"\n]*"', '', english.get('detailed_description', ''), flags=re.S)
     role = re.search(r'\b(?:the\s+(?:(?:young|middle-aged|apron-wearing|bearded|male|female)\s+)*(?:man|woman|boy|girl|villager)|his\s+(?:wife|mother)|her\s+(?:husband|son))\b', action, re.I)
     if role:
         issue('role_alias', '动作中以角色代称替换主体：' + role[0])
@@ -90,14 +143,20 @@ def text_findings(prompt, chinese=None, names=None):
     if not any(re.search(full_span, s, re.I) for s in subtitle_rules):
         issue('subtitle_rule', '缺少覆盖全片的无字幕指令（语义完整性仍需内容核对）')
     if chinese is not None:
-        translated = sections(chinese)
+        translated = sections(chinese, headings, allow_prefix=not reference)
         if translated is None:
-            issue('translation_sections', '中文参考版必须保留完整有序的六节英文标题')
+            issue('translation_sections', '中文参考版必须保留当前模式完整有序的英文标题')
         else:
-            for section in SECTIONS:
+            if not reference:
+                translated_prefix = chinese[:chinese.index(headings[0] + ':')]
+                if Counter(re.findall(r'\d+(?:\.\d+)?', prefix)) != Counter(re.findall(r'\d+(?:\.\d+)?', translated_prefix)):
+                    issue('translation_numbers', '首尾对齐说明的中英文数字不对应')
+            for section in headings:
                 if Counter(TAG.findall(english[section])) != Counter(TAG.findall(translated[section])):
                     issue('translation_tags', section + '中英文标签或镜号不对应，不得用摘要替代')
-                if Counter(re.findall(r'\d+(?:\.\d+)?', english[section])) != Counter(re.findall(r'\d+(?:\.\d+)?', translated[section])):
+                english_numbers = english[section].replace('3D', '三维').replace('2D', '二维')
+                chinese_numbers = translated[section].replace('3D', '三维').replace('2D', '二维')
+                if Counter(re.findall(r'\d+(?:\.\d+)?', english_numbers)) != Counter(re.findall(r'\d+(?:\.\d+)?', chinese_numbers)):
                     issue('translation_numbers', section + '中英文数字不对应')
                 if not translated[section]:
                     issue('translation_empty', section + '中文正文为空')
@@ -155,6 +214,7 @@ def audit(project, workflow, mapping):
     chinese_versions = {}
     expected_keys = []
     for node, index, prompt, signature in selected_groups(workflow):
+        mode, group = group_mode(workflow, node, index)
         key = (node, index)
         expected_keys.append(key)
         matching = [r for r in rows if (r.get('node'), r.get('index')) == key]
@@ -186,10 +246,11 @@ def audit(project, workflow, mapping):
         except (KeyError, OSError, ValueError, TypeError) as exc:
             issue('translation_missing', '缺少可读取的中文参考版：' + str(exc))
         names = row.get('subjects')
-        if not isinstance(names, dict) or not names or any(not isinstance(n, str) or not HAN.search(n) for n in names.values()):
+        if not isinstance(names, dict) or (mode in REFERENCE_MODES and not names) or any(not isinstance(n, str) or not HAN.search(n) for n in names.values()):
             issue('review_subjects', '缺少Subject编号到准确中文名称的主体表')
             names = None
-        errors.extend(text_findings(prompt, chinese, names))
+        errors.extend(text_findings(prompt, chinese, names, mode=mode,
+                                    images=keyframe_slots(group), duration=group['durationSec']))
         checks = row.get('checks', {})
         if not isinstance(checks, dict):
             issue('review_schema', 'checks必须为逐类核对对象')

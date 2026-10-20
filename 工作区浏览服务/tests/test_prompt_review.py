@@ -7,10 +7,63 @@ from unittest.mock import patch
 from backend.services import comfy_tasks as tasks, execution_checks as checks
 from tests import test_submission_lifecycle as lifecycle
 from tests.prompt_review_fixture import ENGLISH, CHINESE
-from h3_prompt_checks import audit, text_findings
+from h3_prompt_checks import audit, text_findings, group_mode, bind_review
+
+FL_ENGLISH = '''How the reference pictures align with the target video — Picture 1 (from Shot 1) aligns with the 0.00-second mark of the target video; Picture 2 (from Shot 1) aligns with the 4.46-second mark of the target video.
+
+integrated_multimodal_description: [Shot 1] The woman extends her raised leg once and reaches the contact pose. No subtitles appear throughout the entire video.
+
+overall_soundscape: Wind and one impact.
+
+non_diegetic_music: N/A'''
+FL_CHINESE = '''参考图对应——图片1（镜头1）对应0.00秒；图片2（镜头1）对应4.46秒。
+
+integrated_multimodal_description: [Shot 1] 女子抬起的腿向前伸出一次，落到接触姿势。全片没有字幕。
+
+overall_soundscape: 风声和一次命中声。
+
+non_diegetic_music: N/A'''
 
 
 class TextChecks(unittest.TestCase):
+    def test_fl2v_uses_base_sections_and_checks_the_supplied_pair(self):
+        self.assertEqual(text_findings(FL_ENGLISH, FL_CHINESE, {}, mode='fl2v', images={0, 1}, duration=4.46), [])
+        for slots in ({0}, {1}, set(), {0, 1, 2}):
+            with self.subTest(slots=slots):
+                self.assertIn('keyframe_alignment', [x['code'] for x in text_findings(FL_ENGLISH, mode='fl2v', images=slots)])
+
+    def test_3d_style_matches_chinese_dimensions_without_changing_real_numbers(self):
+        english = FL_ENGLISH.replace('The woman extends', 'Refined 3D rendering. The woman extends')
+        chinese = FL_CHINESE.replace('女子抬起', '精致三维渲染。女子抬起')
+        self.assertEqual(text_findings(english, chinese, mode='fl2v'), [])
+
+    def test_wrong_mode_wrong_end_time_and_translation_still_fail(self):
+        self.assertIn('sections', [x['code'] for x in text_findings(FL_ENGLISH, mode='r2v')])
+        self.assertIn('keyframe_timing', [x['code'] for x in text_findings(FL_ENGLISH, mode='fl2v', duration=5)])
+        self.assertIn('translation_numbers', [x['code'] for x in text_findings(
+            FL_ENGLISH, FL_CHINESE.replace('4.46', '4.47'), mode='fl2v')])
+        self.assertIn('translation_tags', [x['code'] for x in text_findings(
+            FL_ENGLISH, FL_CHINESE.replace('[Shot 1]', '[Shot 2]'), mode='fl2v')])
+
+    def test_base_modes_do_not_borrow_ref2va_subject_requirements(self):
+        base = FL_ENGLISH[FL_ENGLISH.index('integrated_multimodal_description:'):]
+        self.assertEqual(text_findings(base, mode='t2v'), [])
+        first = 'For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\n' + base
+        self.assertEqual(text_findings(first, mode='i2v', images={0}), [])
+        self.assertIn('keyframe_alignment', [x['code'] for x in text_findings(first, mode='i2v', images=set())])
+        last = 'How the reference pictures align with the target video — <Picture 1> (from [Shot 1]) aligns with the 4.46-second mark of the target video.\n\n' + base
+        self.assertEqual(text_findings(last, mode='fl2v', images={1}, duration=4.46), [])
+
+    def test_per_segment_mode_overrides_director_in_a_mixed_canvas(self):
+        timeline = {'global': {'taskType': 'r2v'}, 'segments': [{'taskType': 'fl2v — 首尾帧'}, {'taskType': 'r2v'}]}
+        workflow = {'502': {'inputs': {'task_type': 'r2v', 'timeline_data': json.dumps(timeline)}}}
+        self.assertEqual(group_mode(workflow, '502', 0)[0], 'fl2v')
+        self.assertEqual(group_mode(workflow, '502', 1)[0], 'r2v')
+        timeline['segments'][0]['taskType'] = 'not-a-mode'
+        workflow['502']['inputs']['timeline_data'] = json.dumps(timeline)
+        with self.assertRaisesRegex(ValueError, '无法识别'):
+            group_mode(workflow, '502', 0)
+
     def test_numeric_style_and_chinese_adjacency_use_the_same_tokens(self):
         english = ENGLISH.replace('detailed_description:', 'detailed_description:\nUse 3D animation for 0.7 seconds.')
         chinese = CHINESE.replace('detailed_description:', 'detailed_description:\n采用3D动画，保持0.7秒。')
@@ -55,6 +108,29 @@ class ContentPreparationTests(unittest.IsolatedAsyncioTestCase):
 
     def save_mapping(self, mapping):
         (self.record / '输入映射.json').write_text(json.dumps(mapping, ensure_ascii=False), 'utf-8')
+
+    async def test_fl2v_review_accepts_no_subjects_and_rejects_missing_end_frame(self):
+        self.video()
+        workflow, mapping = copy.deepcopy(self.data.workflow), self.mapping()
+        timeline = json.loads(workflow['502']['inputs']['timeline_data'])
+        timeline['global'].update(commonEnabled=False)
+        timeline['segments'][0].update(taskType='fl2v', prompt=FL_ENGLISH, durationSec=4.46,
+            refs=[{'index': 0, 'imageFile': 'start.png'}, {'index': 1, 'imageFile': 'end.png'}])
+        workflow['502']['inputs']['timeline_data'] = json.dumps(timeline)
+        review = mapping['content_review']['groups'][0]
+        (self.project / review['chinese']['file']).write_text(FL_CHINESE)
+        review.pop('input_sha256'); review['chinese'].pop('sha256'); review['subjects'] = {}
+        for check in review['checks'].values():
+            check['prompt_quote'] = 'The woman extends her raised leg once'
+            check['chinese_quote'] = '女子抬起的腿向前伸出一次'
+            for source in check['sources']:
+                source.pop('sha256')
+        mapping['content_review'] = bind_review(self.project, workflow, {'groups': [review]})
+        self.assertTrue(audit(self.project, workflow, mapping)['ok'])
+        timeline['segments'][0]['refs'].pop()
+        workflow['502']['inputs']['timeline_data'] = json.dumps(timeline)
+        issues = audit(self.project, workflow, mapping)['groups'][0]['issues']
+        self.assertIn('keyframe_alignment', [x['code'] for x in issues])
 
     async def test_missing_review_and_failed_claim_stop_without_queue_or_network(self):
         self.video()
