@@ -1,6 +1,6 @@
 ---
 name: nora-drama-assets
-description: 为 Nora 制作人物、场景、道具资料卡与参考图设计、Qwen图片提示词，处理机位图、状态延伸、参考音视频和素材复用采用；生成交执行技能。
+description: 为 Nora 制作人物、场景、道具资料卡与参考图设计、图片提示词，按已选能力衔接Qwen或Imagegen，处理机位图、状态延伸、参考音视频和素材复用采用；生成交执行技能。
 ---
 
 # Nora 资产设计
@@ -17,7 +17,7 @@ description: 为 Nora 制作人物、场景、道具资料卡与参考图设计�
 | 道具卡、基础图、虚拟界面及状态 | [道具卡](references/道具资料卡规范.md)、[道具专项](references/道具资料与参考图规范.md)的对应类型 |
 | 服装／场景／道具状态延伸 | [统一状态规则](references/Qwen-Image-2.1-提示词规范.md#27-资产状态参考图统一规则)及对应资产专项，沿用原CH／SC／PR |
 | 逐集专用素材 | [逐集专用素材](references/逐集专用素材规范.md)，按已确认分镜及P段实际需要补齐 |
-| 图片提示词编写或修订 | [图片提示词规则](references/图片提示词规范.md)及[Qwen适配](references/Qwen-Image-2.1-提示词规范.md)对应章节，调用[qwen-image-2-1-prompter](../qwen-image-2-1-prompter/SKILL.md) |
+| 图片提示词编写或修订 | [图片提示词规则](references/图片提示词规范.md)；Qwen调用对应适配，已选Imagegen进入[Imagegen分支](../nora-generation/references/Imagegen生成与尺寸处理规范.md) |
 | 参考音视频与人物声音 | [参考音视频管理](references/参考音视频管理规范.md)，沿项目级RA／RV与固定分类 |
 | 图片交付、批准采用、替换和归档 | [核心参考图的验收与保存](references/核心参考图制作规范.md#85-验收记录与保存)，批准后超分交[生成执行](../nora-generation/SKILL.md) |
 
@@ -27,4 +27,4 @@ description: 为 Nora 制作人物、场景、道具资料卡与参考图设计�
 
 首帧构图与提示词由[分镜设计](../short-drama-storyboard/SKILL.md)负责，所需人物／环境／道具图由本技能提供；机位环境图不自动等于人物首帧。法宝或法术外观确需设计时，按需调用[玄幻专项](../sd-xuanhuan-engine/SKILL.md)的造型资料，不额外编造世界规则。
 
-图片引用定位文件中已确认的完整美术正文，按[画风引用](references/Qwen-Image-2.1-提示词规范.md#16-项目画风正文引用)处理。只有表达问题时读取humanizer-zh；图片正文按Qwen规则，不作普通文章润色。图片查看、生成选型及权限沿[主控边界](../nora-ai-short-drama/SKILL.md#看图能力调用边界)。内容准备好且获授权时交[生成执行](../nora-generation/SKILL.md)，工具负责技术装配和正常收尾。
+图片引用定位文件中已确认的完整美术正文，按[画风引用](references/Qwen-Image-2.1-提示词规范.md#16-项目画风正文引用)处理。只有表达问题时读取humanizer-zh；图片正文按实际选定的生成能力规则，不作普通文章润色。图片查看、生成选型及权限沿[主控边界](../nora-ai-short-drama/SKILL.md#看图能力调用边界)。内容准备好且获授权时交[生成执行](../nora-generation/SKILL.md)，工具负责技术装配和正常收尾。
