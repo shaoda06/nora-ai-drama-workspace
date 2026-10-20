@@ -25,6 +25,16 @@ export const selectedRevision = (items: VideoItem[], selection: { stage: string;
     || items.find(item => item.stage === selection.stage && identity(item.key) === identity(selection.key));
 };
 
+export function missingVideoState(current?: VideoItem, recordedKey = '') {
+  // A planned revision has a key too; only a saved media identity or a
+  // successful generation/collection record establishes an existing output.
+  const unavailable = !!current?.fileRevision || current?.taskStatus === '成功'
+    || !!current?.deliveryStatus.includes('已取回') || /\.(mp4|webm|mov)$/.test(recordedKey);
+  const status = current?.taskStatus && current.taskStatus !== '未记录' ? `（${current.taskStatus}）` : '';
+  return { unavailable, message: unavailable ? '已有视频不可播放，请检查视频文件及取回记录。'
+    : `尚未生成视频${status}；可查看已关联资料。` };
+}
+
 export interface SegmentVideoHandle { seekTo: (time: number) => void }
 
 export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, retainSource, wide, onToggleWide, continuousControl, selectorControl, playerRef }: {
@@ -62,7 +72,7 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
       onTimeUpdate={event => onTimeChange(event.currentTarget.currentTime)}
       onSeeked={event => onTimeChange(event.currentTarget.currentTime)}
       onPause={event => onTimeChange(event.currentTarget.currentTime)}
-      onEnded={event => { onTimeChange(event.currentTarget.currentTime); onEnded?.(); }} /> : <div className="video-placeholder">{current ? `本轮暂无可播放视频${current.taskStatus && current.taskStatus !== '未记录' ? `（${current.taskStatus}）` : ''}；可查看本轮已关联资料。` : '视频区域'}</div>}
+      onEnded={event => { onTimeChange(event.currentTarget.currentTime); onEnded?.(); }} /> : <div className="video-placeholder">{current ? missingVideoState(current).message : '视频区域'}</div>}
     <div className="video-source">
       <div className="video-source-summary">{selectorControl}{current && loaded && <span>{description}</span>}</div>
       <div className="video-source-actions">
@@ -72,6 +82,6 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
       </div>
     </div>
     {updated && <div className="video-update" role="status"><span>视频已有更新</span><button onClick={() => { setPlayOnLoad(video.current ? !video.current.paused : false); setLoaded(current); setSource(cachedSource || current.url); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></div>}
-    {error && <p className="error" role="alert">视频无法播放，请打开原文件。</p>}
+    {error && <p className="error" role="alert">已有视频不可播放，请打开原文件检查。</p>}
   </section>;
 }

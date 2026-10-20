@@ -5,7 +5,7 @@ import { get, projectUrl } from '../api';
 import type { FileItem, RecordData, SceneRound } from '../api';
 import { Document, Result } from '../components';
 import { UnderlineTabs } from './UnderlineTabs';
-import { latestVideo, selectedRevision } from './SegmentVideo';
+import { latestVideo, missingVideoState, selectedRevision } from './SegmentVideo';
 import { SegmentWorkspace } from './SegmentWorkspace';
 import { useRevisionNotesExport } from './RevisionNotes';
 import { useSceneVideoCache } from './useSceneVideoCache';
@@ -49,7 +49,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
   const [wideVideo, setWideVideo] = useRefreshState(positionKey + '/wideVideo', false);
   const [segmentTab, setSegmentTab] = useRefreshState(positionKey + '/segmentTab', 'script');
   const [autoPlay, setAutoPlay] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<{ message: string; unavailable: boolean } | null>(null);
   const currentSegment = viewingPrevious ? previousEnding!.segment : segments.find(item => item.id === segment);
   const latest = viewingPrevious ? previousVideo : currentSegment && latestVideo(currentSegment.videos);
   const roundEntry = productionRound?.segments.find(item => item.id === segment);
@@ -73,6 +73,12 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     const items = id === PREVIOUS_ENDING ? previousEnding?.segment?.videos : segments.find(item => item.id === id)?.videos;
     return fixed && items ? selectedRevision(items, fixed) : undefined;
   };
+  const roundVideoIssue = (id: string) => {
+    const version = reviewRound?.versions[id] || productionRound?.segments.find(entry => entry.id === id);
+    const issue = missingVideoState(roundVideo(id), version && 'key' in version ? version.key : '');
+    return { ...issue, message: `${id === PREVIOUS_ENDING ? '上集末段' : id}的本轮${version?.stage || reviewRound?.stage || ''}${version ? ` ${version.run}` : ''}${issue.message}` };
+  };
+  const currentVideoIssue = (reviewRound?.versions[segment] || roundEntry) && !roundVideo(segment)?.url ? roundVideoIssue(segment) : null;
   const missingRoundVideos = productionRound ? productionRound.segments.filter(entry => !roundVideo(entry.id)?.url).length : 0;
   const preparationOrder = reviewRound?.order || [
     ...(previousVideo ? [PREVIOUS_ENDING] : []), ...segments.map(item => item.id),
@@ -106,17 +112,18 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     setSelections(previous => ({ ...previous, ...Object.fromEntries(entries.map(item => [item.id, { stage: chosen.stage, key: versions[item.id]?.key || '' }])) }));
     setAutoPlay(false);
     setContinuous(playContinuously && !!versions[segment]);
-    setError(versions[segment] ? '' : `${viewingPrevious ? '上集末段' : segment}暂无${chosen.stage}可播放视频，本轮不会换用其他画质。`);
+    const issue = missingVideoState(latestVideo((currentSegment?.videos || []).filter(video => video.stage === chosen.stage)));
+    setError(versions[segment] ? null : { ...issue, message: `${viewingPrevious ? '上集末段' : segment}的${chosen.stage}${issue.message}本轮不会换用其他画质。` });
   };
   const toggleContinuous = (checked: boolean) => {
     setAutoPlay(false);
     if (!checked) { setContinuous(false); return; }
     if (!reviewRound) { beginReview(true); return; }
     const video = roundVideo(segment);
-    if (!video?.url) { setContinuous(false); setError(`${viewingPrevious ? '上集末段' : segment}的本轮${reviewRound.stage}视频不可播放，请检查或开始新一轮。`); return; }
+    if (!video?.url) { setContinuous(false); setError(roundVideoIssue(segment)); return; }
     setSelections(previous => ({ ...previous, [segment]: { stage: video.stage, key: video.key } }));
     setContinuous(true);
-    setError('');
+    setError(null);
   };
   useEffect(() => {
     setSelections(previous => {
@@ -131,15 +138,15 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     const next = reviewRound?.order[reviewRound.order.indexOf(segment) + 1];
     if (!continuous || !next) { setAutoPlay(false); return; }
     const video = roundVideo(next);
-    if (!video?.url) { setAutoPlay(false); setError(`${next}的本轮${reviewRound!.stage}视频不可播放，连续播放已停在当前分段；不会换用其他版本。`); return; }
+    if (!video?.url) { const issue = roundVideoIssue(next); setAutoPlay(false); setError({ ...issue, message: `${issue.message}连续播放已停在当前分段；不会换用其他版本。` }); return; }
     setSelections(previous => ({ ...previous, [next]: { stage: video.stage, key: video.key } }));
-    setError('');
+    setError(null);
     setSegment(next);
     setAutoPlay(true);
   };
   const selectSegment = (id: string) => {
     if (reviewRound && id !== PREVIOUS_ENDING) setSelections(previous => ({ ...previous, [id]: { stage: reviewRound.stage, key: roundVideo(id)?.key || '' } }));
-    setAutoPlay(false); setSegment(id); setError('');
+    setAutoPlay(false); setSegment(id); setError(null);
   };
   const selectPrevious = () => {
     if (!reviewRound || productionRound) setSelections(previous => ({ ...previous, [PREVIOUS_ENDING]: { stage: previousVideo!.stage, key: previousVideo!.key } }));
@@ -149,7 +156,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     previousEnding={previousEnding} previousSelected={viewingPrevious} onPreviousSelect={selectPrevious} onSelect={selectSegment} />;
   const changeRound = (number: number) => {
     const next = sceneRounds.find(item => item.number === number)!;
-    setAutoPlay(false); setContinuous(false); setReviewRound(null); setError('');
+    setAutoPlay(false); setContinuous(false); setReviewRound(null); setError(null);
     setSelections({}); setSegment(next.segments[0].id); onRoundChange(number);
   };
   return <>
@@ -178,8 +185,8 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
       {reviewRound && !productionRound && <button disabled={!chosen.stage} onClick={() => beginReview(false)}>重新固定浏览片单</button>}
       {reviewRound && savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key && <span>当前查看版本不属于本轮，导出仍按本轮版本。</span>}
     </div>
-    {error && <p className="error" role="alert">{error}</p>}
-    {reviewRound?.versions[segment] && !roundVideo(segment)?.url && <p className="error" role="alert">{viewingPrevious ? '上集末段' : segment}的本轮{reviewRound.stage} {reviewRound.versions[segment]!.run}视频已不可播放，请检查或开始新一轮；不会自动换用其他版本。</p>}
+    {error && <p className={error.unavailable ? 'error' : 'muted'} role={error.unavailable ? 'alert' : 'status'}>{error.message}</p>}
+    {currentVideoIssue && <p className={currentVideoIssue.unavailable ? 'error' : 'muted'} role={currentVideoIssue.unavailable ? 'alert' : 'status'}>{currentVideoIssue.message}</p>}
     {viewingPrevious && <p className="previous-ending-context">上集末段{productionRound ? '（接续参考，不属于本场修改轮次）' : ''} · {previousEnding!.episode} · {previousEnding!.scene} · {currentSegment!.id} <span>点击本集分段返回</span></p>}
     {currentSegment && <SegmentWorkspace key={`${displayScope.episode}/${displayScope.scene}/${currentSegment.id}`} scope={displayScope} segment={currentSegment.id} revision={revision} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources} retainSource={videoCache.retainSource}
       tab={segmentTab} onTabChange={setSegmentTab}
@@ -188,7 +195,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
       wideVideo={wideVideo} onToggleWide={() => setWideVideo(value => !value)}
       continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} disabled={!chosen.stage} onChange={event => toggleContinuous(event.target.checked)} />连续播放</label>}
       autoPlay={autoPlay} onVideoError={() => setAutoPlay(false)} onVideoEnded={advance}
-      onSelectionChange={value => { setContinuous(false); setAutoPlay(false); setError(''); setSelections(previous => ({ ...previous, [segment]: value })); }}
+      onSelectionChange={value => { setContinuous(false); setAutoPlay(false); setError(null); setSelections(previous => ({ ...previous, [segment]: value })); }}
       notesExportControl={notesExport.control} />}
     {notesExport.dialog}
     </> : view === 'storyboard' ? <div className="scene-storyboard">
