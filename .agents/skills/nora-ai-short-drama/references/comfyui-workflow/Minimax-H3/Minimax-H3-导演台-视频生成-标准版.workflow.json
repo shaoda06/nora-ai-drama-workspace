@@ -2,7 +2,7 @@
   "id": "7fec37f7-c04c-4a51-b251-5ab9b0d650d9",
   "revision": 3,
   "last_node_id": 506,
-  "last_link_id": 39,
+  "last_link_id": 43,
   "nodes": [
     {
       "id": 192,
@@ -215,6 +215,246 @@
       "bgcolor": "#335"
     },
     {
+      "id": 342,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -500,
+        170
+      ],
+      "size": [
+        430,
+        160
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "title": "武打｜Combat V2 · 0.65（已启用）",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 39
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            40
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "H3_Combat_V2.safetensors",
+        0.65
+      ],
+      "widgets_values_named": {
+        "lora_name": "H3_Combat_V2.safetensors",
+        "strength_model": 0.65
+      }
+    },
+    {
+      "id": 344,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -500,
+        410
+      ],
+      "size": [
+        430,
+        160
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "title": "运动修复｜Motion Repair V2 · 0.35（已启用）",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 40
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            41
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "minimax_h3\\Motion_Repair_V2.safetensors",
+        0.35
+      ],
+      "widgets_values_named": {
+        "lora_name": "minimax_h3\\Motion_Repair_V2.safetensors",
+        "strength_model": 0.35
+      }
+    },
+    {
+      "id": 345,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -500,
+        650
+      ],
+      "size": [
+        430,
+        160
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "title": "打斗衔接｜Fight Flow V1 · 0.35（已启用）",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 41
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            42
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "H3_Fight_Flow_V1.safetensors",
+        0.35
+      ],
+      "widgets_values_named": {
+        "lora_name": "H3_Fight_Flow_V1.safetensors",
+        "strength_model": 0.35
+      }
+    },
+    {
+      "id": 343,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -500,
+        890
+      ],
+      "size": [
+        430,
+        160
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "title": "速度控制｜Speed Slider 1.1 · 3.0（已启用）",
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 42
+        },
+        {
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            43
+          ],
+          "slot_index": 0
+        }
+      ],
+      "widgets_values": [
+        "H3_speed_slider_1.1.safetensors",
+        3.0
+      ],
+      "widgets_values_named": {
+        "lora_name": "H3_speed_slider_1.1.safetensors",
+        "strength_model": 3.0
+      }
+    },
+    {
       "id": 38,
       "type": "CLIPLoader",
       "pos": [
@@ -393,7 +633,7 @@
         130
       ],
       "flags": {},
-      "order": 10,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -442,7 +682,7 @@
         95
       ],
       "flags": {},
-      "order": 12,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
@@ -504,7 +744,7 @@
         2350
       ],
       "flags": {},
-      "order": 15,
+      "order": 19,
       "mode": 0,
       "inputs": [
         {
@@ -706,7 +946,7 @@
         480
       ],
       "flags": {},
-      "order": 16,
+      "order": 20,
       "mode": 0,
       "inputs": [
         {
@@ -747,13 +987,13 @@
       "outputs": [],
       "title": "标准版｜使用条件与填写说明",
       "properties": {
-        "text": "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；53加载DMAD v4，权重0.8；随后128加载Mystic角色去油LoRA，权重0.5，再连接405 TE-Speed。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、缓存名、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采864×480（实际9:5，宽屏推荐规格）；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n默认分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据；503→504保存一采，505→506保存二采，均含音频和帧率，提供MP4预览与下载。\n首次一采确认时images端口被阻断，二采保存节点不输出；一采使用images_pre_refine。审批后保留缓存名、节点ID、种子、输入和缓存，再Queue接续二采。\n分段导出时外接保存为最后实际运行组的辅助预览，全部分段按403最终报告取回；全部导出时保存合并视频，不将合并文件当作各P独立结果。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的缓存命名、局部返修及缓存维护按导演台节点使用规范第7节处理；制作新场次副本时填写非空cache_name，同一场次的一采、二采和常规返修沿用缓存名和节点ID。共享基准的缓存名留空；已有任务沿用原缓存名（包括随机后缀或空名）、节点ID及缓存目录，不自动改名或迁移。"
+        "text": "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；53加载DMAD v4，权重0.8；随后128加载Mystic角色去油LoRA，权重0.5；依次接342 Combat 0.65 → 344 Motion Repair 0.35 → 345 Fight Flow 0.35 → 343 Speed Slider 3.0，最后连接405 TE-Speed。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、缓存名、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采864×480（实际9:5，宽屏推荐规格）；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n默认分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据；503→504保存一采，505→506保存二采，均含音频和帧率，提供MP4预览与下载。\n首次一采确认时images端口被阻断，二采保存节点不输出；一采使用images_pre_refine。审批后保留缓存名、节点ID、种子、输入和缓存，再Queue接续二采。\n分段导出时外接保存为最后实际运行组的辅助预览，全部分段按403最终报告取回；全部导出时保存合并视频，不将合并文件当作各P独立结果。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的缓存命名、局部返修及缓存维护按导演台节点使用规范第7节处理；制作新场次副本时填写非空cache_name，同一场次的一采、二采和常规返修沿用缓存名和节点ID。共享基准的缓存名留空；已有任务沿用原缓存名（包括随机后缀或空名）、节点ID及缓存目录，不自动改名或迁移。"
       },
       "widgets_values": [
-        "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；53加载DMAD v4，权重0.8；随后128加载Mystic角色去油LoRA，权重0.5，再连接405 TE-Speed。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、缓存名、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采864×480（实际9:5，宽屏推荐规格）；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n默认分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据；503→504保存一采，505→506保存二采，均含音频和帧率，提供MP4预览与下载。\n首次一采确认时images端口被阻断，二采保存节点不输出；一采使用images_pre_refine。审批后保留缓存名、节点ID、种子、输入和缓存，再Queue接续二采。\n分段导出时外接保存为最后实际运行组的辅助预览，全部分段按403最终报告取回；全部导出时保存合并视频，不将合并文件当作各P独立结果。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的缓存命名、局部返修及缓存维护按导演台节点使用规范第7节处理；制作新场次副本时填写非空cache_name，同一场次的一采、二采和常规返修沿用缓存名和节点ID。共享基准的缓存名留空；已有任务沿用原缓存名（包括随机后缀或空名）、节点ID及缓存目录，不自动改名或迁移。"
+        "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；53加载DMAD v4，权重0.8；随后128加载Mystic角色去油LoRA，权重0.5；依次接342 Combat 0.65 → 344 Motion Repair 0.35 → 345 Fight Flow 0.35 → 343 Speed Slider 3.0，最后连接405 TE-Speed。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、缓存名、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采864×480（实际9:5，宽屏推荐规格）；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n默认分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据；503→504保存一采，505→506保存二采，均含音频和帧率，提供MP4预览与下载。\n首次一采确认时images端口被阻断，二采保存节点不输出；一采使用images_pre_refine。审批后保留缓存名、节点ID、种子、输入和缓存，再Queue接续二采。\n分段导出时外接保存为最后实际运行组的辅助预览，全部分段按403最终报告取回；全部导出时保存合并视频，不将合并文件当作各P独立结果。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的缓存命名、局部返修及缓存维护按导演台节点使用规范第7节处理；制作新场次副本时填写非空cache_name，同一场次的一采、二采和常规返修沿用缓存名和节点ID。共享基准的缓存名留空；已有任务沿用原缓存名（包括随机后缀或空名）、节点ID及缓存目录，不自动改名或迁移。"
       ],
       "widgets_values_named": {
-        "text": "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；53加载DMAD v4，权重0.8；随后128加载Mystic角色去油LoRA，权重0.5，再连接405 TE-Speed。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、缓存名、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采864×480（实际9:5，宽屏推荐规格）；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n默认分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据；503→504保存一采，505→506保存二采，均含音频和帧率，提供MP4预览与下载。\n首次一采确认时images端口被阻断，二采保存节点不输出；一采使用images_pre_refine。审批后保留缓存名、节点ID、种子、输入和缓存，再Queue接续二采。\n分段导出时外接保存为最后实际运行组的辅助预览，全部分段按403最终报告取回；全部导出时保存合并视频，不将合并文件当作各P独立结果。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的缓存命名、局部返修及缓存维护按导演台节点使用规范第7节处理；制作新场次副本时填写非空cache_name，同一场次的一采、二采和常规返修沿用缓存名和节点ID。共享基准的缓存名留空；已有任务沿用原缓存名（包括随机后缀或空名）、节点ID及缓存目录，不自动改名或迁移。"
+        "text": "Minimax-H3-导演台-视频生成-标准版\n正式视频生成默认入口；53加载DMAD v4，权重0.8；随后128加载Mystic角色去油LoRA，权重0.5；依次接342 Combat 0.65 → 344 Motion Repair 0.35 → 345 Fight Flow 0.35 → 343 Speed Slider 3.0，最后连接405 TE-Speed。\n导演台502；INT8 ConvRot编码器，device=default。\n首次Queue只一采；人工确认后沿用同一任务副本、缓存名、节点ID、种子和一采输入，再Queue命中缓存进行二采。\n一采864×480（实际9:5，宽屏推荐规格）；Refine为h3_latent / megapixels=1.265625 / Euler / passes=1 / confirm_first_pass=true，目标1536×864。MP按1024²像素计算，跟随一采比例。\n参考图按各组最长边1536设置；新增或导入分组后核对该值。手动可复制已配置组；插件新增空组不会自动继承模板尺寸。参数填写读取H3执行规范第2节。\n段间清理、二采前清理与精确段间调度开启。\n一采模型与调度器直接使用405；二采模型支路405→408注意力头分组4→409前馈分块4（阈值4096）→407.refine_model。Refine时间与空间分块关闭。\nBeta12按8分割；一采实际9步，二采4步。\n默认分段导出：完整逐组MP4由导演台保存，403报告提供本轮逐组文件依据；503→504保存一采，505→506保存二采，均含音频和帧率，提供MP4预览与下载。\n首次一采确认时images端口被阻断，二采保存节点不输出；一采使用images_pre_refine。审批后保留缓存名、节点ID、种子、输入和缓存，再Queue接续二采。\n分段导出时外接保存为最后实际运行组的辅助预览，全部分段按403最终报告取回；全部导出时保存合并视频，不将合并文件当作各P独立结果。\n缓存操作及来源保护读取导演台节点使用规范第7.5节；新任务采用本基准，已有获批任务不自动套用新参数。\n填写样例不是生成授权；替换全部提示词、素材、种子及分组映射后使用。\n通用Sage、H3 Sage、TE保持启用；不接SelfLift、修脸或语义桥。\n任务副本的缓存命名、局部返修及缓存维护按导演台节点使用规范第7节处理；制作新场次副本时填写非空cache_name，同一场次的一采、二采和常规返修沿用缓存名和节点ID。共享基准的缓存名留空；已有任务沿用原缓存名（包括随机后缀或空名）、节点ID及缓存目录，不自动改名或迁移。"
       },
       "color": "#432",
       "bgcolor": "#653"
@@ -762,21 +1002,21 @@
       "id": 405,
       "type": "TESpeedMiniMaxH3",
       "pos": [
-        4.518746871513446,
-        1030
+        515.5626202591537,
+        580
       ],
       "size": [
         430,
         250
       ],
       "flags": {},
-      "order": 9,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
           "name": "model",
           "type": "MODEL",
-          "link": 39
+          "link": 43
         }
       ],
       "outputs": [
@@ -889,7 +1129,7 @@
         640
       ],
       "flags": {},
-      "order": 14,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
@@ -988,7 +1228,7 @@
         120
       ],
       "flags": {},
-      "order": 11,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -1040,7 +1280,7 @@
         138
       ],
       "flags": {},
-      "order": 13,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -1102,7 +1342,7 @@
         200
       ],
       "flags": {},
-      "order": 17,
+      "order": 21,
       "mode": 0,
       "inputs": [
         {
@@ -1201,7 +1441,7 @@
         450
       ],
       "flags": {},
-      "order": 19,
+      "order": 23,
       "mode": 0,
       "inputs": [
         {
@@ -1280,7 +1520,7 @@
         200
       ],
       "flags": {},
-      "order": 18,
+      "order": 22,
       "mode": 0,
       "inputs": [
         {
@@ -1379,7 +1619,7 @@
         450
       ],
       "flags": {},
-      "order": 20,
+      "order": 24,
       "mode": 0,
       "inputs": [
         {
@@ -1652,6 +1892,38 @@
       39,
       128,
       0,
+      342,
+      0,
+      "MODEL"
+    ],
+    [
+      40,
+      342,
+      0,
+      344,
+      0,
+      "MODEL"
+    ],
+    [
+      41,
+      344,
+      0,
+      345,
+      0,
+      "MODEL"
+    ],
+    [
+      42,
+      345,
+      0,
+      343,
+      0,
+      "MODEL"
+    ],
+    [
+      43,
+      343,
+      0,
       405,
       0,
       "MODEL"
@@ -1716,6 +1988,19 @@
         1900
       ],
       "color": "#6c5b8d",
+      "flags": {}
+    },
+    {
+      "id": 6,
+      "title": "F｜武打与运动LoRA · 全部启用",
+      "bounding": [
+        -530,
+        100,
+        490,
+        1010
+      ],
+      "color": "#66534b",
+      "font_size": 24,
       "flags": {}
     }
   ],
