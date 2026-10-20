@@ -45,7 +45,7 @@ Nora项目的调用入口和授权边界统一见[固定通信工具与证据](.
 
 `prepare`只准备既有生成条目、实际提示词文件与Imagegen执行清单，不调用工具或创建ComfyUI任务。返回`manifest`、`executor`、`generation`、`candidate`、`prompt_file`、`report`入口及`complete_command`参数数组。主控将执行清单和此数组交给固定子代理；执行时只追加`["--source", 实际原生输出路径]`，用参数列表启动，不重新拼写项目、清单或提示词长路径。相同请求复用交接，不重复分配生成编号。已交接请求改变时另存新请求，不覆盖原调用依据。准备好后未执行的条目如实保留待执行，不记生成成功。
 
-子代理取得原生PNG后运行：
+子代理取得原生PNG后，使用上述`complete_command`数组追加`--source`并执行。以下仅展示`complete`的参数含义，不作为手工重拼路径的步骤：
 
 ```sh
 /实际浏览服务/.venv/bin/python /实际技能/scripts/imagegen_results.py complete \
