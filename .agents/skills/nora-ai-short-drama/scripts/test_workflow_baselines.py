@@ -214,7 +214,14 @@ class BaselineTests(unittest.TestCase):
         for node in ("503", "504", "505", "506"):
             standard.pop(node)
         deoiled.pop("128")
-        deoiled["53"]["inputs"]["model"] = ["58", 0]
+        for graph, lora, strength in (
+            (standard, "minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors", 0.8),
+            (deoiled, "minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors", 1.0),
+        ):
+            self.assertEqual(graph["53"]["class_type"], "LoraLoaderModelOnly")
+            self.assertEqual(graph["53"]["inputs"]["lora_name"], lora)
+            self.assertAlmostEqual(graph["53"]["inputs"]["strength_model"], strength)
+        deoiled["53"]["inputs"] = dict(standard["53"]["inputs"])
         self.assertEqual(wb.semantic(standard), wb.semantic(deoiled))
 
     def test_standard_saves_both_stages_without_final_output_dependency_in_first_pass(self):

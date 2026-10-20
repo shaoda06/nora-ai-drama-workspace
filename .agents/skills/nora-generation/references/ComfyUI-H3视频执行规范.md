@@ -1,6 +1,6 @@
 # ComfyUI-H3视频执行规范
 
-版本：v1.83；更新日期：2026-10-20。
+版本：v1.84；更新日期：2026-10-20。
 
 本规范管理视频工作流的填写、执行与记录。制作顺序及审批读取[开发流程第二部分第7节](视频阶段与返修执行规范.md#7-生成视频验收与衔接修改)，后处理与其他视频修改的阶段归属读取[阶段与当前版本修改](视频阶段与返修执行规范.md#视频阶段与当前版本修改)；提示词正文读取[视频提示词制作规范](../../nora-video-prompts/references/视频提示词制作规范.md#6-分段视频提示词文档)及 `h3-prompt-writing`。准备资料、实际任务和人工审核按[逐集目录规范](../../nora-ai-short-drama/references/流程规范/逐集目录与资产管理规范.md)保存，不把技术成功写成内容获批。
 
@@ -11,7 +11,7 @@
 | 工作流 | 当前用途 |
 | --- | --- |
 | Minimax-H3-导演台-视频生成-标准版 | 正式默认视频生成，不加载节点128；502为导演台，407为Refine；首次只一采，人工确认后再次执行二采；默认分段导出，403报告驱动执行 |
-| Minimax-H3-导演台-视频生成-去油版 | 用户明确指定时使用；保留节点128 Mystic LoRA，用于角色去油；其余参数及审核流程与标准版一致 |
+| Minimax-H3-导演台-视频生成-去油版 | 用户明确指定时使用；保留节点128 Mystic LoRA，用于角色去油；LoRA配置见第2节，审核流程与标准版一致 |
 | Minimax-H3-导演台-YZ文武双全-SelfLift-备用测试 | 实验备用，仅明确选择时使用；单次渐进采样直接输出高清，不能中途送审低清 |
 | RTX-RIFE-自动切镜保护超分插帧 | 正式默认后处理；按[开发流程的整场后处理安排](视频阶段与返修执行规范.md#7-生成视频验收与衔接修改)逐段输入选定二采，按需先插帧后超分；默认1080P、30fps，自动检测切镜；配置见[后处理交付规格](#后处理交付规格) |
 
@@ -70,7 +70,7 @@ python3 -B -m unittest discover -s /实际技能目录/scripts -p test_workflow_
 | 模型 | 192：minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors，weight_dtype=default |
 | 通用Sage | 406：PathchSageAttentionKJ，auto，allow_compile=false，启用 |
 | H3专用Sage | 58：MiniMaxH3MemoryEfficientSageAttentionPatch，启用 |
-| LoRA | 两版均保留53：minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors，1.0；仅去油版加载128：MysticXXX_MMH3-V1.safetensors，0.5；标准版没有128节点 |
+| LoRA | 标准版53：minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors，0.8；去油版53：minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors，1.0，另加载128：MysticXXX_MMH3-V1.safetensors，0.5；标准版没有128节点 |
 | TE | 405：0.08 / 0.1 / 0.9 / mcs=2 / device=auto / mode=8-step LoRA，启用 |
 | 编码器 | 38：qwen3vl_32b_minimax_h3_int8_convrot.safetensors，type=minimax，device=default |
 | 视频 / 音频VAE | 36：minimax_h3_video_vae_int8_convrot.safetensors；37：minimax_h3_audio_vae_fp32.safetensors |
@@ -83,7 +83,7 @@ python3 -B -m unittest discover -s /实际技能目录/scripts -p test_workflow_
 | Refine | 407：upscale / h3_latent / minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors / Euler / passes=1 / seed_mode=inherit / megapixels=1.265625 / width=1536 / height=864；跟随一采比例，目标1536×864；confirm_first_pass=true；skip_fl2v=true；时间与空间分块关闭 |
 | 导出 | 默认output.exportMode=segments；导演台逐组MP4为完整交付来源，按[导演台输出规范](ComfyUI-MiniMaxH3导演台节点使用规范.md#731-导出方式与逐组文件)核对；403报告为逐组取回依据；标准版还包含504一采与506二采预览保存，404仅为画布说明 |
 
-标准版模型链为192 → 406 → 58 → 53 → 405；去油版为192 → 406 → 58 → 128 → 53 → 405。两版除128节点及其连接外，生成参数和时间线一致；405直接接261和502；二采独立支路为405 → 408 → 409 → 407.refine_model。执行端须提供上述两个分块节点及对应参数接口，不用Refine的时间／空间分块开关替代模型分块。58接管H3主干注意力；通用节点的加入不表示叠加两次加速。`allow_compile`仅允许参与编译，不是节点总开关；`disabled`直接传递模型。407连接502.refine；没有SelfLift、FaceRefine或语义桥连接。一采实际9步加二采4步，不能把调度器显示12步登记成两轮实际总步数。
+标准版模型链为192 → 406 → 58 → 53 → 405；去油版为192 → 406 → 58 → 128 → 53 → 405。两版的53号LoRA文件与权重不同，去油版另有128节点及其连接；其余生成参数和时间线一致；405直接接261和502；二采独立支路为405 → 408 → 409 → 407.refine_model。执行端须提供上述两个分块节点及对应参数接口，不用Refine的时间／空间分块开关替代模型分块。58接管H3主干注意力；通用节点的加入不表示叠加两次加速。`allow_compile`仅允许参与编译，不是节点总开关；`disabled`直接传递模型。407连接502.refine；没有SelfLift、FaceRefine或语义桥连接。一采实际9步加二采4步，不能把调度器显示12步登记成两轮实际总步数。
 
 Refine当前实现先按一采比例及 `megapixels × 1024²` 计算目标宽高，再分别对齐32；仅填写width/height不会覆盖这一计算。864×480配合megapixels=1.265625，对齐后得到1536×864；一采实际9:5，二采目标16:9，对齐后的结果并非与一采严格等比例。核对解析目标与实际输出均为1536×864，不为凑整比例拉伸一采文件或改变其缓存输入。任务执行使用API中保存的MP数值。
 

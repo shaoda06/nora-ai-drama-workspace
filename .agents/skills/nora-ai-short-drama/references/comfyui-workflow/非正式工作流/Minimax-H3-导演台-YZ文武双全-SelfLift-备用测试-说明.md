@@ -37,7 +37,7 @@ SelfLift采用Simple完整12步，`split_mode=transition_step`、`transition_ste
 - 作者工作流：`YZ金鱼-MiniMax H3 终极篇-文武双全.json`，工程ID `eee7ca4f-9198-48dd-b48a-80b3f7191873`。
 - 导演台原生模块：[MiniMaxH3DirectorSelfLift](https://github.com/AIMixer/ComfyUI_MiniMaxH3_Director/blob/4c6245e518dd8a494f3afc4f3cccd53f22d82d10/nodes/director_selflift.py)。
 - 底模与两类VAE、DMAD 0.8、MysticXXX 0.35、NVFP4 AWQ、Kitchen＋sol-attn、Shift 12/3、前馈2块、H.264 CRF19沿作者设置；Simple采样为12步（前6后6）。
-- 未引入本地标准版的Turbo v4、TE-Speed、SplitSigmas或额外Refine。
+- 未使用Turbo v4、TE-Speed、SplitSigmas或额外Refine。
 - 作者的ResolutionSelector 1.5MP解析值1664×928已填入导演台；作者时长公式解析为294帧，实际12.25秒。
 - 仅用导演台原生素材组；不接外部r2v_groups覆盖素材管理。测试组为空，填入自己的素材和提示词后再运行。
 

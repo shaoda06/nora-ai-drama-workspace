@@ -38,15 +38,15 @@
   "53": {
     "class_type": "LoraLoaderModelOnly",
     "inputs": {
-      "lora_name": "minimax_h3_turbo_v4_step600_ema_pruned_comfyui.safetensors",
-      "strength_model": 1.0000000000000002,
+      "lora_name": "minimax_h3_dmad_full_dareties_v4_step600_comfy_fro.safetensors",
+      "strength_model": 0.8,
       "model": [
         "58",
         0
       ]
     },
     "_meta": {
-      "title": "04｜原 LoRA · Turbo v4 1.0"
+      "title": "04｜LoRA · DMAD v4 0.8"
     }
   },
   "405": {
