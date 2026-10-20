@@ -6,7 +6,7 @@
 
 使用放大权重：minimax_h3_latent_upscaler_3d_fp16_V2.safetensors。远端已识别该权重。
 
-在导演台第一组添加参考素材并填写提示词。参考图策略max。导演台界面时长12秒，对应294帧／实际12.25秒；目标1664×928、24fps。
+在导演台第一组添加参考素材并填写提示词。参考图最长边1536，保持原比例；新增或导入分组也设为1536。导演台界面时长12秒，对应294帧／实际12.25秒；目标1664×928、24fps。
 
 SelfLift采用Simple完整12步，`split_mode=transition_step`、`transition_step=6`、`highres_steps=6`、`lowres_scale=0.6`、`latent_upsample=nearest`；rho=0，不接额外Refine。
 
