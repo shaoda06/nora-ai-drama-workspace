@@ -121,6 +121,7 @@ class VideoExecutionTests(unittest.IsolatedAsyncioTestCase):
         report=json.loads(stdout);self.assertNotIn('tasks',report)
         self.assertEqual(report['delivery']['video_count'],1)
         entry=report['delivery']['tasks'][0]
+        self.assertEqual(entry['task_type'],'video-first-pass')
         self.assertEqual(entry['videos'][0]['file'],str(out))
         self.assertEqual(entry['review_url'],url+self.store.read_report(batch,self.data.thread_id)['tasks'][0]['review_path'])
         self.assertEqual(entry['videos'][0]['metadata']['width'],1536)

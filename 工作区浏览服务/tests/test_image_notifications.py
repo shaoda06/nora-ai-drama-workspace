@@ -62,6 +62,55 @@ class ImageNotificationTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(self.store, 'desktop_call', side_effect=desktop):
             await self.notify('first')
 
+    async def test_old_completed_image_reports_without_display_fields_remain_readable(self):
+        for kind in ('image', 'image-upscale'):
+            with self.subTest(kind=kind):
+                self.task(kind, batch=None, size=1, task_type=kind, status='completed')
+                self.store.save(kind, closeout={'status': 'completed', 'report': '结果收尾报告.json'})
+                self.store.db.execute('INSERT INTO notification_batches VALUES (?, ?, ?, ?, ?)',
+                                     (kind, self.data.thread_id, json.dumps([kind]), 'historical notice', 'sent'))
+                self.store.db.execute('INSERT INTO notification_reports VALUES (?, ?)',
+                                     (kind, json.dumps({'tasks': [], 'results': [], 'user_message_ready': False})))
+                self.store.db.commit()
+                with patch.object(self.store, 'prepare_report', AsyncMock(side_effect=AssertionError('no closeout'))), \
+                        patch.object(self.store, 'desktop_call', AsyncMock(side_effect=AssertionError('no send'))):
+                    report = self.store.read_report(kind, self.data.thread_id)
+                self.assertTrue(report['user_message_ready'])
+                self.assertNotIn('delivery', report)
+                self.assertEqual(report['tasks'][0]['task_type'], kind)
+
+    async def test_old_ack_does_not_replace_newer_notification_state(self):
+        self.task('first', size=1, status='collection_failed')
+        with patch.object(self.store, 'desktop_call', AsyncMock(return_value={})):
+            await self.notify('first', 'failure')
+            old_batch = self.store.rows['first']['state']['notices'][0]['batch_id']
+            self.complete('first')
+            await self.notify('first', 'recovered')
+        state = self.store.rows['first']['state']
+        new_batch = state['notices'][-1]['batch_id']
+        self.assertNotEqual(old_batch, new_batch)
+        old = self.store.read_report(old_batch, self.data.thread_id)
+        self.assertTrue(old['user_message_ready'])
+        self.assertEqual(state['notification'], 'sent')
+        self.assertNotIn('notification_acknowledged_at', state)
+        self.assertEqual(state['notices'][-1]['delivery'], 'sent')
+        self.store.read_report(new_batch, self.data.thread_id)
+        self.assertEqual(state['notification'], 'acknowledged')
+
+    async def test_old_upscale_error_ack_does_not_undo_quiet_success(self):
+        self.task('upscale', batch=None, size=1, task_type='image-upscale', status='collection_failed')
+        with patch.object(self.store, 'desktop_call', AsyncMock(return_value={})) as send:
+            await self.notify('upscale', 'failure')
+            state = self.store.rows['upscale']['state']
+            batch = state['notices'][0]['batch_id']
+            self.complete('upscale')
+            await self.notify('upscale', 'recovered')
+            self.assertEqual(sum(c.args[1] == 'send' for c in send.call_args_list), 1)
+        self.assertEqual(state['notification'], 'not_required')
+        report = self.store.read_report(batch, self.data.thread_id)
+        self.assertEqual(report['delivery']['tasks'][0]['task_type'], 'image-upscale')
+        self.assertEqual(state['notification'], 'not_required')
+
     async def test_batch_wait_survives_restart(self):
         self.task('first'); self.task('second'); self.complete('first')
         with patch.object(self.store, 'desktop_call', AsyncMock()) as send:

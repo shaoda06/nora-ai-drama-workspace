@@ -85,8 +85,10 @@ class TaskNotifications:
             if matched:
                 for item in matched:
                     item['delivery'] = 'acknowledged'
+                changes = ({'notification': 'acknowledged', 'notification_acknowledged_at': self.client.now()}
+                           if row['state']['notices'][-1].get('batch_id') == batch_id else {})
                 self.record(key, 'notification', 'acknowledged', notification_id=batch_id,
-                            _changes={'notification': 'acknowledged', 'notification_acknowledged_at': self.client.now()})
+                            _changes=changes)
         self.db.commit()
         event = getattr(self, '_ack_events', {}).get(batch_id)
         if event is not None:
@@ -191,6 +193,7 @@ class TaskNotifications:
         row = self.rows[key]
         state, data = row['state'], row['input']
         return (f'本地任务ID：{key}；项目：{state["project"]}；任务：{data.title}\n'
+                f'任务类型：{data.task_type}\n'
                 f'记录位置：{data.record_dir}\n')
 
     async def notify(self, key):

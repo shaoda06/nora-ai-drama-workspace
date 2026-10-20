@@ -90,6 +90,56 @@ class CompletionDeliveryTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(restored['reported_at'], expected['reported_at'])
         self.assertTrue(restored['reused'])
 
+    async def test_video_repaired_notice_preserves_delivery_and_stage_after_restart(self):
+        candidate, draft = self.setup_video()
+        with patch.object(registration, 'verify', side_effect=ValueError('视频入口缺项')):
+            batch = await self.collect_and_notice()
+        self.assertFalse(self.store.read_report(batch, self.data.thread_id)['user_message_ready'])
+        before = draft.read_bytes()
+        with patch.object(self.store, 'desktop_call', AsyncMock()) as send:
+            result = await registration.closeout(self.store, self.projects, batch, self.data.thread_id)
+            self.assertTrue(result['user_message_ready'])
+            send.assert_not_awaited()
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        with patch.object(registration, 'register', side_effect=AssertionError('no registration')), \
+                patch.object(registration, 'verify', side_effect=AssertionError('no browser work')), \
+                patch.object(t.client, 'status', side_effect=AssertionError('no remote')):
+            report = self.store.read_report(batch, self.data.thread_id)
+            self.assertTrue(report['user_message_ready'])
+            self.assertEqual(report['delivery']['video_count'], 1)
+            entry = report['delivery']['tasks'][0]
+            self.assertEqual(entry['task_type'], 'video-first-pass')
+            self.assertEqual(entry['videos'][0]['file'], str(candidate))
+            self.assertEqual(entry['videos'][0]['identity'], candidate.stem)
+            self.assertEqual(entry['videos'][0]['draft_file'], str(draft))
+            self.assertEqual(self.store.read_report(batch, self.data.thread_id), report)
+        self.assertEqual(draft.read_bytes(), before)
+
+    async def test_video_report_preserves_each_stage_and_media_metadata(self):
+        candidate, draft = self.setup_video()
+        await self.collect_and_notice()
+        original = self.store.rows['task']
+        for kind, stage in [('video-first-pass', '一采'), ('video-second-pass', '二采'), ('video-postprocess', '后处理')]:
+            with self.subTest(kind=kind):
+                data = original['input'].model_copy(deep=True, update={'task_type': kind})
+                state = deepcopy(original['state'])
+                state['id'] = kind
+                entry = state['closeout']['video_outputs'][0]
+                entry['identity'] = 'EP001-C001-P001-R001-' + stage
+                entry['path'] = str(candidate.with_name(entry['identity'] + '.mp4'))
+                entry['metadata'] = {'width': 1536, 'height': 864, 'duration': 3, 'audio': [{'codec_name': 'aac'}]}
+                self.store.rows[kind] = {'input': data, 'state': state}
+                report = self.store.result_report([kind])
+                self.assertTrue(report['user_message_ready'])
+                self.assertEqual(report['delivery']['video_count'], 1)
+                result = report['delivery']['tasks'][0]
+                self.assertEqual(result['task_type'], kind)
+                self.assertEqual(result['videos'][0]['identity'], entry['identity'])
+                self.assertEqual(result['videos'][0]['file'], entry['path'])
+                self.assertEqual(result['videos'][0]['metadata'], entry['metadata'])
+                self.assertEqual(result['videos'][0]['draft_file'], str(draft))
+
     async def test_browser_retry_reuses_registration_and_notifies_only_final_result(self):
         _, draft = self.setup_video()
         with patch.object(registration, 'verify', side_effect=[ValueError('scanning'), ValueError('scanning'),

@@ -174,8 +174,6 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.record = self.record / '超分-001'
         self.record.mkdir()
         self.data.record_dir = str(self.record)
-        base.TaskTests.seed(self, status='completed')
-        self.store.save('task', collected=1)
         out = source.with_name('CH001-服装参考图-候选-v01-超分-001.png')
         self.data.task_type = 'image-upscale'
         self.data.workflow = {'2': {'class_type': 'LoadImage', 'inputs': {'image': 'uploaded/source.png'}}, '1': {'class_type': 'RTXVideoSuperResolution', 'inputs': {'images': ['2', 0], 'resize_type': 'scale by multiplier', 'resize_type.scale': 2}}, '3': {'class_type': 'SaveImage', 'inputs': {'images': ['1', 0]}}}
@@ -187,6 +185,8 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         formal = self.project / '03-人物资料/CH001-男主/参考图/CH001-日常-服装参考图.png'
         header = '| 图片类型 | 人物状态 | 服装状态 | 正式文件 | 采用的候选版本 | 适用范围 | 审阅记录 |\n| --- | --- | --- | --- | --- | --- | --- |'
         plan['upscale'] = dict(number='超分-001', source=self.rel(source), approval=plan['draft'] + '#' + plan['review'], formal=self.rel(formal), record_updates=[dict(path=plan['draft'], old=header, new=header + '\n| 服装参考图 | 大学 | 日常 | {{file}} | v01／超分001 | 首集 | [批准](#审阅-生成记录-001-001) |')])
+        base.TaskTests.seed(self, status='completed')
+        self.store.save('task', collected=1)
         self.request()
         self.output(out, png(8, 6))
         return source, formal
@@ -220,6 +220,35 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn('- 结论：批准采用', text)
         self.assertIn('- 用户采用状态：已采用', text)
         self.assertEqual(text.count('### 审阅-生成记录-001-001'), 1)
+
+    async def test_upscale_error_report_recovers_to_typed_formal_output_without_sending(self):
+        source, formal = self.setup_upscale()
+        with patch.object(registration, 'verify', side_effect=ValueError('网页尚未收录')), \
+                patch.object(self.store, 'desktop_call', AsyncMock(return_value={})), \
+                patch('backend.services.task_notifications.asyncio.sleep', AsyncMock()):
+            self.store.queue_notice('task', 'terminal', 'terminal', '超分完成')
+            await self.store.notifiers['task']
+        batch = self.store.rows['task']['state']['notices'][0]['batch_id']
+        self.assertFalse(self.store.read_report(batch, self.data.thread_id)['user_message_ready'])
+        before = self.draft.read_bytes()
+        with patch.object(self.store, 'desktop_call', AsyncMock()) as send:
+            fixed = await registration.closeout(self.store, self.store.projects, batch, self.data.thread_id)
+            self.assertTrue(fixed['user_message_ready'])
+            send.assert_not_awaited()
+        await self.store.close()
+        self.store = tasks.TaskStore(self.root / 'runtime', self.root)
+        with patch.object(registration, 'register', side_effect=AssertionError('no registration')), \
+                patch.object(ProjectStore, 'snapshot', side_effect=AssertionError('no scan')), \
+                patch.object(image, 'png', side_effect=AssertionError('no decode')):
+            result = self.store.read_report(batch, self.data.thread_id)
+            self.assertTrue(result['user_message_ready'])
+            entry = result['delivery']['tasks'][0]
+            self.assertEqual(entry['task_type'], 'image-upscale')
+            self.assertEqual(entry['images'][0]['file'], str(formal))
+            self.assertEqual((entry['images'][0]['width'], entry['images'][0]['height']), (8, 6))
+        self.assertEqual(before, self.draft.read_bytes())
+        self.assertEqual(source.read_bytes(), png())
+        self.assertEqual(formal.read_bytes(), png(8, 6))
 
     async def test_unapproved_upscale_never_publishes(self):
         _, formal = self.setup_upscale()
@@ -452,6 +481,7 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(brief['user_message_ready'])
         self.assertEqual(brief['delivery']['image_count'], 1)
         entry = brief['delivery']['tasks'][0]
+        self.assertEqual(entry['task_type'], 'image')
         self.assertEqual(entry['images'][0]['file'], str(out))
         self.assertEqual(entry['images'][0]['width'], 4)
         self.assertEqual(entry['review_url'], url + full['tasks'][0]['review_path'])
