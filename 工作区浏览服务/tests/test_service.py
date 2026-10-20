@@ -103,6 +103,51 @@ class ServiceTests(HttpTestCase):
         self.assertEqual(data['children'][3]['children'], [])
         self.assertFalse((self.project / '09-剧集制作/EP004').exists())
 
+    def test_episode_titles_fall_back_to_formal_scripts_without_using_working_drafts(self):
+        outlines = self.project / '06-分集大纲'
+        outlines.mkdir()
+        (outlines / 'EP004-分集大纲.md').write_text('本集题名：大纲优先。\n', encoding='utf-8')
+        (outlines / 'EP005-分集大纲.md').write_text('- 本集题名： \n', encoding='utf-8')
+        for number, text in (
+            ('EP001', '# EP001｜序章｜本集剧本\n'),
+            ('EP002', '# EP002-本集剧本\n\n- 本集题名：正式题名\n'),
+            ('EP003', '# EP003-本集剧本\n'),
+            ('EP004', '# EP004｜剧本题名｜本集剧本\n'),
+            ('EP005', '# EP005｜空题名接续｜本集剧本\n'),
+        ):
+            script = self.project / f'09-剧集制作/{number}/02-剧集剧本/{number}-本集剧本.md'
+            script.parent.mkdir(parents=True)
+            script.write_text(text, encoding='utf-8')
+        draft = self.project / '09-剧集制作/EP003/其他资料/工作稿/EP003-本集剧本-工作稿.md'
+        draft.parent.mkdir(parents=True)
+        draft.write_text('- 本集题名：未采用草稿\n', encoding='utf-8')
+        data = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
+        self.assertEqual([(item['name'], item['title']) for item in data['children']],
+                         [('EP001', '序章'), ('EP002', '正式题名'), ('EP003', ''),
+                          ('EP004', '大纲优先'), ('EP005', '空题名接续')])
+        self.assertEqual(self.client.get('/api/projects/示例项目/episodes/EP001').json()['title'], '序章')
+
+    def test_outline_index_can_explicitly_link_existing_script_without_inventing_an_outline(self):
+        outlines = self.project / '06-分集大纲'
+        outlines.mkdir()
+        key = '09-剧集制作/EP001/02-剧集剧本/EP001-本集剧本.md'
+        script = self.project / key
+        script.parent.mkdir(parents=True)
+        script.write_text('# EP001｜序章｜本集剧本\n', encoding='utf-8')
+        (outlines / '分集索引.md').write_text(
+            '| 集号 | 所属故事阶段 | 一句话概要 | 大纲入口 |\n| --- | --- | --- | --- |\n'
+            f'| EP001 | 序章 | 既有序篇 | 未单独编写；[正式剧本](../{key}) |\n', encoding='utf-8')
+        data = self.client.get('/api/projects/示例项目/sections/06-分集大纲').json()
+        entry = data['children'][0]
+        self.assertEqual((entry['name'], entry['title'], entry['key']), ('EP001', '序章', key))
+        self.assertIn('未单独编写分集大纲', entry['summary'])
+        self.assertIn('未单独编写分集大纲', entry['statusHtml'])
+        self.assertFalse((outlines / 'EP001-分集大纲.md').exists())
+        self.assertFalse(any('大纲入口未识别' in message for message in data['warnings']))
+        # Scoped outline reads must track the real title source for invalidation.
+        parsed = parser.build_data(self.project, web_episode_navigation=True, load_scope='06-分集大纲')
+        self.assertIn(key, parsed['sources'])
+
     def test_production_statistics_count_episodes_not_preparation_states(self):
         outlines = self.project / '06-分集大纲'
         outlines.mkdir()
@@ -661,6 +706,22 @@ class ServiceTests(HttpTestCase):
                 with patch('backend.services.projects.CACHE_SCHEMA', CACHE_SCHEMA + 1 if changed == 'schema' else CACHE_SCHEMA), patch('backend.services.projects.build_data', wraps=parser.build_data) as parse:
                     ProjectStore(root, cache_directory=cache, version=version).get('示例项目')
                     parse.assert_called_once()
+
+    def test_restart_rebuilds_empty_episode_title_from_pre_fallback_cache(self):
+        script = self.project / '09-剧集制作/EP001/02-剧集剧本/EP001-本集剧本.md'
+        script.parent.mkdir(parents=True)
+        script.write_text('# EP001｜序章｜本集剧本\n', encoding='utf-8')
+        cache = self.root / '.project-cache'
+        store = ProjectStore(self.root, cache_directory=cache)
+        entry = store.get('示例项目')
+        data = store.section('示例项目', '09-剧集制作')
+        data['catalogues']['09-剧集制作']['children'][0]['title'] = ''
+        # Schema 3 belongs to releases that only read titles from outlines.
+        with patch('backend.services.projects.CACHE_SCHEMA', 3):
+            store.save_cache('示例项目', entry['snapshot'], data, part='09-剧集制作')
+        restarted = ProjectStore(self.root, cache_directory=cache)
+        loaded = restarted.section('示例项目', '09-剧集制作')
+        self.assertEqual(loaded['catalogues']['09-剧集制作']['children'][0]['title'], '序章')
 
     def test_refresh_updates_restart_cache_and_failed_refresh_keeps_last_complete_cache(self):
         cache = self.root / '.project-cache'

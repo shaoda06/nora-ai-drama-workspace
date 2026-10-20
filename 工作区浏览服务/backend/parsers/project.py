@@ -462,6 +462,9 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             allowed = {'00-项目定位', load_scope}
             if load_scope == '09-剧集制作':
                 allowed.add('06-分集大纲')
+            if load_scope == '06-分集大纲' and re.fullmatch(
+                    r'09-剧集制作/(EP\d{3,})/02-剧集剧本/\1-本集剧本\.md', relative):
+                allowed.add('09-剧集制作')
             if relative.split('/')[0] not in allowed:
                 return None
         if preview is None:
@@ -1154,6 +1157,21 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
     catalogues = {}
     outline_root = "06-分集大纲"
     outline_index = outline_root + "/分集索引.md"
+
+    def episode_title(number):
+        title_field = r"^(?:-[ \t]*)?本集题名[:：][ \t]*([^。\n]+)"
+        outline = read(outline_root + "/" + number + "-分集大纲.md") or ""
+        match = re.search(title_field, outline, re.M)
+        if match and match[1].strip():
+            return match[1].strip()
+        script = read("09-剧集制作/" + number + "/02-剧集剧本/" + number + "-本集剧本.md") or ""
+        match = re.search(title_field, script, re.M)
+        if not match or not match[1].strip():
+            match = re.search(r"^#[ \t]+" + re.escape(number)
+                              + r"[ \t]*[｜|][ \t]*([^｜|\n]+?)[ \t]*[｜|][ \t]*本集(?:故事)?剧本[ \t]*$",
+                              script, re.M)
+        return match[1].strip() if match else ""
+
     outline_text = read(outline_index) or ""
     outline_items, indexed, planned_episodes = [], set(), set()
     for row in table_records(outline_text, ("集号", "一句话概要", "大纲入口")):
@@ -1161,8 +1179,10 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
         if not re.fullmatch(r"EP\d{3,}", number):
             continue
         planned_episodes.add(number)
-        key = next((link["key"] for link in markdown_links(row["大纲入口"], outline_index)
-                    if link["key"] == outline_root + "/" + number + "-分集大纲.md"), None)
+        outline_key = outline_root + "/" + number + "-分集大纲.md"
+        script_key = "09-剧集制作/" + number + "/02-剧集剧本/" + number + "-本集剧本.md"
+        linked_keys = {link["key"] for link in markdown_links(row["大纲入口"], outline_index)}
+        key = next((candidate for candidate in (outline_key, script_key) if candidate in linked_keys), None)
         if not key:
             warnings.append(number + "大纲入口未识别，请核对分集索引。")
             continue
@@ -1170,11 +1190,12 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
         if load_scope == '09-剧集制作':
             continue
         doc = long_document(key, False)
-        title_match = re.search(r"^(?:-[ \t]*)?本集题名[:：][ \t]*([^。\n]+)", read(key) or "", re.M)
         outline_items.append({"kind": "outline", "name": number, "key": key, "doc": doc,
-                              "title": title_match[1].strip() if title_match else "",
-                              "category": row.get("所属故事阶段", ""), "summary": row["一句话概要"],
-                              "statusHtml": doc["confirmationHtml"]})
+                              "title": episode_title(number),
+                              "category": row.get("所属故事阶段", ""), "summary": row["一句话概要"] +
+                              ("（未单独编写分集大纲，入口为正式本集剧本。）" if key == script_key else ""),
+                              "statusHtml": status_markup("未单独编写分集大纲", key)
+                              if key == script_key else doc["confirmationHtml"]})
     outline_files = inventory(outline_root)
     extra = [f for f in outline_files if f["key"] not in indexed and f["key"] != outline_index]
     catalogues[outline_root] = {"kind": "group", "key": outline_root, "name": "分集大纲",
@@ -1276,9 +1297,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             continue
         episode_node = existing_episodes.get(number) or {
             "kind": "group", "name": number, "key": production + "/" + number, "children": []}
-        title_match = re.search(r"^(?:-[ \t]*)?本集题名[:：][ \t]*([^。\n]+)",
-                               read(outline_root + "/" + number + "-分集大纲.md") or "", re.M)
-        episode_node.update({"title": title_match[1].strip() if title_match else "",
+        episode_node.update({"title": episode_title(number),
             "productionComplete": state == "已完成",
             "statusHtml": status_markup(state if web_episode_navigation else raw_status or "未记录", PROGRESS),
             "note": "等待审阅也属于进行中；整集完成以项目进度为准。"})
