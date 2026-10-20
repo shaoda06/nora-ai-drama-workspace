@@ -57,7 +57,8 @@ export default function Project() {
   }, [name, retryAt, syncing, refetch]);
   const revision = status.data?.revision || 1;
   const production = useQuery<RecordData>({ queryKey: ['section', name, section, revision], enabled: false, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
-  const episodeTitle = production.data?.children?.find((item: FileItem) => item.name === episode)?.title || '题名未记录';
+  const episodeItem = production.data?.children?.find((item: FileItem) => item.name === episode);
+  const episodeTitle = (episodeItem?.title || '题名未记录') + (episodeItem?.titleStatus ? `（${episodeItem.titleStatus === '工作集名' ? '工作集名，未最终定名' : episodeItem.titleStatus}）` : '');
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   const warnings = [...new Set<string>([...(overview.data?.warnings || []), ...(production.data?.warnings || [])])];
   useEffect(() => {

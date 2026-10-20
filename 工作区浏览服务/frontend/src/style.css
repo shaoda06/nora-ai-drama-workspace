@@ -145,3 +145,5 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .scene-round-selector>button{padding:6px 10px}
 .scene-round-selector>select{padding:6px 28px 6px 10px}
 .scene-round-selector>.tab-select-marked{gap:10px}
+
+.episode-title-status{flex-shrink:0;font-size:11px;color:#805616;background:#fff2d6;border-radius:4px;padding:0 5px;white-space:nowrap}

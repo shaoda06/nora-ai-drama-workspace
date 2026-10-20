@@ -141,7 +141,8 @@ class ServiceTests(HttpTestCase):
             with self.subTest(template=template_name):
                 script.write_text('# EP002-本集剧本\n', encoding='utf-8')
                 body = (templates / template_name).read_text(encoding='utf-8').split('```markdown\n', 1)[1].split('```', 1)[0]
-                target.write_text(body.replace('EP编号', 'EP002').replace('- 本集题名：', '- 本集题名：这次不是样品'), encoding='utf-8')
+                target.write_text(body.replace('EP编号', 'EP002').replace('- 本集题名：', '- 本集题名：这次不是样品')
+                                  .replace('- 集名状态：', '- 集名状态：工作集名'), encoding='utf-8')
                 (outlines / '分集索引.md').write_text(
                     '| 集号 | 所属故事阶段 | 一句话概要 | 大纲入口 |\n| --- | --- | --- | --- |\n'
                     f'| EP002 | 日常 | 礼物 | [正式入口]({index_link}) |\n', encoding='utf-8')
@@ -149,7 +150,47 @@ class ServiceTests(HttpTestCase):
                 for scope in ('06-分集大纲', '09-剧集制作'):
                     data = self.client.get(f'/api/projects/示例项目/sections/{scope}').json()
                     self.assertEqual(data['children'][0]['title'], '这次不是样品')
+                    self.assertEqual(data['children'][0]['titleStatus'], '工作集名')
                 self.assertEqual(self.client.get('/api/projects/示例项目/episodes/EP002').json()['title'], '这次不是样品')
+
+    def test_episode_title_status_follows_the_selected_title_source(self):
+        outlines = self.project / '06-分集大纲'
+        outlines.mkdir()
+        cases = [
+            ('EP001', '- 本集题名：山间微光\n- 工作集名：山间微光（非最终发行集名）\n', '', '工作集名'),
+            ('EP002', '- 本集题名：山间微光\n- 集名状态：最终定名\n- 工作集名：山间微光（非最终发行集名）\n', '', '最终定名'),
+            ('EP003', '- 本集题名：山间微光\n- 确认状态：已确认\n', '- 集名状态：工作集名\n', ''),
+            ('EP004', '', '- 本集题名：山间微光\n- 集名状态：工作集名\n', '工作集名'),
+            ('EP005', '- 本集题名：山间微光\n- 工作集名：不同的旧名（非最终发行集名）\n', '', ''),
+            ('EP006', '- 本集题名：待定\n- 集名状态：待定\n', '', '待定'),
+        ]
+        rows = '| 集号 | 所属故事阶段 | 一句话概要 | 大纲入口 |\n| --- | --- | --- | --- |\n'
+        for ep, outline, script_body, _ in cases:
+            (outlines / f'{ep}-分集大纲.md').write_text(outline, encoding='utf-8')
+            script = self.project / f'09-剧集制作/{ep}/02-剧集剧本/{ep}-本集剧本.md'
+            script.parent.mkdir(parents=True)
+            script.write_text(script_body, encoding='utf-8')
+            rows += f'| {ep} | 开篇 | 概要 | [大纲]({ep}-分集大纲.md) |\n'
+        (outlines / '分集索引.md').write_text(rows, encoding='utf-8')
+        expected = [(ep, status) for ep, _, _, status in cases]
+        for scope in ('06-分集大纲', '09-剧集制作'):
+            data = self.client.get(f'/api/projects/示例项目/sections/{scope}').json()
+            self.assertEqual([(x['name'], x.get('titleStatus', '')) for x in data['children']], expected)
+        self.assertEqual(self.client.get('/api/projects/示例项目/episodes/EP001').json().get('titleStatus'), '工作集名')
+
+    def test_restart_rebuilds_working_title_status_from_schema_four_cache(self):
+        script = self.project / '09-剧集制作/EP001/02-剧集剧本/EP001-本集剧本.md'
+        script.parent.mkdir(parents=True)
+        script.write_text('- 本集题名：山间微光\n- 工作集名：山间微光（非最终发行集名）\n', encoding='utf-8')
+        cache = self.root / '.project-cache'
+        store = ProjectStore(self.root, cache_directory=cache)
+        entry = store.get('示例项目')
+        data = store.section('示例项目', '09-剧集制作')
+        data['catalogues']['09-剧集制作']['children'][0].pop('titleStatus', None)
+        with patch('backend.services.projects.CACHE_SCHEMA', 4):
+            store.save_cache('示例项目', entry['snapshot'], data, part='09-剧集制作')
+        loaded = ProjectStore(self.root, cache_directory=cache).section('示例项目', '09-剧集制作')
+        self.assertEqual(loaded['catalogues']['09-剧集制作']['children'][0].get('titleStatus'), '工作集名')
 
     def test_outline_index_can_explicitly_link_existing_script_without_inventing_an_outline(self):
         outlines = self.project / '06-分集大纲'

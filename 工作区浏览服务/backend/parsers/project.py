@@ -1160,17 +1160,20 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
 
     def episode_title(number):
         title_field = r"^(?:-[ \t]*)?本集题名[:：][ \t]*([^。\n]+)"
-        outline = read(outline_root + "/" + number + "-分集大纲.md") or ""
-        match = re.search(title_field, outline, re.M)
-        if match and match[1].strip():
-            return match[1].strip()
-        script = read("09-剧集制作/" + number + "/02-剧集剧本/" + number + "-本集剧本.md") or ""
-        match = re.search(title_field, script, re.M)
+        source = read(outline_root + "/" + number + "-分集大纲.md") or ""
+        match = re.search(title_field, source, re.M)
         if not match or not match[1].strip():
-            match = re.search(r"^#[ \t]+" + re.escape(number)
-                              + r"[ \t]*[｜|][ \t]*([^｜|\n]+?)[ \t]*[｜|][ \t]*本集(?:故事)?剧本[ \t]*$",
-                              script, re.M)
-        return match[1].strip() if match else ""
+            source = read("09-剧集制作/" + number + "/02-剧集剧本/" + number + "-本集剧本.md") or ""
+            match = re.search(title_field, source, re.M)
+            if not match or not match[1].strip():
+                match = re.search(r"^#[ \t]+" + re.escape(number)
+                                  + r"[ \t]*[｜|][ \t]*([^｜|\n]+?)[ \t]*[｜|][ \t]*本集(?:故事)?剧本[ \t]*$",
+                                  source, re.M)
+        title = match[1].strip() if match else ""
+        status = re.search(r"^(?:-[ \t]*)?集名状态[:：][ \t]*(工作集名|最终定名|待定)[ \t]*$", source, re.M)
+        working = title and re.search(r"^(?:-[ \t]*)?工作集名[:：][ \t]*" + re.escape(title)
+                                     + r"(?:[ \t]*[（(]非最终发行集名[）)])?[ \t]*$", source, re.M)
+        return {"title": title, "titleStatus": (status[1] if status else "工作集名" if working else "") if title else ""}
 
     outline_text = read(outline_index) or ""
     outline_items, indexed, planned_episodes = [], set(), set()
@@ -1191,7 +1194,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             continue
         doc = long_document(key, False)
         outline_items.append({"kind": "outline", "name": number, "key": key, "doc": doc,
-                              "title": episode_title(number),
+                              **episode_title(number),
                               "category": row.get("所属故事阶段", ""), "summary": row["一句话概要"] +
                               ("（未单独编写分集大纲，入口为正式本集剧本。）" if key == script_key else ""),
                               "statusHtml": status_markup("未单独编写分集大纲", key)
@@ -1297,7 +1300,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             continue
         episode_node = existing_episodes.get(number) or {
             "kind": "group", "name": number, "key": production + "/" + number, "children": []}
-        episode_node.update({"title": episode_title(number),
+        episode_node.update({**episode_title(number),
             "productionComplete": state == "已完成",
             "statusHtml": status_markup(state if web_episode_navigation else raw_status or "未记录", PROGRESS),
             "note": "等待审阅也属于进行中；整集完成以项目进度为准。"})
