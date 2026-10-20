@@ -66,6 +66,13 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         script = self.project / 'storyboard.md'
         script.write_text('- 文档版本：v1\n镜头正文。', 'utf-8')
         (self.project / 'screenplay.md').write_text('- 文档版本：v1\n剧本正文。', 'utf-8')
+        episode = self.project / '09-剧集制作/EP001'
+        screenplay = episode / '02-剧集剧本/EP001-本集剧本.md'
+        screenplay.parent.mkdir(parents=True, exist_ok=True)
+        screenplay.write_text('## 1. 故事剧本正文\n### EP001-C001\n测试场次。\n', 'utf-8')
+        index = episode / '03-分镜脚本/EP001-分镜索引.md'
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text('| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n| EP001-C001 | EP001-C001-P001 | 3 |\n', 'utf-8')
         mapping = dict(scene='EP001-C001', scene_storyboard_version='v1', selected_indices=[0], storyboard_file='storyboard.md',
             screenplay_version='v1', scene_modification_round=1,
             uploads=[], segments=[dict(segment='EP001-C001-P001', round='R001', duration_seconds=3, local_execution_dir=str(self.record))])

@@ -28,6 +28,15 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
         mapping.update(scene='EP001-C001', scene_modification_round=1, screenplay_version='v1', scene_storyboard_version='v1',
                        selected_indices=selected, segments=[{'segment': f'EP001-C001-P{i+1:03d}', 'round': 'R001',
                        'duration_seconds': group['durationSec']} for i, group in enumerate(timeline['segments'])])
+        episode = self.project / '09-剧集制作/EP001'
+        script = episode / '02-剧集剧本/EP001-本集剧本.md'
+        script.parent.mkdir(parents=True, exist_ok=True)
+        script.write_text('## 1. 故事剧本正文\n### EP001-C001\n测试场次。\n', 'utf-8')
+        index = episode / '03-分镜脚本/EP001-分镜索引.md'
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text('| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n' + ''.join(
+            f'| EP001-C001 | EP001-C001-P{i+1:03d} | {group["durationSec"]} |\n'
+            for i, group in enumerate(timeline['segments'])), 'utf-8')
         attach_review(self.project, self.record, data.workflow, mapping)
         text = json.dumps(mapping)
         if not path.exists() or path.read_text('utf-8') != text:

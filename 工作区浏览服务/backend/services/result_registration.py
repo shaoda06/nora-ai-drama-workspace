@@ -201,6 +201,9 @@ def verify(projects, store, key, report):
         found = set()
         def walk(value):
             if isinstance(value, dict):
+                if value.get('productionIssues'):
+                    raise ValueError('源资料已登记，网页制作资料需要修正：' + '；'.join(
+                        issue['key'] + '：' + issue['message'] for issue in value['productionIssues']))
                 if value.get('run') and value.get('stage') and value.get('url'):
                     found.add(unquote(value['url']))
                 for child in value.values(): walk(child)

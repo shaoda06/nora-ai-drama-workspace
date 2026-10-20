@@ -310,6 +310,31 @@ def needs_content_review(data):
         node['class_type'] == 'MiniMaxH3Director' for node in data.workflow.values())
 
 
+def storyboard_index_checks(data, mapping):
+    from backend.parsers.project import table_records, storyboard_index_identity
+    episode = mapping['scene'].split('-')[0]
+    base = '09-剧集制作/' + episode
+    script_key = base + '/02-剧集剧本/' + episode + '-本集剧本.md'
+    index_key = base + '/03-分镜脚本/' + episode + '-分镜索引.md'
+    script = project_file(data.project, script_key).read_text('utf-8-sig')
+    index = project_file(data.project, index_key).read_text('utf-8-sig')
+    body = re.search(r'^##[ \t]+1\.[ \t]*故事剧本正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)', script, re.M | re.S)
+    scenes = re.findall(r'^###[ \t]+' + re.escape(episode) + r'-(C\d{3,})[ \t]*$',
+                        body[1] if body else '', re.M)
+    if not scenes:
+        raise ValueError(script_key + '：缺少故事剧本正文或完整场次标题')
+    rows = table_records(index, ('场次', '分段', '分段计划时长（秒）'))
+    if not rows:
+        raise ValueError(index_key + '：没有可读取的分段表')
+    for row in rows:
+        try:
+            storyboard_index_identity(episode, scenes, row)
+        except ValueError as error:
+            raise ValueError(index_key + '：' + str(error)) from error
+    return {'ok': True, 'rows': len(rows),
+            'files': [str(project_file(data.project, key)) for key in (script_key, index_key)]}
+
+
 def content_checks(data, mapping, report):
     from h3_prompt_checks import audit
     result = audit(data.project, data.workflow, mapping)
@@ -340,18 +365,23 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
         if previous and 'title' not in expected:
             expected['title'] = data.title
         requires_content = not at_execution and needs_content_review(data)
+        requires_index = not at_execution and data.task_type.startswith('video-')
         content_current = (not requires_content or previous is not None
                            and previous.get('content_checks', {}).get('version') == 1
                            and previous['content_checks'].get('ok') is True)
         if previous and previous['ok'] and expected == report['prepared_input']:
             observed = {}
-            report['sources'] = sources(data, previous.get('context_sources', []) + previous.get('content_checks', {}).get('sources', []), mapping, observed=observed, composition=composition)
+            index_files = previous.get('storyboard_index', {}).get('files', [])
+            report['sources'] = sources(data, previous.get('context_sources', []) + previous.get('content_checks', {}).get('sources', []) + index_files, mapping, observed=observed, composition=composition)
             if previous['sources'] == report['sources']:
                 report.update(previous)
                 changed = False
                 if not content_current:
                     content_checks(data, mapping, report)
                     report['sources'] = sources(data, previous.get('context_sources', []) + report['content_checks']['sources'], mapping, observed=observed, composition=composition)
+                    changed = True
+                if requires_index and not previous.get('storyboard_index', {}).get('ok'):
+                    report['storyboard_index'] = storyboard_index_checks(data, mapping)
                     changed = True
                 if not at_execution and not previous.get('new_task_ready'):
                     check_new_targets(data)
@@ -363,15 +393,18 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
                     report['sources'] = sources(data, extra + report.get('content_checks', {}).get('sources', []), mapping, observed=observed, composition=composition)
                     changed = True
                 if changed:
+                    report['sources'] = sources(data, report.get('context_sources', []) + report.get('content_checks', {}).get('sources', []) + report.get('storyboard_index', {}).get('files', []), mapping, observed=observed, composition=composition)
                     write_report(data, report)
                 return {'prepared': True, 'report': REPORT, 'reused': True,
                         'checks': {'segments': previous['segments']}}
+        if requires_index:
+            report['storyboard_index'] = storyboard_index_checks(data, mapping)
         if requires_content:
             content_checks(data, mapping, report)
         report.update(fixed_checks(store, data, mapping=mapping, legacy=at_execution))
         if data.task_type.startswith('video-'):
             report.setdefault('context_sources', [])
-        report['sources'] = sources(data, report.get('context_sources', []) + report.get('content_checks', {}).get('sources', []), mapping, composition=composition)
+        report['sources'] = sources(data, report.get('context_sources', []) + report.get('content_checks', {}).get('sources', []) + report.get('storyboard_index', {}).get('files', []), mapping, composition=composition)
         report['ok'] = True
         if not at_execution:
             report['new_task_ready'] = True

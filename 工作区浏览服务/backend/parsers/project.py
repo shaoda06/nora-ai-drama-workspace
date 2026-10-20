@@ -401,6 +401,14 @@ def document_preview(text, source):
     }
 
 
+def storyboard_index_identity(episode, scenes, row):
+    identity = re.fullmatch(re.escape(episode) + r"-(C\d{3,})-(P\d{3,})", row["分段"])
+    if not identity or identity[1] not in scenes or row["场次"] != episode + "-" + identity[1]:
+        raise ValueError("分段“" + row["分段"] + "”与场次“" + row["场次"]
+                         + "”不匹配，或该场次未在本集剧本中定义。")
+    return identity
+
+
 def table_records(text, required):
     """Read only a table with the explicit expected columns."""
     lines = text.splitlines()
@@ -1326,10 +1334,10 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                                                '分段计划时长（秒）': str(segment['duration'])})
                             known_segment_ids.add(segment_id)
             for row in index_rows:
-                identity = re.fullmatch(re.escape(number) + r"-(C\d{3,})-(P\d{3,})", row["分段"])
-                if not identity or identity[1] not in episode_node["segments"] or row["场次"] != number + "-" + identity[1]:
-                    issues.append({"key": storyboard_index,
-                                   "message": "分段“" + row["分段"] + "”与场次“" + row["场次"] + "”不匹配，或该场次未在本集剧本中定义。"})
+                try:
+                    identity = storyboard_index_identity(number, episode_node["segments"], row)
+                except ValueError as error:
+                    issues.append({"key": storyboard_index, "message": str(error)})
                     continue
                 duration = row["分段计划时长（秒）"]
                 if not re.fullmatch(r"\d+(?:\.\d+)?", duration) or float(duration) <= 0:
