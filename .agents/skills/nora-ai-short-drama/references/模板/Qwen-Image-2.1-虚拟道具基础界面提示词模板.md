@@ -2,7 +2,7 @@
 
 版本：v1.01；更新日期：2026-10-04。
 
-生成方式、输入与规格读取[道具专项规则](../../../nora-drama-assets/references/道具资料与参考图规范.md#虚拟道具基础界面)。使用前读取[Qwen提示词规范](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md)，按所选大类读取[文生图共用填写与输出格式](Qwen-Image-2.1-文生图提示词模板.md)或[图像编辑共用填写与输出格式](Qwen-Image-2.1-图像编辑提示词模板.md)。修订按[统一修订规则](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#25-参考图统一修订规则)执行。
+生成方式、输入与规格读取[道具专项规则](../../../nora-drama-assets/references/道具资料与参考图规范.md#虚拟道具基础界面)。使用前读取[Qwen提示词规范](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md)，按所选大类读取[文生图共用填写与输出格式](Qwen-Image-2.1-文生图提示词模板.md)或[图像编辑共用填写与输出格式](Qwen-Image-2.1-图像编辑提示词模板.md)。修订按[统一修订规则](../../../nora-drama-assets/references/图片提示词规范.md#参考图统一修订规则)执行。
 
 依据已确认道具资料卡填写目标状态、虚拟外观、三区或其他既定布局、标记与本次准确文字；不把未确认功能填入正文。画风占位符按[项目画风正文引用](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#16-项目画风正文引用)原样填入，其他占位符按[统一填写规则](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#15-模板占位符填写)填写。比例元数据取专项规格。
 
@@ -34,7 +34,7 @@
 
 ## 2. 依据用户提供或指定的界面参考图生成
 
-生成方式：图生图。输入依据读取上方道具专项规则及[输入记录规则](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#24-输入参考图检查与记录复用)。输出使用编辑三字段JSON，`wh_ratio` 取专项规格，`ratio_follow` 为空。
+生成方式：图生图。输入依据读取上方道具专项规则及[输入记录规则](../../../nora-drama-assets/references/图片提示词规范.md#源参考图与输入资格)。输出使用编辑三字段JSON，`wh_ratio` 取专项规格，`ratio_follow` 为空。
 
 填写说明：单图用自然指代，多图按实际顺序逐张使用标签，明确采用范围；文字按本次确认原文逐项填写，不概括成“相应文字”。
 

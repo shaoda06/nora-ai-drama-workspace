@@ -1,6 +1,6 @@
 # Qwen-Image-2.1-图像编辑提示词模板
 
-本文件只维护图像编辑共用输入清单与三字段JSON格式；专用正文按[图片类型索引](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#11-图片类型专用模板索引)读取。使用前读取规范第1、2、4节，包含[七项约定](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#22-qwen参考图生成与修订的七项约定)。按实际输入核对图号，单图自然称“图像”，多图逐张说明用途。输入图按[输入参考图检查与记录复用](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#24-输入参考图检查与记录复用)按记录核对；需看图时先满足明确授权条件。
+本文件只维护图像编辑共用输入清单与三字段JSON格式；专用正文按[图片类型索引](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#11-图片类型专用模板索引)读取。使用前读取规范第1、2、4节，包含[七项约定](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#22-qwen参考图生成与修订的七项约定)。按实际输入核对图号，单图自然称“图像”，多图逐张说明用途。输入图按[输入参考图检查与记录复用](../../../nora-drama-assets/references/图片提示词规范.md#源参考图与输入资格)按记录核对；需看图时先满足明确授权条件。
 
 
 正文分段与JSON换行转义遵循[统一中文编写、审阅与提交](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#14-统一中文编写审阅与提交)。

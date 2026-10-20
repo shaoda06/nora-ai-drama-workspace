@@ -50,11 +50,11 @@
 
 <a id="24-输入参考图检查与记录复用"></a>
 
-- [2.4 输入参考图检查与记录复用](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#24-输入参考图检查与记录复用)
+- [2.4 输入参考图检查与记录复用](../../../nora-drama-assets/references/图片提示词规范.md#源参考图与输入资格)
 
 <a id="25-参考图统一修订规则"></a>
 
-- [2.5 参考图统一修订规则](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#25-参考图统一修订规则)
+- [2.5 Qwen修订分支与共用规则入口](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#25-参考图统一修订规则)
 
 <a id="26-项目七类图片默认种子"></a>
 

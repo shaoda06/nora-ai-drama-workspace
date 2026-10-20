@@ -6,7 +6,7 @@
 
 使用前读取[Qwen提示词规范](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md)及[图像编辑共用填写与输出格式](Qwen-Image-2.1-图像编辑提示词模板.md)。占位符按[统一填写规则](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#15-模板占位符填写)处理；画风按[项目画风正文引用](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#16-项目画风正文引用)填写。只使用当前资产对应的一份正文，不把整个文件交给模型。
 
-生成方式：图生图。输入资格与状态用途按统一资产状态规则，修订和种子分别读取[第2.5节](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#25-参考图统一修订规则)及[第2.6节](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#26-项目七类图片默认种子)。用户提供并指定的原图与项目已批准图都按其实际用途填写输入指代；单图用“图像”，多图按真实顺序逐张使用 `<image1>`、`<image2>` 等标签。输出使用编辑三字段JSON，`wh_ratio` 取对应规格，`ratio_follow` 为空；不在模型正文写像素和种子。
+生成方式：图生图。输入资格与状态用途按统一资产状态规则，修订和种子分别读取[共用修订规则](../../../nora-drama-assets/references/图片提示词规范.md#参考图统一修订规则)及[第2.6节](../../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#26-项目七类图片默认种子)。用户提供并指定的原图与项目已批准图都按其实际用途填写输入指代；单图用“图像”，多图按真实顺序逐张使用 `<image1>`、`<image2>` 等标签。输出使用编辑三字段JSON，`wh_ratio` 取对应规格，`ratio_follow` 为空；不在模型正文写像素和种子。
 
 - [1. 服装状态参考图](#1-服装状态参考图)
 - [2. 场景状态参考图](#2-场景状态参考图)

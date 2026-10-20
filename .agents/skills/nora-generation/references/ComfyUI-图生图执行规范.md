@@ -7,20 +7,20 @@
 
 提示词按 [Qwen Image 2.1 提示词规范](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md) 第 4 节整理，并依其[接入与适配](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#13-qwen-image-2-1-prompter接入与适配)使用qwen-image-2-1-prompter的Edit分支；素材规格、连续性和正式命名按 [核心参考图制作规范](../../nora-drama-assets/references/核心参考图制作规范.md)的实际资产类型。本文不重复规定提示词写法。
 
-本执行规范的适用类型和源素材由[固定生成方式索引](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#11-图片类型专用模板索引)确定；修订任务执行[参考图统一修订规则](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#25-参考图统一修订规则)。下文节点能力和参数说明不扩大业务适用范围。
+本执行规范的适用类型和源素材由[固定生成方式索引](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#11-图片类型专用模板索引)确定；修订任务执行[参考图统一修订规则](../../nora-drama-assets/references/图片提示词规范.md#参考图统一修订规则)。下文节点能力和参数说明不扩大业务适用范围。
 
 基础服装、场景和道具任务先按类型索引及专项生成规则确定分支与输入，再填写对应现有模板内的图生图大类；场景任务读取[场景生成规则](../../nora-drama-assets/references/场景资料与参考图规范.md#411-生成方式与参考输入)及[场景模板](../../nora-ai-short-drama/references/模板/Qwen-Image-2.1-场景参考图提示词模板.md)。资产状态任务读取[统一状态规则](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#27-资产状态参考图统一规则)及[资产状态模板](../../nora-ai-short-drama/references/模板/Qwen-Image-2.1-资产状态参考图提示词模板.md)。所选图生图任务按本文完成上传、连接及画布设置。
 
 首帧任务先读取[首帧参考图规范](../../short-drama-storyboard/references/首帧参考图规范.md)，将其中的开始状态与画面要求落实到提示词；目录、命名和共用集内记录读取该规范第2、4、5节及其链接的集内素材规则。实际选择图生图时，本文只维护上传、连接、画布与执行映射。
 
-制作、修订和结果核对按[Qwen参考图生成与修订的七项约定](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#22-qwen参考图生成与修订的七项约定)执行；工具选型见[技能入口](../../nora-ai-short-drama/SKILL.md#当前参考图生成选型)。候选先交用户审核；修订按[参考图统一修订规则](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#25-参考图统一修订规则)执行。
+制作、修订和结果核对按[Qwen参考图生成与修订的七项约定](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#22-qwen参考图生成与修订的七项约定)执行；工具选型见[技能入口](../../nora-ai-short-drama/SKILL.md#当前参考图生成选型)。候选先交用户审核；修订按[参考图统一修订规则](../../nora-drama-assets/references/图片提示词规范.md#参考图统一修订规则)执行。
 
 技术映射、规格核对及记录由脚本执行，职责以[图片执行分工](ComfyUI-服务配置与任务提交规范.md#图片执行分工)为准；Agent不因下列技术说明重新测文件、核对节点或抄写参数。
 
 ## 1. 输入与基准文件
 
 - 提示词结果：`rewritten_prompt`、`wh_ratio`、`ratio_follow`，后两者恰有一个非空；跟随画幅的内容输入按第4.3节换算后再交任务清单。用户明确指定直接使用原文时记录该选择。
-- 输入图：按实际顺序列出本地文件、用途、版本与确认状态；资格和来源记录读取[输入参考图规则](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#24-输入参考图检查与记录复用)。后台复用已核验的真实尺寸和来源，不因工作流替换放宽输入条件。
+- 输入图：按实际顺序列出本地文件、用途、版本与确认状态；资格和来源记录读取[输入参考图规则](../../nora-drama-assets/references/图片提示词规范.md#源参考图与输入资格)。后台复用已核验的真实尺寸和来源，不因工作流替换放宽输入条件。
 - 输出要求：对应图片类型的原生送审宽高、1张PNG、保存位置和本次授权。
 
 | 文件 | 用途 |
