@@ -127,6 +127,30 @@ class ServiceTests(HttpTestCase):
                           ('EP004', '大纲优先'), ('EP005', '空题名接续')])
         self.assertEqual(self.client.get('/api/projects/示例项目/episodes/EP001').json()['title'], '序章')
 
+    def test_episode_title_from_real_templates_reaches_both_lists_and_detail(self):
+        templates = Path(__file__).resolve().parents[2] / '.agents/skills/nora-ai-short-drama/references/模板'
+        outlines = self.project / '06-分集大纲'
+        outlines.mkdir()
+        script_key = '09-剧集制作/EP002/02-剧集剧本/EP002-本集剧本.md'
+        script = self.project / script_key
+        script.parent.mkdir(parents=True)
+        for template_name, target, index_link in (
+            ('本集故事剧本模板.md', script, '../' + script_key),
+            ('分集大纲模板.md', outlines / 'EP002-分集大纲.md', 'EP002-分集大纲.md'),
+        ):
+            with self.subTest(template=template_name):
+                script.write_text('# EP002-本集剧本\n', encoding='utf-8')
+                body = (templates / template_name).read_text(encoding='utf-8').split('```markdown\n', 1)[1].split('```', 1)[0]
+                target.write_text(body.replace('EP编号', 'EP002').replace('- 本集题名：', '- 本集题名：这次不是样品'), encoding='utf-8')
+                (outlines / '分集索引.md').write_text(
+                    '| 集号 | 所属故事阶段 | 一句话概要 | 大纲入口 |\n| --- | --- | --- | --- |\n'
+                    f'| EP002 | 日常 | 礼物 | [正式入口]({index_link}) |\n', encoding='utf-8')
+                self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
+                for scope in ('06-分集大纲', '09-剧集制作'):
+                    data = self.client.get(f'/api/projects/示例项目/sections/{scope}').json()
+                    self.assertEqual(data['children'][0]['title'], '这次不是样品')
+                self.assertEqual(self.client.get('/api/projects/示例项目/episodes/EP002').json()['title'], '这次不是样品')
+
     def test_outline_index_can_explicitly_link_existing_script_without_inventing_an_outline(self):
         outlines = self.project / '06-分集大纲'
         outlines.mkdir()
