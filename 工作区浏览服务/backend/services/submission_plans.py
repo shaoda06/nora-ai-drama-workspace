@@ -21,14 +21,21 @@ SIZES = {'人物上半身正面肖像图': (1024, 1024), '人物多视角参考�
 
 
 class Documents:
-    def __init__(self, root):
+    def __init__(self, root, previous_writes=()):
         self.root, self.edits, self.image_sizes = root, {}, {}
+        self.previous = {project_file(root, item['path']): item for item in previous_writes}
+        for path, item in self.previous.items():
+            current = path.read_text('utf-8-sig') if path.exists() else None
+            if current not in (item['old'], item['new']):
+                raise ValueError('准备资料已变化，不覆盖：' + item['path'])
 
     def read(self, name):
         path = project_file(self.root, name)
         if path not in self.edits:
             text = path.read_text('utf-8-sig') if path.exists() else None
-            self.edits[path] = [text, text]
+            # Rebuild from the original inputs, while publishing against the current files.
+            previous = self.previous.get(path)
+            self.edits[path] = [text, previous.get('original', previous['old']) if previous else text]
         return self.edits[path][1]
 
     def put(self, name, text):
@@ -44,8 +51,9 @@ class Documents:
         self.put(name, json.dumps(value, ensure_ascii=False, indent=2))
 
     def writes(self):
-        return [dict(path=p.relative_to(self.root).as_posix(), old=old, new=new)
-                for p, (old, new) in self.edits.items() if old != new]
+        return [dict(path=p.relative_to(self.root).as_posix(), old=old, new=new,
+                     **({'original': self.previous[p].get('original', self.previous[p]['old'])} if p in self.previous else {}))
+                for p, (old, new) in self.edits.items() if old != new or p in self.previous]
 
 
 def publish(root, updates):
@@ -81,7 +89,10 @@ def widget(graph, node, **values):
         if slot and slot.get('link') is not None:
             disconnect(graph, slot)
         named[key] = content
-    node['widgets_values'] = list(named.values())
+    if isinstance(node['widgets_values'], dict):
+        node['widgets_values'].update(values)
+    else:
+        node['widgets_values'] = list(named.values())
 
 
 def disconnect(graph, slot):
@@ -401,11 +412,19 @@ def build_video(root, spec, documents):
     mapping = deepcopy(spec.get('mapping'))
     if mapping is None:
         mapping = json.loads(documents.read(record / '输入映射.json'))
+    unbound_mapping = deepcopy(mapping)
+    source_index = mapping.setdefault('uploads', [])
+    for ref in spec.get('references', []):
+        file = project_file(root, ref['file']).relative_to(root.resolve()).as_posix()
+        matches = [item for item in source_index if item['input_path'] == ref['placeholder']]
+        if any(project_file(root, item['file']) != project_file(root, file) for item in matches):
+            raise ValueError('视频参考占位值对应不同源文件：' + ref['placeholder'])
+        if not matches:
+            source_index.append(dict(input_path=ref['placeholder'], file=file))
     if spec.get('sync_timing'):
         from backend.services.video_records import sync_timing
         sync_timing(canvas, mapping, spec['task_type'])
     api = pairs.Canvas(canvas).api(spec['output_nodes'])
-    unbound_mapping = deepcopy(mapping)
     if spec.get('content_review'):
         if mapping.get('content_review'):
             raise ValueError('已有内容核对映射不自动覆盖；新核对请明确使用本次无绑定映射及注释')
@@ -415,7 +434,7 @@ def build_video(root, spec, documents):
     documents.new_json(record / '任务.api.json', api)
     mapping_file = record / '输入映射.json'
     existing_mapping = documents.read(mapping_file)
-    if spec.get('content_review') and existing_mapping is not None and json.loads(existing_mapping) == unbound_mapping:
+    if existing_mapping is not None and json.loads(existing_mapping) == unbound_mapping:
         documents.put(mapping_file, json.dumps(mapping, ensure_ascii=False, indent=2))
     else:
         documents.new_json(mapping_file, mapping)
@@ -481,19 +500,47 @@ async def execute(store, payload):
     source = json.loads(plan_file.read_text('utf-8-sig'))
     if not source['tasks']:
         raise ValueError('任务清单不能为空')
+    if payload.reprepare and not payload.prepare_only:
+        raise ValueError('重新装配仅用于--prepare-only，不会直接入队')
     journal_file = plan_file.with_name(plan_file.stem + '-装配结果.json')
+    journal = None
+    documents = None
     if journal_file.exists():
         journal = json.loads(journal_file.read_text('utf-8-sig'))
         if journal['thread_id'] != payload.thread_id:
             raise ValueError('任务清单来源已改变，不能覆盖原装配记录')
+        if payload.reprepare:
+            if journal.get('accepted') or any(
+                    row['input'].record_dir == str(project_file(root, task['record_dir']))
+                    for row in store.rows.values() for task in [*journal['tasks'], *source['tasks']]):
+                raise ValueError('任务已登记，不能重装原清单；请使用原任务ID接续')
+            documents = Documents(root, journal['writes'])
+            archive = deepcopy(journal)
+            archive['preparation_reports'] = []
+            for task in journal['tasks']:
+                report = project_file(root, task['record_dir']) / '执行检查报告.json'
+                if report.exists():
+                    archive['preparation_reports'].append(dict(record_dir=task['record_dir'],
+                        report=json.loads(report.read_text('utf-8-sig'))))
+            index = 1
+            while journal_file.with_name(f'{journal_file.stem}-准备归档-{index:03d}.json').exists():
+                index += 1
+            with journal_file.with_name(f'{journal_file.stem}-准备归档-{index:03d}.json').open('x', encoding='utf-8') as stream:
+                json.dump(archive, stream, ensure_ascii=False, indent=2)
+            journal = None
+    elif payload.reprepare:
+        raise ValueError('没有原装配记录，请先按常规入口准备')
+    if journal is not None:
         if journal['source'] != source:
             before, after = deepcopy(journal['source']), deepcopy(source)
             for item in [*before['tasks'], *after['tasks']]:
                 item.pop('authorization', None)
-            if before != after or journal.get('accepted') or any(
+            if journal.get('accepted') or any(
                     row['input'].record_dir == str(project_file(root, task['record_dir']))
                     for row in store.rows.values() for task in journal['tasks']):
                 raise ValueError('任务清单内容已改变，不能覆盖原装配记录')
+            if before != after:
+                raise ValueError('尚未登记的任务清单内容已改变；修正后使用--prepare-only --reprepare原地重新准备')
             replacements = [(old.get('draft'), old.get('authorization', '仅准备，尚未执行授权'), new.get('authorization', '仅准备，尚未执行授权'))
                             for old, new in zip(journal['source']['tasks'], source['tasks'])]
             for update in journal['writes']:
@@ -508,7 +555,7 @@ async def execute(store, payload):
         if len(journal.get('accepted', [])) == len(journal['tasks']):
             return dict(status='enqueued', tasks=journal['accepted'], reused=True, next_action='end-turn')
     else:
-        documents = Documents(root)
+        documents = documents or Documents(root)
         tasks = []
         for entry in source['tasks']:
             if not payload.prepare_only and not entry.get('authorization'):

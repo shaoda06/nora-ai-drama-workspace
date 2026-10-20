@@ -32,7 +32,8 @@ def submit_plan(args):
     # The one plan parameter is project-relative, like all files inside its task entries.
     plan = plan.resolve() if plan.is_absolute() else (project / plan).resolve()
     payload = dict(project=project.name, plan_file=plan.relative_to(project).as_posix(), thread_id=thread,
-                   desktop=desktop, timeout=args.timeout, prepare_only=args.prepare_only, start_paused=args.start_paused)
+                   desktop=desktop, timeout=args.timeout, prepare_only=args.prepare_only,
+                   reprepare=getattr(args, 'reprepare', False), start_paused=args.start_paused)
     return local_post(config, '/submit-plan', payload, args.timeout)
 
 

@@ -281,6 +281,7 @@ class SubmissionPlanInput(BaseModel):
     thread_id: str
     desktop: DesktopConnection
     prepare_only: bool = False
+    reprepare: bool = False
     start_paused: bool = False
 
 

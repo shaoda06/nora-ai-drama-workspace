@@ -128,5 +128,16 @@ class DispatchTests(unittest.TestCase):
         self.assertTrue(call.call_args.args[0].prepare_only)
         self.assertTrue(call.call_args.args[0].start_paused)
 
+    def test_reprepare_requires_plan_and_prepare_only(self):
+        for flags in (['--reprepare'], ['--plan', '任务清单.json', '--reprepare']):
+            args = d.parser().parse_args(['--project', str(self.root), *flags])
+            with patch.object(d.browser_tasks, 'submit_plan') as handoff, self.assertRaisesRegex(ValueError, '--prepare-only'):
+                d.dispatch(args)
+            handoff.assert_not_called()
+        args = d.parser().parse_args(['--project', str(self.root), '--plan', '任务清单.json', '--prepare-only', '--reprepare'])
+        with patch.object(d.browser_tasks, 'submit_plan', return_value={'status': 'prepared'}) as handoff:
+            d.dispatch(args)
+        self.assertTrue(handoff.call_args.args[0].reprepare)
+
 
 if __name__=='__main__': unittest.main()

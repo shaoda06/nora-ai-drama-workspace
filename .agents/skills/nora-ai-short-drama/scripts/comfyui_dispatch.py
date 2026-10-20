@@ -19,6 +19,8 @@ def load_config(project, timeout):
 
 
 def dispatch(args):
+    if getattr(args, 'reprepare', False) and (not args.plan or not args.prepare_only):
+        raise ValueError('--reprepare必须与--plan和--prepare-only一起使用；只重新准备，不入队')
     if getattr(args, 'plan', None):
         return browser_tasks.submit_plan(args)
     for name in ('task_type', 'workflow', 'record_dir', 'task_title'):
@@ -46,6 +48,7 @@ def parser():
     p.add_argument('--eligible-url', help='Optional expected primary address; identity check only, no capability probe')
     p.add_argument('--uploads', help='Optional upload bindings; file paths relative to the project root')
     p.add_argument('--prepare-only', action='store_true', help='Tool checks and writes 执行检查报告.json; no upload, queue entry or generation POST')
+    p.add_argument('--reprepare', action='store_true', help='With --plan --prepare-only: archive and rebuild an unregistered local preparation in place; registered tasks and concurrent edits are rejected; no upload or generation')
     p.add_argument('--record-dir', help='Legacy prepared-input mode: evidence directory relative to project; video tasks require 输入映射.json')
     p.add_argument('--attempt-name', default='submit-attempt.json', help='Exclusive attempt evidence filename')
     p.add_argument('--request-name', default='request.json', help='Actual request evidence filename')

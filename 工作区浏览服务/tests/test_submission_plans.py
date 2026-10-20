@@ -204,13 +204,110 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
             record_dir=self.rel(self.record), canvas=self.rel(canvas), output_nodes=['403'],
             mapping=json.loads((self.record/'输入映射.json').read_text()), report_node='403', output_root='E:/Comfy/output',
             references=[dict(file='reference.png', placeholder='planned/ref.png')])
+        task['mapping'].pop('uploads')
+        (self.record/'输入映射.json').unlink()
         self.write_plan(task)
         result = await plans.execute(self.store, self.payload)
         self.assertEqual(result['status'], 'enqueued')
         data = next(iter(self.store.rows.values()))['input']
         self.assertEqual(data.segment_plan.targets[0].index, 0)
         self.assertEqual(data.uploads[0]['json-path'], ['global','refs',0,'imageFile'])
+        mapping = json.loads((self.record/'输入映射.json').read_text())
+        self.assertEqual(mapping['uploads'], [dict(input_path='planned/ref.png', file='reference.png')])
         self.assertEqual(data.workflow, plans.pairs.Canvas(json.loads((self.record/'任务.workflow.json').read_text())).api('403'))
+
+    def test_video_rejects_conflicting_reference_sources_before_writes(self):
+        life.LifecycleTests.video(self)
+        mapping = json.loads((self.record/'输入映射.json').read_text())
+        mapping['uploads'] = [dict(input_path='planned/ref.png', file='different.png')]
+        documents = plans.Documents(self.project)
+        task = dict(record_dir=self.rel(self.record), canvas=self.rel(self.record/'task.workflow.json'),
+            mapping=mapping, references=[dict(file='reference.png', placeholder='planned/ref.png')])
+        with self.assertRaisesRegex(ValueError, '不同源文件'):
+            plans.build_video(self.project, task, documents)
+        self.assertEqual(documents.writes(), [])
+
+    def test_widget_updates_object_and_list_storage_without_losing_preview(self):
+        for stored in ({'filename_prefix': 'old', 'videopreview': {'hidden': True}}, ['old']):
+            node = dict(id=264, type='VHS_VideoCombine', inputs=[],
+                widgets_values_named={'filename_prefix': 'old'}, widgets_values=deepcopy(stored))
+            canvas = dict(nodes=[node], links=[])
+            plans.widget(canvas, node, filename_prefix='new-test')
+            self.assertEqual(node['widgets_values_named']['filename_prefix'], 'new-test')
+            if isinstance(stored, dict):
+                self.assertEqual(node['widgets_values']['filename_prefix'], 'new-test')
+                self.assertEqual(node['widgets_values']['videopreview'], {'hidden': True})
+            else:
+                self.assertEqual(node['widgets_values'], ['new-test'])
+            plans.pairs.Canvas(canvas)
+
+    async def test_reprepare_corrects_failed_plan_in_place_and_preserves_failure(self):
+        task = self.spec()
+        self.write_plan(task)
+        self.payload.prepare_only = True
+        with patch.object(self.store, 'prepare_only', side_effect=ValueError('实际准备失败')):
+            with self.assertRaisesRegex(ValueError, '实际准备失败'):
+                await plans.execute(self.store, self.payload)
+        journal_file = self.plan_file.with_name('任务清单-装配结果.json')
+        original = json.loads(journal_file.read_text())
+        task['prompt']['rewritten_prompt'] += '\n衣装的银色刺绣清晰可见。'
+        self.write_plan(task)
+        with self.assertRaisesRegex(ValueError, '--reprepare'):
+            await plans.execute(self.store, self.payload)
+        self.payload.reprepare = True
+        with patch.object(self.store, 'enqueue', side_effect=AssertionError('no enqueue')), \
+                patch.object(t.client.Client, 'json', side_effect=AssertionError('no remote')):
+            result = await plans.execute(self.store, self.payload)
+        self.assertEqual(result['status'], 'prepared')
+        saved = json.loads(journal_file.read_text())
+        self.assertEqual(saved['tasks'][0]['record_dir'], original['tasks'][0]['record_dir'])
+        archive = json.loads(self.plan_file.with_name('任务清单-装配结果-准备归档-001.json').read_text())
+        self.assertEqual(archive['source'], original['source'])
+        draft = (self.project/task['draft']).read_text()
+        self.assertIn('银色刺绣', draft)
+        self.assertNotIn('### 生成记录-002', draft)
+        task['prompt']['rewritten_prompt'] += '\n衣领完整。'
+        self.write_plan(task)
+        await plans.execute(self.store, self.payload)
+        draft = (self.project/task['draft']).read_text()
+        self.assertIn('衣领完整', draft)
+        self.assertNotIn('### 生成记录-002', draft)
+        self.payload.reprepare = self.payload.prepare_only = False
+        result = await plans.execute(self.store, self.payload)
+        self.assertEqual(result['status'], 'enqueued')
+        self.assertEqual(len(self.store.rows), 1)
+
+    async def test_reprepare_rejects_registered_tasks_even_if_journal_id_is_missing(self):
+        self.write_plan(self.spec())
+        await plans.execute(self.store, self.payload)
+        journal_file = self.plan_file.with_name('任务清单-装配结果.json')
+        journal = json.loads(journal_file.read_text())
+        journal['accepted'] = []
+        journal_file.write_text(json.dumps(journal))
+        self.payload.reprepare = self.payload.prepare_only = True
+        with self.assertRaisesRegex(ValueError, '已登记'):
+            await plans.execute(self.store, self.payload)
+        self.assertEqual(len(self.store.rows), 1)
+        self.assertFalse(list(self.plan_file.parent.glob('*准备归档*')))
+
+    async def test_reprepare_preserves_concurrent_edits(self):
+        task = self.spec()
+        self.write_plan(task)
+        self.payload.prepare_only = True
+        await plans.execute(self.store, self.payload)
+        draft = self.project/task['draft']
+        draft.write_text('其他会话正在修改')
+        self.payload.reprepare = True
+        with self.assertRaisesRegex(ValueError, '资料已变化'):
+            await plans.execute(self.store, self.payload)
+        self.assertEqual(draft.read_text(), '其他会话正在修改')
+
+    async def test_reprepare_cannot_enqueue(self):
+        self.write_plan(self.spec())
+        self.payload.reprepare = True
+        with self.assertRaisesRegex(ValueError, '仅用于--prepare-only'):
+            await plans.execute(self.store, self.payload)
+        self.assertFalse(self.store.rows)
 
     async def test_prepare_then_add_only_authorization_and_enqueue(self):
         task = self.spec()
