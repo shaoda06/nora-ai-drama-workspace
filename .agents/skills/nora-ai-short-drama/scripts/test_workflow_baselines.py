@@ -206,30 +206,21 @@ class BaselineTests(unittest.TestCase):
     def test_video_variants_share_generation_backbone(self):
         standard = json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api')).read_text(encoding="utf-8"))
         deoiled = json.loads((workflow_file('Minimax-H3-导演台-视频生成-去油版', 'api')).read_text(encoding="utf-8"))
-        for graph in (standard, deoiled):
-            self.assertEqual(graph["128"]["class_type"], "LoraLoaderModelOnly")
-            self.assertEqual(graph["128"]["inputs"]["lora_name"], "MysticXXX_MMH3-V1.safetensors")
-            self.assertAlmostEqual(graph["128"]["inputs"]["strength_model"], 0.5)
-        self.assertEqual(standard["128"]["inputs"]["model"], ["53", 0])
-        for node, parent, lora, strength in (
-            ("342", "128", "H3_Combat_V2.safetensors", 0.65),
-            ("344", "342", "minimax_h3\\Motion_Repair_V2.safetensors", 0.35),
-            ("345", "344", "H3_Fight_Flow_V1.safetensors", 0.35),
-            ("343", "345", "H3_speed_slider_1.1.safetensors", 3.0),
-        ):
-            self.assertNotIn(node, deoiled)
-            self.assertEqual(standard[node]["class_type"], "LoraLoaderModelOnly")
-            self.assertEqual(standard[node]["inputs"]["model"], [parent, 0])
-            self.assertEqual(standard[node]["inputs"]["lora_name"], lora)
-            self.assertAlmostEqual(standard[node]["inputs"]["strength_model"], strength)
+        for node in ("128", "342", "344", "345"):
+            self.assertNotIn(node, standard)
+        self.assertEqual(standard["343"]["class_type"], "LoraLoaderModelOnly")
+        self.assertEqual(standard["343"]["inputs"]["lora_name"], "H3_speed_slider_1.1.safetensors")
+        self.assertEqual(standard["343"]["inputs"]["strength_model"], 3.0)
+        self.assertEqual(standard["343"]["inputs"]["model"], ["53", 0])
         self.assertEqual(standard["405"]["inputs"]["model"], ["343", 0])
+        self.assertEqual(deoiled["128"]["class_type"], "LoraLoaderModelOnly")
+        self.assertEqual(deoiled["128"]["inputs"]["lora_name"], "MysticXXX_MMH3-V1.safetensors")
+        self.assertAlmostEqual(deoiled["128"]["inputs"]["strength_model"], 0.5)
         self.assertEqual(deoiled["405"]["inputs"]["model"], ["53", 0])
         self.assertEqual(deoiled["128"]["inputs"]["model"], ["58", 0])
         self.assertEqual(deoiled["53"]["inputs"]["model"], ["128", 0])
         self.assertEqual(standard["53"]["inputs"]["model"], ["58", 0])
-        for node in ("503", "504", "505", "506"):
-            standard.pop(node)
-        for node in ("128", "342", "344", "345", "343"):
+        for node in ("503", "504", "505", "506", "343"):
             standard.pop(node)
         standard["405"]["inputs"]["model"] = ["53", 0]
         deoiled.pop("128")
@@ -243,6 +234,39 @@ class BaselineTests(unittest.TestCase):
         deoiled["53"]["inputs"] = dict(standard["53"]["inputs"])
         self.assertEqual(wb.semantic(standard), wb.semantic(deoiled))
 
+    def test_standard_lora_presets_export_only_selected_models_in_both_stages(self):
+        baseline = json.loads(workflow_file('Minimax-H3-导演台-视频生成-标准版', 'workflow').read_text(encoding='utf-8'))
+        optional = {128, 342, 344, 345}
+        defaults = {node['id']: node for node in baseline['nodes']}
+        self.assertEqual({key: defaults[key]['mode'] for key in optional}, dict.fromkeys(optional, 4))
+        for key in (53, 343):
+            self.assertEqual(defaults[key]['mode'], 0)
+        expected = {
+            1: ([53, 343], 20),
+            2: ([53, 128, 343], 21),
+            3: ([53, 342, 344, 345, 343], 23),
+            4: ([53, 128, 342, 344, 345, 343], 24),
+        }
+        for choice, (chain, count) in expected.items():
+            with self.subTest(choice=choice):
+                canvas_data = copy.deepcopy(baseline)
+                for node in canvas_data['nodes']:
+                    if node['id'] in optional:
+                        node['mode'] = 0 if node['id'] in chain else 4
+                canvas = wb.Canvas(canvas_data)
+                self.assertEqual(len(canvas.api([403, 504, 506])), count)
+                for output in (504, 506):
+                    graph = canvas.api(output)
+                    for key in optional:
+                        self.assertEqual(str(key) in graph, key in chain)
+                    for parent, node in zip([58, *chain], [*chain, 405]):
+                        self.assertEqual(graph[str(node)]['inputs']['model'], [str(parent), 0])
+                    self.assertEqual(graph['53']['inputs']['strength_model'], 0.8)
+                    self.assertEqual(graph['343']['inputs']['strength_model'], 3.0)
+                    for node, strength in ((128, 0.5), (342, 0.65), (344, 0.35), (345, 0.35)):
+                        if node in chain:
+                            self.assertEqual(graph[str(node)]['inputs']['strength_model'], strength)
+
     def test_standard_saves_both_stages_without_final_output_dependency_in_first_pass(self):
         canvas = wb.Canvas(json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'workflow')).read_text(encoding="utf-8")))
         first = canvas.api(504)
@@ -252,9 +276,10 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(first["503"]["inputs"]["images"], ["502", 6])
         self.assertEqual(second["505"]["inputs"]["images"], ["502", 0])
         for graph, create_id, save_id in ((first, "503", "504"), (second, "505", "506")):
-            self.assertEqual(graph["128"]["inputs"]["model"], ["53", 0])
-            for node, parent in (("342", "128"), ("344", "342"), ("345", "344"), ("343", "345"), ("405", "343")):
-                self.assertEqual(graph[node]["inputs"]["model"], [parent, 0])
+            for node in ("128", "342", "344", "345"):
+                self.assertNotIn(node, graph)
+            self.assertEqual(graph["343"]["inputs"]["model"], ["53", 0])
+            self.assertEqual(graph["405"]["inputs"]["model"], ["343", 0])
             self.assertEqual(graph[create_id]["inputs"]["audio"], ["502", 1])
             self.assertEqual(graph[create_id]["inputs"]["fps"], ["502", 2])
             self.assertEqual(graph[save_id]["inputs"]["video"], [create_id, 0])

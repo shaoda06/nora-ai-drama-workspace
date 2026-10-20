@@ -49,74 +49,18 @@
       "title": "04｜LoRA · DMAD v4 0.8"
     }
   },
-  "128": {
-    "class_type": "LoraLoaderModelOnly",
-    "inputs": {
-      "lora_name": "MysticXXX_MMH3-V1.safetensors",
-      "strength_model": 0.5,
-      "model": [
-        "53",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "128｜角色去油 LoRA · Mystic 0.5"
-    }
-  },
-  "342": {
-    "class_type": "LoraLoaderModelOnly",
-    "inputs": {
-      "lora_name": "H3_Combat_V2.safetensors",
-      "strength_model": 0.65,
-      "model": [
-        "128",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "武打｜Combat V2 · 0.65（已启用）"
-    }
-  },
-  "344": {
-    "class_type": "LoraLoaderModelOnly",
-    "inputs": {
-      "lora_name": "minimax_h3\\Motion_Repair_V2.safetensors",
-      "strength_model": 0.35,
-      "model": [
-        "342",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "运动修复｜Motion Repair V2 · 0.35（已启用）"
-    }
-  },
-  "345": {
-    "class_type": "LoraLoaderModelOnly",
-    "inputs": {
-      "lora_name": "H3_Fight_Flow_V1.safetensors",
-      "strength_model": 0.35,
-      "model": [
-        "344",
-        0
-      ]
-    },
-    "_meta": {
-      "title": "打斗衔接｜Fight Flow V1 · 0.35（已启用）"
-    }
-  },
   "343": {
     "class_type": "LoraLoaderModelOnly",
     "inputs": {
       "lora_name": "H3_speed_slider_1.1.safetensors",
       "strength_model": 3.0,
       "model": [
-        "345",
+        "53",
         0
       ]
     },
     "_meta": {
-      "title": "速度控制｜Speed Slider 1.1 · 3.0（已启用）"
+      "title": "343｜动作速度 · Speed Slider 1.1 · 3.0（常开）"
     }
   },
   "405": {
