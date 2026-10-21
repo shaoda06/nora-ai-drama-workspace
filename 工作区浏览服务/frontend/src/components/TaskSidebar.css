@@ -7,6 +7,15 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-sidebar-toggle{width:40px;flex:none;border:0;border-left:1px solid var(--line);border-radius:0;padding:20px 4px;display:flex;align-items:center;flex-direction:column;gap:18px;background:#edf3ee;color:var(--green);overflow:hidden}
 .comfy-sidebar-toggle>span:first-child{font-size:28px;line-height:1}
 .comfy-rail-label{writing-mode:vertical-rl;letter-spacing:4px;font-size:13px;font-weight:600}
+.comfy-rail-runner{display:flex;align-items:center;justify-content:center;flex:none;width:28px;height:36px;margin-bottom:8px;color:var(--muted)}
+.comfy-rail-runner[data-state=running]{color:var(--green)}
+.comfy-runner-arm,.comfy-runner-leg-back{transform:rotate(-30deg);transform-origin:0 0}
+.comfy-runner-arm-back,.comfy-runner-leg{transform:rotate(30deg);transform-origin:0 0}
+.comfy-runner-arm-back,.comfy-runner-leg-back{opacity:.5}
+.comfy-rail-runner[data-state=running] .comfy-runner-arm,.comfy-rail-runner[data-state=running] .comfy-runner-leg-back{animation:comfy-runner-swing .65s ease-in-out infinite alternate}
+.comfy-rail-runner[data-state=running] .comfy-runner-arm-back,.comfy-rail-runner[data-state=running] .comfy-runner-leg{animation:comfy-runner-swing .65s ease-in-out infinite alternate-reverse}
+@keyframes comfy-runner-swing{from{transform:rotate(-35deg)}to{transform:rotate(35deg)}}
+@media(prefers-reduced-motion:reduce){.comfy-rail-runner[data-state=running] .comfy-runner-body path{animation:none}}
 .comfy-rail-summary{width:100%;flex:1;min-height:0;display:flex;align-items:center;flex-direction:column;overflow-y:auto;scrollbar-width:none;font-size:11px;line-height:1.2}
 .comfy-rail-values{writing-mode:vertical-rl;white-space:nowrap;letter-spacing:1px;color:var(--muted)}
 .comfy-rail-values>span+span{margin-inline-start:10px}

@@ -70,6 +70,12 @@ export function TaskSidebar() {
     };
   }, []);
   const selectedNode = nodes.find(node => node.url === selectedUrl) ?? nodes[0];
+  const liveNodes = nodes.filter(node => node.connection === 'connected' && !node.error && !node.queue_error && node.running_count !== null);
+  const remoteActivity = connection !== 'connected' ? 'unknown'
+    : liveNodes.some(node => node.running_count! > 0) ? 'running'
+    : nodes.length > 0 && liveNodes.length === nodes.length ? 'idle' : 'unknown';
+  const remoteActivityLabel = remoteActivity === 'running' ? '远端有任务正在执行'
+    : remoteActivity === 'idle' ? '远端当前没有进行中任务' : '远端执行状态暂未确认';
   const category = (task: LocalQueueTask): keyof typeof localQueueStates => task.category ??
     (task.status === 'queued' || task.status === 'local_queued' ? 'queued' : task.status === 'paused' ? 'paused' : 'history');
   const nodeRows = localRows.filter(task => task.remote_url === selectedNode?.url);
@@ -180,6 +186,14 @@ export function TaskSidebar() {
       aria-label={open ? '收起任务进度' : '展开任务进度'} onClick={() => {
         setOpen(!open);
       }}><span aria-hidden="true">{open ? '‹' : '›'}</span><span className="comfy-rail-label">任务进度</span>
+      <PointerTooltip text={remoteActivityLabel}><span className="comfy-rail-runner" data-state={remoteActivity} role="img" aria-label={remoteActivityLabel}>
+        <svg width="24" height="32" viewBox="0 0 24 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <g className="comfy-runner-body"><circle cx="12" cy="5" r="2.5" /><path d="M12 9v9" />
+            <g transform="translate(12 11)"><path className="comfy-runner-arm-back" d="M0 0v5l3 2" /><path className="comfy-runner-arm" d="M0 0v5l3 2" /></g>
+            <g transform="translate(12 18)"><path className="comfy-runner-leg-back" d="M0 0v6l3 3" /><path className="comfy-runner-leg" d="M0 0v6l3 3" /></g>
+          </g>
+        </svg>
+      </span></PointerTooltip>
       <span className="comfy-rail-summary">
         <span className="comfy-rail-values">
           {(Object.keys(localQueueStates) as (keyof typeof localQueueStates)[]).map(status => <span key={status}>{status === 'queued' ? '队列中' : localQueueStates[status]} <b>{localCounts[status]}</b></span>)}
