@@ -158,6 +158,33 @@ class ContentPreparationTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(self.store.rows)
         self.assertFalse(checks.read_report(self.data)['ok'])
 
+    async def test_explicit_subtitle_omission_only_waives_that_group_rule(self):
+        self.video()
+        workflow, mapping = copy.deepcopy(self.data.workflow), self.mapping()
+        timeline = json.loads(workflow['502']['inputs']['timeline_data'])
+        timeline['segments'][0]['prompt'] = timeline['segments'][0]['prompt'].replace(
+            'No subtitles or title cards appear throughout the entire video.', '')
+        workflow['502']['inputs']['timeline_data'] = json.dumps(timeline)
+        row = mapping['content_review']['groups'][0]
+        row.pop('input_sha256'); row['chinese'].pop('sha256')
+        for check in row['checks'].values():
+            for source in check['sources']:
+                source.pop('sha256')
+        mapping['content_review'] = bind_review(self.project, workflow, {'groups': [row]})
+        row = mapping['content_review']['groups'][0]
+        for authorization in (None, '', True):
+            row['subtitle_instruction_omission_authorization'] = authorization
+            report = audit(self.project, workflow, mapping)
+            self.assertIn('subtitle_rule', [i['code'] for i in report['groups'][0]['issues']])
+        row['subtitle_instruction_omission_authorization'] = '用户明确授权本组删除字幕禁令对照。'
+        report = audit(self.project, workflow, mapping)
+        self.assertTrue(report['ok'], report)
+        self.assertEqual(report['groups'][0]['subtitle_instruction_omission_authorization'],
+                         row['subtitle_instruction_omission_authorization'])
+        row['checks']['translation']['status'] = 'pending'
+        report = audit(self.project, workflow, mapping)
+        self.assertIn('review_incomplete', [i['code'] for i in report['groups'][0]['issues']])
+
     async def test_valid_review_prepares_and_reuses_then_chinese_change_blocks(self):
         self.video()
         await self.store.prepare_only(self.data)

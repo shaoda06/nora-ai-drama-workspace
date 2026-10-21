@@ -252,8 +252,15 @@ def audit(project, workflow, mapping):
         if not isinstance(names, dict) or (mode in REFERENCE_MODES and not names) or any(not isinstance(n, str) or not HAN.search(n) for n in names.values()):
             issue('review_subjects', '缺少Subject编号到准确中文名称的主体表')
             names = None
-        errors.extend(text_findings(prompt, chinese, names, mode=mode,
-                                    images=keyframe_slots(group), duration=group['durationSec']))
+        findings = text_findings(prompt, chinese, names, mode=mode,
+                                 images=keyframe_slots(group), duration=group['durationSec'])
+        omission = row.get('subtitle_instruction_omission_authorization')
+        if omission is not None:
+            if not isinstance(omission, str) or not omission.strip():
+                issue('review_schema', '省略字幕指令必须记录用户对本组选中输入的明确授权')
+            else:
+                findings = [item for item in findings if item['code'] != 'subtitle_rule']
+        errors.extend(findings)
         checks = row.get('checks', {})
         if not isinstance(checks, dict):
             issue('review_schema', 'checks必须为逐类核对对象')
@@ -294,6 +301,7 @@ def audit(project, workflow, mapping):
                     issue('review_evidence', category + '依据不可读取：' + str(exc))
         results.append({'node': node, 'index': index, 'input_sha256': signature,
                         'chinese_sha256': chinese_signature,
+                        'subtitle_instruction_omission_authorization': omission,
                         'ok': not errors, 'issues': errors})
     if sorted((r.get('node', ''), r.get('index', -1)) for r in rows) != sorted(expected_keys):
         failures.append({'code': 'review_scope', 'detail': '核对记录必须准确覆盖本次选中原组，不含重复或未选中组'})
