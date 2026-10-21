@@ -1,0 +1,90 @@
+{
+  "6": {
+    "class_type": "LoadVideo",
+    "inputs": {
+      "file": "{已获批二采分段文件}.mp4"
+    },
+    "_meta": {
+      "title": "输入二采视频｜LoadVideo"
+    }
+  },
+  "7": {
+    "class_type": "GetVideoComponents",
+    "inputs": {
+      "video": [
+        "6",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "分离画面音轨帧率｜GetVideoComponents"
+    }
+  },
+  "12": {
+    "class_type": "NoraRIFEInterpolationCutTest",
+    "inputs": {
+      "source_fps": [
+        "7",
+        2
+      ],
+      "target_fps": 30.0,
+      "scale": 1.0,
+      "scene_cut_threshold": 0.15,
+      "model_name": "flownet.pkl",
+      "batch_size": 1,
+      "use_fp16": true,
+      "images": [
+        "7",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "切镜保护插帧｜NoraRIFEInterpolationCutTest"
+    }
+  },
+  "1": {
+    "class_type": "ImageCrop",
+    "inputs": {
+      "width": 1920,
+      "height": 1080,
+      "x": 0,
+      "y": 4,
+      "image": [
+        "12",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "画面裁切｜ImageCrop"
+    }
+  },
+  "16": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "frame_rate": [
+        "12",
+        1
+      ],
+      "loop_count": 0,
+      "filename_prefix": "{EP编号}-{C编号}-{P编号}-{R编号}-后处理",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 19,
+      "save_metadata": true,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true,
+      "images": [
+        "1",
+        0
+      ],
+      "audio": [
+        "7",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "保存后处理视频｜VHS_VideoCombine"
+    }
+  }
+}

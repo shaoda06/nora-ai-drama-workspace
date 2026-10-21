@@ -44,6 +44,26 @@ class BaselineTests(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, 'interpolation node'):
             wb.validate_postprocess(original, name)
 
+    def test_combat_crop_preserves_audio_and_both_orientations(self):
+        name = 'RIFE-自动切镜保护裁切'
+        api = json.loads(workflow_file(name, 'api').read_text(encoding='utf-8'))
+        self.assertEqual(api['1']['inputs'], {'image': ['12', 0], 'width': 1920,
+                                             'height': 1080, 'x': 0, 'y': 4})
+        self.assertNotIn('RTXVideoSuperResolution', {n['class_type'] for n in api.values()})
+        for width, height, x, y in ((1920, 1080, 0, 4), (1080, 1920, 4, 0)):
+            changed = copy.deepcopy(api)
+            changed['1']['inputs'].update(width=width, height=height, x=x, y=y)
+            result = wb.validate_postprocess(changed, name)
+            self.assertEqual((result['width'], result['height'], result['target_fps']), (width, height, 30))
+            self.assertEqual(changed['16']['inputs']['audio'], ['7', 1])
+            self.assertFalse(changed['16']['inputs']['trim_to_audio'])
+        for node, field, value in (('1', 'image', ['7', 0]), ('16', 'images', ['12', 0]),
+                                   ('16', 'audio', None), ('16', 'frame_rate', ['7', 2])):
+            changed = copy.deepcopy(api)
+            changed[node]['inputs'][field] = value
+            with self.assertRaises(AssertionError):
+                wb.validate_postprocess(changed, name)
+
     def test_rife_package_requires_complete_installable_contents(self):
         package = ROOT / 'dependencies/ComfyUI节点资源/ComfyUI-Nora-RIFE-CutTest.zip'
         wb.validate_rife_package(package)
@@ -134,12 +154,12 @@ class BaselineTests(unittest.TestCase):
         # Check both persisted representations, including the UI's named values.
         director = canvas.nodes[502]['widgets_values_named']
         for inputs in (director, api['502']['inputs']):
-            self.assertEqual((inputs['width'], inputs['height'], inputs['frame_rate']), (864, 480, 24))
+            self.assertEqual((inputs['width'], inputs['height'], inputs['frame_rate']), (1024, 576, 24))
             timeline = json.loads(inputs['timeline_data'])
-            self.assertEqual((timeline['width'], timeline['height'], timeline['frameRate']), (864, 480, 24))
+            self.assertEqual((timeline['width'], timeline['height'], timeline['frameRate']), (1024, 576, 24))
             output = timeline['output']
-            for key, value in {'mode': 'fixed', 'width': 864, 'height': 480, 'longEdge': 864,
-                               'megapixels': 0.4, 'multiple': 32, 'aspectRatio': '16:9 (宽屏)'}.items():
+            for key, value in {'mode': 'fixed', 'width': 1024, 'height': 576, 'longEdge': 1024,
+                               'megapixels': 0.5625, 'multiple': 32, 'aspectRatio': '16:9 (宽屏)'}.items():
                 self.assertEqual(output[key], value, key)
             self.assertEqual(inputs['ref_max_size'], 864)
             self.assertEqual(output['refImageSize'], '1536')
@@ -195,9 +215,9 @@ class BaselineTests(unittest.TestCase):
 
     def test_all_pairs_and_reference_branches(self):
         results = wb.verify(BASELINES)
-        self.assertEqual(len(results), 5)
+        self.assertEqual(len(results), 6)
         for folder, group in workflow_directories(BASELINES):
-            self.assertEqual(len(wb.verify(folder)), 0 if group == 'backup' else 1 if folder.name == 'Minimax-H3' else 2)
+            self.assertEqual(len(wb.verify(folder)), 0 if group == 'backup' else 1 if folder.name == 'Minimax-H3' else 3 if folder.name == '后处理综合' else 2)
         h3 = [r for r in results if r["optional_references"]]
         self.assertEqual(h3, [])
 
@@ -238,41 +258,69 @@ class BaselineTests(unittest.TestCase):
             4: ([53, 128, 342, 344, 345, 343], 23),
         }
         for choice, (chain, count) in expected.items():
-            with self.subTest(choice=choice):
-                canvas_data = copy.deepcopy(baseline)
-                for node in canvas_data['nodes']:
-                    if node['id'] in optional:
-                        node['mode'] = 0 if node['id'] in chain else 4
-                    field_value = {
-                        261: ('steps', 10 if choice in (1, 2) else 12),
-                        289: ('step', 6),
-                        502: ('steps', 6),
-                    }.get(node['id'])
-                    if field_value:
-                        field, value = field_value
-                        node['widgets_values_named'][field] = value
-                        node['widgets_values'] = list(node['widgets_values_named'].values())
-                canvas = wb.Canvas(canvas_data)
-                self.assertEqual(len(canvas.api([403, 504, 506])), count)
-                for output in (504, 506):
-                    graph = canvas.api(output)
-                    for key in optional:
-                        self.assertEqual(str(key) in graph, key in chain)
-                    for parent, node in zip([331, *chain], [*chain, 405]):
-                        self.assertEqual(graph[str(node)]['inputs']['model'], [str(parent), 0])
-                    self.assertEqual(graph['53']['inputs']['strength_model'], 0.8)
-                    self.assertEqual(graph['343']['inputs']['strength_model'], 3.0)
-                    total_steps = graph['261']['inputs']['steps']
-                    split_step = graph['289']['inputs']['step']
-                    self.assertEqual(total_steps, 10 if choice in (1, 2) else 12)
-                    self.assertEqual(split_step, 6)
-                    self.assertEqual(total_steps - split_step, 4 if choice in (1, 2) else 6)
-                    self.assertEqual(graph['502']['inputs']['steps'], split_step)
-                    self.assertEqual(graph['502']['inputs']['sigmas'], ['289', 0])
-                    self.assertEqual(graph['407']['inputs']['sigmas'], ['289', 1])
-                    for node, strength in ((128, 0.5), (342, 0.65), (344, 0.35), (345, 0.35)):
-                        if node in chain:
-                            self.assertEqual(graph[str(node)]['inputs']['strength_model'], strength)
+            for portrait in (False, True):
+                with self.subTest(choice=choice, portrait=portrait):
+                    canvas_data = copy.deepcopy(baseline)
+                    for node in canvas_data['nodes']:
+                        if node['id'] in optional:
+                            node['mode'] = 0 if node['id'] in chain else 4
+                        field_value = {
+                            261: ('steps', 10 if choice in (1, 2) else 12),
+                            289: ('step', 6),
+                            502: ('steps', 6),
+                        }.get(node['id'])
+                        if field_value:
+                            field, value = field_value
+                            node['widgets_values_named'][field] = value
+                            node['widgets_values'] = list(node['widgets_values_named'].values())
+                    first_size = (576, 1024) if portrait else (1024, 576)
+                    second_size = (1536, 864) if choice in (1, 2) else (1920, 1088)
+                    if portrait:
+                        second_size = second_size[::-1]
+                    for node in canvas_data['nodes']:
+                        if node['id'] == 502:
+                            values = node['widgets_values_named']
+                            values.update(width=first_size[0], height=first_size[1])
+                            timeline = json.loads(values['timeline_data'])
+                            timeline.update(width=first_size[0], height=first_size[1])
+                            timeline['output'].update(width=first_size[0], height=first_size[1],
+                                                      aspectRatio='9:16 (竖屏)' if portrait else '16:9 (宽屏)')
+                            values['timeline_data'] = json.dumps(timeline, ensure_ascii=False)
+                            node['widgets_values'] = list(values.values())
+                        elif node['id'] == 407:
+                            node['widgets_values_named'].update(width=second_size[0], height=second_size[1],
+                                megapixels=1.265625 if choice in (1, 2) else 1.9921875)
+                            node['widgets_values'] = list(node['widgets_values_named'].values())
+                    canvas = wb.Canvas(canvas_data)
+                    self.assertEqual(len(canvas.api([403, 504, 506])), count)
+                    for output in (504, 506):
+                        graph = canvas.api(output)
+                        for key in optional:
+                            self.assertEqual(str(key) in graph, key in chain)
+                        for parent, node in zip([331, *chain], [*chain, 405]):
+                            self.assertEqual(graph[str(node)]['inputs']['model'], [str(parent), 0])
+                        self.assertEqual(graph['53']['inputs']['strength_model'], 0.8)
+                        self.assertEqual(graph['343']['inputs']['strength_model'], 3.0)
+                        total_steps = graph['261']['inputs']['steps']
+                        split_step = graph['289']['inputs']['step']
+                        self.assertEqual(total_steps, 10 if choice in (1, 2) else 12)
+                        self.assertEqual(split_step, 6)
+                        self.assertEqual(total_steps - split_step, 4 if choice in (1, 2) else 6)
+                        self.assertEqual(graph['502']['inputs']['steps'], split_step)
+                        self.assertEqual(graph['502']['inputs']['sigmas'], ['289', 0])
+                        self.assertEqual(graph['407']['inputs']['sigmas'], ['289', 1])
+                        director, refine = graph['502']['inputs'], graph['407']['inputs']
+                        self.assertEqual((director['width'], director['height']), first_size)
+                        self.assertEqual((refine['width'], refine['height']), second_size)
+                        pixels = refine['megapixels'] * 1024 ** 2
+                        aspect = director['width'] / director['height']
+                        resolved = (round(math.sqrt(pixels * aspect) / 32) * 32,
+                                    round(math.sqrt(pixels / aspect) / 32) * 32)
+                        self.assertEqual(resolved, second_size)
+                        self.assertEqual(director['ref_max_size'], 864)
+                        for node, strength in ((128, 0.5), (342, 0.65), (344, 0.35), (345, 0.35)):
+                            if node in chain:
+                                self.assertEqual(graph[str(node)]['inputs']['strength_model'], strength)
 
     def test_standard_saves_both_stages_without_final_output_dependency_in_first_pass(self):
         canvas = wb.Canvas(json.loads((workflow_file('Minimax-H3-导演台-视频生成-标准版', 'workflow')).read_text(encoding="utf-8")))

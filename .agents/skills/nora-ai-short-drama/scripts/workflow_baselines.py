@@ -5,7 +5,8 @@ from pathlib import Path
 from workflow_paths import workflow_directories, workflow_root
 UI_FIELDS={'control_after_generate','upload','choose video to upload','videopreview','image_upload','audioUI','preview'}
 UI_NODES={'Note','MarkdownNote','SetNode','GetNode','Reroute'}
-POSTPROCESS_NODES={'RTX-RIFE-自动切镜保护超分插帧':'NoraRIFEInterpolationCutTest'}
+POSTPROCESS_NODES={'RTX-RIFE-自动切镜保护超分插帧':'NoraRIFEInterpolationCutTest',
+                   'RIFE-自动切镜保护裁切':'NoraRIFEInterpolationCutTest'}
 
 def validate_rife_package(path):
  with zipfile.ZipFile(path) as package:
@@ -21,17 +22,24 @@ def validate_rife_package(path):
 
 def validate_postprocess(api,name):
  interpolation=api['12'];resize=api['1']['inputs'];encode=api['16']['inputs']
+ expected='ImageCrop' if name=='RIFE-自动切镜保护裁切' else 'RTXVideoSuperResolution'
+ assert api['1']['class_type']==expected, 'Postprocess image processing node mismatch'
  assert interpolation['class_type']==POSTPROCESS_NODES[name], 'Postprocess interpolation node mismatch'
  if interpolation['class_type']=='NoraRIFEInterpolationCutTest':
   assert {'scale','scene_cut_threshold'}<=set(interpolation['inputs']), 'Missing required RIFE inputs'
  frame_input='images' if interpolation['class_type']=='NoraRIFEInterpolationCutTest' else 'frames'
  assert interpolation['inputs'][frame_input]==['7',0], 'Postprocess source images mismatch'
  assert interpolation['inputs']['source_fps']==['7',2], 'Postprocess source FPS mismatch'
- assert resize['images']==['12',0], 'Postprocess must interpolate before upscaling'
- assert encode['images']==['1',0], 'Postprocess encoder must use upscaled images'
+ if api['1']['class_type']=='ImageCrop':
+  assert resize['image']==['12',0], 'Postprocess must interpolate before cropping'
+  width,height=resize['width'],resize['height']
+ else:
+  assert resize['images']==['12',0], 'Postprocess must interpolate before upscaling'
+  width,height=resize['resize_type.width'],resize['resize_type.height']
+ assert encode['images']==['1',0], 'Postprocess encoder must use processed images'
  assert encode['frame_rate']==['12',1], 'Postprocess output FPS must follow interpolation'
  assert encode['audio']==['7',1] and encode['trim_to_audio'] is False, 'Postprocess original audio/timing mismatch'
- width,height=resize['resize_type.width'],resize['resize_type.height'];fps=interpolation['inputs']['target_fps']
+ fps=interpolation['inputs']['target_fps']
  notes=[]
  if min(width,height)<1080:notes.append('低于推荐1080P；按本次选定交付依据核对，不因此拒绝本次交付配置')
  if fps<30:notes.append('低于推荐30fps；按本次选定交付依据核对，不因此拒绝本次交付配置')
