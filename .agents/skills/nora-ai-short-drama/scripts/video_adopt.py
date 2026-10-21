@@ -135,10 +135,11 @@ def approved_row(text, row, filename):
                 and filename in outputs)
 
 
-def adoption(args):
+def adoption(args, *, plan=None):
     root = Path(args.project).resolve(strict=True)
-    plan_path = Path(args.plan)
-    plan = load(plan_path if plan_path.is_absolute() else root / plan_path)
+    if plan is None:
+        plan_path = Path(args.plan)
+        plan = load(plan_path if plan_path.is_absolute() else root / plan_path)
     if not isinstance(plan, dict):
         raise ValueError('采用计划必须是 JSON 对象')
     if not isinstance(plan.get('approval_text'), str) or not plan['approval_text'].strip():

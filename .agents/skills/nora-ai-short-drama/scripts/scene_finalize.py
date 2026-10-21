@@ -515,10 +515,11 @@ def finalize_one(root, plan, p, apply, timeout):
     return result
 
 
-def finalize(args):
+def finalize(args, *, plan=None):
     root = Path(args.project).resolve(strict=True)
-    plan_path = Path(args.plan)
-    plan = adopt.load(plan_path if plan_path.is_absolute() else root / plan_path)
+    if plan is None:
+        plan_path = Path(args.plan)
+        plan = adopt.load(plan_path if plan_path.is_absolute() else root / plan_path)
     if not plan.get('configuration_batches'):
         return finalize_one(root, plan, prepare(root, plan), args.apply, args.timeout)
     if not plan.get('configuration_batch_authorization'):
