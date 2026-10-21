@@ -123,6 +123,41 @@ class AdoptionTests(unittest.TestCase):
         self.assertTrue(target.is_file())
         self.assertEqual(self.run_plan()['items'][0]['state'], 'already_adopted')
 
+    def test_backend_postprocess_selector_and_download_receipt_bind_output(self):
+        item, draft, source, target = self.item(stage='后处理')
+        mapping = Path(item['mapping'])
+        mapped = tool.load(mapping)
+        output = mapped.pop('outputs')[0]
+        prompt = mapped.pop('prompt_id')
+        self.write_json(mapping, mapped)
+        self.write_json(mapping.parent / '提交响应.json', {'prompt_id': prompt})
+        selector = {'node_id': '16', 'output_key': 'gifs', 'index': 0,
+                    'path': output['path'], 'response_name': Path(item['receipt']).name}
+        self.write_json(mapping.parent / '后台任务状态.json', {
+            'record_dir': str(mapping.parent), 'prompt_id': prompt,
+            'remote_url': 'https://example.test', 'outputs': [selector]})
+        terminal = {'data': {'prompt_id': 'wrong-prompt', 'state': 'success',
+            'files': [{'node_id': '16', 'output_key': 'gifs', 'index': 0, 'file': output['remote']}]}}
+        self.write_json(mapping.parent / '执行结果.json', terminal)
+        with self.assertRaisesRegex(ValueError, '执行结果.*任务ID'):
+            self.run_plan()
+        terminal['data']['prompt_id'] = prompt
+        self.write_json(mapping.parent / '执行结果.json', terminal)
+        wrong = tool.load(Path(item['receipt']))
+        wrong['data']['remote']['filename'] = 'wrong.mp4'
+        self.write_json(Path(item['receipt']), wrong)
+        with self.assertRaisesRegex(ValueError, '远端文件'):
+            self.run_plan()
+        wrong['data']['remote'] = output['remote']
+        self.write_json(Path(item['receipt']), wrong)
+        self.assertEqual(self.run_plan()['items'][0]['state'], 'adopt')
+        self.assertEqual(target.read_bytes(), item['identity'].encode())
+        saved = tool.load(mapping)
+        self.assertNotIn('prompt_id', saved)
+        self.assertNotIn('outputs', saved)
+        self.assertEqual(saved['generation_contexts'], mapped['generation_contexts'])
+        self.assertEqual(self.run_plan()['items'][0]['state'], 'already_adopted')
+
     def test_existing_storyboard_summary_adoption_and_repeat(self):
         self.item(stage='后处理')
         existing = self.summary.with_name('EP001-分镜索引-工作稿.md')

@@ -68,9 +68,15 @@ def source(root, item):
     response = adopt.load(mapping_path.parent / '提交响应.json')
     accepted = response.get('data', response)
     restoration = []
-    if item['identity'].endswith('-后处理') and not mapping.get('uploads'):
-        mapping['uploads'] = postprocess_uploads(root, mapping_path.parent)
-        restoration.append('依据本任务后台成功上传记录关联实际 input_path 与本地来源；原映射保留')
+    verified_uploads = None
+    if item['identity'].endswith('-后处理'):
+        load_paths = [n['inputs']['file'] for n in request['prompt'].values() if n['class_type'] == 'LoadVideo']
+        bound_paths = [u['input_path'] for u in mapping.get('uploads', [])]
+        if 'source_bytes' not in mapping or any(path not in bound_paths for path in load_paths):
+            verified_uploads = postprocess_uploads(root, mapping_path.parent)
+        if not mapping.get('uploads') or any(path not in bound_paths for path in load_paths):
+            mapping['uploads'] = verified_uploads
+            restoration.append('依据本任务后台成功上传记录关联实际 input_path 与本地来源；原映射保留')
     # Populate the export copy from the actual API; source canvas bytes stay untouched.
     for stored in canvas['nodes']:
         named = stored.get('widgets_values_named', {})
@@ -101,7 +107,7 @@ def source(root, item):
         raise ValueError('来源 API／提交响应与实际获批任务不一致：' + item['identity'])
     return {'identity': item['identity'], 'mapping_path': mapping_path, 'mapping': mapping,
             'context': contexts[0], 'api_path': api_path, 'canvas_path': canvas_path,
-            'api': workflow, 'canvas': canvas, 'restoration': restoration}
+            'api': workflow, 'canvas': canvas, 'restoration': restoration, 'verified_uploads': verified_uploads}
 
 
 def director(source_item, part):
@@ -255,13 +261,21 @@ def prepare(root, plan, batch_parts=None, batch_name=None):
             source_video = adopt.local_path(root, item['source_video'])
             if source_video.stem != content['identity']:
                 raise ValueError('后处理源视频身份不符合二采来源')
-            adopt.check_file(source_video, {'bytes': actual['mapping']['source_bytes'],
-                                            'sha256': actual['mapping']['source_sha256']})
             uploads = [u for u in actual['mapping']['uploads']
                        if adopt.local_path(root, u['file']) == source_video]
             loaders = [n['inputs']['file'] for n in actual['api'].values() if n['class_type'] == 'LoadVideo']
             if len(uploads) != 1 or loaders != [uploads[0]['input_path']]:
                 raise ValueError('后处理实际输入视频与上传映射不对应：' + part)
+            if 'source_bytes' in actual['mapping']:
+                adopt.check_file(source_video, {'bytes': actual['mapping']['source_bytes'],
+                                                'sha256': actual['mapping']['source_sha256']})
+            else:
+                # Backend upload receipts already bind the actual source bytes.
+                verified = [u for u in actual['verified_uploads']
+                            if adopt.local_path(root, u['file']) == source_video
+                            and u['input_path'] == loaders[0]]
+                if len(verified) != 1:
+                    raise ValueError('后处理源视频没有唯一匹配的成功上传凭据：' + part)
         content['root'] = root
         content['director'] = director(content, part)
         sources.append((actual, content))

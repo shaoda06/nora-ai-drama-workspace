@@ -43,8 +43,22 @@ def execution_metadata(root, mapping_path, mapped):
     if (not state.get('prompt_id') or accepted.get('prompt_id') != state['prompt_id']
             or local_path(root, state['record_dir']) != mapping_path.parent):
         raise ValueError('后台状态与本次实际提交或执行目录不一致')
+    if 'segments' in state:
+        return {**mapped, 'prompt_id': state['prompt_id'], 'url': state['remote_url'],
+                'outputs': list(state['segments'].values())}
+    # Ordinary save nodes use explicit output selectors, not native director segments.
+    result = load(mapping_path.parent / '执行结果.json')['data']
+    if result['prompt_id'] != state['prompt_id'] or result['state'] != 'success':
+        raise ValueError('执行结果的任务ID或成功状态与后台提交不一致')
+    outputs = []
+    for selected in state['outputs']:
+        actual = next(item['file'] for item in result['files'] if all(
+            item[key] == selected[key] for key in ('node_id', 'output_key', 'index')))
+        outputs.append({**selected, 'identity': Path(selected['path']).stem,
+                        'receipt': str(mapping_path.parent / selected['response_name']),
+                        'remote': {key: actual[key] for key in ('filename', 'subfolder', 'type')}})
     return {**mapped, 'prompt_id': state['prompt_id'], 'url': state['remote_url'],
-            'outputs': list(state['segments'].values())}
+            'outputs': outputs, 'selector_receipts': True}
 
 
 def check_file(path, receipt):
@@ -193,7 +207,7 @@ def adoption(args):
         receipt_path = local_path(root, item['receipt'])
         receipt_document = load(receipt_path)
         receipt = receipt_document.get('data', receipt_document)
-        if execution is not mapped and (receipt_document.get('prompt_id') != prompt
+        if execution is not mapped and not execution.get('selector_receipts') and (receipt_document.get('prompt_id') != prompt
                                         or receipt_document.get('identity') != identity):
             raise ValueError('取回凭据的任务ID或分段身份与后台执行不一致')
         if local_edit is not None and receipt_path == mapping:

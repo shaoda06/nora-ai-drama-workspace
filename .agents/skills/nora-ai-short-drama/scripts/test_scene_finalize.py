@@ -256,6 +256,27 @@ class FinalizeTests(unittest.TestCase):
             del current['scene_finalizations']
             self.assertEqual(current, json.loads(data))
 
+    def test_postprocess_source_fingerprint_comes_from_actual_upload_receipt(self):
+        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
+        self.plan['stage'] = '后处理'
+        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
+        for item in self.plan['items']:
+            path = Path(item['mapping'])
+            mapping = tool.adopt.load(path)
+            upload = mapping['uploads'][0]
+            receipt = {'input_path': upload['input_path'], 'bytes': mapping.pop('source_bytes'),
+                       'sha256': mapping.pop('source_sha256')}
+            upload['input_path'] = 'planned/' + upload['input_path']
+            self.put(path, mapping)
+            self.put(path.parent / '后台过程记录.json', [
+                {'stage': 'upload', 'result': 'success', 'file': upload['file'], 'remote': receipt}])
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'completed')
+        for item in self.plan['items']:
+            mapping = tool.adopt.load(Path(item['mapping']))
+            self.assertNotIn('source_bytes', mapping)
+            self.assertNotIn('source_sha256', mapping)
+
     def test_postprocess_missing_upload_records_does_not_infer_from_request(self):
         contents = [self.item(p, '二采') for p in ('P001', 'P002')]
         self.plan['stage'] = '后处理'
