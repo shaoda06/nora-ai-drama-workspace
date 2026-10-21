@@ -127,7 +127,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     setSelections(previous => {
       const arriving = segments.filter(item => !previous[item.id] && item.videos.length).map(item => {
         const latest = reviewRound ? roundVideo(item.id) : latestVideo(item.videos);
-        return [item.id, { stage: reviewRound?.stage || latest!.stage, key: latest?.key || '' }];
+        return [item.id, { stage: latest?.stage || reviewRound!.stage, key: latest?.key || '' }];
       });
       return arriving.length ? { ...previous, ...Object.fromEntries(arriving) } : previous;
     });
@@ -143,7 +143,10 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     setAutoPlay(true);
   };
   const selectSegment = (id: string) => {
-    if (reviewRound && id !== PREVIOUS_ENDING) setSelections(previous => ({ ...previous, [id]: { stage: reviewRound.stage, key: roundVideo(id)?.key || '' } }));
+    if (reviewRound && id !== PREVIOUS_ENDING) {
+      const video = roundVideo(id);
+      setSelections(previous => ({ ...previous, [id]: { stage: video?.stage || reviewRound.stage, key: video?.key || '' } }));
+    }
     setAutoPlay(false); setSegment(id); setError(null);
   };
   const selectPrevious = () => {
