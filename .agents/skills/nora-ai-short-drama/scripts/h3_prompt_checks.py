@@ -140,7 +140,10 @@ def text_findings(prompt, chinese=None, names=None, *, mode='r2v', images=None, 
     subtitle_rules = [s for s in re.split(r'(?<=[.!?])\s+|\n', prompt)
                       if re.search(r'\b(?:no|without|never|prohibit\w*|forbid\w*)\b[^.\n]{0,200}\bsubtitles?\b', s, re.I)]
     full_span = r'\b(?:(?:throughout|entire|whole|full)[^.\n]{0,40}(?:video|clip|sequence)|all frames|first frame[^.\n]{0,40}last frame|start to (?:the )?end)\b'
-    if not any(re.search(full_span, s, re.I) for s in subtitle_rules):
+    visual_description = english['detailed_description' if reference else 'integrated_multimodal_description']
+    visual_description = re.sub(r'<d>.*?</d>', '', visual_description, flags=re.S)
+    chinese_subtitle_rule = re.search(r'(?:^|[\n。！？.!?])\s*全程不要出现字幕(?=[。！？.!?\s]|$)', visual_description)
+    if not chinese_subtitle_rule and not any(re.search(full_span, s, re.I) for s in subtitle_rules):
         issue('subtitle_rule', '缺少覆盖全片的无字幕指令（语义完整性仍需内容核对）')
     if chinese is not None:
         translated = sections(chinese, headings, allow_prefix=not reference)

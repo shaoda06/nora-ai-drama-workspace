@@ -91,6 +91,20 @@ class TextChecks(unittest.TestCase):
                                'Keep the face consistent throughout the entire video. No subtitles in the first second.')
         self.assertIn('subtitle_rule', [x['code'] for x in text_findings(text)])
 
+    def test_explicit_chinese_whole_video_subtitle_ban_is_accepted(self):
+        text = ENGLISH.replace('No subtitles or title cards appear throughout the entire video.',
+                               '全程不要出现字幕')
+        self.assertEqual(text_findings(text, CHINESE), [])
+
+    def test_chinese_subtitle_phrase_must_be_a_whole_video_visual_instruction(self):
+        for replacement in ('不要出现字幕', '第一秒不要出现字幕',
+                            '<d>[Chinese] 全程不要出现字幕</d>',
+                            'A sign reads "全程不要出现字幕".'):
+            with self.subTest(replacement=replacement):
+                text = ENGLISH.replace('No subtitles or title cards appear throughout the entire video.',
+                                       replacement)
+                self.assertIn('subtitle_rule', [x['code'] for x in text_findings(text)])
+
     def test_dialogue_role_words_are_not_treated_as_action_aliases(self):
         self.assertFalse(text_findings(ENGLISH.replace(
             'stands screen right', 'says <d>The man outside is my uncle.</d> and stands screen right')))
