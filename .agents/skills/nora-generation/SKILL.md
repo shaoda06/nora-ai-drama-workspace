@@ -34,7 +34,7 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 
 准备、提交或获授权直接操作远端API时，读取随包[comfyui-api](../nora-ai-short-drama/dependencies/comfyui-api/SKILL.md)及当前调用说明；普通后台查询和通知不需要它。异常按需使用[comfyui-troubleshooter](../nora-ai-short-drama/dependencies/comfyui-troubleshooter/SKILL.md)，明确要求能力盘点或依赖诊断时才使用[comfyui-inventory](../nora-ai-short-drama/dependencies/comfyui-inventory/SKILL.md)。沿现有真源，不另复制安装。
 
-标准版视频生成前按[四种配置与生成前询问](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)取得本次选择；DMAD和343常开，Mystic及打戏组由用户选择开启。
+标准版视频生成前按[四种配置与生成前询问](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)取得本次配置与画幅，沿该节选择LoRA、采样与尺寸参数及超分／裁切后处理分支；询问选项使用该节规定的完整原文。已有明确选择直接沿用，不重复询问。
 
 Imagegen原生生成与编辑由固定执行子代理调用内置工具，保存与交付职责见[Imagegen分支](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)；主控接收报告后交付，不重复收尾。以下API装配、入队和后台收尾适用于ComfyUI任务。
 

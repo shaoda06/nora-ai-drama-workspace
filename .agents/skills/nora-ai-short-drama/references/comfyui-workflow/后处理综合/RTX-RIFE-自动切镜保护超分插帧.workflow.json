@@ -579,7 +579,7 @@
       "outputs": [],
       "properties": {},
       "widgets_values": [
-        "输入已获批二采原片，先在源尺寸以RIFE插帧到30fps，再由RTX超分到1920×1080，保留原音轨。自动检测真实切镜并保持源帧，不按预设秒数拆片，不跨切镜混合。切镜阈值0.15；0表示关闭，需按本次任务明确选择。节点依赖：dependencies/ComfyUI节点资源/ComfyUI-Nora-RIFE-CutTest.zip；类名NoraRIFEInterpolationCutTest。安装、验证与回退见维护规范的ComfyUI节点安装包章节。执行前替换输入文件及输出身份，并按本次画幅同步尺寸。"
+        "用于配置1文戏默认、配置2文戏+去油；默认保存横屏。输入对应方向的已获批文戏二采原片，先在源尺寸以RIFE插帧到30fps，再由RTX超分：横屏输出1920×1080，竖屏输出1080×1920，保留原音轨。配置3、4使用RIFE-自动切镜保护裁切，不套用本超分基准。自动检测真实切镜并保持源帧，不按预设秒数拆片，不跨切镜混合。切镜阈值0.15；0表示关闭，需按本次任务明确选择。节点依赖：dependencies/ComfyUI节点资源/ComfyUI-Nora-RIFE-CutTest.zip；类名NoraRIFEInterpolationCutTest。安装、验证与回退见维护规范的ComfyUI节点安装包章节。执行前替换输入文件及输出身份，并按本次画幅同步尺寸。"
       ],
       "title": "RIFE自动切镜保护后处理｜使用说明",
       "color": "#432",
