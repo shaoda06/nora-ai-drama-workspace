@@ -187,10 +187,17 @@ export function TaskSidebar() {
         setOpen(!open);
       }}><span aria-hidden="true">{open ? '‹' : '›'}</span><span className="comfy-rail-label">任务进度</span>
       <PointerTooltip text={remoteActivityLabel}><span className="comfy-rail-runner" data-state={remoteActivity} role="img" aria-label={remoteActivityLabel}>
-        <svg width="24" height="32" viewBox="0 0 24 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <g className="comfy-runner-body"><circle cx="12" cy="5" r="2.5" /><path d="M12 9v9" />
-            <g transform="translate(12 11)"><path className="comfy-runner-arm-back" d="M0 0v5l3 2" /><path className="comfy-runner-arm" d="M0 0v5l3 2" /></g>
-            <g transform="translate(12 18)"><path className="comfy-runner-leg-back" d="M0 0v6l3 3" /><path className="comfy-runner-leg" d="M0 0v6l3 3" /></g>
+        <svg width="28" height="36" viewBox="0 0 32 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <g className="comfy-lifter">
+            <g className="comfy-lifter-upper">
+              <path d="M1 13h30" />
+              <path d="M4 9v8M7 8v10M25 8v10M28 9v8" strokeWidth="3" />
+              <circle cx="16" cy="6.5" r="3" fill="currentColor" stroke="none" />
+              <path d="M16 10v3M11 15l2 9h6l2-9M11 15l-2-2v-2M21 15l2-2v-2M11 15q5-4 10 0" />
+            </g>
+            <path className="comfy-lifter-leg-left" d="M13 24L11 30L10 36" />
+            <path className="comfy-lifter-leg-right" d="M19 24L21 30L22 36" />
+            <path d="M7 37h5M20 37h5" />
           </g>
         </svg>
       </span></PointerTooltip>
