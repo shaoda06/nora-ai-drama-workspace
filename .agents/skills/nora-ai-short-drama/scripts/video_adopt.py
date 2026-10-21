@@ -30,6 +30,23 @@ def load(path):
     return client.strict_json(path.read_bytes())
 
 
+def execution_metadata(root, mapping_path, mapped):
+    """Read backend execution evidence without rewriting frozen input fields."""
+    if mapped.get('prompt_id') or mapped.get('local_edit') is not None:
+        return mapped
+    state_path = mapping_path.parent / '后台任务状态.json'
+    if not state_path.is_file():
+        raise ValueError(f'请指定实际执行的输入映射，不用父级旧请求代替：{mapping_path}')
+    state = load(state_path)
+    response = load(mapping_path.parent / '提交响应.json')
+    accepted = response.get('data', response)
+    if (not state.get('prompt_id') or accepted.get('prompt_id') != state['prompt_id']
+            or local_path(root, state['record_dir']) != mapping_path.parent):
+        raise ValueError('后台状态与本次实际提交或执行目录不一致')
+    return {**mapped, 'prompt_id': state['prompt_id'], 'url': state['remote_url'],
+            'outputs': list(state['segments'].values())}
+
+
 def check_file(path, receipt):
     if not path.is_file() or path.stat().st_size != receipt['bytes']:
         raise ValueError(f'文件缺失或长度不符合取回凭据：{path}')
@@ -159,7 +176,8 @@ def adoption(args):
         contexts = mapped.get('generation_contexts', [])
         if identity not in [context['identity'] for context in contexts]:
             raise ValueError(f'输入映射未关联本次批准对象：{identity}')
-        prompt = mapped.get('prompt_id')
+        execution = execution_metadata(root, mapping, mapped)
+        prompt = execution.get('prompt_id')
         local_edit = mapped.get('local_edit')
         if local_edit is not None:
             if not isinstance(local_edit, dict) or not all(local_edit.get(key) for key in ('tool', 'source', 'source_file', 'parameters')):
@@ -175,6 +193,9 @@ def adoption(args):
         receipt_path = local_path(root, item['receipt'])
         receipt_document = load(receipt_path)
         receipt = receipt_document.get('data', receipt_document)
+        if execution is not mapped and (receipt_document.get('prompt_id') != prompt
+                                        or receipt_document.get('identity') != identity):
+            raise ValueError('取回凭据的任务ID或分段身份与后台执行不一致')
         if local_edit is not None and receipt_path == mapping:
             receipt = mapped['output']
         if not isinstance(receipt.get('bytes'), int) or receipt['bytes'] <= 0:
@@ -185,13 +206,15 @@ def adoption(args):
         if not receipt_path.is_relative_to(mapping.parent):
             if str(receipt_path) not in json.dumps(mapped, ensure_ascii=False):
                 raise ValueError('共同任务外的取回凭据须已在输入映射中明确关联')
-        outputs = mapped.get('outputs', []) + mapped.get('runtime_retrieved', [])
+        outputs = execution.get('outputs', []) + execution.get('runtime_retrieved', [])
         matching_outputs = [output for output in outputs if output.get('identity') == identity]
         if not matching_outputs and len(contexts) == 1 and mapped.get('output'):
             matching_outputs = [mapped['output']]
         if len(matching_outputs) != 1:
             raise ValueError('输入映射须明确关联本段已取回的唯一输出，不凭同目录猜归属')
         output = matching_outputs[0]
+        if output.get('receipt') and local_path(root, output['receipt']) != receipt_path:
+            raise ValueError('取回凭据路径与本段后台输出记录不一致')
         if output.get('remote') and output['remote'] != receipt.get('remote'):
             raise ValueError('取回凭据的远端文件不符合映射中的本段输出')
         if output.get('bytes') is not None and output['bytes'] != receipt['bytes']:

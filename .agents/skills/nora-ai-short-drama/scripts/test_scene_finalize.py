@@ -287,6 +287,25 @@ class FinalizeTests(unittest.TestCase):
             self.run_plan()
         self.assertFalse(NativeClient.calls)
 
+    def test_backend_metadata_and_outputs_are_read_without_backfilling_frozen_mapping(self):
+        self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
+        for item in self.plan['items']:
+            path = Path(item['mapping'])
+            mapped = tool.adopt.load(path)
+            prompt = mapped.pop('prompt_id')
+            url = mapped.pop('url')
+            remote = mapped['segments'][0].pop('remote')
+            self.put(path, mapped)
+            self.put(path.parent / '后台任务状态.json', {
+                'record_dir': str(path.parent), 'prompt_id': prompt, 'remote_url': url,
+                'segments': {'0': {'identity': item['identity'], 'remote': remote, 'receipt': item['receipt']}}})
+        self.assertEqual(self.run_plan()['state'], 'completed')
+        for item in self.plan['items']:
+            saved = tool.adopt.load(Path(item['mapping']))
+            self.assertNotIn('prompt_id', saved)
+            self.assertNotIn('outputs', saved)
+            self.assertIn('一采', saved['scene_finalizations'])
+
     def test_all_three_stages_single_pair_repeat_and_originals(self):
         for stage in tool.adopt.STAGES:
             with self.subTest(stage=stage):

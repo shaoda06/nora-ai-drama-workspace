@@ -93,6 +93,36 @@ class AdoptionTests(unittest.TestCase):
                 self.assertEqual(self.run_plan()['items'][0]['state'], 'already_adopted')
                 self.assertEqual(snapshot, {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()})
 
+    def test_backend_state_and_receipt_bind_actual_execution_without_backfilling_inputs(self):
+        item, draft, source, target = self.item()
+        mapping = Path(item['mapping'])
+        mapped = tool.load(mapping)
+        output = mapped.pop('outputs')[0]
+        prompt = mapped.pop('prompt_id')
+        self.write_json(mapping, mapped)
+        self.write_json(mapping.parent / '提交响应.json', {'prompt_id': prompt})
+        self.write_json(mapping.parent / '后台任务状态.json', {
+            'record_dir': str(mapping.parent), 'prompt_id': prompt,
+            'remote_url': 'https://example.test',
+            'segments': {'0': {**output, 'receipt': item['receipt']}}})
+        receipt_path = Path(item['receipt'])
+        receipt = tool.load(receipt_path)
+        receipt.update(identity=item['identity'], prompt_id='wrong-prompt')
+        self.write_json(receipt_path, receipt)
+        with self.assertRaisesRegex(ValueError, '任务ID或分段身份'):
+            self.run_plan()
+        self.assertTrue(source.exists())
+        receipt['prompt_id'] = prompt
+        self.write_json(receipt_path, receipt)
+        self.assertEqual(self.run_plan()['items'][0]['state'], 'adopt')
+        saved = tool.load(mapping)
+        self.assertNotIn('prompt_id', saved)
+        self.assertNotIn('outputs', saved)
+        self.assertEqual(saved['generation_contexts'], mapped['generation_contexts'])
+        self.assertEqual(saved['adoptions'][0]['prompt_id'], prompt)
+        self.assertTrue(target.is_file())
+        self.assertEqual(self.run_plan()['items'][0]['state'], 'already_adopted')
+
     def test_existing_storyboard_summary_adoption_and_repeat(self):
         self.item(stage='后处理')
         existing = self.summary.with_name('EP001-分镜索引-工作稿.md')

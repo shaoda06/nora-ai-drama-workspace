@@ -57,7 +57,7 @@ def postprocess_uploads(root, record):
 
 def source(root, item):
     mapping_path = adopt.local_path(root, item['mapping'])
-    mapping = adopt.load(mapping_path)
+    mapping = adopt.execution_metadata(root, mapping_path, adopt.load(mapping_path))
     contexts = [c for c in mapping['generation_contexts'] if c['identity'] == item['identity']]
     if len(contexts) != 1:
         raise ValueError('来源映射身份不唯一：' + item['identity'])
@@ -237,6 +237,11 @@ def prepare(root, plan, batch_parts=None, batch_name=None):
         remote = mapped_part.get('remote', mapped_part.get('remote_output', actual['mapping'].get('remote_output')))
         if remote is None and mapped_part.get('final_output'):
             remote = mapped_part['final_output']['remote']
+        if remote is None:
+            outputs = [o for o in actual['mapping'].get('outputs', []) if o.get('identity') == item['identity']]
+            if len(outputs) != 1 or adopt.local_path(root, outputs[0]['receipt']) != receipt_path:
+                raise ValueError('后台输出未唯一关联本段及指定取回凭据')
+            remote = outputs[0]['remote']
         if remote != receipt['remote']:
             raise ValueError('取回凭据的远端输出与本段映射不对应')
         adopt.check_file(selected, receipt)
