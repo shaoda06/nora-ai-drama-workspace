@@ -8,9 +8,10 @@ type Props = {
   label: string;
   disabled?: boolean;
   reselect?: boolean;
+  iconOnly?: boolean;
 };
 
-function MarkedTabSelect({ items, selected, onChange, label, disabled }: Props) {
+function MarkedTabSelect({ items, selected, onChange, label, disabled, iconOnly }: Props) {
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
@@ -43,11 +44,11 @@ function MarkedTabSelect({ items, selected, onChange, label, disabled }: Props) 
     }
   };
   return <>
-    <button ref={trigger} type="button" className="tab-select tab-select-marked" role="combobox" aria-label={label}
+    <button ref={trigger} type="button" className={`tab-select tab-select-marked${iconOnly ? ' tab-select-icon' : ''}`} role="combobox" aria-label={label}
       aria-haspopup="listbox" aria-controls={id} aria-expanded={expanded} aria-activedescendant={expanded ? `${id}-${active}` : undefined}
       disabled={disabled} data-active={Boolean(selected)} data-value={selected} onKeyDown={keyDown} popoverTarget={id}
       onClick={() => { if (!expanded) positionMenu(); }}>
-      <span className="tab-select-label">{items.find(item => item.value === selected)?.label || label}</span>
+      {!iconOnly && <span className="tab-select-label">{items.find(item => item.value === selected)?.label || label}</span>}
       <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12"><path d="m3 4.5 3 3 3-3" fill="none" stroke="currentColor" /></svg>
     </button>
     <div ref={menu} id={id} popover="auto" role="listbox" aria-label={label} className="tab-select-menu" style={position}
@@ -61,8 +62,8 @@ function MarkedTabSelect({ items, selected, onChange, label, disabled }: Props) 
   </>;
 }
 
-export function TabSelect({ items, selected, onChange, label, disabled = false, reselect = false }: Props) {
-  if (items.some(item => item.badge)) return <MarkedTabSelect items={items} selected={selected} onChange={onChange} label={label} disabled={disabled} />;
+export function TabSelect({ items, selected, onChange, label, disabled = false, reselect = false, iconOnly = false }: Props) {
+  if (iconOnly || items.some(item => item.badge)) return <MarkedTabSelect items={items} selected={selected} onChange={onChange} label={label} disabled={disabled} iconOnly={iconOnly} />;
   return <select className="tab-select" aria-label={label} disabled={disabled} data-active={Boolean(selected)} value={selected} onChange={event => onChange(event.target.value)}>
     <option value="" disabled hidden>{label}</option>
     {items.map(item => <option key={item.value} value={item.value} onClick={reselect && item.value === selected ? () => onChange(item.value) : undefined}>{item.label}</option>)}

@@ -9,7 +9,8 @@ import { Pagination } from './Pagination';
 import { EpisodeButton } from './EpisodeButton';
 import { SceneWorkspace } from './SceneWorkspace';
 import { useRefreshState } from '../refreshPosition';
-import { BreadcrumbActionsContext } from './Breadcrumbs';
+import { BreadcrumbActionsContext, BreadcrumbSelectorContext } from './Breadcrumbs';
+import { TabSelect } from './TabSelect';
 import { get, projectUrl } from '../api';
 import { DownloadButton } from './DownloadButton';
 import { previousEpisodeEnding } from '../previousEpisodeEnding';
@@ -18,6 +19,7 @@ import './SceneDownloads.css';
 export function EpisodeProduction({ project, items, selected, onSelect, revision }: { project: string; items: FileItem[]; selected: string | null; onSelect: (episode: string | null) => void; revision: number }) {
   const preview = useContext(PreviewContext);
   const breadcrumbActions = useContext(BreadcrumbActionsContext);
+  const breadcrumbSelector = useContext(BreadcrumbSelectorContext);
   const [scene, setScene] = useRefreshState(`project/${project}/production/scene`, '');
   const [page, setPage] = useState(1);
   const cards = useRef<HTMLDivElement>(null);
@@ -66,7 +68,10 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
     setScene('');
     onSelect(name);
   };
-  return selectedItem && !current ? <Result page loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} /> : current ? <div className="episode-detail">
+  return <>
+    {breadcrumbSelector && selectedItem && createPortal(<TabSelect iconOnly label="快速选集" selected={selected!} onChange={open}
+      items={items.map(item => ({ value: item.name, label: `${item.name} · ${item.title || '题名未记录'}${item.titleStatus ? `（${item.titleStatus}）` : ''}`, badge: item.name === selected ? '当前集' : undefined }))} />, breadcrumbSelector)}
+    {selectedItem && !current ? <Result page loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} /> : current ? <div className="episode-detail">
     {breadcrumbActions && episodeComplete && createPortal(<DownloadButton key={current.name} pack
       url={`${projectUrl(project)}/episodes/${current.name}/download`} label="本集打包下载"
       title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理正式版视频`} />, breadcrumbActions)}
@@ -87,5 +92,5 @@ export function EpisodeProduction({ project, items, selected, onSelect, revision
     <div ref={cards} className="episode-grid">{items.slice((page - 1) * 36, page * 36).map(item => <EpisodeButton key={item.key} item={item} onSelect={open} />)}</div>
     {!items.length && <p className="muted">尚无剧集制作目录。</p>}
     <Pagination page={page} total={items.length} change={setPage} />
-  </>;
+  </>}</>;
 }

@@ -8,7 +8,7 @@ import type { FileItem, RecordData } from './api';
 import { Document, FileTree, Groups, Preview, PreviewContext, Result, Rich } from './components';
 
 import { PageHeader } from './components/PageHeader';
-import { Breadcrumbs, BreadcrumbActionsContext } from './components/Breadcrumbs';
+import { Breadcrumbs, BreadcrumbActionsContext, BreadcrumbSelectorContext } from './components/Breadcrumbs';
 import { TabNav } from './components/TabNav';
 import { SearchField } from './components/SearchField';
 import { Pagination } from './components/Pagination';
@@ -37,6 +37,7 @@ export default function Project() {
   const [asset, setAsset] = useRefreshState<AssetSelection | null>(`project/${name}/asset`, null);
   const currentPath = useRef<HTMLSpanElement>(null);
   const [breadcrumbActions, setBreadcrumbActions] = useState<HTMLDivElement | null>(null);
+  const [breadcrumbSelector, setBreadcrumbSelector] = useState<HTMLSpanElement | null>(null);
   const openSection = (value: string) => {
     setEpisode(null);
     setAsset(null);
@@ -66,7 +67,7 @@ export default function Project() {
       setSection('00-项目定位'); setVisited(['00-项目定位']); setEpisode(null); setAsset(null);
     }
   }, [overview.data, section, setSection, setEpisode, setAsset]);
-  return <BreadcrumbActionsContext.Provider value={breadcrumbActions}><PreviewContext.Provider value={setPreview}>
+  return <BreadcrumbSelectorContext.Provider value={breadcrumbSelector}><BreadcrumbActionsContext.Provider value={breadcrumbActions}><PreviewContext.Provider value={setPreview}>
     <SyncNotification key={name} error={status.data?.error} errorKind={status.data?.errorKind} retryAt={retryAt} updating={syncing} />
     {syncRoot && createPortal(<>上次同步：{status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '—'}</>, syncRoot)}
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
@@ -76,7 +77,7 @@ export default function Project() {
         <div className="activity-items">{overview.data.active.length ? overview.data.active.map((item: RecordData) => <div className="activity-item" key={item.name}><strong>{item.name}</strong><button className="activity-state" aria-label={`${item.name}：${item.status}，查看待决事项`} onClick={() => setPreview({ kind: 'progress', name: `${item.name} · 待决事项与下一步`, doc: { statusHtml: item.statusHtml, html: '<h3>待决事项</h3>' + item.pendingHtml + '<h3>下一步</h3>' + item.nextHtml }, key: `项目进度.md#${item.anchor}`, url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}#${item.anchor}` })}><Rich html={item.statusHtml} /></button></div>) : <span className="muted">未记录进行中或待确认阶段</span>}</div>
       </div>
     )}
-      <Breadcrumbs currentRef={currentPath} actionsRef={setBreadcrumbActions} items={[{ label: overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), href: `#/projects/${encodeURIComponent(name)}`, onClick: () => openSection(section) }, ...(section === '09-剧集制作' && episode ? [{ label: `${episode} · ${episodeTitle}` }] : asset ? [{ label: `${asset.id} · ${asset.name}` }] : [])]} />
+      <Breadcrumbs currentRef={currentPath} actionsRef={setBreadcrumbActions} selectorRef={section === '09-剧集制作' && episode ? setBreadcrumbSelector : undefined} items={[{ label: overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), href: `#/projects/${encodeURIComponent(name)}`, onClick: () => openSection(section) }, ...(section === '09-剧集制作' && episode ? [{ label: `${episode} · ${episodeTitle}` }] : asset ? [{ label: `${asset.id} · ${asset.name}` }] : [])]} />
     </PageHeader>
     <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} retry={status.error ? status.refetch : overview.refetch} retrying={status.isFetching || overview.isFetching} />
     {overview.data && <>
@@ -85,7 +86,7 @@ export default function Project() {
       {visited.filter(label => overview.data.directories.some((dir: RecordData) => dir.name === label)).map(label => <SectionPane key={name + '/' + label + '/' + (entries[label] || 0)} project={name} section={label} revision={revision} active={label === section} asset={label === section ? asset : null} onAssetChange={value => { setAsset(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} episode={episode} onEpisodeChange={value => { setEpisode(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} />)}
     </>}
     {preview && <Preview key={preview.key || preview.url} project={name} item={preview} revision={revision} close={() => setPreview(null)} />}
-  </PreviewContext.Provider></BreadcrumbActionsContext.Provider>;
+  </PreviewContext.Provider></BreadcrumbActionsContext.Provider></BreadcrumbSelectorContext.Provider>;
 }
 function SectionPane({ project, section, revision, active, episode, onEpisodeChange, asset, onAssetChange }: { project: string; section: string; revision: number; active: boolean; episode: string | null; onEpisodeChange: (episode: string | null) => void } & AssetNavigation) {
   const query = useQuery({ queryKey: ['section', project, section, revision], queryFn: () => get<RecordData>(`${projectUrl(project)}/sections/${encodeURIComponent(section)}`), enabled: active, placeholderData: previous => previous });
