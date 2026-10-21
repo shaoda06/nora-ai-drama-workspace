@@ -410,14 +410,16 @@ class LocalQueue:
                         or result.get('selected_matched', 0) > 0):
                     raise ValueError('目标节点已有匹配的一采缓存，当前工作流会进入二采；请先核对目标节点缓存与任务阶段')
                 timeline = json.loads(inputs['timeline_data'])
-                if timeline.get('runSelectEnabled'):
+                # A matching first-pass latent already contains its original context;
+                # only a new first pass needs a predecessor's final cache as a guide.
+                if data.task_type == 'video-first-pass' and timeline.get('runSelectEnabled'):
                     selected = set(timeline['runSelection'])
                     cached = {item['index']: item for item in result['segments']}
                     for index in selected:
                         if index and index - 1 not in selected and timeline['segments'][index].get('continuityFromPrev'):
                             previous = cached.get(index - 1, {})
                             matches = previous.get('final_matches') is True
-                            if data.task_type == 'video-first-pass' and not matches:
+                            if not matches:
                                 differences = previous.get('final_diff_keys', [])
                                 # First-pass guide uses the matching pre-refine source. A change
                                 # confined to Refine settings does not invalidate that source.

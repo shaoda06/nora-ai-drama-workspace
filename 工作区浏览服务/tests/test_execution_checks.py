@@ -285,7 +285,8 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
             ('video-first-pass', {'final_exists': False}, False),
             ('video-first-pass', {'final_diff_keys': ['prompt']}, False),
             ('video-first-pass', {'final_diff_keys': []}, False),
-            ('video-second-pass', {}, False),
+            ('video-second-pass', {}, True),
+            ('video-second-pass', {'final_exists': False, 'final_diff_keys': []}, True),
             ('video-second-pass', {'final_matches': True}, True),
         ]
         for stage, changed, allowed in cases:
@@ -308,6 +309,16 @@ class PreparationTests(unittest.IsolatedAsyncioTestCase):
                         with self.assertRaisesRegex(ValueError, '前段衔接缓存'):
                             await self.store.prepare(key)
                     post.assert_not_called()
+
+    async def test_second_pass_still_requires_matching_selected_first_pass_cache(self):
+        workflow = json.loads(workflow_file('Minimax-H3-导演台-视频生成-标准版', 'api').read_text('utf-8'))
+        key = (await self.store.enqueue(self.data))['local_task_id']
+        self.store.rows[key]['input'].task_type = 'video-second-pass'
+        with patch.object(t.client.Client, 'json', return_value={'can_confirm_refine': False}), \
+                patch.object(t.client, 'submit') as post:
+            with self.assertRaisesRegex(ValueError, '一采缓存缺失或不匹配'):
+                await self.store.check_target_cache(key, workflow)
+            post.assert_not_called()
 
     async def test_upload_responses_reach_scoped_binding_save_and_both_media_states(self):
         from backend.services.director_uploads import save_uploaded_workflow
