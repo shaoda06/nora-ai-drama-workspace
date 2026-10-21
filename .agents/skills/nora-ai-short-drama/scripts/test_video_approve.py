@@ -198,6 +198,11 @@ class ApprovalTests(unittest.TestCase):
         playback = {'segments': {'C001': [{'id': 'P001', 'videos': [
             {'stage': '后处理', 'run': 'R001', 'approved': True}]}]}}
         called = []
+        statuses = [
+            {'updating': False, 'checking': True, 'error': '上次读取期间资料有变化'},
+            {'updating': True, 'checking': True, 'error': None},
+            {'updating': False, 'checking': False, 'error': None},
+        ]
 
         class Opener:
             def open(inner, url, timeout):
@@ -206,8 +211,9 @@ class ApprovalTests(unittest.TestCase):
                 if path == '/api/service':
                     value = {'workspace': str(workspace), 'ready': True}
                 elif path.endswith('/status'):
-                    value = {'updating': False, 'error': None}
+                    value = statuses.pop(0)
                 elif '/episodes/' in path:
+                    self.assertEqual(statuses, [], '检查和更新结束后才能核对播放资料')
                     value = playback
                 elif '/sections/' in path:
                     value = catalogue
@@ -215,13 +221,46 @@ class ApprovalTests(unittest.TestCase):
                     raise AssertionError('Unexpected endpoint ' + path)
                 return io.BytesIO(json.dumps(value).encode())
 
-        with patch.object(tool.urllib.request, 'build_opener', return_value=Opener()):
+        with patch.object(tool.urllib.request, 'build_opener', return_value=Opener()), \
+                patch.object(tool.time, 'sleep') as sleep:
             result = tool.browser_sync(self.root, 'EP001', '后处理', self.plan['identities'][:1], True, 30)
             self.assertEqual(result['state'], 'verified')
+            self.assertEqual(sleep.call_args_list, [unittest.mock.call(.5), unittest.mock.call(.5)])
             playback['segments'] = {'C002': playback['segments']['C001']}
+            statuses.append({'updating': False, 'checking': False, 'error': None})
             with self.assertRaisesRegex(ValueError, '具体采用版本'):
                 tool.browser_sync(self.root, 'EP001', '后处理', self.plan['identities'][:1], False, 30)
         self.assertTrue(any('/episodes/EP001' in p for p in called))
+
+    def test_browser_checking_timeout_and_idle_error_do_not_read_episode(self):
+        workspace = self.root.parent.parent
+        self.fixture.put(workspace / '工作区浏览服务/runtime/task-service.json', {'url': 'http://browser.invalid'})
+        for status, expected_error, message in [
+            ({'updating': False, 'checking': True, 'error': None}, TimeoutError, '浏览入口仍在同步'),
+            ({'updating': False, 'checking': False, 'error': '读取失败'}, ValueError, '读取失败'),
+        ]:
+            with self.subTest(status=status):
+                called = []
+
+                class Opener:
+                    def open(inner, url, timeout):
+                        path = urllib.parse.urlsplit(url).path
+                        called.append(path)
+                        if path == '/api/service':
+                            value = {'workspace': str(workspace), 'ready': True}
+                        elif path.endswith('/status'):
+                            value = status
+                        else:
+                            raise AssertionError('等待或报错期间不应读取剧集：' + path)
+                        return io.BytesIO(json.dumps(value).encode())
+
+                with patch.object(tool.urllib.request, 'build_opener', return_value=Opener()), \
+                        patch.object(tool.time, 'monotonic', side_effect=[10, 11]), \
+                        patch.object(tool.time, 'sleep') as sleep:
+                    with self.assertRaisesRegex(expected_error, message):
+                        tool.browser_sync(self.root, 'EP001', '一采', [], False, 1)
+                    sleep.assert_not_called()
+                self.assertEqual(len(called), 2)
 
     def test_existing_authorized_configuration_batches_are_preserved(self):
         self.setup_stage()

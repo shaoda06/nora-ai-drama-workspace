@@ -141,9 +141,9 @@ def browser_sync(root, episode, stage, identities, complete, timeout):
     deadline = time.monotonic() + timeout
     while True:
         status = get(route + '/status')
-        if status.get('error'):
-            raise ValueError('浏览入口同步失败：' + str(status['error']))
-        if not status['updating']:
+        if not status['updating'] and not status['checking']:
+            if status.get('error'):
+                raise ValueError('浏览入口同步失败：' + str(status['error']))
             break
         if time.monotonic() >= deadline:
             raise TimeoutError('浏览入口仍在同步；只需恢复本次网页核对，不重复采用或导出')
