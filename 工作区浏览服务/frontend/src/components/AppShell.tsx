@@ -6,6 +6,7 @@ import { restoreRefreshScroll } from '../refreshPosition';
 import { Notifications } from './Notifications';
 import { TaskSidebar } from './TaskSidebar';
 import { BottomTools } from './BottomTools';
+import { ProjectSwitcher } from './ProjectSwitcher';
 
 export const HeaderControlsContext = createContext<HTMLElement | null>(null);
 export const FooterSyncContext = createContext<HTMLElement | null>(null);
@@ -36,7 +37,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return <Notifications><HeaderControlsContext.Provider value={controlsRoot}><FooterSyncContext.Provider value={syncRoot}>
     <div className="workspace-with-tasks"><TaskSidebar />
     <header className="site-header" ref={header}>
-      <div className="header-main"><Link className="brand" to="/">Nora工作台</Link>
+      <div className="header-main"><ProjectSwitcher />
         <div className="header-controls" ref={setControlsRoot} /></div>
     </header>
     <main ref={main} className={location.pathname.startsWith('/projects/') ? 'project-page' : undefined}>{children}</main>
