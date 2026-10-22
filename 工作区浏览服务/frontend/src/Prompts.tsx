@@ -109,7 +109,7 @@ export default function Prompts() {
   }); }
   function ask(title: string, text: string, action: () => Promise<void>) { setModalError(''); setConfirm({ title, text, action }); }
   function categoryTree(parent: string): ReactNode { return categories.filter(item => parentOf(item.path) === parent).map(item => <li key={item.path}>
-    <button disabled={busy} aria-current={view === 'library' && category === item.path ? 'page' : undefined} title={item.path} onClick={() => selectCategory(item.path)}>▱ {nameOf(item.path)}</button>
+    <button disabled={busy} aria-current={view === 'library' && category === item.path ? 'page' : undefined} title={item.path} onClick={() => selectCategory(item.path)}><svg className="prompt-folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" /></svg><span>{nameOf(item.path)}</span></button>
     <ul>{categoryTree(item.path)}</ul></li>); }
   const loadError = snapshot.error || (view === 'trash' ? trash.error : query ? results.error : null);
   return <div className="prompt-page" data-prompt-unsaved={dirty || busy}>
@@ -121,7 +121,6 @@ export default function Prompts() {
     <div className="prompt-layout" data-step={step}>
       <aside className="prompt-categories" aria-label="分类">
         <div className="prompt-panel-heading"><h2>分类</h2><button disabled={busy || categoryMissing} onClick={() => openCategoryEdit({ source: null, name: '', parent: category })}>新建分类</button></div>
-        <button className="prompt-root" disabled={busy} aria-current={!category && view === 'library' ? 'page' : undefined} onClick={() => selectCategory('')}>▱ 主目录</button>
         <ul className="prompt-tree">{categoryTree('')}</ul>
         {categories.length === 0 && <p className="muted">还没有分类。可以直接保存提示词，也可以创建自己的分类。</p>}
         {!!category && !categoryMissing && <div className="prompt-category-actions"><small>当前：{category}</small><button disabled={busy} onClick={() => openCategoryEdit({ source: categories.find(item => item.path === category)!, name: nameOf(category), parent: parentOf(category) })}>改名 / 移动分类</button><button disabled={busy} onClick={() => guard(() => ask('删除空分类', `删除“${category}”？其中有内容时不会删除。`, async () => {
