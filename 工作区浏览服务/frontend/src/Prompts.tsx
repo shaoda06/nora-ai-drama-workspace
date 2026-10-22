@@ -15,7 +15,6 @@ type Draft = { title: string; body: string; category: string };
 const parentOf = (path: string) => path.split('/').slice(0, -1).join('/');
 const nameOf = (path: string) => path.split('/').at(-1)!;
 const titleOf = (path: string) => nameOf(path).slice(0, -3);
-const formatTime = (value: number) => new Date(value * 1000).toLocaleString('zh-CN');
 async function api<T>(url: string, method = 'GET', data?: unknown, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`/api/prompts${url}`, { method, signal, headers: data === undefined ? undefined : { 'Content-Type': 'application/json' }, body: data === undefined ? undefined : JSON.stringify(data) });
   const result = await response.json();
@@ -133,7 +132,7 @@ export default function Prompts() {
         <div className="prompt-panel-heading"><button className="prompt-mobile" onClick={() => setStep('categories')}>‹ 分类</button><h2>{view === 'trash' ? '回收站' : query ? '搜索结果' : nameOf(category) || '主目录'}</h2><small>{view === 'trash' ? trash.data?.length || 0 : items.length} 份</small></div>
         {categoryMissing && view === 'library' && <p role="status">当前分类已被移动或删除。<button onClick={() => selectCategory('')}>返回主目录</button></p>}
         {(snapshot.isPending || (view === 'trash' && trash.isPending) || (query && results.isPending)) && <p role="status">正在读取…</p>}
-        {view === 'library' ? items.map(item => <button key={item.path} className="prompt-list-item" disabled={busy} aria-current={saved?.path === item.path ? 'page' : undefined} onClick={() => openDocument(item.path)}><strong>{item.title}</strong><small>{item.category || '主目录'}</small>{item.snippet && <p>{item.snippet}</p>}<small>{formatTime(item.modified)}</small></button>) : trash.data?.map(item => <button className="prompt-list-item" key={item.id} disabled={busy} aria-current={deleted?.id === item.id ? 'page' : undefined} onClick={() => void run(async () => { const doc = await api<Trash>(`/trash/document?id=${item.id}`); clearSelection(); setDeleted(doc); setStep('detail'); })}><strong>{titleOf(item.original)}</strong><small>{parentOf(item.original) || '主目录'}</small><small>删除于 {new Date(item.deleted).toLocaleString('zh-CN')}</small></button>)}
+        {view === 'library' ? items.map(item => <button key={item.path} className="prompt-list-item prompt-title-item" disabled={busy} aria-current={saved?.path === item.path ? 'page' : undefined} onClick={() => openDocument(item.path)}><strong>{item.title}</strong></button>) : trash.data?.map(item => <button className="prompt-list-item" key={item.id} disabled={busy} aria-current={deleted?.id === item.id ? 'page' : undefined} onClick={() => void run(async () => { const doc = await api<Trash>(`/trash/document?id=${item.id}`); clearSelection(); setDeleted(doc); setStep('detail'); })}><strong>{titleOf(item.original)}</strong><small>{parentOf(item.original) || '主目录'}</small><small>删除于 {new Date(item.deleted).toLocaleString('zh-CN')}</small></button>)}
         {!snapshot.isPending && view === 'library' && !items.length && <p className="prompt-empty">{query ? '没有找到匹配的提示词。' : '这里还没有提示词。点击“新建提示词”开始。'}</p>}
         {view === 'trash' && trash.data?.length === 0 && <p className="prompt-empty">回收站是空的。</p>}
       </section>
