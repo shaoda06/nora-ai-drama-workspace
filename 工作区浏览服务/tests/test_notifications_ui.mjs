@@ -60,16 +60,15 @@ try {
     await remaining.getByText('2', { exact: true }).waitFor();
     await click('错误通知');
     await count(5);
-    await card('音频播放失败').locator('.floating-message-countdown').getByText('3', { exact: true }).waitFor();
+    assert.equal(await card('音频播放失败').locator('.floating-message-countdown').count(), 0);
     await page.clock.runFor(1000);
     await remaining.getByText('1', { exact: true }).waitFor();
-    await card('音频播放失败').locator('.floating-message-countdown').getByText('2', { exact: true }).waitFor();
     assert.equal(await card('本文有新版本').locator('.floating-message-countdown').count(), 0);
     assert.equal(await card('页面已有更新').locator('.floating-message-countdown').count(), 0);
     assert.equal(await card('独立常驻通知').locator('.floating-message-countdown').count(), 0);
     await page.screenshot({ path: path.join(out, `${viewport.width}-dismiss-countdown.png`), fullPage: true });
-    assert.equal(await card('本文有新版本').getByRole('button', { name: '关闭通知' }).count(), 0);
-    assert.equal(await card('页面已有更新').getByRole('button').count(), 0);
+    assert.equal(await card('本文有新版本').getByRole('button', { name: '关闭通知' }).count(), 1);
+    assert.equal(await card('页面已有更新').getByRole('button', { name: '关闭通知' }).count(), 1);
     // Independent close, cleanup and timers must never clear another source.
     await card('音频播放失败').getByRole('button', { name: '关闭通知' }).click();
     await count(4);
@@ -77,6 +76,12 @@ try {
     await count(3);
     await page.clock.runFor(1100);
     await card('普通通知').waitFor({ state: 'detached' });
+    await count(2);
+    await click('错误通知');
+    await page.clock.runFor(10000);
+    await count(3);
+    assert.ok(await card('音频播放失败').isVisible());
+    await card('音频播放失败').getByRole('button', { name: '关闭通知' }).click();
     await count(2);
     await click('同步失败');
     await card('30秒后重试').waitFor();
@@ -91,6 +96,16 @@ try {
     await click('更新文档');
     await card('本文有新版本').waitFor();
     await click('切换文档');
+    await count(1);
+    // Closing a state-driven notice must survive source rerenders without changing source state.
+    await card('页面已有更新').getByRole('button', { name: '关闭通知' }).click();
+    await count(0);
+    await click('更新文档');
+    await page.clock.runFor(1000);
+    await count(0);
+    await click('切换页面更新'); // End the still-active condition.
+    await count(0);
+    await click('切换页面更新'); // A new condition may notify again.
     await count(1);
     // Modal moves the same host above the dialog without restarting notification lifetime.
     await click('普通通知');

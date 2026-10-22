@@ -48,7 +48,8 @@ try {
     releaseB();
     await failures.nth(1).waitFor();
     assert.deepEqual(reads, { A: 1, B: 1, Modal: 0 });
-    assert.equal(await failures.locator('.floating-message-countdown, .floating-message-close').count(), 0);
+    assert.equal(await failures.locator('.floating-message-countdown').count(), 0);
+    assert.equal(await failures.getByRole('button', { name: '关闭通知', exact: true }).count(), 2);
     await page.getByRole('button', { name: '普通通知', exact: true }).click();
     await page.locator('.floating-message').filter({ hasText: '独立普通通知' }).waitFor({ state: 'detached' });
     assert.equal(await failures.count(), 2, 'retry controls survive ordinary toast expiry');

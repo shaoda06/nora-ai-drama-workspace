@@ -56,7 +56,7 @@ export function DownloadButton({ url, label, title, pack = false, disabled = fal
     } finally {
       setBusy(false);
       setProgress(null);
-      notify(`${title}：${current.message}`, current.failed ? 'error' : 'info', 5000);
+      notify(`${title}：${current.message}`, current.failed ? 'error' : 'info');
       onStateChange?.({ ...current, busy: false });
     }
   }

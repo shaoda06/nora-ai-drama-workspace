@@ -3,21 +3,23 @@ import type { ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import './Notifications.css';
 
-type Notification = { text: ReactNode; tone: 'info' | 'error'; expiresAt: number | null; dismissible: boolean };
+type Notification = { text: ReactNode; tone: 'info' | 'error'; expiresAt: number | null; onDismiss?: () => void };
 type Message = Notification & { id: string };
-const NotificationContext = createContext<(text: ReactNode, tone?: Notification['tone'], duration?: number) => () => void>(() => () => {});
+const NotificationContext = createContext<(text: ReactNode, tone?: Notification['tone'], duration?: 0) => () => void>(() => () => {});
 const MessageContext = createContext<{
   put: (message: Message) => void;
   remove: (id: string) => void;
 }>(null!);
 export const useNotify = () => useContext(NotificationContext);
 
-/** Persistent messages share the host, but keep their source component's lifetime and actions. */
+/** Dismiss only this mounted message; source rerenders must not reopen it or stop its operation. */
 export function FloatingMessage({ children, tone = 'info' }: { children: ReactNode; tone?: Notification['tone'] }) {
   const id = useId();
+  const dismissed = useRef(false);
   const { put, remove } = useContext(MessageContext);
   useEffect(() => {
-    put({ id, text: children, tone, expiresAt: null, dismissible: false });
+    if (dismissed.current) return;
+    put({ id, text: children, tone, expiresAt: null, onDismiss: () => { dismissed.current = true; } });
   }, [id, children, tone, put]);
   useEffect(() => () => remove(id), [id, remove]);
   return null;
@@ -36,7 +38,7 @@ function MessageCard({ message, remove }: { message: Message; remove: (id: strin
   return <div className={'floating-message floating-message-' + message.tone} role={message.tone === 'error' ? 'alert' : 'status'}>
     <div className="floating-message-content">{message.text}</div>
     {seconds !== null && seconds > 0 && <span className="floating-message-countdown" aria-hidden="true">{seconds}</span>}
-    {message.dismissible && <button className="floating-message-close" aria-label="关闭通知" onClick={() => remove(id)}>×</button>}
+    <button type="button" className="floating-message-close" aria-label="关闭通知" onClick={() => { message.onDismiss?.(); remove(id); }}>×</button>
   </div>;
 }
 
@@ -51,9 +53,9 @@ export function Notifications({ children }: { children: ReactNode }) {
     return index < 0 ? [...current, message] : current.map(item => item.id === message.id ? message : item);
   }), []);
   const registry = useMemo(() => ({ put, remove }), [put, remove]);
-  const notify = useCallback((text: ReactNode, tone: Notification['tone'] = 'info', duration = 3000) => {
+  const notify = useCallback((text: ReactNode, tone: Notification['tone'] = 'info', duration?: 0) => {
     const id = `notification-${nextId.current++}`;
-    put({ id, text, tone, expiresAt: duration ? Date.now() + duration : null, dismissible: true });
+    put({ id, text, tone, expiresAt: tone === 'error' || duration === 0 ? null : Date.now() + 3000 });
     return () => remove(id);
   }, [put, remove]);
   useEffect(() => {
