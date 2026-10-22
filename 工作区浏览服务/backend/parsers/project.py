@@ -24,7 +24,7 @@ PEOPLE = "03-人物资料"
 SCENES = "04-场景资料"
 PROPS = "05-道具资料"
 FORMAL_SECTIONS = ("00-项目定位", "01-主旨与简介", "02-故事大纲", PEOPLE, SCENES, PROPS,
-                   "06-分集大纲", "07-参考音频", "08-参考视频", "09-剧集制作")
+                   "06-分集大纲", "07-参考音频", "08-参考视频", "09-剧集制作", "10-封面资料")
 TEXT_PREVIEW_LIMIT = 256 * 1024
 INLINE_PATTERN = r"(\x60+)(.+?)\1|!?\[([^\]]*)\]\((<[^>]+>|[^)\n]+)\)|\*\*(.+?)\*\*"
 STATUS_COLORS = {
@@ -1473,6 +1473,11 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
         "statistics": {"total": sum(number.startswith("EP") for number in episode_numbers), "completed": counts["已完成"],
                        "notStarted": counts["未开始"], "running": counts["进行中"]},
         "note": "选择剧集查看本集内容。"}
+
+    if load_scope in (None, "10-封面资料"):
+        from backend.parsers.covers import build_covers
+        catalogues["10-封面资料"] = build_covers(project, read)
+        catalogues["10-封面资料"]["groups"] = collect_groups("10-封面资料")
 
     directories = [{"name": p.name, "label": re.sub(r"^\d+-", "", p.name),
                     "url": quote(p.name, safe="-._~") + "/"}

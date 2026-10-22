@@ -43,6 +43,8 @@ def prepare(project, request_file):
     if text is None:
         text = '# ' + draft.stem + '\n' + template.split('\n', 1)[1]
         text = text[:text.index('### 生成记录-001')] + text[text.index('## 3. 讨论与修改'):text.index('### 审阅-生成记录-001-001')]
+    if len(spec.get('references', [])) > 5:
+        raise ValueError('内置Imagegen最多接收5张参考图，请先按实际用途精简输入')
     refs = [reference(root, draft, ref, documents, require_seed=False) for ref in spec.get('references', [])]
     number = max((int(n) for n in re.findall(r'^### 生成记录-(\d+)', text, re.M)), default=0) + 1
     generation = f'生成记录-{number:03d}'

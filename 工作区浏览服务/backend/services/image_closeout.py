@@ -16,7 +16,8 @@ from backend.services.execution_checks import write_json
 
 
 TEMPLATES = {'人物': '人物参考图工作稿模板.md', '场景': '场景参考图工作稿模板.md',
-             '道具': '道具参考图工作稿模板.md', '剧集素材': '剧集素材工作稿模板.md'}
+             '道具': '道具参考图工作稿模板.md', '剧集素材': '剧集素材工作稿模板.md',
+             '封面': '封面制作工作稿模板.md'}
 
 
 def section(text, heading):

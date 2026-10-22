@@ -21,6 +21,7 @@ import { AssetCandidateMedia } from './components/AssetCandidateMedia';
 import { useRefreshState } from './refreshPosition';
 import { AudioPreviewButton, useAudioPreview } from './components/AudioPreviewButton';
 import { ReferenceLibrary } from './components/ReferenceLibrary';
+import { CoverLibrary } from './components/CoverLibrary';
 
 type AssetSelection = { id: string; name: string };
 type AssetNavigation = { asset: AssetSelection | null; onAssetChange: (asset: AssetSelection | null) => void };
@@ -94,6 +95,7 @@ function SectionPane({ project, section, revision, active, episode, onEpisodeCha
 }
 function Section({ value, project, section, revision, active, episode, onEpisodeChange, asset, onAssetChange }: { value: RecordData; project: string; section: string; revision: number; active: boolean; episode: string | null; onEpisodeChange: (episode: string | null) => void } & AssetNavigation) {
   if (section === '09-剧集制作') return <EpisodeProduction project={project} statistics={value.statistics} items={value.children} selected={episode} onSelect={onEpisodeChange} revision={revision} />;
+  if (value.kind === 'covers') return <CoverLibrary value={value} revision={revision} />;
   if (section === '06-分集大纲') return <EpisodeOutlines value={value} />;
   if (value.kind === 'people' || value.kind === 'scenes' || value.kind === 'props') return <Assets value={value} project={project} revision={revision} active={active} asset={asset} onAssetChange={onAssetChange} />;
   if (section === '07-参考音频' || section === '08-参考视频') return <ReferenceLibrary value={value} revision={revision} active={active} asset={asset} onAssetChange={onAssetChange} />;
