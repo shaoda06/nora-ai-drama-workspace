@@ -9,7 +9,7 @@ sessionStorage.removeItem(STORAGE_KEY);
 const previous = restored?.href === window.location.href ? restored : null;
 const values: Record<string, unknown> = {};
 
-// Only an automatic refresh restores these choices; ordinary navigation keeps its existing defaults.
+// Reloads restore these choices; navigation within the app keeps its existing defaults.
 export function useRefreshState<T>(key: string, initial: T): [T, Dispatch<SetStateAction<T>>] {
   const [entry, setEntry] = useState(() => ({ key, value: (previous?.values[key] as T | undefined) ?? initial }));
   if (entry.key !== key) setEntry({ key, value: (previous?.values[key] as T | undefined) ?? initial });
@@ -30,6 +30,8 @@ export function useRefreshState<T>(key: string, initial: T): [T, Dispatch<SetSta
 export function saveRefreshPosition() {
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ href: window.location.href, scrollY: window.scrollY, values }));
 }
+
+window.addEventListener('pagehide', saveRefreshPosition);
 
 export function restoreRefreshScroll(container: HTMLElement) {
   if (!previous || previous.href !== window.location.href) return;
