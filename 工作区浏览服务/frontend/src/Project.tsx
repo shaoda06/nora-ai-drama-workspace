@@ -1,3 +1,4 @@
+import { PageCheckStatus } from './components/PageCheckStatus';
 import { TabSelect } from './components/TabSelect';
 import { PointerTooltip } from './components/PointerTooltip';
 import { useContext, useEffect, useRef, useState } from 'react';
@@ -13,7 +14,7 @@ import { Breadcrumbs, BreadcrumbActionsContext, BreadcrumbSelectorContext } from
 import { TabNav } from './components/TabNav';
 import { SearchField } from './components/SearchField';
 import { Pagination } from './components/Pagination';
-import { FooterSyncContext, HeaderControlsContext } from './components/AppShell';
+import { HeaderControlsContext } from './components/AppShell';
 import { SyncNotification } from './components/SyncNotification';
 import { EpisodeProduction } from './components/EpisodeProduction';
 import { EpisodeOutlines } from './components/EpisodeOutlines';
@@ -29,7 +30,6 @@ type AssetNavigation = { asset: AssetSelection | null; onAssetChange: (asset: As
 
 export default function Project() {
   const controlsRoot = useContext(HeaderControlsContext);
-  const syncRoot = useContext(FooterSyncContext);
   const { name = '' } = useParams();
   const [section, setSection] = useRefreshState(`project/${name}/section`, '00-项目定位');
   const [visited, setVisited] = useState([section]);
@@ -71,7 +71,7 @@ export default function Project() {
   }, [overview.data, section, setSection, setEpisode, setAsset]);
   return <BreadcrumbSelectorContext.Provider value={breadcrumbSelector}><BreadcrumbActionsContext.Provider value={breadcrumbActions}><PreviewContext.Provider value={setPreview}>
     <SyncNotification key={name} error={status.data?.error} errorKind={status.data?.errorKind} retryAt={retryAt} updating={syncing} />
-    {syncRoot && createPortal(<>上次同步：{status.data?.updated ? new Date(status.data.updated).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).replaceAll('/', '-') : '—'}</>, syncRoot)}
+    <PageCheckStatus queries={[status, overview]} />
     <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
     {overview.data && (
       <div className="activity" role="region" aria-label="当前阶段">

@@ -1,3 +1,4 @@
+import { PageCheckStatus } from './components/PageCheckStatus';
 import { Component, lazy, Suspense, useState } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -28,6 +29,7 @@ function Home() {
   const projects = useQuery({ queryKey: ['projects'], queryFn: () => get<{ id: string; name: string }[]>('/api/projects'), refetchInterval: 5000 });
   const index = useQuery({ queryKey: ['project-index'], queryFn: () => get<{ title: string; html: string }>('/api/project-index'), enabled: indexOpen, refetchInterval: 5000 });
   return <div className="home">
+    <PageCheckStatus queries={[projects]} />
     <div className="section-heading"><h2>共用工具</h2></div>
     <div className="grid"><EntryCard to="/assets/person" title="资产管理" description="人物资料、服装、道具与图片相册" /><EntryCard to="/prompts" title="提示词管理" description="分类整理、编辑与搜索常用提示词" /><EntryCard to="/krea2" title="Krea2 风格库" description="预览、提示词与资源更新" /><EntryCard to="/workflows" title="内置工作流" description="下载画布版与 API 版工作流" /></div>
     <div className="section-heading"><h2>短剧项目</h2><span className="muted">按<button type="button" className="link" aria-label="查看项目总索引" onClick={() => setIndexOpen(true)}>项目总索引</button>排序</span></div>

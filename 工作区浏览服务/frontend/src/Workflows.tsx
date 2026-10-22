@@ -1,3 +1,4 @@
+import { PageCheckStatus } from './components/PageCheckStatus';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { get } from './api';
@@ -15,6 +16,7 @@ const groups = [
 export default function Workflows() {
   const query = useQuery({ queryKey: ['workflows'], queryFn: () => get<Workflow[]>('/api/workflows') });
   return <>
+    <PageCheckStatus queries={[query]} />
     <PageHeader title="内置工作流" description="画布版可在 ComfyUI 中打开编辑；API 版用于程序提交。" />
     <Result page loading={query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} />
     {query.data && groups.map(group => {

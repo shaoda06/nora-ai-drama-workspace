@@ -1,3 +1,4 @@
+import { PageCheckStatus } from './components/PageCheckStatus';
 import { TabSelect } from './components/TabSelect';
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useBlocker, useNavigate, useParams } from 'react-router-dom';
@@ -52,6 +53,7 @@ function AssetList({ kind }: { kind: Kind }) {
   const items = all.filter(item => (!category || item.category === category) &&
     [item.name, item.category, ...Object.values(item.profile)].join('\n').toLocaleLowerCase().includes(needle));
   return <>
+    <PageCheckStatus queries={[query]} />
     <div className="asset-toolbar"><input type="search" aria-label="搜索资产" placeholder={`搜索${kinds[kind]}名称或资料…`} value={search} onChange={event => setSearch(event.target.value)} />
       {kind === 'clothing' && <TabSelect label="服装分类筛选" selected={category} onChange={setCategory} items={[{ value: '', label: '全部分类' }, ...clothing.map((value) => ({ value, label: value }))]} />}
       <Link className="asset-primary" to={`/assets/${kind}/new`}>＋ 新增{kinds[kind]}</Link></div>
@@ -70,10 +72,10 @@ function AssetList({ kind }: { kind: Kind }) {
 
 function AssetDetail({ kind, id }: { kind: Kind; id: string }) {
   const query = useQuery({ queryKey: ['asset', id], queryFn: ({ signal }) => api<Asset>(`/${id}`, 'GET', undefined, signal), enabled: id !== 'new', gcTime: 0, staleTime: 0 });
-  if (id === 'new') return <AssetEditor initial={null} kind={kind} />;
-  if (!query.data) return <><Link to={`/assets/${kind}`}>‹ 返回{kinds[kind]}列表</Link><Result loading={query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} /></>;
+  if (id === 'new') return <><PageCheckStatus queries={[]} /><AssetEditor initial={null} kind={kind} /></>;
+  if (!query.data) return <><PageCheckStatus queries={[query]} /><Link to={`/assets/${kind}`}>‹ 返回{kinds[kind]}列表</Link><Result loading={query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} /></>;
   if (query.data.kind !== kind) return <Navigate to={`/assets/${query.data.kind}/${id}`} replace />;
-  return <AssetEditor initial={query.data} kind={kind} />;
+  return <><PageCheckStatus queries={[query]} /><AssetEditor initial={query.data} kind={kind} /></>;
 }
 
 function AssetEditor({ initial, kind }: { initial: Asset | null; kind: Kind }) {

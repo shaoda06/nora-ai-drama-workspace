@@ -1,3 +1,4 @@
+import { PageCheckStatus } from './components/PageCheckStatus';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { get } from './api';
@@ -37,6 +38,7 @@ export default function History() {
   }, [selected, anchor, document.isSuccess]);
   const documentError = !showRecords && document.error;
   return <PreviewContext.Provider value={item => openDocument(item.key!)}>
+    <PageCheckStatus queries={showRecords ? [list] : [list, document]} />
     <PageHeader eyebrow="开发跟踪" title="版本与开发记录" />
     <div className="history-layout">
       <TabNav vertical label="开发文档" items={navigation} selected={path.startsWith('开发记录/') ? RECORDS : path} onChange={openDocument} />

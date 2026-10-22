@@ -1,3 +1,4 @@
+import { PageCheckStatus } from './components/PageCheckStatus';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useBlocker } from 'react-router-dom';
@@ -131,6 +132,7 @@ export default function Prompts() {
   </>; }
   const loadError = snapshot.error || (view === 'trash' ? trash.error : query ? results.error : null);
   return <div className="prompt-page" data-prompt-unsaved={dirty || busy}>
+    <PageCheckStatus queries={[snapshot, ...(view === 'trash' ? [trash] : query ? [results] : [])]} />
     <PageHeader title="提示词管理" actions={<button className="prompt-trash-toggle" disabled={busy} onClick={() => guard(() => { clearSelection(); setView(view === 'trash' ? 'library' : 'trash'); setStep('categories'); })}>{view !== 'trash' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" /></svg>}{view === 'trash' ? '返回提示词库' : '回收站'}</button>} />
     {loadError && <div className="error" role="alert">{loadError.message}<button onClick={() => void refresh()}>重试</button></div>}
     {error && <div className="error" role="alert">{error}</div>}

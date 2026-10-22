@@ -1,3 +1,4 @@
+import { PageCheckStatus } from './components/PageCheckStatus';
 import { TabSelect } from './components/TabSelect';
 import { useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -23,6 +24,7 @@ export default function Krea() {
   const version = JSON.stringify(state.data?.sources && Object.fromEntries(Object.entries(state.data.sources).map(([key, value]) => [key, (value as RecordData).local])));
   const catalogue = useQuery({ queryKey: ['krea', search, library, category, page, version], queryFn: () => get<RecordData>(`/api/krea2/catalog?${new URLSearchParams({ q: search, library, category, page: String(page) })}`), placeholderData: previous => previous });
   return <>
+    <PageCheckStatus queries={[state, catalogue]} />
     <PageHeader eyebrow="跨项目视觉参考" eyebrowInline title="Krea2 风格库" description="浏览预览、查看提示词，保留来源与版本。" actions={<button onClick={() => setManage(true)}>资源与更新管理</button>} />
     {controlsRoot && createPortal(<div className="toolbar"><SearchField label="搜索风格" placeholder="搜索风格名称、分类" value={search} onChange={value => { setSearch(value); setPage(1); }} />
       <TabSelect label="资源库" selected={library} onChange={value => { setLibrary(value); setCategory(''); setPage(1); }} items={[{ value: '', label: '全部资源库' }, { value: 'krea2_styles', label: '风格库' }, { value: 'Krea2_moodboard', label: '灵感库' }]} />
