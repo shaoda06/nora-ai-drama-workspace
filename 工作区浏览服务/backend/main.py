@@ -663,7 +663,8 @@ def update_action(request: Request, action: UpdateAction) -> dict[str, bool]:
 @app.get('/api/history')
 def history() -> list[dict[str, str]]:
     root = TOOL / 'docs'
-    return [{'path': p.relative_to(root).as_posix(), 'name': p.stem} for p in sorted(root.rglob('*.md'))]
+    return [{'path': p.relative_to(root).as_posix(), 'name': p.stem}
+            for p in sorted(root.rglob('*.md')) if not p.is_relative_to(root / '归档')]
 
 
 @app.get('/api/history/document')

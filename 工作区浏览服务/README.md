@@ -211,7 +211,7 @@ Agent通过[统一入口](../.agents/skills/nora-ai-short-drama/references/comfy
 ├── Krea2风格库/               # 风格资源、内部更新模块及操作说明
 ├── scripts/launcher.py       # 系统托管启动、复用、停止及发布重启
 ├── tests/                    # API、变化检测与访问边界测试
-├── docs/                     # 开发计划、版本记录、详细开发记录
+├── docs/                     # 版本记录、详细开发记录及归档（归档不进入网页导航）
 └── runtime/                  # 本机日志及验证附件，不入Git
 ```
 
