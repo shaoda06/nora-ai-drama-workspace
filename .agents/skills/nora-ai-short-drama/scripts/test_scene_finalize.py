@@ -280,6 +280,47 @@ class FinalizeTests(unittest.TestCase):
             self.assertNotIn('source_bytes', mapping)
             self.assertNotIn('source_sha256', mapping)
 
+    def test_postprocess_authorized_prepared_input_keeps_original_second_pass_identity(self):
+        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
+        self.plan['stage'] = '后处理'
+        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
+        originals = {}
+        for item in self.plan['items']:
+            path = Path(item['mapping'])
+            mapping = tool.adopt.load(path)
+            original = Path(item['source_video'])
+            originals[original] = original.read_bytes()
+            prepared = path.parent / '输入素材/前3秒.mkv'
+            self.put(prepared, b'trimmed first three seconds')
+            upload = mapping['uploads'][0]
+            upload['file'] = str(prepared)
+            mapping['preprocessing'] = {'source_video': str(original), 'prepared_video': str(prepared)}
+            mapping.pop('source_bytes')
+            mapping.pop('source_sha256')
+            self.put(path, mapping)
+            self.put(path.parent / '后台过程记录.json', [{'stage': 'upload', 'result': 'success',
+                'file': str(prepared), 'remote': {'input_path': upload['input_path'],
+                    'bytes': prepared.stat().st_size, 'sha256': hashlib.sha256(prepared.read_bytes()).hexdigest()}}])
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'completed')
+        for file, data in originals.items():
+            self.assertEqual(file.read_bytes(), data)
+        self.assertEqual([s['content_identity'] for s in result['sources']], [c['identity'] for c in contents])
+
+    def test_postprocess_prepared_input_cannot_claim_another_second_pass_source(self):
+        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
+        self.plan['stage'] = '后处理'
+        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
+        item = self.plan['items'][0]
+        path = Path(item['mapping'])
+        mapping = tool.adopt.load(path)
+        mapping['preprocessing'] = {'source_video': self.plan['items'][1]['source_video'],
+                                    'prepared_video': item['source_video']}
+        self.put(path, mapping)
+        with self.assertRaisesRegex(ValueError, '来源与获批二采不对应'):
+            self.run_plan()
+        self.assertFalse(NativeClient.calls)
+
     def test_postprocess_missing_upload_records_does_not_infer_from_request(self):
         contents = [self.item(p, '二采') for p in ('P001', 'P002')]
         self.plan['stage'] = '后处理'

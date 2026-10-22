@@ -342,6 +342,11 @@ def prepare(root, plan, batch_parts=None, batch_name=None):
             source_video = adopt.local_path(root, item['source_video'])
             if source_video.stem != content['identity']:
                 raise ValueError('后处理源视频身份不符合二采来源')
+            preprocessing = actual['mapping'].get('preprocessing')
+            if preprocessing:
+                if adopt.local_path(root, preprocessing['source_video']) != source_video:
+                    raise ValueError('后处理输入副本的来源与获批二采不对应：' + part)
+                source_video = adopt.local_path(root, preprocessing['prepared_video'])
             uploads = [u for u in actual['mapping']['uploads']
                        if adopt.local_path(root, u['file']) == source_video]
             loaders = [n['inputs']['file'] for n in actual['api'].values() if n['class_type'] == 'LoadVideo']
