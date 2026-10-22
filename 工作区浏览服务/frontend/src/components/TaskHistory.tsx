@@ -1,3 +1,4 @@
+import { FloatingMessage } from './Notifications';
 import { TabSelect } from './TabSelect';
 import { useEffect, useRef, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -42,8 +43,8 @@ export function TaskHistory({ updatedAt, total, onDetails }: {
       ]} /></div>
     <div className="comfy-queue-body">
       {query.isPending && <p className="comfy-empty" role="status">正在读取历史…</p>}
-      {query.isError && <p className="comfy-task-warning" role="alert">{query.error.message} <button
-        disabled={query.isFetching} onClick={() => void refetch()}>重新读取</button></p>}
+      {query.isError && <FloatingMessage tone="error">{query.error.message} <button
+        disabled={query.isFetching} onClick={() => void refetch()}>重新读取</button></FloatingMessage>}
       {!query.isPending && !query.isError && items.length === 0 && <p className="comfy-empty">{search || result !== 'all' ? '没有符合条件的历史任务' : '暂无历史任务'}</p>}
       <div className="comfy-task-items">{items.map(task => <LocalQueueCard key={task.id} task={task} onDetails={onDetails} />)}</div>
       {matches !== undefined && matches > 0 && <div className="comfy-history-footer"><span>已显示 {items.length} / {matches} 条</span>

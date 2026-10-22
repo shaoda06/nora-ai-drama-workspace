@@ -1,3 +1,4 @@
+import { FloatingMessage } from './Notifications';
 import { PointerTooltip } from './PointerTooltip';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -240,7 +241,7 @@ export function TaskSidebar() {
         {localCategory === 'history' ? <TaskHistory
           updatedAt={historyUpdatedAt} total={localCounts.history} onDetails={setDetailId} /> :
         <div className="comfy-queue-body" key={`${selectedNode?.url}:${localCategory}`}>
-          {actionError && <p className="comfy-task-warning" role="alert">{actionError}</p>}
+          {open && actionError && <FloatingMessage tone="error">{actionError}</FloatingMessage>}
           {localTasks.length === 0 && <p className="comfy-empty">暂无{localQueueStates[localCategory]}任务</p>}
           <div className="comfy-task-items">{localTasks.map(task => <LocalQueueCard key={task.id} task={task}
             position={localPositions.get(task.id)}

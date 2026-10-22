@@ -1,5 +1,6 @@
 import { PointerTooltip } from './PointerTooltip';
 import { useState } from 'react';
+import { FloatingMessage, useNotify } from './Notifications';
 import './SceneDownloads.css';
 
 type Request = { time: string; message: string; failed: boolean };
@@ -10,22 +11,22 @@ export function DownloadButton({ url, label, title, pack = false, disabled = fal
   onStateChange?: (state: DownloadState) => void;
 }) {
   const [busy, setBusy] = useState(false);
-  const [requests, setRequests] = useState<Request[]>([]);
+  const [progress, setProgress] = useState<Request | null>(null);
+  const notify = useNotify();
 
   async function download() {
-    const index = requests.length;
     let current = {
       time: new Date().toLocaleTimeString('zh-CN', { hour12: false }),
       message: pack ? '正在打包视频，请稍候…' : '正在准备文件，请稍候…', failed: false,
     };
     const update = (message: string, failed = false) => {
       current = { ...current, message, failed };
-      if (onStateChange) onStateChange({ ...current, busy: true });
-      else setRequests(previous => previous.map((request, i) => i === index ? current : request));
+      setProgress(current);
+      onStateChange?.({ ...current, busy: true });
     };
     setBusy(true);
-    if (onStateChange) onStateChange({ ...current, busy: true });
-    else setRequests(previous => [...previous, current]);
+    setProgress(current);
+    onStateChange?.({ ...current, busy: true });
     try {
       const response = await fetch(url!);
       if (!response.ok) {
@@ -54,6 +55,8 @@ export function DownloadButton({ url, label, title, pack = false, disabled = fal
       update(`下载失败：${error instanceof Error ? error.message : String(error)}`, true);
     } finally {
       setBusy(false);
+      setProgress(null);
+      notify(`${title}：${current.message}`, current.failed ? 'error' : 'info', 5000);
       onStateChange?.({ ...current, busy: false });
     }
   }
@@ -64,7 +67,6 @@ export function DownloadButton({ url, label, title, pack = false, disabled = fal
       {busy && <span className="loading-spinner download-spinner" aria-hidden="true" />}
       {busy ? (pack ? '正在打包…' : '正在准备…') : label}
     </button></PointerTooltip>
-    {!onStateChange && requests.map((request, index) => <span className={`stage-download-message ${request.failed ? 'download-failed' : 'muted'}`}
-      role={request.failed ? 'alert' : 'status'} key={index}>{request.time} {request.message}</span>)}
+    {progress && <FloatingMessage>{title}：{progress.message}</FloatingMessage>}
   </div>;
 }

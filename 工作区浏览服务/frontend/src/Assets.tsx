@@ -5,7 +5,7 @@ import { Link, Navigate, useBlocker, useNavigate, useParams } from 'react-router
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Dialog, Result } from './components';
 import { PageHeader } from './components/PageHeader';
-import { useNotify } from './components/Notifications';
+import { FloatingMessage, useNotify } from './components/Notifications';
 import './Assets.css';
 
 type Kind = 'person' | 'clothing' | 'prop';
@@ -151,7 +151,7 @@ function AssetEditor({ initial, kind }: { initial: Asset | null; kind: Kind }) {
   }
   return <div data-asset-unsaved={dirty || busy}>
     <div className="asset-detail-heading"><Link to={`/assets/${kind}`}>‹ 返回{kinds[kind]}列表</Link>{saved && <button className="asset-danger" disabled={busy || dirty} onClick={() => setRemove('asset')}>删除{kinds[kind]}</button>}</div>
-    {error && <div className="error" role="alert">{error}{saved && <button disabled={busy} onClick={() => setReload(true)}>重新载入</button>}</div>}
+    {error && <FloatingMessage tone="error">{error}{saved && !remove && !reload && <button disabled={busy} onClick={() => setReload(true)}>重新载入</button>}</FloatingMessage>}
     <div className="asset-editor">
       <section className="asset-info" aria-label="资料卡"><h2>{saved ? saved.name : `新增${kinds[kind]}`}</h2>
         <form onSubmit={event => { event.preventDefault(); void run(save); }}><fieldset disabled={busy}>
@@ -180,8 +180,8 @@ function AssetEditor({ initial, kind }: { initial: Asset | null; kind: Kind }) {
       </section>
     </div>
     {preview && saved && <Dialog title={preview.name} close={() => setPreview(null)}><img className="asset-full-image" src={imageUrl(saved, preview)} alt={preview.name} /><p><a href={imageUrl(saved, preview) + '?download=true'} download>下载原图</a></p></Dialog>}
-    {remove && <Dialog title={remove === 'asset' ? `删除${kinds[kind]}` : '删除图片'} close={() => { if (!busy) setRemove(null); }}><p>{remove === 'asset' ? `将删除“${saved!.name}”的资料及全部图片。` : `将删除“${remove.name}”。`}此操作无法撤销。</p><div className="asset-dialog-actions"><button disabled={busy} onClick={() => setRemove(null)}>取消</button><button className="asset-danger" disabled={busy} onClick={() => void run(confirmRemove)}>确认删除</button></div>{error && <p className="error" role="alert">{error}</p>}</Dialog>}
-    {reload && <Dialog title="重新载入资料" close={() => setReload(false)}><p>重新载入会放弃当前未保存的输入，读取最近保存的资料和图片。</p><div className="asset-dialog-actions"><button disabled={busy} onClick={() => setReload(false)}>取消</button><button disabled={busy} onClick={() => void run(async () => { const item = await api<Asset>(`/${saved!.id}`); accept(item); setDraft(cardOf(item)); setReload(false); })}>放弃输入并载入</button></div>{error && <p role="alert">{error}</p>}</Dialog>}
+    {remove && <Dialog title={remove === 'asset' ? `删除${kinds[kind]}` : '删除图片'} close={() => { if (!busy) setRemove(null); }}><p>{remove === 'asset' ? `将删除“${saved!.name}”的资料及全部图片。` : `将删除“${remove.name}”。`}此操作无法撤销。</p><div className="asset-dialog-actions"><button disabled={busy} onClick={() => setRemove(null)}>取消</button><button className="asset-danger" disabled={busy} onClick={() => void run(confirmRemove)}>确认删除</button></div></Dialog>}
+    {reload && <Dialog title="重新载入资料" close={() => setReload(false)}><p>重新载入会放弃当前未保存的输入，读取最近保存的资料和图片。</p><div className="asset-dialog-actions"><button disabled={busy} onClick={() => setReload(false)}>取消</button><button disabled={busy} onClick={() => void run(async () => { const item = await api<Asset>(`/${saved!.id}`); accept(item); setDraft(cardOf(item)); setReload(false); })}>放弃输入并载入</button></div></Dialog>}
     {blocker.state === 'blocked' && <Dialog title={busy ? '正在处理' : '资料尚未保存'} close={() => blocker.reset()}><p>{busy ? '图片或资料正在保存，请等待完成。' : '离开会丢失当前未保存的资料。'}</p><div className="asset-dialog-actions"><button onClick={() => blocker.reset()}>继续编辑</button>{!busy && <button onClick={() => blocker.proceed()}>放弃修改并离开</button>}</div></Dialog>}
   </div>;
 }

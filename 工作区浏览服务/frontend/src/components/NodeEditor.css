@@ -19,9 +19,8 @@
 .node-editor-add{width:100%;padding:10px}
 .node-editor-save{display:flex;align-items:center;gap:14px;padding:14px 0;background:#fff}
 .node-editor-save>span{font-size:12px;color:var(--muted)}
-.node-editor-error,.node-editor-confirm{padding:12px;border:1px solid var(--line);border-radius:8px;margin-bottom:14px;font-size:13px}
-.node-editor-error{color:#a63730}
-.node-editor-error p,.node-editor-confirm p{margin:0 0 10px}
+.node-editor-confirm{padding:12px;border:1px solid var(--line);border-radius:8px;margin-bottom:14px;font-size:13px}
+.node-editor-confirm p{margin:0 0 10px}
 .node-editor-confirm>div{display:flex;flex-wrap:wrap;gap:8px}
 .node-editor-confirm button{font-size:12px;padding:6px 9px}
 @media(max-width:450px){.node-editor-auth{grid-template-columns:1fr;gap:0}}

@@ -1,3 +1,4 @@
+import { FloatingMessage } from './components/Notifications';
 import { PageCheckStatus } from './components/PageCheckStatus';
 import { TabSelect } from './components/TabSelect';
 import { useContext, useState } from 'react';
@@ -59,10 +60,10 @@ function UpdateManagement({ state, error, retry, retrying, close }: { state?: Re
   };
   return <Dialog title="资源与更新管理" close={close}><Result loading={!state} error={error} retry={retry} retrying={retrying} />
     {state && <>{!state.canManage && <p className="notice">更新管理仅支持本机或局域网地址，请通过对应地址打开。</p>}
-      {actionError && <p className="error" role="alert">{actionError}</p>}{Object.entries(state.sources).map(([source, raw]) => {
+      {actionError && <FloatingMessage tone="error">{actionError}</FloatingMessage>}{Object.entries(state.sources).map(([source, raw]) => {
         const data = raw as RecordData;
         const disabled = !state.canManage || state.job.running;
-        return <article key={source}><h3>{source === 'clio' ? '风格库（Clio）' : '灵感库（Ray）'}</h3><p>本地 {data.count} 个风格 · {data.local?.label || '版本未记录'}</p>{data.local?.date && <p className="muted">来源日期：{data.local.date}</p>}<p role="status">{data.status.message}</p>{data.status.error && <p className="error">{data.status.error}</p>}
+        return <article key={source}><h3>{source === 'clio' ? '风格库（Clio）' : '灵感库（Ray）'}</h3><p>本地 {data.count} 个风格 · {data.local?.label || '版本未记录'}</p>{data.local?.date && <p className="muted">来源日期：{data.local.date}</p>}<p role="status">{data.status.message}</p>{data.status.error && <FloatingMessage tone="error">{source === 'clio' ? '风格库（Clio）' : '灵感库（Ray）'}：{data.status.error}</FloatingMessage>}
           {data.status.download && <p>已下载 {(data.status.download.received / 1_000_000).toFixed(1)} MB{data.status.download.total ? ` / ${(data.status.download.total / 1_000_000).toFixed(1)} MB` : ''}</p>}
           {data.remote && <details><summary>上游版本</summary><p>{data.remote.label}</p><p>{data.remote.date}</p><p>{data.remote.note}</p><Original url={data.remote.url} label="发布页面" /></details>}
           <div className="toolbar"><button disabled={disabled} onClick={() => run(source, 'check')}>检查更新</button><button disabled={disabled} onClick={() => run(source, 'prepare')}>下载并准备更新</button><button disabled={disabled || !data.restore} onClick={() => run(source, 'restore')}>恢复上一版</button></div>

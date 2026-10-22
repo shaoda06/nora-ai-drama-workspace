@@ -1,3 +1,4 @@
+import { FloatingMessage } from './Notifications';
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Dialog } from '../components';
@@ -100,8 +101,8 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close, openTask }: {
     ? Math.max(0, Math.floor((Date.parse(summary.ended_at) - Date.parse(summary.started_at)) / 1000)) : null;
   return <Dialog title="任务历史详情" close={close}><div className="task-detail">
     {query.isPending && <p role="status">正在读取任务详情…</p>}
-    {query.isError && <div className="task-detail-problem" role="alert"><p>{query.error.message}</p>
-      <button onClick={() => void refetch()}>重新读取</button></div>}
+    {query.isError && <FloatingMessage tone="error">{query.error.message}
+      <button onClick={() => void refetch()}>重新读取</button></FloatingMessage>}
     {summary && data && <>
       <div className="task-detail-title"><div><p>{summary.project} · {taskTypeLabels[summary.task_type]}</p>
         <h3>{summary.title}</h3><p>来源会话：{summary.source_session_name || '未记录'}</p></div>

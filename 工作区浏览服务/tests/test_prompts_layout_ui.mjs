@@ -178,9 +178,9 @@ try {
   assert.equal(await body.inputValue(), '未保存正文\n换行保留');
   failSave = true;
   await page.getByRole('button', { name: '保存', exact: true }).click();
-  await page.locator('.prompt-page > .error').filter({ hasText: '测试保存冲突' }).waitFor();
+  await page.locator('.floating-message-error').filter({ hasText: '测试保存冲突' }).waitFor();
   assert.equal(await body.inputValue(), '未保存正文\n换行保留');
-  assert.equal(await page.locator('.floating-message').count(), 0);
+  assert.equal(await page.locator('.prompt-page > .error').count(), 0);
   failSave = false;
   const savedScroll = await page.evaluate(() => scrollY);
   await page.getByRole('button', { name: '保存', exact: true }).click();

@@ -3,6 +3,7 @@ import type { SegmentVideo } from '../api';
 import { Dialog } from '../components';
 import { editNote, loadNotes, noteKey, prepareNotesExport, saveNote, saveNotesExport, useSceneNotes } from '../revisionNotes';
 import type { NoteInput } from '../revisionNotes';
+import { FloatingMessage, useNotify } from './Notifications';
 import { CopyButton } from './CopyButton';
 import { candidateLabel } from './SegmentVideo';
 import { TabNav } from './TabNav';
@@ -10,7 +11,7 @@ import { TabNav } from './TabNav';
 export interface NoteScope { project: string; episode: string; scene: string }
 export function RevisionNoteEditor({ scope, segment, current, fileRevision, time, shot }: { scope: NoteScope; segment: string; current: SegmentVideo; fileRevision: string; time: number; shot?: string }) {
   const textarea = useRef<HTMLTextAreaElement>(null);
-  const [insertMessage, setInsertMessage] = useState('');
+  const notify = useNotify();
   const tenths = Math.floor(time * 10);
   const timestamp = `${String(Math.floor(tenths / 600)).padStart(2, '0')}.${String(Math.floor(tenths / 10) % 60).padStart(2, '0')}.${tenths % 10}秒${shot ? `，${shot}` : ''}：`;
   const data = useSceneNotes(scope.project, scope.episode, scope.scene);
@@ -30,25 +31,23 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
     const before = text.slice(0, start);
     const inserted = (before && !before.endsWith('\n') ? '\n' : '') + timestamp;
     const value = before + inserted + text.slice(end);
-    if (value.length > editor.maxLength) { setInsertMessage('文字已达上限，无法插入时间。'); return; }
+    if (value.length > editor.maxLength) { notify('文字已达上限，无法插入时间。'); return; }
     editNote(data.url, { ...identity, text: value, fileRevision });
     requestAnimationFrame(() => {
       editor.focus();
       editor.setSelectionRange(start + inserted.length, start + inserted.length);
     });
-    setInsertMessage('');
   };
   return <div className="revision-note-editor">
     <p className="revision-note-identity">{scope.project} / {scope.episode} / {scope.scene} / {segment} / {current.stage} / {current.approved ? '正式版' : candidateLabel(current.candidateNumber)} · {current.run}</p>
-    {data.error && <p className="error" role="alert">修改意见读取失败：{data.error}<button onClick={() => { void loadNotes(data.url); }}>重试读取</button></p>}
     <div className="revision-note-heading">
       <div className="revision-note-label"><label htmlFor="revision-note-text">修改意见</label><button className="link" disabled={!data.loaded || !current.url} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={insertTime}>插入时间</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
       <div className="revision-note-status" role="status"><span className="revision-note-state" data-state={statusKind}>{data.error ? '读取失败' : data.loading ? '正在读取…' : status}</span>{note && <span className="muted">更新于 {new Date(note.updatedAt).toLocaleString('zh-CN')}</span>}{draft?.status === 'error' && <button onClick={() => { void saveNote(data.url, key); }}>重试保存</button>}</div>
     </div>
     <textarea ref={textarea} id="revision-note-text" placeholder="填写修改意见..." maxLength={20000} disabled={!data.loaded} value={text}
       onChange={event => editNote(data.url, { ...identity, text: event.target.value, fileRevision })} onBlur={() => { void saveNote(data.url, key); }} />
-    {insertMessage && <p role="status" className="muted">{insertMessage}</p>}
-    {draft?.error && <p className="error">{draft.error}</p>}
+
+    {draft?.error && <FloatingMessage tone="error">{draft.error}</FloatingMessage>}
     {note && note.fileRevision !== fileRevision && <p className="muted">该意见记录于此版本更新前。</p>}
   </div>;
 }
@@ -67,6 +66,7 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
   const [exporting, setExporting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const notify = useNotify();
   const [exportError, setExportError] = useState('');
   const changed = draft !== null && [...draft.notes, ...draft.rounds].some(item => item.text !== item.original);
   useEffect(() => {
@@ -125,7 +125,7 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
         rounds: opened.rounds.filter(item => item.text !== item.original).map(({ number, text, original }) => ({ number, text, expectedText: original })),
       });
       setDraft({ ...opened, notes: opened.notes.map(item => ({ ...item, original: item.text })), rounds: opened.rounds.map(item => ({ ...item, original: item.text })) });
-      setMessage('已保存。');
+      notify('已保存。');
       setConfirmClose(false);
     } catch (error) {
       setMessage(`未保存：${error instanceof Error ? error.message : String(error)}`);
@@ -134,8 +134,8 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
     }
   };
   return { control: <><button disabled={!data.loaded || exporting} onClick={() => { void exportNotes(); }}>{exporting ? '正在读取意见…' : '导出修改意见'}</button>
-    {exportError && <span className="error" role="alert">导出资料读取失败：{exportError}</span>}
-    {data.error && <span className="error">意见读取失败<button onClick={() => { void loadNotes(data.url); }}>重试</button></span>}</>,
+    {exportError && <FloatingMessage tone="error">导出资料读取失败：{exportError}</FloatingMessage>}
+    {data.error && <FloatingMessage tone="error">修改意见读取失败：{data.error}<button onClick={() => { void loadNotes(data.url); }}>重试</button></FloatingMessage>}</>,
     dialog: draft !== null && <Dialog title={`${draft.scope.episode} · ${draft.scope.scene} 导出修改意见`} close={close} headerActions={confirmClose ? <div className="revision-export-close-actions"><button autoFocus onClick={() => setConfirmClose(false)}>继续编辑</button><button className="revision-export-discard" onClick={() => { setDraft(null); setConfirmClose(false); }}>放弃修改并关闭</button></div> : undefined}>
       <TabNav compact label="意见导出范围" items={[{ value: 'round', label: '本轮意见' }, { value: 'history', label: '全部历史意见' }]} selected={mode} onChange={value => { setMode(value as ExportMode); setConfirmClose(false); }} />
       {confirmClose && <p className="notice" role="alert">尚有未保存的修改。放弃修改并关闭后，这些修改不会保留。</p>}
@@ -150,7 +150,7 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
             {!visibleRounds.length && <p className="muted">{mode === 'round' ? '整场总体意见按已登记的场次轮次保存；请先选择本场次的修改轮次。' : '暂无按轮次保存的整场总体意见。'}</p>}
           </section>
         </fieldset>
-        <footer className="revision-export-save"><button disabled={!changed || saving} onClick={() => { void save(); }}>{saving ? '保存中…' : '保存'}</button><button disabled={!changed || saving} onClick={() => { setDraft({ ...draft, notes: draft.notes.map(item => ({ ...item, text: item.original })), rounds: draft.rounds.map(item => ({ ...item, text: item.original })) }); setConfirmClose(false); setMessage(''); }}>还原</button><div className="revision-export-toolbar"><CopyButton label="复制" text={text} onMessage={value => setMessage(value === '已复制' && changed ? '已复制；有未保存的修改' : value)} /></div><span role="status" className={message.startsWith('未保存') || message.startsWith('复制失败') ? 'error' : 'muted'}>{message || (changed ? '有未保存的修改' : '')}</span></footer>
+        <footer className="revision-export-save"><button disabled={!changed || saving} onClick={() => { void save(); }}>{saving ? '保存中…' : '保存'}</button><button disabled={!changed || saving} onClick={() => { setDraft({ ...draft, notes: draft.notes.map(item => ({ ...item, text: item.original })), rounds: draft.rounds.map(item => ({ ...item, text: item.original })) }); setConfirmClose(false); setMessage(''); }}>还原</button><div className="revision-export-toolbar"><CopyButton label="复制" text={text} successMessage={changed ? '已复制；有未保存的修改' : '已复制'} /></div><span role="status" className="muted">{changed ? '有未保存的修改' : ''}</span>{message && <FloatingMessage tone="error">{message}</FloatingMessage>}</footer>
       </div>
     </Dialog> };
 }

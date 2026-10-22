@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './NodeEditor.css';
+import { FloatingMessage, useNotify } from './Notifications';
 
 interface SavedNode { url: string; has_auth: boolean; locked: boolean; username: string; password: string }
 interface Config { revision: string | null; nodes: SavedNode[] }
@@ -14,7 +15,7 @@ export function NodeEditor({ close }: { close: () => void }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [notice, setNotice] = useState('');
+  const notify = useNotify();
   const [confirmClose, setConfirmClose] = useState(false);
   const [confirmReload, setConfirmReload] = useState(false);
   const [shownPasswords, setShownPasswords] = useState<number[]>([]);
@@ -29,7 +30,7 @@ export function NodeEditor({ close }: { close: () => void }) {
     setShownPasswords([]);
   }
   async function load(signal?: AbortSignal) {
-    setLoading(true); setError(''); setNotice('');
+    setLoading(true); setError('');
     try {
       const response = await fetch('/api/comfy/config/read', { method: 'POST', signal, cache: 'no-store' });
       const data = await response.json();
@@ -55,7 +56,7 @@ export function NodeEditor({ close }: { close: () => void }) {
   }, [dirty]);
   function update(index: number, value: Partial<Row>) {
     setRows(current => current.map((row, at) => at === index ? { ...row, ...value } : row));
-    setNotice('');
+
   }
   function move(index: number, direction: number) {
     setRows(current => {
@@ -63,24 +64,24 @@ export function NodeEditor({ close }: { close: () => void }) {
       [next[index], next[index + direction]] = [next[index + direction], next[index]];
       return next;
     });
-    setNotice('');
+
   }
   async function save(andClose = false) {
-    setSaving(true); setError(''); setNotice('');
+    setSaving(true); setError('');
     try {
       const response = await fetch('/api/comfy/config', { method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ revision: config!.revision, nodes: rows.map(({ url, original_url, no_auth, username, password }) =>
           ({ url, original_url, auth_mode: no_auth ? 'none' : 'basic', ...(!no_auth ? { username, password } : {}) })) }) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.detail);
-      accept(data); setNotice('已保存'); setConfirmClose(false);
+      accept(data); notify('已保存'); setConfirmClose(false);
       if (andClose) close();
     } catch (failure) {
       setError((failure as Error).message);
     } finally { setSaving(false); }
   }
   function restore() {
-    setRows(initialRows); setError(''); setNotice('已还原');
+    setRows(initialRows); setError(''); notify('已还原');
     setConfirmClose(false); setConfirmReload(false); setShownPasswords([]);
   }
   const busy = loading || saving;
@@ -102,9 +103,9 @@ export function NodeEditor({ close }: { close: () => void }) {
           <button disabled={saving} onClick={() => setConfirmClose(false)}>继续编辑</button></div>
       </div>}
       {loading && <p role="status">正在读取节点配置…</p>}
-      {error && <div className="node-editor-error" role="alert"><p>{error}</p><button disabled={busy} onClick={() => {
+      {error && <FloatingMessage tone="error">{error}<button disabled={busy} onClick={() => {
         if (dirty) setConfirmReload(true); else void load();
-      }}>重新载入</button></div>}
+      }}>重新载入</button></FloatingMessage>}
       {config && <form onSubmit={event => { event.preventDefault(); void save(); }}>
         <p className="node-editor-hint">所有项目共用此配置。第一项为默认节点，其余为备用节点。</p>
         <fieldset disabled={busy} className="node-editor-fields">
@@ -113,7 +114,7 @@ export function NodeEditor({ close }: { close: () => void }) {
               <div><button type="button" aria-label={`上移节点${index + 1}`} disabled={index === 0} onClick={() => move(index, -1)}>上移</button>
                 <button type="button" aria-label={`下移节点${index + 1}`} disabled={index === rows.length - 1} onClick={() => move(index, 1)}>下移</button>
                 <button type="button" aria-label={`删除节点${index + 1}`} disabled={row.locked || rows.length === 1}
-                  onClick={() => { setRows(current => current.filter(item => item.key !== row.key)); setNotice(''); }}>删除</button></div>
+                  onClick={() => { setRows(current => current.filter(item => item.key !== row.key)); }}>删除</button></div>
             </div>
             <label>节点地址<input aria-label={`节点${index + 1}地址`} type="url" required value={row.url} disabled={row.locked}
               placeholder="http://127.0.0.1:8188" onChange={event => {
@@ -140,12 +141,12 @@ export function NodeEditor({ close }: { close: () => void }) {
           {rows.length === 0 && <p className="node-editor-hint">尚未配置节点，点击下方添加。</p>}
           <button type="button" className="node-editor-add" onClick={() => {
             setRows(current => [...current, { key: nextKey.current++, original_url: null, url: '', has_auth: false,
-              locked: false, no_auth: true, username: '', password: '' }]); setNotice('');
+              locked: false, no_auth: true, username: '', password: '' }]);
           }}>＋ 添加节点</button>
         </fieldset>
         <footer className="node-editor-save"><button type="submit" disabled={busy || !dirty || rows.length === 0}>{saving ? '保存中…' : '保存'}</button>
           <button type="button" disabled={busy || !dirty} onClick={restore}>还原</button>
-          <span role="status">{notice || (dirty ? '有未保存的修改' : '')}</span></footer>
+          <span role="status">{dirty ? '有未保存的修改' : ''}</span></footer>
       </form>}
     </section>
   </>;

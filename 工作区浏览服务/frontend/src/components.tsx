@@ -208,7 +208,7 @@ export function Preview({ project, item, revision, close }: { project: string; i
       image ? <img className="preview-image" src={item.url} alt={item.name} onError={() => setMediaError('图片无法加载，请使用原文件入口。')} /> :
       video ? <video controls preload="metadata" src={item.url} onError={() => setMediaError('视频无法加载，请使用原文件入口。')} /> :
       audio ? <audio controls preload="metadata" src={item.url} onError={() => setMediaError('音频无法加载，请使用原文件入口。')} /> : <p>此格式暂不支持页内预览，请打开原文件。</p>}
-    {mediaError && <p className="error" role="alert">{mediaError}</p>}
+    {mediaError && <FloatingMessage tone="error">{mediaError}</FloatingMessage>}
     {item.prompts && <details><summary>对应提示词</summary><p>英文</p><pre>{item.prompts.english}</pre><p>中文</p><pre>{item.prompts.chinese}</pre></details>}
   </Dialog>;
 }

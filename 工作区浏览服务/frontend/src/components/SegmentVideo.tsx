@@ -1,3 +1,4 @@
+import { FloatingMessage } from './Notifications';
 import { useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode, Ref } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -214,9 +215,9 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
         {loaded?.url && <Original url={loaded.url} label="查看视频原文件" />}
       </div>
     </div>
-    {updated && <div className="video-update" role="status"><span>视频已有更新</span><button onClick={() => { setPlayOnLoad(video.current ? !video.current.paused : false); setLoaded(current); setSource(cachedSource || current.url); attempts.current = 0; pendingSeek.current = null; restore.current = null; setRecovering(false); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></div>}
+    {updated && <FloatingMessage>视频已有更新<button onClick={() => { setPlayOnLoad(video.current ? !video.current.paused : false); setLoaded(current); setSource(cachedSource || current.url); attempts.current = 0; pendingSeek.current = null; restore.current = null; setRecovering(false); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></FloatingMessage>}
     {detailId && <TaskDetailDialog id={detailId} updatedAt={task.data?.updated_at} nodes={[]} close={() => setDetailId('')} openTask={setDetailId} />}
     {recovering && <p role="status">正在恢复视频画面…</p>}
-    {error && <p className="error" role="alert">视频画面恢复失败。<button onClick={() => { attempts.current = 0; recoverPlayback(); }}>重新加载视频</button>，也可打开原文件检查。</p>}
+    {error && <FloatingMessage tone="error">视频画面恢复失败。<button onClick={() => { attempts.current = 0; recoverPlayback(); }}>重新加载视频</button>，也可打开原文件检查。</FloatingMessage>}
   </section>;
 }

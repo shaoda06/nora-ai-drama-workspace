@@ -1,10 +1,10 @@
 import { PageCheckStatus } from './components/PageCheckStatus';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { get } from './api';
 import { Result } from './components';
 import { PageHeader } from './components/PageHeader';
-import { DownloadButton, type DownloadState } from './components/DownloadButton';
+import { DownloadButton } from './components/DownloadButton';
 import './Workflows.css';
 
 type Workflow = { name: string; group: 'formal' | 'backup'; canvasUrl: string; apiUrl: string | null };
@@ -32,20 +32,12 @@ export default function Workflows() {
 }
 
 function WorkflowCard({ item }: { item: Workflow }) {
-  const [download, setDownload] = useState<DownloadState | null>(null);
-  useEffect(() => {
-    if (!download || download.busy) return;
-    const timer = window.setTimeout(() => setDownload(null), 5000);
-    return () => window.clearTimeout(timer);
-  }, [download]);
-  const report = (format: string) => (state: DownloadState) => setDownload({ ...state, message: `${format}：${state.message}` });
+  const [busy, setBusy] = useState(false);
   return <article className="workflow-row">
     <div className="workflow-info"><h3>{item.name}</h3></div>
     <div className="workflow-downloads">
-      <div className={`workflow-download-message ${download?.failed ? 'download-failed' : 'muted'}`}
-        role={download?.failed ? 'alert' : 'status'}>{download && <>{download.time} {download.message}</>}</div>
-      <DownloadButton url={item.canvasUrl} label="下载画布版" title={`${item.name} · 画布版`} disabled={download?.busy} onStateChange={report('画布版')} />
-      <DownloadButton url={item.apiUrl} label="下载 API 版" title={item.apiUrl ? `${item.name} · API 版` : 'API 文件缺失'} disabled={download?.busy} onStateChange={report('API 版')} />
+      <DownloadButton url={item.canvasUrl} label="下载画布版" title={`${item.name} · 画布版`} disabled={busy} onStateChange={state => setBusy(state.busy)} />
+      <DownloadButton url={item.apiUrl} label="下载 API 版" title={item.apiUrl ? `${item.name} · API 版` : 'API 文件缺失'} disabled={busy} onStateChange={state => setBusy(state.busy)} />
     </div>
   </article>;
 }
