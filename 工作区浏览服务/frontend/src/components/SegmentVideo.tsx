@@ -52,8 +52,10 @@ export const videoTaskMessages: Record<string, string> = {
 
 // A media clock can keep advancing after the browser loses its video renderer.
 // loadedmetadata and error alone do not report that state.
-export function watchVideoPlayback(element: HTMLVideoElement, recover: () => void) {
+export function watchVideoPlayback(element: HTMLVideoElement, recover: (reason: 'stalled' | 'resume', paused?: boolean) => void) {
   let stopped = false;
+  let away = document.hidden;
+  let pausedBeforeLeave = element.paused;
   let frameRequest: number | undefined;
   let lastFrame = performance.now();
   let previousTime = element.currentTime;
@@ -61,6 +63,20 @@ export function watchVideoPlayback(element: HTMLVideoElement, recover: () => voi
   let waitingSince: number | undefined;
   const reset = () => { lastFrame = performance.now(); previousTime = element.currentTime; waitingSince = undefined; };
   const interrupted = () => { waitingSince ??= performance.now(); };
+  const leave = () => { if (!away) pausedBeforeLeave = element.paused; away = true; };
+  const resume = () => {
+    if (stopped || document.hidden || !away) return;
+    away = false;
+    stopped = true;
+    // A paused renderer may disappear without a media error or frame APIs.
+    recover('resume', pausedBeforeLeave);
+  };
+  const visibility = () => { if (document.hidden) leave(); else resume(); };
+  document.addEventListener('visibilitychange', visibility);
+  window.addEventListener('blur', leave);
+  window.addEventListener('focus', resume);
+  window.addEventListener('pagehide', leave);
+  window.addEventListener('pageshow', resume);
   const frame = () => {
     if (stopped) return;
     lastFrame = performance.now();
@@ -75,7 +91,7 @@ export function watchVideoPlayback(element: HTMLVideoElement, recover: () => voi
   const timer = window.setInterval(() => {
     if (stopped) return;
     const now = performance.now();
-    if (document.hidden) { reset(); return; }
+    if (document.hidden) { leave(); reset(); return; }
     const frames = element.getVideoPlaybackQuality?.().totalVideoFrames;
     if (frameRequest === undefined && frames !== undefined && frames !== previousFrames) { previousFrames = frames; lastFrame = now; }
     const movingWithoutFrames = !element.paused && !element.ended && element.currentTime > previousTime
@@ -85,7 +101,7 @@ export function watchVideoPlayback(element: HTMLVideoElement, recover: () => voi
     previousTime = element.currentTime;
     if (!movingWithoutFrames && !stalled) return;
     stopped = true;
-    recover();
+    recover('stalled');
   }, 1000);
   if (element.error) interrupted();
   return () => {
@@ -97,6 +113,11 @@ export function watchVideoPlayback(element: HTMLVideoElement, recover: () => voi
     element.removeEventListener('waiting', interrupted);
     element.removeEventListener('stalled', interrupted);
     element.removeEventListener('error', interrupted);
+    document.removeEventListener('visibilitychange', visibility);
+    window.removeEventListener('blur', leave);
+    window.removeEventListener('focus', resume);
+    window.removeEventListener('pagehide', leave);
+    window.removeEventListener('pageshow', resume);
   };
 }
 
@@ -152,14 +173,17 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
     element.currentTime = Number.isFinite(element.duration) ? Math.min(time, element.duration) : time;
     onTimeChange(element.currentTime);
   };
-  const recoverPlayback = () => {
+  const recoverPlayback = (reason: 'stalled' | 'resume' = 'stalled', paused?: boolean) => {
     const element = video.current;
     if (!element) return;
-    if (attempts.current >= 2) { setRecovering(false); setError(true); onError?.(); return; }
-    attempts.current += 1;
+    if (reason === 'resume') attempts.current = 0;
+    else {
+      if (attempts.current >= 2) { setRecovering(false); setError(true); onError?.(); return; }
+      attempts.current += 1;
+    }
     pendingSeek.current ??= element.currentTime;
     restore.current ??= { volume: element.volume, muted: element.muted, playbackRate: element.playbackRate };
-    setPlayOnLoad(!element.paused && !element.ended);
+    setPlayOnLoad(!(paused ?? element.paused) && !element.ended);
     setError(false);
     setRecovering(true);
     setReloadCount(value => value + 1);

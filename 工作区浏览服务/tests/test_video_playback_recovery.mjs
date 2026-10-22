@@ -12,7 +12,11 @@ const source = readFileSync(process.env.NORA_VIDEO_SOURCE || new URL('../fronten
 function fixture({ frameAPI = true, qualityAPI = true } = {}) {
   let now = 0, id = 0;
   const intervals = new Map(), callbacks = new Map();
-  const document = { hidden: false };
+  const document = Object.assign(new EventTarget(), { hidden: false });
+  const window = Object.assign(new EventTarget(), {
+    setInterval(callback) { intervals.set(++id, callback); return id; },
+    clearInterval(value) { intervals.delete(value); },
+  });
   class Video extends EventTarget {
     currentTime = 0; duration = 14; readyState = 4; paused = false; ended = false; error = null;
     volume = 0.4; muted = true; playbackRate = 1.5; frames = 0;
@@ -43,7 +47,7 @@ function fixture({ frameAPI = true, qualityAPI = true } = {}) {
   vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText,
     { exports, require: name => ({ react, 'react/jsx-runtime': jsx,
       '@tanstack/react-query': { useQuery: () => ({}), useQueryClient: () => queryClient } }[name] || {}),
-      performance: { now: () => now }, document, window: { setInterval(callback) { intervals.set(++id, callback); return id; }, clearInterval: value => intervals.delete(value) } });
+      performance: { now: () => now }, document, window });
   const tick = (seconds, { moving = true, present = false } = {}) => {
     for (let i = 0; i < seconds; i++) {
       now += 1000;
@@ -67,7 +71,7 @@ function fixture({ frameAPI = true, qualityAPI = true } = {}) {
     while (effects.length) effects.shift()();
     return { tree, media, find: type => find(tree, type) };
   };
-  return { ...exports, video, tick, document, intervals, callbacks, props, render };
+  return { ...exports, video, tick, document, window, intervals, callbacks, props, render };
 }
 
 test('advancing audio clock with ready data but no presented frames requests one recovery', () => {
@@ -139,4 +143,80 @@ test('repeated failure stops after two automatic reloads and keeps a local retry
   const stopped = app.render();
   assert.equal(stopped.media.key, 'original-revision:2');
   assert.ok(JSON.stringify(stopped.tree).includes('重新加载视频'));
+});
+
+test('returning to a visible page recovers paused video without either frame API exactly once', () => {
+  const app = fixture({ frameAPI: false, qualityAPI: false });
+  const reasons = []; app.video.paused = true;
+  app.watchVideoPlayback(app.video, reason => reasons.push(reason));
+  app.document.hidden = true; app.document.dispatchEvent(new Event('visibilitychange'));
+  app.window.dispatchEvent(new Event('focus'));
+  assert.deepEqual(reasons, []);
+  app.document.hidden = false; app.document.dispatchEvent(new Event('visibilitychange'));
+  app.window.dispatchEvent(new Event('focus')); app.window.dispatchEvent(new Event('pageshow'));
+  assert.deepEqual(reasons, ['resume']);
+});
+
+test('in-app blur and focus recover even when visibilityState never changes', () => {
+  for (const paused of [true, false]) {
+    const app = fixture({ frameAPI: false, qualityAPI: false });
+    const reasons = []; app.video.paused = paused;
+    app.watchVideoPlayback(app.video, reason => reasons.push(reason));
+    app.window.dispatchEvent(new Event('focus')); app.window.dispatchEvent(new Event('pageshow'));
+    assert.deepEqual(reasons, []);
+    app.window.dispatchEvent(new Event('blur')); app.window.dispatchEvent(new Event('focus'));
+    app.window.dispatchEvent(new Event('focus'));
+    assert.deepEqual(reasons, ['resume']);
+  }
+});
+
+test('pagehide and pageshow recover once and detached players ignore return events', () => {
+  const app = fixture(); const reasons = [];
+  const cleanup = app.watchVideoPlayback(app.video, reason => reasons.push(reason));
+  app.window.dispatchEvent(new Event('pagehide')); app.window.dispatchEvent(new Event('pageshow'));
+  assert.deepEqual(reasons, ['resume']);
+  cleanup();
+  app.window.dispatchEvent(new Event('blur')); app.window.dispatchEvent(new Event('focus'));
+  app.document.hidden = true; app.document.dispatchEvent(new Event('visibilitychange'));
+  app.document.hidden = false; app.document.dispatchEvent(new Event('visibilitychange'));
+  assert.deepEqual(reasons, ['resume']);
+  assert.equal(app.intervals.size, 0); assert.equal(app.callbacks.size, 0);
+});
+
+test('component restores the same source, exact position and paused or playing state after each return', () => {
+  for (const paused of [true, false]) {
+    const app = fixture({ frameAPI: false, qualityAPI: false });
+    app.video.paused = paused; let previous = app.render();
+    // Ordinary returns must not exhaust the two-attempt stalled-playback budget.
+    for (let i = 0; i < 4; i++) {
+      app.video.currentTime = 2.4; app.video.paused = paused;
+      app.video.volume = 0.4; app.video.muted = true; app.video.playbackRate = 1.5;
+      app.window.dispatchEvent(new Event('blur')); app.window.dispatchEvent(new Event('focus'));
+      const recovered = app.render();
+      assert.notEqual(recovered.media.key, previous.media.key);
+      assert.equal(recovered.media.props.src, '/same-file.mp4');
+      assert.equal(recovered.media.props.autoPlay, !paused);
+      app.video.currentTime = 0; app.video.volume = 1; app.video.muted = false; app.video.playbackRate = 1;
+      recovered.media.props.onLoadedMetadata({ currentTarget: app.video });
+      recovered.media.props.onLoadedData();
+      assert.equal(app.video.currentTime, 2.4); assert.equal(app.video.volume, 0.4);
+      assert.equal(app.video.muted, true); assert.equal(app.video.playbackRate, 1.5);
+      assert.ok(!JSON.stringify(app.render().tree).includes('视频画面恢复失败'));
+      previous = recovered;
+    }
+  }
+});
+
+test('browser background auto-pause does not replace the playback choice made before leaving', () => {
+  const app = fixture({ frameAPI: false, qualityAPI: false });
+  app.render(); app.video.paused = false; app.video.currentTime = 2.4;
+  app.window.dispatchEvent(new Event('blur'));
+  app.video.paused = true;
+  app.document.hidden = true; app.document.dispatchEvent(new Event('visibilitychange'));
+  app.document.hidden = false; app.document.dispatchEvent(new Event('visibilitychange'));
+  const recovered = app.render();
+  assert.equal(recovered.media.props.autoPlay, true);
+  app.video.currentTime = 0;
+  recovered.media.props.onLoadedMetadata({ currentTarget: app.video });
+  assert.equal(app.video.currentTime, 2.4);
 });
