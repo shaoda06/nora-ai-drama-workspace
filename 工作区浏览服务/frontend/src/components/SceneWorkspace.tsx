@@ -168,10 +168,10 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     <div className="scene-workspace-tabs">
       <UnderlineTabs label="场次内容" items={[{ value: 'segments', label: '分段制作' }, { value: 'storyboard', label: '场次分镜' }, { value: 'dialogue', label: '分镜修改' }, { value: 'downloads', label: '资源下载' }]} selected={view} onChange={value => { setAutoPlay(false); setView(value); }} />
     {sceneRounds.length > 0 && <div className="scene-round-selector">
+      <span className="production-latest">当前最新{selectedRound !== latestRound!.number && <>：第{latestRound!.number}轮：剧本{latestRound!.script?.version || '缺失'} · 分镜{latestRound!.storyboard?.version || '缺失'}，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => changeRound(latestRound!.number)}>点击切换</button></>}</span>
       <TabSelect label="场次修改轮次" selected={String(selectedRound)} onChange={value => changeRound(Number(value))}
         items={[...sceneRounds].reverse().map(item => ({ value: String(item.number),
           label: `第${item.number}轮：剧本${item.script?.version || '缺失'} · 分镜${item.storyboard?.version || '缺失'}` }))} />
-      <span className="production-latest">当前最新：第{latestRound!.number}轮：剧本{latestRound!.script?.version || '缺失'} · 分镜{latestRound!.storyboard?.version || '缺失'}{selectedRound !== latestRound!.number && <>，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => changeRound(latestRound!.number)}>点击切换</button></>}</span>
     </div>}
     </div>
     <div className="episode-scene-content" aria-label={scene ? `场次 ${scene} 内容` : '场次内容'}>
