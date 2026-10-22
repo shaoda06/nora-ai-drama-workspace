@@ -4,11 +4,15 @@ import json
 import os
 import re
 import stat
+import sys
 import threading
 import time
 
 from backend.parsers.project import SourceChangedError, build_data, live_task_record, live_revision_notes, FORMAL_SECTIONS
 from backend.parsers.generation import load_context
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / '.agents/skills/nora-ai-short-drama/scripts'))
+from project_index import read_index
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +38,11 @@ class ProjectStore:
         return path
 
     def discover(self):
-        return [{'id': p.name, 'name': p.name} for p in sorted(self.root.iterdir())
-                if p.is_dir() and not p.name.startswith('.') and p.resolve().parent == self.root]
+        projects = {p.name for p in self.root.iterdir()
+                    if p.is_dir() and not p.name.startswith('.') and p.resolve().parent == self.root}
+        _, indexed = read_index(self.root)
+        names = dict.fromkeys([*indexed, *sorted(projects)])
+        return [{'id': name, 'name': name} for name in names if name in projects]
 
     def snapshot(self, path: Path):
         # mtime and size detect edits, additions, removal and renames without reading media.

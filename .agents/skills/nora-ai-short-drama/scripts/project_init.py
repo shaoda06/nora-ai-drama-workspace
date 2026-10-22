@@ -1,4 +1,4 @@
-"""Create the standard project or episode directory skeleton; never write content."""
+"""Create project or episode directories and register projects in the shared index."""
 import argparse
 import json
 from pathlib import Path
@@ -6,6 +6,7 @@ import re
 import sys
 
 from project_paths import project_file
+from project_index import INDEX_NAME, register_project
 
 
 PROJECT_DIRECTORIES = (
@@ -54,11 +55,15 @@ def initialize(project, episode=None):
         else:
             path.mkdir(parents=True, exist_ok=True)
             result["created"].append(item)
+    if episode is None:
+        added = register_project(project)
+        result["project_index"] = str(project.parent / INDEX_NAME)
+        result["index_added"] = added
     return result
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="由Agent初始化项目或单集目录；仅建目录，不生成正文或连接网页服务。")
+    parser = argparse.ArgumentParser(description="由Agent初始化项目或单集目录；项目模式同时追加项目总索引，不生成创作正文或连接网页服务。")
     parser.add_argument("--project", required=True,
                         help="项目根目录，例如projects/剧名；相对路径从当前工作目录解析，支持绝对路径。")
     parser.add_argument("--episode",

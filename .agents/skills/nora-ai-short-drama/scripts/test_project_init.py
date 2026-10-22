@@ -32,6 +32,10 @@ class ProjectInitializationTests(unittest.TestCase):
         first = subprocess.run(command, cwd=self.workspace, text=True, capture_output=True, check=True)
         report = json.loads(first.stdout)
         self.assertEqual(report["project"], str(self.project.resolve()))
+        self.assertTrue(report["index_added"])
+        index = self.project.parent / "项目总索引.md"
+        self.assertEqual(report["project_index"], str(index.resolve()))
+        self.assertEqual(index.read_text(encoding="utf-8"), "# 项目总索引\n\n1. 测试 短片\n")
         self.assertEqual(len(report["created"]), 21)
         self.assertEqual({path.name for path in self.project.iterdir()}, {
             "00-项目定位", "01-主旨与简介", "02-故事大纲", "03-人物资料",
@@ -45,6 +49,31 @@ class ProjectInitializationTests(unittest.TestCase):
         self.assertFalse(any(p.is_file() for p in self.project.rglob("*")))
         second = subprocess.run(command, cwd=self.workspace, text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(second.stdout)["created"], [])
+        self.assertFalse(json.loads(second.stdout)["index_added"])
+
+    def test_new_project_appends_and_repeat_preserves_manual_order_and_text(self):
+        initialize(self.project)
+        other = self.project.with_name("第二个项目")
+        index = self.project.parent / "项目总索引.md"
+        source = "# 项目总索引\n\n说明保留。\n\n1. 已有项目\n2. 测试 短片\n"
+        index.write_text(source, encoding="utf-8")
+        self.assertTrue(initialize(other)["index_added"])
+        expected = source + "3. 第二个项目\n"
+        self.assertEqual(index.read_text(encoding="utf-8"), expected)
+        before = index.stat().st_mtime_ns
+        self.assertFalse(initialize(self.project)["index_added"])
+        initialize(other, "片尾")
+        self.assertEqual(index.read_text(encoding="utf-8"), expected)
+        self.assertEqual(index.stat().st_mtime_ns, before)
+
+    def test_repair_adds_missing_registration_without_touching_other_entries(self):
+        initialize(self.project)
+        index = self.project.parent / "项目总索引.md"
+        index.write_text("# 项目总索引\n\n1. 另一个项目\n", encoding="utf-8")
+        result = initialize(self.project)
+        self.assertEqual(result["created"], [])
+        self.assertTrue(result["index_added"])
+        self.assertEqual(index.read_text(encoding="utf-8"), "# 项目总索引\n\n1. 另一个项目\n2. 测试 短片\n")
 
     def test_repeat_and_missing_directory_repair_preserve_existing_documents(self):
         initialize(self.project)

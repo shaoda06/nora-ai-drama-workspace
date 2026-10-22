@@ -8,7 +8,7 @@ export function ProjectSwitcher() {
   const location = useLocation();
   const navigate = useNavigate();
   const projects = useQuery({ queryKey: ['projects'],
-    queryFn: () => get<{ id: string; name: string }[]>('/api/projects') });
+    queryFn: () => get<{ id: string; name: string }[]>('/api/projects'), refetchInterval: 5000 });
   return <div className="brand-project-switcher">
     <Link className="brand" to="/">Nora工作台</Link>
     <TabSelect iconOnly label={projects.isPending ? '正在读取项目' : projects.data?.length === 0 ? '暂无项目' : '切换项目'}
