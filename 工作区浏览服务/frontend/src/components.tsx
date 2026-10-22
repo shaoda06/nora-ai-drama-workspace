@@ -86,7 +86,7 @@ export function Groups({ groups = [], chapter = false }: { groups?: Group[]; cha
     {open && <div id={contentId} className="groups-content">{folders}</div>}
   </section> : <details className="groups"><summary>其他资料</summary>{folders}</details>;
 }
-export function Document({ value: latest, showOriginal = true }: { value: RecordData; showOriginal?: boolean }) {
+export function Document({ value: latest, showOriginal = true, showChapters = true }: { value: RecordData; showOriginal?: boolean; showChapters?: boolean }) {
   const [value, setValue] = useState(latest);
   const changed = (value.html || value.bodyHtml) !== (latest.html || latest.bodyHtml) || value.headerHtml !== latest.headerHtml;
   const body = value.bodyHtml || value.contentHtml || value.html || '';
@@ -166,16 +166,17 @@ export function Document({ value: latest, showOriginal = true }: { value: Record
   const hasGroups = !!latest.groups?.length;
   const [headings, setHeadings] = useState<ChapterHeading[]>([]);
   useEffect(() => {
+    if (!showChapters) return;
     setHeadings(Array.from(ref.current!.querySelectorAll('h2,h3,h4,h5,h6')).map((heading, i) => {
       if (!heading.id) heading.id = `chapter-${i}`;
       return { id: heading.id, text: heading.textContent || '', level: Number(heading.tagName[1]) };
     }));
-  }, [presentation.html, hasGroups]);
+  }, [presentation.html, hasGroups, showChapters]);
   return <div className="document">
     {changed && <FloatingMessage>本文有新版本，当前阅读位置保持不变。<button onClick={() => setValue(latest)}>读取新版本</button></FloatingMessage>}
     <div className="meta document-meta-inline">{value.confirmationHtml && <Rich html={value.confirmationHtml.match(/^<span class="status-badge.*?<\/span>/s)?.[0]} />}{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}{showOriginal && <FileActions url={value.url} />}</div>
     {value.headerHtml && <DocumentInformation><Rich html={value.headerHtml} /></DocumentInformation>}
-    <ChapterNavigation headings={headings} onNavigate={id => ref.current!.querySelectorAll('[id]').forEach(el => { if (el.id === id) { el.scrollIntoView({ behavior: 'auto', block: 'start' }); (el as HTMLElement).tabIndex = -1; (el as HTMLElement).focus({ preventScroll: true }); } })} />
+    {showChapters && <ChapterNavigation headings={headings} onNavigate={id => ref.current!.querySelectorAll('[id]').forEach(el => { if (el.id === id) { el.scrollIntoView({ behavior: 'auto', block: 'start' }); (el as HTMLElement).tabIndex = -1; (el as HTMLElement).focus({ preventScroll: true }); } })} />}
     <div ref={ref}><Rich html={presentation.html} languages={presentation.languages} /><Groups groups={latest.groups} chapter /></div>
   </div>;
 }

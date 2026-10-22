@@ -677,12 +677,21 @@ def history() -> list[dict[str, str]]:
 
 
 @app.get('/api/history/document')
-def history_document(path: Annotated[str, Query()]) -> dict[str, str]:
+def history_document(path: Annotated[str, Query()], page: Annotated[int, Query(ge=1)] = 1) -> dict[str, str | int]:
     root = TOOL / 'docs'
     target = (root / path).resolve()
     if not target.is_relative_to(root) or target.suffix != '.md' or not target.is_file():
         raise HTTPException(404, '记录不存在')
-    return {'title': target.stem, 'html': parser.markdown(target.read_text('utf-8'), path)}
+    text = target.read_text('utf-8')
+    if path == '版本记录.md':
+        introduction, *entries = re.split(r'(?m)(?=^### )', text)
+        page_size = 10
+        total = len(entries)
+        page = min(page, max(1, (total + page_size - 1) // page_size))
+        start = (page - 1) * page_size
+        return {'title': target.stem, 'html': parser.markdown(introduction + ''.join(entries[start:start + page_size]), path),
+                'page': page, 'pageSize': page_size, 'total': total}
+    return {'title': target.stem, 'html': parser.markdown(text, path)}
 
 
 app.frontend('/', directory=TOOL / 'frontend/dist', fallback='index.html')

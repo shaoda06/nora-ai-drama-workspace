@@ -5,16 +5,21 @@ import { get } from './api';
 import { Document, PreviewContext, Result } from './components';
 import { PageHeader } from './components/PageHeader';
 import { TabNav } from './components/TabNav';
+import { Pagination } from './components/Pagination';
+import './History.css';
 
 const RECORDS = 'all-records';
+type HistoryDocument = { title: string; html: string; page: number; pageSize: number; total: number };
 
 export default function History() {
   const [selected, setSelected] = useState('版本记录.md');
+  const [page, setPage] = useState(1);
   const [path, anchor] = selected.split('#');
   const showRecords = selected === RECORDS;
+  const showVersions = path === '版本记录.md';
   const content = useRef<HTMLElement>(null);
   const list = useQuery({ queryKey: ['history'], queryFn: () => get<{ path: string; name: string }[]>('/api/history'), refetchInterval: 5000 });
-  const document = useQuery({ queryKey: ['history-document', path], queryFn: () => get<{ title: string; html: string }>(`/api/history/document?path=${encodeURIComponent(path)}`), enabled: !showRecords, refetchInterval: 5000 });
+  const document = useQuery({ queryKey: ['history-document', path, showVersions ? page : 1], queryFn: () => get<HistoryDocument>(`/api/history/document?path=${encodeURIComponent(path)}&page=${showVersions ? page : 1}`), enabled: !showRecords, refetchInterval: 5000 });
   const records = (list.data || []).filter(item => item.path.startsWith('开发记录/'));
   const navigation = [
     { value: '版本记录.md', label: '版本记录' },
@@ -37,6 +42,11 @@ export default function History() {
     });
   }, [selected, anchor, document.isSuccess]);
   const documentError = !showRecords && document.error;
+  const changePage = (value: number) => {
+    setPage(value);
+    window.scrollTo(0, 0);
+  };
+  const pagination = showVersions && document.data && <Pagination page={document.data.page} total={document.data.total} pageSize={document.data.pageSize} change={changePage} />;
   return <PreviewContext.Provider value={item => openDocument(item.key!)}>
     <PageCheckStatus queries={showRecords ? [list] : [list, document]} />
     <PageHeader eyebrow="开发跟踪" title="版本与开发记录" />
@@ -47,7 +57,11 @@ export default function History() {
         {showRecords ? <>
           <h1>全部开发记录</h1>
           <ul>{[...records].sort((a, b) => b.name.localeCompare(a.name, 'zh-CN', { numeric: true })).map(item => <li key={item.path}><button className="link" onClick={() => openDocument(item.path)}>{item.name}</button></li>)}</ul>
-        </> : document.data && <Document key={selected} value={document.data} />}
+        </> : document.data && <>
+          {pagination}
+          <Document key={`${selected}:${showVersions ? document.data.page : 1}`} value={document.data} showChapters={!showVersions} />
+          {pagination}
+        </>}
       </article>
     </div>
   </PreviewContext.Provider>;
