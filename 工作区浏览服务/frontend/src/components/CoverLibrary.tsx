@@ -2,10 +2,11 @@ import './CoverLibrary.css';
 import { useContext, useState } from 'react';
 import type { RecordData } from '../api';
 import { AssetMediaCard } from './AssetMediaCard';
-import { Groups, Original, PreviewContext } from '../components';
+import { Dialog, Groups, Original, PreviewContext, Rich } from '../components';
 
 export function CoverLibrary({ value, revision }: { value: RecordData; revision: number }) {
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [detail, setDetail] = useState<{ item: RecordData; candidate: boolean } | null>(null);
   return <>
     <div className="toolbar"><h2>当前采用封面</h2><RecordLinks items={[value.index, value.record]} /></div>
     <div className="asset-media-grid">{value.items.map((item: RecordData) => {
@@ -13,30 +14,35 @@ export function CoverLibrary({ value, revision }: { value: RecordData; revision:
       return <AssetMediaCard key={item.name} title={item.name} revision={revision} formal item={{
         media: image && { ...image, kind: 'image', name: item.name }, version: item.version,
         statusHtml: item.statusHtml, scope: item.scope + ' · ' + item.layout,
-      }}>
-        {!item.media && item.original && <p className="muted">当前预览为采用原图，成品待规格处理。</p>}
-        <dl className="cover-library-facts">
-          <dt>登记版本</dt><dd>{item.version}</dd>
-          <dt>目标规格</dt><dd>{item.targetSize} · {item.targetRatio}</dd>
-          <dt>成品实测</dt><dd>{item.media ? `${item.media.width}×${item.media.height} · ${item.media.ratio}` : '待处理'}</dd>
-          <dt>原图实测</dt><dd>{item.original ? `${item.original.width}×${item.original.height} · ${item.original.ratio}` : '尚未登记'}</dd>
-        </dl>
-        <div className="cover-library-links"><Original url={item.media?.url} label="成品原文件" />{item.media && <a href={item.media.url + '?download=true'} download>下载成品</a>}<Original url={item.original?.url} label="采用原图" />{item.original && <a href={item.original.url + '?download=true'} download>下载原图</a>}</div>
-        <RecordLinks items={[item.review, item.processing]} />
-      </AssetMediaCard>;
+      }} onDetails={() => setDetail({ item, candidate: false })} />;
     })}</div>
     {!value.items.length && <p className="muted">尚无已登记的采用封面，可先查看候选和制作记录。</p>}
     <details className="cover-library-history" onToggle={event => setHistoryOpen(event.currentTarget.open)}>
       <summary>候选与历史（{value.candidates.length}）</summary>
       {historyOpen && <div className="asset-media-grid">{value.candidates.map((item: RecordData) => <AssetMediaCard
         key={item.media.key} title={item.name} revision={revision} item={{
-          media: { ...item.media, kind: 'image' }, generation: item.generation, recordUrl: item.record.url,
-        }}>
-        <p>{item.status}</p><p className="muted">实际比例：{item.media.ratio}</p>
-        <Original url={item.media.url} label="候选原图" />
-      </AssetMediaCard>)}</div>}
+          media: { ...item.media, kind: 'image' }, generation: item.generation, userState: item.status,
+        }} onDetails={() => setDetail({ item, candidate: true })} />)}</div>}
     </details>
     <Groups groups={value.groups} />
+    {detail && <Dialog title={`${detail.item.name} · 详情`} close={() => setDetail(null)}>
+      {detail.candidate ? <>
+        <p>{detail.item.status}</p>
+        <p>实际规格：{detail.item.media.width}×{detail.item.media.height} · {detail.item.media.ratio}</p>
+        <div className="cover-library-links"><Original url={detail.item.media.url} label="候选原图" /><a href={detail.item.media.url + '?download=true'} download>下载原图</a></div>
+        <RecordLinks items={[detail.item.record]} />
+      </> : <>
+        <Rich html={detail.item.statusHtml} />
+        {!detail.item.media && detail.item.original && <p className="muted">当前预览为采用原图，成品待规格处理。</p>}
+        <dl className="cover-library-facts">
+          <dt>目标规格</dt><dd>{detail.item.targetSize} · {detail.item.targetRatio}</dd>
+          <dt>成品实测</dt><dd>{detail.item.media ? `${detail.item.media.width}×${detail.item.media.height} · ${detail.item.media.ratio}` : '待处理'}</dd>
+          <dt>原图实测</dt><dd>{detail.item.original ? `${detail.item.original.width}×${detail.item.original.height} · ${detail.item.original.ratio}` : '尚未登记'}</dd>
+        </dl>
+        <div className="cover-library-links"><Original url={detail.item.media?.url} label="成品原文件" />{detail.item.media && <a href={detail.item.media.url + '?download=true'} download>下载成品</a>}<Original url={detail.item.original?.url} label="采用原图" />{detail.item.original && <a href={detail.item.original.url + '?download=true'} download>下载原图</a>}</div>
+        <RecordLinks items={[detail.item.review, detail.item.processing]} />
+      </>}
+    </Dialog>}
   </>;
 }
 
