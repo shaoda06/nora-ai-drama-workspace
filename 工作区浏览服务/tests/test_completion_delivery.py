@@ -254,8 +254,10 @@ class CompletionDeliveryTests(unittest.IsolatedAsyncioTestCase):
         self.setup_video()
         batch = await old.CloseoutTests.collect_and_notice(self)
         progress = self.project / '项目进度.md'
-        progress.write_text('| EP001 | 原状态 |\n', 'utf-8')
-        updates = [{'path': '项目进度.md', 'old': '| EP001 | 原状态 |', 'new': '| EP001 | 已取回待审 |'}]
+        before = '| EP001制作 | 测试会话 | 进行中 | 原状态 | - 无 | - 无 |'
+        after = '| EP001制作 | 测试会话 | 待确认 | 已取回待审 | - 无 | - 无 |'
+        progress.write_text(before + '\n', 'utf-8')
+        updates = [{'path': '项目进度.md', 'old': before, 'new': after}]
         read = Path.read_text
         reports = []
         def observed(path, *args, **kwargs):
@@ -265,7 +267,8 @@ class CompletionDeliveryTests(unittest.IsolatedAsyncioTestCase):
             result = await registration.closeout(self.store, self.projects, batch, self.data.thread_id, updates)
         self.assertTrue(result['user_message_ready'])
         self.assertEqual(len(reports), 0)  # Initial register creates its report and passes that object to updates.
-        self.assertEqual(sum(call.args[0] == '| EP001 | 原状态 |\n' for call in digest.call_args_list), 1)
+        self.assertEqual(sum(call.args[0] == before + '\n' for call in digest.call_args_list), 1)
+        self.assertEqual(progress.read_text('utf-8'), after + '\n')
 
     async def test_report_during_send_wakes_waiter_and_preserves_received_state(self):
         self.setup_video()
