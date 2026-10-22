@@ -1,1 +1,2 @@
 .history-layout .pagination { flex-wrap: wrap; gap: 12px; }
+.history-versions .prose > h1:first-child { display: none; }

@@ -52,7 +52,7 @@ export default function History() {
     <PageHeader eyebrow="开发跟踪" title="版本与开发记录" />
     <div className="history-layout">
       <TabNav vertical label="开发文档" items={navigation} selected={path.startsWith('开发记录/') ? RECORDS : path} onChange={openDocument} />
-      <article className="panel" ref={content}>
+      <article className={showVersions ? "panel history-versions" : "panel"} ref={content}>
         <Result page loading={list.isPending || (!showRecords && document.isPending)} error={documentError || list.error} retry={documentError ? document.refetch : list.refetch} retrying={document.isFetching || list.isFetching} />
         {showRecords ? <>
           <h1>全部开发记录</h1>
