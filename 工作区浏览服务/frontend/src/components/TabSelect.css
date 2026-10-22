@@ -1,4 +1,7 @@
-.tab-select.tab-select-marked[data-active]{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;max-width:100%;min-width:0;appearance:auto;background-image:none;padding:7px 12px;text-align:left;background-color:white;color:var(--green)}
+.tab-select.tab-select-marked[data-active]{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;max-width:100%;min-width:0;appearance:auto;background-image:none;padding:7px 12px;text-align:center;background-color:white;color:var(--green)}
+.tab-select.tab-select-marked[data-active]:not(.tab-select-icon){display:inline-grid;grid-template-columns:12px minmax(0,1fr) 12px;gap:4px}
+.tab-select.tab-select-marked:not(.tab-select-icon)::before{content:''}
+
 .tabs .tab-select.tab-select-marked[data-active=true],.scene-round-selector .tab-select.tab-select-marked[data-active=true]{background-color:var(--green);color:white}
 .tab-select-menu [role=option]>span:first-child{min-width:0;overflow-wrap:anywhere}
 .prompt-dialog label>.tab-select,.asset-info label>.tab-select{width:100%;color:#25352f}
