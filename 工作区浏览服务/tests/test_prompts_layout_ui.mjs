@@ -17,11 +17,12 @@ try {
   const release = await (await page.request.get(base + '/release.json')).json();
   let doc = { path: '根提示词.md', title: '根提示词', category: '', revision: '1', modified: Date.now() / 1000, body: '测试正文\n第二行' };
   let recycled = null, failSave = false, failPreview = false, saves = 0;
-  const categories = [{ path: '图片', revision: '1' }, { path: '图片/反推', revision: '1' }];
+  const categories = ['图片', '图片/反推', '图片/反推/深层', '图片库'].map(path => ({ path, revision: '1' }));
+  const extraDocs = ['图片', '图片/反推/深层', '图片库'].map((category, i) => ({ ...doc, title: `文件${i}`, path: `${category}/文件${i}.md`, category }));
   await page.route('**/api/**', route => {
     const request = route.request(), url = new URL(request.url());
     let data;
-    if (url.pathname === '/api/prompts') data = { categories, prompts: recycled ? [] : [doc] };
+    if (url.pathname === '/api/prompts') data = { categories, prompts: [...extraDocs, ...(recycled ? [] : [doc])] };
     else if (url.pathname === '/api/prompts/document') {
       if (request.method() === 'DELETE') {
         recycled = { id: 'recycled', original: doc.path, deleted: new Date().toISOString(), revision: doc.revision, body: doc.body };
@@ -32,6 +33,8 @@ try {
         doc = { ...doc, title: body.title, body: body.body, category: body.category, path: `${body.category ? body.category + '/' : ''}${body.title}.md`, revision: '2' };
       } else assert.equal(request.method(), 'GET');
       data = doc;
+    } else if (url.pathname === '/api/prompts/search') {
+      data = [doc, ...extraDocs].filter(item => item.title.includes(url.searchParams.get('q')));
     } else if (url.pathname === '/api/prompts/preview') {
       if (failPreview) return route.fulfill({ status: 503, json: { detail: '测试预览失败' } });
       const body = request.postDataJSON().body;
@@ -46,6 +49,28 @@ try {
   });
   await page.goto(base + '/#/prompts');
   const tree = page.getByRole('complementary', { name: '主目录', exact: true });
+  await tree.getByRole('button', { name: '主目录 (4)', exact: true }).waitFor();
+  assert.equal(await tree.getByRole('button', { name: '图片 (2)', exact: true }).getAttribute('aria-expanded'), 'false');
+  await tree.getByRole('button', { name: '修改分类：图片', exact: true }).click();
+  await page.getByRole('dialog', { name: '修改分类', exact: true }).waitFor();
+  assert.equal(await page.getByLabel('分类名称', { exact: true }).inputValue(), '图片');
+  await page.getByRole('button', { name: '关闭', exact: true }).click();
+  assert.equal(await tree.getByRole('button', { name: '图片 (2)', exact: true }).getAttribute('aria-expanded'), 'false', 'edit button must not expand folder');
+  await tree.getByRole('button', { name: '图片 (2)', exact: true }).click();
+  await tree.getByRole('button', { name: '反推 (1)', exact: true }).click();
+  await tree.getByRole('button', { name: '深层 (1)', exact: true }).waitFor();
+  await tree.getByRole('button', { name: '图片库 (1)', exact: true }).click();
+  assert.equal(await tree.getByRole('button', { name: '反推 (1)', exact: true }).count(), 0, 'opening sibling closes nested tree');
+  await tree.getByRole('button', { name: '图片 (2)', exact: true }).click();
+  assert.equal(await tree.getByRole('button', { name: '反推 (1)', exact: true }).getAttribute('aria-expanded'), 'false');
+  await tree.getByRole('button', { name: '图片 (2)', exact: true }).click();
+  await page.getByLabel('搜索提示词', { exact: true }).fill('根提示词');
+  const searchResults = tree.getByRole('region', { name: '搜索结果', exact: true });
+  await searchResults.getByRole('button', { name: '根提示词', exact: true }).click();
+  assert.equal(await page.getByLabel('提示词标题', { exact: true }).isEditable(), true);
+  assert.equal(await page.getByRole('combobox', { name: '提示词所在分类', exact: true }).isEnabled(), true);
+  await tree.getByRole('button', { name: '主目录 (4)', exact: true }).click();
+  console.log('PASS recursive counts, separate edit buttons, folder accordion and sidebar search');
   const openRoot = async () => {
     await tree.getByRole('button', { name: '根提示词', exact: true }).click();
     const toggle = page.getByRole('switch', { name: '编辑模式', exact: true });
@@ -58,8 +83,10 @@ try {
   await page.getByLabel('提示词正文', { exact: true }).waitFor();
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
   const before = await page.evaluate(() => ({ y: scrollY, height: document.querySelector('.prompt-layout').getBoundingClientRect().height }));
-  assert.ok(before.y > 0, 'fixture must exercise page scrolling');
-  await tree.getByRole('button', { name: '图片', exact: true }).click();
+  assert.equal(before.y, 0, 'workspace must fit viewport without page scrolling');
+  assert.equal(await page.locator('.prompt-list').count(), 0);
+  assert.ok((await tree.boundingBox()).width >= 300, 'directory column must be wider');
+  await tree.getByRole('button', { name: /^图片 \(\d+\)$/ }).click();
   const after = await page.evaluate(() => ({ y: scrollY, height: document.querySelector('.prompt-layout').getBoundingClientRect().height }));
   assert.ok(Math.abs(after.y - before.y) <= 1, `directory click moved page: ${before.y} -> ${after.y}`);
   assert.equal(after.height, before.height, 'clearing the editor shrank the workspace');
@@ -72,7 +99,7 @@ try {
   await options.getByRole('option', { name: '图片/反推', exact: true }).click();
   assert.equal(await category.innerText(), '图片/反推');
   assert.equal(doc.category, '', 'choosing a category must not save automatically');
-  await tree.getByRole('button', { name: '主目录', exact: true }).click();
+  await tree.getByRole('button', { name: /^主目录 \(\d+\)$/ }).click();
   await page.getByRole('dialog', { name: '修改尚未保存' }).waitFor();
   await page.getByRole('button', { name: '继续编辑', exact: true }).click();
   assert.equal(await category.innerText(), '图片/反推');
@@ -88,16 +115,22 @@ try {
   await page.getByRole('switch', { name: '编辑模式', exact: true }).click();
   await page.locator('.prompt-preview p').first().waitFor();
   const detail = page.locator('.prompt-detail');
-  assert.ok(await detail.evaluate(el => el.scrollHeight > el.clientHeight), 'long preview must scroll inside the detail panel');
-  await detail.evaluate(el => { el.scrollTop = 200; });
+  assert.ok(await page.locator('.prompt-preview').evaluate(el => el.scrollHeight > el.clientHeight), 'long preview must scroll inside the body');
+  assert.ok(await detail.evaluate(el => el.scrollHeight <= el.clientHeight), 'detail panel must not overflow');
+  await page.locator('.prompt-preview').evaluate(el => { el.scrollTop = 200; });
   const previewY = await page.evaluate(() => scrollY);
-  await tree.getByRole('button', { name: '反推', exact: true }).click();
+  await tree.getByRole('button', { name: /^反推 \(\d+\)$/ }).click();
   assert.equal(await page.evaluate(() => scrollY), previewY);
   await openRoot();
   await page.getByLabel('提示词正文', { exact: true }).waitFor();
   await page.screenshot({ path: path.join(out, 'desktop.png') });
+  await page.getByLabel('提示词正文', { exact: true }).fill('长正文\n'.repeat(200));
+  assert.ok(await page.locator('.prompt-body').evaluate(el => el.scrollHeight > el.clientHeight), 'long text must scroll inside textarea');
+  assert.ok(await detail.evaluate(el => el.scrollHeight <= el.clientHeight));
+  await page.getByLabel('提示词正文', { exact: true }).fill(doc.body);
+  await page.getByRole('switch', { name: '编辑模式', exact: true }).click();
   console.log('PASS directory scroll regression, fixed workspace, long preview, custom category picker and unsaved guard');
-  for (const viewport of [{ width: 1362, height: 918 }, { width: 390, height: 844 }]) {
+  for (const viewport of [{ width: 1362, height: 700 }, { width: 390, height: 844 }]) {
     await page.setViewportSize(viewport);
     const title = page.getByLabel('提示词标题', { exact: true });
     const field = title.locator('..'), label = field.locator('span');
@@ -112,6 +145,11 @@ try {
     assert.equal(doc.category, target);
     assert.equal(doc.body, '测试正文\n第二行');
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    assert.ok(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight), 'no page overflow at desktop or mobile sizes');
+    const panelBox = await detail.boundingBox(), actionsBox = await detail.locator('.prompt-actions').boundingBox();
+    assert.ok(panelBox.y + panelBox.height - actionsBox.y - actionsBox.height <= 21, 'actions must sit at panel bottom');
+    const bodyBox = await page.locator('.prompt-preview').boundingBox();
+    assert.ok(actionsBox.y - bodyBox.y - bodyBox.height <= 17, 'body must fill available height');
     await category.click();
     await page.waitForFunction(() => document.querySelector('[role="combobox"][aria-label="提示词所在分类"]').getAttribute('aria-expanded') === 'true');
     assert.equal(await options.locator('.tab-select-badge').count(), 1);
@@ -125,13 +163,15 @@ try {
   await page.waitForFunction(() => document.querySelectorAll('.floating-message').length === 0, null, { timeout: 5000 });
   const toggle = page.getByRole('switch', { name: '编辑模式', exact: true });
   const body = page.getByLabel('提示词正文', { exact: true });
+  assert.equal(await toggle.getAttribute('aria-checked'), 'false');
+  await toggle.click();
   const currentSaves = saves;
   await body.fill('未保存正文\n换行保留');
   await toggle.click();
   await page.locator('.prompt-preview').filter({ hasText: '未保存正文' }).waitFor();
   assert.equal(await toggle.getAttribute('aria-checked'), 'false');
-  assert.equal(await page.getByLabel('提示词标题', { exact: true }).getAttribute('readonly'), '');
-  assert.equal(await category.isDisabled(), true);
+  assert.equal(await page.getByLabel('提示词标题', { exact: true }).getAttribute('readonly'), null);
+  assert.equal(await category.isDisabled(), false);
   assert.equal(saves, currentSaves, 'preview switch must not write the file');
   await page.screenshot({ path: path.join(out, 'preview-switch-off.png') });
   await toggle.click();
@@ -167,6 +207,7 @@ try {
   await confirmation.getByRole('button', { name: '确认', exact: true }).click();
   await page.locator('.floating-message-content').filter({ hasText: '已移入回收站' }).waitFor();
   assert.equal(await page.getByRole('dialog').count(), 0);
+  await tree.getByRole('button', { name: '主目录 (3)', exact: true }).waitFor();
   await page.getByRole('button', { name: '关闭通知', exact: true }).click();
   await page.getByRole('button', { name: '回收站', exact: true }).click();
   await page.locator('.prompt-list-item').filter({ hasText: '根提示词' }).click();
@@ -174,6 +215,7 @@ try {
   await page.getByRole('button', { name: '确认恢复', exact: true }).click();
   await page.locator('.floating-message-content').filter({ hasText: '已恢复' }).waitFor();
   assert.equal(await toggle.getAttribute('aria-checked'), 'false');
+  await tree.getByRole('button', { name: '主目录 (4)', exact: true }).waitFor();
   await page.locator('.prompt-preview').filter({ hasText: doc.body }).waitFor();
   await page.locator('.floating-message').waitFor({ state: 'hidden', timeout: 5000 });
   await page.getByRole('button', { name: '＋ 新建提示词', exact: true }).click();
@@ -184,7 +226,7 @@ try {
   await toggle.click();
   await page.locator('.prompt-preview').filter({ hasText: '新正文' }).waitFor();
   assert.equal(doc.title, '根提示词', 'new draft must not save when changing modes');
-  await tree.getByRole('button', { name: '主目录', exact: true }).click();
+  await tree.getByRole('button', { name: /^主目录 \(\d+\)$/ }).click();
   await page.getByRole('button', { name: '放弃修改', exact: true }).click();
   console.log('PASS preview/edit switch, preserved drafts on preview/save failure, current badge, delete wording, shared save/delete/restore notices and automatic dismissal');
   assert.deepEqual(errors, []);
