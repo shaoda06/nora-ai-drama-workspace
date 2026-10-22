@@ -63,7 +63,7 @@ try {
   assert.equal(await stage.inputValue(), '一采');
   assert.ok((await version.inputValue()).includes('R002'));
   assert.equal(await page.locator('.segment-video video').count(), 0, 'pending round used old video');
-  assert.ok((await page.getByRole('region', { name: '场次提示' }).locator('[data-message="preparation"]').innerText()).includes('1段尚无可播放视频'));
+  assert.ok((await page.locator('.scene-video-preparation').innerText()).includes('1段尚无可播放视频'));
   await page.getByRole('button', { name: '提示词', exact: true }).click();
   assert.ok((await page.locator('.segment-script-content').innerText()).includes('P001-R002中文方案'));
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).click();

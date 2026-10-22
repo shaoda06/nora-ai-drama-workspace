@@ -15,6 +15,7 @@ import { SceneDownloads } from './SceneDownloads';
 import { SegmentStageStrip } from './SegmentStageStrip';
 import { TabSelect } from './TabSelect';
 import { MessagePanel } from './MessagePanel';
+import { PointerTooltip } from './PointerTooltip';
 import { PREVIOUS_ENDING } from '../previousEpisodeEnding';
 import type { PreviousEpisodeEnding } from '../previousEpisodeEnding';
 
@@ -175,14 +176,13 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     {view === 'segments' && <>
     {segments.length === 0 ? <div className="scene-empty" role="status"><h3>{scene ? '暂无可显示的分段' : '暂无可显示的场次'}</h3><p className="muted">{emptyMessage}</p></div> : null}
     {!wideVideo && (segments.length > 0 || previousEnding) && navigation()}
+    {!wideVideo && (videoCache.total > 0 || productionRound) && <PointerTooltip text={videoCache.failures.join('\n')}><p className="scene-video-preparation" role="status">
+      {productionRound ? `第${productionRound.number}轮视频已准备 ${videoCache.ready}／${productionRound.segments.length}${missingRoundVideos ? `，${missingRoundVideos}段尚无可播放视频` : ''}${videoCache.failures.length ? `，${videoCache.failures.length}个准备失败` : ''}` : videoCache.failures.length ? `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
+        : videoCache.ready === videoCache.total ? `${reviewRound ? '本轮' : '最新'}视频已全部准备好` : `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}`}{(reviewRound ? !!roundVideo(PREVIOUS_ENDING)?.url : !!previousVideo) ? '（含上集末段）' : ''}
+    </p></PointerTooltip>}
     </>}
     <MessagePanel label="场次提示" messages={[
       !!productionRound?.issues.length && { id: 'round-issues', tone: 'error', content: `${productionRound.issues.join('；')}；不会换用当前文档。` },
-      view === 'segments' && (videoCache.total > 0 || !!productionRound) && {
-        id: 'preparation', tone: videoCache.failures.length ? 'warning' : 'info', detail: videoCache.failures.join('\n'),
-        content: <>{productionRound ? `第${productionRound.number}轮视频已准备 ${videoCache.ready}／${productionRound.segments.length}${missingRoundVideos ? `，${missingRoundVideos}段尚无可播放视频` : ''}${videoCache.failures.length ? `，${videoCache.failures.length}个准备失败` : ''}` : videoCache.failures.length ? `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
-          : videoCache.ready === videoCache.total ? `${reviewRound ? '本轮' : '最新'}视频已全部准备好` : `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}`}{(reviewRound ? !!roundVideo(PREVIOUS_ENDING)?.url : !!previousVideo) ? '（含上集末段）' : ''}</>,
-      },
       view === 'segments' && !!reviewRound && (!productionRound || !!(savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key)) && {
         id: 'review-round', content: savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key ? '当前查看版本不属于本轮，导出仍按本轮版本。' : null,
         actions: !productionRound && <button disabled={!chosen.stage} onClick={() => beginReview(false)}>重新固定浏览片单</button>,
