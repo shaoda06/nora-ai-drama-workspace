@@ -1,5 +1,6 @@
 """Build submission artifacts from one project task list; prepare all before queueing any."""
 from copy import deepcopy
+import asyncio
 import json
 from pathlib import Path
 import re
@@ -356,14 +357,18 @@ def build_image(root, skill, spec, documents, now):
         if project_file(root, approval_file) != draft:
             raise ValueError('超分必须在原生成工作稿留档')
         generation = re.search(r'生成记录-\d+', heading)[0]
-        numbers = [int(n) for n in re.findall(r'超分-(\d+)', images.section(text, generation)[0])]
-        number = spec.get('upscale_number', f'超分-{max(numbers, default=0)+1:03d}')
-        prefix = spec['object'] + '-' + generation + '-' + number
         target = spec.get('size', [n * 2 for n in refs[0]['size']])
         if not isinstance(target, (list, tuple)) or len(target) != 2 or any(type(n) is not int or n <= 0 for n in target):
             raise ValueError('超分size须为两个正整数像素宽高')
         width, height = target
+        local = tuple(target) == tuple(refs[0]['size']) or any(n < old for n, old in zip(target, refs[0]['size']))
+        label = '规格处理' if local else '超分'
+        numbers = [int(n) for n in re.findall(label + r'-(\d+)', images.section(text, generation)[0])]
+        number = spec.get('processing_number' if local else 'upscale_number', f'{label}-{max(numbers, default=0)+1:03d}')
+        prefix = spec['object'] + '-' + generation + '-' + number
         processing = f'RTX指定尺寸{width}×{height}' if 'size' in spec else '固定RTX2倍'
+        if local:
+            processing = f'本地等比缩放与裁切{width}×{height}'
         candidate = project_file(root, spec.get('output', str(refs[0]['file'].with_name(refs[0]['file'].stem + '-' + number + '.png'))))
         record = project_file(root, spec.get('record_dir', str(draft.parent.parent / '执行附件' / prefix)))
         plan = dict(draft=draft.relative_to(root).as_posix(), kind=spec['kind'], generation=generation, review=heading,
@@ -372,10 +377,12 @@ def build_image(root, skill, spec, documents, now):
                          formal=spec['formal'], record_updates=adoption_updates(root, draft, text, generation, heading, refs[0]['file'], {**spec, 'upscale_number': number})))
         if spec.get('archive'):
             plan['upscale']['archive'] = spec['archive']
+        if local:
+            plan['local_processing'] = dict(source_size=list(refs[0]['size']), crop_anchor=spec.get('crop_anchor', [0.5, 0.5]))
         body = images.section(text, generation)[0]
-        changed = images.fields(body, {'批准后超分': '已批准待超分；进度见后台状态',
+        changed = images.fields(body, {'批准后超分': '已批准待本地规格处理' if local else '已批准待超分；进度见后台状态',
             '超分编号及批准输入': number + '；' + images.link(draft, refs[0]['file']) + '；[原批准](#' + heading + ')',
-            '超分工作流、参数与任务ID': processing + '；任务状态见' + images.link(draft, record / '后台任务状态.json', '后台状态')})
+            '超分工作流、参数与任务ID': processing + '；' + images.link(draft, record / ('结果收尾报告.json' if local else '后台任务状态.json'), '处理记录' if local else '后台状态')})
         text = text.replace(body, changed, 1)
         seed = None
     else:
@@ -402,6 +409,12 @@ def build_image(root, skill, spec, documents, now):
                     review='审阅-' + generation + '-001', images=[dict(path=candidate.relative_to(root).as_posix(), width=width, height=height)])
     if candidate.exists():
         raise ValueError('候选文件已存在，不能覆盖：' + str(candidate))
+    if plan.get('local_processing'):
+        documents.new_json(record / (prefix + '-本地处理计划.json'), plan)
+        documents.put(draft, text)
+        return dict(project=str(root), task_type=spec['task_type'], title=spec['title'], workflow={}, uploads=[], image_plan=plan,
+            record_dir=str(record), outputs=[dict(node_id='local', output_key='images', index=0, path=str(candidate), response_name=prefix+'-处理结果.json')],
+            attempt_name=prefix+'-执行尝试.json', request_name=prefix+'-本地请求.json', response_name=prefix+'-本地响应.json', history_name=prefix+'-执行结果.json')
     image_type = spec.get('image_type') or images.value(images.section(text, generation)[0], '图片类型')
     remote_name = spec['object'] + '-' + image_type + '-' + prefix[len(spec['object']) + 1:]
     category = '剧集专用' if spec['kind'] == '剧集素材' else spec['kind']
@@ -593,9 +606,10 @@ async def execute(store, payload):
                 if revised != update['new']:
                     update['old'], update['new'] = update['new'], revised
             journal['source'] = source
+            journal['published'] = False
             write_json(journal_file, journal)
         if len(journal.get('accepted', [])) == len(journal['tasks']):
-            return dict(status='enqueued', tasks=journal['accepted'], reused=True, next_action='end-turn')
+            return dict(status='completed' if all(item['status'] == 'completed' for item in journal['accepted']) else 'enqueued', tasks=journal['accepted'], reused=True, next_action='end-turn')
     else:
         documents = documents or Documents(root)
         tasks = []
@@ -625,8 +639,10 @@ async def execute(store, payload):
         accepted.append(dict(title=data.title, task_type=data.task_type, local_task_id=result['local_task_id'],
                              status=result['status'], record_dir=data.record_dir))
         write_json(journal_file, journal)
-    if not journal.get('accepted'):
+    if not journal.get('accepted') and not journal.get('published'):
         publish(root, journal['writes'])
+        journal['published'] = True
+        write_json(journal_file, journal)
     prepared = []
     inputs = []
     for index, task in enumerate(journal['tasks']):
@@ -637,17 +653,26 @@ async def execute(store, payload):
         store.resolve_input(data)
         if any(row['input'].record_dir == data.record_dir for row in store.rows.values()):
             raise ValueError('清单后项已被其他登记占用，请核对原任务，不自动补提')
-        report = await store.prepare_only(data)
+        if data.image_plan and data.image_plan.get('local_processing'):
+            from backend.services import local_images
+            report = local_images.prepare(store, data)
+        else:
+            report = await store.prepare_only(data)
         prepared.append(dict(title=data.title, report=report['report']))
         inputs.append(data)
-    if payload.prepare_only:
+    if payload.prepare_only or payload.start_paused and any(data.image_plan and data.image_plan.get('local_processing') for data in inputs):
         return dict(status='prepared', tasks=prepared, next_action='review-content')
     for data in inputs:
         try:
-            result = await store.enqueue(data)
+            if data.image_plan and data.image_plan.get('local_processing'):
+                from backend.services import local_images
+                result = await asyncio.to_thread(local_images.complete, store, data)
+            else:
+                result = await store.enqueue(data)
         except (ValueError, OSError, store.client.ClientError) as error:
             return dict(status='partial' if accepted else 'failed', tasks=accepted, error=str(error), next_action='inspect-failure')
         accepted.append(dict(title=data.title, task_type=data.task_type, local_task_id=result['local_task_id'],
-                             status=result['status'], record_dir=data.record_dir))
+                             status=result['status'], record_dir=data.record_dir,
+                             **({'provider': 'local', 'report': result['report']} if result.get('provider') == 'local' else {})))
         write_json(journal_file, journal)
-    return dict(status='enqueued', tasks=accepted, next_action='end-turn')
+    return dict(status='completed' if all(item['status'] == 'completed' for item in accepted) else 'enqueued', tasks=accepted, next_action='end-turn')

@@ -518,6 +518,142 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
     async def test_upscale_builds_formal_adoption_and_closes_bound_upload(self):
         await self.check_upscale_adoption()
 
+    def approved_local_spec(self, size):
+        source = image_tests.ImageCloseoutTests.setup_image(self)
+        result_registration.register(self.store, 'task')
+        text = self.draft.read_text()
+        review = image.section(text, '审阅-生成记录-001-001')[0]
+        self.draft.write_text(text.replace(review, image.fields(review, {
+            '结论': '批准采用', '批准的具体候选': image.link(self.draft, source)})))
+        formal = '03-人物资料/CH001-男主/参考图/CH001-日常-服装参考图.png'
+        spec = dict(task_type='image-upscale', object='CH001', title='CH001 · 指定尺寸适配', kind='人物',
+            draft=self.rel(self.draft), authorization='用户授权指定尺寸下的等比缩放与少量裁切', formal=formal,
+            size=size, adoption_fields={'适用范围': '第一集'}, references=[dict(file=self.rel(source), purpose='获批原图',
+            approval=self.rel(self.draft)+'#审阅-生成记录-001-001')])
+        return source, self.project / formal, spec
+
+    async def test_any_smaller_edge_and_same_size_run_locally_without_queue_or_remote(self):
+        from PIL import Image
+        source, formal, spec = self.approved_local_spec([6, 2])
+        original = source.read_bytes()
+        self.write_plan(spec)
+        with patch.object(self.store, 'enqueue', side_effect=AssertionError('local must not enqueue')), \
+                patch.object(t.client.Client, 'json', side_effect=AssertionError('local must not contact remote')):
+            result = await plans.execute(self.store, self.payload)
+        self.assertEqual(result['status'], 'completed')
+        self.assertEqual(result['tasks'][0]['provider'], 'local')
+        self.assertIsNone(result['tasks'][0]['local_task_id'])
+        with Image.open(formal) as output:
+            self.assertEqual(output.size, (6, 2))
+        self.assertEqual(source.read_bytes(), original)
+        self.assertIn('规格处理-001', self.draft.read_text())
+        self.assertIn('本地Pillow等比缩放与裁切；远端任务ID不适用', self.draft.read_text())
+        self.assertIn('v01／规格处理-001', self.draft.read_text())
+        self.assertEqual(len(self.store.rows), 1)  # Only the original image generation.
+        with patch('PIL.ImageOps.fit', side_effect=AssertionError('do not resize again')):
+            repeated = await plans.execute(self.store, self.payload)
+        self.assertTrue(repeated['reused'])
+
+    async def test_size_routing_covers_width_height_mixed_and_identical_dimensions(self):
+        _, _, spec = self.approved_local_spec([2, 3])
+        for size in ([2, 3], [4, 2], [6, 2], [2, 6], [2, 1], [4, 3], [8, 6], [4, 6]):
+            with self.subTest(size=size):
+                task = plans.build_image(self.project, t.SKILL, {**spec, 'size': size}, plans.Documents(self.project), t.client.now())
+                local = task['image_plan'].get('local_processing')
+                self.assertEqual(bool(local), size not in ([8, 6], [4, 6]))
+                if local:
+                    self.assertEqual(task['workflow'], {})
+                    self.assertEqual(task['uploads'], [])
+                else:
+                    self.assertEqual(task['workflow']['1']['class_type'], 'RTXVideoSuperResolution')
+
+    async def test_local_prepare_only_does_not_process_then_normal_call_completes(self):
+        _, formal, spec = self.approved_local_spec([2, 1])
+        spec['crop_anchor'] = [0.5, 0]
+        self.write_plan(spec)
+        self.payload.prepare_only = True
+        with patch('PIL.ImageOps.fit', side_effect=AssertionError('prepare only does not process')):
+            result = await plans.execute(self.store, self.payload)
+        self.assertEqual(result['status'], 'prepared')
+        self.assertFalse(formal.exists())
+        self.payload.prepare_only = False
+        await plans.execute(self.store, self.payload)
+        receipt = next(self.project.rglob('*规格处理-001-处理结果.json'))
+        proof = json.loads(receipt.read_text())
+        self.assertEqual(proof['crop_anchor'], [0.5, 0])
+        self.assertEqual(proof['crop_box'], [0.0, 0.0, 4.0, 2.0])
+
+    async def test_local_processing_does_not_overwrite_existing_formal_without_archive(self):
+        _, formal, spec = self.approved_local_spec([2, 1])
+        formal.parent.mkdir(parents=True)
+        formal.write_bytes(b'preserve previous formal')
+        self.write_plan(spec)
+        with self.assertRaisesRegex(ValueError, '归档'):
+            await plans.execute(self.store, self.payload)
+        self.assertEqual(formal.read_bytes(), b'preserve previous formal')
+
+    async def test_changed_source_after_local_preparation_stops_before_processing(self):
+        source, formal, spec = self.approved_local_spec([2, 1])
+        self.write_plan(spec)
+        self.payload.prepare_only = True
+        await plans.execute(self.store, self.payload)
+        source.write_bytes(source.read_bytes())
+        self.payload.prepare_only = False
+        with self.assertRaisesRegex(ValueError, '准备资料已变化'):
+            await plans.execute(self.store, self.payload)
+        self.assertFalse(formal.exists())
+
+    async def test_local_closeout_resumes_browser_verification_without_processing_again(self):
+        _, formal, spec = self.approved_local_spec([2, 1])
+        self.write_plan(spec)
+        with patch('backend.services.local_images.verify_image_entries', side_effect=ValueError('browser not ready')):
+            result = await plans.execute(self.store, self.payload)
+        self.assertEqual(result['status'], 'failed')
+        self.assertTrue(formal.exists())
+        with patch('PIL.ImageOps.fit', side_effect=AssertionError('do not process again')):
+            result = await plans.execute(self.store, self.payload)
+        self.assertEqual(result['status'], 'completed')
+
+    async def test_identical_size_copies_original_without_resampling(self):
+        source, formal, spec = self.approved_local_spec([4, 3])
+        self.write_plan(spec)
+        with patch('PIL.ImageOps.fit', side_effect=AssertionError('same dimensions do not need processing')):
+            await plans.execute(self.store, self.payload)
+        self.assertEqual(formal.read_bytes(), source.read_bytes())
+
+    async def test_invalid_second_task_prevents_local_first_task_from_executing(self):
+        _, formal, spec = self.approved_local_spec([2, 1])
+        second = self.spec('CH002')
+        second['size'] = [0, 0]
+        self.write_plan(spec, second)
+        with patch('PIL.ImageOps.fit', side_effect=AssertionError('batch has not passed preparation')):
+            with self.assertRaisesRegex(ValueError, '尺寸'):
+                await plans.execute(self.store, self.payload)
+        self.assertFalse(formal.exists())
+
+    async def test_local_replacement_archives_previous_formal(self):
+        _, formal, spec = self.approved_local_spec([2, 1])
+        formal.parent.mkdir(parents=True)
+        formal.write_bytes(b'previous formal')
+        spec['archive'] = '03-人物资料/其他资料/历史版本/服装-归档.png'
+        self.write_plan(spec)
+        result = await plans.execute(self.store, self.payload)
+        self.assertEqual(result['status'], 'completed')
+        self.assertEqual((self.project / spec['archive']).read_bytes(), b'previous formal')
+        self.assertNotEqual(formal.read_bytes(), b'previous formal')
+
+    async def test_legacy_rtx_plan_rejects_smaller_edge_before_upload(self):
+        _, _, spec = self.approved_local_spec([8, 6])
+        self.write_plan(spec)
+        result = await plans.execute(self.store, self.payload)
+        key = result['tasks'][0]['local_task_id']
+        data = self.store.rows[key]['input']
+        data.image_plan['images'][0].update(width=6, height=2)
+        data.workflow['1']['inputs'].update({'resize_type.width': 6, 'resize_type.height': 2})
+        with patch.object(t.client.Client, 'json', side_effect=AssertionError('no upload')):
+            with self.assertRaisesRegex(ValueError, 'RTX不能缩小'):
+                await self.store.prepare(key)
+
     async def test_target_dimensions_builds_paired_workflow_and_closes_approved_imagegen_source(self):
         await self.check_upscale_adoption(size=[11, 8])
 

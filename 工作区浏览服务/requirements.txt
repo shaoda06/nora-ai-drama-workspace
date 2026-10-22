@@ -30,6 +30,7 @@ opentelemetry-exporter-otlp-proto-http==1.45.0
 opentelemetry-proto==1.45.0
 opentelemetry-sdk==1.45.0
 opentelemetry-semantic-conventions==0.66b0
+Pillow==12.3.0
 protobuf==7.36.2
 pydantic==2.13.5
 pydantic-extra-types==2.11.1

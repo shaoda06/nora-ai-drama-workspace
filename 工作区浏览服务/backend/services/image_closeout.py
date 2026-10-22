@@ -123,7 +123,8 @@ def validate_plan(data):
             raise ValueError('超分必须关联一个获批输入和一个输出')
         if up.get('review_required'):
             raise ValueError('用户要求超分后再审，不能使用自动正式采用计划')
-        if not re.fullmatch(r'超分-\d{3,}', up['number']):
+        local = plan.get('local_processing')
+        if not re.fullmatch(('规格处理' if local else '超分') + r'-\d{3,}', up['number']):
             raise ValueError('超分子记录编号错误')
         source = project_file(root, up['source'])
         approval_file, heading = up['approval'].split('#', 1)
@@ -137,24 +138,36 @@ def validate_plan(data):
         candidates = re.findall(r'\[[^\]]*\]\(([^)]+)\)', value(confirmation[1], '批准的具体候选') or value(confirmation[1], '对应具体候选'))
         if not any(project_file(root, (approval_path.parent / unquote(path)).resolve(), recorded=True) == source for path in candidates):
             raise ValueError('超分输入不是批准的具体候选')
-        if len(data.uploads) != 1 or Path(data.uploads[0]['file']) != source or data.uploads[0]['node'] != '2' or data.uploads[0]['input'] != 'image':
+        output = next(iter(planned.values()))
+        target = (output['width'], output['height'])
+        source_size = png(source.read_bytes())
+        if local:
+            anchor = local['crop_anchor']
+            if (data.workflow or data.uploads or data.outputs[0].node_id != 'local'
+                    or list(source_size) != local['source_size']):
+                raise ValueError('本地处理必须使用原批准图及本地输出，不带远端工作流或上传')
+            if not isinstance(anchor, (list, tuple)) or len(anchor) != 2 or any(type(n) not in (int, float) or not 0 <= n <= 1 for n in anchor):
+                raise ValueError('crop_anchor须为0到1之间的两个数，表示水平、垂直裁切位置')
+        elif any(n < old for n, old in zip(target, source_size)) or target == source_size:
+            raise ValueError('RTX不能缩小任意一边或处理同尺寸图片；请使用统一任务清单自动转本地处理')
+        elif len(data.uploads) != 1 or Path(data.uploads[0]['file']) != source or data.uploads[0]['node'] != '2' or data.uploads[0]['input'] != 'image':
             raise ValueError('超分上传必须绑定获批原图到节点2')
-        workflow = data.workflow
-        if (workflow['1']['class_type'] != 'RTXVideoSuperResolution' or workflow['1']['inputs']['images'] != ['2', 0]
-                or workflow['3']['class_type'] != 'SaveImage' or workflow['3']['inputs']['images'] != ['1', 0]
-                or data.outputs[0].node_id != '3'):
-            raise ValueError('超分必须为批准原图→RTX节点1→节点3')
-        resize = workflow['1']['inputs']
-        if resize['resize_type'] == 'scale by multiplier':
-            if resize['resize_type.scale'] != 2:
-                raise ValueError('倍数超分只支持2倍')
-        elif resize['resize_type'] == 'target dimensions':
-            target = (resize['resize_type.width'], resize['resize_type.height'])
-            output = next(iter(planned.values()))
-            if any(type(n) is not int for n in target) or target != (output['width'], output['height']):
-                raise ValueError('RTX指定尺寸与成果计划不符')
-        else:
-            raise ValueError('不支持的RTX图片尺寸模式')
+        if not local:
+            workflow = data.workflow
+            if (workflow['1']['class_type'] != 'RTXVideoSuperResolution' or workflow['1']['inputs']['images'] != ['2', 0]
+                    or workflow['3']['class_type'] != 'SaveImage' or workflow['3']['inputs']['images'] != ['1', 0]
+                    or data.outputs[0].node_id != '3'):
+                raise ValueError('超分必须为批准原图→RTX节点1→节点3')
+            resize = workflow['1']['inputs']
+            if resize['resize_type'] == 'scale by multiplier':
+                if resize['resize_type.scale'] != 2:
+                    raise ValueError('倍数超分只支持2倍')
+            elif resize['resize_type'] == 'target dimensions':
+                requested = (resize['resize_type.width'], resize['resize_type.height'])
+                if any(type(n) is not int for n in requested) or requested != target:
+                    raise ValueError('RTX指定尺寸与成果计划不符')
+            else:
+                raise ValueError('不支持的RTX图片尺寸模式')
         formal = project_file(root, up['formal'])
         if formal == source or formal in planned or formal.is_relative_to(Path(data.record_dir)):
             raise ValueError('超分正式文件必须与审批原图、候选及执行附件分开')

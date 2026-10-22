@@ -528,7 +528,9 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
  "adoption_fields":{"适用范围":"首集"}}
 ```
 
-超分条目可选`size:[目标宽,目标高]`，单位为像素，须为两个正整数；未传时沿用原图宽高各2倍。先按[图片后处理的方式选择](../../../nora-generation/references/ComfyUI-图片超分执行规范.md#指定尺寸处理的方式选择)确定本地处理或RTX放大；仅RTX放大进入本超分条目。Imagegen获批原图需要RTX到正式尺寸时必填本类型已确定的正式宽高，例如场景图`"size":[2752,1536]`；不填Qwen原生送审尺寸。工具复用RTX图片基准，在任务副本同步`target dimensions`及宽高控件、API和成果计划，基准仍保留2倍。实际文件必须达到明确目标；不强求原图恰好一半大。画布与API保留ULTRA、strength=1.0、8-bit RGB，批准、源图上传绑定、正式采用及异常规则不变。
+图片后处理继续使用`task_type:"image-upscale"`及可选`size:[目标宽,目标高]`，单位为像素，须为两个正整数；未传时沿用原图宽高各2倍。工具按[图片后处理的方式选择](../../../nora-generation/references/ComfyUI-图片超分执行规范.md#指定尺寸处理的方式选择)读取原图真实宽高并自动分流，本地处理不装配RTX工作流。进入RTX的指定尺寸任务在副本同步`target dimensions`及宽高控件、API和成果计划，基准仍保留2倍，画布与API保留ULTRA、strength=1.0、8-bit RGB。
+
+需裁切时可选`crop_anchor:[水平位置,垂直位置]`，两个数均为0到1，默认`[0.5,0.5]`居中；例如`[0.5,0]`保持顶部、从底部裁去多余部分。必须符合本次已获授权的裁切范围。正式资产、原批准、`formal`、`archive`及`adoption_updates`仍按本节填写。本地分支同步完成处理与收尾，返回`status:"completed"`、`provider:"local"`、报告路径及空的`local_task_id`，不会产生ComfyUI任务或正常超分通知；`--prepare-only`不执行处理，`--start-paused`遇本地分支时整批停在准备阶段，去掉该参数再次调用才执行。
 
 工具从原生成条目读取图片类型／状态等字段，生成既有“当前正式资产”表采用更新，版本指向原候选与超分编号，审阅仍指原批准；该表缺少的业务内容在`adoption_fields`按原表头补充，不猜适用场次／状态。需替换已有正式文件时提供`archive`原规则下的历史保存路径。确有额外关联文字须修改时，可选`adoption_updates:[{path,old,new}]`补充具体关联，常规正式表无需提供。原图、历史批准与超分后再审等特殊要求沿用原规则，不借精简提前采用。
 
