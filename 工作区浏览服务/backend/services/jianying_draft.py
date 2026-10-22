@@ -2,7 +2,9 @@
 
 Draft JSON: pyJianYingDraft 0.3.0 (Apache-2.0), https://github.com/GuanYixuan/pyJianYingDraft
 Native path spelling: zenstory-ai/video-recap-skills, writer.py at 53916862;
-verified in Windows Jianying 11.5.0.14471. The token is literal, not a draft ID.
+verified in Windows Jianying 11.5.0.14471 and Mac Jianying 11.6.0.
+Windows reads draft_content.json; Mac reads the identical draft_info.json.
+The token is literal, not a draft ID.
 """
 import json
 from pathlib import Path
@@ -53,5 +55,6 @@ def draft_files(files, name):
         'roughcut_time_range': {'start': 0, 'duration': material.duration},
         'sub_time_range': {'start': -1, 'duration': -1},
     } for material, (_, member) in zip(materials, files)]
-    return {'draft_content.json': script.dumps(),
+    content = script.dumps()
+    return {'draft_content.json': content, 'draft_info.json': content,
             'draft_meta_info.json': json.dumps(meta, ensure_ascii=False, indent=2)}

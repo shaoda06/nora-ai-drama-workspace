@@ -68,6 +68,7 @@ class EpisodeDownloadTests(HttpTestCase):
         self.assertIn('示例项目-第1集-正式版视频.zip', unquote(response.headers['content-disposition']))
         with ZipFile(BytesIO(response.content)) as bundle:
             self.assertIn('draft_content.json', bundle.namelist())
+            self.assertIn('draft_info.json', bundle.namelist())
             self.assertIn('draft_meta_info.json', bundle.namelist())
             return {item.filename: bundle.read(item) for item in bundle.infolist() if not item.filename.endswith('.json')}
 
@@ -106,7 +107,7 @@ class EpisodeDownloadTests(HttpTestCase):
                                   unquote(response.headers['content-disposition']))
                     with ZipFile(BytesIO(response.content)) as bundle:
                         self.assertEqual(bundle.namelist(), [f'第{scene_number}场-第1段-正式版.mp4',
-                                                           'draft_content.json', 'draft_meta_info.json'])
+                                                           'draft_content.json', 'draft_info.json', 'draft_meta_info.json'])
                         self.assertEqual(bundle.read(bundle.namelist()[0]), expected[scene][stage])
 
     def test_scene_download_does_not_read_missing_files_from_other_scenes(self):
@@ -279,7 +280,7 @@ class EpisodeDownloadTests(HttpTestCase):
         with ZipFile(BytesIO(response.content)) as bundle:
             self.assertEqual(bundle.namelist(), ['第1场-第1段-正式版.mp4', '第2场-第1段-正式版.mp4',
                                                '第2场-第2段-正式版.mp4', '第2场-第3段-正式版.mp4',
-                                               'draft_content.json', 'draft_meta_info.json'])
+                                               'draft_content.json', 'draft_info.json', 'draft_meta_info.json'])
             self.assertEqual([bundle.read(member) for member in bundle.namelist() if not member.endswith('.json')], [content for _, content in expected])
         stage_files = self.archive('后处理', 'videos')
         self.assertEqual(list(stage_files), ['第1场-第1段-正式版.mp4', '第2场-第1段-正式版.mp4',
@@ -326,6 +327,22 @@ class EpisodeDownloadTests(HttpTestCase):
                     self.assertEqual(doc['materials']['audios'], [])
                     self.assertEqual(doc['materials']['transitions'], [])
                     self.assertEqual(doc['materials']['texts'], [])
+
+    def test_mac_and_windows_draft_entries_share_identical_timeline_and_identity(self):
+        self.episode['scenes'] = ['C001']
+        self.video('后处理', 'C001', 'P001')
+        for url in (self.url.replace('/downloads', '/download'), self.url + '/后处理/videos?scene=C001'):
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertEqual(response.status_code, 200)
+                with ZipFile(BytesIO(response.content)) as bundle:
+                    self.assertEqual(bundle.read('draft_info.json'), bundle.read('draft_content.json'))
+                    content = json.loads(bundle.read('draft_info.json'))
+                    meta = json.loads(bundle.read('draft_meta_info.json'))
+                    self.assertEqual(content['id'], meta['draft_id'])
+                    self.assertEqual(content['duration'], meta['tm_duration'])
+                    self.assertEqual(content['materials']['videos'][0]['path'],
+                                     jianying_draft.DRAFT_PATH + '第1场-第1段-正式版.mp4')
 
     def test_invalid_video_does_not_deliver_a_zip_with_a_broken_draft(self):
         self.video('后处理', 'C001', 'P001')
