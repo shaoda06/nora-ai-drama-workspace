@@ -12,6 +12,7 @@ from urllib.parse import unquote
 import zlib
 
 from project_paths import project_file
+import project_progress
 from backend.services.execution_checks import write_json
 
 
@@ -373,6 +374,19 @@ def apply_updates(root, report, report_file):
         else:
             raise ValueError('图片收尾源文字变化或不唯一：' + str(path))
         edits[path] = before, text
+    progress = root / '项目进度.md'
+    if progress in edits:
+        phases = set()
+        for item in report['items']:
+            parts = project_file(root, item['draft']).relative_to(root).parts
+            if parts[0] == '09-剧集制作':
+                phases.add(parts[1] + '制作')
+            else:
+                phases.update({'03-人物资料': ('人物资料卡', '人物参考图'),
+                               '04-场景资料': ('场景资料卡', '场景参考图'),
+                               '05-道具资料': ('道具资料卡', '道具参考图'),
+                               '10-封面资料': ('封面制作',)}[parts[0]])
+        project_progress.validate_update(*edits[progress], phases=phases)
     if report.get('approval'):
         approval = report['approval']
         path = project_file(root, approval['path'])

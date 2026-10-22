@@ -9,6 +9,7 @@ import re
 import sys
 import tempfile
 from project_paths import project_file, relative_file
+import project_progress
 from datetime import datetime
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'comfyui-scripts'))
@@ -377,6 +378,9 @@ def adoption(args, *, plan=None):
     missing = sorted(str(p) for p in required - covered) if changed else []
     if args.apply and missing:
         raise ValueError('正式采用须提供生成说明和项目进度的定点更新（无变化可 old=new）：' + ', '.join(missing))
+    progress = root / '项目进度.md'
+    if progress in texts:
+        project_progress.validate_update(original[progress], texts[progress], episodes)
     destinations = [new for _, new in moves]
     if len(destinations) != len(set(destinations)):
         raise ValueError('移动目标重复')

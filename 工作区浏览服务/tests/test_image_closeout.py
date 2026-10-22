@@ -365,11 +365,37 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
     async def test_record_updates_render_links_relative_to_each_document(self):
         self.setup_image()
         progress = self.project / '项目进度.md'
-        progress.write_text('等待生成')
-        self.data.image_plan['record_updates'] = [dict(path='项目进度.md', old='等待生成', new='待审核；{{outputs}}；{{specs}}')]
+        row = '| 人物参考图 | 会话 | 进行中 | 未生成 | - 无 | - 无 |'
+        progress.write_text(row)
+        self.data.image_plan['record_updates'] = [dict(path='项目进度.md', old=row,
+            new='| 人物参考图 | 会话 | 待确认 | {{outputs}}；{{specs}} | - 审核本轮候选 | - 无 |')]
         registration.register(self.store, 'task')
         self.assertIn('](03-人物资料/其他资料/工作稿/素材/', progress.read_text())
         self.assertNotIn('{{', progress.read_text())
+
+    async def test_image_progress_updates_cannot_append_history(self):
+        self.setup_image()
+        progress = self.project / '项目进度.md'
+        row = '| 人物参考图 | 会话 | 进行中 | 当前成果 | - 无 | - 无 |'
+        progress.write_text(row)
+        self.data.image_plan['record_updates'] = [dict(path='项目进度.md', old=row,
+            new=row + '\n\n### 图片已取回\n完成流水')]
+        before = self.draft.read_bytes()
+        with self.assertRaisesRegex(ValueError, '不得追加历史记录'):
+            registration.register(self.store, 'task')
+        self.assertEqual(progress.read_text(), row)
+        self.assertEqual(self.draft.read_bytes(), before)
+
+    async def test_image_progress_updates_cannot_modify_an_unrelated_phase(self):
+        self.setup_image()
+        progress = self.project / '项目进度.md'
+        row = '| 场景参考图 | 其他会话 | 待确认 | 其他成果 | - 场景问题 | - 无 |'
+        progress.write_text(row)
+        self.data.image_plan['record_updates'] = [dict(path='项目进度.md', old=row,
+            new=row.replace('场景问题', '误清'))]
+        with self.assertRaisesRegex(ValueError, '对应阶段行'):
+            registration.register(self.store, 'task')
+        self.assertEqual(progress.read_text(), row)
 
     async def test_interrupt_after_document_publish_does_not_duplicate_appended_review(self):
         self.setup_image()

@@ -16,15 +16,15 @@ class AdoptionTests(unittest.TestCase):
     def setUp(self):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)
-        self.root = Path(temp.name)
+        self.root = Path(temp.name).resolve()
         self.extra = self.root / '09-剧集制作/EP001/其他资料'
         self.summary = self.extra / '工作稿/EP001-生成说明-工作稿.md'
         self.progress = self.root / '项目进度.md'
         self.put(self.summary, '# 生成说明\n- 当前状态：待审核\n')
-        self.put(self.progress, '# 项目进度\n| EP001 | 制作中 |\n')
+        self.put(self.progress, '# 项目进度\n| EP001制作 | 会话 | 进行中 | 原成果 | - 无 | - 无 |\n')
         self.plan = {'approval_text': '这两段通过了', 'items': [], 'record_updates': [
             {'path': str(self.summary), 'old': '- 当前状态：待审核', 'new': '- 当前状态：本批批准采用'},
-            {'path': str(self.progress), 'old': '| EP001 | 制作中 |', 'new': '| EP001 | 本批已采用，其他任务继续 |'}]}
+            {'path': str(self.progress), 'old': '| EP001制作 | 会话 | 进行中 | 原成果 | - 无 | - 无 |', 'new': '| EP001制作 | 会话 | 进行中 | 当前采用 | - 无 | - 无 |'}]}
 
     def put(self, path, content):
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -86,7 +86,7 @@ class AdoptionTests(unittest.TestCase):
             for stage in tool.STAGES:
                 self.plan = {'approval_text': '本条具体候选通过采用', 'items': [], 'record_updates': [
                     {'path': str(self.summary), 'old': '- 当前状态：待审核', 'new': '- 当前状态：待审核'},
-                    {'path': str(self.progress), 'old': '| EP001 | 制作中 |', 'new': '| EP001 | 制作中 |'}]}
+                    {'path': str(self.progress), 'old': '| EP001制作 | 会话 | 进行中 | 原成果 | - 无 | - 无 |', 'new': '| EP001制作 | 会话 | 进行中 | 原成果 | - 无 | - 无 |'}]}
                 _, draft, source, target = self.item(stage=stage)
                 content = source.read_bytes()
                 result = self.run_plan()
@@ -348,6 +348,16 @@ class AdoptionTests(unittest.TestCase):
         self.put(self.progress, '其他会话已改动')
         with self.assertRaisesRegex(ValueError, '原文已变化'):
             self.run_plan()
+        self.assertTrue(source.exists())
+        self.assertFalse(target.exists())
+
+    def test_progress_edit_cannot_append_history_before_video_move(self):
+        _, _, source, target = self.item()
+        before = self.progress.read_bytes()
+        self.plan['record_updates'][1]['new'] += '\n\n### 定稿留档-EP001-C001-一采\n已完成'
+        with self.assertRaisesRegex(ValueError, '不得追加历史记录'):
+            self.run_plan()
+        self.assertEqual(self.progress.read_bytes(), before)
         self.assertTrue(source.exists())
         self.assertFalse(target.exists())
 

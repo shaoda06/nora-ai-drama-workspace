@@ -209,13 +209,13 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         batch = await self.collect_and_notice()
         await closeout(self.store, self.projects, batch, self.data.thread_id)
         progress = self.project / '项目进度.md'
-        progress.write_text('| EP001 | 生成中 |\n', 'utf-8')
-        changes = [{'path': '项目进度.md', 'old': '| EP001 | 生成中 |', 'new': '| EP001 | 待审核 |'}]
+        progress.write_text('| EP001制作 | 会话 | 进行中 | 原成果 | - 无 | - 无 |\n', 'utf-8')
+        changes = [{'path': '项目进度.md', 'old': '| EP001制作 | 会话 | 进行中 | 原成果 | - 无 | - 无 |', 'new': '| EP001制作 | 会话 | 待确认 | 当前成果 | - 审核当前候选 | - 无 |'}]
         with patch.object(self.projects, 'scan', wraps=self.projects.scan) as scan:
             result = await closeout(self.store, self.projects, batch, self.data.thread_id, changes)
             self.assertTrue(result['user_message_ready'], result)
             scan.assert_called_once()
-        self.assertIn('待审核', progress.read_text('utf-8'))
+        self.assertIn('待确认', progress.read_text('utf-8'))
         before = progress.read_bytes()
         with patch.object(self.projects, 'scan') as scan:
             result = await closeout(self.store, self.projects, batch, self.data.thread_id, changes)
@@ -232,8 +232,8 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.setup_video()
         batch = await self.collect_and_notice()
         progress = self.project / '项目进度.md'
-        progress.write_text('EP001 生成中', 'utf-8')
-        changes = [{'path': '项目进度.md', 'old': 'EP001 生成中', 'new': 'EP001 待审核'}]
+        progress.write_text('| EP001制作 | 会话 | 进行中 | 原成果 | - 无 | - 无 |', 'utf-8')
+        changes = [{'path': '项目进度.md', 'old': '| EP001制作 | 会话 | 进行中 | 原成果 | - 无 | - 无 |', 'new': '| EP001制作 | 会话 | 待确认 | 当前成果 | - 审核当前候选 | - 无 |'}]
         from backend.services import result_registration as registration
         original = registration.write_json
         def interrupted(path, value):
@@ -242,10 +242,24 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(registration, 'write_json', interrupted):
             result = await closeout(self.store, self.projects, batch, self.data.thread_id, changes)
         self.assertFalse(result['user_message_ready'])
-        self.assertEqual(progress.read_text('utf-8'), 'EP001 待审核')
+        self.assertEqual(progress.read_text('utf-8'), '| EP001制作 | 会话 | 待确认 | 当前成果 | - 审核当前候选 | - 无 |')
         result = await closeout(self.store, self.projects, batch, self.data.thread_id)
         self.assertTrue(result['user_message_ready'], result)
-        self.assertEqual(progress.read_text('utf-8'), 'EP001 待审核')
+        self.assertEqual(progress.read_text('utf-8'), '| EP001制作 | 会话 | 待确认 | 当前成果 | - 审核当前候选 | - 无 |')
+
+    async def test_business_update_cannot_append_progress_history(self):
+        self.setup_video()
+        batch = await self.collect_and_notice()
+        await closeout(self.store, self.projects, batch, self.data.thread_id)
+        progress = self.project / '项目进度.md'
+        row = '| EP001制作 | 会话 | 进行中 | 当前成果 | - 无 | - 无 |'
+        progress.write_text(row + '\n', 'utf-8')
+        changes = [{'path': '项目进度.md', 'old': row,
+                    'new': row + '\n\n### EP001已取回\n完成流水'}]
+        result = await closeout(self.store, self.projects, batch, self.data.thread_id, changes)
+        self.assertFalse(result['user_message_ready'])
+        self.assertEqual(result['results'][0]['status'], 'registration_failed')
+        self.assertEqual(progress.read_text('utf-8'), row + '\n')
 
     async def test_missing_receipt_and_duplicate_stage_cannot_be_registered(self):
         _, draft = self.setup_video()

@@ -12,22 +12,12 @@ import urllib.request
 
 import video_adopt as adopt
 import scene_finalize as final
+import project_progress
 
 
-def indexed_parts(root, episode):
-    path = root / '09-剧集制作' / episode / '03-分镜脚本' / (episode + '-分镜索引.md')
-    return re.findall(r'^\| (' + re.escape(episode) + r'-C\d{3}) \|[^\n]*?\| ('
-                      + re.escape(episode) + r'-C\d{3}-P\d{3}) \|', path.read_text('utf-8-sig'), re.M)
-
-
-def selected(root, part, stage):
-    draft = root / '09-剧集制作' / part.split('-')[0] / '其他资料/工作稿' / (part + '-视频制作-工作稿.md')
-    text = draft.read_text('utf-8-sig')
-    _, _, row = adopt.selected_row(text, stage)
-    names = re.findall(re.escape(part) + r'-R\d{3}-' + stage + r'\.\w+', row)
-    anchors = re.findall(r'\]\(#([^)]*)\)', row.strip().strip('|').split('|')[-1])
-    approved = names and len(anchors) == 1 and adopt.approved_row(text, names[0] + ' [审核](#' + anchors[0] + ')', names[0])
-    return Path(names[0]).stem if approved else None
+indexed_parts = final.indexed_parts
+selected = final.selected
+episode_missing = final.episode_missing
 
 
 def source_items(root, plan, stage):
@@ -65,34 +55,6 @@ def record_updates(root, episode, summary):
     return updates
 
 
-def episode_missing(root, episode):
-    """Check current approvals against existing finalization records, not newest files."""
-    missing, records = [], {}
-    for scene, part in indexed_parts(root, episode):
-        draft = root / '09-剧集制作' / episode / '其他资料/工作稿' / (part + '-视频制作-工作稿.md')
-        text = draft.read_text('utf-8-sig')
-        for stage in adopt.STAGES:
-            identity = selected(root, part, stage)
-            if identity is None:
-                missing.append(part + ' ' + stage + '未采用')
-                continue
-            headings = re.findall(r'^### (定稿留档-' + re.escape(scene + '-' + stage) + r'[^\n]*)$', text, re.M)
-            covered = False
-            for heading in headings:
-                a, b = adopt.section(text, heading)
-                for link in re.findall(r'\[留档记录\]\(([^)]+)\)', text[a:b]):
-                    path = adopt.local_path(root, draft.parent / urllib.parse.unquote(link))
-                    if path not in records:
-                        records[path] = adopt.load(path)
-                    record = records[path]
-                    if (record['state'] == 'completed' and identity in {s['identity'] for s in record['sources']}
-                            and all(adopt.local_path(root, record[k]).is_file() for k in ('pack', 'canvas'))):
-                        covered = True
-            if not covered:
-                missing.append(identity + '缺少当前版本定稿留档')
-    return missing
-
-
 def update_business(root, episode, scene, stage, summary, identities, finalized, complete):
     status = (episode + '分段制作与交付已完成。' if complete else
               scene + '的' + stage + '已采用' + str(len(identities)) + '段；'
@@ -112,17 +74,7 @@ def update_business(root, episode, scene, stage, summary, identities, finalized,
     else:
         text = text.rstrip() + '\n\n### ' + heading + '\n' + body
     final.replace_file(summary, text)
-    progress = root / '项目进度.md'
-    text = progress.read_text('utf-8-sig')
-    rows = re.findall(r'^\| ' + re.escape(episode) + r'制作 \|[^\n]*', text, re.M)
-    if len(rows) != 1:
-        raise ValueError('项目进度缺少唯一的' + episode + '制作行；采用和留档事实已保留')
-    cells = rows[0].split('|')
-    cells[3] = ' 已完成 ' if complete else ' 进行中 '
-    cells[4] = ' - [' + scene + stage + '采用视频](' + adopt.link(progress, folder) + ') '
-    cells[5] = ' - 分段制作与交付完成 ' if complete else ' - ' + status + ' '
-    cells[6] = ' - 下一集等待用户安排 ' if complete else ' - 后续阶段按实际批准及执行授权安排 '
-    final.replace_file(progress, text.replace(rows[0], '|'.join(cells), 1))
+    final.update_progress(root, episode, scene, stage, summary)
 
 
 def browser_sync(root, episode, stage, identities, complete, timeout):
@@ -130,9 +82,9 @@ def browser_sync(root, episode, stage, identities, complete, timeout):
     base = config['url'].rstrip('/')
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 
-    def get(route):
+    def get(route, *, text=False):
         with opener.open(base + route, timeout=timeout) as response:
-            return json.load(response)
+            return response.read().decode("utf-8-sig") if text else json.load(response)
 
     service = get('/api/service')
     if not service['ready'] or Path(service['workspace']).resolve() != root.parent.parent:
@@ -148,6 +100,11 @@ def browser_sync(root, episode, stage, identities, complete, timeout):
         if time.monotonic() >= deadline:
             raise TimeoutError('浏览入口仍在同步；只需恢复本次网页核对，不重复采用或导出')
         time.sleep(.5)
+    served = get(route + '/files/' + urllib.parse.quote('项目进度.md', safe=''), text=True)
+    _, actual = project_progress.phase_row(served, episode)
+    _, expected = project_progress.phase_row((root / '项目进度.md').read_text('utf-8-sig'), episode)
+    if actual != expected:
+        raise ValueError('网页尚未同步本批阶段行的状态、成果、待决事项和下一步')
     data = get(route + '/episodes/' + episode)
     seen = set()
     for scene_name, rows in data['segments'].items():
@@ -180,6 +137,7 @@ def approve(args):
     if len(scopes) != 1:
         raise ValueError('一次批准收尾限同一集、场次及处理阶段')
     episode, scene_number, stage = next(iter(scopes))
+    project_progress.phase_row((root / '项目进度.md').read_text('utf-8-sig'), episode)
     scene = episode + '-' + scene_number
     expected = [p for s, p in indexed_parts(root, episode) if s == scene]
     if not expected or any(i.rsplit('-', 2)[0] not in expected for i in ids):

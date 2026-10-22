@@ -11,6 +11,7 @@ from backend.services.execution_checks import write_json
 from backend.services.result_summary import batch_tasks, summary, outputs as collected_outputs
 from project_paths import project_file
 from video_adopt import field
+import project_progress
 
 REPORT = '结果收尾报告.json'
 
@@ -242,11 +243,9 @@ def apply_record_updates(store, key, updates, episodes, report=None):
         if set(update) != {'path', 'old', 'new'} or not all(isinstance(value, str) and value for value in update.values()):
             raise ValueError('业务更新须提供 path、old、new，且不得为空')
         path = project_file(root, update['path'])
-        if path == root / '项目进度.md':
-            if not any(re.search(r'\b' + re.escape(ep) + r'\b', update['old']) for ep in episodes):
-                raise ValueError('项目进度更新必须明确属于本批剧集')
-        elif not any(path.is_relative_to(root / '09-剧集制作' / ep) for ep in episodes) or not (
-                '01-制作前检查' in path.parts or path.name.endswith('生成说明-工作稿.md')):
+        if path != root / '项目进度.md' and (not any(
+                path.is_relative_to(root / '09-剧集制作' / ep) for ep in episodes) or not (
+                '01-制作前检查' in path.parts or path.name.endswith('生成说明-工作稿.md'))):
             raise ValueError('业务更新仅用于本批项目进度、制作前检查及生成说明工作稿')
         if path not in edits:
             before = path.read_text('utf-8-sig')
@@ -261,6 +260,9 @@ def apply_record_updates(store, key, updates, episodes, report=None):
         if current.count(update['old']) != 1:
             raise ValueError('业务更新原文不唯一或已变化：' + str(path))
         edits[path] = before, current.replace(update['old'], update['new'], 1)
+    progress = root / '项目进度.md'
+    if progress in edits:
+        project_progress.validate_update(*edits[progress], episodes)
     journal = {'fingerprint': fingerprint, 'status': 'applying', 'updates': updates,
                'files': {path.relative_to(root).as_posix(): {'before': before_digests[path], 'after': digest(after) if after != before else before_digests[path]}
                          for path, (before, after) in edits.items()}}

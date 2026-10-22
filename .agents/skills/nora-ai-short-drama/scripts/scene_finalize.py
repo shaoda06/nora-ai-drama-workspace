@@ -15,6 +15,7 @@ from urllib.parse import unquote
 import video_adopt as adopt
 import workflow_baselines as pairs
 import comfyui_config
+import project_progress
 
 client = adopt.client
 MEDIA = ('imageFile', 'audioFile', 'videoFile', 'pairedAudioFile')
@@ -36,6 +37,86 @@ def replace_file(path, text):
 
 def save_json(path, value):
     replace_file(path, json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+
+def indexed_parts(root, episode):
+    path = root / '09-剧集制作' / episode / '03-分镜脚本' / (episode + '-分镜索引.md')
+    return re.findall(r'^\| (' + re.escape(episode) + r'-C\d{3}) \|[^\n]*?\| ('
+                      + re.escape(episode) + r'-C\d{3}-P\d{3}) \|', path.read_text('utf-8-sig'), re.M)
+
+
+def selected(root, part, stage):
+    draft = root / '09-剧集制作' / part.split('-')[0] / '其他资料/工作稿' / (part + '-视频制作-工作稿.md')
+    text = draft.read_text('utf-8-sig')
+    _, _, row = adopt.selected_row(text, stage)
+    names = re.findall(re.escape(part) + r'-R\d{3}-' + stage + r'\.\w+', row)
+    anchors = re.findall(r'\]\(#([^)]*)\)', row.strip().strip('|').split('|')[-1])
+    approved = names and len(anchors) == 1 and adopt.approved_row(text, names[0] + ' [审核](#' + anchors[0] + ')', names[0])
+    return Path(names[0]).stem if approved else None
+
+
+def episode_missing(root, episode):
+    """Check current approved identities against their actual finalization records."""
+    missing, records = [], {}
+    for scene, part in indexed_parts(root, episode):
+        draft = root / '09-剧集制作' / episode / '其他资料/工作稿' / (part + '-视频制作-工作稿.md')
+        text = draft.read_text('utf-8-sig')
+        for stage in adopt.STAGES:
+            identity = selected(root, part, stage)
+            if identity is None:
+                missing.append(part + ' ' + stage + '未采用')
+                continue
+            headings = re.findall(r'^### (定稿留档-' + re.escape(scene + '-' + stage) + r'[^\n]*)$', text, re.M)
+            covered = False
+            for heading in headings:
+                a, b = adopt.section(text, heading)
+                for reference in re.findall(r'\[留档记录\]\(([^)]+)\)', text[a:b]):
+                    path = adopt.local_path(root, draft.parent / unquote(reference))
+                    if path not in records:
+                        records[path] = adopt.load(path)
+                    record = records[path]
+                    if (record['state'] == 'completed' and identity in {s['identity'] for s in record['sources']}
+                            and all(adopt.local_path(root, record[k]).is_file() for k in ('pack', 'canvas'))):
+                        covered = True
+            if not covered:
+                missing.append(identity + '缺少当前版本定稿留档')
+    return missing
+
+
+def update_progress(root, episode, scene, stage, summary, *, failure_record=None):
+    path = root / '项目进度.md'
+    pending, next_steps = [], []
+    indexed = indexed_parts(root, episode)
+    missing = episode_missing(root, episode)
+    if failure_record is not None:
+        reference = '[本场' + stage + '留档记录](' + adopt.link(path, failure_record) + ')'
+        reason = {'export_failed': '导出失败', 'verification_failed': '核对失败'}[adopt.load(failure_record)['state']]
+        pending.append(reference + reason)
+        next_steps.append('核对' + reference + '并恢复定稿留档')
+    else:
+        for current_scene, part in indexed:
+            if current_scene == scene and selected(root, part, stage) is None:
+                draft = root / '09-剧集制作' / episode / '其他资料/工作稿' / (part + '-视频制作-工作稿.md')
+                pending.append('[' + part + '](' + adopt.link(path, draft) + ')的' + stage + '尚未采用')
+    for current_scene in dict.fromkeys(s for s, _ in indexed):
+        parts = [part for s, part in indexed if s == current_scene]
+        for current_stage in adopt.STAGES:
+            if failure_record is not None and (current_scene, current_stage) == (scene, stage):
+                continue
+            if any(part + ' ' + current_stage + '未采用' in missing for part in parts):
+                continue
+            if any(item.startswith(current_scene + '-') and item.endswith(current_stage + '缺少当前版本定稿留档')
+                   for item in missing):
+                reference = '[' + current_scene + current_stage + '](' + adopt.link(path, summary) + ')'
+                pending.append(reference + '定稿留档尚未齐备')
+                next_steps.append('补齐' + reference + '的定稿留档')
+    complete = failure_record is None and not missing
+    folder = root / '09-剧集制作' / episode / '06-阶段采用视频' / adopt.STAGES[stage] / (scene.split('-')[-1] + '-场次')
+    outputs = '[' + scene + stage + '采用视频](' + adopt.link(path, folder) + ')、[制作与留档记录](' + adopt.link(path, summary) + ')'
+    text = path.read_text('utf-8-sig')
+    replace_file(path, project_progress.update(text, episode, status='已完成' if complete else '进行中',
+                                             outputs=outputs, pending=pending, next_steps=next_steps))
+    return complete
 
 
 def postprocess_uploads(root, record):
@@ -432,6 +513,7 @@ def verify_pack(prepared):
 def finalize_one(root, plan, p, apply, timeout):
     for path in [*p['drafts'], p['summary'], p['progress']]:
         path.read_text(encoding='utf-8-sig')
+    project_progress.phase_row(p['progress'].read_text('utf-8-sig'), plan['episode'])
     record = {'stage': plan['stage'], 'sources': p['evidence'], 'url': p['url'], 'node_id': p['node'],
               'pack': str(p['pack']), 'canvas': str(p['canvas_path']), 'api': str(p['api_path']),
               'configuration_batch_authorization': plan.get('configuration_batch_authorization')}
@@ -467,6 +549,8 @@ def finalize_one(root, plan, p, apply, timeout):
                        'details': error.details if isinstance(error, client.ClientError) else {}}
             client.write_new(p['receipt'], failure)
             save_json(p['record'], {**record, 'state': 'export_failed', 'error': failure, 'receipt': str(p['receipt'])})
+            update_progress(root, plan['episode'], plan['episode'] + '-' + plan['scene'], plan['stage'],
+                            p['summary'], failure_record=p['record'])
             raise
         client.write_new(p['receipt'], {'ok': True, 'recorded_at': client.now(), 'data': response})
     try:
@@ -475,12 +559,14 @@ def finalize_one(root, plan, p, apply, timeout):
             adopt.check_file(p['pack'], adopt.load(p['receipt'])['data'])
     except (ValueError, KeyError, OSError, zipfile.BadZipFile) as error:
         save_json(p['record'], {**record, 'state': 'verification_failed', 'error': str(error)})
-        for path in [*p['drafts'], p['summary'], p['progress']]:
+        for path in [*p['drafts'], p['summary']]:
             text = path.read_text(encoding='utf-8-sig')
             if re.search(r'^### ' + re.escape(p['heading']) + r'\s*$', text, re.M):
                 a, b = adopt.section(text, p['heading'])
                 body = adopt.field(text[a:b], '状态', p['scope'] + '定稿留档核对失败；具体问题见留档记录，视频批准事实保持。')
                 replace_file(path, text[:a] + body + '\n' + text[b:])
+        update_progress(root, plan['episode'], plan['episode'] + '-' + plan['scene'], plan['stage'],
+                        p['summary'], failure_record=p['record'])
         raise
     if not p['receipt'].exists():
         # The native client may have published the ZIP before an interrupted receipt write.
@@ -490,7 +576,7 @@ def finalize_one(root, plan, p, apply, timeout):
                                       'basis': '已有准备记录及实际包内容／素材字节核对；原远端导出时间未记录',
                                       'data': {'path': str(p['pack']), 'bytes': p['pack'].stat().st_size, 'sha256': digest}})
     stamp = adopt.load(p['record']).get('verified_at', client.now())
-    for path in [*p['drafts'], p['summary'], p['progress']]:
+    for path in [*p['drafts'], p['summary']]:
         text = path.read_text(encoding='utf-8-sig')
         body = (f'\n- 状态：{p["scope"]}定稿留档完成；视频批准依据保持原记录。\n'
                 f'- 导演包：[下载]({adopt.link(path, p["pack"])})\n'
@@ -509,8 +595,11 @@ def finalize_one(root, plan, p, apply, timeout):
         save_json(actual['mapping_path'], mapped)
     save_json(p['record'], {**record, 'state': 'completed', 'verified_at': stamp,
                            'checks': '全部P段实际批准／实际提交来源／原生包正文与素材字节／记录入口',
-                           'records': [str(path) for path in [*p['drafts'], p['summary'], p['progress']]],
+                           'records': [str(path) for path in [*p['drafts'], p['summary']]],
                            'receipt': str(p['receipt'])})
+    update_progress(root, plan['episode'], plan['episode'] + '-' + plan['scene'], plan['stage'], p['summary'])
+    saved = adopt.load(p['record'])
+    save_json(p['record'], {**saved, 'records': saved['records'] + [str(p['progress'])]})
     result['state'] = 'completed'
     return result
 

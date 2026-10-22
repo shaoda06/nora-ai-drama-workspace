@@ -123,6 +123,9 @@ class ApprovalTests(unittest.TestCase):
         self.assertEqual(result['episode_missing'], [])
         self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 1)
         self.assertIn('| 已完成 |', (self.root / '项目进度.md').read_text())
+        cells = tool.project_progress.phase_row((self.root / '项目进度.md').read_text(), 'EP001')[1]
+        self.assertEqual(cells[4:], ['- 无', '- 无'])
+        self.assertNotIn('### 定稿留档-', (self.root / '项目进度.md').read_text())
         for path, data in original.items():
             self.assertEqual(path.read_bytes(), data)
         self.assertEqual(self.run_plan()['state'], 'completed')
@@ -136,6 +139,9 @@ class ApprovalTests(unittest.TestCase):
         self.assertFalse(result['episode_completed'])
         self.assertIsNone(tool.selected(self.root, 'EP001-C001-P002', '后处理'))
         self.assertEqual(NativeClient.calls, [])
+        pending = tool.project_progress.phase_row((self.root / '项目进度.md').read_text(), 'EP001')[1][4]
+        self.assertIn('P002', pending)
+        self.assertNotIn('EP001-C001-P001', pending)
 
     def test_preview_does_not_move_write_export_or_query_browser(self):
         self.setup_stage()
@@ -198,6 +204,7 @@ class ApprovalTests(unittest.TestCase):
         playback = {'segments': {'C001': [{'id': 'P001', 'videos': [
             {'stage': '后处理', 'run': 'R001', 'approved': True}]}]}}
         called = []
+        served_progress = [None]
         statuses = [
             {'updating': False, 'checking': True, 'error': '上次读取期间资料有变化'},
             {'updating': True, 'checking': True, 'error': None},
@@ -215,6 +222,8 @@ class ApprovalTests(unittest.TestCase):
                 elif '/episodes/' in path:
                     self.assertEqual(statuses, [], '检查和更新结束后才能核对播放资料')
                     value = playback
+                elif '/files/' in path:
+                    return io.BytesIO(served_progress[0] or (self.root / '项目进度.md').read_bytes())
                 elif '/sections/' in path:
                     value = catalogue
                 else:
@@ -229,6 +238,10 @@ class ApprovalTests(unittest.TestCase):
             playback['segments'] = {'C002': playback['segments']['C001']}
             statuses.append({'updating': False, 'checking': False, 'error': None})
             with self.assertRaisesRegex(ValueError, '具体采用版本'):
+                tool.browser_sync(self.root, 'EP001', '后处理', self.plan['identities'][:1], False, 30)
+            statuses.append({'updating': False, 'checking': False, 'error': None})
+            served_progress[0] = (self.root / '项目进度.md').read_text().replace('| 进行中 |', '| 待确认 |', 1).encode()
+            with self.assertRaisesRegex(ValueError, '状态、成果、待决事项和下一步'):
                 tool.browser_sync(self.root, 'EP001', '后处理', self.plan['identities'][:1], False, 30)
         self.assertTrue(any('/episodes/EP001' in p for p in called))
 
