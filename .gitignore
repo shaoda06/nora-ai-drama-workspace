@@ -3,6 +3,7 @@
 # 本机Codex配置。
 /.codex/
 /comfyui-config.json
+/提示词管理/
 
 # 已独立安装、由上游按需获取的技能，不随本模板重复分发。
 /.agents/skills/h3-prompt-writing/

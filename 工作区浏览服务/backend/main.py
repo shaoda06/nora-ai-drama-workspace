@@ -24,6 +24,8 @@ from workflow_paths import workflow_directories, workflow_root
 from backend.services.task_details import task_detail
 from backend.services.task_history import task_history
 from backend.services import node_config
+from backend.services.prompts import PromptLibrary
+from backend.routes.prompts import create_router as prompt_router
 from backend.services.task_resolution import ResolutionInput, resolve_task
 from backend.services.result_summary import summary as result_summary
 from backend.services.result_registration import closeout as result_closeout
@@ -35,12 +37,14 @@ WORKSPACE = Path(os.environ.get('NORA_WORKSPACE', TOOL.parent)).resolve()
 WORKFLOWS = workflow_root(WORKSPACE / '.agents/skills/nora-ai-short-drama')
 ENVIRONMENT = os.environ.get('NORA_SERVICE_ENV', 'production')
 revision_notes = RevisionNotes()
+prompt_library = PromptLibrary(WORKSPACE / '提示词管理')
 VERSION = json.loads((TOOL / 'frontend/package.json').read_text('utf-8'))['version']
 FRONTEND_RELEASE = TOOL / 'frontend/dist/release.json'
 store = ProjectStore(WORKSPACE / 'projects', cache_directory=TOOL / 'runtime/project-cache', version=VERSION)
 @asynccontextmanager
 async def lifespan(app):
     clear_downloads()
+    prompt_library.path().mkdir(parents=True, exist_ok=True)
     tasks = TaskStore(TOOL / 'runtime', WORKSPACE)
     tasks.projects = store
     app.state.comfy_tasks = tasks
@@ -189,6 +193,9 @@ class TransferInput(BaseModel):
 def queue_write(request: Request):
     if not local_write_request(request):
         raise HTTPException(403, '仅允许工作台同源管理操作')
+
+
+app.include_router(prompt_router(prompt_library, queue_write))
 
 
 def agent_request(request: Request):

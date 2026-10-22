@@ -26,6 +26,7 @@
 | `sd-combat-engine/`、`sd-xuanhuan-engine/`、`sd-real-engine/` | 位于 `.agents/skills/`，由业务技能按戏型选择通用、玄幻、写实打戏方法 |
 | 主技能内 `dependencies/` | 三个ComfyUI适配技能的真源；节点源码目录或ZIP安装包统一放在其 `ComfyUI节点资源/` 子目录，保留来源、版本与许可证 |
 | `.agents/skills/krea2-style-library/` | 风格库使用与维护指引 |
+| `提示词管理/` | 本机提示词资料库，分类对应文件夹，一份提示词对应一个MD文件；通过后台管理 |
 | `工作区浏览服务/` | React＋FastAPI浏览服务、双击启动、共用解析器与开发历史 |
 | `工作区浏览服务/Krea2风格库/` | 本地浏览页、当前风格资源、更新程序和启动入口 |
 | `projects/` | 使用者真实短剧项目，模板仅保留目录说明 |

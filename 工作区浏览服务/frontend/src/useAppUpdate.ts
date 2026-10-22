@@ -11,7 +11,7 @@ interface Service { version: string; ready: boolean; environment: string }
 function canRefresh() {
   const editing = document.activeElement?.matches('input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, [contenteditable="true"], [contenteditable="plaintext-only"]');
   const playing = [...document.querySelectorAll<HTMLMediaElement>('video, audio')].some(media => !media.paused && !media.ended);
-  return !editing && !playing && !document.querySelector('dialog[open], [data-node-config-unsaved="true"]') && !hasUnsavedNotes();
+  return !editing && !playing && !document.querySelector('dialog[open], [data-node-config-unsaved="true"], [data-prompt-unsaved="true"]') && !hasUnsavedNotes();
 }
 
 export function useAppUpdate() {
