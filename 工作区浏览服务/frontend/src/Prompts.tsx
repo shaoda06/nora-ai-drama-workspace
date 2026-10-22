@@ -4,6 +4,7 @@ import { useBlocker } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { PageHeader } from './components/PageHeader';
 import { CopyButton } from './components/CopyButton';
+import { MarkedTabSelect } from './components/TabSelect';
 import './Prompts.css';
 
 type Category = { path: string; revision: string };
@@ -146,10 +147,12 @@ export default function Prompts() {
       <section className="prompt-detail" aria-label="提示词详情">
         <button className="prompt-mobile" disabled={busy} onClick={() => guard(() => { clearSelection(); setStep('list'); })}>‹ 返回列表</button>
         {draft ? <>
-          <div className="prompt-detail-heading"><span>{saved ? '编辑提示词' : '新建提示词'}</span><small>{dirty ? '尚未保存' : '已保存到本地文件'}</small></div>
           {changed && <div className="prompt-warning" role="status">这份提示词已在外部修改、移动或删除。当前内容已保留。<button disabled={busy} onClick={() => openDocument(saved!.path)}>重新载入</button></div>}
-          <label>标题<input aria-label="提示词标题" value={draft.title} disabled={busy} onChange={e => setDraft({ ...draft, title: e.target.value })} placeholder="为提示词起个名字" /></label>
-          <label>所在分类<select aria-label="提示词所在分类" value={draft.category} disabled={busy} onChange={e => setDraft({ ...draft, category: e.target.value })}>{categoryOptions()}{draft.category && !categories.some(item => item.path === draft.category) && <option value={draft.category}>{draft.category}（已不存在）</option>}</select></label>
+          <label className="prompt-form-field"><span>标题</span><input aria-label="提示词标题" value={draft.title} disabled={busy} onChange={e => setDraft({ ...draft, title: e.target.value })} placeholder="为提示词起个名字" /></label>
+          <div className="prompt-form-field"><span>所在分类</span><MarkedTabSelect label="提示词所在分类" selected={draft.category} disabled={busy} onChange={category => setDraft({ ...draft, category })} items={[
+            { value: '', label: '主目录' }, ...categories.map(item => ({ value: item.path, label: item.path })),
+            ...(draft.category && !categories.some(item => item.path === draft.category) ? [{ value: draft.category, label: `${draft.category}（已不存在）` }] : []),
+          ]} /></div>
           <div className="prompt-editor-tabs"><button aria-pressed={mode === 'text'} disabled={busy} onClick={() => setMode('text')}>文本编辑</button><button aria-pressed={mode === 'preview'} disabled={busy} onClick={() => void run(async () => { const result = await api<{ html: string }>('/preview', 'POST', { body: draft.body }); setHtml(result.html); setMode('preview'); })}>Markdown 预览</button></div>
           {mode === 'text' ? <textarea aria-label="提示词正文" className="prompt-body" value={draft.body} disabled={busy} spellCheck={false} placeholder="输入或粘贴提示词正文…" onChange={e => setDraft({ ...draft, body: e.target.value })} /> : <article className="prompt-preview" dangerouslySetInnerHTML={{ __html: html }} />}
           <div className="prompt-actions"><button className="prompt-primary" disabled={busy || !draft.title.trim() || !dirty} onClick={() => void save()}>{busy ? '处理中…' : '保存'}</button><CopyButton label="复制" text={draft.body} />{saved && <button className="danger-button prompt-delete" disabled={busy} onClick={() => guard(() => { const current = latestSaved.current!; ask('移入回收站', `将“${current.title}”移入回收站？之后可以恢复。`, async () => { await api('/document', 'DELETE', { path: current.path, revision: current.revision }); clearSelection(); setConfirm(null); setStep('list'); setNotice('已移入回收站'); await refresh(); }); })}>删除</button>}</div>

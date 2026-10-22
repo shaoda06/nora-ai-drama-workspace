@@ -11,7 +11,7 @@ type Props = {
   iconOnly?: boolean;
 };
 
-function MarkedTabSelect({ items, selected, onChange, label, disabled, iconOnly }: Props) {
+export function MarkedTabSelect({ items, selected, onChange, label, disabled, iconOnly }: Props) {
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);

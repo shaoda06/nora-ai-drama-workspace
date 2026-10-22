@@ -1,0 +1,106 @@
+// Real page with browser-local API fixtures; never writes to the user's prompt library.
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { mkdtemp } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+const require = createRequire(import.meta.url);
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const [base] = process.argv.slice(2);
+assert.ok(base, 'Usage: node tests/test_prompts_layout_ui.mjs URL');
+const out = await mkdtemp(path.join(os.tmpdir(), 'nora-prompts-layout-'));
+const browser = await chromium.launch({ headless: true });
+try {
+  const page = await browser.newPage({ viewport: { width: 1362, height: 918 } });
+  const errors = [];
+  page.on('pageerror', error => errors.push(String(error)));
+  const release = await (await page.request.get(base + '/release.json')).json();
+  let doc = { path: '根提示词.md', title: '根提示词', category: '', revision: '1', modified: Date.now() / 1000, body: '测试正文\n第二行' };
+  const categories = [{ path: '图片', revision: '1' }, { path: '图片/反推', revision: '1' }];
+  await page.route('**/api/**', route => {
+    const request = route.request(), url = new URL(request.url());
+    let data;
+    if (url.pathname === '/api/prompts') data = { categories, prompts: [doc] };
+    else if (url.pathname === '/api/prompts/document') {
+      if (request.method() === 'POST') {
+        const body = request.postDataJSON();
+        doc = { ...doc, title: body.title, body: body.body, category: body.category, path: `${body.category ? body.category + '/' : ''}${body.title}.md`, revision: '2' };
+      } else assert.equal(request.method(), 'GET');
+      data = doc;
+    } else if (url.pathname === '/api/prompts/preview') data = { html: '<p>长预览段落</p>'.repeat(80) };
+    else if (url.pathname === '/api/service') data = { version: release.version, ready: true };
+    else if (url.pathname === '/api/comfy/tasks') data = { tasks: [], remote_nodes: [], local_tasks: [], local_counts: {}, history_updated_at: {} };
+    else { assert.equal(request.method(), 'GET'); data = []; }
+    return route.fulfill({ json: data });
+  });
+  await page.goto(base + '/#/prompts');
+  const tree = page.getByRole('complementary', { name: '主目录', exact: true });
+  const openRoot = () => tree.getByRole('button', { name: '根提示词', exact: true }).click();
+  await openRoot();
+  await page.getByLabel('提示词正文', { exact: true }).waitFor();
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  const before = await page.evaluate(() => ({ y: scrollY, height: document.querySelector('.prompt-layout').getBoundingClientRect().height }));
+  assert.ok(before.y > 0, 'fixture must exercise page scrolling');
+  await tree.getByRole('button', { name: '图片', exact: true }).click();
+  const after = await page.evaluate(() => ({ y: scrollY, height: document.querySelector('.prompt-layout').getBoundingClientRect().height }));
+  assert.ok(Math.abs(after.y - before.y) <= 1, `directory click moved page: ${before.y} -> ${after.y}`);
+  assert.equal(after.height, before.height, 'clearing the editor shrank the workspace');
+  await openRoot();
+  assert.equal(await page.locator('.prompt-detail-heading').count(), 0);
+  const category = page.getByRole('combobox', { name: '提示词所在分类', exact: true });
+  await category.click();
+  await page.waitForFunction(() => document.querySelector('[role="combobox"][aria-label="提示词所在分类"]').getAttribute('aria-expanded') === 'true');
+  const options = page.getByRole('listbox', { name: '提示词所在分类', exact: true });
+  await options.getByRole('option', { name: '图片/反推', exact: true }).click();
+  assert.equal(await category.innerText(), '图片/反推');
+  assert.equal(doc.category, '', 'choosing a category must not save automatically');
+  await tree.getByRole('button', { name: '主目录', exact: true }).click();
+  await page.getByRole('dialog', { name: '修改尚未保存' }).waitFor();
+  await page.getByRole('button', { name: '继续编辑', exact: true }).click();
+  assert.equal(await category.innerText(), '图片/反推');
+  await category.click();
+  await page.waitForFunction(() => document.querySelector('[role="combobox"][aria-label="提示词所在分类"]').getAttribute('aria-expanded') === 'true');
+  await page.keyboard.press('Home');
+  await page.keyboard.press('Enter');
+  assert.equal(await category.innerText(), '主目录');
+  await category.click();
+  await page.waitForFunction(() => document.querySelector('[role="combobox"][aria-label="提示词所在分类"]').getAttribute('aria-expanded') === 'true');
+  await page.keyboard.press('Escape');
+  assert.equal(await category.getAttribute('aria-expanded'), 'false');
+  await page.getByRole('button', { name: 'Markdown 预览', exact: true }).click();
+  await page.locator('.prompt-preview p').first().waitFor();
+  const detail = page.locator('.prompt-detail');
+  assert.ok(await detail.evaluate(el => el.scrollHeight > el.clientHeight), 'long preview must scroll inside the detail panel');
+  await detail.evaluate(el => { el.scrollTop = 200; });
+  const previewY = await page.evaluate(() => scrollY);
+  await tree.getByRole('button', { name: '反推', exact: true }).click();
+  assert.equal(await page.evaluate(() => scrollY), previewY);
+  await openRoot();
+  await page.getByLabel('提示词正文', { exact: true }).waitFor();
+  await page.screenshot({ path: path.join(out, 'desktop.png') });
+  console.log('PASS directory scroll regression, fixed workspace, long preview, custom category picker and unsaved guard');
+  for (const viewport of [{ width: 1362, height: 918 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport);
+    const title = page.getByLabel('提示词标题', { exact: true });
+    const field = title.locator('..'), label = field.locator('span');
+    const inputBox = await title.boundingBox(), labelBox = await label.boundingBox();
+    assert.ok(Math.abs(inputBox.y + inputBox.height / 2 - labelBox.y - labelBox.height / 2) < 2, 'title label should align beside input');
+    await category.click();
+    await page.waitForFunction(() => document.querySelector('[role="combobox"][aria-label="提示词所在分类"]').getAttribute('aria-expanded') === 'true');
+    const target = viewport.width > 1000 ? '图片/反推' : '';
+    await options.getByRole('option', { name: target || '主目录', exact: true }).click();
+    await page.getByRole('button', { name: '保存', exact: true }).click();
+    await page.locator('.prompt-page > .notice').filter({ hasText: '已保存' }).waitFor();
+    assert.equal(doc.category, target);
+    assert.equal(doc.body, '测试正文\n第二行');
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    await category.click();
+    await page.waitForFunction(() => document.querySelector('[role="combobox"][aria-label="提示词所在分类"]').getAttribute('aria-expanded') === 'true');
+    await page.screenshot({ path: path.join(out, `${viewport.width}-picker.png`) });
+    const menuBox = await options.boundingBox();
+    assert.ok(menuBox.x >= 0 && menuBox.x + menuBox.width <= viewport.width);
+    await page.keyboard.press('Escape');
+  }
+  assert.deepEqual(errors, []);
+  console.log(`PASS desktop/mobile inline fields, picker selection and save, no page errors; screenshots: ${out}`);
+} finally { await browser.close(); }
