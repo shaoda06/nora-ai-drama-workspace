@@ -209,9 +209,16 @@ def adoption(args, *, plan=None):
         receipt_path = local_path(root, item['receipt'])
         receipt_document = load(receipt_path)
         receipt = receipt_document.get('data', receipt_document)
-        if execution is not mapped and not execution.get('selector_receipts') and (receipt_document.get('prompt_id') != prompt
-                                        or receipt_document.get('identity') != identity):
-            raise ValueError('取回凭据的任务ID或分段身份与后台执行不一致')
+        if execution is not mapped and not execution.get('selector_receipts'):
+            receipt_identity = receipt_document.get('identity')
+            if receipt_identity != identity and mapped.get('identity_migration'):
+                migration = load(local_path(root, mapped['identity_migration']['report']))
+                pair = {'old': receipt_identity, 'new': identity}
+                if (migration['state'] == 'completed' and pair in migration['identities']
+                        and any(Path(target).resolve() == mapping.parent for _, target in migration['moves'])):
+                    receipt_identity = identity
+            if receipt_document.get('prompt_id') != prompt or receipt_identity != identity:
+                raise ValueError('取回凭据的任务ID或分段身份与后台执行不一致')
         if local_edit is not None and receipt_path == mapping:
             receipt = mapped['output']
         if not isinstance(receipt.get('bytes'), int) or receipt['bytes'] <= 0:

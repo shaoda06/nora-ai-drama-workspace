@@ -91,6 +91,7 @@ Python 3.11+、标准库。正常批准直接执行一次`--apply`；默认不�
 - `identities`必须逐项指明同一集、场次、阶段中的EP/C/P/R，不能写“最新”或由脚本解释自然语言；同一P只选一个版本。`approval_text`必须是用户实际批准原话，`approval_time`可选带时区时间，不猜填。用户限定画面、音轨或接受已知缺陷时，填写`approval_scope`保留实际批准范围，不扩大决定。
 - `submission_plans`填写实际使用的原任务清单，可跨原批次。脚本只从这些清单读取原执行目录、实际选中范围、生成资料关联和结果凭据，不扫描历史猜最新版本。只批准`identities`；未获批其他段保持原状。部分批准后整场尚未齐备时只收尾采用；最后一部分批准使整场齐备时，沿清单中已有批准组合统一留档。
 - 后处理必须提供`source_finalization`，指向对应二采的实际定稿请求，脚本依其准确身份取得正文来源及配套API／画布；原二采路径取本次后处理映射的`source_video`。一采、二采仅需沿用既有授权配置分批时也可提供该字段。已有请求中的授权分批原样沿用，不自行拆批或统一配置。确有新的分批决定时提供`configuration_batches/configuration_batch_authorization`，语义同下方定稿接口；没有授权就不填写。
+- `edition`可选三位留档序号，如`002`；当前采用来源替换了旧定稿来源时另存导演包，保留原留档，不改变候选号。
 - `summary`可选，指定本集既有生成说明或分镜索引工作稿。项目进度使用既有`EP编号制作`行；旧项目缺少该行、分镜索引或模板字段时返回具体缺项，不猜写另一种结构。
 - 常规采用、留档和网页核对在同一次调用完成，`timings_seconds`返回各段耗时；结果保存在请求旁的`请求名-结果.json`，保留失败经过，不新增效率台账。`--timeout`默认为30秒，约束每次导出／网页请求及网页同步等待；“正在检查”和“正在更新”均结束后才判断同步错误并核对网页，期间有界等待，不让Agent接管轮询。
 
@@ -825,7 +826,7 @@ python .agents/skills/nora-ai-short-drama/scripts/video_revision_migrate.py --pr
 
 返回 `state=completed` 才表示本地迁移完成；恢复服务后还须核对网页各阶段候选号、原审批状态、来源资料与下载入口。失败按报告中的原记录和移动对照恢复，不再次执行同一迁移报告。不使用该工具迁移仍在运行的任务。验证命令：`python -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p test_video_revision_migrate.py`，覆盖跨阶段来源、编号重叠、原媒体／请求字节、审批／备注保留和活动任务拒绝。
 
-将旧候选下某一次重复执行单独归为新候选时，在请求中只列这一项`identities`，并增加`execution`对象：`record_dir`为旧身份下`执行-YYYYMMDD-HHmmss`目录，`new_record_dir`为新候选执行目录，`source_output`和`target_output`为旧新视频路径（均相对项目根），`task_id`为这一条已结束后台任务的本地ID，`scene_modification_round`为新候选对应轮次。仍先预览，再停止服务后`--apply`；只移动指定执行及视频、更新其当前映射与这一条任务，原候选、批准、素材来源、请求、工作流及取回凭据字节保留。项目工作稿中的候选条目、轮次和下游计划按已授权对应关系同步，不对所有旧身份作全局替换。测试使用`TMPDIR=/private/tmp python -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p test_video_revision_migrate.py`（macOS使用物理临时目录），包括拆出一次执行且不影响原候选采用状态。
+将旧候选下某一次重复执行单独归为新候选时，在请求中只列这一项`identities`，并增加`execution`对象：`record_dir`为旧身份下`执行-YYYYMMDD-HHmmss`目录，`new_record_dir`为新候选执行目录，`source_output`和`target_output`为旧新视频路径（均相对项目根），`task_id`为这一条已结束后台任务的本地ID，`scene_modification_round`为新候选对应轮次。仍先预览，再停止服务后`--apply`；只移动指定执行及视频、更新其当前映射与这一条任务，并在输入映射的`identity_migration.report`关联完成的迁移报告；批准工具据该报告核对原凭据旧身份与新候选身份，不改写原取回凭据。原候选、批准、素材来源、请求、工作流及取回凭据字节保留。项目工作稿中的候选条目、轮次和下游计划按已授权对应关系同步，不对所有旧身份作全局替换。测试使用`TMPDIR=/private/tmp python -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p test_video_revision_migrate.py`（macOS使用物理临时目录），包括拆出一次执行且不影响原候选采用状态。
 
 
 ## 场次修改轮次登记

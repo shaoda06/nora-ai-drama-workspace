@@ -349,8 +349,15 @@ class ExecutionMigration(Migration):
         edits = {}
         for path in self.record.rglob('*'):
             if path.is_file() and path.name in MUTABLE_JSON | {'结果收尾报告.json'}:
-                edits[path] = json.dumps(self.json_value(json.loads(path.read_text('utf-8-sig'))), ensure_ascii=False, indent=2) + '\n'
+                data = self.json_value(json.loads(path.read_text('utf-8-sig')))
+                if path.name == '输入映射.json' and hasattr(self, 'report'):
+                    data['identity_migration'] = {'report': self.report.relative_to(self.project).as_posix()}
+                edits[path] = json.dumps(data, ensure_ascii=False, indent=2) + '\n'
         return [(self.video, self.target_video), (self.record, self.target_record)], edits
+
+    def apply(self, database, report):
+        self.report = Path(report).resolve()
+        return super().apply(database, report)
 
     def task_rows(self, database):
         with closing(sqlite3.connect(database)) as db:

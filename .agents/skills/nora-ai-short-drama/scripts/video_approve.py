@@ -202,7 +202,7 @@ def approve(args):
                         source = next(c['source'] for c in mapping['generation_contexts'] if c['identity'] == item['identity'])
                         item['content'] = {k: content[source][k] for k in ('identity', 'mapping', 'api', 'canvas')}
                         item['source_video'] = mapping['source_video']
-            for key in ('configuration_batches', 'configuration_batch_authorization'):
+            for key in ('configuration_batches', 'configuration_batch_authorization', 'edition'):
                 if key in plan:
                     final_plan[key] = plan[key]
             began = time.monotonic()

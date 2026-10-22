@@ -145,6 +145,30 @@ class AdoptionTests(unittest.TestCase):
         self.assertTrue(target.is_file())
         self.assertEqual(self.run_plan()['items'][0]['state'], 'already_adopted')
 
+    def test_migrated_receipt_requires_completed_matching_ledger_and_preserves_bytes(self):
+        item, _, source, target = self.item(revision='R005')
+        mapping = Path(item['mapping']); mapped = tool.load(mapping)
+        output = mapped.pop('outputs')[0]; prompt = mapped.pop('prompt_id')
+        ledger = self.root / '99-综合资料/其他资料/历史版本/迁移.json'
+        mapped['identity_migration'] = {'report': str(ledger)}
+        self.write_json(mapping, mapped)
+        self.write_json(mapping.parent/'提交响应.json', {'prompt_id':prompt})
+        self.write_json(mapping.parent/'后台任务状态.json', {'record_dir':str(mapping.parent),
+            'prompt_id':prompt,'remote_url':'https://example.test','segments':{'0':{**output,'receipt':item['receipt']}}})
+        receipt_path=Path(item['receipt']); receipt=tool.load(receipt_path)
+        old=item['identity'].replace('R005','R003'); receipt.update(identity=old,prompt_id=prompt)
+        self.write_json(receipt_path, receipt); original=receipt_path.read_bytes()
+        record={'state':'prepared','identities':[{'old':old,'new':item['identity']}],
+            'moves':[['historical execution',str(mapping.parent)]]}
+        self.write_json(ledger,record)
+        with self.assertRaisesRegex(ValueError,'分段身份'): self.run_plan()
+        record['state']='completed'; record['identities'][0]['old']=old.replace('R003','R004');self.write_json(ledger,record)
+        with self.assertRaisesRegex(ValueError,'分段身份'): self.run_plan()
+        record['identities'][0]['old']=old;self.write_json(ledger,record)
+        self.assertEqual(self.run_plan()['items'][0]['state'],'adopt')
+        self.assertEqual(receipt_path.read_bytes(),original)
+        self.assertTrue(target.is_file());self.assertFalse(source.exists())
+
     def test_backend_postprocess_selector_and_download_receipt_bind_output(self):
         item, draft, source, target = self.item(stage='后处理')
         mapping = Path(item['mapping'])

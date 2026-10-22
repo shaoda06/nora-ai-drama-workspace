@@ -94,6 +94,13 @@ class ApprovalTests(unittest.TestCase):
         with patch.object(tool.final.client, 'Client', NativeClient), patch.object(tool, 'browser_sync', side_effect=verify):
             return tool.approve(argparse.Namespace(project=str(self.root), plan=str(self.request), apply=apply, timeout=30))
 
+    def test_explicit_new_finalization_edition_is_forwarded(self):
+        self.setup_stage(stage='一采',parts=('P001',))
+        self.plan['edition']='002'
+        result=self.run_plan()
+        self.assertEqual(result['state'],'completed',result)
+        self.assertEqual(len(list(self.fixture.ep.rglob('*一采定稿-002-导演包.mmxpack.zip'))),1)
+
     def test_whole_postprocess_approval_finishes_episode_and_repeat_never_exports_again(self):
         items = self.setup_stage(parts=tuple(f'P{i:03d}' for i in range(1, 13)))
         for item in items:
