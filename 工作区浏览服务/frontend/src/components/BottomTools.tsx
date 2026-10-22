@@ -9,7 +9,7 @@ export function BottomTools({ children }: { children: ReactNode }) {
     const measure = () => {
       const footer = document.querySelector('.site-footer')?.getBoundingClientRect();
       const floor = (footer?.top ?? window.innerHeight) - 16;
-      const notices = document.querySelectorAll<HTMLElement>('.notification:popover-open, .document-update');
+      const notices = document.querySelectorAll<HTMLElement>('.floating-messages:popover-open');
       setNoticeSpace(Math.max(0, ...Array.from(notices, element => {
         const rect = element.getBoundingClientRect();
         return rect.width && rect.height ? floor - rect.top + 12 : 0;
@@ -18,7 +18,7 @@ export function BottomTools({ children }: { children: ReactNode }) {
     const resize = new ResizeObserver(measure);
     const observe = () => {
       resize.disconnect();
-      document.querySelectorAll('.notification, .document-update, .site-footer').forEach(element => resize.observe(element));
+      document.querySelectorAll('.floating-messages, .site-footer').forEach(element => resize.observe(element));
       measure();
     };
     const changes = new MutationObserver(observe);

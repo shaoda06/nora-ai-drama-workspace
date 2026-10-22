@@ -1,0 +1,7 @@
+.floating-messages{position:fixed;inset:auto;left:24px;bottom:calc(var(--site-footer-height) + 16px);display:flex;flex-direction:column;gap:12px;width:min(520px,calc(100vw - 48px));max-height:calc(100dvh - var(--site-footer-height) - 96px);margin:0;padding:0;border:0;background:transparent;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+body:has(.workspace-with-tasks) .floating-messages{left:56px;width:min(520px,calc(100vw - 72px))}
+.floating-message{display:flex;align-items:flex-start;gap:16px;flex:none;padding:14px 18px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#25352f;box-shadow:0 3px 18px #24342d20;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.floating-message-error{border-color:#b94a48;color:#a13835}
+.floating-message-content{flex:1;min-width:0}
+.floating-message-content button{margin-left:10px}
+.floating-message .floating-message-close{flex:none;padding:0 4px;min-width:24px;border:0;background:transparent;color:inherit;font-size:18px;line-height:1.25}

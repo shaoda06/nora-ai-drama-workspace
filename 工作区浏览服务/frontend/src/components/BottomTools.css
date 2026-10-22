@@ -1,3 +1,2 @@
 .workspace-with-tasks>.app-bottom-tools{left:calc(var(--task-sidebar-width) + 16px);right:auto;bottom:calc(var(--site-footer-height) + 16px + var(--bottom-notice-space,0px));align-items:flex-start;gap:12px;max-width:calc(100vw - var(--task-sidebar-width) - 32px)}
 .app-bottom-tools .back-top{margin:0}
-.app-bottom-tools .app-update-notice{width:auto;max-width:520px;border:1px solid var(--line);border-radius:7px;text-align:left}

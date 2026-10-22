@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { APP_VERSION, useAppUpdate } from '../useAppUpdate';
 import { restoreRefreshScroll } from '../refreshPosition';
-import { Notifications } from './Notifications';
+import { FloatingMessage, Notifications } from './Notifications';
 import { TaskSidebar } from './TaskSidebar';
 import { BottomTools } from './BottomTools';
 import { ProjectSwitcher } from './ProjectSwitcher';
@@ -48,8 +48,8 @@ export function AppShell({ children }: { children: ReactNode }) {
     </footer>
     <BottomTools>
       {backTop && <button className="back-top" onClick={() => window.scrollTo({ top: 0, behavior: 'auto' })}>↑ 返回顶部</button>}
-      {pending && <p className="app-update-notice" role="status">页面已有更新，将在编辑或播放结束后自动刷新。</p>}
     </BottomTools>
+    {pending && <FloatingMessage>页面已有更新，将在编辑或播放结束后自动刷新。</FloatingMessage>}
     </div>
   </FooterSyncContext.Provider></HeaderControlsContext.Provider></Notifications>;
 }

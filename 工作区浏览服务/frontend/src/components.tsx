@@ -5,7 +5,7 @@ import { get, projectUrl } from './api';
 import type { FileItem, Group, RecordData } from './api';
 import { CopyButton } from './components/CopyButton';
 import { TabNav } from './components/TabNav';
-import { useNotify } from './components/Notifications';
+import { FloatingMessage, useNotify } from './components/Notifications';
 import { DocumentInformation } from './components/DocumentInformation';
 import { Loading } from './components/Loading';
 import { ChapterNavigation } from './components/ChapterNavigation';
@@ -175,7 +175,7 @@ export function Document({ value: latest }: { value: RecordData }) {
     }));
   }, [presentation.html, hasGroups]);
   return <div className="document">
-    {changed && <p className="notice document-update">本文有新版本，当前阅读位置保持不变。<button onClick={() => setValue(latest)}>读取新版本</button></p>}
+    {changed && <FloatingMessage>本文有新版本，当前阅读位置保持不变。<button onClick={() => setValue(latest)}>读取新版本</button></FloatingMessage>}
     <div className="meta document-meta-inline">{value.confirmationHtml && <Rich html={value.confirmationHtml.match(/^<span class="status-badge.*?<\/span>/s)?.[0]} />}{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}<Original url={value.url} /></div>
     {value.headerHtml && <DocumentInformation><Rich html={value.headerHtml} /></DocumentInformation>}
     <ChapterNavigation headings={headings} onNavigate={id => ref.current!.querySelectorAll('[id]').forEach(el => { if (el.id === id) { el.scrollIntoView({ behavior: 'auto', block: 'start' }); (el as HTMLElement).tabIndex = -1; (el as HTMLElement).focus({ preventScroll: true }); } })} />
@@ -206,7 +206,7 @@ export function Preview({ project, item, revision, close }: { project: string; i
   const audio = kind === 'audio' || /\.(mp3|wav|ogg|flac|m4a)$/i.test(key || item.name);
   return <Dialog title={item.name} close={close}>
     {kind !== 'progress' && !(kind === 'document' && item.doc) && <Original url={item.url} />}
-    {text && !item.doc && revision !== openedRevision && <p className="notice document-update">项目资料有更新。<button onClick={() => setOpenedRevision(revision)}>读取新版本</button></p>}
+    {text && !item.doc && revision !== openedRevision && <FloatingMessage>项目资料有更新。<button onClick={() => setOpenedRevision(revision)}>读取新版本</button></FloatingMessage>}
     {kind === 'progress' && item.doc ? <div className="phase-progress"><div className="phase-progress-meta"><div className="phase-progress-status"><strong>当前状态：</strong><Rich html={String(item.doc.statusHtml)} /></div><Original url={item.url} /></div><Rich html={String(item.doc.html)} /></div> : item.doc ? kind === 'document' ? <Document value={item.doc} /> : <Rich html={String(item.doc.html)} /> : text ? <><Result loading={query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} />{query.data && (query.data.html ? <Document value={query.data} /> : <><p>{query.data.notice}</p><pre>{query.data.text}</pre></>)}</> :
       image ? <img className="preview-image" src={item.url} alt={item.name} onError={() => setMediaError('图片无法加载，请使用原文件入口。')} /> :
       video ? <video controls preload="metadata" src={item.url} onError={() => setMediaError('视频无法加载，请使用原文件入口。')} /> :
