@@ -13,7 +13,7 @@ export function ProjectSwitcher() {
     <Link className="brand" to="/">Nora工作台</Link>
     <TabSelect iconOnly label={projects.isPending ? '正在读取项目' : projects.data?.length === 0 ? '暂无项目' : '切换项目'}
       selected={location.pathname} onChange={navigate}
-      items={(projects.data || []).map(project => ({ value: `/projects/${encodeURIComponent(project.id)}`, label: project.name }))} />
+      items={(projects.data || []).map((project, index) => ({ value: `/projects/${encodeURIComponent(project.id)}`, label: `${String(index + 1).padStart(2, '0')}-${project.name}` }))} />
     <Result loading={false} error={projects.error} retry={projects.refetch} retrying={projects.isFetching} />
   </div>;
 }
