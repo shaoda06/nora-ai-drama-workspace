@@ -67,7 +67,8 @@ export function Notifications({ children }: { children: ReactNode }) {
     return () => observer.disconnect();
   }, []);
   useEffect(() => {
-    if (messages.length && !popup.current!.matches(':popover-open')) popup.current!.showPopover();
+    // A closing dialog can detach the portal before the observer selects its next host.
+    if (messages.length && popup.current!.isConnected && !popup.current!.matches(':popover-open')) popup.current!.showPopover();
   }, [messages.length, target]);
   return <NotificationContext.Provider value={notify}><MessageContext.Provider value={registry}>{children}{messages.length > 0 && createPortal(
     <aside ref={popup} popover="manual" className="floating-messages" aria-label="消息通知">

@@ -26,6 +26,8 @@ from backend.services.task_history import task_history
 from backend.services import node_config
 from backend.services.prompts import PromptLibrary
 from backend.routes.prompts import create_router as prompt_router
+from backend.services.assets import AssetLibrary
+from backend.routes.assets import create_router as asset_router
 from backend.services.task_resolution import ResolutionInput, resolve_task
 from backend.services.result_summary import summary as result_summary
 from backend.services.result_registration import closeout as result_closeout
@@ -196,6 +198,7 @@ def queue_write(request: Request):
 
 
 app.include_router(prompt_router(prompt_library, queue_write))
+app.include_router(asset_router(AssetLibrary(WORKSPACE / '综合资料/资产管理'), queue_write))
 
 
 def agent_request(request: Request):
