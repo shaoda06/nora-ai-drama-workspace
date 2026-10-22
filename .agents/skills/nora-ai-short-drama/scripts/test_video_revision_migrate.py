@@ -41,6 +41,9 @@ class RevisionMigrationTests(unittest.TestCase):
                        'output': {'filename_prefix': identity}, 'adopted': identity == self.second}
             self.write('其他资料/执行附件/' + identity + '/输入映射.json', json.dumps(mapping, ensure_ascii=False))
             self.write('其他资料/执行附件/' + identity + '/请求.json', json.dumps({'prefix': identity}))
+            self.write('其他资料/执行附件/' + identity + '/任务清单.json', json.dumps({'tasks': [
+                {'task_type': {'一采':'video-first-pass','二采':'video-second-pass','后处理':'video-postprocess'}[stage],
+                 'record_dir': '09-剧集制作/EP001/其他资料/执行附件/' + identity}]}))
             self.write('其他资料/候选视频/' + identity + '.mp4', (identity + 'actual bytes').encode())
         draft = self.write('其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md',
                            f'| 二采 | [{self.second}](../候选视频/{self.second}.mp4) | R010 | | [批准](#审阅-r010-二采-001) |\n'
@@ -64,6 +67,9 @@ class RevisionMigrationTests(unittest.TestCase):
         mapping = json.loads((self.root / ('其他资料/执行附件/' + self.new_post + '/输入映射.json')).read_text('utf-8'))
         self.assertEqual(mapping['generation_contexts'][0], {'identity': self.new_post, 'source': self.new_second})
         self.assertEqual(mapping['segments'][0]['round'], 'R002')
+        self.assertEqual(mapping['identity_migration']['report'], self.report.relative_to(self.project).as_posix())
+        index = json.loads((self.root / ('其他资料/执行附件/' + self.new_post + '/迁移后来源清单.json')).read_text('utf-8'))
+        self.assertTrue(index['tasks'][0]['record_dir'].endswith(self.new_post))
         self.assertEqual(mapping['output']['filename_prefix'], self.post)
         self.assertEqual(mapping['actual_submissions_this_batch'], 1)
         self.assertFalse(mapping['adopted'])
@@ -137,9 +143,6 @@ class RevisionMigrationTests(unittest.TestCase):
         self.assertIsNone(english['segments'][1]['round'])
 
 
-if __name__ == '__main__':
-    unittest.main()
-
 class ExecutionMigrationTests(unittest.TestCase):
     def test_split_repeat_preserves_original_approval_and_sent_evidence(self):
         from video_revision_migrate import ExecutionMigration
@@ -165,6 +168,7 @@ class ExecutionMigrationTests(unittest.TestCase):
             (record / '输入映射.json').write_text(json.dumps(mapping))
             payload = {'project':'项目','task_type':'video-first-pass','record_dir':str(record),'workflow':{'unchanged':'R003'},
                 'segment_plan':{'targets':[{'index':0,'path':str(video)}]}}
+            (record/'任务清单.json').write_text(json.dumps({'tasks':[payload]}))
             state = {'status':'completed','segments':{'0':{'identity':old,'path':str(video)}}}
             database = Path(temp) / 'tasks.sqlite'
             with closing(sqlite3.connect(database)) as db, db:
@@ -184,6 +188,9 @@ class ExecutionMigrationTests(unittest.TestCase):
             current=json.loads((target/'输入映射.json').read_text())
             self.assertEqual(current['segments'][0]['round'],'R005')
             self.assertEqual(current['generation_contexts'][0]['identity'],new)
+            self.assertEqual(current['identity_migration']['report'],str(report.relative_to(project)))
+            index=json.loads((target/'迁移后来源清单.json').read_text())
+            self.assertEqual(index['tasks'][0]['record_dir'],str(target.relative_to(project)))
             self.assertEqual(current['segments'][0]['materials_from']['identity'],old)
             self.assertEqual(json.loads(original.read_text())['adoptions'][0]['identity'],old)
             with closing(sqlite3.connect(database)) as db:
@@ -194,3 +201,7 @@ class ExecutionMigrationTests(unittest.TestCase):
             self.assertEqual(untouched,payload)
             with self.assertRaisesRegex(ValueError,'目标已存在|目录或实际视频缺失'):
                 migration.plan()
+
+
+if __name__ == '__main__':
+    unittest.main()

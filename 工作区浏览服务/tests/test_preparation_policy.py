@@ -46,6 +46,19 @@ class PolicyTests(unittest.IsolatedAsyncioTestCase):
                 await self.store.prepare(key)
             targets.assert_called_once()
 
+    async def test_completed_candidate_invalidates_cached_preparation_and_blocks_execution(self):
+        self.video()
+        await self.store.prepare_only(self.data)
+        key = (await self.store.enqueue(self.data))['local_task_id']
+        adopted = self.project / '09-剧集制作/EP001/06-阶段采用视频/01-一采/C001-场次/EP001-C001-P001-R001-一采.mp4'
+        adopted.parent.mkdir(parents=True)
+        adopted.write_bytes(b'completed adopted output')
+        with self.assertRaisesRegex(ValueError, '使用新R'):
+            await self.store.prepare(key)
+        with self.assertRaisesRegex(ValueError, '使用新R'):
+            checks.prepare_report(self.store, self.data)
+        self.assertFalse(checks.read_report(self.data)['ok'])
+
     async def test_missing_targets_fail_preparation_before_any_network(self):
         self.video()
         self.data.segment_plan.targets = []

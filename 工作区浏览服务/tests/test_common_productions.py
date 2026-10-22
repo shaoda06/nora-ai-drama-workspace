@@ -74,7 +74,7 @@ class CommonProductionTests(HttpTestCase):
             self.assertEqual(data['productionIssues'], [])
             self.assertEqual(data['sceneRounds']['C001'][0]['segments'][0]['id'], 'P001')
             self.assertEqual(data['segments']['C001'][0]['videos'][0]['run'], 'R001')
-            self.assertEqual(video_archive_name('项目', name), f'项目-{name}-正式版视频.zip')
+            self.assertEqual(video_archive_name('项目', name), f'项目-{name}-已采用视频.zip')
         catalogue = self.projects.section(self.project.name, '09-剧集制作')['catalogues']['09-剧集制作']
         self.assertEqual([item['name'] for item in catalogue['children']], ['片头', '片尾', 'EP001'])
         self.assertEqual(catalogue['statistics'], {'total': 1, 'completed': 1, 'notStarted': 0, 'running': 0})

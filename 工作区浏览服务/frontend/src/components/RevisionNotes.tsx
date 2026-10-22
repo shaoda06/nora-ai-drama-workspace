@@ -39,7 +39,7 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
     });
   };
   return <div className="revision-note-editor">
-    <p className="revision-note-identity">{scope.project} / {scope.episode} / {scope.scene} / {segment} / {current.stage} / {current.approved ? '正式版' : candidateLabel(current.candidateNumber)} · {current.run}</p>
+    <p className="revision-note-identity">{scope.project} / {scope.episode} / {scope.scene} / {segment} / {current.stage} / {candidateLabel(current.candidateNumber, current.approved)} · {current.run}</p>
     <div className="revision-note-heading">
       <div className="revision-note-label"><label htmlFor="revision-note-text">修改意见</label><button className="link" disabled={!data.loaded || !current.url} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={insertTime}>插入时间</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
       <div className="revision-note-status" role="status"><span className="revision-note-state" data-state={statusKind}>{data.error ? '读取失败' : data.loading ? '正在读取…' : status}</span>{note && <span className="muted">更新于 {new Date(note.updatedAt).toLocaleString('zh-CN')}</span>}{draft?.status === 'error' && <button onClick={() => { void saveNote(data.url, key); }}>重试保存</button>}</div>
@@ -92,7 +92,7 @@ export function useRevisionNotesExport(scope: NoteScope, segments: { id: string;
       const order = (id: string) => { const index = ids.indexOf(id); return index < 0 ? ids.length + Number(id.slice(1)) : index; };
       const notes = Object.values(values).filter(note => note.text.trim()).sort((a, b) => order(a.segment) - order(b.segment) || ['一采', '二采', '后处理'].indexOf(a.stage) - ['一采', '二采', '后处理'].indexOf(b.stage) || Number(b.run.slice(1)) - Number(a.run.slice(1))).map(note => {
         const video = exportSegments.find(item => item.id === note.segment)?.videos.find(item => item.stage === note.stage && item.run === note.run);
-        const label = video ? (video.approved ? '正式版' : candidateLabel(video.candidateNumber)) : '';
+        const label = video ? (candidateLabel(video.candidateNumber, video.approved)) : '';
         return { ...note, key: noteKey(note), title: `${note.segment} / ${note.stage} / ${note.run}${label ? ' / ' + label : ''}`, original: note.text };
       });
       const rounds: ExportOverall[] = Object.values(saved.rounds).map(item => ({ number: item.number, text: item.text, original: item.text }));

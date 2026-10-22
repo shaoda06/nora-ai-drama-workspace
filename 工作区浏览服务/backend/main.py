@@ -538,7 +538,7 @@ def episode_download(name: str, episode: Episode, stage: Literal['一采', '二�
         if not files:
             raise FileNotFoundError(('本场' if scene else '本集') + '该阶段没有可下载的' + KINDS[kind])
         label = episode if episode in ('片头', '片尾') else f'第{int(episode[2:])}集'
-        filename = f'{name}-{label}-{scene}-{stage}-正式版视频.zip' if scene else video_archive_name(name, episode)
+        filename = f'{name}-{label}-{scene}-{stage}-已采用视频.zip' if scene else video_archive_name(name, episode)
         return zip_response(files, filename)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error

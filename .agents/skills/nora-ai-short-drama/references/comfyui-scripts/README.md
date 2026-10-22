@@ -554,6 +554,8 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 - 标准单段H.264 MP4后处理可不传outputs，工具从唯一VHS_VideoCombine保存节点和已选P／R派生目标及取回凭据；其他保存结构须显式提供实际输出映射，不猜节点。
 - 清单视频任务自动带媒体信息读取计划：通知前仅用本机ffprobe读取一次stream／container事实，将实测值写入原结果收尾报告和分段记录；网页重试复用未变化的测量，report读取不再测量。缺少ffprobe、无法读视频轨或文件变化返回技术异常，不转交Agent手测或自动重生成；不安装依赖、不抽帧或运行内容／质量评价。既有已接受任务不追溯补测。
 
+新视频准备及开工时会核对目标阶段／R在候选和采用目录中的现有视频；已有结果不能借更改输出路径重复使用该R。候选分配及失败恢复读取[候选编号规则](../流程规范/逐集目录与资产管理规范.md#视频修订编号与执行过程)，工具只报出冲突，不自动改号或重新生成。
+
 `output_nodes`为本次画布的实际执行输出节点；标准版示例的403／504／506不能照搬到不同工作流。`output_root`为已核实的远端真实目录。既有`输入映射.json`复用，不复制粘贴；新映射可在`mapping`传入既定语义信息。分镜版本、场次修改轮次、组与P／R对应、内容核对证据仍须准备；工具不替代这些内容决定。工具导出配套API，按已选原始组序、P／R／阶段派生候选路径与取回凭据，按`references`中的占位值定位图片／音视频素材槽位、组装上传映射；原映射和冻结资料仍由既有后台保存。二采使用指定来源画布及既有批准关系，不能换成新的基准。后处理或特定输出可显式提供原格式的`outputs`／`segment_plan`／`uploads`，仍共用本次装配、准备和入队。
 
 `references`是本次**需要上传**的素材占位值到源文件的单一填写入口。工具同时建立技术上传槽位和`输入映射.json`的`uploads:[{input_path,file}]`来源索引；同占位值、同源文件只登记一条来源，重复的`references`条目复用同一套槽位绑定，同占位值对应不同文件则在写入前报错。已有来源索引保持兼容，不要求Agent重复填写。
@@ -764,7 +766,7 @@ targets必须逐一对应输入映射selected_indices，保留原始组序，不
 
 二采在每个实际执行组中另填 `source`，指向同P获批来源的完整执行身份；二采保存自己的当次输入并保留来源。后处理只需场次、实际组序及含 `segment`、`round`、`source` 的分段项，来源为本次实际使用的完整执行身份，不另生成空提示词或参考素材。
 
-可选的 `storyboard_file` 指定项目内已冻结分镜，仍核对 `scene_storyboard_version`；不填写时读取正式分镜。同R故障补做按[修订与过程规则](../流程规范/逐集目录与资产管理规范.md#视频修订编号与执行过程)使用阶段目录内 `执行-YYYYMMDD-HHmmss/`，`--record-dir` 及各选中组的 `local_execution_dir` 对应该次位置；提交命令、文件名和防重检查不变，建立新位置不能代替旧任务的活动／接受核对。
+可选的 `storyboard_file` 指定项目内已冻结分镜，仍核对 `scene_storyboard_version`；不填写时读取正式分镜。同R尚无完整结果的故障恢复按[修订与过程规则](../流程规范/逐集目录与资产管理规范.md#视频修订编号与执行过程)使用阶段目录内 `执行-YYYYMMDD-HHmmss/`，`--record-dir` 及各选中组的 `local_execution_dir` 对应该次位置；提交命令、文件名和防重检查不变，建立新位置不能代替旧任务的活动／接受核对。
 
 每个 `segments` 项可选填写 `materials_from: {"mapping": "项目内原输入映射.json", "identity": "EP001-C001-P001-R001-一采"}`，引用同分段原关联的分镜、提示词与实际参考素材。工具按当前实际输入逐项核对正文、文件字节与槽位后引用旧冻结文件，差异时报错，不冒充沿用；新工作流/API仍单独保存。若素材有修改，不填写整套复用字段，按新输入冻结。复用不继承视频批准，也不递归推断最新资料。
 
@@ -828,6 +830,7 @@ python .agents/skills/nora-ai-short-drama/scripts/video_revision_migrate.py --pr
 
 将旧候选下某一次重复执行单独归为新候选时，在请求中只列这一项`identities`，并增加`execution`对象：`record_dir`为旧身份下`执行-YYYYMMDD-HHmmss`目录，`new_record_dir`为新候选执行目录，`source_output`和`target_output`为旧新视频路径（均相对项目根），`task_id`为这一条已结束后台任务的本地ID，`scene_modification_round`为新候选对应轮次。仍先预览，再停止服务后`--apply`；只移动指定执行及视频、更新其当前映射与这一条任务，并在输入映射的`identity_migration.report`关联完成的迁移报告；批准工具据该报告核对原凭据旧身份与新候选身份，不改写原取回凭据。原候选、批准、素材来源、请求、工作流及取回凭据字节保留。项目工作稿中的候选条目、轮次和下游计划按已授权对应关系同步，不对所有旧身份作全局替换。测试使用`TMPDIR=/private/tmp python -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p test_video_revision_migrate.py`（macOS使用物理临时目录），包括拆出一次执行且不影响原候选采用状态。
 
+编号迁移完成后，有原任务清单的执行目录自动保存`迁移后来源清单.json`，仅供批准收尾的`submission_plans`指向实际当前执行目录；它链接原提交清单及完成的迁移报告，不用于提交生成。普通编号迁移和单次执行拆分均在当前输入映射中关联`identity_migration.report`，原请求及下载凭据不改字节。
 
 ## 场次修改轮次登记
 

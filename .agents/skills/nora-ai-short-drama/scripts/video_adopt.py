@@ -214,7 +214,7 @@ def adoption(args, *, plan=None):
             if receipt_identity != identity and mapped.get('identity_migration'):
                 migration = load(local_path(root, mapped['identity_migration']['report']))
                 pair = {'old': receipt_identity, 'new': identity}
-                if (migration['state'] == 'completed' and pair in migration['identities']
+                if (migration['state'] == 'completed' and any(all(row.get(key) == value for key, value in pair.items()) for row in migration['identities'])
                         and any(Path(target).resolve() == mapping.parent for _, target in migration['moves'])):
                     receipt_identity = identity
             if receipt_document.get('prompt_id') != prompt or receipt_identity != identity:

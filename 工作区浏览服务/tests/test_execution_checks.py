@@ -379,5 +379,36 @@ class LocalFormatTests(unittest.TestCase):
         self.assertEqual(checks.director_checks(workflow())[0]['reference_seconds']['Audio'], 3)
 
 
+class CandidateIdentityTests(unittest.TestCase):
+    def test_existing_adopted_result_cannot_be_rebuilt_under_same_candidate(self):
+        from tempfile import TemporaryDirectory
+        from types import SimpleNamespace
+        with TemporaryDirectory() as temp:
+            project = Path(temp)
+            adopted = project/'09-剧集制作/片尾/06-阶段采用视频/01-一采/C001-场次/片尾-C001-P001-R003-一采.mp4'
+            adopted.parent.mkdir(parents=True); adopted.write_bytes(b'completed output')
+            mapping = {'selected_indices':[0], 'segments':[{'segment':'片尾-C001-P001','round':'R003'}]}
+            data = SimpleNamespace(project=project, task_type='video-first-pass',segment_plan=None)
+            with self.assertRaisesRegex(ValueError,'使用新R'):
+                checks.check_existing_video_identity(data,mapping)
+            mapping['segments'][0]['round']='R005'
+            checks.check_existing_video_identity(data,mapping)
+            mapping['segments'][0]['round']='R003';data.task_type='video-second-pass'
+            checks.check_existing_video_identity(data,mapping)
+
+    def test_an_existing_candidate_cannot_be_bypassed_with_another_output_path(self):
+        from tempfile import TemporaryDirectory
+        from types import SimpleNamespace
+        with TemporaryDirectory() as temp:
+            project=Path(temp); candidate=project/'09-剧集制作/EP001/其他资料/候选视频/EP001-C001-P001-R001-后处理.mov'
+            candidate.parent.mkdir(parents=True); candidate.write_bytes(b'output')
+            data=SimpleNamespace(project=project,task_type='video-postprocess',segment_plan=None)
+            mapping={'selected_indices':[0],'segments':[{'segment':'EP001-C001-P001','round':'R001'}]}
+            with self.assertRaisesRegex(ValueError,'使用新R'):
+                checks.check_existing_video_identity(data,mapping)
+            candidate.unlink()
+            checks.check_existing_video_identity(data,mapping)
+
+
 if __name__ == '__main__':
     unittest.main()

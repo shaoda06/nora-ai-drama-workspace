@@ -6,10 +6,11 @@ import { TaskDetailDialog } from './TaskDetailDialog';
 import type { SegmentVideo as VideoItem } from '../api';
 import { Original } from '../components';
 
-export const candidateLabel = (number: number) => {
+export const candidateLabel = (number: number, approved = false) => {
   const digits = '零一二三四五六七八九';
-  return '候选' + (number < 10 ? digits[number] : number < 100
+  const label = '候选' + (number < 10 ? digits[number] : number < 100
     ? (number < 20 ? '' : digits[Math.floor(number / 10)]) + '十' + (number % 10 ? digits[number % 10] : '') : number);
+  return label + (approved ? '（已采用）' : '');
 };
 
 export const latestVideo = (items: VideoItem[]) => {
@@ -197,7 +198,7 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
   useEffect(() => {
     if (!autoPlay) video.current?.pause();
   }, [autoPlay]);
-  const description = current && `${current.stage} · ${current.run} · ${candidateLabel(current.candidateNumber)}${current.approved ? '（正式版）' : ''}`;
+  const description = current && `${current.stage} · ${current.run} · ${candidateLabel(current.candidateNumber, current.approved)}`;
   return <section className="segment-video" aria-label="视频区域">
     {loaded?.url ? <video ref={video} key={`${loaded.fileRevision}:${reloadCount}`} controls autoPlay={playOnLoad} preload="metadata" src={source} aria-label={description}
       onLoadedMetadata={event => { if (restore.current) { Object.assign(event.currentTarget, restore.current); restore.current = null; } if (pendingSeek.current !== null) seekTo(pendingSeek.current); else onTimeChange(event.currentTarget.currentTime); onFileRevision?.(loaded.fileRevision); }}

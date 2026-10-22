@@ -104,6 +104,8 @@ def check_prepared(store, data, *, bound=False, transferred=False, legacy=False,
         raise ValueError('新视频任务必须先关联场次修改轮次；请使用--prepare-only补齐准备，旧登记任务仍按原记录恢复')
     if not legacy and not report.get('new_task_ready'):
         raise ValueError('新任务准备报告尚未覆盖完整登记要求；请使用--prepare-only补齐准备，不会在开工时补查')
+    if not legacy:
+        check_existing_video_identity(data, actual.get('mapping'))
     if not legacy and require_content_review and needs_content_review(data):
         content = report.get('content_checks', {})
         if content.get('version') != 1 or content.get('ok') is not True:
@@ -221,6 +223,23 @@ def fixed_input_checks(store, data):
 def check_new_targets(data):
     if data.segment_plan and not data.segment_plan.targets:
         raise ValueError('新导演台任务必须显式提供每段本机成果保存路径')
+
+
+def check_existing_video_identity(data, mapping):
+    if not data.task_type.startswith('video-') or not mapping:
+        return
+    stage = {'video-first-pass': '一采', 'video-second-pass': '二采', 'video-postprocess': '后处理'}[data.task_type]
+    stage_folder = {'一采': '01-一采', '二采': '02-二采', '后处理': '03-后处理'}[stage]
+    for index in mapping['selected_indices']:
+        entry = mapping['segments'][index]
+        identity = entry['segment'] + '-' + entry['round'] + '-' + stage
+        episode, scene = entry['segment'].split('-')[:2]
+        root = Path(data.project) / '09-剧集制作' / episode
+        folders = [root / '其他资料/候选视频', root / '06-阶段采用视频' / stage_folder / (scene + '-场次'),
+                   root / '其他资料/阶段采用视频' / stage_folder / (scene + '-场次')]
+        if any(file.is_file() and file.suffix in ('.mp4', '.webm', '.mov')
+               for folder in folders for file in folder.glob(identity + '.*')):
+            raise ValueError('候选编号已有视频文件，重新生成须使用新R；失败取回请沿原任务恢复：' + identity)
 
 
 def fixed_checks(store, data, *, mapping=None, legacy=False):
@@ -354,6 +373,8 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
         mapping_file = Path(data.record_dir) / '输入映射.json'
         mapping = json.loads(mapping_file.read_text('utf-8-sig')) if mapping_file.exists() else {}
         report['prepared_input'] = basis(store, data, mapping)
+        if not at_execution:
+            check_existing_video_identity(data, mapping)
         if not at_execution and data.task_type.startswith('video-'):
             if 'scene_composition' not in report['prepared_input']:
                 check_new_targets(data)

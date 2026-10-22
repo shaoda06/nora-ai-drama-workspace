@@ -78,7 +78,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     {selectedItem && !current ? <Result page loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} /> : current ? <div className="episode-detail">
     {breadcrumbActions && episodeComplete && createPortal(<DownloadButton key={current.name} pack
       url={`${projectUrl(project)}/episodes/${current.name}/download`} label={`${sharedSelected ? current.name : '本集'}打包下载`}
-      title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理正式版视频`} />, breadcrumbActions)}
+      title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理已采用视频`} />, breadcrumbActions)}
     <div className="episode-scene-header">
       {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
       <PointerTooltip text={script ? undefined : `${contentLabel}尚未建立`}><button className="link episode-script-link" disabled={!script} onClick={() => preview(script!)}>查看{contentLabel}</button></PointerTooltip>

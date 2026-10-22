@@ -23,11 +23,11 @@ export function SceneDownloads({ project, episode, scene, revision }: { project:
     {downloads.data && <>
     {['后处理', '二采', '一采'].map(stage => <section className="stage-download-section" key={stage} aria-label={stage + '资源下载'}>
       <h3>{stage}</h3>
-      <section className="stage-download-group" aria-label={stage + '正式版视频下载'}>
-        <h4>正式版视频下载 <small className="stage-download-count muted">{downloads.data[stage].videos.count}个正式版视频</small></h4>
+      <section className="stage-download-group" aria-label={stage + '已采用视频下载'}>
+        <h4>已采用视频下载 <small className="stage-download-count muted">{downloads.data[stage].videos.count}个已采用视频</small></h4>
         <DownloadButton url={downloads.data[stage].videos.url} label="本场打包下载" pack title={downloads.data[stage].videos.url
-          ? `仅下载${episode}场次${scene}的${stage}正式版视频，共${downloads.data[stage].videos.count}段`
-          : `场次${scene}的${stage}暂无正式版视频`} />
+          ? `仅下载${episode}场次${scene}的${stage}已采用视频，共${downloads.data[stage].videos.count}段`
+          : `场次${scene}的${stage}暂无已采用视频`} />
       </section>
       <details className="stage-download-group" aria-label={stage + '导演包下载'}>
         <summary>导演包下载</summary>

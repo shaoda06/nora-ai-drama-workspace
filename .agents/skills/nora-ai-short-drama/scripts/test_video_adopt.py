@@ -164,7 +164,7 @@ class AdoptionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'分段身份'): self.run_plan()
         record['state']='completed'; record['identities'][0]['old']=old.replace('R003','R004');self.write_json(ledger,record)
         with self.assertRaisesRegex(ValueError,'分段身份'): self.run_plan()
-        record['identities'][0]['old']=old;self.write_json(ledger,record)
+        record['identities'][0]['old']=old;record['identities'][0]['source']='historical-source';self.write_json(ledger,record)
         self.assertEqual(self.run_plan()['items'][0]['state'],'adopt')
         self.assertEqual(receipt_path.read_bytes(),original)
         self.assertTrue(target.is_file());self.assertFalse(source.exists())

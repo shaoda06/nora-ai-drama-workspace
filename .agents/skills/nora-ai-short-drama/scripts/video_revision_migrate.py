@@ -193,7 +193,12 @@ class Migration:
                 data = json.loads(original)
                 identity = IDENTITY.findall(str(path))
                 stage = identity[-1].rsplit('-', 1)[1] if identity else None
-                updated = json.dumps(self.json_value(data, stage), ensure_ascii=False, indent=2) + '\n'
+                current = self.json_value(data, stage)
+                if path.name == '输入映射.json' and hasattr(self, 'report') and any(
+                        context['identity'] in {new for old, new in self.identities.items() if old != new}
+                        for context in current.get('generation_contexts', [])):
+                    current['identity_migration'] = {'report': self.report.relative_to(self.project).as_posix()}
+                updated = json.dumps(current, ensure_ascii=False, indent=2) + '\n'
             elif path.name.endswith('-视频修改意见.json'):
                 original = path.read_text('utf-8-sig')
                 data = json.loads(original)
@@ -246,6 +251,7 @@ class Migration:
             raise ValueError('迁移记录须位于项目99-综合资料/其他资料/历史版本，避免被当作现行生成映射')
         if report.exists():
             raise ValueError('该迁移已经执行；按原报告核对，不重复执行')
+        self.report = report
         moves, edits = self.plan()
         rows = self.task_rows(database) if database else []
         report.parent.mkdir(parents=True, exist_ok=True)
@@ -274,11 +280,33 @@ class Migration:
                 staged.append((temporary, new))
             for temporary, new in staged:
                 temporary.rename(new)
+        indexes = []
+        for path in edits:
+            current = Path(self.replace(str(path)))
+            source_plan = current.parent / '任务清单.json'
+            if current.name != '输入映射.json' or not source_plan.is_file():
+                continue
+            tasks = []
+            for task in json.loads(source_plan.read_text('utf-8-sig'))['tasks']:
+                directory = Path(self.replace(task['record_dir']))
+                directory = directory if directory.is_absolute() else self.project / directory
+                if directory.resolve() == current.parent:
+                    tasks.append({'task_type': task['task_type'], 'record_dir': current.parent.relative_to(self.project).as_posix()})
+            if not tasks:
+                raise ValueError('迁移后的来源清单无法关联实际执行目录：' + str(current))
+            index = current.parent / '迁移后来源清单.json'
+            content = {'purpose': '重编号后的采用来源索引，不用于提交生成',
+                       'original_submission_plan': source_plan.relative_to(self.project).as_posix(),
+                       'identity_migration': {'report': report.relative_to(self.project).as_posix()}, 'tasks': tasks}
+            if index.exists() and json.loads(index.read_text('utf-8-sig')) != content:
+                raise ValueError('已有不同的迁移来源索引，不覆盖：' + str(index))
+            index.write_text(json.dumps(content, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+            indexes.append(index.relative_to(self.project).as_posix())
         if database:
             with closing(sqlite3.connect(database)) as db, db:
                 db.executemany('UPDATE tasks SET payload=?,state=? WHERE id=?',
                                [(row[3], row[4], row[0]) for row in rows])
-        ledger['state'] = 'completed'
+        ledger.update(state='completed', source_indexes=indexes)
         report.write_text(json.dumps(ledger, ensure_ascii=False, indent=2), encoding='utf-8')
         return {'state': 'completed', 'moves': len(moves), 'records': len(edits), 'tasks': len(rows), 'report': str(report)}
 
@@ -354,10 +382,6 @@ class ExecutionMigration(Migration):
                     data['identity_migration'] = {'report': self.report.relative_to(self.project).as_posix()}
                 edits[path] = json.dumps(data, ensure_ascii=False, indent=2) + '\n'
         return [(self.video, self.target_video), (self.record, self.target_record)], edits
-
-    def apply(self, database, report):
-        self.report = Path(report).resolve()
-        return super().apply(database, report)
 
     def task_rows(self, database):
         with closing(sqlite3.connect(database)) as db:
