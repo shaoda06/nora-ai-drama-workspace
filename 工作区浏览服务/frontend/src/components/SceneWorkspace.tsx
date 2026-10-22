@@ -16,6 +16,7 @@ import { SegmentStageStrip } from './SegmentStageStrip';
 import { TabSelect } from './TabSelect';
 import { MessagePanel } from './MessagePanel';
 import { PointerTooltip } from './PointerTooltip';
+import './LatestSelection.css';
 import { PREVIOUS_ENDING } from '../previousEpisodeEnding';
 import type { PreviousEpisodeEnding } from '../previousEpisodeEnding';
 
@@ -26,6 +27,12 @@ type ReviewRound = { stage: string; order: string[]; versions: ReviewVersions };
 export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [], selectedRound, onRoundChange, previousEnding, emptyMessage, revision, storyboardDocument }: { scope: NoteScope; segments: Segments; sceneRounds?: SceneRound[]; selectedRound?: number; onRoundChange: (number: number) => void; previousEnding: PreviousEpisodeEnding | null; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData }) {
   const { scene } = scope;
   const productionRound = sceneRounds.find(item => item.number === selectedRound);
+  const latestRound = sceneRounds.at(-1);
+  const newVideoSegments = new Set((productionRound?.segments || []).filter(entry =>
+    allSegments.find(item => item.id === entry.id)?.videos.some(video => video.stage === entry.stage && video.run === entry.run && video.url)
+    && !sceneRounds.some(round => round.number < productionRound!.number
+      && round.segments.some(previous => previous.id === entry.id && previous.stage === entry.stage && previous.run === entry.run))
+  ).map(entry => entry.id));
   const segments = productionRound ? productionRound.segments.map(entry => ({ ...allSegments.find(item => item.id === entry.id)!, ...entry })) : allSegments.filter(item => !item.historical);
   const queryClient = useQueryClient();
   const positionKey = `scene/${scope.project}/${scope.episode}/${scene}`;
@@ -137,7 +144,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     setSelections(previous => ({ ...previous, [PREVIOUS_ENDING]: { stage: previousVideo!.stage, key: previousVideo!.key } }));
     selectSegment(PREVIOUS_ENDING);
   };
-  const navigation = (vertical = false) => <SegmentStageStrip vertical={vertical} segments={segments} selected={segment}
+  const navigation = (vertical = false) => <SegmentStageStrip vertical={vertical} segments={segments} selected={segment} newVideoSegments={newVideoSegments}
     previousEnding={previousEnding} previousSelected={viewingPrevious} onPreviousSelect={selectPrevious} onSelect={selectSegment} />;
   const changeRound = (number: number, keepSegment = false) => {
     const next = sceneRounds.find(item => item.number === number)!;
@@ -164,7 +171,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
       <TabSelect label="场次修改轮次" selected={String(selectedRound)} onChange={value => changeRound(Number(value))}
         items={[...sceneRounds].reverse().map(item => ({ value: String(item.number),
           label: `第${item.number}轮：剧本${item.script?.version || '缺失'} · 分镜${item.storyboard?.version || '缺失'}` }))} />
-      <button onClick={() => changeRound(sceneRounds.at(-1)!.number)}>最新修改轮次</button>
+      <span className="production-latest">当前最新：第{latestRound!.number}轮：剧本{latestRound!.script?.version || '缺失'} · 分镜{latestRound!.storyboard?.version || '缺失'}，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => changeRound(latestRound!.number)}>点击切换</button></span>
     </div>}
     </div>
     <div className="episode-scene-content" aria-label={scene ? `场次 ${scene} 内容` : '场次内容'}>

@@ -15,6 +15,7 @@ import { RevisionNoteEditor } from './RevisionNotes';
 import type { NoteScope } from './RevisionNotes';
 import { useRefreshState } from '../refreshPosition';
 import './SegmentWideLayout.css';
+import './LatestSelection.css';
 
 function SegmentReferences({ context }: { context?: GenerationContext }) {
   const preview = useContext(PreviewContext);
@@ -88,7 +89,7 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
   const selectors = <div className="segment-selectors tabs tabs-grouped">
       <TabSelect label="画质选择" selected={stage} onChange={value => onSelectionChange({ stage: value, key: '' })} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
       <TabSelect label="版本切换" reselect disabled={!stage} selected={current?.key || ''} onChange={key => onSelectionChange({ stage, key })} items={versions.map(item => ({ value: item.key, label: item.approved ? '正式版' : candidateLabel(item.candidateNumber) }))} />
-      <button disabled={!latest} onClick={() => onSelectionChange({ stage: latest!.stage, key: latest!.key })}>本段最新版本</button>
+      <span className="production-latest">当前最新：{latest ? <>{candidateLabel(latest.candidateNumber)}，<button className="production-latest-link" aria-label="切换到本段最新版本" onClick={() => onSelectionChange({ stage: latest.stage, key: latest.key })}>点击切换</button></> : '暂无版本'}</span>
     </div>;
   return <>
     {!wideVideo && selectors}

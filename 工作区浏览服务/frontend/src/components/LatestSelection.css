@@ -1,0 +1,4 @@
+.production-latest{font-size:13px;line-height:22px;color:var(--muted);overflow-wrap:anywhere}
+.production-latest>.production-latest-link{display:inline;padding:0;border:0;border-radius:0;background:transparent;color:var(--green);font:inherit;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.production-latest>.production-latest-link:hover{background:transparent;color:#184d43}
+.segment-selectors>.production-latest{align-self:center}

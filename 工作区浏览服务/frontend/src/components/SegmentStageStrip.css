@@ -21,3 +21,6 @@
 .previous-ending-button:disabled{background:#f7faf8;color:var(--muted);opacity:1}
 .segment-vertical-item.is-previous-ending>.previous-ending-button{flex-direction:column;justify-content:center;gap:0;background:#edf5f1}
 .segment-vertical-item.is-previous-ending>.previous-ending-button[aria-pressed=true]{background:var(--green);color:white}
+
+.segment-strip>button,.segment-vertical-item>button{position:relative}
+.segment-strip>button>.segment-round-new,.segment-vertical-item>button>.segment-round-new{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:#df921b;box-shadow:0 0 0 1px white}
