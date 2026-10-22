@@ -28,19 +28,17 @@ export function CoverLibrary({ value, revision }: { value: RecordData; revision:
     {detail && <Dialog title={`${detail.item.name} · 详情`} close={() => setDetail(null)}>
       {detail.candidate ? <>
         <p>{detail.item.status}</p>
-        <p>实际规格：{detail.item.media.width}×{detail.item.media.height} · {detail.item.media.ratio}</p>
-        <div className="cover-library-links"><Original url={detail.item.media.url} label="候选原图" /><a href={detail.item.media.url + '?download=true'} download>下载原图</a></div>
+        <dl className="cover-library-facts"><dt>原图</dt><dd className="cover-library-file"><span>{detail.item.media.width}×{detail.item.media.height} · {detail.item.media.ratio}</span><Original url={detail.item.media.url} label="查看" /><a href={detail.item.media.url + '?download=true'} download>下载</a></dd></dl>
         <RecordLinks items={[detail.item.record]} />
       </> : <>
         <Rich html={detail.item.statusHtml} />
         {!detail.item.media && detail.item.original && <p className="muted">当前预览为采用原图，成品待规格处理。</p>}
         <dl className="cover-library-facts">
           <dt>目标规格</dt><dd>{detail.item.targetSize} · {detail.item.targetRatio}</dd>
-          <dt>成品实测</dt><dd>{detail.item.media ? `${detail.item.media.width}×${detail.item.media.height} · ${detail.item.media.ratio}` : '待处理'}</dd>
-          <dt>原图实测</dt><dd>{detail.item.original ? `${detail.item.original.width}×${detail.item.original.height} · ${detail.item.original.ratio}` : '尚未登记'}</dd>
+          <dt>成品</dt><dd className="cover-library-file"><span>{detail.item.media ? `${detail.item.media.width}×${detail.item.media.height} · ${detail.item.media.ratio}` : '待处理'}</span>{detail.item.media && <><Original url={detail.item.media.url} label="查看" /><a href={detail.item.media.url + '?download=true'} download>下载</a></>}</dd>
+          <dt>原图</dt><dd className="cover-library-file"><span>{detail.item.original ? `${detail.item.original.width}×${detail.item.original.height} · ${detail.item.original.ratio}` : '尚未登记'}</span>{detail.item.original && <><Original url={detail.item.original.url} label="查看" /><a href={detail.item.original.url + '?download=true'} download>下载</a></>}</dd>
         </dl>
-        <div className="cover-library-links"><Original url={detail.item.media?.url} label="成品原文件" />{detail.item.media && <a href={detail.item.media.url + '?download=true'} download>下载成品</a>}<Original url={detail.item.original?.url} label="采用原图" />{detail.item.original && <a href={detail.item.original.url + '?download=true'} download>下载原图</a>}</div>
-        <RecordLinks items={[detail.item.review, detail.item.processing]} />
+        <RecordLinks items={[detail.item.review && { ...detail.item.review, name: '批准记录' }, detail.item.processing]} />
       </>}
     </Dialog>}
   </>;

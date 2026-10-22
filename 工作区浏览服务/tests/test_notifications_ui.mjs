@@ -35,11 +35,12 @@ try {
     await page.route('**/api/**', route => {
       assert.equal(route.request().method(), 'GET');
       documentReads++;
-      return route.fulfill({ json: { text: `预览原文第${documentReads}版` } });
+      return route.fulfill({ json: { html: `<p>预览原文第${documentReads}版</p>`, url: '/fixture.txt' } });
     });
     await page.clock.install();
     await page.goto(base + '/tests/notifications.html');
     await page.getByRole('heading', { name: '公共消息组件回归测试' }).waitFor();
+    assert.equal(await page.locator('.document').getByRole('link', { name: '原文件 ↗', exact: true }).count(), 1);
     const cards = page.locator('.floating-message');
     const card = text => cards.filter({ hasText: text });
     const click = name => page.getByRole('button', { name, exact: true }).click();
@@ -96,6 +97,7 @@ try {
     await page.clock.runFor(2000);
     await click('打开预览');
     await page.getByText('预览原文第1版', { exact: true }).waitFor();
+    assert.equal(await page.getByRole('dialog').getByRole('link', { name: '原文件 ↗', exact: true }).count(), 1);
     await page.locator('dialog .floating-messages:popover-open').waitFor();
     await card('普通通知').locator('.floating-message-countdown').getByText('1', { exact: true }).waitFor();
     await page.clock.runFor(1100);
@@ -105,6 +107,7 @@ try {
     await card('项目资料有更新').waitFor();
     await card('项目资料有更新').getByRole('button', { name: '读取新版本' }).click();
     await page.getByText('预览原文第2版', { exact: true }).waitFor();
+    assert.equal(await page.getByRole('dialog').getByRole('link', { name: '原文件 ↗', exact: true }).count(), 1);
     assert.equal(documentReads, 2);
     await page.getByRole('button', { name: '关闭', exact: true }).click();
     await page.locator('body > .floating-messages:popover-open').waitFor();

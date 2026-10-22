@@ -38,7 +38,7 @@ function Demo() {
       <button onClick={() => { for (let i = 0; i < 15; i++) notify(`多条通知${i}`, 'info', 0); }}>批量通知</button>
     </div>
     <SyncNotification error={sync.error} errorKind="parse_error" retryAt={sync.retryAt} updating={false} />
-    {documentVisible && <Document value={{ html: `<h2>正文第${documentVersion}版</h2><p>文档内容。</p>` }} />}
+    {documentVisible && <Document value={{ html: `<h2>正文第${documentVersion}版</h2><p>文档内容。</p>`, url: '/fixture.md' }} />}
     {pending && <FloatingMessage>页面已有更新，将在编辑或播放结束后自动刷新。</FloatingMessage>}
     {preview && <Preview project="消息测试" item={{ kind: 'text', name: '预览测试.txt', key: '预览测试.txt', url: '/fixture.txt' }} revision={revision} close={() => setPreview(false)} />}
     </main>
