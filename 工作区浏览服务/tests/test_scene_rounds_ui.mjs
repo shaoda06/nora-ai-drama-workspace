@@ -10,7 +10,7 @@ const [base, project] = process.argv.slice(2);
 assert.ok(base && project, 'Usage: node tests/test_scene_rounds_ui.mjs URL PROJECT');
 const out = path.join(os.tmpdir(), 'nora-scene-rounds-ui');
 await mkdir(out, { recursive: true });
-const browser = await chromium.launch({ channel: 'msedge', headless: true });
+const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'msedge', headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
   const errors = [];
@@ -53,7 +53,7 @@ try {
   assert.equal(await choose.innerText(), '第2轮：剧本v2 · 分镜v2');
   await choose.click();
   assert.deepEqual(await page.getByRole('listbox', { name: '场次修改轮次' }).getByRole('option').allTextContents(), ['第2轮：剧本v2 · 分镜v2当前方案', '第1轮：剧本v1 · 分镜v1']);
-  const badge = page.locator('.tab-select-badge');
+  const badge = page.getByRole('listbox', { name: '场次修改轮次' }).locator('.tab-select-badge');
   assert.equal(await badge.evaluate(element => getComputedStyle(element).color), 'rgb(37, 113, 99)');
   await choose.press('Escape');
   assert.equal(await choose.getAttribute('aria-expanded'), 'false');
@@ -68,12 +68,13 @@ try {
   assert.ok((await page.locator('.segment-script-content').innerText()).includes('P001-R002中文方案'));
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).click();
   assert.equal(await page.getByRole('checkbox', { name: '连续播放', exact: true }).isChecked(), false);
-  assert.ok((await page.locator('.scene-workspace-tabs').locator('..').innerText()).includes('不可播放'));
+  assert.ok((await page.locator('.scene-video-preparation').innerText()).includes('1段尚无可播放视频'));
   assert.ok((await version.inputValue()).includes('R002'));
   await chooseRound('1');
   assert.ok((await page.getByRole('group', { name: '本场分段', exact: true }).getByRole('button').first().getAttribute('aria-label')).includes('P003'));
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).check();
   await page.locator('.segment-video video').dispatchEvent('ended');
+  await page.locator('.segment-strip button[aria-pressed="true"][aria-label^="分段 P001，"]').waitFor();
   assert.equal(await page.getByRole('button', { name: /^分段 P001，/ }).first().getAttribute('aria-pressed'), 'true');
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).uncheck();
   await page.getByRole('button', { name: /^分段 P001，/ }).first().click();
@@ -81,7 +82,10 @@ try {
   await page.getByRole('button', { name: '本段最新版本', exact: true }).click();
   assert.equal(await stage.inputValue(), '一采', 'latest jumped to old second-pass');
   assert.ok((await version.inputValue()).includes('R002-一采'));
-  assert.ok(await page.getByText('当前查看版本不属于本轮，导出仍按本轮版本。', { exact: true }).isVisible());
+  assert.equal(await choose.getAttribute('data-value'), '2', 'version selection must switch to its latest registered round');
+  assert.equal(await page.getByRole('button', { name: /^分段 P001，/ }).first().getAttribute('aria-pressed'), 'true');
+  await chooseRound('1');
+  await page.getByRole('button', { name: /^分段 P001，/ }).first().click();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
   await page.getByRole('button', { name: '导出修改意见', exact: true }).click();
   const exported = page.locator('.revision-export-note textarea');
@@ -108,9 +112,13 @@ try {
   assert.equal(await choose.getAttribute('data-value'), '2', 'new arrival replaced currently viewed round');
   await page.getByRole('button', { name: '最新修改轮次', exact: true }).click();
   assert.equal(await choose.getAttribute('data-value'), '3');
-  await choose.press('ArrowDown'); await choose.press('End'); await choose.press('Enter');
+  await choose.press('ArrowDown');
+  await page.locator('[role="combobox"][aria-label="场次修改轮次"][aria-expanded="true"]').waitFor();
+  await choose.press('End'); await choose.press('Enter');
   assert.equal(await choose.getAttribute('data-value'), '1');
-  await choose.press('ArrowDown'); await choose.press('Home'); await choose.press('Enter');
+  await choose.press('ArrowDown');
+  await page.locator('[role="combobox"][aria-label="场次修改轮次"][aria-expanded="true"]').waitFor();
+  await choose.press('Home'); await choose.press('Enter');
   assert.equal(await choose.getAttribute('data-value'), '3');
   await page.locator('.scene-round-selector').scrollIntoViewIfNeeded();
   await choose.click();
@@ -123,6 +131,7 @@ try {
   const menuBox = await page.getByRole('listbox', { name: '场次修改轮次' }).boundingBox();
   assert.ok(menuBox.x >= 0 && menuBox.x + menuBox.width <= 391);
   await page.getByRole('button', { name: '最新修改轮次', exact: true }).click();
+  await page.locator('[role="combobox"][aria-label="场次修改轮次"][aria-expanded="false"]').waitFor();
   assert.equal(await choose.getAttribute('aria-expanded'), 'false');
   // Long history stays compact even on tall screens; the oldest option remains reachable.
   for (let number = 4; number <= 20; number++) fixtureRounds.push(round(number, ['P001', 'P002']));
@@ -132,9 +141,12 @@ try {
   await choose.scrollIntoViewIfNeeded();
   await choose.click();
   const longMenu = page.getByRole('listbox', { name: '场次修改轮次' });
+  await page.locator('[role="combobox"][aria-label="场次修改轮次"][aria-expanded="true"]').waitFor();
   assert.ok((await longMenu.boundingBox()).height <= 321, 'history menu grows with the screen');
   assert.ok(await longMenu.evaluate(element => element.scrollHeight > element.clientHeight), 'long history is not internally scrollable');
-  await choose.press('End'); await choose.press('Enter');
+  await choose.press('End');
+  await longMenu.locator('[role="option"][data-active="true"]').filter({ hasText: /^第1轮：/ }).waitFor();
+  await choose.press('Enter');
   assert.equal(await choose.getAttribute('data-value'), '1', 'oldest round is unreachable');
   await page.getByRole('button', { name: '最新修改轮次', exact: true }).click();
   await page.setViewportSize({ width: 1194, height: 890 });
@@ -143,7 +155,7 @@ try {
   await page.screenshot({ path: path.join(out, 'bounded-round-history.png') });
   await choose.press('Escape');
   assert.deepEqual(errors, []);
-  const evidence = { url: page.url(), title: await page.title(), checks: ['round defaults', 'shared select styling', 'descending version labels', 'current plan badge', 'keyboard and dismissal', 'bounded scrollable long history', 'pending revision retained', 'stage-scoped latest', 'outside-round notice', 'round-scoped note export', 'script and storyboard versions', 'historical segment order', 'unchanged run inheritance', 'fixed-round continuous playback', 'missing clip stops playback', 'new round does not replace current selection'], pageErrors: errors, productionWrites: 0 };
+  const evidence = { url: page.url(), title: await page.title(), checks: ['round defaults', 'shared select styling', 'descending version labels', 'current plan badge', 'keyboard and dismissal', 'bounded scrollable long history', 'pending revision retained', 'stage-scoped latest', 'version-linked latest round', 'round-scoped note export', 'script and storyboard versions', 'historical segment order', 'unchanged run inheritance', 'fixed-round continuous playback', 'missing clip stops playback', 'new round does not replace current selection'], pageErrors: errors, productionWrites: 0 };
   await writeFile(path.join(out, 'evidence.json'), JSON.stringify(evidence, null, 2));
   console.log(JSON.stringify(evidence));
 } finally { await browser.close(); }
