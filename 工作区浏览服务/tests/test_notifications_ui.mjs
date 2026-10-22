@@ -53,8 +53,20 @@ try {
     await click('切换页面更新');
     await click('常驻通知');
     await click('普通通知');
+    const remaining = card('普通通知').locator('.floating-message-countdown');
+    await remaining.getByText('3', { exact: true }).waitFor();
+    await page.clock.runFor(1000);
+    await remaining.getByText('2', { exact: true }).waitFor();
     await click('错误通知');
     await count(5);
+    await card('音频播放失败').locator('.floating-message-countdown').getByText('3', { exact: true }).waitFor();
+    await page.clock.runFor(1000);
+    await remaining.getByText('1', { exact: true }).waitFor();
+    await card('音频播放失败').locator('.floating-message-countdown').getByText('2', { exact: true }).waitFor();
+    assert.equal(await card('本文有新版本').locator('.floating-message-countdown').count(), 0);
+    assert.equal(await card('页面已有更新').locator('.floating-message-countdown').count(), 0);
+    assert.equal(await card('独立常驻通知').locator('.floating-message-countdown').count(), 0);
+    await page.screenshot({ path: path.join(out, `${viewport.width}-dismiss-countdown.png`), fullPage: true });
     assert.equal(await card('本文有新版本').getByRole('button', { name: '关闭通知' }).count(), 0);
     assert.equal(await card('页面已有更新').getByRole('button').count(), 0);
     // Independent close, cleanup and timers must never clear another source.
@@ -62,11 +74,12 @@ try {
     await count(4);
     await click('清理常驻通知');
     await count(3);
-    await page.clock.runFor(3100);
+    await page.clock.runFor(1100);
     await card('普通通知').waitFor({ state: 'detached' });
     await count(2);
     await click('同步失败');
     await card('30秒后重试').waitFor();
+    assert.equal(await card('30秒后重试').locator('.floating-message-countdown').count(), 0);
     await page.clock.runFor(2000);
     await card('28秒后重试').waitFor();
     await click('同步恢复');
@@ -84,6 +97,7 @@ try {
     await click('打开预览');
     await page.getByText('预览原文第1版', { exact: true }).waitFor();
     await page.locator('dialog .floating-messages:popover-open').waitFor();
+    await card('普通通知').locator('.floating-message-countdown').getByText('1', { exact: true }).waitFor();
     await page.clock.runFor(1100);
     await card('普通通知').waitFor({ state: 'detached' });
     assert.equal(await card('普通通知').count(), 0);

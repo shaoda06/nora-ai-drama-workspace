@@ -25,13 +25,17 @@ export function FloatingMessage({ children, tone = 'info' }: { children: ReactNo
 
 function MessageCard({ message, remove }: { message: Message; remove: (id: string) => void }) {
   const { id, expiresAt } = message;
+  const [now, setNow] = useState(Date.now);
+  const seconds = expiresAt === null ? null : Math.max(0, Math.ceil((expiresAt - now) / 1000));
   useEffect(() => {
     if (expiresAt === null) return;
     const timer = window.setTimeout(() => remove(id), Math.max(0, expiresAt - Date.now()));
-    return () => window.clearTimeout(timer);
+    const ticker = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => { window.clearTimeout(timer); window.clearInterval(ticker); };
   }, [id, expiresAt, remove]);
   return <div className={'floating-message floating-message-' + message.tone} role={message.tone === 'error' ? 'alert' : 'status'}>
     <div className="floating-message-content">{message.text}</div>
+    {seconds !== null && seconds > 0 && <span className="floating-message-countdown" aria-hidden="true">{seconds}</span>}
     {message.dismissible && <button className="floating-message-close" aria-label="关闭通知" onClick={() => remove(id)}>×</button>}
   </div>;
 }
