@@ -1,8 +1,9 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import type { KeyboardEvent } from 'react';
+import type { CSSProperties, KeyboardEvent } from 'react';
+import './TabSelect.css';
 
 type Props = {
-  items: { value: string; label: string; badge?: string }[];
+  items: { value: string; label: string }[];
   selected: string;
   onChange: (value: string) => void;
   label: string;
@@ -11,22 +12,25 @@ type Props = {
   iconOnly?: boolean;
 };
 
-export function MarkedTabSelect({ items, selected, onChange, label, disabled, iconOnly }: Props) {
+export function TabSelect({ items, selected, onChange, label, disabled, iconOnly, reselect = false }: Props) {
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
   const [active, setActive] = useState(0);
-  const [position, setPosition] = useState({ left: 0, top: 0, width: 0, maxHeight: 0 });
+  const [position, setPosition] = useState<CSSProperties>({});
   const positionMenu = () => {
     const rect = trigger.current!.getBoundingClientRect();
     const width = Math.min(Math.max(rect.width, 340), window.innerWidth - 16);
+    const below = window.innerHeight - rect.bottom - 12;
+    const above = rect.top - 12;
+    const openAbove = below < 320 && above > below;
     setPosition({ left: Math.max(8, Math.min(rect.left, window.innerWidth - width - 8)),
-      top: rect.bottom + 4, width, maxHeight: Math.min(320, Math.max(80, window.innerHeight - rect.bottom - 20)) });
+      top: openAbove ? undefined : rect.bottom + 4, bottom: openAbove ? window.innerHeight - rect.top + 4 : undefined, width, maxHeight: Math.min(320, openAbove ? above : below) });
     setActive(Math.max(0, items.findIndex(item => item.value === selected)));
   };
   const close = () => { menu.current!.hidePopover(); setExpanded(false); };
-  const choose = (index: number) => { onChange(items[index].value); close(); trigger.current!.focus(); };
+  const choose = (index: number) => { const value = items[index].value; close(); trigger.current!.focus(); if (reselect || value !== selected) onChange(value); };
   useEffect(() => {
     if (expanded) menu.current!.children[active]?.scrollIntoView({ block: 'nearest' });
   }, [active, expanded]);
@@ -40,14 +44,17 @@ export function MarkedTabSelect({ items, selected, onChange, label, disabled, ic
     } else if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault(); if (expanded) choose(active); else trigger.current!.click();
     } else if (event.key === 'Escape' || event.key === 'Tab') {
-      if (expanded) close();
+      if (expanded) {
+        if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); }
+        close();
+      }
     }
   };
   return <>
     <button ref={trigger} type="button" className={`tab-select tab-select-marked${iconOnly ? ' tab-select-icon' : ''}`} role="combobox" aria-label={label}
       aria-haspopup="listbox" aria-controls={id} aria-expanded={expanded} aria-activedescendant={expanded ? `${id}-${active}` : undefined}
-      disabled={disabled} data-active={Boolean(selected)} data-value={selected} onKeyDown={keyDown} popoverTarget={id}
-      onClick={() => { if (!expanded) positionMenu(); }}>
+      disabled={disabled || items.length === 0} data-active={Boolean(selected)} data-value={selected} onKeyDown={keyDown} popoverTarget={id}
+      onClick={() => { if (!expanded) positionMenu(); setExpanded(!expanded); }}>
       {!iconOnly && <span className="tab-select-label">{items.find(item => item.value === selected)?.label || label}</span>}
       <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12"><path d="m3 4.5 3 3 3-3" fill="none" stroke="currentColor" /></svg>
     </button>
@@ -56,16 +63,8 @@ export function MarkedTabSelect({ items, selected, onChange, label, disabled, ic
       {items.map((item, index) => <button key={item.value} type="button" role="option" id={`${id}-${index}`}
         aria-selected={item.value === selected} data-active={index === active} tabIndex={-1}
         onMouseEnter={() => setActive(index)} onMouseDown={event => event.preventDefault()} onClick={() => choose(index)}>
-        <span>{item.label}</span>{item.badge && <span className="tab-select-badge">{item.badge}</span>}
+        <span>{item.label}</span>{item.value === selected && <span className="tab-select-badge">当前</span>}
       </button>)}
     </div>
   </>;
-}
-
-export function TabSelect({ items, selected, onChange, label, disabled = false, reselect = false, iconOnly = false }: Props) {
-  if (iconOnly || items.some(item => item.badge)) return <MarkedTabSelect items={items} selected={selected} onChange={onChange} label={label} disabled={disabled} iconOnly={iconOnly} />;
-  return <select className="tab-select" aria-label={label} disabled={disabled} data-active={Boolean(selected)} value={selected} onChange={event => onChange(event.target.value)}>
-    <option value="" disabled hidden>{label}</option>
-    {items.map(item => <option key={item.value} value={item.value} onClick={reselect && item.value === selected ? () => onChange(item.value) : undefined}>{item.label}</option>)}
-  </select>;
 }

@@ -45,8 +45,10 @@ try {
   await page.getByRole('button', { name: '剧集制作', exact: true }).click();
   await page.getByRole('button').filter({ hasText: episode }).first().click();
   await page.getByRole('button', { name: new RegExp('^分段 ' + segment + '，') }).first().click();
-  await page.getByRole('combobox', { name: '画质选择' }).selectOption('一采');
-  await page.getByRole('combobox', { name: '版本切换' }).selectOption({ label: candidate });
+  await page.getByRole('combobox', { name: '画质选择', exact: true }).click();
+  await page.getByRole('listbox', { name: '画质选择', exact: true }).getByRole('option').filter({ hasText: '一采' }).click();
+  await page.getByRole('combobox', { name: '版本切换', exact: true }).click();
+  await page.getByRole('listbox', { name: '版本切换', exact: true }).getByRole('option').filter({ hasText: candidate }).click();
   const figures = page.locator('.segment-reference-images figure');
   await figures.first().waitFor();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
@@ -74,7 +76,8 @@ try {
   await page.screenshot({ path: path.join(out, 'content-refresh-retained.png') });
   await page.waitForTimeout(2800);
   assert.ok(contexts > before.contexts, 'genuine content change did not refetch');
-  await page.getByRole('combobox', { name: '版本切换' }).selectOption({ label: otherCandidate });
+  await page.getByRole('combobox', { name: '版本切换', exact: true }).click();
+  await page.getByRole('listbox', { name: '版本切换', exact: true }).getByRole('option').filter({ hasText: otherCandidate }).click();
   await page.locator('.segment-references .placeholder-label').waitFor();
   assert.equal(await figures.count(), 0, 'different candidate inherited previous reference images');
   await figures.first().waitFor();

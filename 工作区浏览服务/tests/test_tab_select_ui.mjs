@@ -1,0 +1,71 @@
+// Isolated component fixtures; no project, library or task writes.
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { mkdtemp } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+const require = createRequire(import.meta.url);
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const base = process.argv[2];
+assert.ok(base, 'Usage: node tests/test_tab_select_ui.mjs DEV_URL');
+const out = await mkdtemp(path.join(os.tmpdir(), 'nora-tab-select-'));
+const browser = await chromium.launch({ headless: true });
+try {
+  const page = await browser.newPage({ viewport: { width: 1362, height: 918 } });
+  const errors = [];
+  page.on('pageerror', error => errors.push(String(error)));
+  await page.goto(base + '/tests/tab-select.html');
+  await page.getByRole('heading', { name: '共用下拉菜单测试' }).waitFor();
+  assert.equal(await page.title(), '共用下拉菜单测试');
+  const combo = name => page.getByRole('combobox', { name, exact: true });
+  const menu = name => page.getByRole('listbox', { name, exact: true });
+  const current = async (name, text) => {
+    await menu(name).waitFor();
+    assert.equal(await menu(name).locator('.tab-select-badge').count(), 1);
+    assert.equal(await menu(name).getByRole('option', { selected: true }).innerText(), text + '\n当前');
+  };
+  await combo('分类筛选').click(); await current('分类筛选', '全部分类');
+  await menu('分类筛选').getByRole('option', { selected: true }).click();
+  assert.equal(await page.getByTestId('calls').innerText(), '0', 'normal reselection must not fire changes');
+  await combo('分类筛选').click();
+  await page.keyboard.press('End'); await page.keyboard.press('Enter');
+  assert.equal(await combo('分类筛选').innerText(), '视频');
+  assert.equal(await page.getByTestId('calls').innerText(), '1');
+  await combo('分类筛选').click(); await current('分类筛选', '视频');
+  await page.keyboard.press('Escape');
+  assert.equal(await combo('分类筛选').getAttribute('aria-expanded'), 'false');
+  assert.equal(await combo('分组导航').evaluate(el => getComputedStyle(el).backgroundImage), 'none', 'shared menu must not retain the native select arrow');
+  await combo('分组导航').click(); await current('分组导航', '视频');
+  await menu('分组导航').getByRole('option', { selected: true }).click();
+  assert.equal(await page.getByTestId('calls').innerText(), '2', 'navigation reselection still works');
+  await combo('快速选择').click(); await current('快速选择', '视频');
+  await page.keyboard.press('Home'); await page.keyboard.press('Enter');
+  assert.equal(await combo('分类筛选').innerText(), '全部分类');
+  assert.ok(await combo('禁用').isDisabled()); assert.ok(await combo('空选项').isDisabled());
+  await page.getByRole('button', { name: '打开弹窗', exact: true }).click();
+  await combo('弹窗分类').click(); await current('弹窗分类', '全部分类');
+  await menu('弹窗分类').getByRole('option', { name: '图片', exact: true }).click();
+  assert.ok(await page.getByRole('dialog').isVisible(), 'choosing an option must not submit the form');
+  await combo('弹窗分类').click(); await current('弹窗分类', '图片');
+  await page.screenshot({ path: path.join(out, 'dialog.png') });
+  await page.keyboard.press('Escape');
+  assert.ok(await page.getByRole('dialog').isVisible(), 'Escape closes menu before dialog');
+  await page.getByRole('button', { name: '保存', exact: true }).click();
+  await combo('转移任务').click();
+  assert.equal(await menu('转移任务').locator('.tab-select-badge').count(), 0, 'action picker has no selected destination before transfer');
+  await menu('转移任务').getByRole('option', { name: '目标节点', exact: true }).click();
+  assert.equal(await page.getByTestId('destination').innerText(), 'target');
+  for (const viewport of [{ width: 1362, height: 918 }, { width: 390, height: 700 }]) {
+    await page.setViewportSize(viewport);
+    await combo('底部菜单').click(); await current('底部菜单', '第19项');
+    const box = await menu('底部菜单').boundingBox();
+    assert.ok(box.x >= 0 && box.y >= 0 && box.x + box.width <= viewport.width && box.y + box.height <= viewport.height);
+    assert.ok(await menu('底部菜单').evaluate(el => el.scrollHeight > el.clientHeight));
+    await page.keyboard.press('Home');
+    await page.screenshot({ path: path.join(out, `${viewport.width}-menu.png`) });
+    await page.keyboard.press('Tab');
+    assert.equal(await combo('底部菜单').getAttribute('aria-expanded'), 'false');
+  }
+  assert.deepEqual(errors, []);
+  console.log('PASS default current badge, empty value, change/reselect, keyboard, modal, icon-only, disabled/empty, transfer callback, desktop/mobile bottom positioning; screenshots: ' + out);
+} finally { await browser.close(); }

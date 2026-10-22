@@ -1,3 +1,4 @@
+import { TabSelect } from './components/TabSelect';
 import { PointerTooltip } from './components/PointerTooltip';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -107,9 +108,9 @@ function Catalogue({ value, section }: { value: RecordData; section: string }) {
   const [category, setCategory] = useState('');
   const [page, setPage] = useState(1);
   const all: FileItem[] = value.children || value.items || value.files || [];
-  const categories = Array.from(new Set(all.map(item => item.category).filter(Boolean)));
+  const categories = Array.from(new Set(all.map(item => item.category).filter((value): value is string => !!value)));
   const matched = searchTree(all.filter(item => !category || item.category === category), search);
-  return <>{value.note && <p className="muted">{value.note}</p>}<div className="toolbar"><SearchField label="搜索目录" placeholder="搜索名称、概要" value={search} onChange={value => { setSearch(value); setPage(1); }} />{categories.length > 0 && <select aria-label="目录分类" value={category} onChange={event => { setCategory(event.target.value); setPage(1); }}><option value="">全部分类</option>{categories.map(item => <option key={item}>{item}</option>)}</select>}</div>
+  return <>{value.note && <p className="muted">{value.note}</p>}<div className="toolbar"><SearchField label="搜索目录" placeholder="搜索名称、概要" value={search} onChange={value => { setSearch(value); setPage(1); }} />{categories.length > 0 && <TabSelect label="目录分类" selected={category} onChange={value => { setCategory(value); setPage(1); }} items={[{ value: '', label: '全部分类' }, ...categories.map((value) => ({ value, label: value }))]} />}</div>
     {!all.length && <p className="muted">暂无资料。</p>}<FileTree key={section} items={matched.slice((page - 1) * 36, page * 36)} />
     <Pagination page={page} total={matched.length} change={setPage} /><Groups groups={value.groups} /></>;
 }

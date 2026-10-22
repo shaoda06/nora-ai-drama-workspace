@@ -152,7 +152,8 @@ try {
   await scene.getByText('P004的本轮一采 R001等待提交', { exact: false }).waitFor();
   assert.ok(!(await scene.locator('[role=alert]').allTextContents()).some(text => text.includes('尚未生成')));
   await select('P001');
-  await page.getByRole('combobox', { name: '版本切换', exact: true }).selectOption({ label: '候选三' });
+  await page.getByRole('combobox', { name: '版本切换', exact: true }).click();
+  await page.getByRole('listbox', { name: '版本切换', exact: true }).getByRole('option').filter({ hasText: '候选三' }).click();
   await page.getByText('该版本未登记整场轮次，不能连续播放；导出仍按第1轮。', { exact: true }).waitFor();
   assert.equal(await page.getByRole('checkbox', { name: '连续播放', exact: true }).isDisabled(), true);
   await select('P001');

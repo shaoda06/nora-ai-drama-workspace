@@ -52,7 +52,7 @@ try {
   const chooseRound = async number => { await choose.click(); await page.getByRole('option', { name: new RegExp('^第' + number + '轮：') }).click(); };
   assert.equal(await choose.innerText(), '第2轮：剧本v2 · 分镜v2');
   await choose.click();
-  assert.deepEqual(await page.getByRole('listbox', { name: '场次修改轮次' }).getByRole('option').allTextContents(), ['第2轮：剧本v2 · 分镜v2当前方案', '第1轮：剧本v1 · 分镜v1']);
+  assert.deepEqual(await page.getByRole('listbox', { name: '场次修改轮次' }).getByRole('option').allTextContents(), ['第2轮：剧本v2 · 分镜v2当前', '第1轮：剧本v1 · 分镜v1']);
   const badge = page.getByRole('listbox', { name: '场次修改轮次' }).locator('.tab-select-badge');
   assert.equal(await badge.evaluate(element => getComputedStyle(element).color), 'rgb(37, 113, 99)');
   await choose.press('Escape');
@@ -60,8 +60,8 @@ try {
   assert.equal(await choose.getAttribute('data-value'), '2');
   const stage = page.getByRole('combobox', { name: '画质选择' });
   const version = page.getByRole('combobox', { name: '版本切换' });
-  assert.equal(await stage.inputValue(), '一采');
-  assert.ok((await version.inputValue()).includes('R002'));
+  assert.equal(await stage.getAttribute('data-value'), '一采');
+  assert.ok((await version.getAttribute('data-value')).includes('R002'));
   assert.equal(await page.locator('.segment-video video').count(), 0, 'pending round used old video');
   assert.ok((await page.locator('.scene-video-preparation').innerText()).includes('1段尚无可播放视频'));
   await page.getByRole('button', { name: '提示词', exact: true }).click();
@@ -69,8 +69,11 @@ try {
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).click();
   assert.equal(await page.getByRole('checkbox', { name: '连续播放', exact: true }).isChecked(), false);
   assert.ok((await page.locator('.scene-video-preparation').innerText()).includes('1段尚无可播放视频'));
-  assert.ok((await version.inputValue()).includes('R002'));
+  assert.ok((await version.getAttribute('data-value')).includes('R002'));
   await chooseRound('1');
+  await choose.click();
+  assert.equal(await page.getByRole('listbox', { name: '场次修改轮次' }).getByRole('option', { selected: true }).textContent(), '第1轮：剧本v1 · 分镜v1当前');
+  await choose.press('Escape');
   assert.ok((await page.getByRole('group', { name: '本场分段', exact: true }).getByRole('button').first().getAttribute('aria-label')).includes('P003'));
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).check();
   await page.locator('.segment-video video').dispatchEvent('ended');
@@ -78,10 +81,10 @@ try {
   assert.equal(await page.getByRole('button', { name: /^分段 P001，/ }).first().getAttribute('aria-pressed'), 'true');
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).uncheck();
   await page.getByRole('button', { name: /^分段 P001，/ }).first().click();
-  assert.ok((await version.inputValue()).includes('R001-一采'));
+  assert.ok((await version.getAttribute('data-value')).includes('R001-一采'));
   await page.getByRole('button', { name: '本段最新版本', exact: true }).click();
-  assert.equal(await stage.inputValue(), '一采', 'latest jumped to old second-pass');
-  assert.ok((await version.inputValue()).includes('R002-一采'));
+  assert.equal(await stage.getAttribute('data-value'), '一采', 'latest jumped to old second-pass');
+  assert.ok((await version.getAttribute('data-value')).includes('R002-一采'));
   assert.equal(await choose.getAttribute('data-value'), '2', 'version selection must switch to its latest registered round');
   assert.equal(await page.getByRole('button', { name: /^分段 P001，/ }).first().getAttribute('aria-pressed'), 'true');
   await chooseRound('1');
@@ -105,7 +108,7 @@ try {
   await page.getByRole('button', { name: '分段制作', exact: true }).click();
   assert.equal(await page.getByRole('button', { name: /^分段 P003，/ }).count(), 0);
   await page.getByRole('button', { name: /^分段 P002，/ }).first().click();
-  assert.ok((await version.inputValue()).includes('R001'), 'unchanged segment was renumbered');
+  assert.ok((await version.getAttribute('data-value')).includes('R001'), 'unchanged segment was renumbered');
   fixtureRounds.push(round(3, ['P001', 'P002']));
   refreshRevision = 1;
   await page.waitForFunction(() => document.querySelector('[role=combobox][aria-label="场次修改轮次"]')?.getAttribute('aria-controls') && document.getElementById(document.querySelector('[role=combobox][aria-label="场次修改轮次"]').getAttribute('aria-controls'))?.children.length === 3);
@@ -155,7 +158,7 @@ try {
   await page.screenshot({ path: path.join(out, 'bounded-round-history.png') });
   await choose.press('Escape');
   assert.deepEqual(errors, []);
-  const evidence = { url: page.url(), title: await page.title(), checks: ['round defaults', 'shared select styling', 'descending version labels', 'current plan badge', 'keyboard and dismissal', 'bounded scrollable long history', 'pending revision retained', 'stage-scoped latest', 'version-linked latest round', 'round-scoped note export', 'script and storyboard versions', 'historical segment order', 'unchanged run inheritance', 'fixed-round continuous playback', 'missing clip stops playback', 'new round does not replace current selection'], pageErrors: errors, productionWrites: 0 };
+  const evidence = { url: page.url(), title: await page.title(), checks: ['round defaults', 'shared select styling', 'descending version labels', 'selected round current badge', 'keyboard and dismissal', 'bounded scrollable long history', 'pending revision retained', 'stage-scoped latest', 'version-linked latest round', 'round-scoped note export', 'script and storyboard versions', 'historical segment order', 'unchanged run inheritance', 'fixed-round continuous playback', 'missing clip stops playback', 'new round does not replace current selection'], pageErrors: errors, productionWrites: 0 };
   await writeFile(path.join(out, 'evidence.json'), JSON.stringify(evidence, null, 2));
   console.log(JSON.stringify(evidence));
 } finally { await browser.close(); }

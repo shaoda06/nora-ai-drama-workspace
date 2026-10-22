@@ -163,8 +163,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     {sceneRounds.length > 0 && <div className="scene-round-selector">
       <TabSelect label="场次修改轮次" selected={String(selectedRound)} onChange={value => changeRound(Number(value))}
         items={[...sceneRounds].reverse().map(item => ({ value: String(item.number),
-          label: `第${item.number}轮：剧本${item.script?.version || '缺失'} · 分镜${item.storyboard?.version || '缺失'}`,
-          badge: item.number === sceneRounds.at(-1)!.number ? '当前方案' : undefined }))} />
+          label: `第${item.number}轮：剧本${item.script?.version || '缺失'} · 分镜${item.storyboard?.version || '缺失'}` }))} />
       <button onClick={() => changeRound(sceneRounds.at(-1)!.number)}>最新修改轮次</button>
     </div>}
     </div>

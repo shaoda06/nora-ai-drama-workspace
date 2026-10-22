@@ -1,0 +1,14 @@
+.tab-select.tab-select-marked[data-active]{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;max-width:100%;min-width:0;appearance:auto;background-image:none;padding:7px 12px;text-align:left;background-color:white;color:var(--green)}
+.tabs .tab-select.tab-select-marked[data-active=true],.scene-round-selector .tab-select.tab-select-marked[data-active=true]{background-color:var(--green);color:white}
+.tab-select-menu [role=option]>span:first-child{min-width:0;overflow-wrap:anywhere}
+.prompt-dialog label>.tab-select,.asset-info label>.tab-select{width:100%;color:#25352f}
+.asset-info label>.tab-select{font-size:14px}
+.prompt-toolbar>.tab-select,.toolbar>.tab-select{max-width:100%}
+.local-queue-card-actions .tab-select.tab-select-marked{font-size:11px;padding:4px 6px;max-width:130px;line-height:1.6}
+.tab-select.tab-select-marked.tab-select-icon{width:22px;height:28px;justify-content:center;padding:2px;border:0;background:transparent}
+@media(max-width:760px){.prompt-toolbar>.tab-select{flex:1;min-width:0}}
+@media(max-width:600px){.header-controls .toolbar>.tab-select,.asset-toolbar>.tab-select{flex:1;min-width:0}}
+
+.tabs-grouped .tab-select.tab-select-marked[data-active]{background-image:none}
+.prompt-form-field>.tab-select.tab-select-marked{color:#25352f}
+.comfy-history-controls .tab-select.tab-select-marked{flex:none;width:auto;font-size:12px;padding:7px 9px}

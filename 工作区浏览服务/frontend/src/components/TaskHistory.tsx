@@ -1,3 +1,4 @@
+import { TabSelect } from './TabSelect';
 import { useEffect, useRef, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { LocalQueueCard, type LocalQueueTask } from './LocalQueueCard';
@@ -35,10 +36,10 @@ export function TaskHistory({ updatedAt, total, onDetails }: {
   return <div className="comfy-history">
     <div className="comfy-history-controls"><input type="search" aria-label="搜索任务标题或来源会话"
       placeholder="搜索标题或来源会话" value={text} onChange={event => setText(event.target.value)} />
-      <select aria-label="历史任务结果" value={result} onChange={event => setResult(event.target.value)}>
-        <option value="all">全部结果</option><option value="completed">已完成</option>
-        <option value="abnormal">异常</option><option value="resolved">已结案</option><option value="cancelled">已取消</option>
-      </select></div>
+      <TabSelect label="历史任务结果" selected={result} onChange={setResult} items={[
+        { value: 'all', label: '全部结果' }, { value: 'completed', label: '已完成' }, { value: 'abnormal', label: '异常' },
+        { value: 'resolved', label: '已结案' }, { value: 'cancelled', label: '已取消' },
+      ]} /></div>
     <div className="comfy-queue-body">
       {query.isPending && <p className="comfy-empty" role="status">正在读取历史…</p>}
       {query.isError && <p className="comfy-task-warning" role="alert">{query.error.message} <button

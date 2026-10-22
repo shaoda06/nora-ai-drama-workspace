@@ -1,3 +1,4 @@
+import { TabSelect } from './components/TabSelect';
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useBlocker, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -52,7 +53,7 @@ function AssetList({ kind }: { kind: Kind }) {
     [item.name, item.category, ...Object.values(item.profile)].join('\n').toLocaleLowerCase().includes(needle));
   return <>
     <div className="asset-toolbar"><input type="search" aria-label="搜索资产" placeholder={`搜索${kinds[kind]}名称或资料…`} value={search} onChange={event => setSearch(event.target.value)} />
-      {kind === 'clothing' && <select aria-label="服装分类筛选" value={category} onChange={event => setCategory(event.target.value)}><option value="">全部分类</option>{clothing.map(value => <option key={value}>{value}</option>)}</select>}
+      {kind === 'clothing' && <TabSelect label="服装分类筛选" selected={category} onChange={setCategory} items={[{ value: '', label: '全部分类' }, ...clothing.map((value) => ({ value, label: value }))]} />}
       <Link className="asset-primary" to={`/assets/${kind}/new`}>＋ 新增{kinds[kind]}</Link></div>
     <Result loading={query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} />
     {query.data && <p className="muted">{items.length} 份{kinds[kind]}资产</p>}
@@ -153,7 +154,7 @@ function AssetEditor({ initial, kind }: { initial: Asset | null; kind: Kind }) {
       <section className="asset-info" aria-label="资料卡"><h2>{saved ? saved.name : `新增${kinds[kind]}`}</h2>
         <form onSubmit={event => { event.preventDefault(); void run(save); }}><fieldset disabled={busy}>
           <label>名称<input required maxLength={100} value={draft.name} onChange={event => setDraft({ ...draft, name: event.target.value })} placeholder={kind === 'person' ? '人物姓名或称呼' : '资产名称'} /></label>
-          {kind === 'clothing' && <label>分类<select aria-label="分类" value={draft.category} onChange={event => setDraft({ ...draft, category: event.target.value })}>{clothing.map(value => <option key={value}>{value}</option>)}</select></label>}
+          {kind === 'clothing' && <label>分类<TabSelect label="分类" selected={draft.category} onChange={category => setDraft({ ...draft, category })} items={clothing.map(value => ({ value, label: value }))} /></label>}
           {kind === 'person' && <>
             <div className="asset-field-pair"><label>性别<input value={draft.profile.gender} maxLength={100} onChange={event => setProfile('gender', event.target.value)} /></label><label>年龄<input value={draft.profile.age} maxLength={100} onChange={event => setProfile('age', event.target.value)} placeholder="可填写年龄段" /></label></div>
             <label>身份<input value={draft.profile.identity} maxLength={1000} onChange={event => setProfile('identity', event.target.value)} placeholder="职业、身份或背景" /></label>

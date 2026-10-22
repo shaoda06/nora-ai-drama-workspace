@@ -1,3 +1,4 @@
+import { TabSelect } from './TabSelect';
 import { useEffect, useRef, useState } from 'react';
 import type { FileItem, RecordData } from '../api';
 import { FileTree, Original, Rich } from '../components';
@@ -34,7 +35,7 @@ export function ReferenceLibrary({ value, revision, active, asset, onAssetChange
       <dt>版本与采用依据：</dt><dd><Rich html={selected.statusHtml} /></dd>
     </dl>
   </> : <>
-    <div className="toolbar"><SearchField label="搜索参考素材" placeholder="搜索文件名、名称" value={search} onChange={setSearch} /><select aria-label="参考素材分类" value={category} onChange={event => setCategory(event.target.value)}><option value="">全部分类</option>{value.categories.map((name: string) => <option key={name}>{name}</option>)}</select></div>
+    <div className="toolbar"><SearchField label="搜索参考素材" placeholder="搜索文件名、名称" value={search} onChange={setSearch} /><TabSelect label="参考素材分类" selected={category} onChange={setCategory} items={[{ value: '', label: '全部分类' }, ...value.categories.map((value: string) => ({ value, label: value }))]} /></div>
     <div className="reference-media-list">{matched.map(item => <ReferenceMediaCard key={item.key} item={item} audio={audio} playing={preview.playingId === item.key} progress={preview.currentId === item.key ? preview.progress : 0} onPlay={() => preview.toggle(item.key!, item.media!.url!)} onSelect={() => select(item)} />)}</div>
     {!matched.length && <p className="muted">暂无匹配的参考素材。</p>}<FileTree items={other} />
   </>}</>;
