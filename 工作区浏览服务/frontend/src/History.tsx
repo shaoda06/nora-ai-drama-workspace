@@ -9,6 +9,7 @@ import { Pagination } from './components/Pagination';
 import './History.css';
 
 type HistoryDocument = { title: string; html: string; page: number; pageSize: number; total: number };
+const templatePaths = ['开发记录模板.md', '开发记录规范.md', '版本记录模板.md', '版本记录规范.md'];
 
 function HistoryPreview({ selected, close }: { selected: string; close: () => void }) {
   const [path, anchor] = selected.split('#');
@@ -41,8 +42,9 @@ export default function History() {
   const document = useQuery({ queryKey: ['history-document', selected, showVersions ? page : 1], queryFn: () => get<HistoryDocument>(`/api/history/document?path=${encodeURIComponent(selected)}&page=${showVersions ? page : 1}`), refetchInterval: 5000 });
   const navigation = [
     { value: '版本记录.md', label: '版本记录' },
-    ...(list.data || []).filter(item => item.path !== '版本记录.md' && !item.path.startsWith('开发记录/')).map(item => ({ value: item.path, label: item.name })),
+    { value: '组件与页面实现.md', label: '组件与页面实现' },
   ];
+  const templates = templatePaths.filter(path => list.data?.some(item => item.path === path)).map(path => ({ value: path, label: path.replace(/\.md$/, '') }));
   const openDocument = (value: string) => {
     setSelected(value);
     window.scrollTo(0, 0);
@@ -56,7 +58,13 @@ export default function History() {
     <PageCheckStatus queries={[list, document]} />
     <PageHeader eyebrow="开发跟踪" title="版本与开发记录" />
     <div className="history-layout">
-      <TabNav vertical label="开发文档" items={navigation} selected={selected} onChange={openDocument} />
+      <aside className="history-sidebar" aria-label="开发文档导航">
+        <TabNav vertical label="开发文档" items={navigation} selected={selected} onChange={openDocument} />
+        <details className="history-templates">
+          <summary>模板与规范</summary>
+          <TabNav vertical label="模板与规范" items={templates} selected={selected} onChange={openDocument} />
+        </details>
+      </aside>
       <article className={showVersions ? "panel history-versions" : "panel"}>
         <Result page loading={list.isPending || document.isPending} error={document.error || list.error} retry={document.error ? document.refetch : list.refetch} retrying={document.isFetching || list.isFetching} />
         {document.data && <>

@@ -1,2 +1,14 @@
 .history-layout .pagination { flex-wrap: wrap; gap: 12px; }
 .history-versions .prose > h1:first-child { display: none; }
+.history-layout { grid-template-columns: 180px minmax(0, 1fr); }
+.history-sidebar { min-width: 0; }
+.history-sidebar .tabs-vertical { flex-direction: column; overflow: visible; }
+.history-sidebar .tabs-vertical button { width: 100%; white-space: normal; }
+.history-templates { margin: 14px 0 0; }
+.history-templates > summary { padding: 8px 12px; color: var(--green); font-size: 14px; }
+.history-templates .tabs { margin: 8px 0 0 12px; padding-left: 8px; border-left: 1px solid var(--line); }
+@media (max-width: 600px) {
+  .history-layout { grid-template-columns: minmax(0, 1fr); }
+  .history-sidebar > .tabs { display: grid; grid-template-columns: 1fr 1fr; }
+  .history-templates .tabs { display: grid; grid-template-columns: 1fr 1fr; }
+}
