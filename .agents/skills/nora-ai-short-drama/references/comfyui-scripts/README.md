@@ -825,6 +825,9 @@ python .agents/skills/nora-ai-short-drama/scripts/video_revision_migrate.py --pr
 
 返回 `state=completed` 才表示本地迁移完成；恢复服务后还须核对网页各阶段候选号、原审批状态、来源资料与下载入口。失败按报告中的原记录和移动对照恢复，不再次执行同一迁移报告。不使用该工具迁移仍在运行的任务。验证命令：`python -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p test_video_revision_migrate.py`，覆盖跨阶段来源、编号重叠、原媒体／请求字节、审批／备注保留和活动任务拒绝。
 
+将旧候选下某一次重复执行单独归为新候选时，在请求中只列这一项`identities`，并增加`execution`对象：`record_dir`为旧身份下`执行-YYYYMMDD-HHmmss`目录，`new_record_dir`为新候选执行目录，`source_output`和`target_output`为旧新视频路径（均相对项目根），`task_id`为这一条已结束后台任务的本地ID，`scene_modification_round`为新候选对应轮次。仍先预览，再停止服务后`--apply`；只移动指定执行及视频、更新其当前映射与这一条任务，原候选、批准、素材来源、请求、工作流及取回凭据字节保留。项目工作稿中的候选条目、轮次和下游计划按已授权对应关系同步，不对所有旧身份作全局替换。测试使用`TMPDIR=/private/tmp python -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p test_video_revision_migrate.py`（macOS使用物理临时目录），包括拆出一次执行且不影响原候选采用状态。
+
+
 ## 场次修改轮次登记
 
 规则见[场次修改轮次](../共用规则/场次版本组合规范.md#场次修改轮次)，计划字段见[模板](../模板/场次修改轮次模板.md)。在当前集中修改形成送审或执行方案后调用一次；不是每次保存、失败重试或结果取回都调用。完整计划列出全部分段；局部计划明确`base_round`及完整的`segment_changes`条目，由工具展开沿用项。未提供的剧本／分镜引用沿用基轮，不能增加、删除或重排分段；新布局必须提供完整`segments`。两种计划互斥，不从执行时间线或R最大值拼造播放组合。

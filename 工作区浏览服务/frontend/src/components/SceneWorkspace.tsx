@@ -45,6 +45,13 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
   const segment = viewingPrevious ? PREVIOUS_ENDING : segments.some(item => item.id === requestedSegment) ? requestedSegment : segments[0]?.id || '';
   const displayScope = viewingPrevious ? { ...scope, episode: previousEnding!.episode, scene: previousEnding!.scene } : scope;
   const [selections, setSelections] = useRefreshState<Record<string, Selection>>(positionKey + (productionRound ? `/round/${productionRound.number}` : '') + '/selections', {});
+  const [pendingSelection, setPendingSelection] = useState<{ round: number; segment: string; value: Selection } | null>(null);
+  useEffect(() => {
+    if (pendingSelection?.round === productionRound?.number && pendingSelection) {
+      setSelections(previous => ({ ...previous, [pendingSelection.segment]: pendingSelection.value }));
+      setPendingSelection(null);
+    }
+  }, [pendingSelection, productionRound?.number]);
   const fixedVersions: ReviewVersions = Object.fromEntries((productionRound?.segments || []).map(entry => {
     const video = allSegments.find(item => item.id === entry.id)?.videos.find(video => video.stage === entry.stage && video.run === entry.run);
     return [entry.id, video ? { stage: video.stage, run: video.run, key: video.key } : null];
@@ -61,7 +68,8 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
   const latest = viewingPrevious ? previousVideo : currentSegment && latestVideo(currentSegment.videos);
   const roundEntry = productionRound?.segments.find(item => item.id === segment);
   const roundDefault = roundEntry && currentSegment?.videos.find(video => video.stage === roundEntry.stage && video.run === roundEntry.run);
-  const savedSelection = selections[segment];
+  const savedSelection = pendingSelection?.round === productionRound?.number && pendingSelection?.segment === segment
+    ? pendingSelection.value : selections[segment];
   const savedRevision = savedSelection && currentSegment && selectedRevision(currentSegment.videos, savedSelection);
   const chosen = savedRevision ? { stage: savedRevision.stage, key: savedRevision.key }
     : savedSelection && (!savedSelection.key || reviewRound) ? savedSelection : { stage: roundDefault?.stage || latest?.stage || '', key: roundDefault?.key || latest?.key || '' };
@@ -149,7 +157,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
   const changeRound = (number: number, keepSegment = false) => {
     const next = sceneRounds.find(item => item.number === number)!;
     setAutoPlay(false); setContinuous(false); setError(null);
-    setSelections({}); setSegment(keepSegment ? segment : next.segments[0].id); onRoundChange(number);
+    setPendingSelection(null); setSelections({}); setSegment(keepSegment ? segment : next.segments[0].id); onRoundChange(number);
   };
   const changeSelection = (value: Selection) => {
     setContinuous(false); setAutoPlay(false); setError(null);
@@ -159,6 +167,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
         && (!latest || round.number > latest.number) ? round : latest, undefined);
     if (matchingRound) {
       changeRound(matchingRound.number, true);
+      setPendingSelection({ round: matchingRound.number, segment, value });
       return;
     }
     setSelections(previous => ({ ...previous, [segment]: value }));

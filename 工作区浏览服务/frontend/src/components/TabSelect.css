@@ -15,3 +15,6 @@
 .tabs-grouped .tab-select.tab-select-marked[data-active]{background-image:none}
 .prompt-form-field>.tab-select.tab-select-marked{color:#25352f}
 .comfy-history-controls .tab-select.tab-select-marked{flex:none;width:auto;font-size:12px;padding:7px 9px}
+
+.tab-select-status{display:inline-block;margin-left:6px;padding:0 4px;border:1px solid currentColor;border-radius:3px;font-size:10px;line-height:1.4;vertical-align:middle}
+.segment-selectors>.tab-select[aria-label="版本切换"]{min-width:152px}

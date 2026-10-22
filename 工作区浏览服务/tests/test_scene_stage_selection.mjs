@@ -173,6 +173,15 @@ test('even a matching older round advances to the latest reuse; exact stage and 
   assert.equal(app.render().workspace.selection.stage, '二采');
 });
 
+test('a concrete candidate remains selected when the matching round has another file with the same R', () => {
+  const app = matchingRounds();
+  app.props.segments[1].videos.unshift({ key: 'adopted/P003-R022-一采', stage: '一采', run: 'R022', url: '/adopted.mp4', approved: true });
+  app.render().workspace.onSelectionChange({ stage: '一采', key: 'P003-R022-一采' });
+  assert.equal(app.props.selectedRound, 3);
+  assert.equal(app.render().workspace.selection.key, 'P003-R022-一采');
+  assert.equal(app.render().messages.messages.some(message => message?.id === 'playback'), false);
+});
+
 test('an unregistered version stays visible but cannot arm continuous playback or silently replace itself', () => {
   const app = matchingRounds();
   app.render().workspace.onSelectionChange({ stage: '一采', key: 'P003-R021-一采' });

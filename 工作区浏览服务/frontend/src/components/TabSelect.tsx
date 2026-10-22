@@ -3,7 +3,7 @@ import type { CSSProperties, KeyboardEvent } from 'react';
 import './TabSelect.css';
 
 type Props = {
-  items: { value: string; label: string }[];
+  items: { value: string; label: string; badge?: string }[];
   selected: string;
   onChange: (value: string) => void;
   label: string;
@@ -55,7 +55,7 @@ export function TabSelect({ items, selected, onChange, label, disabled, iconOnly
       aria-haspopup="listbox" aria-controls={id} aria-expanded={expanded} aria-activedescendant={expanded ? `${id}-${active}` : undefined}
       disabled={disabled || items.length === 0} data-active={Boolean(selected)} data-value={selected} onKeyDown={keyDown} popoverTarget={id}
       onClick={() => { if (!expanded) positionMenu(); setExpanded(!expanded); }}>
-      {!iconOnly && <span className="tab-select-label">{items.find(item => item.value === selected)?.label || label}</span>}
+      {!iconOnly && <span className="tab-select-label">{items.find(item => item.value === selected)?.label || label}{items.find(item => item.value === selected)?.badge && <span className="tab-select-status">{items.find(item => item.value === selected)!.badge}</span>}</span>}
       <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12"><path d="m3 4.5 3 3 3-3" fill="none" stroke="currentColor" /></svg>
     </button>
     <div ref={menu} id={id} popover="auto" role="listbox" aria-label={label} className="tab-select-menu" style={position}
@@ -63,7 +63,7 @@ export function TabSelect({ items, selected, onChange, label, disabled, iconOnly
       {items.map((item, index) => <button key={item.value} type="button" role="option" id={`${id}-${index}`}
         aria-selected={item.value === selected} data-active={index === active} tabIndex={-1}
         onMouseEnter={() => setActive(index)} onMouseDown={event => event.preventDefault()} onClick={() => choose(index)}>
-        <span>{item.label}</span>{item.value === selected && <span className="tab-select-badge">当前</span>}
+        <span>{item.label}{item.badge && <span className="tab-select-status">{item.badge}</span>}</span>{item.value === selected && <span className="tab-select-badge">当前</span>}
       </button>)}
     </div>
   </>;

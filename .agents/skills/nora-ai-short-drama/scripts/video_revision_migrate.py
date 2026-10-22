@@ -283,15 +283,106 @@ class Migration:
         return {'state': 'completed', 'moves': len(moves), 'records': len(edits), 'tasks': len(rows), 'report': str(report)}
 
 
+class ExecutionMigration(Migration):
+    """Split one historical repeated execution from an otherwise unchanged R."""
+
+    def __init__(self, project, request):
+        self.project = Path(project).resolve()
+        self.episode = request['episode']
+        self.rows = request['identities']
+        if not re.fullmatch(r'(?:EP\d{3,}|片头|片尾)', self.episode):
+            raise ValueError('episode须为完整制作对象编号')
+        if len(self.rows) != 1:
+            raise ValueError('单次执行重编号只接受一个身份对应')
+        self.old, self.new = self.rows[0]['old'], self.rows[0]['new']
+        if not all(IDENTITY.fullmatch(value) for value in (self.old, self.new)) or self.old == self.new:
+            raise ValueError('单次执行需要两个不同的完整身份')
+        if self.old.split('-')[:3] != self.new.split('-')[:3] or self.old.rsplit('-', 1)[1] != self.new.rsplit('-', 1)[1]:
+            raise ValueError('单次执行重编号不能改变分段或阶段')
+        if not self.old.startswith(self.episode + '-'):
+            raise ValueError('单次执行身份越出本集')
+        self.execution = request['execution']
+        self.record = self.project / self.execution['record_dir']
+        self.target_record = self.project / self.execution['new_record_dir']
+        self.video = self.project / self.execution['source_output']
+        self.target_video = self.project / self.execution['target_output']
+        episode_root = self.project / '09-剧集制作' / self.episode
+        for path in (self.record, self.target_record, self.video, self.target_video):
+            if not path.resolve().is_relative_to(episode_root) or '..' in path.parts:
+                raise ValueError('单次执行重编号路径越出本集')
+        if self.record.parent.name != self.old or not re.fullmatch(r'执行-\d{8}-\d{6}', self.record.name):
+            raise ValueError('来源须为旧身份下明确的单次执行目录')
+        if self.target_record.name != self.new or self.video.stem != self.old or self.target_video.stem != self.new:
+            raise ValueError('执行或视频目标与候选身份不一致')
+        self.identities = {self.old: self.new}
+
+    def replace(self, value):
+        # External frozen source documents still belong to the original R.
+        for source, target in ((self.record, self.target_record), (self.video, self.target_video)):
+            value = value.replace(str(source), str(target))
+            value = value.replace(source.relative_to(self.project).as_posix(), target.relative_to(self.project).as_posix())
+        return value
+
+    def json_value(self, value, stage=None):
+        if isinstance(value, str):
+            return self.replace(value)
+        if isinstance(value, list):
+            return [self.json_value(item, stage) for item in value]
+        if not isinstance(value, dict):
+            return value
+        raw = {'workflow', 'workflow_api', 'request', 'response', 'remote', 'notices',
+               'materials_from', 'revision_of', 'content_review'}
+        result = {key: item if key in raw else self.json_value(item, stage) for key, item in value.items()}
+        if value.get('identity') == self.old:
+            result['identity'] = self.new
+        if value.get('segment') == self.old.rsplit('-', 2)[0] and value.get('round') == self.old.split('-')[3]:
+            result['round'] = self.new.split('-')[3]
+        if 'scene_modification_round' in value:
+            result['scene_modification_round'] = self.execution['scene_modification_round']
+        return result
+
+    def plan(self):
+        if not self.record.is_dir() or not self.video.is_file():
+            raise ValueError('单次执行目录或实际视频缺失')
+        if self.target_record.exists() or self.target_video.exists():
+            raise ValueError('新候选目标已存在，不覆盖')
+        edits = {}
+        for path in self.record.rglob('*'):
+            if path.is_file() and path.name in MUTABLE_JSON | {'结果收尾报告.json'}:
+                edits[path] = json.dumps(self.json_value(json.loads(path.read_text('utf-8-sig'))), ensure_ascii=False, indent=2) + '\n'
+        return [(self.video, self.target_video), (self.record, self.target_record)], edits
+
+    def task_rows(self, database):
+        with closing(sqlite3.connect(database)) as db:
+            task_id = self.execution['task_id']
+            payload, state = db.execute('SELECT payload,state FROM tasks WHERE id=?', (task_id,)).fetchone()
+        data, status = json.loads(payload), json.loads(state)
+        directory = Path(data['record_dir'])
+        directory = directory if directory.is_absolute() else self.project / directory
+        if data['project'] != self.project.name or directory.resolve() != self.record:
+            raise ValueError('指定任务与单次执行目录不匹配')
+        if status['status'] not in INACTIVE:
+            raise ValueError('单次执行任务仍在活动中')
+        current_data, current_state = dict(data), dict(status)
+        for field in ('record_dir', 'outputs', 'segment_plan'):
+            if field in data:
+                current_data[field] = self.json_value(data[field])
+        for field in ('segments', 'saved_outputs'):
+            if field in status:
+                current_state[field] = self.json_value(status[field])
+        return [(task_id, payload, state, json.dumps(current_data, ensure_ascii=False), json.dumps(current_state, ensure_ascii=False))]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--project', required=True, help='项目根目录')
-    parser.add_argument('--request', required=True, help='UTF-8 JSON：episode、identities[{old,new,source可选}]，须已获迁移授权')
+    parser.add_argument('--request', required=True, help='UTF-8 JSON：episode、identities[{old,new,source可选}]；可选execution只拆出一次历史执行，须已获迁移授权')
     parser.add_argument('--database', help='停止服务后的comfy-tasks.sqlite；仅迁移本集非活动任务当前入口')
     parser.add_argument('--apply', action='store_true', help='执行迁移；默认只读预览')
     parser.add_argument('--report', help='执行时必填；项目99-综合资料/其他资料/历史版本下的JSON，附原记录备份')
     args = parser.parse_args()
-    migration = Migration(args.project, json.loads(Path(args.request).read_text('utf-8-sig')))
+    request = json.loads(Path(args.request).read_text('utf-8-sig'))
+    migration = (ExecutionMigration if 'execution' in request else Migration)(args.project, request)
     if args.apply:
         if not args.report:
             parser.error('--apply 需要 --report')

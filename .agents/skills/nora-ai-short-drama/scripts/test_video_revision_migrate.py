@@ -139,3 +139,58 @@ class RevisionMigrationTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class ExecutionMigrationTests(unittest.TestCase):
+    def test_split_repeat_preserves_original_approval_and_sent_evidence(self):
+        from video_revision_migrate import ExecutionMigration
+        with tempfile.TemporaryDirectory() as temp:
+            project = Path(temp) / '项目'
+            base = project / '09-剧集制作/片尾'
+            old, new = '片尾-C001-P001-R003-一采', '片尾-C001-P001-R005-一采'
+            record = base / '其他资料/执行附件' / old / '执行-20261023-061024'
+            target = record.parent.parent / new
+            record.mkdir(parents=True)
+            original = record.parent / '输入映射.json'
+            original.write_text(json.dumps({'adoptions': [{'identity': old}]}))
+            video = base / '其他资料/候选视频' / (old + '.mp4')
+            video.parent.mkdir(parents=True)
+            video.write_bytes(b'original video bytes')
+            new_video = video.with_name(new + '.mp4')
+            frozen = b'{"identity":"old sent request"}'
+            (record / '请求.json').write_bytes(frozen)
+            (record / '最终取回-000.json').write_bytes(frozen)
+            mapping = {'segments': [{'segment':'片尾-C001-P001','round':'R003','local_execution_dir':str(record.relative_to(project)),
+                'materials_from':{'identity':old,'mapping':str(original.relative_to(project))}}], 'scene_modification_round':4,
+                'generation_contexts':[{'identity':old,'prompts':{'english':str(record.parent.relative_to(project) / '模型提示词.txt')}}]}
+            (record / '输入映射.json').write_text(json.dumps(mapping))
+            payload = {'project':'项目','task_type':'video-first-pass','record_dir':str(record),'workflow':{'unchanged':'R003'},
+                'segment_plan':{'targets':[{'index':0,'path':str(video)}]}}
+            state = {'status':'completed','segments':{'0':{'identity':old,'path':str(video)}}}
+            database = Path(temp) / 'tasks.sqlite'
+            with closing(sqlite3.connect(database)) as db, db:
+                db.execute('CREATE TABLE tasks(id TEXT PRIMARY KEY,payload TEXT,state TEXT)')
+                for key in ('repeat','unrelated'):
+                    db.execute('INSERT INTO tasks VALUES(?,?,?)',(key,json.dumps(payload),json.dumps(state)))
+            request = {'episode':'片尾','identities':[{'old':old,'new':new}], 'execution':{
+                'record_dir':str(record.relative_to(project)),'new_record_dir':str(target.relative_to(project)),
+                'source_output':str(video.relative_to(project)),'target_output':str(new_video.relative_to(project)),
+                'task_id':'repeat','scene_modification_round':6}}
+            migration = ExecutionMigration(project, request)
+            report = project / '99-综合资料/其他资料/历史版本/重建重编号.json'
+            migration.apply(database, report)
+            self.assertEqual(new_video.read_bytes(), b'original video bytes')
+            self.assertEqual((target/'请求.json').read_bytes(), frozen)
+            self.assertEqual((target/'最终取回-000.json').read_bytes(), frozen)
+            current=json.loads((target/'输入映射.json').read_text())
+            self.assertEqual(current['segments'][0]['round'],'R005')
+            self.assertEqual(current['generation_contexts'][0]['identity'],new)
+            self.assertEqual(current['segments'][0]['materials_from']['identity'],old)
+            self.assertEqual(json.loads(original.read_text())['adoptions'][0]['identity'],old)
+            with closing(sqlite3.connect(database)) as db:
+                migrated=json.loads(db.execute('SELECT payload FROM tasks WHERE id="repeat"').fetchone()[0])
+                untouched=json.loads(db.execute('SELECT payload FROM tasks WHERE id="unrelated"').fetchone()[0])
+            self.assertEqual(migrated['record_dir'],str(target))
+            self.assertEqual(migrated['workflow'],payload['workflow'])
+            self.assertEqual(untouched,payload)
+            with self.assertRaisesRegex(ValueError,'目标已存在|目录或实际视频缺失'):
+                migration.plan()
