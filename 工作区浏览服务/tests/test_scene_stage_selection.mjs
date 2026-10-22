@@ -78,6 +78,7 @@ test('mixed-stage arrivals use each segment stage before any click', () => {
   const initial = app.render();
   assert.equal(initial.workspace.selection.stage, '一采');
   assert.equal(initial.workspace.selection.key, 'P001-R001-一采');
+  assert.equal('roundVersions' in initial.navigation, false, 'overall progress must not receive a round filter');
 });
 
 test('clicking mixed-stage segments selects their exact stage and keeps candidates reachable', () => {

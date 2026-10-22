@@ -153,7 +153,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
     if (!reviewRound || productionRound) setSelections(previous => ({ ...previous, [PREVIOUS_ENDING]: { stage: previousVideo!.stage, key: previousVideo!.key } }));
     selectSegment(PREVIOUS_ENDING);
   };
-  const navigation = (vertical = false) => <SegmentStageStrip vertical={vertical} segments={segments} selected={segment} roundVersions={productionRound ? fixedVersions : undefined}
+  const navigation = (vertical = false) => <SegmentStageStrip vertical={vertical} segments={segments} selected={segment}
     previousEnding={previousEnding} previousSelected={viewingPrevious} onPreviousSelect={selectPrevious} onSelect={selectSegment} />;
   const changeRound = (number: number) => {
     const next = sceneRounds.find(item => item.number === number)!;
