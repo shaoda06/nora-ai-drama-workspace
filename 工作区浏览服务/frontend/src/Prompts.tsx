@@ -48,6 +48,7 @@ export default function Prompts() {
   const [restore, setRestore] = useState<{ item: Trash; title: string; category: string } | null>(null);
   const [confirm, setConfirm] = useState<{ title: string; text: string; action: () => Promise<void> } | null>(null);
   const [modalError, setModalError] = useState('');
+  const [categoryDelete, setCategoryDelete] = useState(false);
   const opening = useRef(0);
   const latestSaved = useRef<Document | null>(null);
   const dirty = draft !== null && (!saved || draft.title !== saved.title || draft.body !== saved.body || draft.category !== saved.category);
@@ -99,7 +100,7 @@ export default function Prompts() {
   function cancelPending() { setPending(null); if (blocker.state === 'blocked') blocker.reset(); }
   function categoryOptions(exclude?: string) { return <><option value="">主目录</option>{categories.filter(item => !exclude || (item.path !== exclude && !item.path.startsWith(exclude + '/'))).map(item => <option key={item.path} value={item.path}>{item.path}</option>)}</>; }
   function openCategoryEdit(edit: NonNullable<typeof categoryEdit>) { guard(() => {
-    setModalError('');
+    setModalError(''); setCategoryDelete(false);
     if (edit.source) {
       const source = client.getQueryData<Snapshot>(['prompts'])!.categories.find(item => item.path === edit.source!.path);
       if (!source) { setError('分类已在外部移动或删除，请重新选择。'); return; }
@@ -122,14 +123,10 @@ export default function Prompts() {
         <div className="prompt-panel-heading"><h2>分类</h2><button disabled={busy || categoryMissing} onClick={() => openCategoryEdit({ source: null, name: '', parent: category })}>新建分类</button></div>
         <ul className="prompt-tree">{categoryTree('')}</ul>
         {categories.length === 0 && <p className="muted">还没有分类。可以直接保存提示词，也可以创建自己的分类。</p>}
-        {!!category && !categoryMissing && <div className="prompt-category-actions"><small>当前：{category}</small><button disabled={busy} onClick={() => openCategoryEdit({ source: categories.find(item => item.path === category)!, name: nameOf(category), parent: parentOf(category) })}>改名 / 移动分类</button><button disabled={busy} onClick={() => guard(() => ask('删除空分类', `删除“${category}”？其中有内容时不会删除。`, async () => {
-          const selected = client.getQueryData<Snapshot>(['prompts'])!.categories.find(item => item.path === category);
-          if (!selected) throw new Error('分类已在外部移动或删除，请重新选择。');
-          await api('/categories', 'DELETE', { path: category, revision: selected.revision }); clearSelection(); setCategory(parentOf(category)); setConfirm(null); await refresh();
-        }))}>删除分类</button></div>}
+
       </aside>
       <section className="prompt-list" aria-label={view === 'trash' ? '回收站列表' : '提示词列表'}>
-        <div className="prompt-panel-heading"><button className="prompt-mobile" onClick={() => setStep('categories')}>‹ 分类</button><h2>{view === 'trash' ? '回收站' : query ? '搜索结果' : nameOf(category) || '主目录'}</h2><small>{view === 'trash' ? trash.data?.length || 0 : items.length} 份</small></div>
+        <div className="prompt-panel-heading"><button className="prompt-mobile" onClick={() => setStep('categories')}>‹ 分类</button><div className="prompt-list-heading"><h2>{view === 'trash' ? '回收站' : query ? '搜索结果' : nameOf(category) || '主目录'}</h2>{view === 'library' && !query && !!category && !categoryMissing && <button className="prompt-category-edit" type="button" aria-label="修改分类" title="修改分类" disabled={busy} onClick={() => openCategoryEdit({ source: categories.find(item => item.path === category)!, name: nameOf(category), parent: parentOf(category) })}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m16 3 5 5M4 20l5-1L21 7a2 2 0 0 0-5-5L4 14l-1 7Z" /></svg></button>}</div><small>{view === 'trash' ? trash.data?.length || 0 : items.length} 份</small></div>
         {categoryMissing && view === 'library' && <p role="status">当前分类已被移动或删除。<button onClick={() => selectCategory('')}>返回主目录</button></p>}
         {(snapshot.isPending || (view === 'trash' && trash.isPending) || (query && results.isPending)) && <p role="status">正在读取…</p>}
         {view === 'library' ? items.map(item => <button key={item.path} className="prompt-list-item prompt-title-item" disabled={busy} aria-current={saved?.path === item.path ? 'page' : undefined} onClick={() => openDocument(item.path)}><strong>{item.title}</strong></button>) : trash.data?.map(item => <button className="prompt-list-item" key={item.id} disabled={busy} aria-current={deleted?.id === item.id ? 'page' : undefined} onClick={() => void run(async () => { const doc = await api<Trash>(`/trash/document?id=${item.id}`); clearSelection(); setDeleted(doc); setStep('detail'); })}><strong>{titleOf(item.original)}</strong><small>{parentOf(item.original) || '主目录'}</small><small>删除于 {new Date(item.deleted).toLocaleString('zh-CN')}</small></button>)}
@@ -154,10 +151,15 @@ export default function Prompts() {
     </div>
     {unsavedOpen && <Dialog title="修改尚未保存" close={() => { if (!busy) cancelPending(); }}><p>保存后继续，或放弃这次修改。</p>{error && <p className="error" role="alert">{error}</p>}<div className="prompt-actions"><button disabled={busy || !draft?.title.trim()} onClick={async () => { if (await save()) proceed(); }}>保存并继续</button><button disabled={busy} onClick={() => { clearSelection(); proceed(); }}>放弃修改</button><button disabled={busy} onClick={cancelPending}>继续编辑</button></div></Dialog>}
     {categoryEdit && <Dialog title={categoryEdit.source ? '修改分类' : '新建分类'} close={() => { if (!busy) setCategoryEdit(null); }}><form onSubmit={event => { event.preventDefault(); void run(async () => {
+      if (categoryDelete) return;
       const source = categoryEdit.source;
       const result = await api<Category>('/categories', source ? 'PUT' : 'POST', { parent: categoryEdit.parent, name: categoryEdit.name, source: source?.path || '', revision: source?.revision || '' });
       clearSelection(); setCategory(result.path); setView('library'); setStep('list'); setCategoryEdit(null); await refresh();
-    }, true); }}><label>分类名称<input autoFocus aria-label="分类名称" value={categoryEdit.name} disabled={busy} onChange={e => setCategoryEdit({ ...categoryEdit, name: e.target.value })} /></label><label>上级分类<select aria-label="上级分类" value={categoryEdit.parent} disabled={busy} onChange={e => setCategoryEdit({ ...categoryEdit, parent: e.target.value })}>{categoryOptions(categoryEdit.source?.path)}</select></label>{modalError && <p className="error" role="alert">{modalError}</p>}<div className="prompt-actions"><button type="submit" disabled={busy || !categoryEdit.name.trim()}>保存分类</button><button type="button" disabled={busy} onClick={() => setCategoryEdit(null)}>取消</button></div></form></Dialog>}
+    }, true); }}><label>分类名称<input autoFocus aria-label="分类名称" value={categoryEdit.name} disabled={busy || categoryDelete} onChange={e => setCategoryEdit({ ...categoryEdit, name: e.target.value })} /></label><label>上级分类<select aria-label="上级分类" value={categoryEdit.parent} disabled={busy || categoryDelete} onChange={e => setCategoryEdit({ ...categoryEdit, parent: e.target.value })}>{categoryOptions(categoryEdit.source?.path)}</select></label>{modalError && <p className="error" role="alert">{modalError}</p>}{categoryDelete && <p className="prompt-warning">确认删除“{categoryEdit.source!.path}”？分类内有文件或子分类时不会删除。</p>}<div className="prompt-actions">{categoryDelete ? <><button className="prompt-danger" type="button" disabled={busy} onClick={() => void run(async () => {
+      const source = categoryEdit.source!;
+      await api('/categories', 'DELETE', { path: source.path, revision: source.revision });
+      clearSelection(); setCategory(parentOf(source.path)); setCategoryEdit(null); setCategoryDelete(false); setStep('list'); await refresh();
+    }, true)}>确认删除分类</button><button type="button" disabled={busy} onClick={() => { setCategoryDelete(false); setModalError(''); }}>取消删除</button></> : <><button type="submit" disabled={busy || !categoryEdit.name.trim()}>保存分类</button><button type="button" disabled={busy} onClick={() => setCategoryEdit(null)}>取消</button>{categoryEdit.source && <button type="button" className="prompt-danger prompt-category-delete" disabled={busy} onClick={() => { setCategoryDelete(true); setModalError(''); }}>删除分类</button>}</>}</div></form></Dialog>}
     {restore && <Dialog title="恢复提示词" close={() => { if (!busy) setRestore(null); }}><form onSubmit={event => { event.preventDefault(); void run(async () => {
       const doc = await api<Document>('/trash/restore', 'POST', { id: restore.item.id, revision: restore.item.revision, title: restore.title, category: restore.category });
       setView('library'); setCategory(doc.category); accept(doc); setRestore(null); setNotice('已恢复'); await refresh();
