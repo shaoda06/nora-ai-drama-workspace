@@ -50,6 +50,56 @@ export const videoTaskMessages: Record<string, string> = {
   needs_attention: '任务状态待核对', submission_unknown: '提交结果待核对',
 };
 
+// A media clock can keep advancing after the browser loses its video renderer.
+// loadedmetadata and error alone do not report that state.
+export function watchVideoPlayback(element: HTMLVideoElement, recover: () => void) {
+  let stopped = false;
+  let frameRequest: number | undefined;
+  let lastFrame = performance.now();
+  let previousTime = element.currentTime;
+  let previousFrames = element.getVideoPlaybackQuality?.().totalVideoFrames;
+  let waitingSince: number | undefined;
+  const reset = () => { lastFrame = performance.now(); previousTime = element.currentTime; waitingSince = undefined; };
+  const interrupted = () => { waitingSince ??= performance.now(); };
+  const frame = () => {
+    if (stopped) return;
+    lastFrame = performance.now();
+    frameRequest = element.requestVideoFrameCallback(frame);
+  };
+  if (typeof element.requestVideoFrameCallback === 'function') frameRequest = element.requestVideoFrameCallback(frame);
+  element.addEventListener('playing', reset);
+  element.addEventListener('seeked', reset);
+  element.addEventListener('waiting', interrupted);
+  element.addEventListener('stalled', interrupted);
+  element.addEventListener('error', interrupted);
+  const timer = window.setInterval(() => {
+    if (stopped) return;
+    const now = performance.now();
+    if (document.hidden) { reset(); return; }
+    const frames = element.getVideoPlaybackQuality?.().totalVideoFrames;
+    if (frameRequest === undefined && frames !== undefined && frames !== previousFrames) { previousFrames = frames; lastFrame = now; }
+    const movingWithoutFrames = !element.paused && !element.ended && element.currentTime > previousTime
+      && (frameRequest !== undefined || frames !== undefined) && now - lastFrame >= 3000;
+    const stalled = waitingSince !== undefined && now - waitingSince >= 3000
+      && (!!element.error || (!element.paused && element.readyState < 3));
+    previousTime = element.currentTime;
+    if (!movingWithoutFrames && !stalled) return;
+    stopped = true;
+    recover();
+  }, 1000);
+  if (element.error) interrupted();
+  return () => {
+    stopped = true;
+    window.clearInterval(timer);
+    if (frameRequest !== undefined) element.cancelVideoFrameCallback(frameRequest);
+    element.removeEventListener('playing', reset);
+    element.removeEventListener('seeked', reset);
+    element.removeEventListener('waiting', interrupted);
+    element.removeEventListener('stalled', interrupted);
+    element.removeEventListener('error', interrupted);
+  };
+}
+
 export interface SegmentVideoHandle { seekTo: (time: number) => void }
 
 export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, retainSource, wide, onToggleWide, continuousControl, selectorControl, playerRef }: {
@@ -89,6 +139,10 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
   useLayoutEffect(() => source ? retainSource(source) : undefined, [source, retainSource]);
   const [playOnLoad, setPlayOnLoad] = useState(autoPlay);
   const video = useRef<HTMLVideoElement>(null);
+  const [reloadCount, setReloadCount] = useState(0);
+  const [recovering, setRecovering] = useState(false);
+  const attempts = useRef(0);
+  const restore = useRef<{ volume: number; muted: boolean; playbackRate: number } | null>(null);
   const pendingSeek = useRef<number | null>(null);
   const seekTo = (time: number) => {
     const element = video.current;
@@ -98,6 +152,21 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
     element.currentTime = Number.isFinite(element.duration) ? Math.min(time, element.duration) : time;
     onTimeChange(element.currentTime);
   };
+  const recoverPlayback = () => {
+    const element = video.current;
+    if (!element) return;
+    if (attempts.current >= 2) { setRecovering(false); setError(true); onError?.(); return; }
+    attempts.current += 1;
+    pendingSeek.current ??= element.currentTime;
+    restore.current ??= { volume: element.volume, muted: element.muted, playbackRate: element.playbackRate };
+    setPlayOnLoad(!element.paused && !element.ended);
+    setError(false);
+    setRecovering(true);
+    setReloadCount(value => value + 1);
+  };
+  useEffect(() => {
+    if (video.current) return watchVideoPlayback(video.current, recoverPlayback);
+  }, [source, loaded?.fileRevision, reloadCount]);
   useImperativeHandle(playerRef, () => ({ seekTo }));
   const updated = current && loaded && current.fileRevision !== loaded.fileRevision;
   useEffect(() => {
@@ -105,8 +174,9 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
   }, [autoPlay]);
   const description = current && `${current.stage} · ${current.run} · ${candidateLabel(current.candidateNumber)}${current.approved ? '（正式版）' : ''}`;
   return <section className="segment-video" aria-label="视频区域">
-    {loaded?.url ? <video ref={video} key={loaded.fileRevision} controls autoPlay={playOnLoad} preload="metadata" src={source} aria-label={description} onError={() => { setError(true); onError?.(); }}
-      onLoadedMetadata={event => { if (pendingSeek.current !== null) seekTo(pendingSeek.current); else onTimeChange(event.currentTarget.currentTime); onFileRevision?.(loaded.fileRevision); }}
+    {loaded?.url ? <video ref={video} key={`${loaded.fileRevision}:${reloadCount}`} controls autoPlay={playOnLoad} preload="metadata" src={source} aria-label={description}
+      onLoadedMetadata={event => { if (restore.current) { Object.assign(event.currentTarget, restore.current); restore.current = null; } if (pendingSeek.current !== null) seekTo(pendingSeek.current); else onTimeChange(event.currentTarget.currentTime); onFileRevision?.(loaded.fileRevision); }}
+      onLoadedData={() => setRecovering(false)}
       onTimeUpdate={event => onTimeChange(event.currentTarget.currentTime)}
       onSeeked={event => onTimeChange(event.currentTarget.currentTime)}
       onPause={event => onTimeChange(event.currentTarget.currentTime)}
@@ -120,8 +190,9 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
         {loaded?.url && <Original url={loaded.url} label="查看视频原文件" />}
       </div>
     </div>
-    {updated && <div className="video-update" role="status"><span>视频已有更新</span><button onClick={() => { setPlayOnLoad(video.current ? !video.current.paused : false); setLoaded(current); setSource(cachedSource || current.url); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></div>}
+    {updated && <div className="video-update" role="status"><span>视频已有更新</span><button onClick={() => { setPlayOnLoad(video.current ? !video.current.paused : false); setLoaded(current); setSource(cachedSource || current.url); attempts.current = 0; pendingSeek.current = null; restore.current = null; setRecovering(false); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></div>}
     {detailId && <TaskDetailDialog id={detailId} updatedAt={task.data?.updated_at} nodes={[]} close={() => setDetailId('')} openTask={setDetailId} />}
-    {error && <p className="error" role="alert">已有视频不可播放，请打开原文件检查。</p>}
+    {recovering && <p role="status">正在恢复视频画面…</p>}
+    {error && <p className="error" role="alert">视频画面恢复失败。<button onClick={() => { attempts.current = 0; recoverPlayback(); }}>重新加载视频</button>，也可打开原文件检查。</p>}
   </section>;
 }
