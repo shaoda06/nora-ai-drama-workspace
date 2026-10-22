@@ -10,6 +10,8 @@ import { DocumentInformation } from './components/DocumentInformation';
 import { Loading } from './components/Loading';
 import { ChapterNavigation } from './components/ChapterNavigation';
 import type { ChapterHeading } from './components/ChapterNavigation';
+import { FileActions } from './components/FileActions';
+export { FileActions, Original } from './components/FileActions';
 
 export const PreviewContext = createContext<(item: FileItem) => void>(() => {});
 export function Result({ loading, error, retry, retrying, page = false }: {
@@ -46,13 +48,10 @@ export function Rich({ html = '', languages = {} }: { html?: string; languages?:
     return <CodeBlock key={index} text={block.text} languages={block.languageGroup ? languages[block.languageGroup] : undefined} />;
   })}</div>;
 }
-export function Original({ url, label = '原文件' }: { url?: string; label?: string }) {
-  return url ? <a href={url} target="_blank" rel="noopener noreferrer">{label} ↗</a> : null;
-}
 export function FileLink({ item, showOriginal = true }: { item: FileItem; showOriginal?: boolean }) {
   const preview = useContext(PreviewContext);
   const target = item.kind === 'reference' && item.media ? { ...item.media, name: item.name, prompts: item.prompts } : item;
-  return <div className="file"><button className="link" onClick={() => preview(target)}>{item.name}</button><div className="file-actions">{item.statusHtml ? <Rich html={item.statusHtml} /> : <span className="status-badge status-gray">未知</span>}{showOriginal && <Original url={target.url} />}</div></div>;
+  return <div className="file"><div className="file-entry-main"><button className="link" onClick={() => preview(target)}>{item.name}</button>{showOriginal && <FileActions url={target.url} />}</div><div className="file-actions">{item.statusHtml ? <Rich html={item.statusHtml} /> : <span className="status-badge status-gray">未知</span>}</div></div>;
 }
 export function FileTree({ items, showOriginal = true }: { items: FileItem[]; showOriginal?: boolean }) {
   const entries: FileItem[] = [];
@@ -174,7 +173,7 @@ export function Document({ value: latest, showOriginal = true }: { value: Record
   }, [presentation.html, hasGroups]);
   return <div className="document">
     {changed && <FloatingMessage>本文有新版本，当前阅读位置保持不变。<button onClick={() => setValue(latest)}>读取新版本</button></FloatingMessage>}
-    <div className="meta document-meta-inline">{value.confirmationHtml && <Rich html={value.confirmationHtml.match(/^<span class="status-badge.*?<\/span>/s)?.[0]} />}{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}{showOriginal && <Original url={value.url} />}</div>
+    <div className="meta document-meta-inline">{value.confirmationHtml && <Rich html={value.confirmationHtml.match(/^<span class="status-badge.*?<\/span>/s)?.[0]} />}{value.meta && Object.entries(value.meta).filter(([key]) => key !== '确认状态').map(([key, text]) => <span key={key}>{key}：{String(text)}</span>)}{showOriginal && <FileActions url={value.url} />}</div>
     {value.headerHtml && <DocumentInformation><Rich html={value.headerHtml} /></DocumentInformation>}
     <ChapterNavigation headings={headings} onNavigate={id => ref.current!.querySelectorAll('[id]').forEach(el => { if (el.id === id) { el.scrollIntoView({ behavior: 'auto', block: 'start' }); (el as HTMLElement).tabIndex = -1; (el as HTMLElement).focus({ preventScroll: true }); } })} />
     <div ref={ref}><Rich html={presentation.html} languages={presentation.languages} /><Groups groups={latest.groups} chapter /></div>
@@ -203,9 +202,9 @@ export function Preview({ project, item, revision, close }: { project: string; i
   const video = kind === 'video' || /\.(mp4|webm|mov)$/i.test(key || item.name);
   const audio = kind === 'audio' || /\.(mp3|wav|ogg|flac|m4a)$/i.test(key || item.name);
   return <Dialog title={item.name} close={close}>
-    {kind !== 'progress' && !(kind === 'document' && item.doc) && <Original url={item.url} />}
+    {kind !== 'progress' && !(kind === 'document' && item.doc) && <FileActions url={item.url} />}
     {text && !item.doc && revision !== openedRevision && <FloatingMessage>项目资料有更新。<button onClick={() => setOpenedRevision(revision)}>读取新版本</button></FloatingMessage>}
-    {kind === 'progress' && item.doc ? <div className="phase-progress"><div className="phase-progress-meta"><div className="phase-progress-status"><strong>当前状态：</strong><Rich html={String(item.doc.statusHtml)} /></div><Original url={item.url} /></div><Rich html={String(item.doc.html)} /></div> : item.doc ? kind === 'document' ? <Document value={item.doc} /> : <Rich html={String(item.doc.html)} /> : text ? <><Result loading={query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} />{query.data && (query.data.html ? <Document value={query.data} showOriginal={false} /> : <><p>{query.data.notice}</p><pre>{query.data.text}</pre></>)}</> :
+    {kind === 'progress' && item.doc ? <div className="phase-progress"><div className="phase-progress-meta"><div className="phase-progress-status"><strong>当前状态：</strong><Rich html={String(item.doc.statusHtml)} /></div><FileActions url={item.url} /></div><Rich html={String(item.doc.html)} /></div> : item.doc ? kind === 'document' ? <Document value={item.doc} /> : <Rich html={String(item.doc.html)} /> : text ? <><Result loading={query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} />{query.data && (query.data.html ? <Document value={query.data} showOriginal={false} /> : <><p>{query.data.notice}</p><pre>{query.data.text}</pre></>)}</> :
       image ? <img className="preview-image" src={item.url} alt={item.name} onError={() => setMediaError('图片无法加载，请使用原文件入口。')} /> :
       video ? <video controls preload="metadata" src={item.url} onError={() => setMediaError('视频无法加载，请使用原文件入口。')} /> :
       audio ? <audio controls preload="metadata" src={item.url} onError={() => setMediaError('音频无法加载，请使用原文件入口。')} /> : <p>此格式暂不支持页内预览，请打开原文件。</p>}

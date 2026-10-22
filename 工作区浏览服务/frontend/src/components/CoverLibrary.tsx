@@ -2,7 +2,8 @@ import './CoverLibrary.css';
 import { useContext, useState } from 'react';
 import type { RecordData } from '../api';
 import { AssetMediaCard } from './AssetMediaCard';
-import { Dialog, Groups, Original, PreviewContext, Rich } from '../components';
+import { Dialog, Groups, PreviewContext, Rich } from '../components';
+import { FileActions } from './FileActions';
 
 export function CoverLibrary({ value, revision }: { value: RecordData; revision: number }) {
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -28,15 +29,15 @@ export function CoverLibrary({ value, revision }: { value: RecordData; revision:
     {detail && <Dialog title={`${detail.item.name} · 详情`} close={() => setDetail(null)}>
       {detail.candidate ? <>
         <p>{detail.item.status}</p>
-        <dl className="cover-library-facts"><dt>原图</dt><dd className="cover-library-file"><span>{detail.item.media.width}×{detail.item.media.height} · {detail.item.media.ratio}</span><Original url={detail.item.media.url} label="查看" /><a href={detail.item.media.url + '?download=true'} download>下载</a></dd></dl>
+        <dl className="cover-library-facts"><dt>原图</dt><dd className="cover-library-file"><span>{detail.item.media.width}×{detail.item.media.height} · {detail.item.media.ratio}</span><FileActions url={detail.item.media.url} /></dd></dl>
         <RecordLinks items={[detail.item.record]} />
       </> : <>
         <Rich html={detail.item.statusHtml} />
         {!detail.item.media && detail.item.original && <p className="muted">当前预览为采用原图，成品待规格处理。</p>}
         <dl className="cover-library-facts">
           <dt>目标规格</dt><dd>{detail.item.targetSize} · {detail.item.targetRatio}</dd>
-          <dt>成品</dt><dd className="cover-library-file"><span>{detail.item.media ? `${detail.item.media.width}×${detail.item.media.height} · ${detail.item.media.ratio}` : '待处理'}</span>{detail.item.media && <><Original url={detail.item.media.url} label="查看" /><a href={detail.item.media.url + '?download=true'} download>下载</a></>}</dd>
-          <dt>原图</dt><dd className="cover-library-file"><span>{detail.item.original ? `${detail.item.original.width}×${detail.item.original.height} · ${detail.item.original.ratio}` : '尚未登记'}</span>{detail.item.original && <><Original url={detail.item.original.url} label="查看" /><a href={detail.item.original.url + '?download=true'} download>下载</a></>}</dd>
+          <dt>成品</dt><dd className="cover-library-file"><span>{detail.item.media ? `${detail.item.media.width}×${detail.item.media.height} · ${detail.item.media.ratio}` : '待处理'}</span><FileActions url={detail.item.media?.url} /></dd>
+          <dt>原图</dt><dd className="cover-library-file"><span>{detail.item.original ? `${detail.item.original.width}×${detail.item.original.height} · ${detail.item.original.ratio}` : '尚未登记'}</span><FileActions url={detail.item.original?.url} /></dd>
         </dl>
         <RecordLinks items={[detail.item.review && { ...detail.item.review, name: '批准记录' }, detail.item.processing]} />
       </>}
