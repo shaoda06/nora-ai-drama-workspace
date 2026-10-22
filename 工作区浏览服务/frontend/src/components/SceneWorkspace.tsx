@@ -171,7 +171,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
       <TabSelect label="场次修改轮次" selected={String(selectedRound)} onChange={value => changeRound(Number(value))}
         items={[...sceneRounds].reverse().map(item => ({ value: String(item.number),
           label: `第${item.number}轮：剧本${item.script?.version || '缺失'} · 分镜${item.storyboard?.version || '缺失'}` }))} />
-      <span className="production-latest">当前最新：第{latestRound!.number}轮：剧本{latestRound!.script?.version || '缺失'} · 分镜{latestRound!.storyboard?.version || '缺失'}，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => changeRound(latestRound!.number)}>点击切换</button></span>
+      <span className="production-latest">当前最新：第{latestRound!.number}轮：剧本{latestRound!.script?.version || '缺失'} · 分镜{latestRound!.storyboard?.version || '缺失'}{selectedRound !== latestRound!.number && <>，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => changeRound(latestRound!.number)}>点击切换</button></>}</span>
     </div>}
     </div>
     <div className="episode-scene-content" aria-label={scene ? `场次 ${scene} 内容` : '场次内容'}>

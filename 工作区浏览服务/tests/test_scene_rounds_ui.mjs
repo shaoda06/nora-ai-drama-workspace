@@ -51,11 +51,10 @@ try {
   await choose.waitFor();
   const chooseRound = async number => { await choose.click(); await page.getByRole('option', { name: new RegExp('^第' + number + '轮：') }).click(); };
   assert.equal(await choose.innerText(), '第2轮：剧本v2 · 分镜v2');
-  assert.equal(await page.locator('.scene-round-selector .production-latest').innerText(), '当前最新：第2轮：剧本v2 · 分镜v2，点击切换');
+  assert.equal(await page.locator('.scene-round-selector .production-latest').innerText(), '当前最新：第2轮：剧本v2 · 分镜v2');
   assert.equal(await page.locator('.segment-round-new').count(), 0, 'pending video and inherited video must not be marked');
-  assert.equal(await page.locator('.segment-selectors .production-latest').innerText(), '当前最新：候选二，点击切换');
-  assert.equal(await page.getByRole('button', { name: '切换到本段最新版本', exact: true }).evaluate(el => getComputedStyle(el).textDecorationLine), 'underline');
-  assert.equal(await page.getByRole('button', { name: '切换到最新修改轮次', exact: true }).evaluate(el => getComputedStyle(el).borderTopWidth), '0px');
+  assert.equal(await page.locator('.segment-selectors .production-latest').innerText(), '当前最新：候选二');
+  assert.equal(await page.locator('.production-latest-link').count(), 0, 'latest selections need no switch links');
   await choose.click();
   assert.deepEqual(await page.getByRole('listbox', { name: '场次修改轮次' }).getByRole('option').allTextContents(), ['第2轮：剧本v2 · 分镜v2当前', '第1轮：剧本v1 · 分镜v1']);
   const badge = page.getByRole('listbox', { name: '场次修改轮次' }).locator('.tab-select-badge');
@@ -87,7 +86,10 @@ try {
   await page.getByRole('checkbox', { name: '连续播放', exact: true }).uncheck();
   await page.getByRole('button', { name: /^分段 P001，/ }).first().click();
   assert.ok((await version.getAttribute('data-value')).includes('R001-一采'));
+  assert.equal(await page.getByRole('button', { name: '切换到本段最新版本', exact: true }).evaluate(el => getComputedStyle(el).textDecorationLine), 'underline');
+  assert.equal(await page.getByRole('button', { name: '切换到最新修改轮次', exact: true }).evaluate(el => getComputedStyle(el).borderTopWidth), '0px');
   await page.getByRole('button', { name: '切换到本段最新版本', exact: true }).click();
+  assert.equal(await page.locator('.production-latest-link').count(), 0, 'switching to latest hides both links');
   assert.equal(await stage.getAttribute('data-value'), '一采', 'latest jumped to old second-pass');
   assert.ok((await version.getAttribute('data-value')).includes('R002-一采'));
   assert.equal(await choose.getAttribute('data-value'), '2', 'version selection must switch to its latest registered round');
@@ -114,10 +116,12 @@ try {
   assert.equal(await page.getByRole('button', { name: /^分段 P003，/ }).count(), 0);
   await page.getByRole('button', { name: /^分段 P002，/ }).first().click();
   assert.ok((await version.getAttribute('data-value')).includes('R001'), 'unchanged segment was renumbered');
+  assert.equal(await page.locator('.production-latest-link').count(), 0, 'latest candidate is determined per segment');
   fixtureRounds.push(round(3, ['P001', 'P002']));
   refreshRevision = 1;
   await page.waitForFunction(() => document.querySelector('[role=combobox][aria-label="场次修改轮次"]')?.getAttribute('aria-controls') && document.getElementById(document.querySelector('[role=combobox][aria-label="场次修改轮次"]').getAttribute('aria-controls'))?.children.length === 3);
   assert.equal(await choose.getAttribute('data-value'), '2', 'new arrival replaced currently viewed round');
+  assert.equal(await page.getByRole('button', { name: '切换到本段最新版本', exact: true }).count(), 0, 'new round does not make an unchanged candidate outdated');
   await page.getByRole('button', { name: '切换到最新修改轮次', exact: true }).click();
   assert.equal(await choose.getAttribute('data-value'), '3');
   assert.equal(await page.locator('.segment-round-new').count(), 0, 'returning to an older video is not a new generation');
@@ -154,7 +158,8 @@ try {
   await page.screenshot({ path: path.join(out, 'mobile-round-selection.png') });
   const menuBox = await page.getByRole('listbox', { name: '场次修改轮次' }).boundingBox();
   assert.ok(menuBox.x >= 0 && menuBox.x + menuBox.width <= 391);
-  await page.getByRole('button', { name: '切换到最新修改轮次', exact: true }).click();
+  assert.equal(await page.getByRole('button', { name: '切换到最新修改轮次', exact: true }).count(), 0);
+  await choose.press('Escape');
   await page.locator('[role="combobox"][aria-label="场次修改轮次"][aria-expanded="false"]').waitFor();
   assert.equal(await choose.getAttribute('aria-expanded'), 'false');
   // Long history stays compact even on tall screens; the oldest option remains reachable.
