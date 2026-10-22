@@ -83,13 +83,6 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
       {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
       <PointerTooltip text={script ? undefined : `${contentLabel}尚未建立`}><button className="link episode-script-link" disabled={!script} onClick={() => preview(script!)}>查看{contentLabel}</button></PointerTooltip>
     </div>
-    {!!current.materials?.length && <details className="asset-candidate-type production-materials"><summary>专用素材与图片候选（{current.materials.length}）</summary>
-      {current.materialRecord && <p><button className="link" onClick={() => preview(current.materialRecord!)}>查看素材生成与审阅记录</button></p>}
-      <div className="asset-media-grid">{current.materials.map(file => <article className="asset-media-card" key={file.key}>
-        <h3>{file.name}</h3><button className="production-image-preview" onClick={() => preview(file)} aria-label={`查看${file.name}`}><img loading="lazy" src={file.url} alt={file.name} /></button>
-        <div className="asset-media-footer"><DownloadButton url={file.url!} label="下载原图" title={`下载${file.name}`} /></div>
-      </article>)}</div>
-    </details>}
     {!!current.warnings?.length && <details className="notice"><summary>资料提示（{current.warnings.length}）</summary>{current.warnings.map(message => <p key={message}>{message}</p>)}</details>}
     {issues.length > 0 ? <div className="notice episode-data-issues" role="alert">
       <strong>制作资料需要修正</strong>
@@ -99,6 +92,13 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     </div> : null}
     {selectedScene ? <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
       : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
+    {!!current.materials?.length && <details className="asset-candidate-type production-materials"><summary>专用素材与图片候选（{current.materials.length}）</summary>
+      {current.materialRecord && <p><button className="link" onClick={() => preview(current.materialRecord!)}>查看素材生成与审阅记录</button></p>}
+      <div className="asset-media-grid">{current.materials.map(file => <article className="asset-media-card" key={file.key}>
+        <h3>{file.name}</h3><button className="production-image-preview" onClick={() => preview(file)} aria-label={`查看${file.name}`}><img loading="lazy" src={file.url} alt={file.name} /></button>
+        <div className="asset-media-footer"><DownloadButton url={file.url!} label="下载原图" title={`下载${file.name}`} /></div>
+      </article>)}</div>
+    </details>}
   </div> : <>
     <div ref={cards}>
       <section aria-label="片头与片尾"><h2>片头与片尾</h2><div className="episode-grid">{shared.map(item => <EpisodeButton key={item.key} item={item} onSelect={open} />)}</div>
