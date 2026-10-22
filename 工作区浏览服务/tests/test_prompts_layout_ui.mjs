@@ -16,18 +16,29 @@ try {
   page.on('pageerror', error => errors.push(String(error)));
   const release = await (await page.request.get(base + '/release.json')).json();
   let doc = { path: '根提示词.md', title: '根提示词', category: '', revision: '1', modified: Date.now() / 1000, body: '测试正文\n第二行' };
+  let recycled = null, failSave = false, failPreview = false, saves = 0;
   const categories = [{ path: '图片', revision: '1' }, { path: '图片/反推', revision: '1' }];
   await page.route('**/api/**', route => {
     const request = route.request(), url = new URL(request.url());
     let data;
-    if (url.pathname === '/api/prompts') data = { categories, prompts: [doc] };
+    if (url.pathname === '/api/prompts') data = { categories, prompts: recycled ? [] : [doc] };
     else if (url.pathname === '/api/prompts/document') {
-      if (request.method() === 'POST') {
+      if (request.method() === 'DELETE') {
+        recycled = { id: 'recycled', original: doc.path, deleted: new Date().toISOString(), revision: doc.revision, body: doc.body };
+      } else if (request.method() === 'POST') {
+        if (failSave) return route.fulfill({ status: 409, json: { detail: '测试保存冲突' } });
+        saves++;
         const body = request.postDataJSON();
         doc = { ...doc, title: body.title, body: body.body, category: body.category, path: `${body.category ? body.category + '/' : ''}${body.title}.md`, revision: '2' };
       } else assert.equal(request.method(), 'GET');
       data = doc;
-    } else if (url.pathname === '/api/prompts/preview') data = { html: '<p>长预览段落</p>'.repeat(80) };
+    } else if (url.pathname === '/api/prompts/preview') {
+      if (failPreview) return route.fulfill({ status: 503, json: { detail: '测试预览失败' } });
+      const body = request.postDataJSON().body;
+      data = { html: '<p>' + body.replaceAll('&', '&amp;').replaceAll('<', '&lt;') + '</p>' + '<p>长预览段落</p>'.repeat(80) };
+    } else if (url.pathname === '/api/prompts/trash') data = recycled ? [recycled] : [];
+    else if (url.pathname === '/api/prompts/trash/document') data = recycled;
+    else if (url.pathname === '/api/prompts/trash/restore') { recycled = null; data = doc; }
     else if (url.pathname === '/api/service') data = { version: release.version, ready: true };
     else if (url.pathname === '/api/comfy/tasks') data = { tasks: [], remote_nodes: [], local_tasks: [], local_counts: {}, history_updated_at: {} };
     else { assert.equal(request.method(), 'GET'); data = []; }
@@ -35,7 +46,14 @@ try {
   });
   await page.goto(base + '/#/prompts');
   const tree = page.getByRole('complementary', { name: '主目录', exact: true });
-  const openRoot = () => tree.getByRole('button', { name: '根提示词', exact: true }).click();
+  const openRoot = async () => {
+    await tree.getByRole('button', { name: '根提示词', exact: true }).click();
+    const toggle = page.getByRole('switch', { name: '编辑模式', exact: true });
+    await toggle.waitFor();
+    assert.equal(await toggle.getAttribute('aria-checked'), 'false');
+    await toggle.click();
+    await page.getByLabel('提示词正文', { exact: true }).waitFor();
+  };
   await openRoot();
   await page.getByLabel('提示词正文', { exact: true }).waitFor();
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
@@ -67,7 +85,7 @@ try {
   await page.waitForFunction(() => document.querySelector('[role="combobox"][aria-label="提示词所在分类"]').getAttribute('aria-expanded') === 'true');
   await page.keyboard.press('Escape');
   assert.equal(await category.getAttribute('aria-expanded'), 'false');
-  await page.getByRole('button', { name: 'Markdown 预览', exact: true }).click();
+  await page.getByRole('switch', { name: '编辑模式', exact: true }).click();
   await page.locator('.prompt-preview p').first().waitFor();
   const detail = page.locator('.prompt-detail');
   assert.ok(await detail.evaluate(el => el.scrollHeight > el.clientHeight), 'long preview must scroll inside the detail panel');
@@ -90,17 +108,85 @@ try {
     const target = viewport.width > 1000 ? '图片/反推' : '';
     await options.getByRole('option', { name: target || '主目录', exact: true }).click();
     await page.getByRole('button', { name: '保存', exact: true }).click();
-    await page.locator('.prompt-page > .notice').filter({ hasText: '已保存' }).waitFor();
+    await page.locator('.floating-message-content').filter({ hasText: '已保存' }).last().waitFor();
     assert.equal(doc.category, target);
     assert.equal(doc.body, '测试正文\n第二行');
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     await category.click();
     await page.waitForFunction(() => document.querySelector('[role="combobox"][aria-label="提示词所在分类"]').getAttribute('aria-expanded') === 'true');
+    assert.equal(await options.locator('.tab-select-badge').count(), 1);
+    assert.equal(await options.getByRole('option', { selected: true }).locator('.tab-select-badge').innerText(), '当前');
     await page.screenshot({ path: path.join(out, `${viewport.width}-picker.png`) });
     const menuBox = await options.boundingBox();
     assert.ok(menuBox.x >= 0 && menuBox.x + menuBox.width <= viewport.width);
     await page.keyboard.press('Escape');
   }
+  await page.setViewportSize({ width: 1362, height: 918 });
+  await page.waitForFunction(() => document.querySelectorAll('.floating-message').length === 0, null, { timeout: 5000 });
+  const toggle = page.getByRole('switch', { name: '编辑模式', exact: true });
+  const body = page.getByLabel('提示词正文', { exact: true });
+  const currentSaves = saves;
+  await body.fill('未保存正文\n换行保留');
+  await toggle.click();
+  await page.locator('.prompt-preview').filter({ hasText: '未保存正文' }).waitFor();
+  assert.equal(await toggle.getAttribute('aria-checked'), 'false');
+  assert.equal(await page.getByLabel('提示词标题', { exact: true }).getAttribute('readonly'), '');
+  assert.equal(await category.isDisabled(), true);
+  assert.equal(saves, currentSaves, 'preview switch must not write the file');
+  await page.screenshot({ path: path.join(out, 'preview-switch-off.png') });
+  await toggle.click();
+  assert.equal(await body.inputValue(), '未保存正文\n换行保留');
+  failSave = true;
+  await page.getByRole('button', { name: '保存', exact: true }).click();
+  await page.locator('.prompt-page > .error').filter({ hasText: '测试保存冲突' }).waitFor();
+  assert.equal(await body.inputValue(), '未保存正文\n换行保留');
+  assert.equal(await page.locator('.floating-message').count(), 0);
+  failSave = false;
+  const savedScroll = await page.evaluate(() => scrollY);
+  await page.getByRole('button', { name: '保存', exact: true }).click();
+  await page.locator('.floating-message-content').filter({ hasText: '已保存' }).waitFor();
+  assert.equal(await page.locator('.prompt-page > .notice').count(), 0);
+  assert.equal(await page.evaluate(() => scrollY), savedScroll);
+  assert.equal(doc.body, '未保存正文\n换行保留');
+  await page.screenshot({ path: path.join(out, 'shared-save-notice.png') });
+  await page.getByRole('button', { name: '关闭通知', exact: true }).click();
+  await body.fill('预览重试正文');
+  failPreview = true;
+  await toggle.click();
+  await page.getByRole('alert').filter({ hasText: '测试预览失败' }).waitFor();
+  failPreview = false;
+  await page.getByRole('button', { name: '重试预览', exact: true }).click();
+  await page.locator('.prompt-preview').filter({ hasText: '预览重试正文' }).waitFor();
+  await toggle.click();
+  assert.equal(await body.inputValue(), '预览重试正文');
+  await body.fill(doc.body);
+  await page.getByRole('button', { name: '删除', exact: true }).click();
+  const confirmation = page.getByRole('dialog', { name: '移入回收站', exact: true });
+  await confirmation.waitFor();
+  assert.equal(await confirmation.locator('p').innerText(), '确定将“根提示词”移入回收站吗？');
+  await confirmation.getByRole('button', { name: '确认', exact: true }).click();
+  await page.locator('.floating-message-content').filter({ hasText: '已移入回收站' }).waitFor();
+  assert.equal(await page.getByRole('dialog').count(), 0);
+  await page.getByRole('button', { name: '关闭通知', exact: true }).click();
+  await page.getByRole('button', { name: '回收站', exact: true }).click();
+  await page.locator('.prompt-list-item').filter({ hasText: '根提示词' }).click();
+  await page.getByRole('button', { name: '恢复提示词', exact: true }).click();
+  await page.getByRole('button', { name: '确认恢复', exact: true }).click();
+  await page.locator('.floating-message-content').filter({ hasText: '已恢复' }).waitFor();
+  assert.equal(await toggle.getAttribute('aria-checked'), 'false');
+  await page.locator('.prompt-preview').filter({ hasText: doc.body }).waitFor();
+  await page.locator('.floating-message').waitFor({ state: 'hidden', timeout: 5000 });
+  await page.getByRole('button', { name: '＋ 新建提示词', exact: true }).click();
+  assert.equal(await toggle.getAttribute('aria-checked'), 'false');
+  await toggle.click();
+  await page.getByLabel('提示词标题', { exact: true }).fill('新提示词');
+  await body.fill('新正文');
+  await toggle.click();
+  await page.locator('.prompt-preview').filter({ hasText: '新正文' }).waitFor();
+  assert.equal(doc.title, '根提示词', 'new draft must not save when changing modes');
+  await tree.getByRole('button', { name: '主目录', exact: true }).click();
+  await page.getByRole('button', { name: '放弃修改', exact: true }).click();
+  console.log('PASS preview/edit switch, preserved drafts on preview/save failure, current badge, delete wording, shared save/delete/restore notices and automatic dismissal');
   assert.deepEqual(errors, []);
   console.log(`PASS desktop/mobile inline fields, picker selection and save, no page errors; screenshots: ${out}`);
 } finally { await browser.close(); }

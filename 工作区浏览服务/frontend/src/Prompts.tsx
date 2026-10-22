@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { PageHeader } from './components/PageHeader';
 import { CopyButton } from './components/CopyButton';
 import { MarkedTabSelect } from './components/TabSelect';
+import { useNotify } from './components/Notifications';
 import './Prompts.css';
 
 type Category = { path: string; revision: string };
@@ -30,6 +31,7 @@ function Dialog({ title, close, children, showClose = false, busy = false }: { t
 
 export default function Prompts() {
   const client = useQueryClient();
+  const notify = useNotify();
   const [category, setCategory] = useState('');
   const [expandedPath, setExpandedPath] = useState('');
   const [search, setSearch] = useState('');
@@ -40,10 +42,8 @@ export default function Prompts() {
   const [saved, setSaved] = useState<Document | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [deleted, setDeleted] = useState<Trash | null>(null);
-  const [mode, setMode] = useState<'text' | 'preview'>('text');
-  const [html, setHtml] = useState('');
+  const [mode, setMode] = useState<'text' | 'preview'>('preview');
   const [error, setError] = useState('');
-  const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
   const [pending, setPending] = useState<(() => void) | null>(null);
   const [categoryEdit, setCategoryEdit] = useState<{ source: Category | null; name: string; parent: string } | null>(null);
@@ -58,6 +58,7 @@ export default function Prompts() {
   const snapshot = useQuery({ queryKey: ['prompts'], queryFn: ({ signal }) => api<Snapshot>('', 'GET', undefined, signal), refetchInterval: 5000, refetchOnWindowFocus: true });
   const trash = useQuery({ queryKey: ['prompt-trash'], queryFn: ({ signal }) => api<Trash[]>('/trash', 'GET', undefined, signal), enabled: view === 'trash', refetchInterval: 5000, refetchOnWindowFocus: true });
   const results = useQuery({ queryKey: ['prompt-search', query, scope === 'all' ? '' : category], queryFn: ({ signal }) => api<Prompt[]>(`/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(scope === 'all' ? '' : category)}`, 'GET', undefined, signal), enabled: !!query && view === 'library', refetchInterval: 5000, refetchOnWindowFocus: true });
+  const preview = useQuery({ queryKey: ['prompt-preview', mode === 'preview' ? draft?.body : null], queryFn: ({ signal }) => api<{ html: string }>('/preview', 'POST', { body: draft!.body }, signal), enabled: !!draft && mode === 'preview', retry: false });
   const categories = snapshot.data?.categories || [];
   const items = query ? results.data || [] : (snapshot.data?.prompts || []).filter(item => item.category === category);
   const changed = !!saved && !!snapshot.data && snapshot.data.prompts.find(item => item.path === saved.path)?.revision !== saved.revision;
@@ -76,24 +77,24 @@ export default function Prompts() {
   }, [dirty, busy]);
   async function refresh() { await client.invalidateQueries({ predicate: q => ['prompts', 'prompt-trash', 'prompt-search'].includes(String(q.queryKey[0])) }); }
   async function run(action: () => Promise<void>, modal = false) {
-    setBusy(true); setError(''); setNotice(''); setModalError('');
+    setBusy(true); setError(''); setModalError('');
     try { await action(); }
     catch (failure) { (modal ? setModalError : setError)((failure as Error).message); }
     finally { setBusy(false); }
   }
-  function accept(doc: Document) { latestSaved.current = doc; setSaved(doc); setDraft({ title: doc.title, body: doc.body, category: doc.category }); setDeleted(null); setMode('text'); setStep('detail'); }
+  function accept(doc: Document, resetMode = false) { latestSaved.current = doc; setSaved(doc); setDraft({ title: doc.title, body: doc.body, category: doc.category }); setDeleted(null); if (resetMode) setMode('preview'); setStep('detail'); }
   function guard(action: () => void) { if (busy) return; if (dirty) setPending(() => action); else action(); }
-  function clearSelection() { opening.current++; setSaved(null); setDraft(null); setDeleted(null); setMode('text'); }
+  function clearSelection() { opening.current++; setSaved(null); setDraft(null); setDeleted(null); setMode('preview'); }
   function selectCategory(path: string) { guard(() => { clearSelection(); setCategory(path); setView('library'); setStep('list'); setError(''); }); }
   function openDocument(path: string, fromTree = false) {
-    guard(() => { const sequence = ++opening.current; void run(async () => { const doc = await api<Document>(`/document?path=${encodeURIComponent(path)}`); if (opening.current === sequence) { accept(doc); if (fromTree) { setCategory(doc.category); setView('library'); setSearch(''); } } }); });
+    guard(() => { const sequence = ++opening.current; void run(async () => { const doc = await api<Document>(`/document?path=${encodeURIComponent(path)}`); if (opening.current === sequence) { accept(doc, true); if (fromTree) { setCategory(doc.category); setView('library'); setSearch(''); } } }); });
   }
   async function save(): Promise<boolean> {
     if (!draft) return true;
-    setBusy(true); setError(''); setNotice('');
+    setBusy(true); setError('');
     try {
       const doc = await api<Document>('/document', 'POST', { ...draft, source: saved?.path ?? null, revision: saved?.revision ?? null });
-      accept(doc); setCategory(doc.category); setNotice('已保存'); await refresh(); return true;
+      accept(doc); setCategory(doc.category); notify('已保存'); await refresh(); return true;
     } catch (failure) { setError((failure as Error).message); return false; }
     finally { setBusy(false); }
   }
@@ -126,7 +127,7 @@ export default function Prompts() {
   return <div className="prompt-page" data-prompt-unsaved={dirty || busy}>
     <PageHeader title="提示词管理" actions={<button className="prompt-trash-toggle" disabled={busy} onClick={() => guard(() => { clearSelection(); setView(view === 'trash' ? 'library' : 'trash'); setStep('list'); })}>{view !== 'trash' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" /></svg>}{view === 'trash' ? '返回提示词库' : '回收站'}</button>} />
     {loadError && <div className="error" role="alert">{loadError.message}<button onClick={() => void refresh()}>重试</button></div>}
-    {error && <div className="error" role="alert">{error}</div>}{notice && <p className="notice" role="status">{notice}</p>}
+    {error && <div className="error" role="alert">{error}</div>}
     <div className="prompt-toolbar"><input type="search" aria-label="搜索提示词" placeholder="搜索标题或正文…" value={search} disabled={view === 'trash'} onChange={e => setSearch(e.target.value)} /><select aria-label="搜索范围" value={scope} disabled={view === 'trash'} onChange={e => setScope(e.target.value)}><option value="all">全库搜索</option><option value="category">当前分类及子分类</option></select>
       <button disabled={busy || view === 'trash' || categoryMissing} onClick={() => guard(() => { clearSelection(); setDraft({ title: '', body: '', category }); setStep('detail'); setError(''); })}>＋ 新建提示词</button></div>
     <div className="prompt-layout" data-step={step}>
@@ -148,14 +149,14 @@ export default function Prompts() {
         <button className="prompt-mobile" disabled={busy} onClick={() => guard(() => { clearSelection(); setStep('list'); })}>‹ 返回列表</button>
         {draft ? <>
           {changed && <div className="prompt-warning" role="status">这份提示词已在外部修改、移动或删除。当前内容已保留。<button disabled={busy} onClick={() => openDocument(saved!.path)}>重新载入</button></div>}
-          <label className="prompt-form-field"><span>标题</span><input aria-label="提示词标题" value={draft.title} disabled={busy} onChange={e => setDraft({ ...draft, title: e.target.value })} placeholder="为提示词起个名字" /></label>
-          <div className="prompt-form-field"><span>所在分类</span><MarkedTabSelect label="提示词所在分类" selected={draft.category} disabled={busy} onChange={category => setDraft({ ...draft, category })} items={[
+          <label className="prompt-form-field"><span>标题</span><input aria-label="提示词标题" value={draft.title} disabled={busy} readOnly={mode === 'preview'} onChange={e => setDraft({ ...draft, title: e.target.value })} placeholder="为提示词起个名字" /></label>
+          <div className="prompt-form-field"><span>所在分类</span><MarkedTabSelect label="提示词所在分类" selected={draft.category} disabled={busy || mode === 'preview'} onChange={category => setDraft({ ...draft, category })} items={[
             { value: '', label: '主目录' }, ...categories.map(item => ({ value: item.path, label: item.path })),
             ...(draft.category && !categories.some(item => item.path === draft.category) ? [{ value: draft.category, label: `${draft.category}（已不存在）` }] : []),
-          ]} /></div>
-          <div className="prompt-editor-tabs"><button aria-pressed={mode === 'text'} disabled={busy} onClick={() => setMode('text')}>文本编辑</button><button aria-pressed={mode === 'preview'} disabled={busy} onClick={() => void run(async () => { const result = await api<{ html: string }>('/preview', 'POST', { body: draft.body }); setHtml(result.html); setMode('preview'); })}>Markdown 预览</button></div>
-          {mode === 'text' ? <textarea aria-label="提示词正文" className="prompt-body" value={draft.body} disabled={busy} spellCheck={false} placeholder="输入或粘贴提示词正文…" onChange={e => setDraft({ ...draft, body: e.target.value })} /> : <article className="prompt-preview" dangerouslySetInnerHTML={{ __html: html }} />}
-          <div className="prompt-actions"><button className="prompt-primary" disabled={busy || !draft.title.trim() || !dirty} onClick={() => void save()}>{busy ? '处理中…' : '保存'}</button><CopyButton label="复制" text={draft.body} />{saved && <button className="danger-button prompt-delete" disabled={busy} onClick={() => guard(() => { const current = latestSaved.current!; ask('移入回收站', `将“${current.title}”移入回收站？之后可以恢复。`, async () => { await api('/document', 'DELETE', { path: current.path, revision: current.revision }); clearSelection(); setConfirm(null); setStep('list'); setNotice('已移入回收站'); await refresh(); }); })}>删除</button>}</div>
+          ].map(item => ({ ...item, badge: item.value === draft.category ? '当前' : undefined }))} /></div>
+          <div className="prompt-edit-control"><span id="prompt-edit-label">编辑模式</span><button type="button" className="prompt-edit-switch" role="switch" aria-labelledby="prompt-edit-label" aria-checked={mode === 'text'} disabled={busy} onClick={() => setMode(mode === 'text' ? 'preview' : 'text')}><span /></button></div>
+          {mode === 'text' ? <textarea aria-label="提示词正文" className="prompt-body" value={draft.body} disabled={busy} spellCheck={false} placeholder="输入或粘贴提示词正文…" onChange={e => setDraft({ ...draft, body: e.target.value })} /> : preview.isPending ? <p className="prompt-preview" role="status">正在生成预览…</p> : preview.error ? <div className="prompt-preview error" role="alert">{preview.error.message}<button onClick={() => void preview.refetch()}>重试预览</button></div> : <article className="prompt-preview" dangerouslySetInnerHTML={{ __html: preview.data.html }} />}
+          <div className="prompt-actions"><button className="prompt-primary" disabled={busy || !draft.title.trim() || !dirty} onClick={() => void save()}>{busy ? '处理中…' : '保存'}</button><CopyButton label="复制" text={draft.body} />{saved && <button className="danger-button prompt-delete" disabled={busy} onClick={() => guard(() => { const current = latestSaved.current!; ask('移入回收站', `确定将“${current.title}”移入回收站吗？`, async () => { await api('/document', 'DELETE', { path: current.path, revision: current.revision }); clearSelection(); setConfirm(null); setStep('list'); notify('已移入回收站'); await refresh(); }); })}>删除</button>}</div>
         </> : deleted ? <>
           <h2>{titleOf(deleted.original)}</h2><small>原位置：{deleted.original}</small><p className="muted">回收站内容不会自动清空。</p><pre className="prompt-trash-body">{deleted.body}</pre>
           <div className="prompt-actions"><button disabled={busy} onClick={() => { setModalError(''); setRestore({ item: deleted, title: titleOf(deleted.original), category: parentOf(deleted.original) }); }}>恢复提示词</button><CopyButton label="复制" text={deleted.body || ''} /><button className="danger-button prompt-delete" disabled={busy} onClick={() => ask('彻底删除提示词', `“${titleOf(deleted.original)}”将永久删除，无法从回收站恢复。`, async () => { await api('/trash', 'DELETE', { id: deleted.id, revision: deleted.revision }); clearSelection(); setConfirm(null); setStep('list'); await refresh(); })}>彻底删除</button></div>
@@ -175,7 +176,7 @@ export default function Prompts() {
     }, true)}>确认删除分类</button><button type="button" disabled={busy} onClick={() => { setCategoryDelete(false); setModalError(''); }}>取消删除</button></> : <><button type="submit" disabled={busy || !categoryEdit.name.trim()}>保存</button>{categoryEdit.source && <button type="button" className="danger-button prompt-category-delete" disabled={busy} onClick={() => { setCategoryDelete(true); setModalError(''); }}>删除分类</button>}</>}</div></form></Dialog>}
     {restore && <Dialog title="恢复提示词" close={() => { if (!busy) setRestore(null); }}><form onSubmit={event => { event.preventDefault(); void run(async () => {
       const doc = await api<Document>('/trash/restore', 'POST', { id: restore.item.id, revision: restore.item.revision, title: restore.title, category: restore.category });
-      setView('library'); setCategory(doc.category); accept(doc); setRestore(null); setNotice('已恢复'); await refresh();
+      setView('library'); setCategory(doc.category); accept(doc, true); setRestore(null); notify('已恢复'); await refresh();
     }, true); }}><label>标题<input aria-label="恢复标题" value={restore.title} disabled={busy} onChange={e => setRestore({ ...restore, title: e.target.value })} /></label><label>恢复到<select aria-label="恢复到分类" value={restore.category} disabled={busy} onChange={e => setRestore({ ...restore, category: e.target.value })}>{categoryOptions()}{restore.category && !categories.some(item => item.path === restore.category) && <option value={restore.category}>{restore.category}（重建原分类）</option>}</select></label><p>原分类已不存在时，恢复会重新创建该分类。</p>{modalError && <p className="error" role="alert">{modalError}</p>}<div className="prompt-actions"><button type="submit" disabled={busy || !restore.title.trim()}>确认恢复</button><button type="button" disabled={busy} onClick={() => setRestore(null)}>取消</button></div></form></Dialog>}
     {confirm && <Dialog title={confirm.title} close={() => { if (!busy) setConfirm(null); }}><p>{confirm.text}</p>{modalError && <p className="error" role="alert">{modalError}</p>}<div className="prompt-actions"><button disabled={busy} onClick={() => void run(confirm.action, true)}>确认</button><button disabled={busy} onClick={() => setConfirm(null)}>取消</button></div></Dialog>}
   </div>;
