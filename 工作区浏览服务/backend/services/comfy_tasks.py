@@ -25,6 +25,7 @@ from backend.services.comfy_nodes import RemoteQueues, initial_state
 from backend.services.local_queue import LocalQueue, LOCAL, TERMINAL
 from backend.services.task_notifications import TaskNotifications
 from backend.services.collection_retry import DELAYS, failure, saved_files
+from backend.services.session_names import read_thread_name
 
 logger = logging.getLogger(__name__)
 SKILL = Path(__file__).resolve().parents[3] / '.agents/skills/nora-ai-short-drama'
@@ -395,6 +396,8 @@ class TaskStore(LocalQueue, TaskNotifications):
             state = row['state']
             if state['status'] == 'resolved':
                 continue
+            if state['status'] not in TERMINAL and not state.get('source_session_name'):
+                self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
             for notice in state.get('notices', []):
                 if notice['delivery'] == 'sending':
                     notice['delivery'] = 'delivery_unknown'
@@ -426,8 +429,6 @@ class TaskStore(LocalQueue, TaskNotifications):
                 self.workers[key] = asyncio.create_task(self.collect_saved(key))
             else:
                 self.workers[key] = asyncio.create_task(self.watch(key))
-            if not state.get('source_session_name'):
-                self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
         for batch_id, in self.db.execute("SELECT id FROM notification_batches WHERE state IN ('sending','delivery_unknown')"):
             self.db.execute('UPDATE notification_batches SET state=? WHERE id=?', ('delivery_unknown', batch_id))
             self.notifiers['ack:' + batch_id] = asyncio.create_task(self.wait_ack(batch_id))
@@ -696,14 +697,16 @@ class TaskStore(LocalQueue, TaskNotifications):
             self.save(key, started_at=started_at)
 
     async def read_session_name(self, key):
+        if self.rows[key]['state'].get('source_session_name'):
+            return
         try:
-            result = await self.desktop_call(self.rows[key]['input'], 'read')
-            response = json.loads(next(item['text'] for item in result['content'] if item['type'] == 'text'))
-            title = response['thread']['title']
-            if not isinstance(title, str) or not title.strip():
-                raise ValueError('来源会话没有有效标题')
+            data = self.rows[key]['input']
+            cli = data.desktop.cli or os.environ.get('CODEX_CLI_PATH') or shutil.which('codex')
+            if not cli:
+                raise OSError('找不到Codex CLI，无法读取来源会话名称')
+            title = await read_thread_name(cli, data.thread_id)
             self.save(key, source_session_name=title)
-        except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, StopIteration) as error:
+        except (OSError, TimeoutError, ValueError, KeyError) as error:
             logger.warning('ComfyUI task %s source session lookup failed: %s', key, error)
 
     async def desktop_call(self, data, operation, prompt=''):

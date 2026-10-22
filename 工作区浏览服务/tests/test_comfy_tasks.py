@@ -29,6 +29,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.record.mkdir(parents=True)
         self.store = t.TaskStore(self.root / 'runtime', self.root)
         self.store.queue_notifications = False
+        self.session_name_reader = self.enterContext(patch.object(t, 'read_thread_name', AsyncMock(return_value='制作会话')))
         self.data = t.TaskInput(project=str(self.project), title='测试图', task_type='image',
             url='http://comfy.invalid:8188', workflow={'1': {'class_type': 'SaveImage', 'inputs': {'seed': 9223372036854775807}}},
             record_dir=str(self.record), attempt_name='提交尝试.json', request_name='请求.json', response_name='提交响应.json',
@@ -203,12 +204,63 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.store.rows['task']['state']['started_at'], '2026-10-09T17:38:38.669000+00:00')
 
     async def test_source_session_title_uses_registered_thread_without_messaging(self):
+        self.data.desktop.cli = 'codex-test'
         self.seed()
-        result = {'content': [{'type': 'text', 'text': json.dumps({'thread': {'title': '制作会话'}})}]}
-        with patch.object(self.store, 'desktop_call', AsyncMock(return_value=result)) as desktop:
+        before = dict(self.store.rows['task']['state'])
+        with patch.object(self.store, 'desktop_call', AsyncMock()) as desktop, patch.object(t.client, 'submit') as submit:
             await self.store.read_session_name('task')
-        desktop.assert_awaited_once_with(self.data, 'read')
+        desktop.assert_not_awaited()
+        submit.assert_not_called()
+        self.session_name_reader.assert_awaited_once_with('codex-test', self.data.thread_id)
         self.assertEqual(self.store.public()['tasks'][0]['source_session_name'], '制作会话')
+        self.assertEqual({k: v for k, v in self.store.rows['task']['state'].items() if k not in ('source_session_name', 'updated_at')},
+                         {k: v for k, v in before.items() if k != 'updated_at'})
+
+    async def test_recorded_session_name_is_preserved_without_external_lookup(self):
+        self.seed()
+        self.store.save('task', source_session_name='已登记会话')
+        await self.store.read_session_name('task')
+        self.session_name_reader.assert_not_awaited()
+        self.assertEqual(self.store.rows['task']['state']['source_session_name'], '已登记会话')
+
+    async def test_new_registration_fills_name_without_submitting_remote_work(self):
+        self.data.desktop.cli = 'codex-test'
+        with patch.object(self.store, 'validate_registration', return_value=self.project), \
+                patch.object(t.client, 'submit') as submit, patch.object(t.client, 'upload') as upload:
+            result = await self.store.enqueue(self.data)
+            key = result['local_task_id']
+            await self.store.session_readers[key]
+        self.session_name_reader.assert_awaited_once_with('codex-test', self.data.thread_id)
+        self.assertEqual(self.store.rows[key]['state']['source_session_name'], '制作会话')
+        self.assertEqual(self.store.rows[key]['state']['status'], 'local_queued')
+        self.assertIsNone(self.store.rows[key]['state']['prompt_id'])
+        submit.assert_not_called()
+        upload.assert_not_called()
+
+    async def test_session_name_failure_does_not_change_running_task(self):
+        self.seed(status='running')
+        before = dict(self.store.rows['task']['state'])
+        self.session_name_reader.side_effect = OSError('read unavailable')
+        with self.assertLogs(t.logger, level='WARNING') as logs:
+            await self.store.read_session_name('task')
+        self.assertIn('read unavailable', logs.output[0])
+        self.assertEqual(self.store.rows['task']['state'], before)
+
+    async def test_restart_fills_missing_paused_task_name_without_remote_work(self):
+        self.data.desktop.cli = 'codex-test'
+        self.seed(status='paused')
+        with patch.object(self.store.remote_queues, 'start', AsyncMock()), \
+                patch.object(self.store, 'schedule', AsyncMock()), patch.object(self.store, 'watch', AsyncMock()) as watch, \
+                patch.object(t.client, 'submit') as submit, patch.object(t.client, 'upload') as upload:
+            await self.store.start()
+            await self.store.session_readers['task']
+        self.session_name_reader.assert_awaited_once_with('codex-test', self.data.thread_id)
+        self.assertEqual(self.store.rows['task']['state']['status'], 'paused')
+        self.assertEqual(self.store.rows['task']['state']['prompt_id'], 'real-id')
+        self.assertEqual(self.store.rows['task']['state']['source_session_name'], '制作会话')
+        watch.assert_not_awaited()
+        submit.assert_not_called()
+        upload.assert_not_called()
 
     async def test_failed_task_is_not_downloaded(self):
         self.seed()
