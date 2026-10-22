@@ -58,3 +58,24 @@ class ProjectIndexTests(HttpTestCase):
         self.assertFalse(initialize(project)['index_added'])
         initialize(project, 'EP001')
         self.assertEqual(self.names(), ['甲项目', '丙项目', '乙项目', '新项目'])
+
+    def test_index_document_renders_actual_source_read_only_and_reads_changes(self):
+        source = '# 项目总索引\n\n1. 甲项目\n2. <script>乙项目</script>\n'
+        self.index.write_text(source, encoding='utf-8-sig')
+        response = self.client.get('/api/project-index')
+        response.raise_for_status()
+        self.assertEqual(response.json()['title'], '项目总索引')
+        self.assertIn('<ol>', response.json()['html'])
+        self.assertIn('&lt;script&gt;', response.json()['html'])
+        self.assertNotIn('<script>', response.json()['html'])
+        self.assertNotIn('url', response.json())
+        self.assertEqual(self.index.read_text(encoding='utf-8-sig'), source)
+        self.index.write_text('# 项目总索引\n\n1. 乙项目\n', encoding='utf-8')
+        self.assertIn('乙项目', self.client.get('/api/project-index').json()['html'])
+        self.assertNotIn('甲项目', self.client.get('/api/project-index').json()['html'])
+
+    def test_missing_index_document_reports_missing_without_creating_file(self):
+        response = self.client.get('/api/project-index')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json()['detail'], '项目总索引尚未建立')
+        self.assertFalse(self.index.exists())

@@ -15,6 +15,7 @@ from pydantic import BaseModel, ValidationError
 
 from backend.parsers import project as parser
 from backend.services.projects import ProjectStore
+from project_index import INDEX_NAME
 from backend.services.request_diagnostics import RequestDiagnostics, RequestDiagnosticsMiddleware
 from backend.services.episode_downloads import KINDS, resources as episode_resources, completed_episode_videos, zip_response, clear_downloads, video_archive_name
 from backend.services import krea2
@@ -398,6 +399,14 @@ def view(value, name):
 @app.get('/api/projects')
 def projects() -> list[dict[str, str]]:
     return store.discover()
+
+
+@app.get('/api/project-index')
+def project_index() -> dict[str, str]:
+    path = store.root / INDEX_NAME
+    if not path.is_file():
+        raise HTTPException(404, '项目总索引尚未建立')
+    return {'title': path.stem, 'html': parser.markdown(path.read_text('utf-8-sig'), INDEX_NAME)}
 
 
 @app.get('/api/workflows')
