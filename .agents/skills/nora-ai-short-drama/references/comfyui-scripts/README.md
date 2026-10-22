@@ -544,6 +544,8 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
  "references":[{"file":"03-人物资料/CH001-男主/参考图/当前角色.png","placeholder":"planned/CH001.png"}]}
 ```
 
+已有视频的局部返修，先按[执行快照与素材路径](../../../nora-generation/references/ComfyUI-MiniMaxH3导演台节点使用规范.md#611-局部返修的执行快照与素材路径)选择实际执行后的内容来源，再装配本次任务；不直接将首次准备示例用于返修。
+
 视频执行职责见[视频执行分工](../../../nora-generation/references/ComfyUI-服务配置与任务提交规范.md#视频执行分工)。任务清单自动建立或补齐各P本R本阶段的技术条目，已有非空说明、用户反馈及决定保持；记录从实际API、语义映射和后台事实生成，不手填模型参数、ID、秒数／帧数或冻结资料入口。
 
 - 新一采可传`sync_timing:true`，以内容画布中已核定的各组durationSec计算17k+5帧格、start、length、总帧数并同步根字段及r2v编辑区。使用新的执行目录保存副本，原内容画布不改写；二采、返修或带历史source／materials_from的任务不使用此选项，保持来源与缓存身份。
@@ -553,7 +555,11 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 
 `output_nodes`为本次画布的实际执行输出节点；标准版示例的403／504／506不能照搬到不同工作流。`output_root`为已核实的远端真实目录。既有`输入映射.json`复用，不复制粘贴；新映射可在`mapping`传入既定语义信息。分镜版本、场次修改轮次、组与P／R对应、内容核对证据仍须准备；工具不替代这些内容决定。工具导出配套API，按已选原始组序、P／R／阶段派生候选路径与取回凭据，按`references`中的占位值定位图片／音视频素材槽位、组装上传映射；原映射和冻结资料仍由既有后台保存。二采使用指定来源画布及既有批准关系，不能换成新的基准。后处理或特定输出可显式提供原格式的`outputs`／`segment_plan`／`uploads`，仍共用本次装配、准备和入队。
 
-`references`是素材占位值到源文件的单一填写入口。工具同时建立技术上传槽位和`输入映射.json`的`uploads:[{input_path,file}]`来源索引；同占位值、同源文件只登记一条来源，重复的`references`条目复用同一套槽位绑定，同占位值对应不同文件则在写入前报错。已有来源索引保持兼容，不要求Agent重复填写。画布控件修改由工具同步`widgets_values`和`widgets_values_named`，保留预览等界面字段；执行范围按[视频执行分工](../../../nora-generation/references/ComfyUI-服务配置与任务提交规范.md#视频执行分工)处理。
+`references`是本次**需要上传**的素材占位值到源文件的单一填写入口。工具同时建立技术上传槽位和`输入映射.json`的`uploads:[{input_path,file}]`来源索引；同占位值、同源文件只登记一条来源，重复的`references`条目复用同一套槽位绑定，同占位值对应不同文件则在写入前报错。已有来源索引保持兼容，不要求Agent重复填写。
+
+H3局部返修复用已核实的远端素材时，内容画布保留来源实际路径，`mapping.uploads`保留`input_path`到本地源文件的来源索引；该索引不发起上传，未变素材不再重复列入`references`。`references`只列本次确需上传的新／已变素材，否则工具会将所列素材上传到新执行目录并改写路径，可能使未选前组的缓存失配；没有新上传项时可省略`references`。这是原素材的显式来源引用，不是跨任务上传缓存；后台文件与阶段缓存核验继续保留。
+
+画布控件修改由工具同步`widgets_values`和`widgets_values_named`，保留预览等界面字段；执行范围按[视频执行分工](../../../nora-generation/references/ComfyUI-服务配置与任务提交规范.md#视频执行分工)处理。
 
 返回与接续：
 
