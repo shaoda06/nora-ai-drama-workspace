@@ -58,7 +58,6 @@ export default function History() {
           <h1>全部开发记录</h1>
           <ul>{[...records].sort((a, b) => b.name.localeCompare(a.name, 'zh-CN', { numeric: true })).map(item => <li key={item.path}><button className="link" onClick={() => openDocument(item.path)}>{item.name}</button></li>)}</ul>
         </> : document.data && <>
-          {pagination}
           <Document key={`${selected}:${showVersions ? document.data.page : 1}`} value={document.data} showChapters={!showVersions} />
           {pagination}
         </>}
