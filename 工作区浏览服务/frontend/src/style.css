@@ -81,6 +81,7 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .header-main:has(.tabs-grouped){flex-wrap:wrap}
 .header-controls:has(>.tabs-grouped){flex:0 1 auto;max-width:100%;margin:0 auto}
 .header-controls>.tabs-grouped{width:max-content;max-width:100%;justify-content:flex-start}
+.header-controls>.tabs-grouped>button,.header-controls>.tabs-grouped .tab-select{width:128px}
 @media(max-width:1279px){.header-controls:has(>.tabs-grouped){order:0;flex-basis:auto;margin:0 auto}}
 
 .asset-card-status{display:flex;align-items:center;gap:4px;font-size:13px}.asset-card-status>span{color:var(--muted)}
