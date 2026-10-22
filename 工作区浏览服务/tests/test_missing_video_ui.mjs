@@ -85,9 +85,9 @@ try {
   await page.screenshot({ path: path.join(out, 'not-generated.png') });
   assert.equal(await placeholder.innerText(), '尚未生成视频', 'planned revision mislabeled as lost media');
   assert.equal(await scene.getByText('部分分段暂无本轮视频。', { exact: true }).count(), 0);
-  assert.equal(await scene.locator('.scene-review-round').count(), 0, 'empty duplicate notice container remains');
+  assert.equal(await scene.getByRole('region', { name: '场次提示' }).count(), 1, 'scene messages must share one panel');
   assert.equal(await scene.getByText('P001的本轮一采 R004尚未生成视频', { exact: false }).count(), 0);
-  assert.ok((await scene.locator('.scene-video-preparation').innerText()).includes('3段尚无可播放视频'));
+  assert.ok((await scene.getByRole('region', { name: '场次提示' }).locator('[data-message="preparation"]').innerText()).includes('3段尚无可播放视频'));
   assert.ok(!(await scene.innerText()).includes('视频已不可播放'));
   assert.equal(await page.locator('.segment-video video').count(), 0, 'must not fall back to old R003');
   const script = page.locator('.segment-script-content');
@@ -155,7 +155,7 @@ try {
   await page.getByRole('combobox', { name: '版本切换', exact: true }).selectOption({ label: '候选三' });
   await page.getByText('当前查看版本不属于本轮，导出仍按本轮版本。', { exact: true }).waitFor();
   await select('P001');
-  assert.equal(await scene.locator('.scene-review-round').count(), 0);
+  assert.equal(await scene.getByRole('region', { name: '场次提示' }).count(), 1);
   await page.setViewportSize({ width: 390, height: 844 });
   await placeholder.scrollIntoViewIfNeeded();
   await page.screenshot({ path: path.join(out, 'mobile-not-generated.png') });

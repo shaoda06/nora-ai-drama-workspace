@@ -1,0 +1,8 @@
+.message-panel{margin:12px 0;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:#f7faf8;font-size:13px;color:var(--muted)}
+.message-panel-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;min-width:0}
+.message-panel-row+.message-panel-row{margin-top:8px}
+.message-panel-text{flex:1 1 240px;min-width:0;overflow-wrap:anywhere}
+.message-panel-row[data-tone=warning]{color:#a26916}
+.message-panel-row[data-tone=error]{color:#ac493b}
+.message-panel-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.message-panel-actions>button{font-size:12px;padding:5px 9px}

@@ -1,4 +1,3 @@
-import { PointerTooltip } from './PointerTooltip';
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { get, projectUrl } from '../api';
@@ -15,6 +14,7 @@ import { SceneStoryboardEditor } from './SceneStoryboardEditor';
 import { SceneDownloads } from './SceneDownloads';
 import { SegmentStageStrip } from './SegmentStageStrip';
 import { TabSelect } from './TabSelect';
+import { MessagePanel } from './MessagePanel';
 import { PREVIOUS_ENDING } from '../previousEpisodeEnding';
 import type { PreviousEpisodeEnding } from '../previousEpisodeEnding';
 
@@ -171,22 +171,29 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
       <button onClick={() => changeRound(sceneRounds.at(-1)!.number)}>最新修改轮次</button>
     </div>}
     </div>
-    {!!productionRound?.issues.length && <p className="error" role="alert">{productionRound.issues.join('；')}；不会换用当前文档。</p>}
     <div className="episode-scene-content" aria-label={scene ? `场次 ${scene} 内容` : '场次内容'}>
-    {view === 'segments' ? <>
+    {view === 'segments' && <>
     {segments.length === 0 ? <div className="scene-empty" role="status"><h3>{scene ? '暂无可显示的分段' : '暂无可显示的场次'}</h3><p className="muted">{emptyMessage}</p></div> : null}
-    {segments.some((item, index) => index > 0 && Number(item.id.slice(1)) < Number(segments[index - 1].id.slice(1))) && <p className="segment-order-note muted">分段按分镜索引中的剧情顺序排列，编号保留原标识。</p>}
     {!wideVideo && (segments.length > 0 || previousEnding) && navigation()}
-    {!wideVideo && (videoCache.total > 0 || productionRound) && <PointerTooltip text={videoCache.failures.join('\n')}><p className="scene-video-preparation" role="status" >
-      {productionRound ? `第${productionRound.number}轮视频已准备 ${videoCache.ready}／${productionRound.segments.length}${missingRoundVideos ? `，${missingRoundVideos}段尚无可播放视频` : ''}${videoCache.failures.length ? `，${videoCache.failures.length}个准备失败` : ''}` : videoCache.failures.length ? `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
-        : videoCache.ready === videoCache.total ? `${reviewRound ? '本轮' : '最新'}视频已全部准备好` : `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}`}{(reviewRound ? !!roundVideo(PREVIOUS_ENDING)?.url : !!previousVideo) ? '（含上集末段）' : ''}
-    </p></PointerTooltip>}
-    {reviewRound && (!productionRound || (savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key)) && <div className="scene-review-round">
-      {!productionRound && <button disabled={!chosen.stage} onClick={() => beginReview(false)}>重新固定浏览片单</button>}
-      {savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key && <span>当前查看版本不属于本轮，导出仍按本轮版本。</span>}
-    </div>}
-    {error && <p className={error.unavailable ? 'error' : 'muted'} role={error.unavailable ? 'alert' : 'status'}>{error.message}</p>}
-    {viewingPrevious && <p className="previous-ending-context">上集末段{productionRound ? '（接续参考，不属于本场修改轮次）' : ''} · {previousEnding!.episode} · {previousEnding!.scene} · {currentSegment!.id} <span>点击本集分段返回</span></p>}
+    </>}
+    <MessagePanel label="场次提示" messages={[
+      !!productionRound?.issues.length && { id: 'round-issues', tone: 'error', content: `${productionRound.issues.join('；')}；不会换用当前文档。` },
+      view === 'segments' && (videoCache.total > 0 || !!productionRound) && {
+        id: 'preparation', tone: videoCache.failures.length ? 'warning' : 'info', detail: videoCache.failures.join('\n'),
+        content: <>{productionRound ? `第${productionRound.number}轮视频已准备 ${videoCache.ready}／${productionRound.segments.length}${missingRoundVideos ? `，${missingRoundVideos}段尚无可播放视频` : ''}${videoCache.failures.length ? `，${videoCache.failures.length}个准备失败` : ''}` : videoCache.failures.length ? `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}，${videoCache.failures.length}个准备失败`
+          : videoCache.ready === videoCache.total ? `${reviewRound ? '本轮' : '最新'}视频已全部准备好` : `${reviewRound ? '本轮' : '最新'}视频已准备 ${videoCache.ready}／${videoCache.total}`}{(reviewRound ? !!roundVideo(PREVIOUS_ENDING)?.url : !!previousVideo) ? '（含上集末段）' : ''}</>,
+      },
+      view === 'segments' && !!reviewRound && (!productionRound || !!(savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key)) && {
+        id: 'review-round', content: savedRevision && reviewRound.versions[segment]?.key !== savedRevision.key ? '当前查看版本不属于本轮，导出仍按本轮版本。' : null,
+        actions: !productionRound && <button disabled={!chosen.stage} onClick={() => beginReview(false)}>重新固定浏览片单</button>,
+      },
+      view === 'segments' && !!error && { id: 'playback', tone: error.unavailable ? 'error' : 'info', content: error.message },
+      view === 'segments' && viewingPrevious && { id: 'previous-ending', content: <>上集末段{productionRound ? '（接续参考，不属于本场修改轮次）' : ''} · {previousEnding!.episode} · {previousEnding!.scene} · {currentSegment!.id}，点击本集分段返回</> },
+      view === 'segments' && segments.some((item, index) => index > 0 && Number(item.id.slice(1)) < Number(segments[index - 1].id.slice(1))) && { id: 'segment-order', content: '分段按分镜索引中的剧情顺序排列，编号保留原标识。' },
+      view === 'storyboard' && !!productionRound && !storyboardDocument && { id: 'storyboard-missing', tone: 'error', content: '本轮分镜文件不可用，请核对轮次资料。' },
+      view === 'dialogue' && !!productionRound && productionRound.number !== sceneRounds.at(-1)?.number && { id: 'historical-round', content: '当前为历史轮次，请切换到最新修改轮次后编辑。' },
+    ]} />
+    {view === 'segments' ? <>
     {currentSegment && <SegmentWorkspace key={`${displayScope.episode}/${displayScope.scene}/${currentSegment.id}`} scope={displayScope} segment={currentSegment.id} revision={revision} items={currentSegment.videos} selection={chosen} cachedSources={videoCache.sources} retainSource={videoCache.retainSource}
       tab={segmentTab} onTabChange={setSegmentTab}
       plannedScript={viewingRoundRevision ? { html: roundEntry.scriptHtml, url: roundEntry.scriptUrl,
@@ -202,8 +209,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
       {!scene ? <p className="muted">本集尚无场次分镜。</p> : <>
         {!storyboardDocument && !productionRound && <Result loading={storyboard.isPending} error={storyboard.error} retry={storyboard.refetch} retrying={storyboard.isFetching} />}
         {(storyboardDocument || (!productionRound && storyboard.data)) && <Document key={productionRound?.number || 'current'} value={storyboardDocument || storyboard.data!} />}
-        {productionRound && !storyboardDocument && <p className="error">本轮分镜文件不可用，请核对轮次资料。</p>}
       </>}
-    </div> : view === 'dialogue' ? productionRound && productionRound.number !== sceneRounds.at(-1)?.number ? <p className="muted">当前为历史轮次，请切换到最新修改轮次后编辑。</p> : <SceneStoryboardEditor key={positionKey} scope={scope} segments={segments} /> : <SceneDownloads project={scope.project} episode={scope.episode} scene={scene} revision={revision} />}
+    </div> : view === 'dialogue' ? productionRound && productionRound.number !== sceneRounds.at(-1)?.number ? null : <SceneStoryboardEditor key={positionKey} scope={scope} segments={segments} /> : <SceneDownloads project={scope.project} episode={scope.episode} scene={scene} revision={revision} />}
   </div></>;
 }
