@@ -53,6 +53,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
       setRoundNumbers(previous => ({ ...previous, [key]: sceneRounds.at(-1)!.number }));
   }, [current?.name, selectedScene, sceneRounds, roundNumbers, setRoundNumbers]);
   const script = round ? round.script : current?.script;
+  const storyboards = { ...current?.storyboards, ...(round ? { [selectedScene]: round.storyboard } : {}) };
   const selectRound = (number: number) => setRoundNumbers(previous => ({ ...previous, [current!.name + '/' + selectedScene]: number }));
   const issues = (current?.productionIssues || []).filter(issue => !issue.scene || issue.scene === selectedScene);
   const episodeComplete = current?.productionComplete && !current.productionIssues?.length && scenes.length > 0 && scenes.every(id => {
@@ -81,8 +82,23 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
       title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理正式版视频`} />, breadcrumbActions)}
     <div className="episode-scene-header">
       {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
-      <PointerTooltip text={script ? undefined : `${contentLabel}尚未建立`}><button className="link episode-script-link" disabled={!script}  onClick={() => preview(script!)}>查看{contentLabel}</button></PointerTooltip>
     </div>
+    <section className="production-documents" aria-label="制作资料">
+      <h3>制作资料</h3>
+      {[
+        { label: contentLabel, files: script ? [script] : [], empty: `${contentLabel}尚未编写` },
+        { label: '分镜索引', files: current.storyboardIndex ? [current.storyboardIndex] : [], empty: '分镜索引尚未编写' },
+        { label: '场次分镜', files: Object.values(storyboards).filter(file => file !== null), empty: '场次分镜尚未编写' },
+        { label: '生成方案', files: current.generationPlan ? [current.generationPlan] : [], empty: '生成方案尚未编写' },
+        { label: '视频提示词', files: current.videoPrompts || [], empty: '视频提示词尚未编写' },
+      ].map(group => <div className="production-document-row" key={group.label}>
+        <strong>{group.label}</strong><div>{group.files.length ? group.files.map(file => {
+          const meta = file.doc?.meta as Record<string, string> | undefined;
+          return <div key={file.key}><button className="link" onClick={() => preview(file)}>查看{group.label === contentLabel ? contentLabel : file.name}</button>
+            <span className="muted"> · {meta?.['文档版本'] || '版本未记录'} · {meta?.['确认状态'] || '状态未记录'}</span></div>;
+        }) : <span className="muted">{group.empty}</span>}</div>
+      </div>)}
+    </section>
     {!!current.materials?.length && <details className="asset-candidate-type production-materials"><summary>专用素材与图片候选（{current.materials.length}）</summary>
       {current.materialRecord && <p><button className="link" onClick={() => preview(current.materialRecord!)}>查看素材生成与审阅记录</button></p>}
       <div className="asset-media-grid">{current.materials.map(file => <article className="asset-media-card" key={file.key}>

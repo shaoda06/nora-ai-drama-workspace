@@ -311,18 +311,16 @@ def needs_content_review(data):
 
 
 def storyboard_index_checks(data, mapping):
-    from backend.parsers.project import table_records, storyboard_index_identity
+    from backend.parsers.project import table_records, storyboard_index_identity, production_scene_ids
     episode = mapping['scene'].split('-')[0]
     base = '09-剧集制作/' + episode
     script_key = base + '/02-剧集剧本/' + episode + '-本集剧本.md'
     index_key = base + '/03-分镜脚本/' + episode + '-分镜索引.md'
     script = project_file(data.project, script_key).read_text('utf-8-sig')
     index = project_file(data.project, index_key).read_text('utf-8-sig')
-    body = re.search(r'^##[ \t]+1\.[ \t]*故事剧本正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)', script, re.M | re.S)
-    scenes = re.findall(r'^###[ \t]+' + re.escape(episode) + r'-(C\d{3,})[ \t]*$',
-                        body[1] if body else '', re.M)
+    scenes = production_scene_ids(script, episode)
     if not scenes:
-        raise ValueError(script_key + '：缺少故事剧本正文或完整场次标题')
+        raise ValueError(script_key + '：缺少内容正文或完整场次标题')
     rows = table_records(index, ('场次', '分段', '分段计划时长（秒）'))
     if not rows:
         raise ValueError(index_key + '：没有可读取的分段表')

@@ -177,5 +177,24 @@ class SyncCurrentDocumentsTests(unittest.TestCase):
         self.assertFalse(target.exists())
 
 
+    def test_shared_design_and_index_publish_together(self):
+        for name in ('片头', '片尾'):
+            base = self.project / '09-剧集制作' / name
+            work = base / '其他资料/工作稿'
+            work.mkdir(parents=True)
+            script_draft = work / (name + '-本集剧本-工作稿.md')
+            script_draft.write_text(f'## 1. 当前内容\n### {name}内容稿\n#### 3. 动画内容\n##### {name}-C001\n飞机飞走。\n', encoding='utf-8')
+            index_draft = work / (name + '-分镜索引-工作稿.md')
+            index_draft.write_text('## 1. 当前内容\n### 分镜索引\n| 场次 | 分段 | 分段计划时长（秒） |\n| --- | --- | --- |\n'
+                                   f'| {name}-C001 | {name}-C001-P001 | 3 |\n', encoding='utf-8')
+            script_target = base / '02-剧集剧本' / (name + '-本集剧本.md')
+            index_target = base / '03-分镜脚本' / (name + '-分镜索引.md')
+            result = sync.sync_documents(self.project, [{'draft': str(script_draft), 'target': str(script_target)},
+                {'draft': str(index_draft), 'target': str(index_target)}], self.archive)
+            self.assertEqual(len(result['written']), 2)
+            self.assertIn('## 3. 动画内容', script_target.read_text(encoding='utf-8'))
+            self.assertIn(name + '-C001-P001 | 3', index_target.read_text(encoding='utf-8'))
+
+
 if __name__ == '__main__':
     unittest.main()

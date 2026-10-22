@@ -401,6 +401,13 @@ def document_preview(text, source):
     }
 
 
+def production_scene_ids(text, episode):
+    chapter = r"(?:3\.[ \t]*动画内容|1\.[ \t]*故事剧本正文)" if episode in ("片头", "片尾") else r"1\.[ \t]*故事剧本正文"
+    body = re.search(r"^##[ \t]+" + chapter + r"[ \t]*\n(.*?)(?=^##[ \t]|\Z)", text, re.M | re.S)
+    return list(dict.fromkeys(re.findall(r"^###[ \t]+" + re.escape(episode) + r"-(C\d{3,})[ \t]*$",
+                                        body[1] if body else "", re.M)))
+
+
 def storyboard_index_identity(episode, scenes, row):
     identity = re.fullmatch(re.escape(episode) + r"-(C\d{3,})-(P\d{3,})", row["分段"])
     if not identity or identity[1] not in scenes or row["场次"] != episode + "-" + identity[1]:
@@ -1317,31 +1324,49 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             issues = episode_node["productionIssues"] = []
             episode_node["script"], script = latest_episode_document(
                 episode_root + "/02-剧集剧本/" + number + "-本集剧本.md", work_root + number + "-本集剧本-工作稿.md")
-            script_body = re.search(r"^##[ \t]+1\.[ \t]*故事剧本正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)", script, re.M | re.S)
-            episode_node["scenes"] = list(dict.fromkeys(re.findall(
-                r"^###[ \t]+" + re.escape(number) + r"-(C\d{3,})[ \t]*$",
-                script_body[1] if script_body else "", re.M)))
+            episode_node["scenes"] = production_scene_ids(script, number)
             if episode_node["script"] and not episode_node["scenes"]:
                 issues.append({"key": episode_node["script"]["key"], "message":
-                    "缺少二级标题“1. 故事剧本正文”（##），或该章中没有三级场次标题（### " + number + "-C001）。"})
+                    ("缺少二级标题“3. 动画内容”（##），或该章中没有三级场次标题（### " if number in ("片头", "片尾") else
+                     "缺少二级标题“1. 故事剧本正文”（##），或该章中没有三级场次标题（### ") + number + "-C001）。"})
+            board_scenes = sorted({match[1] for folder in (episode_root + "/03-分镜脚本", work_root)
+                for item in inventory(folder)
+                if (match := re.fullmatch(re.escape(number) + r"-(C\d{3,})-场次分镜(?:-工作稿)?\.md", item["name"]))})
+            # Documents remain readable before an upstream script or video exists.
+            source_scenes = episode_node["scenes"]
+            if not source_scenes:
+                episode_node["scenes"] = board_scenes
             episode_node["segments"] = {scene: [] for scene in episode_node["scenes"]}
             episode_node["storyboards"] = {}
             from .scene_rounds import load_scene_rounds
             episode_node['sceneRounds'] = {scene: load_scene_rounds(project, number, scene, read)
                                           for scene in episode_node['scenes']} if episode_mode != 'ending' else {}
             storyboard_texts = {}
-            for scene in episode_node["scenes"]:
+            for scene in dict.fromkeys([*episode_node["scenes"], *board_scenes]):
                 identity = number + "-" + scene + "-场次分镜"
                 item, text = latest_episode_document(episode_root + "/03-分镜脚本/" + identity + ".md",
                                                      work_root + identity + "-工作稿.md")
                 if item:
                     episode_node["storyboards"][scene] = item
                     storyboard_texts[scene] = text
+                    if source_scenes and scene not in source_scenes:
+                        issues.append({"key": item["key"], "message": "场次 " + number + "-" + scene + " 未在上游正文中定义；分镜文档仍可独立查看。"})
                     if not re.search(r"^##[ \t]+1\.[ \t]*镜头正文[ \t]*$", text, re.M):
                         issues.append({"key": item["key"], "scene": scene,
                                        "message": "缺少二级标题“1. 镜头正文”（##），无法读取本场镜头。"})
             index_item, storyboard_index_text = latest_episode_document(episode_root + "/03-分镜脚本/" + number + "-分镜索引.md",
                                                             work_root + number + "-分镜索引-工作稿.md")
+            episode_node["storyboardIndex"] = index_item
+            episode_node["generationPlan"], _ = latest_episode_document(episode_root + "/05-视频提示词/" + number + "-生成说明.md",
+                                                                       work_root + number + "-生成说明-工作稿.md")
+            prompt_ids = sorted({match[1] for folder in (episode_root + "/05-视频提示词", work_root)
+                for item in inventory(folder)
+                if (match := re.fullmatch(r"(" + re.escape(number) + r"-C\d{3,}-P\d{3,}-视频提示词)(?:-工作稿)?\.md", item["name"]))})
+            episode_node["videoPrompts"] = []
+            for identity in prompt_ids:
+                item, _ = latest_episode_document(episode_root + "/05-视频提示词/" + identity + ".md", work_root + identity + "-工作稿.md")
+                if item:
+                    episode_node["videoPrompts"].append(item)
             storyboard_index = index_item["key"] if index_item else episode_root + "/03-分镜脚本/" + number + "-分镜索引.md"
             index_rows = table_records(storyboard_index_text, ("场次", "分段", "分段计划时长（秒）"))
             if index_item and not index_rows:

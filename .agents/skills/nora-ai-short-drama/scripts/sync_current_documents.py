@@ -188,12 +188,9 @@ def validate_storyboard_indexes(paths, pending, read):
             path = paths.file(key)
             data = proposed[path] if path in proposed else read(path, required=True)
             documents[key] = data.decode('utf-8-sig')
-        body = re.search(r'^##[ \t]+1\.[ \t]*故事剧本正文[ \t]*\n(.*?)(?=^##[ \t]|\Z)',
-                         documents[script_key], re.M | re.S)
-        scenes = re.findall(r'^###[ \t]+' + re.escape(episode) + r'-(C\d{3,})[ \t]*$',
-                            body[1] if body else '', re.M)
+        scenes = parser.production_scene_ids(documents[script_key], episode)
         if not scenes:
-            raise ValueError(script_key + '：缺少故事剧本正文或完整场次标题')
+            raise ValueError(script_key + '：缺少内容正文或完整场次标题')
         rows = parser.table_records(documents[index_key], ('场次', '分段', '分段计划时长（秒）'))
         if not rows:
             raise ValueError(index_key + '：没有可读取的分段表')
