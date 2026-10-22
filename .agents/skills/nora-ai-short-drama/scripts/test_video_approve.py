@@ -245,6 +245,40 @@ class ApprovalTests(unittest.TestCase):
                 tool.browser_sync(self.root, 'EP001', '后处理', self.plan['identities'][:1], False, 30)
         self.assertTrue(any('/episodes/EP001' in p for p in called))
 
+    def test_browser_verification_encodes_opening_and_ending_paths(self):
+        workspace = self.root.parent.parent
+        self.fixture.put(workspace / '工作区浏览服务/runtime/task-service.json', {'url': 'http://browser.invalid'})
+        progress = (self.root / '项目进度.md').read_text()
+        for episode in ('片头', '片尾'):
+            with self.subTest(episode=episode):
+                self.fixture.put(self.root / '项目进度.md', progress.replace('EP001制作', episode + '制作'))
+                paths = []
+
+                class Opener:
+                    def open(inner, url, timeout):
+                        url.encode('ascii')  # urllib's HTTP request target must be encoded.
+                        path = urllib.parse.urlsplit(url).path
+                        paths.append(path)
+                        if path == '/api/service':
+                            value = {'workspace': str(workspace), 'ready': True}
+                        elif path.endswith('/status'):
+                            value = {'updating': False, 'checking': False, 'error': None}
+                        elif '/files/' in path:
+                            return io.BytesIO((self.root / '项目进度.md').read_bytes())
+                        elif '/episodes/' in path:
+                            value = {'segments': {'C001': [{'id': 'P001', 'videos': [
+                                {'stage': '一采', 'run': 'R003', 'approved': True}]}]}}
+                        else:
+                            raise AssertionError('Unexpected endpoint ' + path)
+                        return io.BytesIO(json.dumps(value).encode())
+
+                with patch.object(tool.urllib.request, 'build_opener', return_value=Opener()):
+                    result = tool.browser_sync(self.root, episode, '一采',
+                                               [episode + '-C001-P001-R003-一采'], False, 30)
+                self.assertEqual(result['state'], 'verified')
+                self.assertTrue(any(path.endswith('/episodes/' + urllib.parse.quote(episode, safe=''))
+                                    for path in paths))
+
     def test_browser_checking_timeout_and_idle_error_do_not_read_episode(self):
         workspace = self.root.parent.parent
         self.fixture.put(workspace / '工作区浏览服务/runtime/task-service.json', {'url': 'http://browser.invalid'})

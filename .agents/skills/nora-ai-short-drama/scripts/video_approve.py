@@ -105,7 +105,7 @@ def browser_sync(root, episode, stage, identities, complete, timeout):
     _, expected = project_progress.phase_row((root / '项目进度.md').read_text('utf-8-sig'), episode)
     if actual != expected:
         raise ValueError('网页尚未同步本批阶段行的状态、成果、待决事项和下一步')
-    data = get(route + '/episodes/' + episode)
+    data = get(route + '/episodes/' + urllib.parse.quote(episode, safe=''))
     seen = set()
     for scene_name, rows in data['segments'].items():
         for row in rows:
