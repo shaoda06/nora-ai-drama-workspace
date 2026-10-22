@@ -157,5 +157,3 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .danger-button,.local-queue-card-actions>button[data-tone=red]{background:#fae6e3;color:#ac493b;border-color:#e1bbb4}
 
 .danger-button:hover:not(:disabled),.local-queue-card-actions>button[data-tone=red]:hover:not(:disabled){background:#f2ccc6;border-color:#ac493b}
-
-.production-documents{margin:20px 0;padding-bottom:16px;border-bottom:1px solid var(--line)}.production-documents h3{margin:0 0 12px}.production-document-row{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 16px;padding:8px 0}.production-document-row .link{max-width:100%;text-align:left;overflow-wrap:anywhere}.production-document-row .muted{font-size:13px}@media(max-width:600px){.production-document-row{grid-template-columns:1fr;gap:4px}}
