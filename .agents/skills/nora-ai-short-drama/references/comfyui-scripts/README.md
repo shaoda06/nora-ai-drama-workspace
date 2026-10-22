@@ -833,7 +833,7 @@ python .agents/skills/nora-ai-short-drama/scripts/video_revision_migrate.py --pr
 python -X utf8 .agents/skills/nora-ai-short-drama/scripts/scene_rounds.py --project "项目根目录绝对路径" --episode EP003 --scene C001 --plan "完整组合计划.json"
 ```
 
-从工作区根目录运行，Python标准库即可。`--project`指定实际项目根目录，`--episode`和`--scene`为目标集／场次；`--plan`是UTF-8 JSON文件路径。工具核对文件范围、文档版本和分段身份，保留剧本分镜副本并调整相对链接，向唯一组合JSON追加下一轮；原R、提示词、输入素材、执行和审核记录不改。未变文档复用上一轮副本，旧轮次不覆盖。成功输出组合文件、轮次整数和分段数，错误以非零退出，不联网、不生成媒体、不登记后台任务。新视频任务输入映射必须使用输出的轮次整数填写`scene_modification_round`，并填写`screenplay_version`、`scene_storyboard_version`及选中组的`duration_seconds`（兼容既有`durationSec`）。准备报告保存所引用的组合，校验选中组身份、版本和计划时长；未选中组仍可保留原缓存时间线，不用它确定整场播放候选。后续增加其他轮次不会使该报告失效。只有原先已登记的旧任务保留无此字段的恢复兼容，不改原执行证据、不补造轮次归属；旧报告不能用于跳过新任务准备。
+从工作区根目录运行，Python标准库即可。`--project`指定实际项目根目录，`--episode`和`--scene`为目标集／场次；`--plan`是UTF-8 JSON文件路径。工具核对文件范围、文档版本和分段身份，保留剧本分镜副本并调整相对链接，向唯一组合JSON追加下一轮；原R、提示词、输入素材、执行和审核记录不改。未变文档复用上一轮副本，旧轮次不覆盖。成功输出组合文件、轮次整数和分段数，错误以非零退出，不联网、不生成媒体、不登记后台任务。新视频任务输入映射必须使用输出的轮次整数填写`scene_modification_round`，并填写`screenplay_version`、`scene_storyboard_version`及选中组的`duration_seconds`（兼容既有`durationSec`）。准备报告保存所引用的组合，校验选中组身份、版本和计划时长；生成长于成片时，每段额外填写`playback_duration_seconds`（如3），保留`duration_seconds`为实际模型请求（如4）；轮次`duration`仍为成片3秒，生成说明记录采用0–3秒及余量用途。工具分别检查两种时长，并拒绝请求短于成片；未传新字段的旧式同长任务保持原检查。未选中组仍可保留原缓存时间线，不用它确定整场播放候选。后续增加其他轮次不会使该报告失效。只有原先已登记的旧任务保留无此字段的恢复兼容，不改原执行证据、不补造轮次归属；旧报告不能用于跳过新任务准备。
 
 回归检查（工作区根目录，隔离临时项目与模拟端点）：
 

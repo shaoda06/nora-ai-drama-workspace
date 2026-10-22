@@ -27,8 +27,11 @@ def scene_round_basis(project, mapping, task_type):
         if fixed is None or fixed['stage'] != STAGES[task_type] or fixed['run'] != item['round']:
             raise ValueError('执行分段身份与场次修改轮次不一致：' + item['segment'])
         duration = item.get('duration_seconds', item.get('durationSec'))
-        if duration != fixed['duration']:
+        playback_duration = item.get('playback_duration_seconds', duration)
+        if playback_duration != fixed['duration']:
             raise ValueError('执行分段计划时长与场次修改轮次不一致：' + item['segment'])
+        if duration < playback_duration:
+            raise ValueError('生成请求时长不能短于成片计划时长：' + item['segment'])
     return revision
 
 
@@ -58,10 +61,10 @@ def validate_segment_context(project, workflow, task_type, mapping, *, timelines
         entries[index] = {'identity': identity, 'directory': directory}
     revision = scene_round_basis(path_scope.project, mapping, task_type)
     if revision is not None:
-        expected = {item['id']: item for item in revision['segments']}
         for index in indices:
-            segment = mapping['segments'][index]['segment']
-            if timeline['segments'][index]['durationSec'] != expected[segment.split('-')[-1]]['duration']:
+            item = mapping['segments'][index]
+            segment = item['segment']
+            if timeline['segments'][index]['durationSec'] != item.get('duration_seconds', item.get('durationSec')):
                 raise ValueError('实际执行选中段计划时长与场次修改轮次不一致：' + segment)
     return {'director': director, 'timeline': timeline, 'indices': indices, 'entries': entries, 'project': path_scope.project}
 
