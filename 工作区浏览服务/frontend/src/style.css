@@ -26,7 +26,7 @@
 .style-sample{margin:0;text-align:center}.style-sample img{width:min(100%,420px);height:auto;object-fit:contain}
 .style-sample figcaption{text-align:center;color:var(--muted);font-size:13px;margin-bottom:8px}
 .table-scroll{overflow:auto}.prose .table-scroll table{display:table;min-width:640px;margin:0}
-.segment-script .prose .table-scroll table{min-width:0}.segment-script .prose th,.segment-script .prose td{overflow-wrap:anywhere;white-space:normal}
+.segment-script .prose .table-scroll table,.project-index-document .prose .table-scroll table{min-width:0}.segment-script .prose th,.segment-script .prose td{overflow-wrap:anywhere;white-space:normal}
 .prose tr[id^=phase-]{scroll-margin-top:85px}.dialog-body .prose h2,.dialog-body .prose h3{scroll-margin-top:100px}
 @media(max-width:760px){.style-samples{grid-template-columns:minmax(0,1fr)}}
 .project-page{padding-top:24px}

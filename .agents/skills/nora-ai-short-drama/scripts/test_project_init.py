@@ -35,7 +35,7 @@ class ProjectInitializationTests(unittest.TestCase):
         self.assertTrue(report["index_added"])
         index = self.project.parent / "项目总索引.md"
         self.assertEqual(report["project_index"], str(index.resolve()))
-        self.assertEqual(index.read_text(encoding="utf-8"), "# 项目总索引\n\n1. 测试 短片\n")
+        self.assertEqual(index.read_text(encoding="utf-8"), "# 项目总索引\n\n| 编号 | 项目名称 |\n| --- | --- |\n| 01 | 测试 短片 |\n")
         self.assertEqual(len(report["created"]), 21)
         self.assertEqual({path.name for path in self.project.iterdir()}, {
             "00-项目定位", "01-主旨与简介", "02-故事大纲", "03-人物资料",
@@ -64,6 +64,19 @@ class ProjectInitializationTests(unittest.TestCase):
         self.assertFalse(initialize(self.project)["index_added"])
         initialize(other, "片尾")
         self.assertEqual(index.read_text(encoding="utf-8"), expected)
+        self.assertEqual(index.stat().st_mtime_ns, before)
+
+    def test_table_append_preserves_order_and_repeat_does_not_rewrite(self):
+        initialize(self.project)
+        index = self.project.parent / "项目总索引.md"
+        source = "# 项目总索引\n\n| 编号 | 项目名称 |\n| --- | --- |\n| 01 | 已有项目 |\n| 02 | 测试 短片 |\n"
+        index.write_text(source, encoding="utf-8")
+        other = self.project.with_name("第二个项目")
+        self.assertTrue(initialize(other)["index_added"])
+        self.assertEqual(index.read_text(encoding="utf-8"), source + "| 03 | 第二个项目 |\n")
+        before = index.stat().st_mtime_ns
+        self.assertFalse(initialize(other)["index_added"])
+        initialize(other, "EP001")
         self.assertEqual(index.stat().st_mtime_ns, before)
 
     def test_repair_adds_missing_registration_without_touching_other_entries(self):

@@ -60,12 +60,12 @@ class ProjectIndexTests(HttpTestCase):
         self.assertEqual(self.names(), ['甲项目', '丙项目', '乙项目', '新项目'])
 
     def test_index_document_renders_actual_source_read_only_and_reads_changes(self):
-        source = '# 项目总索引\n\n1. 甲项目\n2. <script>乙项目</script>\n'
+        source = '# 项目总索引\n\n| 编号 | 项目名称 |\n| --- | --- |\n| 01 | 甲项目 |\n| 02 | <script>乙项目</script> |\n'
         self.index.write_text(source, encoding='utf-8-sig')
         response = self.client.get('/api/project-index')
         response.raise_for_status()
         self.assertEqual(response.json()['title'], '项目总索引')
-        self.assertIn('<ol>', response.json()['html'])
+        self.assertIn('<table>', response.json()['html'])
         self.assertIn('&lt;script&gt;', response.json()['html'])
         self.assertNotIn('<script>', response.json()['html'])
         self.assertNotIn('url', response.json())
@@ -73,6 +73,18 @@ class ProjectIndexTests(HttpTestCase):
         self.index.write_text('# 项目总索引\n\n1. 乙项目\n', encoding='utf-8')
         self.assertIn('乙项目', self.client.get('/api/project-index').json()['html'])
         self.assertNotIn('甲项目', self.client.get('/api/project-index').json()['html'])
+
+    def test_table_orders_projects_and_initialization_appends_a_table_row(self):
+        source = '# 项目总索引\n\n| 编号 | 项目名称 |\n| --- | --- |\n| 01 | 甲项目 |\n| 02 | 丙项目 |\n| 03 | 乙项目 |\n'
+        self.index.write_text(source, encoding='utf-8')
+        self.assertEqual(self.names(), ['甲项目', '丙项目', '乙项目'])
+        initialize(self.root / '新项目')
+        self.assertEqual(self.names(), ['甲项目', '丙项目', '乙项目', '新项目'])
+        self.assertEqual(self.index.read_text(encoding='utf-8'), source + '| 04 | 新项目 |\n')
+        document = self.client.get('/api/project-index').json()
+        self.assertIn('<th>编号</th>', document['html'])
+        self.assertIn('<th>项目名称</th>', document['html'])
+        self.assertIn('<td>04</td>', document['html'])
 
     def test_missing_index_document_reports_missing_without_creating_file(self):
         response = self.client.get('/api/project-index')
