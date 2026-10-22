@@ -5,7 +5,7 @@ import { get, projectUrl } from './api';
 import type { FileItem, Group, RecordData } from './api';
 import { CopyButton } from './components/CopyButton';
 import { TabNav } from './components/TabNav';
-import { FloatingMessage, useNotify } from './components/Notifications';
+import { FloatingMessage } from './components/Notifications';
 import { DocumentInformation } from './components/DocumentInformation';
 import { Loading } from './components/Loading';
 import { ChapterNavigation } from './components/ChapterNavigation';
@@ -15,9 +15,7 @@ export const PreviewContext = createContext<(item: FileItem) => void>(() => {});
 export function Result({ loading, error, retry, retrying, page = false }: {
   loading: boolean; error: Error | null; retry: () => unknown; retrying: boolean; page?: boolean;
 }) {
-  const notify = useNotify();
-  useEffect(() => { if (error) return notify('资料读取失败，请点击重新读取。', 'error'); }, [error, notify]);
-  if (error) return <p className="error" role="alert">资料读取失败，请点击重新读取。 <button disabled={retrying} onClick={() => { void retry(); }}>{retrying ? '正在读取…' : '重新读取'}</button></p>;
+  if (error) return <FloatingMessage tone="error">资料读取失败，请点击重新读取。 <button disabled={retrying} onClick={() => { void retry(); }}>{retrying ? '正在读取…' : '重新读取'}</button></FloatingMessage>;
   return loading && !error ? <Loading page={page} /> : null;
 }
 type LanguageOption = { value: string; label: string; text: string; html?: string };
