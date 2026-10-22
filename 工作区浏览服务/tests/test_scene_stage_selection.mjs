@@ -155,6 +155,7 @@ test('quality selection waits for a concrete version; selection chooses latest m
   let state = app.render();
   assert.equal(state.workspace.segment, 'P003');
   assert.equal(state.workspace.selection.key, 'P003-R022-一采');
+  assert.equal(state.messages.messages.some(message => message?.id === 'playback'), false, 'successful version-linked round change must not create a message');
   assert.equal(state.workspace.autoPlay, false);
   assert.equal(continuousInput(state).checked, false);
   state.navigation.onSelect('P001');

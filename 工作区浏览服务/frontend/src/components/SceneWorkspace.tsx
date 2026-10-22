@@ -159,7 +159,6 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
         && (!latest || round.number > latest.number) ? round : latest, undefined);
     if (matchingRound) {
       changeRound(matchingRound.number, true);
-      if (matchingRound.number !== selectedRound) setError({ unavailable: false, message: `已切换到包含此版本的最新轮次：第${matchingRound.number}轮。` });
       return;
     }
     setSelections(previous => ({ ...previous, [segment]: value }));
