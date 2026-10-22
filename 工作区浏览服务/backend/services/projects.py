@@ -13,7 +13,7 @@ from backend.parsers.generation import load_context
 logger = logging.getLogger(__name__)
 
 # Increment only when the parsed project data or interpretation becomes incompatible.
-CACHE_SCHEMA = 6
+CACHE_SCHEMA = 7
 
 class ProjectStore:
     """Parse on demand; keep the last complete result while a change is read."""
@@ -74,7 +74,7 @@ class ProjectStore:
         return result
 
     def cache_snapshot(self, snapshot, part, data):
-        episode = re.match(r'09-剧集制作--(EP\d{3,})--(?:playback|ending|context)(?:--|$)', part or '')
+        episode = re.match(r'09-剧集制作--((?:EP\d{3,}|片头|片尾))--(?:playback|ending|context)(?:--|$)', part or '')
         if episode is None:
             return snapshot
         number = episode[1]
@@ -200,7 +200,7 @@ class ProjectStore:
                          error=None, error_kind=None, updating=False, retry_at=0.0, retry_at_time=0.0, sections=sections)
 
     def section(self, name: str, scope: str, episode: str | None = None, mode='full', candidate=None):
-        if scope not in FORMAL_SECTIONS or episode is not None and not re.fullmatch(r'EP\d{3,}', episode):
+        if scope not in FORMAL_SECTIONS or episode is not None and not re.fullmatch(r'(?:EP\d{3,}|片头|片尾)', episode):
             raise FileNotFoundError('栏目或剧集不存在')
         entry = self.get(name)
         if candidate is not None and not re.fullmatch(re.escape(episode) + r'-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)', candidate):
@@ -240,7 +240,7 @@ class ProjectStore:
         path = (root / relative).resolve()
         if not path.is_relative_to(root) or any(p.startswith('.') for p in Path(relative).parts):
             raise FileNotFoundError('文件不存在或不在项目内')
-        identity = re.fullmatch(r'(EP\d{3,})-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)', path.stem)
+        identity = re.fullmatch(r'((?:EP\d{3,}|片头|片尾))-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)', path.stem)
         if revision and identity:
             if path.is_file():
                 stat = path.stat()

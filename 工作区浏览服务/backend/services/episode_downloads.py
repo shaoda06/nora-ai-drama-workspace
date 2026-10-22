@@ -13,7 +13,8 @@ DOWNLOAD_DIRECTORY = Path(__file__).resolve().parents[2] / 'runtime' / 'download
 
 
 def video_archive_name(name, episode):
-    return f'{name}-第{int(episode[2:])}集-正式版视频.zip'
+    label = episode if episode in ('片头', '片尾') else f'第{int(episode[2:])}集'
+    return f'{name}-{label}-正式版视频.zip'
 
 
 def video_member_name(path, scene_number, segment_number):

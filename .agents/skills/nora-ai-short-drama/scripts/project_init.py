@@ -30,8 +30,8 @@ def initialize(project, episode=None):
         directories = (".", *PROJECT_DIRECTORIES,
                        *("99-综合资料/" + item for item in GENERAL_DIRECTORIES))
     else:
-        if not re.fullmatch(r"EP[0-9]{3}", episode) or episode == "EP000":
-            raise ValueError("集号须为EP001至EP999，不使用零集号或路径。")
+        if not re.fullmatch(r"(?:EP[0-9]{3}|片头|片尾)", episode) or episode == "EP000":
+            raise ValueError("制作对象须为EP001至EP999、片头或片尾，不使用零集号或路径。")
         if not project.is_dir():
             raise FileNotFoundError("开始单集前须已有项目目录：" + str(project))
         root = "09-剧集制作/" + episode
@@ -62,7 +62,7 @@ def main(argv=None):
     parser.add_argument("--project", required=True,
                         help="项目根目录，例如projects/剧名；相对路径从当前工作目录解析，支持绝对路径。")
     parser.add_argument("--episode",
-                        help="可选集号EP001至EP999；指定后只建立该集的五个准备目录，项目根必须已存在。")
+                        help="可选制作对象EP001至EP999、片头或片尾；只建立该对象的五个准备目录，项目根必须已存在。")
     args = parser.parse_args(argv)
     try:
         result = initialize(args.project, args.episode)

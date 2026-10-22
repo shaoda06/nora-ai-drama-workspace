@@ -468,7 +468,7 @@ def episode_detail(name: str, episode: Episode, detail: Annotated[Literal['playb
     if current is None:
         raise HTTPException(404, '剧集不存在')
     previous = None
-    if int(episode[2:]) > 1:
+    if episode.startswith('EP') and int(episode[2:]) > 1:
         previous_id = 'EP' + str(int(episode[2:]) - 1).zfill(len(episode) - 2)
         prior = entry(name, '09-剧集制作', previous_id, mode='ending' if detail == 'playback' else 'full')['data']['catalogues']['09-剧集制作']['children']
         if prior:
@@ -518,7 +518,8 @@ def episode_download(name: str, episode: Episode, stage: Literal['一采', '二�
         files = episode_resources(store, name, episode, entry(name, '09-剧集制作', episode, mode='playback')['data'], scene)[stage][kind]
         if not files:
             raise FileNotFoundError(('本场' if scene else '本集') + '该阶段没有可下载的' + KINDS[kind])
-        filename = f'{name}-第{int(episode[2:])}集-{scene}-{stage}-正式版视频.zip' if scene else video_archive_name(name, episode)
+        label = episode if episode in ('片头', '片尾') else f'第{int(episode[2:])}集'
+        filename = f'{name}-{label}-{scene}-{stage}-正式版视频.zip' if scene else video_archive_name(name, episode)
         return zip_response(files, filename)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error

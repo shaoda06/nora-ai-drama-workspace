@@ -167,7 +167,7 @@ def validate_storyboard_indexes(paths, pending, read):
     episodes = set()
     proposed = {target: data for target, data, _ in pending}
     for target in proposed:
-        match = re.fullmatch(r'09-剧集制作/(EP\d{3,})/03-分镜脚本/'
+        match = re.fullmatch(r'09-剧集制作/((?:EP\d{3,}|片头|片尾))/03-分镜脚本/'
                              r'(?:\1-分镜索引|\1-C\d{3,}-场次分镜)\.md',
                              target.relative_to(paths.project).as_posix())
         if match:

@@ -36,7 +36,7 @@ def validate_segment_context(project, workflow, task_type, mapping, *, timelines
     """Shared fixed facts for segment retrieval and generation input records."""
     path_scope = path_scope if path_scope is not None else PreparationPaths(project)
     scene, stage = mapping['scene'], STAGES[task_type]
-    if not re.fullmatch(r'EP\d{3,}-C\d{3,}', scene):
+    if not re.fullmatch(r'(?:EP\d{3,}|片头|片尾)-C\d{3,}', scene):
         raise ValueError('输入映射的场次编号不正确')
     directors = [node for node in workflow.values() if node['class_type'] == 'MiniMaxH3Director']
     if len(directors) != 1:
@@ -74,7 +74,7 @@ def prepare_generation_context(project, record, workflow, task_type, uploaded_ma
         mapping = json.loads(path_scope.io_file(mapping_file).read_text(encoding='utf-8-sig'))
     stage = STAGES[task_type]
     scene = mapping['scene']
-    if (stage == '后处理' or segment_plan_checked) and not fixed_checked and not re.fullmatch(r'EP\d{3,}-C\d{3,}', scene):
+    if (stage == '后处理' or segment_plan_checked) and not fixed_checked and not re.fullmatch(r'(?:EP\d{3,}|片头|片尾)-C\d{3,}', scene):
         raise ValueError('输入映射的场次编号不正确')
     payloads = {}
 

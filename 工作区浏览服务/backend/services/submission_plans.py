@@ -408,7 +408,7 @@ def build_image(root, skill, spec, documents, now):
     if image_type == '画风样例':
         remote_output = remote_prefix(root, '图片生成', '画风样例', prefix)
     elif category == '剧集专用':
-        episode = re.search(r'EP\d+', spec['object'])[0]
+        episode = re.search(r'(?:EP\d+|片头|片尾)', spec['object'])[0]
         remote_output = remote_prefix(root, '图片生成', category, episode, remote_name)
     else:
         remote_output = remote_prefix(root, '图片生成', category, spec['object'], remote_name)

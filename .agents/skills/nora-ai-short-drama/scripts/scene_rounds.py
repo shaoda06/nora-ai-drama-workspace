@@ -10,7 +10,7 @@ import re
 STAGES = ('一采', '二采', '后处理')
 
 def manifest_key(episode, scene):
-    if not re.fullmatch(r'EP\d{3,}', episode) or not re.fullmatch(r'C\d{3,}', scene):
+    if not re.fullmatch(r'(?:EP\d{3,}|片头|片尾)', episode) or not re.fullmatch(r'C\d{3,}', scene):
         raise ValueError('集号或场次号不正确')
     return f'09-剧集制作/{episode}/其他资料/工作稿/{episode}-{scene}-场次修改轮次.json'
 

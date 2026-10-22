@@ -10,7 +10,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 
-Episode = Annotated[str, Field(pattern=r'^EP[0-9]{3,}$')]
+Episode = Annotated[str, Field(pattern=r'^(?:EP[0-9]{3,}|片头|片尾)$')]
 Scene = Annotated[str, Field(pattern=r'^C[0-9]{3,}$')]
 
 

@@ -14,7 +14,7 @@ import sqlite3
 from urllib.parse import unquote
 
 
-IDENTITY = re.compile(r'EP\d{3,}-C\d{3,}-P\d{3,}-R\d{3,}-(?:一采|二采|后处理)')
+IDENTITY = re.compile(r'(?:EP\d{3,}|片头|片尾)-C\d{3,}-P\d{3,}-R\d{3,}-(?:一采|二采|后处理)')
 MUTABLE_JSON = {'输入映射.json', '成果取回映射.json', '后台任务状态.json'}
 INACTIVE = {'completed', 'failed', 'cancelled', 'unknown', 'needs_attention', 'paused'}
 PHASES = {'first-pass': '一采', 'second-pass': '二采', 'postprocess': '后处理',
@@ -46,7 +46,7 @@ class Migration:
     def __init__(self, project, request):
         self.project = Path(project).resolve()
         self.episode = request['episode']
-        if not re.fullmatch(r'EP\d{3,}', self.episode):
+        if not re.fullmatch(r'(?:EP\d{3,}|片头|片尾)', self.episode):
             raise ValueError('episode 须为完整EP编号')
         self.root = self.project / '09-剧集制作' / self.episode
         self.rows = request['identities']

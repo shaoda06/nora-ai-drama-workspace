@@ -10,6 +10,7 @@ export interface PreviousEpisodeEnding {
 }
 
 export function previousEpisodeEnding(episodes: FileItem[], episode: string): PreviousEpisodeEnding | null {
+  if (episode === '片头' || episode === '片尾') return null;
   const number = Number(episode.slice(2));
   if (number === 1) return null;
   const previous = `EP${String(number - 1).padStart(episode.length - 2, '0')}`;

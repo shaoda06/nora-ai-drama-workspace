@@ -4,6 +4,10 @@ import { previousEpisodeEnding } from '../frontend/src/previousEpisodeEnding.ts'
 
 const segment = id => ({ id, duration: 10, scriptHtml: '', videos: [] });
 
+test('共用片头片尾没有上一集关联', () => {
+  for (const unit of ['片头', '片尾']) assert.equal(previousEpisodeEnding([], unit), null);
+});
+
 test('第一集不显示上集入口', () => {
   assert.equal(previousEpisodeEnding([{ name: 'EP000' }], 'EP001'), null);
 });

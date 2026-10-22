@@ -10,6 +10,16 @@ from project_init import initialize
 
 
 class ProjectInitializationTests(unittest.TestCase):
+    def test_shared_units_reuse_preparation_layout_without_creating_numbered_episodes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for unit in ('片头', '片尾'):
+                report = initialize(root, unit)
+                self.assertEqual(report['episode'], unit)
+                self.assertTrue((root / '09-剧集制作' / unit / '04-专用素材').is_dir())
+                self.assertFalse(initialize(root, unit)['created'])
+            self.assertEqual(sorted(path.name for path in (root / '09-剧集制作').iterdir()), ['片头', '片尾'])
+
     def setUp(self):
         temp = tempfile.TemporaryDirectory()
         self.addCleanup(temp.cleanup)

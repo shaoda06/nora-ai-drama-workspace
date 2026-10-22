@@ -194,8 +194,8 @@ def merge_graph(canvas, workflow, addition, offset):
 
 def prepare(root, plan, batch_parts=None, batch_name=None):
     episode, scene, stage = plan['episode'], plan['scene'], plan['stage']
-    if not re.fullmatch(r'EP\d{3}', episode) or not re.fullmatch(r'C\d{3}', scene) or stage not in adopt.STAGES:
-        raise ValueError('需要明确 EP编号／C编号／一采、二采或后处理')
+    if not re.fullmatch(r'(?:EP\d{3}|片头|片尾)', episode) or not re.fullmatch(r'C\d{3}', scene) or stage not in adopt.STAGES:
+        raise ValueError('需要明确 EP编号或片头／片尾、C编号以及一采、二采或后处理')
     ep = root / '09-剧集制作' / episode
     index_file = ep / '03-分镜脚本' / f'{episode}-分镜索引.md'
     expected = re.findall(r'^\| ' + episode + '-' + scene + r' \|[^\n]*?\| (' + episode + '-' + scene + r'-P\d{3}) \|',

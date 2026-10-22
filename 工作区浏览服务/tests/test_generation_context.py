@@ -467,7 +467,8 @@ class GenerationContextTests(HttpTestCase):
             result = writer.prepare_generation_context(self.project, root, workflow, 'video-first-pass',
                 mapping=mapping, check_only=True, segment_plan_checked=True)
         self.assertTrue(result['files'])
-        self.assertIn(r'EP\d{3,}-C\d{3,}', patterns)  # Scene spelling was not checked by the old plan.
+        self.assertTrue(any(fullmatch(pattern, 'EP001-C001') for pattern in patterns))
+        self.assertTrue(any(fullmatch(pattern, '片尾-C001') for pattern in patterns))
         self.assertFalse((root / '分镜脚本.md').exists())
 
     def test_legacy_plan_reuse_does_not_skip_new_directory_spelling_check(self):

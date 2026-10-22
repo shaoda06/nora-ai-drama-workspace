@@ -151,3 +151,5 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 .breadcrumb-selector{display:inline-flex;vertical-align:middle;margin-left:4px}.tab-select.tab-select-icon{width:22px;height:28px;justify-content:center;padding:2px;border:0;background:transparent;color:var(--green)}.tab-select.tab-select-icon:hover{background:#edf5ef}
 
 .scene-video-preparation{display:flex;align-items:center;gap:12px;font-size:12px;line-height:20px;color:var(--muted);text-align:center;margin:10px 0 0}.scene-video-preparation::before,.scene-video-preparation::after{content:'';flex:1;min-width:16px;border-top:1px solid var(--line)}.segment-scroll:has(+.scene-video-preparation){padding-bottom:0;border-bottom:0}
+
+.production-materials{margin-bottom:20px}.production-image-preview{padding:0;border:0;background:transparent}.production-image-preview img{display:block;width:100%;height:auto;border-radius:4px}

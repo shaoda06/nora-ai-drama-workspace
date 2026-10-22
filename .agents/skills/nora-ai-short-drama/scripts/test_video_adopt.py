@@ -34,8 +34,9 @@ class AdoptionTests(unittest.TestCase):
         self.put(path, json.dumps(value, ensure_ascii=False))
 
     def item(self, part='P001', revision='R001', stage='一采', mapping=None):
-        identity = f'EP001-C001-{part}-{revision}-{stage}'
-        draft = self.extra / f'工作稿/EP001-C001-{part}-视频制作-工作稿.md'
+        unit = getattr(self, 'unit', 'EP001')
+        identity = f'{unit}-C001-{part}-{revision}-{stage}'
+        draft = self.extra / f'工作稿/{unit}-C001-{part}-视频制作-工作稿.md'
         if not draft.exists():
             self.put(draft, '# 分段工作稿\n- 最近更新：原时间\n- 当前状态及待办：待审核\n\n'
                      '## 1. 当前选定结果\n\n'
@@ -73,6 +74,27 @@ class AdoptionTests(unittest.TestCase):
         path = self.extra / '执行附件/采用请求.json'
         self.write_json(path, self.plan)
         return tool.adoption(argparse.Namespace(project=str(self.root), plan=str(path), apply=apply))
+
+    def test_shared_units_adopt_each_stage_without_touching_numbered_episode(self):
+        numbered_summary = self.summary
+        original = numbered_summary.read_bytes()
+        for unit in ('片头', '片尾'):
+            self.unit = unit
+            self.extra = self.root / '09-剧集制作' / unit / '其他资料'
+            self.summary = self.extra / '工作稿' / (unit + '-生成说明-工作稿.md')
+            self.put(self.summary, '# 生成说明\n- 当前状态：待审核\n')
+            for stage in tool.STAGES:
+                self.plan = {'approval_text': '本条具体候选通过采用', 'items': [], 'record_updates': [
+                    {'path': str(self.summary), 'old': '- 当前状态：待审核', 'new': '- 当前状态：待审核'},
+                    {'path': str(self.progress), 'old': '| EP001 | 制作中 |', 'new': '| EP001 | 制作中 |'}]}
+                _, draft, source, target = self.item(stage=stage)
+                content = source.read_bytes()
+                result = self.run_plan()
+                self.assertEqual(result['items'][0]['state'], 'adopt')
+                self.assertEqual(target.read_bytes(), content)
+                self.assertFalse(source.exists())
+                self.assertIn('- 决定：批准采用', draft.read_text())
+        self.assertEqual(numbered_summary.read_bytes(), original)
 
     def test_each_stage_and_repeat_do_not_change_revision_or_bytes(self):
         for stage in tool.STAGES:

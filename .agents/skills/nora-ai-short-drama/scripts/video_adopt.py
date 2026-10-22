@@ -14,7 +14,7 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'comfyui-scripts'))
 import comfyui_client as client
 
-IDENTITY = re.compile(r'(EP\d{3})-(C\d{3})-(P\d{3})-(R\d{3})-(一采|二采|后处理)')
+IDENTITY = re.compile(r'((?:EP\d{3}|片头|片尾))-(C\d{3})-(P\d{3})-(R\d{3})-(一采|二采|后处理)')
 STAGES = {'一采': '01-一采', '二采': '02-二采', '后处理': '03-后处理'}
 
 
@@ -386,7 +386,7 @@ def adoption(args, *, plan=None):
             text = texts.get(draft, draft.read_text(encoding='utf-8-sig'))
             for stage in STAGES:
                 _, _, row = selected_row(text, stage)
-                name = re.search(r'(EP\d{3}-C\d{3}-P\d{3}-R\d{3}-' + stage + r'\.[A-Za-z0-9]+)', row)
+                name = re.search(r'((?:EP\d{3}|片头|片尾)-C\d{3}-P\d{3}-R\d{3}-' + stage + r'\.[A-Za-z0-9]+)', row)
                 if name and approved_row(text, row, name[0]):
                     counts[stage] += 1
     changed_maps = [str(path) for path, value in maps.items() if load(path) != value]
