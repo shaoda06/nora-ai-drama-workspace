@@ -15,7 +15,7 @@ try {
   const errors = [];
   page.on('pageerror', error => errors.push(String(error)));
   const release = await (await page.request.get(base + '/release.json')).json();
-  let doc = { path: '根提示词.md', title: '根提示词', category: '', revision: '1', modified: Date.now() / 1000, body: '测试正文\n第二行' };
+  let doc = { path: '根提示词.md', title: '根提示词', category: '', revision: '1', modified: Date.now() / 1000, local_only: true, body: '测试正文\n第二行' };
   let recycled = null, failSave = false, failPreview = false, saves = 0;
   const categories = ['图片', '图片/反推', '图片/反推/深层', '图片库'].map(path => ({ path, revision: '1' }));
   const extraDocs = ['图片', '图片/反推/深层', '图片库'].map((category, i) => ({ ...doc, title: `文件${i}`, path: `${category}/文件${i}.md`, category }));
@@ -25,12 +25,12 @@ try {
     if (url.pathname === '/api/prompts') data = { categories, prompts: [...extraDocs, ...(recycled ? [] : [doc])] };
     else if (url.pathname === '/api/prompts/document') {
       if (request.method() === 'DELETE') {
-        recycled = { id: 'recycled', original: doc.path, deleted: new Date().toISOString(), revision: doc.revision, body: doc.body };
+        recycled = { id: 'recycled', original: doc.path, local_only: doc.local_only, deleted: new Date().toISOString(), revision: doc.revision, body: doc.body };
       } else if (request.method() === 'POST') {
         if (failSave) return route.fulfill({ status: 409, json: { detail: '测试保存冲突' } });
         saves++;
         const body = request.postDataJSON();
-        doc = { ...doc, title: body.title, body: body.body, category: body.category, path: `${body.category ? body.category + '/' : ''}${body.title}.md`, revision: '2' };
+        doc = { ...doc, title: body.title, body: body.body, category: body.category, local_only: body.local_only, path: `${body.category ? body.category + '/' : ''}${body.title}.md`, revision: '2' };
       } else assert.equal(request.method(), 'GET');
       data = doc;
     } else if (url.pathname === '/api/prompts/search') {
@@ -200,6 +200,35 @@ try {
   await toggle.click();
   assert.equal(await body.inputValue(), '预览重试正文');
   await body.fill(doc.body);
+  const localOnly = page.getByRole('checkbox', { name: '仅本地保存', exact: true });
+  assert.equal(await localOnly.isChecked(), true, 'existing local documents stay local');
+  await localOnly.uncheck();
+  await tree.getByRole('button', { name: /^主目录 \(\d+\)$/ }).click();
+  await page.getByRole('dialog', { name: '修改尚未保存', exact: true }).waitFor();
+  await page.getByRole('button', { name: '继续编辑', exact: true }).click();
+  assert.equal(await localOnly.isChecked(), false, 'unsaved storage selection is preserved');
+  await page.getByRole('button', { name: '保存', exact: true }).click();
+  await page.getByRole('button', { name: '保存', exact: true }).waitFor();
+  assert.equal(await page.getByRole('button', { name: '保存', exact: true }).isDisabled(), true);
+  assert.equal(doc.local_only, false, 'unchecked sends shared storage on save');
+  await tree.getByRole('button', { name: '根提示词', exact: true }).locator('small').getByText('共享', { exact: true }).waitFor();
+  await page.screenshot({ path: path.join(out, 'shared-storage-desktop.png') });
+  await localOnly.check();
+  await page.getByRole('button', { name: '保存', exact: true }).click();
+  await page.getByRole('button', { name: '保存', exact: true }).waitFor();
+  assert.equal(await page.getByRole('button', { name: '保存', exact: true }).isDisabled(), true);
+  assert.equal(doc.local_only, true, 'checked sends local storage on save');
+  for (const width of [390, 320]) {
+    await page.setViewportSize({ width, height: 918 });
+    assert.equal(await localOnly.isChecked(), true);
+    const box = await page.locator('.prompt-sharing').boundingBox();
+    assert.ok(box.x >= 0 && box.x + box.width <= width, 'storage control stays inside the phone');
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    await page.screenshot({ path: path.join(out, `local-storage-${width}.png`) });
+  }
+  await page.setViewportSize({ width: 1362, height: 918 });
+  console.log('PASS local/shared toggle save payloads, unsaved guard, badges and 390/320px layout');
+  while (await page.getByRole('button', { name: '关闭通知', exact: true }).count()) await page.getByRole('button', { name: '关闭通知', exact: true }).first().click();
   await page.getByRole('button', { name: '删除', exact: true }).click();
   const confirmation = page.getByRole('dialog', { name: '移入回收站', exact: true });
   await confirmation.waitFor();
@@ -220,6 +249,7 @@ try {
   await page.locator('.floating-message').waitFor({ state: 'hidden', timeout: 5000 });
   await page.getByRole('button', { name: '＋ 新建提示词', exact: true }).click();
   assert.equal(await toggle.getAttribute('aria-checked'), 'false');
+  assert.equal(await localOnly.isChecked(), false, 'new prompts default to shared');
   await toggle.click();
   await page.getByLabel('提示词标题', { exact: true }).fill('新提示词');
   await body.fill('新正文');

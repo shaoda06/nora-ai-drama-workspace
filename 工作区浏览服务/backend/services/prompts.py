@@ -294,3 +294,166 @@ class PromptLibrary:
             content.unlink()
             self.path(f'.trash/{identity}/record.json', internal=True).unlink()
             trash.rmdir()
+
+
+class WorkspacePromptLibrary:
+    """One category tree backed by a shared library and the existing local library."""
+
+    def __init__(self, local_root, shared_root):
+        self.stores = {'local': PromptLibrary(local_root), 'shared': PromptLibrary(shared_root)}
+        self.lock = RLock()
+
+    def initialize(self):
+        for store in self.stores.values():
+            store.path().mkdir(parents=True, exist_ok=True)
+
+    def split(self, identity):
+        scope, separator, relative = identity.partition('/')
+        if not separator or scope not in self.stores or not relative:
+            raise PromptError('无效的提示词标识。')
+        return scope, relative
+
+    def document(self, scope, info):
+        return {**info, 'path': scope + '/' + info['path'], 'local_only': scope == 'local'}
+
+    def category(self, relative):
+        folders = [store.path(relative) for store in self.stores.values()]
+        stamps = [revision(folder) if folder.is_dir() else None for folder in folders]
+        if not any(stamps):
+            raise PromptError('分类已不存在，请刷新列表。', 404)
+        return {'path': relative, 'revision': json.dumps(stamps)}
+
+    def snapshot(self):
+        with self.lock:
+            paths, prompts = set(), []
+            for scope, store in self.stores.items():
+                snapshot = store.snapshot()
+                paths.update(item['path'] for item in snapshot['categories'])
+                prompts.extend(self.document(scope, item) for item in snapshot['prompts'])
+            prompts.sort(key=lambda item: (-item['modified'], folded(item['path'])))
+            return {'categories': [self.category(path) for path in sorted(paths, key=folded)], 'prompts': prompts}
+
+    def read(self, identity):
+        with self.lock:
+            scope, relative = self.split(identity)
+            return self.document(scope, self.stores[scope].read(relative))
+
+    def search(self, query, category=''):
+        with self.lock:
+            if category:
+                self.category(category)
+            result = []
+            for scope, store in self.stores.items():
+                if store.path(category).is_dir():
+                    result.extend(self.document(scope, item) for item in store.search(query, category))
+            return sorted(result, key=lambda item: (-item['modified'], folded(item['path'])))
+
+    def save(self, category, title, body, source=None, expected=None, local_only=False):
+        with self.lock:
+            if category:
+                self.category(category)
+            scope = 'local' if local_only else 'shared'
+            destination = self.stores[scope]
+            original_scope, original_path = self.split(source) if source is not None else (scope, None)
+            original_store = self.stores[original_scope]
+            if original_path is not None:
+                original = original_store.file(original_path)
+                original_store.check(original, expected)
+            destination.path(category).mkdir(parents=True, exist_ok=True)
+            info = destination.save(category, title, body,
+                                    original_path if original_scope == scope else None, expected)
+            if original_scope != scope:
+                try:
+                    original_store.check(original, expected)
+                    original.unlink()
+                except BaseException:
+                    # Undo only this write if the source changed or could not be removed.
+                    target = destination.file(info['path'])
+                    destination.check(target, info['revision'])
+                    target.unlink()
+                    raise
+            return self.document(scope, info)
+
+    def create_category(self, parent, name):
+        with self.lock:
+            if parent:
+                self.category(parent)
+            relative = '/'.join(filter(None, [parent, validate_name(name)]))
+            for store in self.stores.values():
+                folder = store.path(parent)
+                if folder.is_dir():
+                    store.vacant(store.path(relative))
+            store = self.stores['shared']
+            store.path(parent).mkdir(parents=True, exist_ok=True)
+            store.create_category(parent, name)
+            return self.category(relative)
+
+    def check_category(self, source, expected):
+        if not source:
+            raise PromptError('主目录不能改名、移动或删除。')
+        if self.category(source)['revision'] != expected:
+            raise PromptError('分类已在外部修改，请刷新列表后再操作。', 409)
+
+    def update_category(self, source, parent, name, expected):
+        with self.lock:
+            self.check_category(source, expected)
+            if parent:
+                self.category(parent)
+            target = '/'.join(filter(None, [parent, validate_name(name)]))
+            if target == source:
+                return self.category(source)
+            if target.startswith(source + '/'):
+                raise PromptError('分类不能移动到自身或自己的子分类。')
+            for store in self.stores.values():
+                if store.path(parent).is_dir():
+                    store.vacant(store.path(target))
+            moved = []
+            try:
+                for store in self.stores.values():
+                    original = store.path(source)
+                    if original.is_dir():
+                        store.path(parent).mkdir(parents=True, exist_ok=True)
+                        original.rename(store.path(target))
+                        moved.append((store.path(target), original))
+            except OSError:
+                for destination, original in reversed(moved):
+                    destination.rename(original)
+                raise
+            return self.category(target)
+
+    def delete_category(self, source, expected):
+        with self.lock:
+            self.check_category(source, expected)
+            folders = [store.path(source) for store in self.stores.values() if store.path(source).is_dir()]
+            if any(any(folder.iterdir()) for folder in folders):
+                raise PromptError('只能删除空分类，请先移动或删除其中的文件和子分类。', 409)
+            for folder in folders:
+                folder.rmdir()
+
+    def trash_record(self, scope, item):
+        return {**item, 'id': scope + '/' + item['id'], 'local_only': scope == 'local'}
+
+    def discard(self, source, expected):
+        with self.lock:
+            scope, relative = self.split(source)
+            return self.trash_record(scope, self.stores[scope].discard(relative, expected))
+
+    def trash_list(self):
+        with self.lock:
+            items = [self.trash_record(scope, item) for scope, store in self.stores.items() for item in store.trash_list()]
+            return sorted(items, key=lambda item: item['deleted'], reverse=True)
+
+    def trash_read(self, identity):
+        with self.lock:
+            scope, relative = self.split(identity)
+            return self.trash_record(scope, self.stores[scope].trash_read(relative))
+
+    def restore(self, identity, category, title, expected):
+        with self.lock:
+            scope, relative = self.split(identity)
+            return self.document(scope, self.stores[scope].restore(relative, category, title, expected))
+
+    def purge(self, identity, expected):
+        with self.lock:
+            scope, relative = self.split(identity)
+            self.stores[scope].purge(relative, expected)

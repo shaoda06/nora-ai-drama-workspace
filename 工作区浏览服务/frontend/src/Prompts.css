@@ -23,5 +23,7 @@ main:has(.prompt-page){height:calc(100dvh - var(--site-header-height) - var(--si
 .prompt-detail>.prompt-actions{margin-top:16px}
 
 .prompt-edit-control{display:flex;align-items:center;gap:10px;margin:12px 0;font-size:13px;color:var(--muted)}
+.prompt-sharing{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--muted);margin:0 0 8px}.prompt-sharing label{display:flex;flex-direction:row;align-items:center;gap:6px;margin:0}.prompt-sharing input{width:auto;min-width:0;flex:none}
+.prompt-tree-file small{margin-left:auto;flex:none;color:inherit;font-size:11px}
 
 @media(max-width:760px){.prompt-toolbar>.tab-select{flex:1;min-width:0}}

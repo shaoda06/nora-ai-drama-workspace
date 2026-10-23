@@ -4,7 +4,7 @@ from collections.abc import Callable
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
-from backend.services.prompts import MARKDOWN, PromptError, PromptLibrary
+from backend.services.prompts import MARKDOWN, PromptError, WorkspacePromptLibrary
 
 
 class SavePrompt(BaseModel):
@@ -13,6 +13,7 @@ class SavePrompt(BaseModel):
     body: str
     source: str | None = None
     revision: str | None = None
+    local_only: bool = False
 
 
 class CategoryInput(BaseModel):
@@ -59,7 +60,7 @@ def errors():
         raise HTTPException(503, '文件操作失败，请检查目录权限和磁盘状态。') from error
 
 
-def create_router(library: PromptLibrary, write_access: Callable):
+def create_router(library: WorkspacePromptLibrary, write_access: Callable):
     router = APIRouter(prefix='/api/prompts', tags=['prompts'])
     writes = [Depends(write_access)]
 
@@ -81,7 +82,7 @@ def create_router(library: PromptLibrary, write_access: Callable):
     @router.post('/document', dependencies=writes)
     def save(data: SavePrompt) -> dict:
         with errors():
-            return library.save(data.category, data.title, data.body, data.source, data.revision)
+            return library.save(data.category, data.title, data.body, data.source, data.revision, data.local_only)
 
     @router.post('/categories', dependencies=writes)
     def create_category(data: CategoryInput) -> dict:

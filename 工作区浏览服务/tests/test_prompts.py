@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import patch
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from backend.services.prompts import PromptLibrary, PromptError, revision
+from backend.services.prompts import PromptLibrary, WorkspacePromptLibrary, PromptError, revision
 from backend.routes.prompts import create_router
 from tests.http_case import HttpTestCase
 
@@ -151,6 +151,140 @@ class PromptFiles(unittest.TestCase):
         self.assertEqual((self.root / '人物.md').read_text(), '外部抢先创建')
 
 
+class WorkspacePrompts(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.local = self.root / '提示词管理'
+        self.shared = self.root / '共享提示词'
+        self.lib = WorkspacePromptLibrary(self.local, self.shared)
+
+    def test_existing_local_default_shared_and_merged_search(self):
+        local = PromptLibrary(self.local)
+        local.create_category('', '图片')
+        local.save('图片', '原内容', '本机正文\r\n不自动分享')
+        before = (self.local / '图片/原内容.md').read_bytes()
+        shared = self.lib.save('图片', '新内容', '共享正文')
+        self.assertFalse(shared['local_only'])
+        self.assertEqual((self.shared / '图片/新内容.md').read_text(), '共享正文')
+        snapshot = self.lib.snapshot()
+        self.assertEqual([c['path'] for c in snapshot['categories']], ['图片'])
+        self.assertEqual(len(snapshot['prompts']), 2)
+        old = self.lib.read('local/图片/原内容.md')
+        self.assertTrue(old['local_only'])
+        self.assertEqual((self.local / '图片/原内容.md').read_bytes(), before)
+        self.assertEqual(len(self.lib.search('正文', '图片')), 2)
+        # Independent external files with the same name still have distinct identities.
+        other = self.lib.save('图片', '原内容', '共享的同名内容')
+        self.assertNotEqual(other['path'], old['path'])
+
+    def test_toggle_both_directions_preserves_body_and_conflicts(self):
+        doc = self.lib.save('', '标题', '原文\r\n第二行')
+        local = self.lib.save('', '标题', doc['body'], doc['path'], doc['revision'], True)
+        self.assertTrue(local['local_only'])
+        self.assertFalse((self.shared / '标题.md').exists())
+        self.assertEqual((self.local / '标题.md').read_bytes(), '原文\r\n第二行'.encode())
+        existing = self.lib.save('', '标题', '不能覆盖')
+        with self.assertRaises(PromptError):
+            self.lib.save('', '标题', local['body'], local['path'], local['revision'], False)
+        self.assertEqual(self.lib.read(existing['path'])['body'], '不能覆盖')
+        restored = self.lib.save('', '新标题', local['body'], local['path'], local['revision'], False)
+        self.assertFalse(restored['local_only'])
+        self.assertFalse((self.local / '标题.md').exists())
+        self.assertEqual(restored['body'], doc['body'])
+        (self.shared / '新标题.md').write_text('外部修改')
+        with self.assertRaises(PromptError):
+            self.lib.save('', '新标题', '草稿', restored['path'], restored['revision'], True)
+        self.assertFalse((self.local / '新标题.md').exists())
+
+    def test_failed_cross_library_write_preserves_source(self):
+        doc = self.lib.save('', '标题', '原文')
+        from os import link
+        def external_change(source, target):
+            link(source, target)
+            (self.shared / '标题.md').write_text('外部新正文')
+        with patch('backend.services.prompts.os.link', side_effect=external_change):
+            with self.assertRaises(PromptError):
+                self.lib.save('', '标题', '草稿', doc['path'], doc['revision'], True)
+        self.assertEqual((self.shared / '标题.md').read_text(), '外部新正文')
+        self.assertFalse((self.local / '标题.md').exists())
+
+    def test_categories_move_both_stores_and_reject_nonempty_delete(self):
+        cat = self.lib.create_category('', '图片')
+        self.lib.save('图片', '公共', '共享')
+        self.lib.save('图片', '私人', '本地', local_only=True)
+        # Saving files changes the folder revision.
+        with self.assertRaises(PromptError):
+            self.lib.update_category('图片', '', '过期', cat['revision'])
+        cat = self.lib.snapshot()['categories'][0]
+        moved = self.lib.update_category('图片', '', '素材', cat['revision'])
+        self.assertTrue((self.shared / '素材/公共.md').is_file())
+        self.assertTrue((self.local / '素材/私人.md').is_file())
+        with self.assertRaises(PromptError):
+            self.lib.delete_category('素材', moved['revision'])
+        with self.assertRaises(PromptError):
+            self.lib.update_category('素材', '素材', '子目录', moved['revision'])
+        empty = self.lib.create_category('', '空分类')
+        self.lib.delete_category(empty['path'], empty['revision'])
+        self.assertFalse((self.shared / '空分类').exists())
+
+    def test_recycle_restores_original_scope_including_old_trash(self):
+        old_store = PromptLibrary(self.local)
+        old = old_store.save('', '旧本地', '旧正文')
+        old_store.discard(old['path'], old['revision'])
+        for local_only in [False, True]:
+            doc = self.lib.save('', '回收', '正文', local_only=local_only)
+            record = self.lib.discard(doc['path'], doc['revision'])
+            item = self.lib.trash_read(record['id'])
+            self.assertEqual(item['local_only'], local_only)
+            restored = self.lib.restore(item['id'], '重建/子分类', '恢复', item['revision'])
+            self.assertEqual(restored['local_only'], local_only)
+            self.assertEqual(restored['body'], doc['body'])
+        old_item = self.lib.trash_list()[0]
+        self.assertTrue(old_item['local_only'])
+        self.lib.restore(old_item['id'], '', '旧本地', old_item['revision'])
+        self.assertTrue((self.local / '旧本地.md').is_file())
+        self.assertEqual(self.lib.trash_list(), [])
+
+    def test_paths_and_symlinks_are_rejected_in_both_stores(self):
+        self.lib.initialize()
+        external = self.root / '外部.md'
+        external.write_text('不应读取')
+        for scope, folder in [('shared', self.shared), ('local', self.local)]:
+            (folder / '链接.md').symlink_to(external)
+            for relative in ['../外部.md', '链接.md', '.trash/secret.md']:
+                with self.subTest(scope=scope, relative=relative), self.assertRaises(PromptError):
+                    self.lib.read(scope + '/' + relative)
+        with self.assertRaises(PromptError):
+            self.lib.read('other/外部.md')
+
+    def test_git_tracks_shared_only_and_ignores_both_trash_roots(self):
+        import subprocess
+        def git(*args):
+            return subprocess.run(['git', '-C', str(self.root), *args], check=True, capture_output=True, text=True).stdout
+        git('init', '--quiet')
+        ignore = Path(__file__).resolve().parents[2] / '.gitignore'
+        (self.root / '.gitignore').write_text(ignore.read_text())
+        shared = self.lib.save('', '公开', '公开正文')
+        local = self.lib.save('', '私有', '私有正文', local_only=True)
+        discarded = self.lib.save('', '回收', '删除正文')
+        self.lib.discard(discarded['path'], discarded['revision'])
+        self.lib.discard(local['path'], local['revision'])
+        self.lib.create_category('', '历史版本')
+        self.lib.save('历史版本', '共享分类', '同名分类不受技能归档忽略规则影响')
+        git('add', '.')
+        tracked = git('-c', 'core.quotePath=false', 'ls-files')
+        self.assertIn('共享提示词/公开.md', tracked)
+        self.assertIn('共享提示词/历史版本/共享分类.md', tracked)
+        self.assertNotIn('提示词管理/', tracked)
+        self.assertNotIn('.trash/', tracked)
+        self.lib.save('', '公开', shared['body'], shared['path'], shared['revision'], True)
+        self.assertIn('共享提示词/公开.md', git('-c', 'core.quotePath=false', 'ls-files', '--deleted'))
+        git('add', '-A')
+        self.assertNotIn('共享提示词/公开.md', git('-c', 'core.quotePath=false', 'ls-files'))
+
+
 class PromptHttp(HttpTestCase):
     def setUp(self):
         super().setUp()
@@ -158,7 +292,7 @@ class PromptHttp(HttpTestCase):
         self.addCleanup(self.temp.cleanup)
         from backend.main import queue_write
         self.app = FastAPI()
-        self.app.include_router(create_router(PromptLibrary(Path(self.temp.name) / '提示词管理'), queue_write))
+        self.app.include_router(create_router(WorkspacePromptLibrary(Path(self.temp.name) / '提示词管理', Path(self.temp.name) / '共享提示词'), queue_write))
         self.client = TestClient(self.app, base_url='http://127.0.0.1:8782')
         self.headers = {'origin': 'http://127.0.0.1:8782'}
 
@@ -169,11 +303,22 @@ class PromptHttp(HttpTestCase):
         response = self.client.post('/api/prompts/document', json=data, headers=self.headers)
         self.assertEqual(response.status_code, 200, response.text)
         doc = response.json()
+        self.assertFalse(doc['local_only'])
         self.assertEqual(self.client.get('/api/prompts/document', params={'path': doc['path']}).json()['body'], data['body'])
         self.assertEqual(len(self.client.get('/api/prompts/search', params={'q': '正文'}).json()), 1)
         response = self.client.request('DELETE', '/api/prompts/document', json={'path': doc['path'], 'revision': doc['revision']}, headers=self.headers)
         self.assertEqual(response.status_code, 200, response.text)
         self.assertEqual(len(self.client.get('/api/prompts/trash').json()), 1)
+
+    def test_local_only_api_round_trip(self):
+        data = {'title': '私人提示词', 'body': '仅本机正文', 'local_only': True}
+        doc = self.client.post('/api/prompts/document', json=data, headers=self.headers).json()
+        self.assertTrue(doc['local_only'])
+        data.update(source=doc['path'], revision=doc['revision'], local_only=False)
+        result = self.client.post('/api/prompts/document', json=data, headers=self.headers)
+        self.assertEqual(result.status_code, 200, result.text)
+        self.assertFalse(result.json()['local_only'])
+        self.assertEqual(len(self.client.get('/api/prompts').json()['prompts']), 1)
 
     def test_preview(self):
         result = self.client.post('/api/prompts/preview', headers=self.headers, json={'body': '<script>alert(1)</script>\n\n**加粗**\n\n[x](javascript:alert(1))'})
