@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import type { DirectorSheets } from '../api';
-import { PreviewContext } from '../components';
+import { Dialog, PreviewContext } from '../components';
+import { FileActions } from './FileActions';
 import { Pagination } from './Pagination';
 import { TabSelect } from './TabSelect';
 import './SceneDirectorSheets.css';
@@ -9,6 +10,7 @@ export function SceneDirectorSheets({ sheets, storyboardVersion, revision }: { s
   const preview = useContext(PreviewContext);
   const [choice, setChoice] = useState('');
   const [pageKey, setPageKey] = useState('');
+  const [fullscreen, setFullscreen] = useState(false);
   const candidates = sheets?.candidates.filter(item => item.sourceVersion === storyboardVersion && item.candidateNumber) || [];
   const versions = [...new Set(candidates.map(item => item.version))].sort((a, b) =>
     candidates.find(item => item.version === b)!.candidateNumber! - candidates.find(item => item.version === a)!.candidateNumber!);
@@ -33,12 +35,21 @@ export function SceneDirectorSheets({ sheets, storyboardVersion, revision }: { s
     </div>
     {current ? <>
       <div className="director-sheet-viewer">
-        <button className="director-sheet-image" aria-label={`放大第${String(current.page).padStart(2, '0')}页导演分镜表`} onClick={() => preview(current)}>
+        <button className="director-sheet-image" aria-label={`全屏查看第${String(current.page).padStart(2, '0')}页导演分镜表`} onClick={() => setFullscreen(true)}>
           <img src={current.url + `?v=${revision}`} alt={current.name} />
         </button>
         <Pagination variant="arrows" page={pageIndex + 1} total={images.length} pageSize={1} change={page => setPageKey(String(images[page - 1].page))} />
       </div>
-      <p className="director-sheet-page-count" aria-live="polite">第{pageIndex + 1}页 / 共{images.length}页</p>
+      <div className="director-sheet-footer">
+        <p className="director-sheet-page-count" aria-live="polite">第{pageIndex + 1}页 / 共{images.length}页</p>
+        <div className="director-sheet-file-actions"><FileActions url={current.url} viewLabel="查看原图" downloadLabel="下载原图" /></div>
+      </div>
+      {fullscreen && <Dialog size="fullscreen" title={`导演分镜表 · 第${pageIndex + 1}页 / 共${images.length}页`} close={() => setFullscreen(false)}>
+        <div className="director-sheet-fullscreen">
+          <img src={current.url + `?v=${revision}`} alt={current.name} />
+          <Pagination variant="arrows" page={pageIndex + 1} total={images.length} pageSize={1} change={page => setPageKey(String(images[page - 1].page))} />
+        </div>
+      </Dialog>}
     </>
       : <p className="muted">{!storyboardVersion ? '该轮缺少来源分镜版本，无法关联导演分镜表。' : `分镜 ${storyboardVersion} 尚未制作导演分镜表。`}{sheets?.candidates.some(item => !item.sourceVersion || !item.candidateNumber) && '本场有图片尚未登记来源或候选编号，请查看生成与审阅记录。'}</p>}
   </section>;

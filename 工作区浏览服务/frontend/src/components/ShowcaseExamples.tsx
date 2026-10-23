@@ -81,10 +81,11 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
     </>}
     {category === 'files' && <>
-      <ComponentExample title="原文件与下载" rule="查看和下载使用固定示例文本。下载会保存component-sample.txt，不读取项目文件。" usage="文件目录、资料卡、制作资源下载">
+      <ComponentExample title="原文件与下载" rule="查看和下载使用固定示例文本。下载会保存component-sample.txt，不读取项目文件；支持自定义查看和下载文案。" usage="文件目录、资料卡、制作资源下载">
         <div className="component-demo-row"><Original url={fileUrl} label="示例原文件" /><FileActions url={fileUrl} /></div>
         <DownloadButton url={fileUrl + '?download=true'} label="下载示例文件" title="组件示例文件" />
         <FileActions url={fileUrl} downloadOnly />
+        <FileActions url={fileUrl} viewLabel="查看原图" downloadLabel="下载原图" />
         <DownloadButton url={null} file={{ text: "本地导出示例。\n", name: "component-export.md", type: "text/markdown;charset=utf-8" }} label="下载本地导出示例" title="本地导出示例" />
         <DownloadButton url={null} label="没有文件时禁用" title="暂无示例文件" />
       </ComponentExample>
