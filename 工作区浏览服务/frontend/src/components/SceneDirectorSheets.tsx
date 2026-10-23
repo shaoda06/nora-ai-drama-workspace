@@ -38,8 +38,7 @@ export function SceneDirectorSheets({ sheets, storyboardVersion, revision }: { s
         </button>
         <Pagination variant="arrows" page={pageIndex + 1} total={images.length} pageSize={1} change={page => setPageKey(String(images[page - 1].page))} />
       </div>
-      {images.length === 1 ? <p className="director-sheet-single-page">第1页 / 共1页</p>
-        : <Pagination page={pageIndex + 1} total={images.length} pageSize={1} showItemCount={false} change={page => setPageKey(String(images[page - 1].page))} />}
+      <p className="director-sheet-page-count" aria-live="polite">第{pageIndex + 1}页 / 共{images.length}页</p>
     </>
       : <p className="muted">{!storyboardVersion ? '该轮缺少来源分镜版本，无法关联导演分镜表。' : `分镜 ${storyboardVersion} 尚未制作导演分镜表。`}{sheets?.candidates.some(item => !item.sourceVersion || !item.candidateNumber) && '本场有图片尚未登记来源或候选编号，请查看生成与审阅记录。'}</p>}
   </section>;
