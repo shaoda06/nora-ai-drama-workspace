@@ -280,6 +280,7 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_transferred_task_submits_and_collects_from_target_over_real_transport(self):
         state = {'posts': 0, 'done': False}
+        running_seen = asyncio.Event()
         primary, remote = FastAPI(), FastAPI()
         expected = 'Basic ' + base64.b64encode(b'wire-user:wire-private-password').decode()
         @remote.middleware('http')
@@ -305,10 +306,10 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(payload['prompt']['1']['inputs']['seed'], 'inputs/source.png')
             state['posts'] += 1
             async def finish():
-                await asyncio.sleep(.05)
+                await running_seen.wait()
                 state['done'] = True
                 await state['socket'].send_json({'type': 'execution_success', 'data': {'prompt_id': 'backup-id'}})
-            asyncio.create_task(finish())
+            state['completion'] = asyncio.create_task(finish())
             return {'prompt_id': 'backup-id'}
         @remote.post('/upload/image')
         async def upload(request: Request):
@@ -316,7 +317,10 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
             state['uploads'] = state.get('uploads', 0) + 1
             return {'name': 'source.png', 'subfolder': 'inputs', 'type': 'input'}
         @remote.get('/queue')
-        def queue():
+        async def queue():
+            if state['posts'] and not state['done']:
+                running_seen.set()
+                return {'queue_pending': [], 'queue_running': [[0, 'backup-id', {}, {}, []]]}
             return {'queue_pending': [], 'queue_running': []}
         @remote.get('/history/backup-id')
         def history():
@@ -341,6 +345,8 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
             with patch.object(self.store, 'notify', AsyncMock()) as notice:
                 await self.store.dispatch_once()
                 await asyncio.wait_for(self.store.workers[key], 5)
+                self.assertTrue(running_seen.is_set())
+                await asyncio.wait_for(state['completion'], 5)
                 self.assertEqual(state['posts'], 1)
                 self.assertEqual(state['uploads'], 1)
                 self.assertEqual(self.store.rows[key]['state']['prompt_id'], 'backup-id')
@@ -349,3 +355,21 @@ class NodeQueueTests(unittest.IsolatedAsyncioTestCase):
                 self.assertNotIn('wire-private-password', json.dumps(self.store.public()))
                 self.assertNotIn(expected, (Path(self.store.rows[key]['input'].record_dir) / '后台过程记录.json').read_text('utf-8'))
                 notice.assert_awaited_once_with(key)
+
+    async def test_transferred_task_with_no_remote_evidence_does_not_resubmit(self):
+        key = await self.add('missing-evidence', self.backup)
+        self.store.save(key, status='running', prompt_id='missing-id')
+        unknown = {'state': 'unknown', 'history': None, 'queue': {}}
+        with patch.object(t.client, 'status', return_value=unknown) as query, \
+                patch.object(t.client, 'submit') as submit, \
+                patch.object(t.client, 'download') as download, \
+                patch.object(self.store, 'notify', AsyncMock()):
+            self.assertTrue(await self.store.reconcile(key))
+            await self.store.notifiers[key]
+        self.assertEqual(query.call_count, 2)
+        self.assertTrue(all(call.args[0].url == self.backup for call in query.call_args_list))
+        self.assertEqual(self.store.rows[key]['state']['status'], 'needs_attention')
+        self.assertEqual(self.store.rows[key]['state']['prompt_id'], 'missing-id')
+        self.assertFalse(Path(self.store.rows[key]['input'].outputs[0].path).exists())
+        submit.assert_not_called()
+        download.assert_not_called()
