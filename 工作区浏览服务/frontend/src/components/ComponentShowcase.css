@@ -6,28 +6,15 @@
 .component-examples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .component-example { min-width: 0; display: flex; flex-direction: column; padding: 20px; border: 1px solid var(--line); border-radius: 9px; }
 .component-example:only-child { grid-column: 1 / -1; }
-.component-example h3 { margin: 0 0 8px; font-size: 17px; }
+.component-example > h3 { margin: 0 0 8px; font-size: 17px; }
 .component-rule { color: var(--muted); font-size: 13px; margin: 0 0 20px; }
 .component-demo { flex: 1; min-width: 0; }
 .component-demo-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.component-demo .tab-select { max-width: 100%; }
-.component-demo textarea { width: 100%; min-height: 100px; margin-top: 12px; }
 .component-draft { white-space: pre-wrap; overflow-wrap: anywhere; }
 .component-usage { border-top: 1px solid var(--line); padding-top: 14px; margin: 20px 0 0; color: var(--muted); font-size: 12px; }
 .component-sample-list { padding-left: 22px; line-height: 2; }
-.component-demo .pagination { gap: 10px; flex-wrap: wrap; }
 @media (max-width: 1000px) { .component-examples { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 600px) { .component-showcase-heading { flex-wrap: wrap; gap: 12px; } .component-example { padding: 16px; } }
-.component-demo .search-field { width: 100%; min-width: 0; margin-bottom: 12px; }
-.component-demo .project-card { min-height: 0; }
-.component-demo .page-heading { margin-top: 0; flex-wrap: wrap; }
-.component-demo .page-heading h1 { font-size: 24px; }
-.component-demo .asset-media-grid { grid-template-columns: minmax(0, 1fr); }
-.component-demo .reference-media-card { margin-bottom: 12px; }
-.component-demo .episode-button { width: 100%; }
-.component-demo .segment-vertical-strip { max-height: 220px; }
-.component-sample-video { max-width: 320px; }
-.component-sample-video.is-wide { max-width: none; }
-.component-demo .comfy-local-title { flex-wrap: wrap; }
-.component-demo .comfy-task h2, .component-demo .local-queue-card h2 { font-size: 16px; }
-.component-demo .local-queue-card-body { flex-wrap: wrap; }
+.component-example.is-full-width { grid-column: 1 / -1; }
+.component-demo-textarea { width: 100%; min-height: 100px; margin-top: 12px; }
+.component-demo-stack { display: grid; gap: 12px; min-width: 0; }

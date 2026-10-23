@@ -18,13 +18,14 @@ import { AudioPreviewButton, useAudioPreview } from './AudioPreviewButton';
 import { EpisodeButton } from './EpisodeButton';
 import { SegmentStageStrip } from './SegmentStageStrip';
 import { SegmentVideo } from './SegmentVideo';
+import { SegmentLayout } from './SegmentLayout';
 import type { SegmentVideoHandle } from './SegmentVideo';
 import { PromptSections } from './PromptSections';
 import { TaskCard } from './TaskCard';
 import { LocalQueueCard } from './LocalQueueCard';
 
-export function ComponentExample({ title, rule, usage, children }: { title: string; rule: string; usage: string; children: ReactNode }) {
-  return <section className="component-example" aria-label={title}>
+export function ComponentExample({ title, rule, usage, children, fullWidth = false }: { fullWidth?: boolean; title: string; rule: string; usage: string; children: ReactNode }) {
+  return <section className={"component-example" + (fullWidth ? " is-full-width" : "")} aria-label={title}>
     <h3>{title}</h3><p className="component-rule">{rule}</p>
     <div className="component-demo">{children}</div>
     <p className="component-usage">使用位置：{usage}</p>
@@ -59,14 +60,14 @@ export function ShowcaseExamples({ category }: { category: string }) {
   const sound = useAudioPreview(category === 'media', null, 1);
   return <PreviewContext.Provider value={setPreview}>
     {category === 'layout' && <>
-      <ComponentExample title="标题与路径导航" rule="页面标题可带说明和操作区；点击路径返回上一级示例。" usage="项目、资产、风格库、开发记录">
+      <ComponentExample fullWidth title="标题与路径导航" rule="页面标题可带说明和操作区；点击路径返回上一级示例。" usage="项目、资产、风格库、开发记录">
         <PageHeader eyebrow="示例栏目" title="示例页面" description="这里展示公共页面标题。" actions={<button onClick={() => setText('已点击标题操作')}>示例操作</button>} />
         <Breadcrumbs items={[{ label: '示例列表', href: '#/history', onClick: () => setText('已返回示例列表') }, { label: '示例详情' }]} />
         <p role="status">{text || '试试右侧操作或路径链接。'}</p>
       </ComponentExample>
-      <ComponentExample title="入口卡片与搜索" rule="输入文字筛选示例；入口沿用真实卡片，点击在本页打开示例说明。" usage="首页、资料目录、资产与风格库">
-        <SearchField label="搜索示例入口" placeholder="搜索示例…" value={search} onChange={setSearch} />
-        {(!search || '公共组件示例'.includes(search)) ? <div onClickCapture={event => { event.preventDefault(); setPreview({ kind: 'document', name: '入口示例', doc: { html: '<p>这是卡片入口打开的示例内容。</p>' } }); }}><EntryCard to="/history" title="公共组件示例" description="打开示例内容" icon="▤" /></div> : <p className="muted">没有匹配的示例。</p>}
+      <ComponentExample title="入口卡片与搜索" rule="输入文字筛选示例；点击卡片按正常链接跳转至网站入口页，会离开展示页。" usage="首页、资料目录、资产与风格库">
+        <div className="component-demo-stack"><SearchField label="搜索示例入口" placeholder="搜索示例…" value={search} onChange={setSearch} />
+        {(!search || '公共组件示例'.includes(search)) ? <EntryCard to="/" title="公共组件示例" description="返回网站入口页" icon="▤" /> : <p className="muted">没有匹配的示例。</p>}</div>
       </ComponentExample>
       <ComponentExample title="导航的分组与方向" rule="同一组件支持横排、竖排、紧凑和分组下拉，禁用项不可选择。" usage="顶部栏目、侧栏、制作模式">
         <TabNav label="示例分组导航" selected={selected} onChange={setSelected} groups={[{ label: '示例分组', values: ['two', 'three'] }]} items={[{ value: 'one', label: '普通页签' }, { value: 'two', label: '子项甲' }, { value: 'three', label: '子项乙' }, { value: 'disabled', label: '禁用页签', disabled: true }]} />
@@ -104,7 +105,7 @@ export function ShowcaseExamples({ category }: { category: string }) {
     </>}
     {category === 'media' && <>
       {sound.player}
-      <ComponentExample title="图片与候选卡片" rule="点击图片在公共预览中放大；候选分组按类型展开。图片为随服务提供的示例图形。" usage="人物、场景、道具、封面">
+      <ComponentExample fullWidth title="图片与候选卡片" rule="点击图片在公共预览中放大；候选分组按类型展开。图片为随服务提供的示例图形。" usage="人物、场景、道具、封面">
         <AssetMedia items={[imageRecord]} revision={1} formal />
         <AssetCandidateMedia items={[imageRecord]} revision={1} />
       </ComponentExample>
@@ -113,8 +114,10 @@ export function ShowcaseExamples({ category }: { category: string }) {
         <ReferenceMediaCard item={{ kind: 'reference', name: video.name, media: video }} audio={false} playing={false} progress={0} onPlay={() => setPreview(video)} onSelect={() => setPreview(video)} />
         <AudioPreviewButton name="缺少参考音频的示例" enabled={false} playing={false} progress={0} onClick={() => {}} />
       </ComponentExample>
-      <ComponentExample title="分段播放器" rule="播放、暂停和拖动进度均操作示例视频；宽屏按钮在演示区内展开。" usage="剧集制作分段视频">
-        <div className={wide ? 'component-sample-video is-wide' : 'component-sample-video'}><SegmentVideo current={videoRecord} onTimeChange={setTime} retainSource={retainSample} wide={wide} onToggleWide={() => setWide(!wide)} continuousControl={null} playerRef={playerRef} /></div>
+      <ComponentExample fullWidth title="分段播放器" rule="示例使用制作页同一份布局；宽屏时播放器展开并显示右侧分段导航。" usage="剧集制作分段视频">
+        <SegmentLayout wide={wide} navigation={<SegmentStageStrip segments={segments} selected={segment} onSelect={setSegment} vertical newVideoSegments={new Set(['P001'])} previousEnding={null} previousSelected={false} onPreviousSelect={() => {}} />} player={<SegmentVideo current={videoRecord} onTimeChange={setTime} retainSource={retainSample} wide={wide} onToggleWide={() => setWide(!wide)} continuousControl={null} playerRef={playerRef} />}>
+          <section className="segment-script"><Rich html="<h3>示例分镜</h3><p>切换宽屏可查看播放器与分段导航的共同布局。</p>" /></section>
+        </SegmentLayout>
         <p>示例播放位置：{time.toFixed(1)}秒</p><button onClick={() => playerRef.current!.seekTo(1)}>跳到1秒</button>
       </ComponentExample>
     </>}
@@ -122,17 +125,17 @@ export function ShowcaseExamples({ category }: { category: string }) {
       <ComponentExample title="选集按钮" rule="点击只更新示例选集，题名和状态使用正式组件排版。" usage="分集大纲、剧集制作">
         <EpisodeButton item={{ kind: 'episode', name: 'EP001', title: '组件演示集', titleStatus: '工作集名', statusHtml: '<span class="status-badge status-gray">未开始</span>' }} onSelect={setSelected} /><p>已选择：{selected === 'one' ? '尚未选集' : selected}</p>
       </ComponentExample>
-      <ComponentExample title="分段与制作状态" rule="P001标记本轮新生成；可切换分段和横竖布局，悬停状态图标查看详情。" usage="分段制作、宽屏分段导航">
+      <ComponentExample fullWidth title="分段与制作状态" rule="P001标记本轮新生成；可切换分段和横竖布局，悬停状态图标查看详情。" usage="分段制作、宽屏分段导航">
         <button onClick={() => setVertical(!vertical)}>{vertical ? '切换横排' : '切换竖排'}</button>
         <SegmentStageStrip segments={segments} selected={segment} onSelect={setSegment} vertical={vertical} newVideoSegments={new Set(['P001'])} previousEnding={null} previousSelected={false} onPreviousSelect={() => {}} />
         <p>当前分段：{segment}</p>
       </ComponentExample>
     </>}
     {category === 'tasks' && <>
-      <ComponentExample title="运行任务卡片" rule="显示固定示例进度，可以展开详情；没有提交或轮询生成任务。" usage="全局任务进度">
+      <ComponentExample fullWidth title="运行任务卡片" rule="显示固定示例进度，可以展开详情；没有提交或轮询生成任务。" usage="全局任务进度">
         <TaskCard task={{ id: 'showcase-running', project: '示例项目', title: '组件展示任务', task_type: 'image', prompt_id: null, status: 'running', connection: 'connected', node: '示例节点', remote_url: '', progress: { value: 3, max: 10 }, error: null, collected: 0, expected: 1, created_at: started, started_at: started, source_session_name: '本地组件演示' }} />
       </ComponentExample>
-      <ComponentExample title="排队任务卡片" rule="暂停、恢复、插队和提交按钮只更新演示状态，不操作真实队列。" usage="全局待提交与暂停列表">
+      <ComponentExample fullWidth title="排队任务卡片" rule="暂停、恢复、插队和提交按钮只更新演示状态，不操作真实队列。" usage="全局待提交与暂停列表">
         <LocalQueueCard task={{ queue: 'local', id: 'showcase-queued', project: '示例项目', title: '本地演示队列', task_type: 'image', status: queueState, remote_url: '', created_at: started, source_session_name: '本地组件演示' }} position={1} onAction={(_id, next) => { setAction(({ pause: '已暂停示例', resume: '已恢复示例', immediate: '已模拟立即提交', insert: '已模拟插队' } as Record<string, string>)[next]); if (next === 'pause' || next === 'resume') setQueueState(next === 'pause' ? 'paused' : 'local_queued'); }} />
         <p role="status">{action}</p>
       </ComponentExample>

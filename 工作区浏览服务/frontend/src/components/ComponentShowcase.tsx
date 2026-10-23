@@ -57,7 +57,7 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
         </Example>
         <Example title="编辑开关与页签" rule="开关只控制示例正文的编辑状态；页签用于切换同一区域的内容。" usage="提示词编辑、分镜与提示词页签">
           <div className="component-demo-row"><span>编辑模式</span><Switch label="示例编辑模式" checked={editing} onChange={setEditing} /></div>
-          {editing ? <textarea aria-label="示例正文" value={draft} onChange={event => setDraft(event.target.value)} /> : <p className="component-draft">{draft}</p>}
+          {editing ? <textarea className="component-demo-textarea" aria-label="示例正文" value={draft} onChange={event => setDraft(event.target.value)} /> : <p className="component-draft">{draft}</p>}
           <UnderlineTabs label="示例页签" items={[{ value: 'overview', label: '概览' }, { value: 'detail', label: '详情' }]} selected={tab} onChange={setTab} />
           <p>{tab === 'overview' ? '这里是概览内容。' : '这里是详情内容。'}</p>
         </Example>

@@ -1,4 +1,3 @@
-.history-layout .pagination { flex-wrap: wrap; gap: 12px; }
 .history-versions .prose > h1:first-child { display: none; }
 .history-layout { grid-template-columns: 180px minmax(0, 1fr); }
 .history-sidebar { min-width: 0; }

@@ -14,7 +14,7 @@ import { PromptSections } from './PromptSections';
 import { RevisionNoteEditor } from './RevisionNotes';
 import type { NoteScope } from './RevisionNotes';
 import { useRefreshState } from '../refreshPosition';
-import './SegmentWideLayout.css';
+import { SegmentLayout } from './SegmentLayout';
 import './LatestSelection.css';
 
 function SegmentReferences({ context }: { context?: GenerationContext }) {
@@ -93,11 +93,7 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
     </div>;
   return <>
     {!wideVideo && selectors}
-    <div className={'segment-workspace' + (wideVideo ? ' is-wide' : '')}>
-      <div className="segment-playback-row">
-      <SegmentVideo playerRef={player} selectorControl={wideVideo ? selectors : undefined} key={current?.key || 'empty'} wide={wideVideo} onToggleWide={onToggleWide} continuousControl={continuousControl} current={current} cachedSource={current && cachedSources[current.url]} retainSource={retainSource} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />
-      {wideVideo && <aside className="segment-side-navigation" aria-label="宽屏分段导航">{segmentNavigation}</aside>}
-      </div>
+    <SegmentLayout wide={wideVideo} navigation={segmentNavigation} player={<SegmentVideo playerRef={player} selectorControl={wideVideo ? selectors : undefined} key={current?.key || 'empty'} wide={wideVideo} onToggleWide={onToggleWide} continuousControl={continuousControl} current={current} cachedSource={current && cachedSources[current.url]} retainSource={retainSource} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />}>
       <SegmentReferences context={context} />
       <section className="segment-script" aria-label="分镜脚本、提示词与修改意见区域">
         <div className="segment-script-header">
@@ -139,6 +135,6 @@ export function SegmentWorkspace({ scope, segment, revision, items, selection: {
         </>}
         </div>
       </section>
-    </div>
+    </SegmentLayout>
   </>;
 }
