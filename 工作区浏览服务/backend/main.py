@@ -669,6 +669,12 @@ def update_action(request: Request, action: UpdateAction) -> dict[str, bool]:
     return {'ok': True}
 
 
+@app.get('/api/component-samples/file')
+def component_sample_file(download: bool = False) -> Response:
+    return Response('公共组件下载示例。此文件不包含项目资料。\n', media_type='text/plain',
+                    headers={'Content-Disposition': ('attachment' if download else 'inline') + '; filename="component-sample.txt"'})
+
+
 @app.get('/api/history')
 def history() -> list[dict[str, str]]:
     root = TOOL / 'docs'

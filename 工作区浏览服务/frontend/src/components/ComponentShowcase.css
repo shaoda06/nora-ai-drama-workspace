@@ -18,3 +18,16 @@
 .component-demo .pagination { gap: 10px; flex-wrap: wrap; }
 @media (max-width: 1000px) { .component-examples { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 600px) { .component-showcase-heading { flex-wrap: wrap; gap: 12px; } .component-example { padding: 16px; } }
+.component-demo .search-field { width: 100%; min-width: 0; margin-bottom: 12px; }
+.component-demo .project-card { min-height: 0; }
+.component-demo .page-heading { margin-top: 0; flex-wrap: wrap; }
+.component-demo .page-heading h1 { font-size: 24px; }
+.component-demo .asset-media-grid { grid-template-columns: minmax(0, 1fr); }
+.component-demo .reference-media-card { margin-bottom: 12px; }
+.component-demo .episode-button { width: 100%; }
+.component-demo .segment-vertical-strip { max-height: 220px; }
+.component-sample-video { max-width: 320px; }
+.component-sample-video.is-wide { max-width: none; }
+.component-demo .comfy-local-title { flex-wrap: wrap; }
+.component-demo .comfy-task h2, .component-demo .local-queue-card h2 { font-size: 16px; }
+.component-demo .local-queue-card-body { flex-wrap: wrap; }

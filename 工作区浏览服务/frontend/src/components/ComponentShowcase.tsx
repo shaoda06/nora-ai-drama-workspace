@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ReactNode } from 'react';
 import { Dialog, Document, FileTree, PreviewContext } from '../components';
 import { TabNav } from './TabNav';
 import { UnderlineTabs } from './UnderlineTabs';
@@ -9,12 +8,17 @@ import { CopyButton } from './CopyButton';
 import { FloatingMessage, useNotify } from './Notifications';
 import { MessagePanel } from './MessagePanel';
 import { Pagination } from './Pagination';
+import { ComponentExample as Example, ShowcaseExamples } from './ShowcaseExamples';
 import './ComponentShowcase.css';
 
 const categories = [
   { value: 'controls', label: '按钮与切换' }, { value: 'select', label: '下拉菜单' },
   { value: 'messages', label: '消息提示' }, { value: 'reading', label: '弹窗与阅读' },
   { value: 'lists', label: '列表与分页' },
+  { value: 'layout', label: '布局与搜索' }, { value: 'files', label: '文件与正文' },
+  { value: 'states', label: '加载与同步' }, { value: 'media', label: '图片与音视频' },
+  { value: 'production', label: '选集与分段' }, { value: 'tasks', label: '任务卡片' },
+  { value: 'coverage', label: '覆盖范围' },
 ];
 const options = [
   { value: 'one', label: '候选一' }, { value: 'two', label: '候选二', badge: '已采用' },
@@ -23,14 +27,6 @@ const options = [
 const sampleText = '这是一段公共组件演示文字。';
 const sampleDocument = { html: '<h1>示例阅读文档</h1><p>这里的内容仅用于演示，不属于任何项目。</p><h2 id="demo-overview">内容概览</h2><p>可以展开章节导航、跳到指定章节，也可以复制示例文字。</p><h3 id="demo-detail">阅读细节</h3><p>正文沿用网站的字体、段落与表格样式。</p><h2 id="demo-checks">示例清单</h2><ul><li>打开文档弹窗</li><li>查看章节与正文</li><li>关闭后继续浏览组件</li></ul><table><thead><tr><th>状态</th><th>说明</th></tr></thead><tbody><tr><td>示例</td><td>不读取或修改真实项目资料</td></tr></tbody></table>' };
 const sampleItems = Array.from({ length: 18 }, (_, i) => `示例记录 ${String(i + 1).padStart(2, '0')}`);
-
-function Example({ title, rule, usage, children }: { title: string; rule: string; usage: string; children: ReactNode }) {
-  return <section className="component-example" aria-label={title}>
-    <h3>{title}</h3><p className="component-rule">{rule}</p>
-    <div className="component-demo">{children}</div>
-    <p className="component-usage">使用位置：{usage}</p>
-  </section>;
-}
 
 export function ComponentShowcase({ onImplementation }: { onImplementation: () => void }) {
   const [category, setCategory] = useState('controls');
@@ -52,7 +48,7 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
   const closeDialog = useCallback(() => setDialog(null), []);
   return <div className="component-showcase">
     <header className="component-showcase-heading"><div><h2>公共组件</h2><p>直接操作真实组件，查看网站统一的样式和行为。</p></div><button className="link" onClick={onImplementation}>实现说明</button></header>
-    <TabNav label="组件分类" items={categories} selected={category} onChange={setCategory} />
+    <TabNav label="组件分类" items={categories} selected={category} onChange={value => { clearNotices(); setCategory(value); }} />
     <div className="component-examples">
       {category === 'controls' && <>
         <Example title="按钮与复制" rule="按钮沿用全站样式；禁用后不能操作。复制按钮会复制下方示例文字并触发公共反馈。" usage="文档阅读、提示词、修改意见">
@@ -94,6 +90,7 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
           <Pagination page={page} total={empty ? 0 : sampleItems.length} pageSize={6} change={setPage} />
         </Example>
       </>}
+      <ShowcaseExamples key={category} category={category} />
     </div>
     {pending && <FloatingMessage>演示进行中。关闭消息不会结束演示，可在展示页点击“结束演示”。</FloatingMessage>}
     {dialog && <Dialog title={dialog} close={closeDialog}><div className="component-demo-row"><CopyButton text={sampleText} label="复制示例文字" /></div><Document value={sampleDocument} showOriginal={false} /></Dialog>}
