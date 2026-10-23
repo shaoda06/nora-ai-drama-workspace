@@ -60,7 +60,7 @@ def parser():
     p.add_argument('--monitor', choices=('browser',), default='browser', help='Persistent backend queue; Agent does not upload or submit remotely')
     p.add_argument('--start-paused', action='store_true', help='Register paused for an authorized manual transfer; default is automatic local queueing, with no remote submission until resumed')
     p.add_argument('--output-plan', help='JSON output selectors and project-relative local targets; H3 segments use [] plus --segment-plan')
-    p.add_argument('--image-plan', help='Image/image-upscale closeout JSON: draft, generation, review, kind, images; approved upscale also supplies source, approval, formal and record_updates. Paths relative to project; backend finishes before notification')
+    p.add_argument('--image-plan', help='Image/image-upscale closeout JSON: draft, generation, review, kind, formal, images; formal binds candidate identity (style samples declare image_type instead). Approved processing also supplies source, approval, formal and record_updates. Paths relative to project; backend finishes before notification')
     p.add_argument('--segment-plan', help='Native H3 plan; targets specify index, project-relative path and response_name; output_root belongs to the remote server')
     p.add_argument('--history-name', default='执行结果.json', help='Terminal history evidence filename inside record-dir; use the project-required prefix for image tasks')
     p.add_argument('--task-title', help='Legacy prepared-input mode: object number plus short description')

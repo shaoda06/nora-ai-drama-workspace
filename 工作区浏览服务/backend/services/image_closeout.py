@@ -190,6 +190,40 @@ def png(raw):
     return width, height
 
 
+def validate_names(root, plan, *, required=False):
+    """Bind new candidate destinations to their declared formal image identity."""
+    up = plan.get('upscale')
+    formal_name = plan.get('formal') or (up.get('formal') if up and required else None)
+    if formal_name is None:
+        if required and plan.get('image_type') != '画风样例':
+            raise ValueError('新图片任务须填写formal正式图片路径，再确定候选名称')
+        if not required:
+            return  # Historical execution plans retain their submitted destinations.
+    formal = project_file(root, formal_name) if formal_name else Path('项目基本定位-画风验证.png')
+    draft = project_file(root, plan['draft'])
+    if up and formal != project_file(root, up['formal']):
+        raise ValueError('处理结果的formal与正式保存路径不一致')
+    for item in plan['images']:
+        candidate = project_file(root, item['path'])
+        if candidate.parent != draft.parent / '素材':
+            raise ValueError('新图片候选须保存到工作稿/素材/')
+        base = re.escape(formal.stem) + r'-候选-v[0-9]{2,}'
+        board = re.fullmatch(r'(.+-手绘导演分镜表)-第([0-9]{2,})页', formal.stem)
+        if up:
+            source = project_file(root, up['source'])
+            if not re.fullmatch(base, source.stem):
+                raise ValueError('批准原候选与正式图片名称不一致；先按授权整理来源，不改写原批准')
+            valid = candidate.name == source.stem + '-' + up['number'] + '.png'
+        elif plan.get('kind') == '社交媒体':
+            valid = bool(candidate.suffix and re.fullmatch(base + r'-(?:原生|[1-9][0-9]*x[1-9][0-9]*)', candidate.stem))
+        elif board:
+            valid = bool(re.fullmatch(re.escape(board[1]) + r'-v[0-9]{2,}-第' + board[2] + r'页\.png', candidate.name))
+        else:
+            valid = bool(re.fullmatch(base + r'\.png', candidate.name))
+        if not valid:
+            raise ValueError('新图片候选须按对应正式图片名及规定处理编号命名，不追加工具、比例等后缀：' + candidate.name)
+
+
 def validate_plan(data, *, check_records=True):
     plan = data.image_plan
     if plan is None:
@@ -197,6 +231,7 @@ def validate_plan(data, *, check_records=True):
     if data.task_type not in ('image', 'image-upscale') or plan['kind'] not in TEMPLATES:
         raise ValueError('图片收尾类型错误')
     root = Path(data.project)
+    validate_names(root, plan)
     draft = project_file(root, plan['draft'])
     text = draft.read_text('utf-8-sig')
     generation = section(text, plan['generation'])[0]

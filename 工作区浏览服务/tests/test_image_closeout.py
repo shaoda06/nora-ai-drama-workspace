@@ -127,7 +127,7 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
             folder.mkdir()
             (folder / 'CH001-男主-人物资料卡.md').write_text('# 人物资料卡\n\n## 3. 外貌与基础造型\n### 3.1 大学\n')
             (self.project / scope / '人物索引.md').write_text('| 人物编号 | 姓名 | 人物定位 | 资料卡入口 |\n| --- | --- | --- | --- |\n| CH001 | 男主 | 主角 | [资料卡](CH001-男主/CH001-男主-人物资料卡.md) |\n')
-        out = self.draft.parent / '素材/CH001-服装参考图-候选-v01.png'
+        out = self.draft.parent / '素材/CH001-日常-服装参考图-候选-v01.png'
         self.data.outputs[0].path = str(out)
         self.data.image_plan = dict(draft=self.rel(self.draft), kind=kind, generation='生成记录-001', review='审阅-生成记录-001-001', images=[dict(path=self.rel(out), width=4, height=3)])
         base.TaskTests.seed(self, status='completed')
@@ -268,7 +268,7 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.record = self.record / '超分-001'
         self.record.mkdir()
         self.data.record_dir = str(self.record)
-        out = source.with_name('CH001-服装参考图-候选-v01-超分-001.png')
+        out = source.with_name('CH001-日常-服装参考图-候选-v01-超分-001.png')
         self.data.task_type = 'image-upscale'
         self.data.workflow = {'2': {'class_type': 'LoadImage', 'inputs': {'image': 'uploaded/source.png'}}, '1': {'class_type': 'RTXVideoSuperResolution', 'inputs': {'images': ['2', 0], 'resize_type': 'scale by multiplier', 'resize_type.scale': 2}}, '3': {'class_type': 'SaveImage', 'inputs': {'images': ['1', 0]}}}
         self.data.uploads = [dict(file=str(source), node='2', input='image', **{'response-name': 'upload.json'})]

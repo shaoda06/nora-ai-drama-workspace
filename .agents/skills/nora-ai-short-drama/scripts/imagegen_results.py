@@ -2,7 +2,6 @@
 import argparse
 import json
 from pathlib import Path
-import re
 import sys
 
 WORKSPACE = Path(__file__).resolve().parents[4]
@@ -10,18 +9,20 @@ sys.path.insert(0, str(WORKSPACE / '工作区浏览服务'))
 
 from project_paths import project_file
 from backend.services import imagegen_results as native
+from backend.services.image_closeout import validate_names
 from backend.services.execution_checks import write_json
 from backend.services.projects import ProjectStore
 
 
 def main():
-    parser = argparse.ArgumentParser(description='主控准备Imagegen交接；子代理运行固定收尾；不调用生图或超分，不登记自动批准')
+    parser = argparse.ArgumentParser(description='准备Imagegen交接、运行固定收尾或只读核对命名；不调用生图或超分，不登记自动批准')
     commands = parser.add_subparsers(dest='command', required=True)
-    for command in ('prepare', 'complete', 'report', 'fail'):
+    for command in ('prepare', 'complete', 'report', 'fail', 'check-name'):
         item = commands.add_parser(command)
         item.add_argument('--project', required=True, help='本机项目绝对目录；也可为独立测试项目')
-        if command == 'prepare':
-            item.add_argument('--request', required=True, help='项目内JSON请求，路径相对项目根；含完整prompt和实际授权')
+        if command in ('prepare', 'check-name'):
+            item.add_argument('--request', required=True, help=('项目内JSON请求：kind/formal/draft/output，只核对路径，不写文件'
+                              if command == 'check-name' else '项目内JSON请求，含formal/output、完整prompt和实际授权；专项样例按规定填写'))
         else:
             item.add_argument('--manifest', required=True, help='prepare返回的项目内Imagegen执行清单路径')
         if command == 'complete':
@@ -32,14 +33,12 @@ def main():
             item.add_argument('--error-file', required=True, help='实际错误的UTF-8文件；不自动重试或改换模型／能力')
     args = parser.parse_args()
     root = Path(args.project).resolve()
-    if args.command == 'prepare':
-        request_file = project_file(root, args.request)
-        spec = json.loads(request_file.read_text('utf-8-sig'))
-        # Existing handoffs retain their submitted paths; validate new requests before any writes.
-        if not request_file.with_name(request_file.stem + '-Imagegen执行清单.json').exists():
-            output = project_file(root, spec['output'])
-            if output.parent != project_file(root, spec['draft']).parent / '素材' or not re.fullmatch(r'.+-候选-v[0-9]{2,}\.png', output.name):
-                raise ValueError('新图片候选须保存到工作稿/素材/，命名为“正式图片名去扩展名-候选-v两位版本号.png”；工具与比例写入记录，不追加文件名后缀')
+    if args.command == 'check-name':
+        spec = json.loads(project_file(root, args.request).read_text('utf-8-sig'))
+        validate_names(root, dict(kind=spec['kind'], image_type=spec.get('image_type'), formal=spec.get('formal'), draft=spec['draft'],
+            images=[dict(path=spec['output'])]), required=True)
+        result = dict(status='valid', formal=spec.get('formal'), candidate=spec['output'])
+    elif args.command == 'prepare':
         job = native.prepare(root, args.request)
         result = {name: job[name] for name in ('manifest', 'executor', 'generation', 'candidate', 'prompt_file',
                   'generation_call_file', 'result_store_key', 'report') if name in job}

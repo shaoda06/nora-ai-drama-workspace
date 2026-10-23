@@ -28,6 +28,7 @@ class NativeImageTests(unittest.TestCase):
             draft='03-人物资料/其他资料/工作稿/CH001-参考图-工作稿.md', prompt='保持原文的测试提示词。',
             authorization='用户授权一次独立测试，不自动重试', ratio='1:1', formal_size=[2048, 2048],
             output='03-人物资料/其他资料/工作稿/素材/CH001-成年-人物上半身正面肖像图-候选-v01.png',
+            formal='03-人物资料/CH001-测试人物/参考图/CH001-成年-人物上半身正面肖像图.png',
             fields={'人物状态': '成年'})
         self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
         self.projects = ProjectStore(self.project.parent)
@@ -222,12 +223,37 @@ class NativeImageTests(unittest.TestCase):
         self.assertIn('tool error', text)
         self.assertNotIn('### ' + self.job['review'], text)
 
+    def test_style_sample_uses_its_fixed_object_without_a_formal_asset(self):
+        self.spec.update(image_type='画风样例',
+            draft='00-项目定位/其他资料/工作稿/项目基本定位-画风验证-工作稿.md',
+            output='00-项目定位/其他资料/工作稿/素材/项目基本定位-画风验证-候选-v01.png')
+        del self.spec['formal']
+        self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+        self.prepare()
+        self.assertNotIn('formal', self.job['request'])
+        self.assertFalse((self.project / self.job['candidate']).exists())
+
+    def test_director_sheet_candidate_must_match_the_declared_formal_page(self):
+        self.spec.update(kind='剧集素材', image_type='手绘导演分镜表',
+            draft='09-剧集制作/EP001/其他资料/工作稿/EP001-专用素材制作-工作稿.md',
+            formal='09-剧集制作/EP001/03-分镜脚本/导演分镜表/EP001-C001-手绘导演分镜表-第01页.png',
+            output='09-剧集制作/EP001/其他资料/工作稿/素材/EP001-C001-手绘导演分镜表-v01-第02页.png')
+        self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+        with self.assertRaisesRegex(ValueError, '对应正式图片名'):
+            native.prepare(self.project, self.request)
+        self.assertFalse((self.project / self.spec['draft']).exists())
+        self.spec['output'] = self.spec['output'].replace('第02页', '第01页')
+        self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+        self.prepare()
+        self.assertIn('-v01-第01页.png', self.job['candidate'])
+
     def test_all_existing_templates_are_prepared_without_new_asset_categories(self):
         for kind, scope, who in [('场景', '04-场景资料', 'SC001'), ('道具', '05-道具资料', 'PR001'),
                                  ('剧集素材', '09-剧集制作/EP001', 'EP001')]:
             with self.subTest(kind=kind):
                 spec = dict(self.spec, kind=kind, object=who,
                     draft=f'{scope}/其他资料/工作稿/{who}-参考图-工作稿.md',
+                    formal=f'{scope}/参考图/{who}.png',
                     output=f'{scope}/其他资料/工作稿/素材/{who}-候选-v01.png')
                 request = self.request.with_name(who + '.json')
                 request.write_text(json.dumps(spec, ensure_ascii=False))
@@ -257,6 +283,7 @@ class NativeImageTests(unittest.TestCase):
     def test_episode_generation_and_review_both_remain_pending(self):
         self.spec.update(kind='剧集素材', object='EP001-C001-P001', image_type='剧集专用参考图',
             draft='09-剧集制作/EP001/其他资料/工作稿/EP001-专用素材制作-工作稿.md',
+            formal='09-剧集制作/EP001/04-专用素材/EP001-专用图.png',
             output='09-剧集制作/EP001/其他资料/工作稿/素材/EP001-专用图-候选-v01.png')
         self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
         self.prepare()
@@ -277,6 +304,7 @@ class NativeImageTests(unittest.TestCase):
                 if scope == '剧集素材':
                     self.spec.update(kind='剧集素材', object='EP001-C001-P001', image_type='剧集专用参考图',
                         draft='09-剧集制作/EP001/其他资料/工作稿/EP001-专用素材制作-工作稿.md',
+                        formal='09-剧集制作/EP001/04-专用素材/EP001-专用图.png',
                         output='09-剧集制作/EP001/其他资料/工作稿/素材/EP001-专用图-候选-v01.png')
                     self.request = self.request.with_name('剧集请求.json')
                     self.request.write_text(json.dumps(self.spec, ensure_ascii=False))

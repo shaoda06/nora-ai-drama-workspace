@@ -244,6 +244,8 @@ class TaskStore(LocalQueue, TaskNotifications):
             def portable(value):
                 return Path(local(value)).relative_to(project).as_posix()
             plan['draft'] = portable(plan['draft'])
+            if plan.get('formal'):
+                plan['formal'] = portable(plan['formal'])
             for image in plan['images']:
                 image['path'] = portable(image['path'])
             if plan.get('upscale'):
@@ -280,6 +282,9 @@ class TaskStore(LocalQueue, TaskNotifications):
         record = Path(data.record_dir)
         if any((record / name).exists() for name in ('后台任务状态.json', '后台过程记录.json')):
             raise client.ClientError('registration_guard', '执行目录已有后台登记记录；请核对原任务')
+        if data.image_plan is not None:
+            from backend.services.image_closeout import validate_names
+            validate_names(project, data.image_plan, required=True)
         if not data.thread_id or not data.desktop.caller_thread:
             raise ValueError('缺少真实会话身份')
         return project

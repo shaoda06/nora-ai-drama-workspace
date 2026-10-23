@@ -29,6 +29,8 @@ def prepare(project, request_file):
         if job['request'] != spec:
             raise ValueError('原Imagegen请求已变化；新生成须另存请求，不覆盖已有交接')
         return job
+    images.validate_names(root, dict(kind=spec['kind'], image_type=spec['image_type'], formal=spec.get('formal'),
+        draft=spec['draft'], images=[dict(path=spec['output'])]), required=True)
     if spec['kind'] not in images.TEMPLATES or not spec['prompt'].strip() or not spec['authorization'].strip():
         raise ValueError('Imagegen需要既定图片类型、完整提示词和实际授权')
     if not re.fullmatch(r'[1-9]\d*:[1-9]\d*', spec['ratio']):
@@ -116,6 +118,8 @@ def prepare(project, request_file):
 def complete(project, manifest_file, result_file, projects, *, repair=None):
     root = Path(project).resolve()
     job = json.loads(project_file(root, manifest_file).read_text('utf-8-sig'))
+    images.validate_names(root, dict(kind=job['kind'], image_type=job['request'].get('image_type'), formal=job['request'].get('formal'),
+        draft=job['draft'], images=[dict(path=job['candidate'])]))
     result_file = project_file(root, result_file)
     result = json.loads(result_file.read_text('utf-8-sig'))
     if result['actual_prompt'] != job['request']['prompt']:

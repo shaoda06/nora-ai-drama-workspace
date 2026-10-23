@@ -394,19 +394,27 @@ def build_image(root, skill, spec, documents, now):
         width, height = spec.get('size', SIZES.get(spec['image_type'], (None, None)))
         if not width or not height or width % 32 or height % 32:
             raise ValueError('明确图片尺寸须为有效32倍数；其他类型请在size指定既定尺寸')
-        stem = '-'.join(str(x) for x in (spec['object'], spec.get('state'), spec.get('costume'), spec['image_type']) if x)
+        if not spec.get('formal') and spec['image_type'] != '画风样例':
+            raise ValueError('新图片任务须填写formal正式图片路径，再确定候选名称')
+        stem = project_file(root, spec['formal']).stem if spec.get('formal') else '项目基本定位-画风验证'
+        board = re.fullmatch(r'(.+-手绘导演分镜表)-第([0-9]{2,})页', stem)
+        pattern = (re.escape(board[1]) + r'-v([0-9]{2,})-第' + board[2] + r'页\.png') if board else re.escape(stem) + r'-候选-v([0-9]{2,})\.png'
         versions = []
         for area in re.finditer(r'^### 生成记录-\d+\s*\n.*?(?=^#{1,3} |\Z)', text, re.M | re.S):
-            if images.value(area[0], '图片类型') != spec['image_type'] or images.value(area[0], '人物状态') != spec.get('state', '不适用') or images.value(area[0], '服装状态') != spec.get('costume', '不适用'):
-                continue
             for path in re.findall(r'\]\(([^)]+\.png)\)', images.value(area[0], '输出候选文件') or images.value(area[0], '候选文件入口')):
-                version = re.search(r'-v(\d+)\.png$', path)
+                version = re.fullmatch(pattern, Path(unquote(path)).name)
                 if version: versions.append(int(version[1]))
-        candidate = project_file(root, spec.get('output', str(draft.parent / '素材' / f'{stem}-候选-v{max(versions, default=0)+1:02d}.png')))
+        version = max(versions, default=0) + 1
+        filename = f'{board[1]}-v{version:02d}-第{board[2]}页.png' if board else f'{stem}-候选-v{version:02d}.png'
+        candidate = project_file(root, spec.get('output', str(draft.parent / '素材' / filename)))
         record = project_file(root, spec.get('record_dir', str(draft.parent.parent / '执行附件' / prefix)))
         seed = choose_seed(root, spec, refs, documents, images.link(root / '00-项目定位/项目基本定位.md', draft, generation)[:-1] + '#' + generation + ')')
         plan = dict(draft=draft.relative_to(root).as_posix(), kind=spec['kind'], generation=generation,
                     review='审阅-' + generation + '-001', images=[dict(path=candidate.relative_to(root).as_posix(), width=width, height=height)])
+    if spec.get('formal'):
+        plan['formal'] = project_file(root, spec['formal']).relative_to(root).as_posix()
+    plan['image_type'] = spec['image_type'] if 'image_type' in spec else images.value(images.section(text, generation)[0], '图片类型')
+    images.validate_names(root, plan, required=True)
     if candidate.exists():
         raise ValueError('候选文件已存在，不能覆盖：' + str(candidate))
     if plan.get('local_processing'):

@@ -39,10 +39,73 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         return dict(task_type='image', object=who, title=who + ' · 角色六视图', kind='人物', image_type='角色多视角参考图',
             state='大学', costume='首集', authorization='用户明确要求男女主各生成一张穿衣六视图',
             draft=f'03-人物资料/其他资料/工作稿/{who}-参考图-工作稿.md',
+            formal=f'03-人物资料/{who}-人物/参考图/{who}-大学-首集-角色多视角参考图.png',
             prompt=dict(rewritten_prompt='风格要求：真人摄影感。\n画面要求：同一人物六视图。\n人物描述：按当前确认的衣装。', wh_ratio='1:1', ratio_follow=''))
 
     def write_plan(self, *tasks):
         self.plan_file.write_text(json.dumps(dict(tasks=tasks), ensure_ascii=False))
+
+    def test_prop_layout_type_does_not_become_candidate_filename(self):
+        spec = dict(self.spec(), kind='道具', object='PR001', image_type='道具三视图',
+                    state='基础', size=[1024, 1024],
+                    draft='05-道具资料/其他资料/工作稿/PR001-参考图-工作稿.md',
+                    formal='05-道具资料/PR001-保温杯/参考图/PR001-基础-道具参考图.png')
+        documents = plans.Documents(self.project)
+        with patch.object(plans, 'choose_seed', return_value=101):
+            task = plans.build_image(self.project, t.SKILL, spec, documents, '2026-10-24')
+        self.assertEqual(Path(task['outputs'][0]['path']).name, 'PR001-基础-道具参考图-候选-v01.png')
+        self.assertFalse((self.project / spec['draft']).exists())
+
+    def test_views_count_candidate_versions_by_formal_filename(self):
+        spec = dict(self.spec(), kind='场景', object='SC001', image_type='场景参考图', size=[1024, 1024],
+                    draft='04-场景资料/其他资料/工作稿/SC001-参考图-工作稿.md')
+        documents = plans.Documents(self.project)
+        for view, expected in [('V001', 'v01'), ('V002', 'v01'), ('V001', 'v02')]:
+            spec['formal'] = f'04-场景资料/SC001-办公室/参考图/SC001-EP001-C001-{view}-场景参考图.png'
+            with patch.object(plans, 'choose_seed', return_value=101):
+                task = plans.build_image(self.project, t.SKILL, spec, documents, '2026-10-24')
+            self.assertEqual(Path(task['outputs'][0]['path']).name,
+                             f'SC001-EP001-C001-{view}-场景参考图-候选-{expected}.png')
+
+    async def test_explicit_wrong_candidate_stops_before_any_publish_or_enqueue(self):
+        spec = self.spec()
+        spec['output'] = '03-人物资料/其他资料/工作稿/素材/CH001-大学-首集-角色多视角参考图-候选-v01-imagegen.png'
+        self.write_plan(spec)
+        with patch.object(self.store, 'enqueue', side_effect=AssertionError('must not enqueue')):
+            with self.assertRaisesRegex(ValueError, '对应正式图片名'):
+                await plans.execute(self.store, self.payload)
+        self.assertFalse((self.project / spec['draft']).exists())
+
+    def test_processing_source_and_destination_must_share_formal_identity(self):
+        draft = '03-人物资料/其他资料/工作稿/CH001-参考图-工作稿.md'
+        source = '03-人物资料/其他资料/工作稿/素材/CH001-日常-服装参考图-候选-v01.png'
+        plan = dict(draft=draft, kind='人物', formal='03-人物资料/CH001-男主/参考图/CH001-日常-服装参考图.png',
+                    images=[dict(path=source.removesuffix('.png') + '-规格处理-001.png')],
+                    upscale=dict(source=source, number='规格处理-001', formal='03-人物资料/CH001-男主/参考图/CH001-日常-服装参考图.png'))
+        image.validate_names(self.project, plan, required=True)
+        plan['images'][0]['path'] = plan['images'][0]['path'].replace('-规格处理-001', '-1080x1440')
+        with self.assertRaisesRegex(ValueError, '对应正式图片名'):
+            image.validate_names(self.project, plan, required=True)
+        plan['images'][0]['path'] = source.removesuffix('.png') + '-规格处理-001.png'
+        plan['upscale']['source'] = source.replace('服装参考图-候选', '服装正背面图-候选')
+        with self.assertRaisesRegex(ValueError, '批准原候选与正式图片名称不一致'):
+            image.validate_names(self.project, plan, required=True)
+
+    def test_legacy_plan_can_recover_without_rewriting_new_fields(self):
+        plan = dict(draft='旧工作稿.md', kind='场景', images=[dict(path='旧名-imagegen.png')])
+        image.validate_names(self.project, plan)
+        self.assertNotIn('formal', plan)
+        with self.assertRaisesRegex(ValueError, 'formal'):
+            image.validate_names(self.project, plan, required=True)
+
+    def test_new_direct_registration_cannot_bypass_formal_identity(self):
+        self.data.image_plan = dict(draft='03-人物资料/其他资料/工作稿/CH001-参考图-工作稿.md',
+                                    kind='人物', images=[dict(path='03-人物资料/其他资料/工作稿/素材/任意图-候选-v01.png')])
+        with self.assertRaisesRegex(ValueError, 'formal'):
+            self.store.validate_registration(self.data)
+        self.data.image_plan['formal'] = '03-人物资料/CH001-男主/参考图/CH001-大学-人物多视角参考图.png'
+        with self.assertRaisesRegex(ValueError, '对应正式图片名'):
+            self.store.validate_registration(self.data)
 
     async def test_batch_builds_both_pairs_and_records_before_one_queue_handoff(self):
         self.write_plan(self.spec(), self.spec('CH002'))
