@@ -1,0 +1,3 @@
+interface:
+  display_name: "视频读取与分析"
+  short_description: "优先读取字幕或转写讲解，按时间点抽帧核对示范，并区分观察与推断"
