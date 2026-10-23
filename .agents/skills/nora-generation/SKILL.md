@@ -14,7 +14,8 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 | 本次动作 | 必要入口 |
 | --- | --- |
 | 封面生成、采用后的规格处理 | [封面专项](../nora-drama-assets/references/封面资料与制作规范.md)；默认Imagegen、Qwen备用，登记类型为“封面”，后处理只为达到目标规格 |
-| 已明确选用Imagegen生成／编辑 | [Imagegen子代理执行](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)；主控准备，固定6 Luna／medium执行，固定脚本收尾，不装配为Qwen任务 |
+| 社交媒体头像／主页背景图生成、结果保存及尺寸处理 | [社交图片生成与记录](../nora-social-visuals/references/生成与记录规范.md)；复用Imagegen共用执行规则，按该用途交接与记录，不冒充旧登记类型 |
+| 已明确选用Imagegen生成／编辑 | [Imagegen子代理执行](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)；主控准备，固定6 Luna／medium执行；收尾按图片用途进入固定脚本或社交专项，不装配为Qwen任务 |
 | 已备内容的ComfyUI图片或超分提交 | [一次装配入队](../nora-ai-short-drama/references/comfyui-scripts/README.md#一次装配与批量入队)、[图片执行分工](references/ComfyUI-服务配置与任务提交规范.md#图片执行分工)；当前任务数据与授权 |
 | 已备内容的视频提交 | 已有任务的局部返修先读[执行快照与素材路径](references/ComfyUI-MiniMaxH3导演台节点使用规范.md#611-局部返修的执行快照与素材路径)并落实来源副本和素材绑定；标准版再按[标准版配置选择](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)询问本次四选一（已有明确选择沿用），再用同一装配工具及[视频执行分工](references/ComfyUI-服务配置与任务提交规范.md#视频执行分工)；不重新读节点全规范 |
 | 首次完整准备图片分支 | [图片执行](references/图片生成执行规范.md)，先按已选能力分支；Qwen再根据T2I／Edit进入对应执行规则；内容缺项交资产或首帧负责人 |
@@ -22,7 +23,7 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 | 仅准备ComfyUI任务、不生成 | [准备分工](references/ComfyUI-服务配置与任务提交规范.md#执行前检查与复用)，固定入口使用--prepare-only |
 | ComfyUI准备失败后修正输入 | 未登记清单进入[清单重新准备](../nora-ai-short-drama/references/comfyui-scripts/README.md#未登记清单的重新准备)；已有本地ID进入[原任务重新准备与恢复](references/ComfyUI-服务配置与任务提交规范.md#重新调度与失败恢复) |
 | 仅查ComfyUI任务进度 | [查询分支](references/进度查询与结果处理规范.md#主动查询进度)，读取实际任务状态和更新时间 |
-| 收到Imagegen子代理完成或失败报告 | [父代理交付与异常处理](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)，复用固定脚本报告，不进入ComfyUI通知分支 |
+| 收到Imagegen子代理完成或失败报告 | [父代理交付与异常处理](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)，复用对应固定脚本报告或社交专项的执行结果，不进入ComfyUI通知分支 |
 | 收到ComfyUI正常图片或超分结果 | [图片结果](references/进度查询与结果处理规范.md#正常图片结果)，沿[图片批次通知与超分静默](references/ComfyUI-任务监控规范.md#图片批次通知与超分静默)处理，普通图片读report后集中展示；正常超分静默 |
 | 收到正常视频结果 | [视频结果](references/进度查询与结果处理规范.md#正常视频结果)，读取report并按通知要求汇报数量及审核入口 |
 | ComfyUI异常、取回失败或恢复 | [异常分支](references/进度查询与结果处理规范.md#异常与恢复)，定位失败阶段后读对应证据；仅取回失败使用取回重试 |
