@@ -1334,7 +1334,27 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                         "formal": [], "candidates": [], "record": episode_node["materialRecord"]})
                     collection[kind].append(dict(item, page=int(match[3]), version='v' + match[2] if match[2] else ''))
             sheet_keys = set()
-            for collection in director_sheets.values():
+            for scene, collection in director_sheets.items():
+                sheet_record = work_root + number + '-' + scene + '-场次分镜-工作稿.md'
+                sheet_text = read(sheet_record) or ''
+                registrations = {row['图表版本']: row for row in table_records(
+                    sheet_text, ('来源分镜版本', '图表版本', '候选编号'))}
+                adopted_pages = {}
+                for row in table_records(sheet_text, ('来源分镜版本', '图表版本', '候选原图', '正式图片')):
+                    for link in markdown_links(row['正式图片'], sheet_record):
+                        adopted_pages[link['key']] = row
+                for item in collection['formal']:
+                    row = adopted_pages.get(item['key'], {})
+                    item.update(sourceVersion=row.get('来源分镜版本', ''), version=row.get('图表版本', ''))
+                for item in collection['candidates']:
+                    row = registrations.get(item['version'], {})
+                    item['sourceVersion'] = row.get('来源分镜版本', '')
+                    item['candidateNumber'] = int(row['候选编号']) if row.get('候选编号', '').isdigit() else None
+                    item['adopted'] = any(formal['sourceVersion'] == item['sourceVersion']
+                        and formal['version'] == item['version'] and formal['page'] == item['page']
+                        and any(link['key'] == item['key'] for link in markdown_links(
+                            adopted_pages.get(formal['key'], {}).get('候选原图', ''), sheet_record))
+                        for formal in collection['formal'])
                 for kind in ('formal', 'candidates'):
                     collection[kind].sort(key=lambda item: (int(item['version'][1:]) if item['version'] else 0, item['page']))
                     sheet_keys.update(item['key'] for item in collection[kind])
@@ -1365,6 +1385,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                 item, text = latest_episode_document(episode_root + "/03-分镜脚本/" + identity + ".md",
                                                      work_root + identity + "-工作稿.md")
                 if item:
+                    item['version'] = field(text, '文档版本').rstrip('。')
                     episode_node["storyboards"][scene] = item
                     storyboard_texts[scene] = text
                     if source_scenes and scene not in source_scenes:

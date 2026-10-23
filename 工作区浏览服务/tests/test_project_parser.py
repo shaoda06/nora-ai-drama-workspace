@@ -506,6 +506,36 @@ class ProjectParserTests(unittest.TestCase):
             verify_image_entries(SimpleNamespace(section=lambda *args: parsed), 'fixture', [{
                 'draft': root + f'/其他资料/工作稿/{number}-专用素材制作-工作稿.md', 'path': candidate}])
 
+    def test_director_sheet_source_and_adoption_come_from_registered_relationships(self):
+        root = '09-剧集制作/EP001'
+        work = root + '/其他资料/工作稿'
+        formal = root + '/03-分镜脚本/导演分镜表/EP001-C001-手绘导演分镜表-第01页.png'
+        self.put(formal, 'formal')
+        for version in (1, 2, 3, 4):
+            self.put(work + f'/素材/EP001-C001-手绘导演分镜表-v{version:02}-第01页.png', 'candidate')
+        self.put(work + '/EP001-C001-场次分镜-工作稿.md', '''# 场次工作稿
+
+| 来源分镜版本 | 图表版本 | 候选编号 |
+| --- | --- | --- |
+| v07 | v01 | 1 |
+| v07 | v02 | 2 |
+| v08 | v03 | 1 |
+
+| 页码 | 来源分镜版本 | 图表版本 | 候选原图 | 正式图片 |
+| --- | --- | --- | --- | --- |
+| 1/1 | v07 | v02 | [候选](素材/EP001-C001-手绘导演分镜表-v02-第01页.png) | [正式](../../03-分镜脚本/导演分镜表/EP001-C001-手绘导演分镜表-第01页.png) |
+''')
+        def collection():
+            data = portal.build_data(self.root.resolve(), web_episode_navigation=True)
+            return data['catalogues']['09-剧集制作']['children'][0]['directorSheets']['C001']
+        sheets = collection()
+        self.assertEqual([(item['sourceVersion'], item['candidateNumber'], item['adopted']) for item in sheets['candidates']],
+                         [('v07', 1, False), ('v07', 2, True), ('v08', 1, False), ('', None, False)])
+        self.assertEqual(sheets['formal'][0]['sourceVersion'], 'v07')
+        self.assertEqual(sheets['formal'][0]['version'], 'v02')
+        (self.root / formal).unlink()
+        self.assertFalse(any(item['adopted'] for item in collection()['candidates']), '登记有链接但正式图片缺失不冒称采用')
+
     def test_episode_materials_index_record_then_images_by_filename(self):
         for episode, prefix in (("EP001", ""), ("EP002", "EP002-")):
             root = f"09-剧集制作/{episode}/04-专用素材"

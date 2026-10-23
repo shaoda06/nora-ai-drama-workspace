@@ -7,23 +7,31 @@ import { TabNav } from './TabNav';
 import { TabSelect } from './TabSelect';
 import './SceneDirectorSheets.css';
 
-export function SceneDirectorSheets({ sheets, revision }: { sheets?: DirectorSheets; revision: number }) {
+export function SceneDirectorSheets({ sheets, storyboardVersion, revision }: { sheets?: DirectorSheets; storyboardVersion: string; revision: number }) {
   const preview = useContext(PreviewContext);
-  const [choice, setChoice] = useState('formal');
+  const [choice, setChoice] = useState('');
   const [pageKey, setPageKey] = useState('');
-  if (!sheets) return <p className="muted">本场尚无导演分镜表。需要制作时，以场次分镜为依据另行安排。</p>;
-  const versions = [...new Set(sheets.candidates.map(item => item.version))].sort((a, b) => Number(b.slice(1)) - Number(a.slice(1)));
-  const options = [{ value: 'formal', label: `已采用（${sheets.formal.length}张）` },
-    ...versions.map(version => ({ value: version, label: `候选与历史 ${version}（${sheets.candidates.filter(item => item.version === version).length}张）` }))];
-  const selected = options.some(item => item.value === choice) ? choice : 'formal';
-  const formal = selected === 'formal';
-  const images = formal ? sheets.formal : sheets.candidates.filter(item => item.version === selected);
+  const candidates = sheets?.candidates.filter(item => item.sourceVersion === storyboardVersion && item.candidateNumber) || [];
+  const versions = [...new Set(candidates.map(item => item.version))].sort((a, b) =>
+    candidates.find(item => item.version === b)!.candidateNumber! - candidates.find(item => item.version === a)!.candidateNumber!);
+  const options = versions.map(version => {
+    const pages = candidates.filter(item => item.version === version);
+    const adopted = pages.filter(item => item.adopted).length;
+    return { value: version, label: `候选${pages[0].candidateNumber}（${pages.length}张）`,
+      badge: adopted === pages.length ? '已采用' : adopted ? '部分已采用' : undefined };
+  });
+  const selected = options.some(item => item.value === choice) ? choice
+    : options.find(item => item.badge)?.value || options[0]?.value || '';
+  const images = candidates.filter(item => item.version === selected).map(item =>
+    item.adopted ? sheets!.formal.find(formal => formal.sourceVersion === storyboardVersion
+      && formal.version === item.version && formal.page === item.page)! : item);
   const pageIndex = Math.max(0, images.findIndex(item => String(item.page) === pageKey));
   const current = images[pageIndex];
   return <section aria-label="本场导演分镜表">
     <div className="toolbar director-sheet-toolbar">
-      <TabSelect label="导演分镜表版本" selected={selected} onChange={value => { setChoice(value); setPageKey(''); }} items={options} />
-      {sheets.record && <div className="director-sheet-record"><button className="link" onClick={() => preview(sheets.record!)}>查看导演表生成与审阅记录</button></div>}
+      <div className="director-sheet-choice"><span className="muted">{storyboardVersion ? `分镜 ${storyboardVersion}` : '未确定来源分镜版本'}</span>
+        {options.length > 0 && <TabSelect highlightSelected label="导演分镜表候选" selected={selected} onChange={value => { setChoice(value); setPageKey(''); }} items={options} />}</div>
+      {sheets?.record && <div className="director-sheet-record"><button className="link" onClick={() => preview(sheets.record!)}>查看导演表生成与审阅记录</button></div>}
     </div>
     {current ? <>
       <TabNav label="导演分镜表页码" selected={String(current.page)} onChange={setPageKey}
@@ -35,6 +43,6 @@ export function SceneDirectorSheets({ sheets, revision }: { sheets?: DirectorShe
       {images.length === 1 ? <p className="director-sheet-single-page">第1页 / 共1页</p>
         : <Pagination page={pageIndex + 1} total={images.length} pageSize={1} showItemCount={false} change={page => setPageKey(String(images[page - 1].page))} />}
     </>
-      : <p className="muted">本场尚无已采用的正式导演分镜表，可切换查看已有候选。</p>}
+      : <p className="muted">{!storyboardVersion ? '该轮缺少来源分镜版本，无法关联导演分镜表。' : `分镜 ${storyboardVersion} 尚未制作导演分镜表。`}{sheets?.candidates.some(item => !item.sourceVersion || !item.candidateNumber) && '本场有图片尚未登记来源或候选编号，请查看生成与审阅记录。'}</p>}
   </section>;
 }

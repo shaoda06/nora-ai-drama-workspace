@@ -4,3 +4,5 @@
 .director-sheet-image img{display:block;width:100%;height:auto;max-height:72vh;object-fit:contain}
 .director-sheet-files{display:flex;justify-content:flex-end;margin-top:12px}
 .director-sheet-single-page{text-align:center;margin:28px 0}
+
+.director-sheet-choice{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0}
