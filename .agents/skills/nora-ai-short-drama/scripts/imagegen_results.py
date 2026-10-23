@@ -2,6 +2,7 @@
 import argparse
 import json
 from pathlib import Path
+import re
 import sys
 
 WORKSPACE = Path(__file__).resolve().parents[4]
@@ -32,6 +33,13 @@ def main():
     args = parser.parse_args()
     root = Path(args.project).resolve()
     if args.command == 'prepare':
+        request_file = project_file(root, args.request)
+        spec = json.loads(request_file.read_text('utf-8-sig'))
+        # Existing handoffs retain their submitted paths; validate new requests before any writes.
+        if not request_file.with_name(request_file.stem + '-Imagegen执行清单.json').exists():
+            output = project_file(root, spec['output'])
+            if output.parent != project_file(root, spec['draft']).parent / '素材' or not re.fullmatch(r'.+-候选-v[0-9]{2,}\.png', output.name):
+                raise ValueError('新图片候选须保存到工作稿/素材/，命名为“正式图片名去扩展名-候选-v两位版本号.png”；工具与比例写入记录，不追加文件名后缀')
         job = native.prepare(root, args.request)
         result = {name: job[name] for name in ('manifest', 'executor', 'generation', 'candidate', 'prompt_file',
                   'generation_call_file', 'result_store_key', 'report') if name in job}

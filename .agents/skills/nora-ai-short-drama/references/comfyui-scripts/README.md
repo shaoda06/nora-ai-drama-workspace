@@ -42,6 +42,8 @@ Nora项目的调用入口和授权边界统一见[固定通信工具与证据](.
 
 `kind`为人物、场景、道具、剧集素材或封面。封面使用 `10-封面资料/其他资料/工作稿/封面制作-工作稿.md` 和封面工作稿模板；`prompt`自由编写，只记录本次实际正文，不套固定封面提示词模板。`prompt`为最终正文，不是要求子代理继续编写的任务描述。`ratio`为请求比例，`formal_size`仅记录获批后正式目标，不限制原生结果像素。`output`必填且不得占用已有文件；不自动推断用户想覆盖哪个候选。`fields`可填原模板创作字段；`references`按既有清单的`file/purpose/approval`或`user_reference/basis`提供项目内真实输入，原批准及来源要求保持，不要求Imagegen提供种子。`record_dir`可选，默认沿原工作稿的既有执行附件及对象／生成序号；`record_updates`可选，原记录须同步的关联内容用`path/old/new`明确提供，支持`{{outputs}}`和`{{specs}}`，不让子代理手写更新。
 
+`output`按[素材命名与保存](../共用规则/文件版本与工作稿规范.md#素材与执行附件)填写。固定入口对新请求在写入工作稿及交接前核对目录和候选文件名，不合规时报错停止；已有执行清单的恢复保留原路径，不追溯改写。`complete`只按清单复制原生文件，执行代理不改目标名。命名检查可在工作区根目录运行`工作区浏览服务/.venv/bin/python -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p test_imagegen_results.py`；使用独立临时项目核对新请求拒绝、标准命名交接及历史交接复用，不调用生图。
+
 ```sh
 /实际浏览服务/.venv/bin/python /实际技能/scripts/imagegen_results.py prepare \
   --project /实际项目目录 --request 相对执行附件/请求.json
