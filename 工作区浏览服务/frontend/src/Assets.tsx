@@ -3,7 +3,9 @@ import { TabSelect } from './components/TabSelect';
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useBlocker, useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Dialog, Result } from './components';
+import { Dialog, Preview, Result } from './components';
+import { SearchField } from './components/SearchField';
+import { FileActions } from './components/FileActions';
 import { PageHeader } from './components/PageHeader';
 import { FloatingMessage, useNotify } from './components/Notifications';
 import './Assets.css';
@@ -54,7 +56,7 @@ function AssetList({ kind }: { kind: Kind }) {
     [item.name, item.category, ...Object.values(item.profile)].join('\n').toLocaleLowerCase().includes(needle));
   return <>
     <PageCheckStatus queries={[query]} />
-    <div className="asset-toolbar"><input type="search" aria-label="搜索资产" placeholder={`搜索${kinds[kind]}名称或资料…`} value={search} onChange={event => setSearch(event.target.value)} />
+    <div className="asset-toolbar"><SearchField label="搜索资产" placeholder={`搜索${kinds[kind]}名称或资料…`} value={search} onChange={setSearch} />
       {kind === 'clothing' && <TabSelect label="服装分类筛选" selected={category} onChange={setCategory} items={[{ value: '', label: '全部分类' }, ...clothing.map((value) => ({ value, label: value }))]} />}
       <Link className="asset-primary" to={`/assets/${kind}/new`}>＋ 新增{kinds[kind]}</Link></div>
     <Result loading={query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} />
@@ -146,7 +148,7 @@ function AssetEditor({ initial, kind }: { initial: Asset | null; kind: Kind }) {
   function pictureCard(picture: Picture) {
     return <div className="asset-picture" key={picture.id}>
       <button className="asset-picture-preview" aria-label={`预览${slots[picture.slot]}：${picture.name}`} onClick={() => setPreview(picture)}><img src={imageUrl(saved!, picture)} alt={picture.name} loading="lazy" /></button>
-      <div className="asset-picture-footer"><span title={picture.name}>{picture.name}</span><div><a href={imageUrl(saved!, picture) + '?download=true'} download>下载</a><button className="link" disabled={busy || dirty} onClick={() => setRemove(picture)}>删除</button></div></div>
+      <div className="asset-picture-footer"><span title={picture.name}>{picture.name}</span><div><FileActions url={imageUrl(saved!, picture)} downloadOnly /><button className="link" disabled={busy || dirty} onClick={() => setRemove(picture)}>删除</button></div></div>
     </div>;
   }
   return <div data-asset-unsaved={dirty || busy}>
@@ -156,7 +158,7 @@ function AssetEditor({ initial, kind }: { initial: Asset | null; kind: Kind }) {
       <section className="asset-info" aria-label="资料卡"><h2>{saved ? saved.name : `新增${kinds[kind]}`}</h2>
         <form onSubmit={event => { event.preventDefault(); void run(save); }}><fieldset disabled={busy}>
           <label>名称<input required maxLength={100} value={draft.name} onChange={event => setDraft({ ...draft, name: event.target.value })} placeholder={kind === 'person' ? '人物姓名或称呼' : '资产名称'} /></label>
-          {kind === 'clothing' && <label>分类<TabSelect label="分类" selected={draft.category} onChange={category => setDraft({ ...draft, category })} items={clothing.map(value => ({ value, label: value }))} /></label>}
+          {kind === 'clothing' && <label>分类<TabSelect variant="field" label="分类" selected={draft.category} onChange={category => setDraft({ ...draft, category })} items={clothing.map(value => ({ value, label: value }))} /></label>}
           {kind === 'person' && <>
             <div className="asset-field-pair"><label>性别<input value={draft.profile.gender} maxLength={100} onChange={event => setProfile('gender', event.target.value)} /></label><label>年龄<input value={draft.profile.age} maxLength={100} onChange={event => setProfile('age', event.target.value)} placeholder="可填写年龄段" /></label></div>
             <label>身份<input value={draft.profile.identity} maxLength={1000} onChange={event => setProfile('identity', event.target.value)} placeholder="职业、身份或背景" /></label>
@@ -179,7 +181,7 @@ function AssetEditor({ initial, kind }: { initial: Asset | null; kind: Kind }) {
         </section>
       </section>
     </div>
-    {preview && saved && <Dialog title={preview.name} close={() => setPreview(null)}><img className="asset-full-image" src={imageUrl(saved, preview)} alt={preview.name} /><p><a href={imageUrl(saved, preview) + '?download=true'} download>下载原图</a></p></Dialog>}
+    {preview && saved && <Preview project="" revision={0} item={{ kind: "image", name: preview.name, url: imageUrl(saved, preview) }} close={() => setPreview(null)} />}
     {remove && <Dialog title={remove === 'asset' ? `删除${kinds[kind]}` : '删除图片'} close={() => { if (!busy) setRemove(null); }}><p>{remove === 'asset' ? `将删除“${saved!.name}”的资料及全部图片。` : `将删除“${remove.name}”。`}此操作无法撤销。</p><div className="asset-dialog-actions"><button disabled={busy} onClick={() => setRemove(null)}>取消</button><button className="asset-danger" disabled={busy} onClick={() => void run(confirmRemove)}>确认删除</button></div></Dialog>}
     {reload && <Dialog title="重新载入资料" close={() => setReload(false)}><p>重新载入会放弃当前未保存的输入，读取最近保存的资料和图片。</p><div className="asset-dialog-actions"><button disabled={busy} onClick={() => setReload(false)}>取消</button><button disabled={busy} onClick={() => void run(async () => { const item = await api<Asset>(`/${saved!.id}`); accept(item); setDraft(cardOf(item)); setReload(false); })}>放弃输入并载入</button></div></Dialog>}
     {blocker.state === 'blocked' && <Dialog title={busy ? '正在处理' : '资料尚未保存'} close={() => blocker.reset()}><p>{busy ? '图片或资料正在保存，请等待完成。' : '离开会丢失当前未保存的资料。'}</p><div className="asset-dialog-actions"><button onClick={() => blocker.reset()}>继续编辑</button>{!busy && <button onClick={() => blocker.proceed()}>放弃修改并离开</button>}</div></Dialog>}

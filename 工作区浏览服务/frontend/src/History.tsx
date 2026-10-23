@@ -61,10 +61,10 @@ export default function History() {
     <PageHeader eyebrow="开发跟踪" title="版本与开发记录" />
     <div className="history-layout">
       <aside className="history-sidebar" aria-label="开发文档导航">
-        <TabNav vertical label="开发文档" items={navigation} selected={selected} onChange={openDocument} />
+        <TabNav vertical mobileLayout="grid" label="开发文档" items={navigation} selected={selected} onChange={openDocument} />
         <details className="history-templates">
           <summary>模板与规范</summary>
-          <TabNav vertical label="模板与规范" items={templates} selected={selected} onChange={openDocument} />
+          <div className="history-template-items"><TabNav vertical mobileLayout="grid" label="模板与规范" items={templates} selected={selected} onChange={openDocument} /></div>
         </details>
       </aside>
       <article className={showVersions ? "panel history-versions" : "panel"}>

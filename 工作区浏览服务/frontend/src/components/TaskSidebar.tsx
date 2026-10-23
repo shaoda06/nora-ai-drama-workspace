@@ -1,3 +1,4 @@
+import { UnderlineTabs } from './UnderlineTabs';
 import { FloatingMessage } from './Notifications';
 import { PointerTooltip } from './PointerTooltip';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -209,13 +210,10 @@ export function TaskSidebar() {
       </span></button>
     <div id="comfy-task-list" className="comfy-task-content" data-view={editingNodes ? 'nodes' : 'tasks'} hidden={!open}>
       {editingNodes ? <NodeEditor close={() => setEditingNodes(false)} /> : <>
-      <div className="comfy-node-heading"><nav className="underline-tabs comfy-node-tabs" aria-label="远端节点">
-        {nodes.map(node => <PointerTooltip key={node.url} text={connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复'}><button  aria-current={node.url === selectedNode?.url ? 'page' : undefined}
-          disabled={busy || dragToken.current !== null}
-          onClick={() => { setSelectedUrl(node.url); setActionError(''); }} >
-          <span className="comfy-node-dot" data-connection={connection === 'connected' ? node.connection : 'connecting'}
-            aria-hidden="true" />{node.name}</button></PointerTooltip>)}
-      </nav><button className="comfy-node-edit" disabled={busy || dragToken.current !== null}
+      <div className="comfy-node-heading"><UnderlineTabs scrollable label="远端节点" selected={selectedNode?.url || ''} disabled={busy || dragToken.current !== null}
+        onChange={url => { setSelectedUrl(url); setActionError(''); }} items={nodes.map(node => ({ value: node.url, label: node.name,
+          tooltip: connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复',
+          icon: <span className="comfy-node-dot" data-connection={connection === 'connected' ? node.connection : 'connecting'} aria-hidden="true" /> }))} /><button className="comfy-node-edit" disabled={busy || dragToken.current !== null}
         onClick={() => setEditingNodes(true)}>编辑</button></div>
       <section className="comfy-queue" aria-label="远端队列">
       <div className="comfy-task-heading"><strong>远端</strong>
@@ -232,11 +230,8 @@ export function TaskSidebar() {
       </section>
       <section className="comfy-queue" aria-label="本地队列">
         <div className="comfy-task-heading comfy-local-heading"><strong>本地</strong>
-          <nav className="underline-tabs comfy-local-tabs" aria-label="本地任务分类">
-            {(Object.keys(localQueueStates) as (keyof typeof localQueueStates)[]).map(status => <button key={status}
-              aria-current={localCategory === status ? 'page' : undefined} disabled={busy || dragToken.current !== null}
-              onClick={() => setLocalCategory(status)}>{localQueueStates[status]}（{localCounts[status]}）</button>)}
-          </nav>
+          <UnderlineTabs compact label="本地任务分类" selected={localCategory} disabled={busy || dragToken.current !== null}
+            onChange={setLocalCategory} items={(Object.keys(localQueueStates) as (keyof typeof localQueueStates)[]).map(status => ({ value: status, label: `${localQueueStates[status]}（${localCounts[status]}）` }))} />
         </div>
         {localCategory === 'history' ? <TaskHistory
           updatedAt={historyUpdatedAt} total={localCounts.history} onDetails={setDetailId} /> :

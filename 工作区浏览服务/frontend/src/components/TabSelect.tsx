@@ -10,9 +10,12 @@ type Props = {
   disabled?: boolean;
   reselect?: boolean;
   iconOnly?: boolean;
+  variant?: "default" | "field";
+  size?: "default" | "compact" | "small" | "toolbar";
+  highlightSelected?: boolean;
 };
 
-export function TabSelect({ items, selected, onChange, label, disabled, iconOnly, reselect = false }: Props) {
+export function TabSelect({ items, selected, onChange, label, disabled, iconOnly, reselect = false, variant = "default", size = "default", highlightSelected = false }: Props) {
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
@@ -51,7 +54,7 @@ export function TabSelect({ items, selected, onChange, label, disabled, iconOnly
     }
   };
   return <>
-    <button ref={trigger} type="button" className={`tab-select tab-select-marked${iconOnly ? ' tab-select-icon' : ''}`} role="combobox" aria-label={label}
+    <button ref={trigger} type="button" className={`tab-select tab-select-marked tab-select-${variant} tab-select-${size}${highlightSelected ? " tab-select-highlight" : ""}${iconOnly ? ' tab-select-icon' : ''}`} role="combobox" aria-label={label}
       aria-haspopup="listbox" aria-controls={id} aria-expanded={expanded} aria-activedescendant={expanded ? `${id}-${active}` : undefined}
       disabled={disabled || items.length === 0} data-active={Boolean(selected)} data-value={selected} onKeyDown={keyDown} popoverTarget={id}
       onClick={() => { if (!expanded) positionMenu(); setExpanded(!expanded); }}>

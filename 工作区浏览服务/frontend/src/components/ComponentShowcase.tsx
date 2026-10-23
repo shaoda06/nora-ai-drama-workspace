@@ -37,6 +37,7 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
   const [selection, setSelection] = useState('one');
   const [disabled, setDisabled] = useState(false);
   const [pending, setPending] = useState(false);
+  const [dialogBusy, setDialogBusy] = useState(false);
   const [dialog, setDialog] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [empty, setEmpty] = useState(false);
@@ -59,11 +60,14 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
           <div className="component-demo-row"><span>编辑模式</span><Switch label="示例编辑模式" checked={editing} onChange={setEditing} /></div>
           {editing ? <textarea className="component-demo-textarea" aria-label="示例正文" value={draft} onChange={event => setDraft(event.target.value)} /> : <p className="component-draft">{draft}</p>}
           <UnderlineTabs label="示例页签" items={[{ value: 'overview', label: '概览' }, { value: 'detail', label: '详情' }]} selected={tab} onChange={setTab} />
+          <UnderlineTabs compact scrollable label="紧凑滚动页签示例" items={[{ value: 'overview', label: '示例节点甲', icon: <span aria-hidden="true">●</span>, tooltip: '节点状态说明示例' }, { value: 'detail', label: '示例节点乙' }]} selected={tab} onChange={setTab} />
           <p>{tab === 'overview' ? '这里是概览内容。' : '这里是详情内容。'}</p>
         </Example>
       </>}
-      {category === 'select' && <Example title="选项菜单" rule="选中项右侧统一显示“当前”，支持方向键、Enter选择与Esc关闭；长选项可换行。" usage="项目切换、场次轮次、视频候选、提示词分类">
+      {category === 'select' && <Example title="选项菜单" rule="选中项右侧统一显示“当前”，支持方向键、Enter选择与Esc关闭；长选项可换行。表单、紧凑、小号、工具栏和选中高亮均为公共规格。" usage="项目切换、场次轮次、视频候选、提示词分类">
         <div className="component-demo-row"><TabSelect label="示例选项" items={options} selected={selection} onChange={setSelection} disabled={disabled} /><span>禁用菜单</span><Switch label="禁用示例菜单" checked={disabled} onChange={setDisabled} /></div>
+        <div className="component-demo-stack"><TabSelect variant="field" label="表单选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} />
+        <div className="component-demo-row"><TabSelect size="compact" label="紧凑选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} /><TabSelect size="small" label="小号选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} /><TabSelect size="toolbar" highlightSelected label="高亮选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} /></div></div>
         <p className="component-draft">已选择：{options.find(item => item.value === selection)!.label}</p>
       </Example>}
       {category === 'messages' && <>
@@ -77,7 +81,7 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
         </Example>
       </>}
       {category === 'reading' && <Example title="文档弹窗" rule="弹窗复用正文排版和章节导航。点击关闭、按Esc或点击遮罩可退出，回到原阅读位置。" usage="开发记录、项目总索引、项目文档预览">
-        <button onClick={() => setDialog('示例阅读文档')}>打开示例文档</button>
+        <div className="component-demo-row"><button onClick={() => setDialog('示例阅读文档')}>打开示例文档</button><button onClick={() => { setDialogBusy(false); setDialog('紧凑弹窗示例'); }}>打开紧凑弹窗</button></div>
         <p>打开后可展开章节、跳转正文，或复制示例文字。</p>
       </Example>}
       {category === 'lists' && <>
@@ -93,6 +97,6 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
       <ShowcaseExamples key={category} category={category} />
     </div>
     {pending && <FloatingMessage>演示进行中。关闭消息不会结束演示，可在展示页点击“结束演示”。</FloatingMessage>}
-    {dialog && <Dialog title={dialog} close={closeDialog}><div className="component-demo-row"><CopyButton text={sampleText} label="复制示例文字" /></div><Document value={sampleDocument} showOriginal={false} /></Dialog>}
+    {dialog === '紧凑弹窗示例' ? <Dialog title={dialog} size="compact" closeDisabled={dialogBusy} close={closeDialog}><p>仅模拟提交状态，不执行保存。开启后，关闭按钮、Esc和遮罩都不能关闭弹窗。</p><Switch label="模拟提交中" checked={dialogBusy} onChange={setDialogBusy} /></Dialog> : dialog && <Dialog title={dialog} close={closeDialog}><div className="component-demo-row"><CopyButton text={sampleText} label="复制示例文字" /></div><Document value={sampleDocument} showOriginal={false} /></Dialog>}
   </div>;
 }

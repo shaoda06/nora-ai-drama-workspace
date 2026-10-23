@@ -26,10 +26,10 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-queue-body{flex:1;min-height:0;overflow-y:auto}
 .comfy-task-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:18px;font-size:16px}
 .comfy-local-heading{align-items:baseline;justify-content:flex-start;flex-wrap:wrap;gap:6px 18px}
-.comfy-local-tabs{gap:18px;font-size:13px;white-space:nowrap}
-.comfy-local-tabs>button{padding-top:0}
+
+
 .comfy-node-heading{display:flex;align-items:baseline;padding:20px 14px 0;flex:none}
-.comfy-node-tabs{min-width:0;overflow-x:auto;white-space:nowrap}
+
 .comfy-node-edit{margin-left:auto;flex:none;border:0;background:transparent;padding:6px 10px;font-size:13px;text-align:center}
 .comfy-task-content[data-view=nodes]{grid-template-rows:auto minmax(0,1fr)}
 .comfy-node-editor-heading{display:flex;align-items:center;gap:18px;padding:16px 14px;border-bottom:1px solid var(--line)}
@@ -37,7 +37,7 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-node-editor{min-height:0;background:#fff}
 .comfy-node-counts{display:flex;flex:none;gap:12px;white-space:nowrap;font-size:12px;color:var(--muted)}
 .comfy-node-counts strong{color:var(--green);font-variant-numeric:tabular-nums}
-.comfy-node-tabs>button{flex:none;display:inline-flex;align-items:center;gap:6px}
+
 .comfy-node-dot{width:8px;height:8px;flex:none;border-radius:50%;background:#9ca9a2}
 .comfy-node-dot[data-connection=connected]{background:#49a879}
 .comfy-node-dot[data-connection=reconnecting]{background:#c65b55}
@@ -45,8 +45,8 @@ body:has(.workspace-with-tasks)>.page-loading-screen{left:40px;z-index:34}
 .comfy-task-items{display:flex;flex-direction:column;gap:12px}
 .comfy-history{display:flex;flex-direction:column;flex:1;min-height:0}
 .comfy-history-controls{display:flex;gap:8px;margin-bottom:12px;flex:none}
-.comfy-history-controls input{flex:1;width:0;min-width:0;padding:7px 10px;font-size:12px}
-.comfy-history-controls select{flex:none;width:auto;padding:7px 9px;font-size:12px}
+.comfy-history-controls .search-field{flex:1;width:0;min-width:0}
+
 .comfy-history-footer{display:flex;justify-content:center;align-items:center;gap:16px;padding:18px 0 8px;color:var(--muted);font-size:12px}
 .comfy-history-footer button{padding:5px 12px;font-size:12px}
 @media(max-width:700px){.comfy-sidebar[data-open=true]{width:100%}.comfy-node-heading{flex-wrap:wrap;gap:6px}.comfy-node-counts{margin-left:auto}}

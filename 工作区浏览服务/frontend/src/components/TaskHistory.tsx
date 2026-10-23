@@ -1,4 +1,5 @@
 import { FloatingMessage } from './Notifications';
+import { SearchField } from './SearchField';
 import { TabSelect } from './TabSelect';
 import { useEffect, useRef, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -35,9 +36,9 @@ export function TaskHistory({ updatedAt, total, onDetails }: {
   const items = Array.from(new Map(query.data?.pages.flatMap(page => page.items).map(task => [task.id, task]) ?? []).values());
   const matches = query.data?.pages[0].total;
   return <div className="comfy-history">
-    <div className="comfy-history-controls"><input type="search" aria-label="搜索任务标题或来源会话"
-      placeholder="搜索标题或来源会话" value={text} onChange={event => setText(event.target.value)} />
-      <TabSelect label="历史任务结果" selected={result} onChange={setResult} items={[
+    <div className="comfy-history-controls"><SearchField size="compact" label="搜索任务标题或来源会话"
+      placeholder="搜索标题或来源会话" value={text} onChange={setText} />
+      <TabSelect size="compact" label="历史任务结果" selected={result} onChange={setResult} items={[
         { value: 'all', label: '全部结果' }, { value: 'completed', label: '已完成' }, { value: 'abnormal', label: '异常' },
         { value: 'resolved', label: '已结案' }, { value: 'cancelled', label: '已取消' },
       ]} /></div>

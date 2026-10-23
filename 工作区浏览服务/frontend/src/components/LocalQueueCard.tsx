@@ -109,7 +109,7 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
         <button type="button" data-tone={task.status === 'paused' ? 'green' : 'orange'} disabled={busy || !onAction}
           onClick={() => onAction?.(task.id, task.status === 'paused' ? 'resume' : 'pause')}>{task.status === 'paused' ? '恢复' : '暂停'}</button>
         <button type="button" data-tone="red" disabled={busy || !onAction} onClick={() => onAction?.(task.id, 'cancel')}>取消</button>
-        {!!task.transfer_targets?.length && <PointerTooltip text={task.can_transfer ? '移入目标节点队尾，暂停任务保持暂停' : '任务已开始准备，不能转移'}><span><TabSelect label="转移任务" selected="" disabled={busy || !task.can_transfer || !onTransfer}
+        {!!task.transfer_targets?.length && <PointerTooltip text={task.can_transfer ? '移入目标节点队尾，暂停任务保持暂停' : '任务已开始准备，不能转移'}><span><TabSelect size="small" label="转移任务" selected="" disabled={busy || !task.can_transfer || !onTransfer}
           onChange={url => onTransfer?.(task.id, url)} items={task.transfer_targets.map(node => ({ value: node.url, label: node.name }))} /></span></PointerTooltip>}
       </div>}
     </div>

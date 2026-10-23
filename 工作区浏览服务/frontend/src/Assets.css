@@ -47,11 +47,10 @@
 .asset-picture-footer { padding: 8px 10px; font-size: 12px; }
 .asset-picture-footer > span { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--muted); }
 .asset-picture-footer > div { display: flex; justify-content: space-between; gap: 10px; padding-top: 5px; }
-.asset-picture-footer a, .asset-picture-footer button { font-size: 12px; }
+.asset-picture-footer button { font-size: 12px; }
 .asset-album { border-top: 1px solid var(--line); padding-top: 20px; margin-top: 20px; }
 .asset-album-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .asset-hint { color: var(--muted); font-size: 13px; background: #f2f6f2; padding: 10px 12px; border-radius: 6px; }
-.asset-full-image { display: block; width: 100%; max-height: 72vh; object-fit: contain; }
 .asset-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 .asset-library .error { margin-bottom: 16px; }
 .asset-library .error button { margin-left: 12px; }

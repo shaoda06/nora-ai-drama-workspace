@@ -180,10 +180,10 @@ export function Document({ value: latest, showOriginal = true, showChapters = tr
     <div ref={ref}><Rich html={presentation.html} languages={presentation.languages} /><Groups groups={latest.groups} chapter /></div>
   </div>;
 }
-export function Dialog({ title, children, close, headerActions }: { title: string; children: ReactNode; close: () => void; headerActions?: ReactNode }) {
+export function Dialog({ title, children, close, headerActions, size = "default", closeDisabled = false }: { title: string; children: ReactNode; close: () => void; headerActions?: ReactNode; size?: "default" | "compact"; closeDisabled?: boolean }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => { const dialog = ref.current!; dialog.showModal(); return () => dialog.close(); }, []);
-  return <dialog ref={ref} aria-label={title} onCancel={event => { event.preventDefault(); close(); }} onClick={event => { if (event.target === event.currentTarget) close(); }}><header><h2>{title}</h2>{headerActions ?? <button aria-label="关闭" onClick={close}>关闭 ×</button>}</header><div className="dialog-body">{children}</div></dialog>;
+  return <dialog ref={ref} className={size === "compact" ? "dialog-compact" : undefined} aria-label={title} onCancel={event => { event.preventDefault(); if (!closeDisabled) close(); }} onClick={event => { if (!closeDisabled && event.target === event.currentTarget) close(); }}><header><h2>{title}</h2>{headerActions ?? <button type="button" aria-label="关闭" disabled={closeDisabled} onClick={close}>关闭 ×</button>}</header><div className="dialog-body">{children}</div></dialog>;
 }
 export function Preview({ project, item, revision, close }: { project: string; item: FileItem; revision: number; close: () => void }) {
   // Keep the opened item and revision until the user chooses to load newer text.

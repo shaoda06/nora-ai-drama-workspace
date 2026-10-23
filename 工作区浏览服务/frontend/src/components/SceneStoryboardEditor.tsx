@@ -1,3 +1,4 @@
+import { DownloadButton } from './DownloadButton';
 import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { FileItem } from '../api';
@@ -80,14 +81,6 @@ export function SceneStoryboardEditor({ scope, segments }: { scope: NoteScope; s
     }
     setExportText(`以下是我对${scope.episode}-${scope.scene}-场次分镜的修改意见：\n\`\`\`\n${content.join('\n\n').replace(/\n{3,}/g, '\n\n')}\n\`\`\``);
   };
-  const download = () => {
-    const url = URL.createObjectURL(new Blob([exportText!], { type: 'text/markdown;charset=utf-8' }));
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${scope.episode}-${scope.scene}-场次分镜-修改意见.md`;
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  };
   return <>
     <div className="scene-revision-layout" style={{ '--revision-rows': rows.length + 1 } as CSSProperties}>
       {[false, true].map(editable => <section className="scene-revision-pane" aria-label={editable ? '修改场次分镜正文' : '当前场次分镜正文'} key={String(editable)}>
@@ -98,7 +91,7 @@ export function SceneStoryboardEditor({ scope, segments }: { scope: NoteScope; s
       </section>)}
     </div>
     {exportText !== null && <Dialog title={`${scope.episode} · ${scope.scene} 导出分镜`} close={() => setExportText(null)}>
-      <div className="revision-export-actions"><CopyButton label="复制" text={exportText} /><button onClick={download}>下载 Markdown</button></div>
+      <div className="revision-export-actions"><CopyButton label="复制" text={exportText} /><DownloadButton url={null} file={{ text: exportText, name: `${scope.episode}-${scope.scene}-场次分镜-修改意见.md`, type: "text/markdown;charset=utf-8" }} label="下载 Markdown" title="分镜修改意见" /></div>
       <textarea className="revision-notes-export scene-revision-export" aria-label="导出分镜文本" readOnly value={exportText} />
     </Dialog>}
   </>;

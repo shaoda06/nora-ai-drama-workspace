@@ -67,11 +67,12 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
       <ComponentExample title="入口卡片与搜索" rule="输入文字筛选示例；点击卡片按正常链接跳转至网站入口页，会离开展示页。" usage="首页、资料目录、资产与风格库">
         <div className="component-demo-stack"><SearchField label="搜索示例入口" placeholder="搜索示例…" value={search} onChange={setSearch} />
+        <SearchField size="compact" label="紧凑搜索示例" placeholder="紧凑搜索…" value={search} onChange={setSearch} /><SearchField label="禁用搜索示例" placeholder="不可搜索" value="" onChange={setSearch} disabled />
         {(!search || '公共组件示例'.includes(search)) ? <EntryCard to="/" title="公共组件示例" description="返回网站入口页" icon="▤" /> : <p className="muted">没有匹配的示例。</p>}</div>
       </ComponentExample>
-      <ComponentExample title="导航的分组与方向" rule="同一组件支持横排、竖排、紧凑和分组下拉，禁用项不可选择。" usage="顶部栏目、侧栏、制作模式">
-        <TabNav label="示例分组导航" selected={selected} onChange={setSelected} groups={[{ label: '示例分组', values: ['two', 'three'] }]} items={[{ value: 'one', label: '普通页签' }, { value: 'two', label: '子项甲' }, { value: 'three', label: '子项乙' }, { value: 'disabled', label: '禁用页签', disabled: true }]} />
-        <TabNav label="示例竖排导航" vertical compact selected={selected} onChange={setSelected} items={[{ value: 'one', label: '示例甲' }, { value: 'two', label: '示例乙' }]} />
+      <ComponentExample title="导航的分组与方向" rule="同一组件支持横排、竖排、紧凑和分组下拉；加宽规格用于项目顶部，竖排示例在手机上改为两列。禁用项不可选择。" usage="顶部栏目、侧栏、制作模式">
+        <TabNav wide label="示例分组导航" selected={selected} onChange={setSelected} groups={[{ label: '示例分组', values: ['two', 'three'] }]} items={[{ value: 'one', label: '普通页签' }, { value: 'two', label: '子项甲' }, { value: 'three', label: '子项乙' }, { value: 'disabled', label: '禁用页签', disabled: true }]} />
+        <TabNav label="示例竖排导航" vertical mobileLayout="grid" compact selected={selected} onChange={setSelected} items={[{ value: 'one', label: '示例甲' }, { value: 'two', label: '示例乙' }]} />
       </ComponentExample>
       <ComponentExample title="悬停与键盘提示" rule="悬停或键盘聚焦显示说明，移开或按Esc关闭；提示不挤动布局。" usage="长标题、播放入口、状态详情">
         <PointerTooltip text="这是公共提示框的完整说明。"><button>查看悬停说明</button></PointerTooltip>
@@ -81,6 +82,8 @@ export function ShowcaseExamples({ category }: { category: string }) {
       <ComponentExample title="原文件与下载" rule="查看和下载使用固定示例文本。下载会保存component-sample.txt，不读取项目文件。" usage="文件目录、资料卡、制作资源下载">
         <div className="component-demo-row"><Original url={fileUrl} label="示例原文件" /><FileActions url={fileUrl} /></div>
         <DownloadButton url={fileUrl + '?download=true'} label="下载示例文件" title="组件示例文件" />
+        <FileActions url={fileUrl} downloadOnly />
+        <DownloadButton url={null} file={{ text: "本地导出示例。\n", name: "component-export.md", type: "text/markdown;charset=utf-8" }} label="下载本地导出示例" title="本地导出示例" />
         <DownloadButton url={null} label="没有文件时禁用" title="暂无示例文件" />
       </ComponentExample>
       <ComponentExample title="文档信息与附属资料" rule="文档信息、章节导航、代码复制和其他资料均由真实文档组件渲染。" usage="项目文档、资料卡、开发记录弹窗">

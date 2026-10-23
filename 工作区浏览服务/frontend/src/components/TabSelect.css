@@ -2,19 +2,14 @@
 .tab-select.tab-select-marked[data-active]:not(.tab-select-icon){display:inline-grid;grid-template-columns:12px minmax(0,1fr) 12px;gap:4px}
 .tab-select.tab-select-marked:not(.tab-select-icon)::before{content:''}
 
-.tabs .tab-select.tab-select-marked[data-active=true],.scene-round-selector .tab-select.tab-select-marked[data-active=true]{background-color:var(--green);color:white}
+.tab-select.tab-select-marked.tab-select-highlight[data-active=true]{background-color:var(--green);color:white}
 .tab-select-menu [role=option]>span:first-child{min-width:0;overflow-wrap:anywhere}
-.prompt-dialog label>.tab-select,.asset-info label>.tab-select{width:100%;color:#25352f}
-.asset-info label>.tab-select{font-size:14px}
-.prompt-toolbar>.tab-select,.toolbar>.tab-select{max-width:100%}
-.local-queue-card-actions .tab-select.tab-select-marked{font-size:11px;padding:4px 6px;max-width:130px;line-height:1.6}
+.tab-select.tab-select-marked.tab-select-field{width:100%;color:#25352f;font-size:14px}
+.tab-select.tab-select-marked.tab-select-small{font-size:11px;padding:4px 6px;max-width:130px;line-height:1.6}
 .tab-select.tab-select-marked.tab-select-icon{width:22px;height:28px;justify-content:center;padding:2px;border:0;background:transparent}
-@media(max-width:760px){.prompt-toolbar>.tab-select{flex:1;min-width:0}}
-@media(max-width:600px){.header-controls .toolbar>.tab-select,.asset-toolbar>.tab-select{flex:1;min-width:0}}
 
-.tabs-grouped .tab-select.tab-select-marked[data-active]{background-image:none}
-.prompt-form-field>.tab-select.tab-select-marked{color:#25352f}
-.comfy-history-controls .tab-select.tab-select-marked{flex:none;width:auto;font-size:12px;padding:7px 9px}
+.tab-select.tab-select-marked.tab-select-compact{font-size:12px;padding:7px 9px}
 
 .tab-select-status{display:inline-block;margin-left:6px;padding:0 4px;border:1px solid currentColor;border-radius:3px;font-size:10px;line-height:1.4;vertical-align:middle}
-.segment-selectors>.tab-select[aria-label="版本切换"]{min-width:152px}
+
+.tab-select.tab-select-marked.tab-select-toolbar{font-size:13px;line-height:22px;height:36px;min-height:36px;padding:6px 10px}
