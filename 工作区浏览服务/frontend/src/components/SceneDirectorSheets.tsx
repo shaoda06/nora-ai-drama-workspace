@@ -44,9 +44,9 @@ export function SceneDirectorSheets({ sheets, storyboardVersion, revision }: { s
         <p className="director-sheet-page-count" aria-live="polite">第{pageIndex + 1}页 / 共{images.length}页</p>
         <div className="director-sheet-file-actions"><FileActions url={current.url} viewLabel="查看原图" downloadLabel="下载原图" /></div>
       </div>
-      {fullscreen && <Dialog size="fullscreen" title={`导演分镜表 · 第${pageIndex + 1}页 / 共${images.length}页`} close={() => setFullscreen(false)}>
+      {fullscreen && <Dialog size="fullscreen" showHeader={false} title={`导演分镜表 · 第${pageIndex + 1}页 / 共${images.length}页`} close={() => setFullscreen(false)}>
         <div className="director-sheet-fullscreen">
-          <img src={current.url + `?v=${revision}`} alt={current.name} />
+          <button className="director-sheet-fullscreen-image" aria-label="退出全屏看图" onClick={() => setFullscreen(false)}><img src={current.url + `?v=${revision}`} alt={current.name} /></button>
           <Pagination variant="arrows" page={pageIndex + 1} total={images.length} pageSize={1} change={page => setPageKey(String(images[page - 1].page))} />
         </div>
       </Dialog>}
