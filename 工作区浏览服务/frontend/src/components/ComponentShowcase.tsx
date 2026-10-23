@@ -108,11 +108,12 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
         <Example title="目录与文件" rule="目录按需展开，点击文件进入阅读。这里仅展示示例文件。" usage="项目文档目录、参考资料">
           <PreviewContext.Provider value={item => setDialog(item.name)}><FileTree showOriginal={false} items={[{ kind: 'group', name: '示例目录', files: [{ kind: 'markdown', name: '示例说明', key: 'demo-note', statusHtml: '<span class="status-badge status-gray">示例</span>' }, { kind: 'group', name: '子目录', files: [{ kind: 'markdown', name: '阅读示例', key: 'demo-reading', statusHtml: '<span class="status-badge status-gray">示例</span>' }] }] }]} /></PreviewContext.Provider>
         </Example>
-        <Example title="分页与空状态" rule="示例每页6项，首页和末页会禁用对应方向；无内容时不显示分页。" usage="版本记录、资产列表、风格库">
+        <Example title="分页与空状态" rule="示例每页6项，首页和末页会禁用对应方向；无内容时不显示分页。逐页图片阅读可关闭条目总数，仅显示当前页和总页数。" usage="版本记录、资产列表、风格库、导演分镜表">
           <div className="component-demo-row"><span>显示空列表</span><Switch label="显示空列表" checked={empty} onChange={setEmpty} /></div>
           {empty ? <p className="muted">这里还没有记录。</p> : <ul className="component-sample-list">{sampleItems.slice((page - 1) * 6, page * 6).map(item => <li key={item}>{item}</li>)}</ul>}
           <p>多位页码演示：可从第9页切到第10页，观察按钮位置。</p><Pagination page={boundaryPage} total={empty ? 0 : 1000} pageSize={10} change={setBoundaryPage} />
           <Pagination page={page} total={empty ? 0 : sampleItems.length} pageSize={6} change={setPage} />
+          <p>图片逐页阅读示例：</p><Pagination page={page} total={empty ? 0 : Math.ceil(sampleItems.length / 6)} pageSize={1} showItemCount={false} change={setPage} />
         </Example>
       </>}
       <ShowcaseExamples key={category} category={category} />

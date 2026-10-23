@@ -8,7 +8,8 @@ const image = (page: number, version = '') => ({
   key: `${version || 'formal'}-${page}`, url: '/component-samples/image.svg', page, version,
 });
 const sheets: DirectorSheets = { formal: [image(1), image(2), image(3)],
-  candidates: [image(1, 'v01'), image(1, 'v02'), image(2, 'v02')], record: null };
+  candidates: [image(1, 'v01'), image(1, 'v02'), image(3, 'v02')],
+  record: { kind: 'document', name: '导演表生成与审阅记录', doc: { html: '<p>隔离示例审阅记录</p>' } } };
 
 export function DirectorSheetsFixture() {
   const [mode, setMode] = useState('formal');
