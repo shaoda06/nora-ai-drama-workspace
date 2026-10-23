@@ -1,4 +1,5 @@
 .segment-playback-row{display:contents}
+.segment-video{grid-template-columns:minmax(0,1fr)}
 .segment-workspace.is-wide{--segment-rail-width:116px;--segment-rail-gap:16px;--segment-frame-height:calc((100cqw - var(--segment-rail-width) - var(--segment-rail-gap))*.5625)}
 .segment-workspace.is-wide>.segment-playback-row{grid-area:video;display:grid;grid-template-columns:minmax(0,1fr) var(--segment-rail-width);gap:var(--segment-rail-gap);min-width:0;align-items:start}
 .segment-workspace.is-wide .segment-video{grid-area:auto}

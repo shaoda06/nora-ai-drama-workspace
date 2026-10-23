@@ -125,15 +125,17 @@ export function watchVideoPlayback(element: HTMLVideoElement, recover: (reason: 
 
 export interface SegmentVideoHandle { seekTo: (time: number) => void }
 
-export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, retainSource, wide, onToggleWide, continuousControl, selectorControl, playerRef }: {
+export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, retainSource, wide, onToggleWide, continuous = false, continuousControl, selectorControl, playerRef }: {
   current?: VideoItem; onTimeChange: (time: number) => void; autoPlay?: boolean;
   onEnded?: () => void; onError?: () => void;
   onFileRevision?: (revision: string) => void;
-  cachedSource?: string; wide: boolean; onToggleWide: () => void; continuousControl: ReactNode; selectorControl?: ReactNode;
+  cachedSource?: string; wide: boolean; onToggleWide: () => void; continuous?: boolean; continuousControl: ReactNode; selectorControl?: ReactNode;
   retainSource: (source: string) => () => void;
   playerRef: Ref<SegmentVideoHandle>;
 }) {
   const [error, setError] = useState(false);
+  const [repeat, setRepeat] = useState(false);
+  useEffect(() => { if (continuous) setRepeat(false); }, [continuous]);
   const [detailId, setDetailId] = useState('');
   const queryClient = useQueryClient();
   const task = useQuery<VideoTaskState>({
@@ -200,7 +202,7 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
   }, [autoPlay]);
   const description = current && `${current.stage} · ${current.run} · ${candidateLabel(current.candidateNumber, current.approved)}`;
   return <section className="segment-video" aria-label="视频区域">
-    {loaded?.url ? <video ref={video} key={`${loaded.fileRevision}:${reloadCount}`} controls autoPlay={playOnLoad} preload="metadata" src={source} aria-label={description}
+    {loaded?.url ? <video ref={video} key={`${loaded.fileRevision}:${reloadCount}`} controls loop={repeat && !continuous} autoPlay={playOnLoad} preload="metadata" src={source} aria-label={description}
       onLoadedMetadata={event => { if (restore.current) { Object.assign(event.currentTarget, restore.current); restore.current = null; } if (pendingSeek.current !== null) seekTo(pendingSeek.current); else onTimeChange(event.currentTarget.currentTime); onFileRevision?.(loaded.fileRevision); }}
       onLoadedData={() => setRecovering(false)}
       onTimeUpdate={event => onTimeChange(event.currentTarget.currentTime)}
@@ -211,6 +213,7 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
     <div className="video-source">
       <div className="video-source-summary">{selectorControl}{current && loaded && <span>{description}</span>}</div>
       <div className="video-source-actions">
+        <label className="scene-continuous"><input type="checkbox" checked={repeat && !continuous} disabled={continuous || !loaded?.url} onChange={event => setRepeat(event.target.checked)} />重复播放</label>
         {continuousControl}
         <button className="video-layout-toggle" aria-pressed={wide} onClick={onToggleWide}>{wide ? '恢复布局' : '宽屏显示'}</button>
         {loaded?.url && <Original url={loaded.url} label="查看视频原文件" />}

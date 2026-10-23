@@ -24,6 +24,8 @@ const videos: SegmentVideo[] = [1, 2].map(candidateNumber => ({
 const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 function Fixture() {
   const [wide, setWide] = useState(false);
+  const [continuous, setContinuous] = useState(false);
+  const [ended, setEnded] = useState(0);
   const [selection, setSelection] = useState({ stage: '一采', key: videos[0].key });
   return <div className="workspace-with-tasks"><main className="project-page">
     <FeedbackFixture />
@@ -35,9 +37,11 @@ function Fixture() {
       <SegmentWorkspace scope={{ project: 'fixture-only', episode: 'EP001', scene: 'C001' }}
         segment="P001" revision={0} items={videos} selection={selection} onSelectionChange={setSelection}
         tab="script" onTabChange={() => {}} notesExportControl={null}
-        segmentNavigation={<span>P001</span>} autoPlay={false} onVideoEnded={() => {}} onVideoError={() => {}}
+        segmentNavigation={<span>P001</span>} autoPlay={false} onVideoEnded={() => setEnded(value => value + 1)} onVideoError={() => {}}
         cachedSources={{}} retainSource={() => () => {}} wideVideo={wide}
-        onToggleWide={() => setWide(value => !value)} continuousControl={null} />
+        onToggleWide={() => setWide(value => !value)} continuous={continuous}
+        continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>} />
+      <output aria-label="播放结束次数">{ended}</output>
     </div></section>
   </main></div>;
 }

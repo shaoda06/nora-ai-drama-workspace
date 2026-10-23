@@ -1,4 +1,5 @@
 import { checkSharedInputs } from './check-shared-inputs.mjs';
+import { checkSharedPlayback } from './check-shared-playback.mjs';
 import { checkSharedNavigation } from './check-shared-navigation.mjs';
 import assert from 'node:assert/strict';
 import { checkSharedFeedback } from './check-shared-feedback.mjs';
@@ -229,6 +230,7 @@ try {
     assert.equal(await showcase.getByRole('link', { name: '查看原图 ↗', exact: true }).count(), 1);
     assert.equal(await showcase.getByRole('link', { name: '下载原图', exact: true }).count(), 1);
     await checkSharedNavigation(page, width, selfTest);
+    await checkSharedPlayback(page, width);
     assert.deepEqual(forbidden, [], '测试不得访问API、外部网络或写入业务');
     assert.deepEqual(errors, [], '浏览器错误');
     console.log(`公共组件布局检查：${width}px普通/宽屏、最新/旧候选、展示页同规格样式、父容器及菜单边界通过。`);

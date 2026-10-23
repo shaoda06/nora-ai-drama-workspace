@@ -206,6 +206,7 @@ test('continuous playback preserves current selection, follows the chosen round,
   assert.equal(state.workspace.selection.key, 'P001-R002-一采');
   assert.equal(state.workspace.autoPlay, false);
   assert.equal(continuousInput(state).checked, true);
+  assert.equal(state.workspace.continuous, true, '连续播放状态传给播放器，关闭其循环');
   state.workspace.onVideoEnded();
   state = app.render();
   assert.equal(state.workspace.segment, 'P003');
@@ -215,6 +216,8 @@ test('continuous playback preserves current selection, follows the chosen round,
   state = app.render();
   assert.equal(state.workspace.segment, 'P003');
   assert.equal(state.workspace.autoPlay, false);
+  continuousInput(state).onChange({ target: { checked: false } });
+  assert.equal(app.render().workspace.continuous, false);
 });
 
 test('continuous playback stops at missing next-round media rather than substituting an older video', () => {

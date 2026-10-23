@@ -220,3 +220,27 @@ test('browser background auto-pause does not replace the playback choice made be
   recovered.media.props.onLoadedMetadata({ currentTarget: app.video });
   assert.equal(app.video.currentTime, 2.4);
 });
+
+test('repeat uses native loop and continuous playback clears it without restoring it later', () => {
+  const app = fixture();
+  assert.equal(app.render().media.props.loop, false);
+  app.render().find('input').props.onChange({ target: { checked: true } });
+  assert.equal(app.render().media.props.loop, true);
+  app.props.continuous = true;
+  const continuous = app.render();
+  assert.equal(continuous.media.props.loop, false);
+  assert.equal(continuous.find('input').props.disabled, true);
+  assert.equal(continuous.find('input').props.checked, false);
+  app.props.continuous = false;
+  const stopped = app.render();
+  assert.equal(stopped.media.props.loop, false);
+  assert.equal(stopped.find('input').props.checked, false);
+  assert.equal(stopped.find('input').props.disabled, false);
+});
+
+test('repeat is disabled when there is no playable video', () => {
+  const app = fixture(); app.props.current = undefined;
+  const empty = app.render();
+  assert.equal(empty.media, undefined);
+  assert.equal(empty.find('input').props.disabled, true);
+});

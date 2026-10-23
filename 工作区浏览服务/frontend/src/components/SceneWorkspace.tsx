@@ -212,6 +212,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
         label: `第${productionRound!.number}轮保存的分镜${productionRound!.storyboard ? `（${productionRound!.storyboard.version}）` : ''}` } : undefined}
       segmentNavigation={navigation(true)}
       wideVideo={wideVideo} onToggleWide={() => setWideVideo(value => !value)}
+      continuous={continuous}
       continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} disabled={!chosen.stage || !productionRound || !viewingRoundRevision} onChange={event => toggleContinuous(event.target.checked)} />连续播放</label>}
       autoPlay={autoPlay} onVideoError={() => setAutoPlay(false)} onVideoEnded={advance}
       onSelectionChange={changeSelection}

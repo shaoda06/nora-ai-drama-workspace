@@ -50,6 +50,7 @@ export function ShowcaseExamples({ category }: { category: string }) {
   const [readState, setReadState] = useState('ready');
   const [sync, setSync] = useState<{ error?: string; errorKind?: string; retryAt?: number; updating?: boolean }>({});
   const [wide, setWide] = useState(false);
+  const [continuous, setContinuous] = useState(false);
   const [time, setTime] = useState(0);
   const [segment, setSegment] = useState('P001');
   const [vertical, setVertical] = useState(false);
@@ -120,8 +121,8 @@ export function ShowcaseExamples({ category }: { category: string }) {
         <ReferenceMediaCard item={{ kind: 'reference', name: video.name, media: video }} audio={false} playing={false} progress={0} onPlay={() => setPreview(video)} onSelect={() => setPreview(video)} />
         <AudioPreviewButton name="缺少参考音频的示例" enabled={false} playing={false} progress={0} onClick={() => {}} />
       </ComponentExample>
-      <ComponentExample fullWidth title="分段播放器" rule="示例使用制作页同一份布局；宽屏时显示右侧分段导航，手机上的视频操作区使用整行宽度。" usage="剧集制作分段视频">
-        <SegmentLayout wide={wide} navigation={<SegmentStageStrip segments={segments} selected={segment} onSelect={setSegment} vertical newVideoSegments={new Set(['P001'])} previousEnding={null} previousSelected={false} onPreviousSelect={() => {}} />} player={<SegmentVideo current={videoRecord} onTimeChange={setTime} retainSource={retainSample} wide={wide} onToggleWide={() => setWide(!wide)} continuousControl={null} playerRef={playerRef} />}>
+      <ComponentExample fullWidth title="分段播放器" rule="示例使用制作页同一份布局；重复播放默认关闭，勾选后循环当前视频；连续播放开启会关闭并禁用重复播放，取消连续播放后不自动恢复。此处连续播放仅演示互斥开关，不播放项目队列。宽屏时显示右侧分段导航，手机操作区使用整行宽度。" usage="剧集制作分段视频">
+        <SegmentLayout wide={wide} navigation={<SegmentStageStrip segments={segments} selected={segment} onSelect={setSegment} vertical newVideoSegments={new Set(['P001'])} previousEnding={null} previousSelected={false} onPreviousSelect={() => {}} />} player={<SegmentVideo current={videoRecord} onTimeChange={setTime} retainSource={retainSample} wide={wide} onToggleWide={() => setWide(!wide)} continuous={continuous} continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} onChange={event => setContinuous(event.target.checked)} />连续播放</label>} playerRef={playerRef} />}>
           <section className="segment-script"><Rich html="<h3>示例分镜</h3><p>切换宽屏可查看播放器与分段导航的共同布局。</p>" /></section>
         </SegmentLayout>
         <p>示例播放位置：{time.toFixed(1)}秒</p><button onClick={() => playerRef.current!.seekTo(1)}>跳到1秒</button>
