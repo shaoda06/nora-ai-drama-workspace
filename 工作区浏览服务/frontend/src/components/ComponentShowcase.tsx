@@ -100,7 +100,7 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
           <MessagePanel label="示例页面说明" messages={[{ id: 'info', content: '这是随页面展示的资料说明。', detail: '此处使用公共MessagePanel与详情提示组件。' }, { id: 'warning', tone: 'warning', content: '示例资料待确认。', actions: <button className="link" onClick={() => setDialog('示例资料说明')}>查看说明</button> }]} />
         </Example>
       </>}
-      {category === 'reading' && <Example title="文档弹窗" rule="弹窗复用正文排版和章节导航。点击关闭、按Esc或点击遮罩可退出，回到原阅读位置。长标题不挤压关闭按钮，正文连续长串也会换行；fullscreen规格铺满浏览区域。" usage="开发记录、项目总索引、项目文档预览">
+      {category === 'reading' && <Example title="文档弹窗" rule="弹窗复用正文排版和章节导航。点击关闭、按Esc或点击遮罩可退出，回到原阅读位置。长标题不挤压关闭按钮，正文连续长串也会换行；fullscreen规格使用深灰蓝半透明蒙版，内容四周留白；无顶部栏时右上角保留独立关闭叉号。" usage="开发记录、项目总索引、项目文档预览">
         <div className="component-demo-row"><button onClick={() => setDialog('示例阅读文档')}>打开示例文档</button><button onClick={() => { setDialogBusy(false); setDialog('紧凑弹窗示例'); }}>打开紧凑弹窗</button><button onClick={() => setDialog(longSampleTitle)}>打开长内容弹窗</button><button onClick={() => { setDialogBusy(false); setDialog('全屏查看示例'); }}>打开全屏示例</button></div>
         <p>打开后可展开章节、跳转正文，或复制示例文字。</p>
       </Example>}
@@ -123,6 +123,6 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
       <ShowcaseExamples key={category} category={category} />
     </div>
     {pending && <FloatingMessage>演示进行中。关闭消息不会结束演示，可在展示页点击“结束演示”。</FloatingMessage>}
-    {dialog === longSampleTitle ? <Dialog title={longSampleTitle} close={closeDialog}><p>{longSampleText}</p><button onClick={() => showNotice(longSampleText, 'error')}>弹窗内错误提示</button>{Array.from({ length: 8 }, (_, i) => <p key={i}>{longSampleText}</p>)}</Dialog> : dialog === '紧凑弹窗示例' ? <Dialog title={dialog} size="compact" closeDisabled={dialogBusy} close={closeDialog}><p>仅模拟提交状态，不执行保存。开启后，关闭按钮、Esc和遮罩都不能关闭弹窗。</p><Switch label="模拟提交中" checked={dialogBusy} onChange={setDialogBusy} /></Dialog> : dialog && <Dialog title={dialog} size={dialog === '全屏查看示例' ? 'fullscreen' : 'default'} showHeader={dialog !== '全屏查看示例'} close={closeDialog}><div className="component-demo-row"><CopyButton text={sampleText} label="复制示例文字" />{dialog === '全屏查看示例' && <button aria-label="关闭" onClick={closeDialog}>退出全屏示例</button>}</div><Document value={sampleDocument} showOriginal={false} /></Dialog>}
+    {dialog === longSampleTitle ? <Dialog title={longSampleTitle} close={closeDialog}><p>{longSampleText}</p><button onClick={() => showNotice(longSampleText, 'error')}>弹窗内错误提示</button>{Array.from({ length: 8 }, (_, i) => <p key={i}>{longSampleText}</p>)}</Dialog> : dialog === '紧凑弹窗示例' ? <Dialog title={dialog} size="compact" closeDisabled={dialogBusy} close={closeDialog}><p>仅模拟提交状态，不执行保存。开启后，关闭按钮、Esc和遮罩都不能关闭弹窗。</p><Switch label="模拟提交中" checked={dialogBusy} onChange={setDialogBusy} /></Dialog> : dialog && <Dialog title={dialog} size={dialog === '全屏查看示例' ? 'fullscreen' : 'default'} showHeader={dialog !== '全屏查看示例'} close={closeDialog}><div className="component-demo-row"><CopyButton text={sampleText} label="复制示例文字" /></div><Document value={sampleDocument} showOriginal={false} /></Dialog>}
   </div>;
 }

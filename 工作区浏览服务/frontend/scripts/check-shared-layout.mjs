@@ -154,6 +154,15 @@ try {
     assert.equal(fullscreenBox.y, 0);
     assert.equal(fullscreenBox.width, width);
     assert.equal(fullscreenBox.height, 918);
+    const fullscreenStyle = await sheetDialog.evaluate(el => ({ background: getComputedStyle(el).backgroundColor, padding: getComputedStyle(el.querySelector('.dialog-body')).padding }));
+    assert.equal(fullscreenStyle.background, 'rgba(24, 34, 47, 0.9)', '深灰蓝半透明蒙版');
+    const imageFrame = await sheetDialog.locator('.director-sheet-fullscreen-image').boundingBox();
+    assert.ok(imageFrame.x >= 16 && imageFrame.y >= 48 && imageFrame.x + imageFrame.width <= width - 16 && imageFrame.y + imageFrame.height <= 918 - 24, '全屏图像四周留空隙');
+    const closeCircle = await sheetDialog.getByRole('button', { name: '关闭', exact: true }).boundingBox();
+    assert.equal(closeCircle.width, 40);
+    assert.equal(closeCircle.height, 40);
+    assert.equal(closeCircle.y, 12);
+    assert.equal(closeCircle.x + closeCircle.width, width - 16);
     assert.match(await sheetDialog.locator('.director-sheet-fullscreen-image > img').getAttribute('alt'), /第02页/);
     await sheetDialog.getByRole('button', { name: '下一张图', exact: true }).click();
     assert.match(await sheetDialog.locator('.director-sheet-fullscreen-image > img').getAttribute('alt'), /第03页/);
@@ -163,6 +172,10 @@ try {
     await sheets.getByRole('button', { name: '全屏查看第03页导演分镜表', exact: true }).click();
     await sheetDialog.getByRole('button', { name: '退出全屏看图', exact: true }).click();
     await sheetDialog.waitFor({ state: 'hidden' });
+    await sheets.getByRole('button', { name: '全屏查看第03页导演分镜表', exact: true }).click();
+    await sheetDialog.getByRole('button', { name: '关闭', exact: true }).click();
+    await sheetDialog.waitFor({ state: 'hidden' });
+    assert.match(await sheetImage.getAttribute('alt'), /第03页/, '叉号退出保留当前页');
     const sheetVersion = sheets.getByRole('combobox', { name: '导演分镜表候选' });
     assert.match(await sheetVersion.innerText(), /候选2.*已采用/s);
     assert.equal(await sheets.getByRole('combobox', { name: '导演分镜表版本' }).count(), 0, '取消独立已采用版本');
