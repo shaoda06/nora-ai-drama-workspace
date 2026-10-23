@@ -256,11 +256,14 @@ Agent通过[统一入口](../.agents/skills/nora-ai-short-drama/references/comfy
 
 #### 自动检查与人工核对
 
-仓库的 `.githooks/pre-commit` 在提交包含前端 `src/` 改动时运行检查，读取Git暂存内容并与HEAD比较，只报告本次新增或改变的违规；不读取未暂存修复代替提交内容，也不因未改动的历史问题拦截本次提交。删除文件不会读取已删除正文。其他资料／纯文档提交不要求前端依赖。
+仓库的 `.githooks/pre-commit` 在提交包含前端 `src/`、检查脚本、布局测试夹具或前端依赖改动时运行静态和浏览器检查。静态部分读取Git暂存内容并与HEAD比较，只报告本次新增或改变的违规；不读取未暂存修复代替提交内容，也不因未改动的历史问题拦截本次提交。删除文件不会读取已删除正文。其他资料／纯文档提交不要求前端依赖。
+
+浏览器部分使用Git暂存快照，在独立临时目录构建真实组件，启动临时回环端口并在结束后清理；不使用工作区尚未暂存的修复，不检查旧的正式构建，不读取真实项目或调用业务API。
 
 自动检查目前覆盖：
 
 - **阻止提交**：公共实现文件以外的原生dialog、select、search输入框、switch／combobox／listbox／dialog角色、带download的链接；直接调用剪贴板复制；在页面手写已登记公共组件的根class；在非公共实现处或页面限定选择器下修改已登记组件的字号、颜色、内边距、边框、间距等外观规则。输出文件、行号、规则和应复用的组件。
+- **浏览器阻止提交**：在1362px桌面、390px及320px手机下，对比真实ComponentShowcase的工具栏下拉框与SegmentWorkspace普通／宽屏模式的字号、行高、内边距、高度和圆角；检查旧候选／最新候选状态下选择栏及可见子项的父容器边界、整页横向越界、弹出菜单屏幕边界。浮层按屏幕而非父容器判断，忽略关闭后不参与布局的节点，容许1px取整差。出现差异、越界、浏览器错误或意外网络请求则失败。
 - **提示人工核对**：公共下载组件以外新增Blob URL，可能是重复下载，也可能是合法图片预览，不一律阻拦。
 - **继续人工检查**：动态class／style、别名或间接调用、未登记组件、复杂通用行为、业务差异，以及真实展示示例和页面是否同步。容器宽度、外边距等空间分配不单独拦截；自动通过不等于人工检查完成。
 
@@ -268,19 +271,24 @@ Agent通过[统一入口](../.agents/skills/nora-ai-short-drama/references/comfy
 
 ```sh
 pnpm --dir 工作区浏览服务/frontend install --frozen-lockfile
+pnpm --dir 工作区浏览服务/frontend exec playwright install chromium
 git config --local core.hooksPath .githooks
 ```
 
-Git钩子配置只对当前本地仓库生效；新克隆或其他设备需要各自启用。Node.js须在Git进程的PATH中可用；前端提交缺少Node或检查依赖时直接失败，不跳过检查。
+Git钩子配置只对当前本地仓库生效；新克隆或其他设备需要各自启用。Node.js须在Git进程的PATH中可用；前端提交缺少Node、检查依赖或Chromium时直接失败，不跳过检查；钩子不会自动安装依赖或下载浏览器。
 
 暂存后可手动运行同一检查；修改检查工具时运行其测试：
 
 ```sh
 pnpm --dir 工作区浏览服务/frontend check:shared
 pnpm --dir 工作区浏览服务/frontend test:shared-check
+pnpm --dir 工作区浏览服务/frontend check:shared-layout
+pnpm --dir 工作区浏览服务/frontend test:shared-layout
 ```
 
-规则位于 `frontend/scripts/shared-component-rules.mjs`，使用TypeScript语法树和PostCSS解析，避免把注释和字符串示例当成实现。公共组件更名、迁移或新增受检查的规格时，同步登记其真实实现位置并补充测试，不增加页面豁免来绕过问题。它不是通用重复代码判定器。检查结果与人工结论一起写入本次W记录，不另建台账。
+`check:shared`与提交钩子均执行静态及浏览器两部分；`check:shared-layout`只运行暂存快照的浏览器检查。`test:shared-layout`额外注入字号继承及容器越界故障，确认同一检查会失败、移除后恢复通过。新增测试夹具也必须先暂存。
+
+规则位于 `frontend/scripts/shared-component-rules.mjs`，使用TypeScript语法树和PostCSS解析，避免把注释和字符串示例当成实现。公共组件更名、迁移或新增受检查的规格时，同步登记其真实实现位置并补充测试，不增加页面豁免来绕过问题。它不是通用重复代码判定器。浏览器用例位于`frontend/tests/shared-layout/`，执行器为`frontend/scripts/check-shared-layout.mjs`；当前覆盖上述已登记场景，不自动遍历所有页面。新增公共组件、规格或使用场景时，为受影响场景补上真实组件用例和明确的布局边界；未覆盖的业务差异继续人工核对。检查结果与人工结论一起写入本次W记录，不另建台账。
 
 ### 开发命令
 

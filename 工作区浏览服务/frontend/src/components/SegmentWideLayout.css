@@ -16,6 +16,7 @@
 .segment-notes-export>button{white-space:nowrap;font-size:13px;padding:6px 10px}
 @media(max-width:700px){
  .segment-workspace.is-wide{--segment-rail-width:84px;--segment-rail-gap:8px}
+ .segment-workspace.is-wide .video-source{width:calc(100% + var(--segment-rail-width) + var(--segment-rail-gap))}
  .segment-workspace.is-wide .video-source-summary{flex-basis:100%;gap:8px}
  .segment-workspace.is-wide .segment-selectors{gap:4px;flex-wrap:wrap}
  .segment-workspace.is-wide .video-source-actions{max-width:100%;justify-content:flex-start;margin-left:0;flex-wrap:wrap}

@@ -2,7 +2,7 @@
 set -eu
 cd "$(git rev-parse --show-toplevel)"
 # Documentation/backend commits do not require frontend dependencies.
-if git diff --cached --quiet -- '工作区浏览服务/frontend/src'; then
+if git diff --cached --quiet -- '工作区浏览服务/frontend/src' '工作区浏览服务/frontend/scripts' '工作区浏览服务/frontend/tests/shared-layout' '工作区浏览服务/frontend/package.json' '工作区浏览服务/frontend/pnpm-lock.yaml'; then
   exit 0
 fi
 if ! command -v node >/dev/null 2>&1; then
@@ -10,3 +10,4 @@ if ! command -v node >/dev/null 2>&1; then
   exit 1
 fi
 node '工作区浏览服务/frontend/scripts/check-shared-components.mjs'
+node '工作区浏览服务/frontend/scripts/check-shared-layout.mjs'

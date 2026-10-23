@@ -67,7 +67,11 @@ test('real Git hook checks the index: rejects staged violations even when worktr
     ok('config', 'commit.gpgsign', 'false');
     writeFileSync(join(repo, source), 'export const Page = () => <p>ok</p>;');
     ok('add', source); ok('commit', '-qm', 'fixture');
-    symlinkSync(here, join(frontend, 'scripts'), 'junction');
+    mkdirSync(join(frontend, 'scripts'));
+    for (const name of ['check-shared-components.mjs', 'shared-component-rules.mjs']) copyFileSync(join(here, name), join(frontend, 'scripts', name));
+    symlinkSync(resolve(here, '../node_modules'), join(frontend, 'node_modules'), 'junction');
+    // Hook wiring test only; the actual browser runner has its own fixture and negative tests.
+    writeFileSync(join(frontend, 'scripts/check-shared-layout.mjs'), 'console.log("browser-check-invoked")');
     mkdirSync(join(repo, '.githooks'));
     copyFileSync(resolve(here, '../../../.githooks/pre-commit'), join(repo, '.githooks/pre-commit'));
     chmodSync(join(repo, '.githooks/pre-commit'), 0o755);
@@ -78,8 +82,14 @@ test('real Git hook checks the index: rejects staged violations even when worktr
     assert.notEqual(blocked.status, 0); assert.match(blocked.stdout + blocked.stderr, /阻止提交.*Page.tsx:1/);
     ok('add', source);
     writeFileSync(join(repo, source), 'export const Page = () => <dialog />;');
+    writeFileSync(join(frontend, 'scripts/check-shared-layout.mjs'), 'console.error("browser-layout-failed"); process.exit(1)');
+    const browserBlocked = run('commit', '-qm', 'must reject browser failure');
+    assert.notEqual(browserBlocked.status, 0);
+    assert.match(browserBlocked.stdout + browserBlocked.stderr, /browser-layout-failed/);
+    writeFileSync(join(frontend, 'scripts/check-shared-layout.mjs'), 'console.log("browser-check-invoked")');
     const accepted = ok('commit', '-qm', 'clean index');
     assert.match(accepted.stdout + accepted.stderr, /0项需修正/);
+    assert.match(accepted.stdout + accepted.stderr, /browser-check-invoked/);
     // Added files and deletions use the same hook; unrelated working changes stay ignored.
     const added = '工作区浏览服务/frontend/src/New.tsx';
     writeFileSync(join(repo, added), '<input type="search"/>'); ok('add', added);
