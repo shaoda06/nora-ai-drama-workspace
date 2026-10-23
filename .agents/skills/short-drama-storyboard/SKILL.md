@@ -34,6 +34,8 @@ license: MIT
 | 修仙拆招、法术、剑阵与大场面 | [玄幻打戏](../sd-xuanhuan-engine/SKILL.md) |
 | 写实格斗、步法、防守与多人调度 | [写实格斗](../sd-real-engine/SKILL.md) |
 
+分镜中的表情可用抽象词交代意图；编写首帧或视频模型提示词时，按[表情拆解](../facial-expression/SKILL.md)细化为可见面部变化，不要求在分镜阶段提前写满提示词。
+
 ## 交接与完成
 
 剧情、原台词及决定因果的必要动作回[剧本写作](../short-drama-write/SKILL.md)维护；取景、镜头和P段由本技能维护。参考图由[资产设计](../nora-drama-assets/SKILL.md)补齐，已确认镜头交[视频提示词](../nora-video-prompts/SKILL.md)转写。不得为迁就参考图、旧P段或缓存保留不合理镜头；具体完整重做范围沿上方规则。

@@ -33,6 +33,8 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 | 导演包或场次阶段定稿 | [导演包](references/导演包规范.md)，按实际授权区分留档、导出与导入测试 |
 | 服务节点配置 | [工作区配置](references/ComfyUI-服务配置与任务提交规范.md#工作区-comfyui-配置)，不因纯文本任务缺配置而阻塞 |
 
+实际生成使用了表情参考写法时，复用提示词阶段已有告知；尚未告知的首次实际使用，按[首次使用提示](../facial-expression/SKILL.md#首次实际使用时的提示)简短补充，不新增确认。用户提供具体表情反馈后，进入[反馈复核](../facial-expression/SKILL.md#收到真实反馈后复核)，更新对应条目的验证情况；正常结果通知不触发自动审片或提前标记有效。
+
 ## 工具与依赖
 
 准备、提交或获授权直接操作远端API时，读取随包[comfyui-api](../nora-ai-short-drama/dependencies/comfyui-api/SKILL.md)及当前调用说明；普通后台查询和通知不需要它。异常按需使用[comfyui-troubleshooter](../nora-ai-short-drama/dependencies/comfyui-troubleshooter/SKILL.md)，明确要求能力盘点或依赖诊断时才使用[comfyui-inventory](../nora-ai-short-drama/dependencies/comfyui-inventory/SKILL.md)。沿现有真源，不另复制安装。

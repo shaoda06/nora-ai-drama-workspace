@@ -44,7 +44,7 @@
 
 ### 本工作区技能与风格资源
 
-[Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md)与[Krea2风格库技能](.agents/skills/krea2-style-library/SKILL.md)由本工作区维护并随仓库提供。Nora由主控、7个核心业务技能、可选社交媒体主页视觉专项和3个按需打戏专项组成；原18项登记包含4个适配业务技能和14个方法／工具依赖。Krea2技能是独立可选工具。[视频读取与分析](.agents/skills/video-study/SKILL.md)为本地独立专项，按任务读取字幕、转写讲解或抽帧分析，不增加核心制作阶段；主控与资产技能提供调用入口。
+[Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md)与[Krea2风格库技能](.agents/skills/krea2-style-library/SKILL.md)由本工作区维护并随仓库提供。Nora由主控、7个核心业务技能、可选社交媒体主页视觉专项和3个按需打戏专项组成；原18项登记包含4个适配业务技能和14个方法／工具依赖。Krea2技能是独立可选工具。[视频读取与分析](.agents/skills/video-study/SKILL.md)为本地独立专项，按任务读取字幕、转写讲解或抽帧分析，不增加核心制作阶段；主控与资产技能提供调用入口。[表情拆解](.agents/skills/facial-expression/SKILL.md)是图片／视频提示词的独立子技能，提供具体面部变化参考、首次实际使用提示及真实反馈后的验证更新；分镜仍可保留抽象表情词。
 
 | 资源 | 来源与作者 |
 | --- | --- |
