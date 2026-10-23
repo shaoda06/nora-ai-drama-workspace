@@ -1,6 +1,7 @@
 """Account index and review integration; fixtures never touch real project files."""
 import os
 from pathlib import Path
+import shutil
 import tempfile
 import unittest
 
@@ -24,8 +25,11 @@ class AccountParserTests(unittest.TestCase):
         path.write_text(text, encoding='utf-8')
 
     def visual(self, purpose='头像', version='v08', platform='平台A／账号', extension='png', size=(40, 30)):
-        formal = f'{purpose}/{platform.split("／")[0]}-{purpose}.{extension}'
-        candidate = f'素材/{purpose}-候选-{version}-原生.png'
+        account = platform.replace('／', '-')
+        role = '背景图' if purpose == '主页背景图' else purpose
+        self.record = f'{DIRECTORY}/其他资料/工作稿/{account}-主页视觉-工作稿.md'
+        formal = f'{role}/{account}-{role}.{extension}'
+        candidate = f'素材/{account}-{role}-候选-{version}-原生.png'
         for key in (DIRECTORY + '/' + formal, str(Path(self.record).parent / candidate)):
             path = self.root / key
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -36,7 +40,8 @@ class AccountParserTests(unittest.TestCase):
                 f'- 候选：[候选]({candidate})\n')
         previous = (self.root / self.record).read_text() if (self.root / self.record).exists() else ''
         self.put(self.record, previous + body)
-        self.rows.append(f'| {platform} | {purpose} | [正式]({formal}) | 原生{version} | 40×30 | [批准](其他资料/工作稿/平台-A-主页视觉-工作稿.md#{heading}) | 无尺寸处理 |')
+        record_link = str(Path(self.record).relative_to(DIRECTORY))
+        self.rows.append(f'| {platform} | {purpose} | [正式]({formal}) | 原生{version} | {size[0]}×{size[1]} | [批准]({record_link}#{heading}) | 无尺寸处理 |')
         return DIRECTORY + '/' + formal
 
     def accounts(self):
@@ -90,6 +95,73 @@ class AccountParserTests(unittest.TestCase):
         data = self.accounts()
         self.assertEqual(data['items'], [])
         self.assertIn('文件缺失', data['issues'][0])
+
+    def test_candidate_or_history_path_cannot_become_formal_through_index(self):
+        key = self.visual()
+        formal = str(Path(key).relative_to(DIRECTORY))
+        row, body = self.rows[0], (self.root / self.record).read_text()
+        for folder in ('其他资料/工作稿/素材', '其他资料/历史版本'):
+            with self.subTest(folder=folder):
+                target = f'{folder}/平台A-账号-头像-候选-v08-原生.png'
+                dest = self.root / DIRECTORY / target
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(self.root / key, dest)
+                self.rows = [row.replace(f']({formal})', f']({target})')]
+                link = os.path.relpath(dest, (self.root / self.record).parent)
+                self.put(self.record, body.replace(f'../../{formal}', link))
+                data = self.accounts()
+                self.assertEqual(data['items'], [])
+                self.assertIn('正式目录', data['issues'][0])
+
+    def test_index_purpose_must_match_formal_directory(self):
+        self.visual()
+        self.rows[0] = self.rows[0].replace('| 头像 |', '| 背景图 |')
+        self.assertEqual(self.accounts()['items'], [])
+
+    def test_replaced_state_uses_shared_record_field_names(self):
+        self.visual()
+        body = (self.root / self.record).read_text()
+        for label in ('当前处置', '当前状态', '用户采用状态'):
+            with self.subTest(label=label):
+                self.put(self.record, body + f'- {label}：已被替换／归档\n')
+                self.assertEqual(self.accounts()['items'], [])
+
+    def test_existing_skill_template_fields_are_read_without_rewriting(self):
+        self.visual('主页背景图', version='v11', platform='平台C／制作号')
+        body = (self.root / self.record).read_text().replace('用户确认：', '用户决定、采用范围与依据：')
+        body = body.replace('- 候选：', '- 审阅的具体文件及候选版本：')
+        body = body.replace('- 正式保存：', '- 正式文件、索引及旧版归档入口：')
+        self.put(self.record, body)
+        data = self.accounts()
+        self.assertEqual(len(data['items']), 1)
+        self.assertEqual(data['items'][0]['version'], '原生v11')
+
+    def test_two_accounts_on_same_platform_and_separate_projects(self):
+        workspace = self.root
+        outputs = []
+        for project, size in (('独立项目甲', (48, 36)), ('另一部短片', (60, 90))):
+            self.root = workspace / project
+            self.root.mkdir()
+            self.rows = []
+            self.visual(platform='平台D／账号甲', version='v03', size=size, extension='jpg')
+            self.visual(platform='平台D／账号乙', version='v12', size=size)
+            data = self.accounts()
+            self.assertEqual(len(data['items']), 2)
+            self.assertEqual(len({item['media']['key'] for item in data['items']}), 2)
+            self.assertEqual({item['platform'] for item in data['items']}, {'平台D／账号甲', '平台D／账号乙'})
+            self.assertTrue(all((item['media']['width'], item['media']['height']) == size for item in data['items']))
+            outputs.append(data)
+        self.assertNotEqual(outputs[0]['items'][0]['media']['width'], outputs[1]['items'][0]['media']['width'])
+
+    def test_unindexed_images_stay_out_of_current_adoption(self):
+        self.visual()
+        self.put(DIRECTORY + '/其他资料/历史版本/旧版.md', '# 旧版')
+        data = build_data(self.root, load_scope=DIRECTORY)['catalogues'][DIRECTORY]
+        self.assertEqual(data['items'], [])
+        self.assertIsNone(data['index'])
+        groups = {group['name']: group['files'] for group in data['groups']}
+        self.assertTrue(groups['工作稿'])
+        self.assertTrue(groups['历史版本'])
 
     def test_navigation_label_and_optional_section(self):
         self.assertNotIn(DIRECTORY, [item['name'] for item in build_data(self.root, load_scope='overview')['directories']])
