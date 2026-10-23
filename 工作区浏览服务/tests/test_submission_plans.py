@@ -532,6 +532,29 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
             approval=self.rel(self.draft)+'#审阅-生成记录-001-001')])
         return source, self.project / formal, spec
 
+    async def check_progress_scope_conflict(self, size):
+        source, formal, spec = self.approved_local_spec(size)
+        progress = self.project / '项目进度.md'
+        row = '| EP001制作 | 会话 | 进行中 | 当前成果 | - 衣装未定 | - 无 |'
+        progress.write_text(row)
+        spec['adoption_updates'] = [dict(path='项目进度.md', old='衣装未定', new='图片已采用')]
+        self.write_plan(spec)
+        with patch.object(self.store, 'enqueue', side_effect=AssertionError('must not enqueue')), \
+                patch.object(t.client.Client, 'json', side_effect=AssertionError('must not contact remote')), \
+                patch('PIL.ImageOps.fit', side_effect=AssertionError('must not process locally')):
+            with self.assertRaisesRegex(ValueError, '对应阶段行'):
+                await plans.execute(self.store, self.payload)
+        self.assertFalse(formal.exists())
+        self.assertEqual(progress.read_text(), row)
+        self.assertEqual(source.read_bytes(), png())
+        self.assertEqual(len(self.store.rows), 1)
+
+    async def test_upscale_progress_scope_conflict_stops_before_queue(self):
+        await self.check_progress_scope_conflict([8, 6])
+
+    async def test_local_progress_scope_conflict_stops_before_processing(self):
+        await self.check_progress_scope_conflict([6, 2])
+
     async def test_any_smaller_edge_and_same_size_run_locally_without_queue_or_remote(self):
         from PIL import Image
         source, formal, spec = self.approved_local_spec([6, 2])

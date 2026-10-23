@@ -369,6 +369,7 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         progress.write_text(row)
         self.data.image_plan['record_updates'] = [dict(path='项目进度.md', old=row,
             new='| 人物参考图 | 会话 | 待确认 | {{outputs}}；{{specs}} | - 审核本轮候选 | - 无 |')]
+        image.validate_plan(self.data)
         registration.register(self.store, 'task')
         self.assertIn('](03-人物资料/其他资料/工作稿/素材/', progress.read_text())
         self.assertNotIn('{{', progress.read_text())
@@ -382,6 +383,8 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
             new=row + '\n\n### 图片已取回\n完成流水')]
         before = self.draft.read_bytes()
         with self.assertRaisesRegex(ValueError, '不得追加历史记录'):
+            image.validate_plan(self.data)
+        with self.assertRaisesRegex(ValueError, '不得追加历史记录'):
             registration.register(self.store, 'task')
         self.assertEqual(progress.read_text(), row)
         self.assertEqual(self.draft.read_bytes(), before)
@@ -393,6 +396,8 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         progress.write_text(row)
         self.data.image_plan['record_updates'] = [dict(path='项目进度.md', old=row,
             new=row.replace('场景问题', '误清'))]
+        with self.assertRaisesRegex(ValueError, '对应阶段行'):
+            image.validate_plan(self.data)
         with self.assertRaisesRegex(ValueError, '对应阶段行'):
             registration.register(self.store, 'task')
         self.assertEqual(progress.read_text(), row)

@@ -36,6 +36,19 @@ class ImageNotificationTests(unittest.IsolatedAsyncioTestCase):
     def reports(self):
         return [json.loads(row[0]) for row in self.store.db.execute('SELECT report FROM notification_reports')]
 
+    async def test_failed_notice_distinguishes_authorized_repair_from_normal_success(self):
+        self.task('upscale', size=1, task_type='image-upscale', status='completed')
+        self.store.save('upscale', collected=1,
+                        closeout={'status': 'registration_failed', 'error': '进度范围冲突'},
+                        closeout_retry_stop='conflict')
+        with patch.object(self.store, 'desktop_call', AsyncMock(return_value={})) as send:
+            await self.notify('upscale')
+        prompt = next(call.args[2] for call in send.call_args_list if call.args[1] == 'send')
+        self.assertIn('正常成功时不再调用ack、register-results', prompt)
+        self.assertIn('已授权范围内的登记修复由Agent直接处理', prompt)
+        self.assertIn('不重新生成、不扩大批准范围', prompt)
+        self.assertEqual(self.reports()[0]['results'][0]['status'], 'registration_failed')
+
     async def test_staggered_images_wait_then_send_one_report_with_both(self):
         self.task('first'); self.task('second'); self.complete('first')
         with patch.object(self.store, 'desktop_call', AsyncMock(return_value={})) as send:

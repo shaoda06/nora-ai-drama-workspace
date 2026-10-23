@@ -21,6 +21,36 @@ TEMPLATES = {'人物': '人物参考图工作稿模板.md', '场景': '场景参
              '封面': '封面制作工作稿模板.md'}
 
 
+def progress_phases(root, drafts):
+    phases = set()
+    for draft in drafts:
+        parts = project_file(root, draft).relative_to(root).parts
+        if parts[0] == '09-剧集制作':
+            phases.add(parts[1] + '制作')
+        else:
+            phases.update({'03-人物资料': ('人物资料卡', '人物参考图'),
+                           '04-场景资料': ('场景资料卡', '场景参考图'),
+                           '05-道具资料': ('道具资料卡', '道具参考图'),
+                           '10-封面资料': ('封面制作',)}[parts[0]])
+    return phases
+
+
+def validate_progress_updates(root, drafts, updates):
+    """Reject cross-phase progress edits before generating or processing an image."""
+    progress = root / '项目进度.md'
+    updates = [u for u in updates if project_file(root, u['path']) == progress]
+    if not updates:
+        return
+    before = text = progress.read_text('utf-8-sig')
+    for update in updates:
+        if text.count(update['new']) == 1:
+            continue
+        if text.count(update['old']) != 1:
+            raise ValueError('项目进度更新源文字变化或不唯一，请修正清单后再准备')
+        text = text.replace(update['old'], update['new'], 1)
+    project_progress.validate_update(before, text, phases=progress_phases(root, drafts))
+
+
 def section(text, heading):
     found = list(re.finditer(r'^### ' + re.escape(heading) + r'\s*\n.*?(?=^#{1,3} |\Z)', text, re.M | re.S))
     if len(found) != 1:
@@ -177,10 +207,12 @@ def validate_plan(data):
             raise ValueError('超分须预先提供正式资产表及关联入口的采用更新')
     elif up:
         raise ValueError('普通图片不能带超分采用计划')
-    for update in [*plan.get('record_updates', []), *(up['record_updates'] if up else [])]:
+    updates = [*plan.get('record_updates', []), *(up['record_updates'] if up else [])]
+    for update in updates:
         path = project_file(root, update['path'])
         if path.suffix != '.md' or set(update) != {'path', 'old', 'new'} or not update['old'] or not update['new']:
             raise ValueError('图片关联更新须为项目Markdown中的非空path/old/new')
+    validate_progress_updates(root, [plan['draft']], updates)
     return draft, text, planned
 
 
@@ -389,16 +421,7 @@ def apply_updates(root, report, report_file):
         edits[path] = before, text
     progress = root / '项目进度.md'
     if progress in edits:
-        phases = set()
-        for item in report['items']:
-            parts = project_file(root, item['draft']).relative_to(root).parts
-            if parts[0] == '09-剧集制作':
-                phases.add(parts[1] + '制作')
-            else:
-                phases.update({'03-人物资料': ('人物资料卡', '人物参考图'),
-                               '04-场景资料': ('场景资料卡', '场景参考图'),
-                               '05-道具资料': ('道具资料卡', '道具参考图'),
-                               '10-封面资料': ('封面制作',)}[parts[0]])
+        phases = progress_phases(root, [item['draft'] for item in report['items']])
         project_progress.validate_update(*edits[progress], phases=phases)
     if report.get('approval'):
         approval = report['approval']

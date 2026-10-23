@@ -60,6 +60,31 @@ class NativeImageTests(unittest.TestCase):
         self.assertFalse(list(self.project.rglob('*.api.json')))
         self.assertFalse(list(self.project.rglob('后台任务状态.json')))
 
+    def test_progress_scope_conflict_stops_before_native_handoff(self):
+        row = '| EP001制作 | 会话 | 进行中 | 当前成果 | - 衣装未定 | - 无 |'
+        progress = self.project / '项目进度.md'
+        progress.write_text(row)
+        self.spec['record_updates'] = [dict(path='项目进度.md', old='衣装未定', new='图片已采用')]
+        self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+        with self.assertRaisesRegex(ValueError, '对应阶段行'):
+            native.prepare(self.project, self.request)
+        self.assertFalse(self.request.with_name('请求-Imagegen执行清单.json').exists())
+        self.assertFalse((self.project / self.spec['draft']).exists())
+        self.assertEqual(progress.read_text(), row)
+
+    def test_matching_progress_phase_is_prepared_without_early_publication(self):
+        row = '| 人物参考图 | 会话 | 进行中 | 尚未生成 | - 无 | - 无 |'
+        progress = self.project / '项目进度.md'
+        progress.write_text(row)
+        self.spec['record_updates'] = [dict(path='项目进度.md', old='尚未生成', new='{{outputs}}；{{specs}}')]
+        self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+        self.prepare()
+        self.assertEqual(progress.read_text(), row)
+        result = native.complete(self.project, self.job['manifest'], self.result, self.projects)
+        self.assertTrue(result['user_message_ready'])
+        self.assertIn('7×5', progress.read_text())
+        self.assertNotIn('{{', progress.read_text())
+
     def test_prepare_and_complete_reuse_without_new_generation_or_overwriting_feedback(self):
         self.prepare()
         self.assertEqual(native.prepare(self.project, self.request), self.job)

@@ -267,8 +267,8 @@ class TaskNotifications:
                       '请调用 browser_tasks.py report --notification-id 上述ID，读取后台已保存的最新结果；读取同时自动确认收到。\n'
                       '通知可能延迟送达，当前状态、异常是否已修复及成果清单以本次report为准，历史经过保留在过程记录。\n'
                       + '\n'.join(self.notification_text(task) for task in ids)
-                      + '\n图片、超分与视频的技术核验、记录更新及网页核验已由后台执行，以报告结果为准；正常成功只读取report，图片按本批完整清单集中展示成果和审核入口，视频汇报数量与审核入口。正常超分静默；历史已发出的正常超分通知只读确认，不发处理进度、完成回复或图片。不再调用ack、register-results或重复查文件／刷新网页。成果保存不等于内容获批。'
-                      '失败请从记录中的失败阶段复查；未知任务不自动重新生成。')
+                      + '\n图片、超分与视频的技术核验、记录更新及网页核验由后台执行，以报告结果为准；正常成功只读取report，图片按本批完整清单集中展示成果和审核入口，视频汇报数量与审核入口。正常超分静默；历史已发出的正常超分通知只读确认，不发处理进度、完成回复或图片。正常成功时不再调用ack、register-results或重复查文件／刷新网页。成果保存不等于内容获批。'
+                      '失败请从报告中的失败阶段复查；已授权范围内的登记修复由Agent直接处理，可使用register-results补完已有结果的登记，不重新生成、不扩大批准范围，也不让用户决定内部命令。超出既有授权或不能保留用户修改时，再说明实际影响并请求决定；未知任务不自动重新生成。')
             self.db.execute('INSERT INTO notification_batches VALUES (?, ?, ?, ?, ?)',
                             (batch_id, data.thread_id, json.dumps(ids), prompt, 'sending'))
             self.db.execute('INSERT INTO notification_reports VALUES (?, ?)', (batch_id, json.dumps(report, ensure_ascii=False)))

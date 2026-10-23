@@ -36,6 +36,7 @@ def prepare(project, request_file):
     if len(spec['formal_size']) != 2 or any(type(n) is not int or n <= 0 for n in spec['formal_size']):
         raise ValueError('正式尺寸须为两个正整数；不代表Imagegen原生像素保证')
     draft = project_file(root, spec['draft'])
+    images.validate_progress_updates(root, [spec['draft']], spec.get('record_updates', []))
     documents = Documents(root)
     text = documents.read(draft)
     template = (SKILL / 'references/模板' / images.TEMPLATES[spec['kind']]).read_text('utf-8-sig')
