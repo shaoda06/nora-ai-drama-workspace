@@ -107,6 +107,22 @@ class ProjectLoadingTests(HttpTestCase):
         listing = self.client.get('/api/projects/示例项目/sections/09-剧集制作').json()
         self.assertTrue(any('EP001大纲入口未识别' in warning for warning in listing['warnings']))
 
+    def test_pre_director_sheet_cache_is_rebuilt_without_editing_source_images(self):
+        image = self.project / '09-剧集制作/EP001/03-分镜脚本/导演分镜表/EP001-C001-手绘导演分镜表-第01页.png'
+        image.parent.mkdir(parents=True)
+        image.write_bytes(b'unchanged image fixture')
+        self.store.section('示例项目', '09-剧集制作', 'EP001', mode='playback')
+        cache = self.root / '.cache/示例项目/09-剧集制作--EP001--playback.json'
+        saved = json.loads(cache.read_text('utf-8'))
+        saved['schema'] = 8
+        del saved['data']['catalogues']['09-剧集制作']['children'][0]['directorSheets']
+        cache.write_text(json.dumps(saved, ensure_ascii=False), encoding='utf-8')
+        restart = ProjectStore(self.root, cache_directory=self.root / '.cache', version='new-release')
+        parsed = restart.section('示例项目', '09-剧集制作', 'EP001', mode='playback')
+        sheets = parsed['catalogues']['09-剧集制作']['children'][0]['directorSheets']['C001']
+        self.assertEqual(len(sheets['formal']), 1)
+        self.assertEqual(image.read_bytes(), b'unchanged image fixture')
+
     def test_playback_cache_survives_unrelated_edits_and_restart_but_refreshes_own_episode(self):
         root = self.project / '09-剧集制作/EP001'
         root.mkdir(parents=True)

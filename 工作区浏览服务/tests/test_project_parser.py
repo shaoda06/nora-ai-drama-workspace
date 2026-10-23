@@ -467,6 +467,45 @@ class ProjectParserTests(unittest.TestCase):
         self.assertIn("09-剧集制作/EP001/06-生成结果/C001-场次结果/P001-分段结果/01-一采/候选", keys)
 
 
+    def test_director_sheets_separate_current_pages_from_candidates_and_other_materials(self):
+        root = '09-剧集制作/EP001'
+        self.put(root + '/02-剧集剧本/EP001-本集剧本.md', '# 剧本\n\n## 1. 故事剧本正文\n\n### EP001-C001\n\n### EP001-C002\n')
+        for page in (10, 2, 1):
+            self.put(root + f'/03-分镜脚本/导演分镜表/EP001-C001-手绘导演分镜表-第{page:02}页.png', 'formal')
+        self.put(root + '/03-分镜脚本/导演分镜表/EP001-C002-手绘导演分镜表-第01页.png', 'other scene')
+        for version, page in ((10, 2), (2, 10), (2, 1), (1, 1)):
+            self.put(root + f'/其他资料/工作稿/素材/EP001-C001-手绘导演分镜表-v{version:02}-第{page:02}页.png', 'candidate')
+        self.put(root + '/其他资料/工作稿/素材/EP001-C002-手绘导演分镜表-v02-第01页.png', 'other scene candidate')
+        self.put(root + '/其他资料/历史版本/EP001-C001-手绘导演分镜表-第03页.png', 'archived')
+        self.put(root + '/其他资料/工作稿/素材/普通图片.png', 'ordinary material')
+        self.put(root + '/其他资料/工作稿/EP001-专用素材制作-工作稿.md', '# 图片过程记录')
+        data = portal.build_data(self.root.resolve(), web_episode_navigation=True)
+        episode = data['catalogues']['09-剧集制作']['children'][0]
+        sheets = episode['directorSheets']
+        self.assertEqual(set(sheets), {'C001', 'C002'})
+        self.assertEqual([item['page'] for item in sheets['C001']['formal']], [1, 2, 10])
+        self.assertEqual([(item['version'], item['page']) for item in sheets['C001']['candidates']],
+                         [('v01', 1), ('v02', 1), ('v02', 10), ('v10', 2)])
+        self.assertEqual(len(sheets['C002']['formal']), 1)
+        self.assertEqual([item['name'] for item in episode['materials']], ['普通图片.png'])
+        self.assertEqual(sheets['C001']['record']['name'], 'EP001-专用素材制作-工作稿.md')
+
+    def test_director_candidate_only_shared_objects_and_image_closeout(self):
+        from types import SimpleNamespace
+        from backend import main  # Load the runtime script paths used by image closeout.
+        from backend.services.result_registration import verify_image_entries
+        for number in ('EP001', '片头', '片尾'):
+            root = f'09-剧集制作/{number}'
+            candidate = root + f'/其他资料/工作稿/素材/{number}-C001-手绘导演分镜表-v01-第01页.png'
+            self.put(candidate, 'candidate only')
+            parsed = portal.build_data(self.root.resolve(), web_episode_navigation=True, load_scope='09-剧集制作', episode_id=number)
+            episode = parsed['catalogues']['09-剧集制作']['children'][0]
+            self.assertEqual(episode['directorSheets']['C001']['formal'], [])
+            self.assertEqual(episode['directorSheets']['C001']['candidates'][0]['key'], candidate)
+            self.assertEqual(episode['materials'], [])
+            verify_image_entries(SimpleNamespace(section=lambda *args: parsed), 'fixture', [{
+                'draft': root + f'/其他资料/工作稿/{number}-专用素材制作-工作稿.md', 'path': candidate}])
+
     def test_episode_materials_index_record_then_images_by_filename(self):
         for episode, prefix in (("EP001", ""), ("EP002", "EP002-")):
             root = f"09-剧集制作/{episode}/04-专用素材"

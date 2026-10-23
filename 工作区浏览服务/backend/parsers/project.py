@@ -1321,6 +1321,24 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                 for item in inventory(folder) if item["kind"] == "image"]
             material_key = work_root + number + "-专用素材制作-工作稿.md"
             episode_node["materialRecord"] = file_entry(project / material_key)
+            # Director sheets are discussion boards, separate from video inputs.
+            sheet_name = re.compile(re.escape(number) + r"-(C\d{3,})-手绘导演分镜表(?:-v(\d{2,}))?-第(\d{2,})页\.png")
+            director_sheets = episode_node["directorSheets"] = {}
+            for kind, folder in (("formal", episode_root + "/03-分镜脚本/导演分镜表"),
+                                 ("candidates", work_root + "素材")):
+                for item in inventory(folder):
+                    match = sheet_name.fullmatch(item['name'])
+                    if item['kind'] != 'image' or not match or bool(match[2]) != (kind == 'candidates'):
+                        continue
+                    collection = director_sheets.setdefault(match[1], {
+                        "formal": [], "candidates": [], "record": episode_node["materialRecord"]})
+                    collection[kind].append(dict(item, page=int(match[3]), version='v' + match[2] if match[2] else ''))
+            sheet_keys = set()
+            for collection in director_sheets.values():
+                for kind in ('formal', 'candidates'):
+                    collection[kind].sort(key=lambda item: (int(item['version'][1:]) if item['version'] else 0, item['page']))
+                    sheet_keys.update(item['key'] for item in collection[kind])
+            episode_node['materials'] = [item for item in episode_node['materials'] if item['key'] not in sheet_keys]
             issues = episode_node["productionIssues"] = []
             episode_node["script"], script = latest_episode_document(
                 episode_root + "/02-剧集剧本/" + number + "-本集剧本.md", work_root + number + "-本集剧本-工作稿.md")

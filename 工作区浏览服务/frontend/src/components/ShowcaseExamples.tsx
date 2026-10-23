@@ -149,7 +149,7 @@ export function ShowcaseExamples({ category }: { category: string }) {
         <ul><li>AppShell：顶部、正文与公共页脚。</li><li>ProjectSwitcher：左上角品牌旁的项目菜单。</li><li>TaskSidebar：左侧任务栏。</li><li>Notifications：左下角消息。</li><li>PageCheckStatus：页脚最近检查时间，使用实际查询结果。</li><li>BottomTools：页面向下滚动后出现的返回顶部按钮，并避让消息。</li></ul>
       </ComponentExample>
       <ComponentExample title="展示范围与业务模块" rule="可复用控件及业务卡片在各分类演示；下列整页业务模块需要真实资料，保留在原页面，不在这里启动真实业务。" usage="项目制作、任务管理与设置">
-        <p>EpisodeProduction、EpisodeOutlines、SceneWorkspace、SegmentWorkspace、SceneStoryboardEditor、RevisionNoteEditor、SceneDownloads、CoverLibrary、ReferenceLibrary属于业务页面或流程；TaskHistory、TaskDetailDialog、NodeEditor负责真实任务和节点数据。</p>
+        <p>EpisodeProduction、EpisodeOutlines、SceneWorkspace、SegmentWorkspace、SceneDirectorSheets、SceneStoryboardEditor、RevisionNoteEditor、SceneDownloads、CoverLibrary、ReferenceLibrary属于业务页面或流程；TaskHistory、TaskDetailDialog、NodeEditor负责真实任务和节点数据。</p>
         <p>它们使用的按钮、导航、文档、媒体、消息、卡片及分页已在对应分类展示。Context、数据查询和缓存Hook属于内部逻辑，随所属组件验证。</p>
         <p>新增或修改公共组件时，必须在同次改动中同步这里的真实演示、说明与相关状态检查。</p>
       </ComponentExample>
