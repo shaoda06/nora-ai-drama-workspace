@@ -20,6 +20,7 @@ import { EpisodeProduction } from './components/EpisodeProduction';
 import { EpisodeOutlines } from './components/EpisodeOutlines';
 import { AssetMedia } from './components/AssetMedia';
 import { AssetCandidateMedia } from './components/AssetCandidateMedia';
+import { PersonImages, personImageCategory, personImageTabs } from './components/PersonImages';
 import { useRefreshState } from './refreshPosition';
 import { AudioPreviewButton, useAudioPreview } from './components/AudioPreviewButton';
 import { ReferenceLibrary } from './components/ReferenceLibrary';
@@ -121,6 +122,9 @@ function Assets({ value, project, revision, active, asset, onAssetChange }: { va
   const voice = useAudioPreview(active, selected, revision);
   const voiceButton = (item: RecordData) => <AudioPreviewButton name={`${item.name}音色`} enabled={!!item.voice} playing={voice.playingId === item.id} progress={voice.currentId === item.id ? voice.progress : 0} onClick={() => voice.toggle(item.id, item.voice.url)} />;
   const detail = useQuery({ queryKey: ['asset', project, value.kind, selected, revision], queryFn: () => get<RecordData>(`${projectUrl(project)}/assets/${value.kind}/${encodeURIComponent(selected!)}`), enabled: !!selected, placeholderData: (previous, query) => query?.queryKey[3] === selected ? previous : undefined });
+  const person = value.kind === 'people';
+  const activeTab = person && tab === '候选与审阅' ? personImageCategory(detail.data?.candidates.find((item: RecordData) => item.pending) || {}) : tab;
+  const tabs = person ? ['资料卡', ...personImageTabs, '相关文件'] : ['资料卡', '正式参考图', '候选与审阅', '相关文件'];
   const matched = value.items.filter((item: RecordData) => `${item.id} ${item.name} ${item.role}`.toLowerCase().includes(search.toLowerCase()));
   return <>
     {value.kind === 'people' && voice.player}
@@ -132,10 +136,10 @@ function Assets({ value, project, revision, active, asset, onAssetChange }: { va
         <div className="asset-card-footer"><div className="asset-card-status"><span>资料卡状态：</span><Rich html={item.statusHtml} /></div><p className="muted">正式参考图 {item.formalCount} · 候选 {item.candidateCount}</p>
         <button onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('资料卡'); }}>查看详情</button></div> {item.pendingCount > 0 && <button className="pending" onClick={() => { onAssetChange({ id: item.id, name: item.name }); setTab('候选与审阅'); }}>留存待确认／待审核 {item.pendingCount}</button>}
       </article>)}</div><Groups groups={value.groups} /></div>
-    {selected && <><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><div className="asset-detail-heading"><h2>{detail.data.id} · {detail.data.name}</h2>{value.kind === 'people' && voiceButton(detail.data)}</div><TabNav label="资产详情" items={['资料卡', '正式参考图', '候选与审阅', '相关文件'].map(label => ({ value: label, label }))} selected={tab} onChange={setTab} />
+    {selected && <><Result loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} />{detail.data && <><div className="asset-detail-heading"><h2>{detail.data.id} · {detail.data.name}</h2>{value.kind === 'people' && voiceButton(detail.data)}</div><TabNav label="资产详情" items={tabs.map(label => ({ value: label, label }))} selected={activeTab} onChange={setTab} />
       <div hidden={tab !== '资料卡'}><Document key={detail.data.id} value={detail.data.card} /></div>
-      <div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} formal /></div>
-      <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <AssetCandidateMedia key={selected} items={detail.data.candidates} revision={revision} />}</div>
+      {person ? personImageTabs.includes(activeTab) && <PersonImages key={`${selected}-${activeTab}`} detail={detail.data} category={activeTab} revision={revision} /> : <><div hidden={tab !== '正式参考图'}><AssetMedia items={[...detail.data.formal, ...(detail.data.auxiliary || []), ...(detail.data.legacy || [])]} revision={revision} formal /></div>
+      <div hidden={tab !== '候选与审阅'}>{tab === '候选与审阅' && <AssetCandidateMedia key={selected} items={detail.data.candidates} revision={revision} />}</div></>}
       <div hidden={tab !== '相关文件'}>{detail.data.recordKey && !detail.data.groups.some((group: RecordData) => group.files.some((file: FileItem) => file.key === detail.data.recordKey)) && <FileTree items={[{ kind: 'markdown', name: '完整生成记录', key: detail.data.recordKey, url: `${projectUrl(project)}/files/${detail.data.recordKey}` }]} />}<FileTree items={detail.data.groups.map((group: RecordData) => ({ kind: 'group', ...group }))} /></div>
     </>}</>}
   </>;
