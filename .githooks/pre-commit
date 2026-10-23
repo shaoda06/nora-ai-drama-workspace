@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+cd "$(git rev-parse --show-toplevel)"
+# Documentation/backend commits do not require frontend dependencies.
+if git diff --cached --quiet -- '工作区浏览服务/frontend/src'; then
+  exit 0
+fi
+if ! command -v node >/dev/null 2>&1; then
+  echo '公共组件检查未运行：找不到Node.js，请配置Node后重新提交。' >&2
+  exit 1
+fi
+node '工作区浏览服务/frontend/scripts/check-shared-components.mjs'
