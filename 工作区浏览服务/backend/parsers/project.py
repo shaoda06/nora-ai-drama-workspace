@@ -24,7 +24,7 @@ PEOPLE = "03-人物资料"
 SCENES = "04-场景资料"
 PROPS = "05-道具资料"
 FORMAL_SECTIONS = ("00-项目定位", "01-主旨与简介", "02-故事大纲", PEOPLE, SCENES, PROPS,
-                   "06-分集大纲", "07-参考音频", "08-参考视频", "09-剧集制作", "10-封面资料")
+                   "06-分集大纲", "07-参考音频", "08-参考视频", "09-剧集制作", "10-封面资料", "11-社交媒体资料")
 TEXT_PREVIEW_LIMIT = 256 * 1024
 INLINE_PATTERN = r"(\x60+)(.+?)\1|!?\[([^\]]*)\]\((<[^>]+>|[^)\n]+)\)|\*\*(.+?)\*\*"
 STATUS_COLORS = {
@@ -1543,7 +1543,12 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
         catalogues["10-封面资料"] = build_covers(project, read)
         catalogues["10-封面资料"]["groups"] = collect_groups("10-封面资料")
 
-    directories = [{"name": p.name, "label": re.sub(r"^\d+-", "", p.name),
+    if load_scope in (None, "11-社交媒体资料"):
+        from backend.parsers.accounts import build_accounts
+        catalogues["11-社交媒体资料"] = build_accounts(project, read)
+        catalogues["11-社交媒体资料"]["groups"] = collect_groups("11-社交媒体资料")
+
+    directories = [{"name": p.name, "label": "账号资料" if p.name == "11-社交媒体资料" else re.sub(r"^\d+-", "", p.name),
                     "url": quote(p.name, safe="-._~") + "/"}
                    for p in sorted(project.iterdir())
                    if p.is_dir() and p.name in FORMAL_SECTIONS]

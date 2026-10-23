@@ -25,6 +25,7 @@ import { useRefreshState } from './refreshPosition';
 import { AudioPreviewButton, useAudioPreview } from './components/AudioPreviewButton';
 import { ReferenceLibrary } from './components/ReferenceLibrary';
 import { CoverLibrary } from './components/CoverLibrary';
+import { AccountLibrary } from './components/AccountLibrary';
 
 type AssetSelection = { id: string; name: string };
 type AssetNavigation = { asset: AssetSelection | null; onAssetChange: (asset: AssetSelection | null) => void };
@@ -85,7 +86,7 @@ export default function Project() {
     <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} retry={status.error ? status.refetch : overview.refetch} retrying={status.isFetching || overview.isFetching} />
     {overview.data && <>
       {warnings.length > 0 && <details className="notice"><summary>资料提示（{warnings.length}）</summary>{warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
-      {controlsRoot && createPortal(<TabNav wide label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料', '10-封面资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={[...overview.data.directories].sort((a: RecordData, b: RecordData) => Number(['07-参考音频', '08-参考视频'].includes(a.name)) - Number(['07-参考音频', '08-参考视频'].includes(b.name))).map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={openSection} />, controlsRoot)}
+      {controlsRoot && createPortal(<TabNav wide label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料', '10-封面资料', '11-社交媒体资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={[...overview.data.directories].sort((a: RecordData, b: RecordData) => Number(['07-参考音频', '08-参考视频'].includes(a.name)) - Number(['07-参考音频', '08-参考视频'].includes(b.name))).map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={openSection} />, controlsRoot)}
       {visited.filter(label => overview.data.directories.some((dir: RecordData) => dir.name === label)).map(label => <SectionPane key={name + '/' + label + '/' + (entries[label] || 0)} project={name} section={label} revision={revision} active={label === section} asset={label === section ? asset : null} onAssetChange={value => { setAsset(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} episode={episode} onEpisodeChange={value => { setEpisode(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} />)}
     </>}
     {preview && <Preview key={preview.key || preview.url} project={name} item={preview} revision={revision} close={() => setPreview(null)} />}
@@ -98,6 +99,7 @@ function SectionPane({ project, section, revision, active, episode, onEpisodeCha
 function Section({ value, project, section, revision, active, episode, onEpisodeChange, asset, onAssetChange }: { value: RecordData; project: string; section: string; revision: number; active: boolean; episode: string | null; onEpisodeChange: (episode: string | null) => void } & AssetNavigation) {
   if (section === '09-剧集制作') return <EpisodeProduction project={project} statistics={value.statistics} items={value.children} selected={episode} onSelect={onEpisodeChange} revision={revision} />;
   if (value.kind === 'covers') return <CoverLibrary value={value} revision={revision} />;
+  if (value.kind === 'accounts') return <AccountLibrary value={value} revision={revision} />;
   if (section === '06-分集大纲') return <EpisodeOutlines value={value} />;
   if (value.kind === 'people' || value.kind === 'scenes' || value.kind === 'props') return <Assets value={value} project={project} revision={revision} active={active} asset={asset} onAssetChange={onAssetChange} />;
   if (section === '07-参考音频' || section === '08-参考视频') return <ReferenceLibrary value={value} revision={revision} active={active} asset={asset} onAssetChange={onAssetChange} />;
