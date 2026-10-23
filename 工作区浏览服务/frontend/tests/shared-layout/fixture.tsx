@@ -1,3 +1,4 @@
+import { InputsFixture } from './inputs';
 import { NavigationFixture } from './navigation';
 import { FeedbackFixture } from './feedback';
 import { DirectorSheetsFixture } from './director-sheets';
@@ -28,6 +29,7 @@ function Fixture() {
     <FeedbackFixture />
     <DirectorSheetsFixture />
     <NavigationFixture />
+    <InputsFixture />
     <section data-testid="showcase"><ComponentShowcase onImplementation={() => {}} /></section>
     <section data-testid="business" className="panel episode-detail"><div className="episode-scene-content">
       <SegmentWorkspace scope={{ project: 'fixture-only', episode: 'EP001', scene: 'C001' }}

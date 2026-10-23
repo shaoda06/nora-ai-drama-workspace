@@ -1,3 +1,4 @@
+import { checkSharedInputs } from './check-shared-inputs.mjs';
 import { checkSharedNavigation } from './check-shared-navigation.mjs';
 import assert from 'node:assert/strict';
 import { checkSharedFeedback } from './check-shared-feedback.mjs';
@@ -60,6 +61,7 @@ try {
     });
     await page.goto(origin + '/tests/shared-layout/index.html');
     assert.equal(await page.title(), '公共组件布局自动检查');
+    await checkSharedInputs(page, width, selfTest);
     const showcase = page.getByTestId('showcase'), business = page.getByTestId('business');
     await showcase.getByRole('button', { name: '下拉菜单', exact: true }).click();
     const reference = showcase.getByRole('combobox', { name: '高亮选项示例', exact: true });

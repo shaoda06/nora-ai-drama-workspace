@@ -36,6 +36,9 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
   const [clicks, setClicks] = useState(0);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(sampleText);
+  const [fieldDraft, setFieldDraft] = useState('');
+  const [fieldsDisabled, setFieldsDisabled] = useState(false);
+  const [longSwitch, setLongSwitch] = useState(false);
   const [tab, setTab] = useState('overview');
   const [selection, setSelection] = useState('one');
   const [disabled, setDisabled] = useState(false);
@@ -68,6 +71,15 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
           <UnderlineTabs compact scrollable label="紧凑滚动页签示例" items={[{ value: 'overview', label: '示例节点甲', icon: <span aria-hidden="true">●</span>, tooltip: '节点状态说明示例' }, { value: 'detail', label: '示例节点乙' }]} selected={tab} onChange={setTab} />
           <UnderlineTabs label="长文字页签演示" items={[{ value: 'one', label: '简短页签' }, { value: 'long', label: '长文字与连续英文换行：' + 'LongNavigationReference'.repeat(4) }]} selected={longTab} onChange={setLongTab} />
           <p>{tab === 'overview' ? '这里是概览内容。' : '这里是详情内容。'}</p>
+        </Example>
+        <Example title="文本输入与禁用" rule="单行与多行输入沿用网站全局样式；长内容在输入框内部显示，窄容器不越界。禁用后不能编辑，只读内容可以选择但不能修改。开关支持点击、空格和回车，长标签不压缩开关。" usage="提示词标题与正文、分类表单、编辑模式">
+          <div className="component-demo-row"><span>禁用输入</span><Switch label="禁用输入示例" checked={fieldsDisabled} onChange={setFieldsDisabled} /><button disabled={fieldsDisabled} onClick={() => setFieldDraft(longSampleText)}>填入长文字</button></div>
+          <div className="component-demo-stack">
+            <label>单行输入<input aria-label="单行输入示例" placeholder="输入中文或很长的标题，查看窄屏显示效果…" value={fieldDraft} onChange={event => setFieldDraft(event.target.value)} disabled={fieldsDisabled} /></label>
+            <label>多行输入<textarea aria-label="多行输入示例" placeholder="输入多行正文…" value={fieldDraft} onChange={event => setFieldDraft(event.target.value)} disabled={fieldsDisabled} /></label>
+            <label>只读输入<input aria-label="只读输入示例" value="可以选择复制，不能修改的示例文字" readOnly /></label>
+            <div className="component-demo-row"><span className="component-draft" style={{ flex: 1, minWidth: 0 }}>长说明文字与连续英文：LongSwitchDescriptionLongSwitchDescription</span><Switch label="长说明开关示例" checked={longSwitch} disabled={fieldsDisabled} onChange={setLongSwitch} /></div>
+          </div>
         </Example>
       </>}
       {category === 'select' && <Example title="选项菜单" rule="选中项右侧统一显示“当前”，支持方向键、Enter选择与Esc关闭；禁用选项不可选择，键盘会跳过。长选项在菜单内换行，触发按钮显示省略。表单、紧凑、小号、工具栏和选中高亮均为公共规格。" usage="项目切换、场次轮次、视频候选、提示词分类">

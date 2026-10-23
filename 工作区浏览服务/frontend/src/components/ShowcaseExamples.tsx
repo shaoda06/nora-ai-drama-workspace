@@ -66,8 +66,9 @@ export function ShowcaseExamples({ category }: { category: string }) {
         <Breadcrumbs items={[{ label: '示例列表', href: '#/history', onClick: () => setText('已返回示例列表') }, { label: '示例详情' }]} />
         <p role="status">{text || '试试右侧操作或路径链接。'}</p>
       </ComponentExample>
-      <ComponentExample title="入口卡片与搜索" rule="输入文字筛选示例；点击卡片按正常链接跳转至网站入口页，会离开展示页。" usage="首页、资料目录、资产与风格库">
-        <div className="component-demo-stack"><SearchField label="搜索示例入口" placeholder="搜索示例…" value={search} onChange={setSearch} />
+      <ComponentExample title="入口卡片与搜索" rule="搜索框支持长文字、清空与禁用，窄容器不越界。输入文字筛选示例；点击卡片按正常链接跳转至网站入口页，会离开展示页。" usage="首页、资料目录、资产与风格库">
+        <button onClick={() => setSearch('中文长搜索条件' + 'LongSearchReference'.repeat(8))}>填入长搜索文字</button>
+        <div className="component-demo-stack"><SearchField label="搜索示例入口" placeholder="搜索示例与较长的关键词说明…" value={search} onChange={setSearch} />
         <SearchField size="compact" label="紧凑搜索示例" placeholder="紧凑搜索…" value={search} onChange={setSearch} /><SearchField label="禁用搜索示例" placeholder="不可搜索" value="" onChange={setSearch} disabled />
         {(!search || '公共组件示例'.includes(search)) ? <EntryCard to="/" title="公共组件示例" description="返回网站入口页" icon="▤" /> : <p className="muted">没有匹配的示例。</p>}</div>
       </ComponentExample>
