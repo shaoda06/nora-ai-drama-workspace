@@ -72,7 +72,7 @@ export default function Project() {
   return <BreadcrumbSelectorContext.Provider value={breadcrumbSelector}><BreadcrumbActionsContext.Provider value={breadcrumbActions}><PreviewContext.Provider value={setPreview}>
     <SyncNotification key={name} error={status.data?.error} errorKind={status.data?.errorKind} retryAt={retryAt} updating={syncing} />
     <PageCheckStatus queries={[status, overview]} />
-    <PageHeader title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
+    <PageHeader stacked title={overview.data?.positionTitle && overview.data.positionTitle !== '未记录' ? overview.data.positionTitle : name}>
     {overview.data && (
       <div className="activity" role="region" aria-label="当前阶段">
         <div className="activity-heading"><strong>当前阶段</strong>{overview.data.active.length > 0 && <span>（<button className="link" onClick={() => setPreview({ kind: 'markdown', name: '项目进度', key: '项目进度.md', url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}` })}>查看完整进度</button>）</span>}</div>

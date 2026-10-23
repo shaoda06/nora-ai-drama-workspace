@@ -33,9 +33,18 @@ export function inspectSource(path, text) {
     const root = postcss.parse(text, { from: path });
     root.walkRules(rule => {
       for (const selector of rule.selectors) {
-        const classNames = [...selector.replace(/\[[^\]]*\]/g, '').matchAll(/\.([\w-]+)/g)].map(match => match[1]);
+        // :has() describes descendants, not the element receiving these declarations.
+        // Track parentheses so nested conditions do not hide a component after :has().
+        let depth = 0, hasDepth = 0, targetSelector = '';
+        for (const token of selector.replace(/\[[^\]]*\]/g, '').match(/:has\(|[()]|[^():]+|:/g) || []) {
+          if (token === ':has(') { depth++; if (!hasDepth) hasDepth = depth; }
+          else if (token === '(') depth++;
+          if (!hasDepth) targetSelector += token;
+          if (token === ')') { if (hasDepth === depth) hasDepth = 0; depth--; }
+        }
+        const classNames = [...targetSelector.matchAll(/\.([\w-]+)/g)].map(match => match[1]);
         const used = classNames.map(componentClass).filter(Boolean);
-        const hasDialog = /(?:^|[\s>+~,])dialog\b/.test(selector);
+        const hasDialog = /(?:^|[\s>+~,])dialog\b/.test(targetSelector);
         if (!used.length && !hasDialog) continue;
         const first = componentClass(classNames[0] || '');
         // Shared styles start at a shared root; page-qualified selectors remain overrides.

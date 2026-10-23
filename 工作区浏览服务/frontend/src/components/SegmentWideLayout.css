@@ -10,14 +10,14 @@
 .segment-vertical-item>button[aria-pressed=true]{background:var(--green);color:white}
 .segment-workspace.is-wide .video-source{flex-wrap:wrap;gap:8px 12px}
 .segment-workspace.is-wide .video-source-summary{flex:1 1 auto;flex-wrap:wrap;overflow:visible;gap:12px}
-.segment-workspace.is-wide .segment-selectors.tabs{margin:0;gap:8px;align-items:center;flex:none}
+.segment-workspace.is-wide .segment-selectors{margin:0;gap:8px;align-items:center;flex:none}
 .segment-workspace.is-wide .video-source-actions{margin-left:auto}
 .segment-notes-export{display:flex;align-items:center;gap:8px;margin-left:auto}
 .segment-notes-export>button{white-space:nowrap;font-size:13px;padding:6px 10px}
 @media(max-width:700px){
  .segment-workspace.is-wide{--segment-rail-width:84px;--segment-rail-gap:8px}
  .segment-workspace.is-wide .video-source-summary{flex-basis:100%;gap:8px}
- .segment-workspace.is-wide .segment-selectors.tabs{gap:4px;flex-wrap:wrap}
+ .segment-workspace.is-wide .segment-selectors{gap:4px;flex-wrap:wrap}
  .segment-workspace.is-wide .video-source-actions{max-width:100%;justify-content:flex-start;margin-left:0;flex-wrap:wrap}
  .segment-vertical-item>button{flex-direction:column;gap:2px;padding:6px 4px}
 }

@@ -60,8 +60,9 @@ export function ShowcaseExamples({ category }: { category: string }) {
   const sound = useAudioPreview(category === 'media', null, 1);
   return <PreviewContext.Provider value={setPreview}>
     {category === 'layout' && <>
-      <ComponentExample fullWidth title="标题与路径导航" rule="页面标题可带说明和操作区；点击路径返回上一级示例。" usage="项目、资产、风格库、开发记录">
+      <ComponentExample fullWidth title="标题与路径导航" rule="页面标题可带说明和操作区；纵向内容使用stacked规格统一间距；点击路径返回上一级示例。" usage="项目、资产、风格库、开发记录">
         <PageHeader eyebrow="示例栏目" title="示例页面" description="这里展示公共页面标题。" actions={<button onClick={() => setText('已点击标题操作')}>示例操作</button>} />
+        <PageHeader stacked title="带附属内容的示例标题"><span>示例阶段信息</span><span>示例路径信息</span></PageHeader>
         <Breadcrumbs items={[{ label: '示例列表', href: '#/history', onClick: () => setText('已返回示例列表') }, { label: '示例详情' }]} />
         <p role="status">{text || '试试右侧操作或路径链接。'}</p>
       </ComponentExample>

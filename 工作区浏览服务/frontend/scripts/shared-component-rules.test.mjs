@@ -33,6 +33,12 @@ test('layout allocation is allowed, while page-qualified component appearance is
   assert.equal(errors('Page.css', '[data-label=".tab-select"]{color:red}').length, 0);
   assert.equal(errors('Page.css', '.panel dialog{padding:0}').length, 1);
   assert.equal(errors('style.css', 'dialog.dialog-compact{padding:10px}').length, 0);
+  assert.equal(errors('Page.css', '.header:has(.tabs-grouped){flex-wrap:wrap}').length, 0);
+  assert.equal(errors('Page.css', '.header:has(:is(.tabs,.tab-select)){display:flex}').length, 0);
+  assert.equal(errors('Page.css', '.header:has(.tabs) .tab-select{padding:1px}').length, 1);
+  assert.equal(errors('Page.css', '.panel:has(dialog){display:flex}').length, 0);
+  assert.equal(errors('Page.css', '.panel:has(.tabs) dialog{padding:1px}').length, 1);
+  assert.equal(errors('Page.css', '.panel .tab-select:has(span){padding:1px}').length, 1);
 });
 
 test('object URLs require review rather than blocking valid media previews', () => {
