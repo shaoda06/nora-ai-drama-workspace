@@ -125,7 +125,7 @@ export default function Prompts() {
         {expanded && <ul>{categoryTree(item.path)}</ul>}
       </li>;
     })}
-    {prompts.filter(item => item.category === parent).map(item => <li key={item.path}><button className="prompt-tree-file" disabled={busy} aria-label={item.title} title={item.path} aria-current={view === 'library' && saved?.path === item.path ? 'page' : undefined} onClick={() => openDocument(item.path, true)}><svg className="prompt-folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z M14 3v6h6 M8 13h8 M8 17h6" /></svg><span>{item.title}</span><small>{item.local_only ? '本地' : '共享'}</small></button></li>)}
+    {prompts.filter(item => item.category === parent).map(item => <li key={item.path}><button className="prompt-tree-file" disabled={busy} aria-label={item.title} title={item.path} aria-current={view === 'library' && saved?.path === item.path ? 'page' : undefined} onClick={() => openDocument(item.path, true)}><svg className="prompt-folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9Z M14 3v6h6 M8 13h8 M8 17h6" /></svg><span>{item.title}</span><small>{item.local_only ? '隐私' : '公开'}</small></button></li>)}
   </>; }
   const loadError = snapshot.error || (view === 'trash' ? trash.error : query ? results.error : null);
   return <div className="prompt-page" data-prompt-unsaved={dirty || busy}>
@@ -146,7 +146,7 @@ export default function Prompts() {
           {trash.data?.length === 0 && <p className="prompt-empty">回收站是空的。</p>}
         </section> : query ? <section aria-label="搜索结果">
           <h3>搜索结果 ({items.length})</h3>
-          {items.map(item => <button key={item.path} className="prompt-list-item prompt-title-item" aria-label={item.title} title={item.path} disabled={busy} aria-current={saved?.path === item.path ? 'page' : undefined} onClick={() => openDocument(item.path)}><strong>{item.title}</strong><small>{item.local_only ? '本地' : '共享'}</small></button>)}
+          {items.map(item => <button key={item.path} className="prompt-list-item prompt-title-item" aria-label={item.title} title={item.path} disabled={busy} aria-current={saved?.path === item.path ? 'page' : undefined} onClick={() => openDocument(item.path)}><strong>{item.title}</strong><small>{item.local_only ? '隐私' : '公开'}</small></button>)}
           {!results.isPending && !items.length && <p className="prompt-empty">没有找到匹配的提示词。</p>}
         </section> : <>
           <ul className="prompt-tree">{categoryTree('')}</ul>
@@ -169,7 +169,7 @@ export default function Prompts() {
           {mode === 'text' ? <textarea aria-label="提示词正文" className="prompt-body" value={draft.body} disabled={busy} spellCheck={false} placeholder="输入或粘贴提示词正文…" onChange={e => setDraft({ ...draft, body: e.target.value })} /> : preview.isPending ? <p className="prompt-preview" role="status">正在生成预览…</p> : preview.error ? <div className="prompt-preview"><FloatingMessage tone="error">{preview.error.message}<button onClick={() => void preview.refetch()}>重试预览</button></FloatingMessage></div> : <article className="prompt-preview"><Rich html={preview.data.html} /></article>}
           <div className="prompt-actions"><button className="prompt-primary" disabled={busy || !draft.title.trim() || !dirty} onClick={() => void save()}>{busy ? '处理中…' : '保存'}</button><CopyButton label="复制" text={draft.body} />{saved && <button className="danger-button prompt-delete" disabled={busy} onClick={() => guard(() => { const current = latestSaved.current!; ask('移入回收站', `确定将“${current.title}”移入回收站吗？`, async () => { await api('/document', 'DELETE', { path: current.path, revision: current.revision }); clearSelection(); setConfirm(null); setStep('categories'); notify('已移入回收站'); await refresh(); }); })}>删除</button>}</div>
         </> : deleted ? <>
-          <h2>{titleOf(deleted.original)}</h2><small>原位置：{deleted.original} · {deleted.local_only ? '仅本地' : '共享'}</small><p className="muted">回收站内容不会自动清空。恢复时保留原来的共享或本地属性。</p><pre className="prompt-trash-body">{deleted.body}</pre>
+          <h2>{titleOf(deleted.original)}</h2><small>原位置：{deleted.original} · {deleted.local_only ? '隐私' : '公开'}</small><p className="muted">回收站内容不会自动清空。恢复时保留原来的隐私或公开属性。</p><pre className="prompt-trash-body">{deleted.body}</pre>
           <div className="prompt-actions"><button disabled={busy} onClick={() => { setModalError(''); setRestore({ item: deleted, title: titleOf(deleted.original), category: parentOf(deleted.original) }); }}>恢复提示词</button><CopyButton label="复制" text={deleted.body || ''} /><button className="danger-button prompt-delete" disabled={busy} onClick={() => ask('彻底删除提示词', `“${titleOf(deleted.original)}”将永久删除，无法从回收站恢复。`, async () => { await api('/trash', 'DELETE', { id: deleted.id, revision: deleted.revision }); clearSelection(); setConfirm(null); setStep('categories'); await refresh(); })}>彻底删除</button></div>
         </> : <div className="prompt-empty"><span className="prompt-empty-icon">▤</span><h2>你的提示词资料库</h2><p>选择一份提示词查看和编辑，<br />或新建一份，把好用的写法留下来。</p></div>}
       </section>

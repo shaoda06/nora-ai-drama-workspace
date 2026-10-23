@@ -213,7 +213,7 @@ try {
   await page.getByRole('button', { name: '保存', exact: true }).waitFor();
   assert.equal(await page.getByRole('button', { name: '保存', exact: true }).isDisabled(), true);
   assert.equal(doc.local_only, false, 'unchecked sends shared storage on save');
-  await tree.getByRole('button', { name: '根提示词', exact: true }).locator('small').getByText('共享', { exact: true }).waitFor();
+  await tree.getByRole('button', { name: '根提示词', exact: true }).locator('small').getByText('公开', { exact: true }).waitFor();
   await page.screenshot({ path: path.join(out, 'shared-storage-desktop.png') });
   await localOnly.click();
   await page.getByRole('button', { name: '保存', exact: true }).click();
