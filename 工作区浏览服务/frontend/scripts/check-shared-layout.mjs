@@ -103,6 +103,9 @@ try {
     const sheetImage = sheets.locator('.director-sheet-image img');
     const sheetArrows = sheets.locator('.pagination-arrows');
     const sheetFooter = sheets.locator('.pagination');
+    const directorGap = await sheets.locator('.director-sheet-toolbar').evaluate(el =>
+      el.getBoundingClientRect().top - el.closest('.episode-scene-content').getBoundingClientRect().top);
+    assert.equal(directorGap, 21, '标签栏后只保留内容区20px内边距及1px分隔线，不叠加工具栏外边距');
     assert.equal(await sheetImage.count(), 1, '导演表每次仅显示一张大图');
     assert.equal(await sheets.getByRole('navigation', { name: '导演分镜表页码' }).count(), 0, '移除上方页码条');
     const sourceLabel = sheets.getByText('场次分镜：V07', { exact: true });

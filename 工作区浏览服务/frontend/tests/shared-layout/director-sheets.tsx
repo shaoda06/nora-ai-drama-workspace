@@ -24,7 +24,7 @@ export function DirectorSheetsFixture() {
     <button onClick={() => setMode('old')}>模拟无图旧版分镜</button>
     <button onClick={() => setMode('other')}>模拟其他来源分镜</button>
     <PreviewContext.Provider value={setPreview}>
-      <SceneDirectorSheets key={mode} sheets={data} storyboardVersion={version} revision={1} />
+      <div className="episode-scene-content"><SceneDirectorSheets key={mode} sheets={data} storyboardVersion={version} revision={1} /></div>
       {preview && <Preview project="fixture-only" item={preview} revision={1} close={() => setPreview(null)} />}
     </PreviewContext.Provider>
   </section>;

@@ -1,4 +1,4 @@
-.director-sheet-toolbar{justify-content:space-between}
+.toolbar.director-sheet-toolbar{justify-content:space-between;margin-top:0}
 .director-sheet-record{margin-left:auto}
 .director-sheet-source{font-size:15px;font-weight:600}
 .director-sheet-viewer{position:relative}
