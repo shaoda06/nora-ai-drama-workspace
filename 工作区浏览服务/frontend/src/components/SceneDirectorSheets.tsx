@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react';
 import type { DirectorSheets } from '../api';
 import { PreviewContext } from '../components';
-import { FileActions } from './FileActions';
 import { Pagination } from './Pagination';
 import { TabSelect } from './TabSelect';
 import './SceneDirectorSheets.css';
@@ -39,7 +38,6 @@ export function SceneDirectorSheets({ sheets, storyboardVersion, revision }: { s
         </button>
         <Pagination variant="arrows" page={pageIndex + 1} total={images.length} pageSize={1} change={page => setPageKey(String(images[page - 1].page))} />
       </div>
-      <div className="director-sheet-files"><FileActions url={current.url} /></div>
       {images.length === 1 ? <p className="director-sheet-single-page">第1页 / 共1页</p>
         : <Pagination page={pageIndex + 1} total={images.length} pageSize={1} showItemCount={false} change={page => setPageKey(String(images[page - 1].page))} />}
     </>

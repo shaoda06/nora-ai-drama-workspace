@@ -107,6 +107,8 @@ try {
       el.getBoundingClientRect().top - el.closest('.episode-scene-content').getBoundingClientRect().top);
     assert.equal(directorGap, 21, '标签栏后只保留内容区20px内边距及1px分隔线，不叠加工具栏外边距');
     assert.equal(await sheetImage.count(), 1, '导演表每次仅显示一张大图');
+    assert.equal(await sheets.getByRole('link', { name: '下载', exact: true }).count(), 0, '图片下方不显示独立下载入口');
+    assert.equal(await sheets.getByRole('link', { name: '查看 ↗', exact: true }).count(), 0, '图片下方不显示独立查看入口');
     assert.equal(await sheets.getByRole('navigation', { name: '导演分镜表页码' }).count(), 0, '移除上方页码条');
     const sourceLabel = sheets.getByText('场次分镜：V07', { exact: true });
     assert.equal(await sourceLabel.count(), 1);
