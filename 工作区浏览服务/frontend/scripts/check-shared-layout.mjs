@@ -1,3 +1,4 @@
+import { checkSharedNavigation } from './check-shared-navigation.mjs';
 import assert from 'node:assert/strict';
 import { checkSharedFeedback } from './check-shared-feedback.mjs';
 import { execFileSync } from 'node:child_process';
@@ -96,6 +97,7 @@ try {
       console.log(`反向验证：模拟字号继承、容器越界均被拦截，恢复后通过。截图：${screenshot}`);
     }
     await checkSharedFeedback(page, width, selfTest);
+    await checkSharedNavigation(page, width, selfTest);
     assert.deepEqual(forbidden, [], '测试不得访问API、外部网络或写入业务');
     assert.deepEqual(errors, [], '浏览器错误');
     console.log(`公共组件布局检查：${width}px普通/宽屏、最新/旧候选、展示页同规格样式、父容器及菜单边界通过。`);

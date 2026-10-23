@@ -22,6 +22,7 @@ const categories = [
 ];
 const options = [
   { value: 'one', label: '候选一' }, { value: 'two', label: '候选二', badge: '已采用' },
+  { value: 'unavailable', label: '暂不可选', disabled: true },
   { value: 'long', label: '这是一条较长的选项名称，用来查看菜单在窄屏下的换行效果' },
 ];
 const sampleText = '这是一段公共组件演示文字。';
@@ -42,6 +43,8 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
   const [dialogBusy, setDialogBusy] = useState(false);
   const [dialog, setDialog] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+  const [boundaryPage, setBoundaryPage] = useState(9);
+  const [longTab, setLongTab] = useState('one');
   const [empty, setEmpty] = useState(false);
   const notify = useNotify();
   const notices = useRef<(() => void)[]>([]);
@@ -58,18 +61,21 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
           <div className="component-demo-row"><button onClick={() => setClicks(n => n + 1)}>普通按钮</button><button className="link" onClick={() => setClicks(n => n + 1)}>链接按钮</button><button disabled>禁用按钮</button></div>
           <p>已点击 {clicks} 次</p><p>{sampleText}</p><CopyButton text={sampleText} label="复制示例文字" />
         </Example>
-        <Example title="编辑开关与页签" rule="开关只控制示例正文的编辑状态；页签用于切换同一区域的内容。" usage="提示词编辑、分镜与提示词页签">
+        <Example title="编辑开关与页签" rule="开关只控制示例正文的编辑状态；页签用于切换同一区域的内容；选中前后保持字重与宽度，长文字按可用空间换行。" usage="提示词编辑、分镜与提示词页签">
           <div className="component-demo-row"><span>编辑模式</span><Switch label="示例编辑模式" checked={editing} onChange={setEditing} /></div>
           {editing ? <textarea className="component-demo-textarea" aria-label="示例正文" value={draft} onChange={event => setDraft(event.target.value)} /> : <p className="component-draft">{draft}</p>}
           <UnderlineTabs label="示例页签" items={[{ value: 'overview', label: '概览' }, { value: 'detail', label: '详情' }]} selected={tab} onChange={setTab} />
           <UnderlineTabs compact scrollable label="紧凑滚动页签示例" items={[{ value: 'overview', label: '示例节点甲', icon: <span aria-hidden="true">●</span>, tooltip: '节点状态说明示例' }, { value: 'detail', label: '示例节点乙' }]} selected={tab} onChange={setTab} />
+          <UnderlineTabs label="长文字页签演示" items={[{ value: 'one', label: '简短页签' }, { value: 'long', label: '长文字与连续英文换行：' + 'LongNavigationReference'.repeat(4) }]} selected={longTab} onChange={setLongTab} />
           <p>{tab === 'overview' ? '这里是概览内容。' : '这里是详情内容。'}</p>
         </Example>
       </>}
-      {category === 'select' && <Example title="选项菜单" rule="选中项右侧统一显示“当前”，支持方向键、Enter选择与Esc关闭；长选项可换行。表单、紧凑、小号、工具栏和选中高亮均为公共规格。" usage="项目切换、场次轮次、视频候选、提示词分类">
+      {category === 'select' && <Example title="选项菜单" rule="选中项右侧统一显示“当前”，支持方向键、Enter选择与Esc关闭；禁用选项不可选择，键盘会跳过。长选项在菜单内换行，触发按钮显示省略。表单、紧凑、小号、工具栏和选中高亮均为公共规格。" usage="项目切换、场次轮次、视频候选、提示词分类">
         <div className="component-demo-row"><TabSelect label="示例选项" items={options} selected={selection} onChange={setSelection} disabled={disabled} /><span>禁用菜单</span><Switch label="禁用示例菜单" checked={disabled} onChange={setDisabled} /></div>
         <div className="component-demo-stack"><TabSelect variant="field" label="表单选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} />
         <div className="component-demo-row"><TabSelect size="compact" label="紧凑选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} /><TabSelect size="small" label="小号选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} /><TabSelect size="toolbar" highlightSelected label="高亮选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} /></div></div>
+        <TabNav label="长文字分组导航演示" items={options} selected={selection} onChange={setSelection} groups={[{ label: '示例分组', values: options.map(item => item.value) }]} disabled={disabled} />
+        <p className="component-draft">按钮只由组件内的SVG显示一个下拉箭头，选中、高亮或禁用时也不叠加背景箭头。</p>
         <p className="component-draft">已选择：{options.find(item => item.value === selection)!.label}</p>
       </Example>}
       {category === 'messages' && <>
@@ -93,6 +99,7 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
         <Example title="分页与空状态" rule="示例每页6项，首页和末页会禁用对应方向；无内容时不显示分页。" usage="版本记录、资产列表、风格库">
           <div className="component-demo-row"><span>显示空列表</span><Switch label="显示空列表" checked={empty} onChange={setEmpty} /></div>
           {empty ? <p className="muted">这里还没有记录。</p> : <ul className="component-sample-list">{sampleItems.slice((page - 1) * 6, page * 6).map(item => <li key={item}>{item}</li>)}</ul>}
+          <p>多位页码演示：可从第9页切到第10页，观察按钮位置。</p><Pagination page={boundaryPage} total={empty ? 0 : 1000} pageSize={10} change={setBoundaryPage} />
           <Pagination page={page} total={empty ? 0 : sampleItems.length} pageSize={6} change={setPage} />
         </Example>
       </>}
