@@ -21,6 +21,7 @@ description: Nora AI连续短剧与短片主控，识别项目阶段和当前任
 | 单集剧本、对白表演、豆包交接与回稿 | [剧本写作](../short-drama-write/SKILL.md) |
 | 人物场景道具资料卡、参考图、机位图、状态图、参考音视频及封面 | [资产设计](../nora-drama-assets/SKILL.md) |
 | 镜头调度、连续性、P段、首帧画面与提示词、打戏分镜 | [分镜设计](../short-drama-storyboard/SKILL.md)，由它选择通用／玄幻／写实专项 |
+| 手绘导演分镜表、分页及讨论反馈回写 | [导演分镜表](../short-drama-storyboard/references/手绘导演分镜表规范.md)，先询问是否需要，以对应场次分镜为真源 |
 | 模型正文、中文参考版、素材对应及内容核对 | [视频提示词](../nora-video-prompts/SKILL.md) |
 | 准备提交、查进度、结果通知、异常恢复、后处理或导演包 | [生成执行](../nora-generation/SKILL.md)，只进当前动作分支 |
 | 专项审稿、资产或连续性审查 | [内容审查](../short-drama-review/SKILL.md)；正常自检由当前作者合并完成 |

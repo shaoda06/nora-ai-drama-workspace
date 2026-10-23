@@ -18,6 +18,7 @@ description: 为 Nora 制作人物、场景、道具资料卡与参考图设计�
 | 服装／场景／道具状态延伸 | [统一状态规则](references/Qwen-Image-2.1-提示词规范.md#27-资产状态参考图统一规则)及对应资产专项，沿用原CH／SC／PR |
 | 逐集专用素材 | [逐集专用素材](references/逐集专用素材规范.md)，按已确认分镜及P段实际需要补齐 |
 | 封面设计、横竖版延展、采用与归档 | [封面资料与制作](references/封面资料与制作规范.md)；按需讨论，不设固定生图提示词模板 |
+| 手绘导演分镜表的图像准备 | [导演分镜表规范](../short-drama-storyboard/references/手绘导演分镜表规范.md)及其固定模板；使用分镜技能已提取的当页内容，不自行改写剧情或镜头 |
 | 图片提示词编写或修订 | [图片提示词规则](references/图片提示词规范.md)；Qwen调用对应适配，已选Imagegen进入[Imagegen分支](../nora-generation/references/Imagegen生成与尺寸处理规范.md) |
 | 参考音视频与人物声音 | [参考音视频管理](references/参考音视频管理规范.md)，沿项目级RA／RV与固定分类 |
 | 图片交付、批准采用、替换和归档 | [核心参考图的验收与保存](references/核心参考图制作规范.md#85-验收记录与保存)，批准后超分交[生成执行](../nora-generation/SKILL.md) |
