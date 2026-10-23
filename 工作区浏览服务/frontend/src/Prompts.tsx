@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { PageHeader } from './components/PageHeader';
 import { CopyButton } from './components/CopyButton';
 import { TabSelect } from './components/TabSelect';
+import { Switch } from './components/Switch';
 import { FloatingMessage, useNotify } from './components/Notifications';
 import './Prompts.css';
 
@@ -165,7 +166,7 @@ export default function Prompts() {
             { value: '', label: '主目录' }, ...categories.map(item => ({ value: item.path, label: item.path })),
             ...(draft.category && !categories.some(item => item.path === draft.category) ? [{ value: draft.category, label: `${draft.category}（已不存在）` }] : []),
           ]} /></div>
-          <div className="prompt-edit-control"><span id="prompt-edit-label">编辑模式</span><button type="button" className="prompt-edit-switch" role="switch" aria-labelledby="prompt-edit-label" aria-checked={mode === 'text'} disabled={busy} onClick={() => setMode(mode === 'text' ? 'preview' : 'text')}><span /></button></div>
+          <div className="prompt-edit-control"><span id="prompt-edit-label">编辑模式</span><Switch label="编辑模式" checked={mode === 'text'} disabled={busy} onChange={checked => setMode(checked ? 'text' : 'preview')} /></div>
           {mode === 'text' ? <textarea aria-label="提示词正文" className="prompt-body" value={draft.body} disabled={busy} spellCheck={false} placeholder="输入或粘贴提示词正文…" onChange={e => setDraft({ ...draft, body: e.target.value })} /> : preview.isPending ? <p className="prompt-preview" role="status">正在生成预览…</p> : preview.error ? <div className="prompt-preview"><FloatingMessage tone="error">{preview.error.message}<button onClick={() => void preview.refetch()}>重试预览</button></FloatingMessage></div> : <article className="prompt-preview" dangerouslySetInnerHTML={{ __html: preview.data.html }} />}
           <div className="prompt-actions"><button className="prompt-primary" disabled={busy || !draft.title.trim() || !dirty} onClick={() => void save()}>{busy ? '处理中…' : '保存'}</button><CopyButton label="复制" text={draft.body} />{saved && <button className="danger-button prompt-delete" disabled={busy} onClick={() => guard(() => { const current = latestSaved.current!; ask('移入回收站', `确定将“${current.title}”移入回收站吗？`, async () => { await api('/document', 'DELETE', { path: current.path, revision: current.revision }); clearSelection(); setConfirm(null); setStep('categories'); notify('已移入回收站'); await refresh(); }); })}>删除</button>}</div>
         </> : deleted ? <>

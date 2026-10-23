@@ -6,6 +6,7 @@ import { Dialog, Document, PreviewContext, Result } from './components';
 import { PageHeader } from './components/PageHeader';
 import { TabNav } from './components/TabNav';
 import { Pagination } from './components/Pagination';
+import { ComponentShowcase } from './components/ComponentShowcase';
 import './History.css';
 
 type HistoryDocument = { title: string; html: string; page: number; pageSize: number; total: number };
@@ -38,11 +39,12 @@ export default function History() {
   const [preview, setPreview] = useState<string | null>(null);
   const closePreview = useCallback(() => setPreview(null), []);
   const showVersions = selected === '版本记录.md';
+  const showComponents = selected === 'components';
   const list = useQuery({ queryKey: ['history'], queryFn: () => get<{ path: string; name: string }[]>('/api/history'), refetchInterval: 5000 });
-  const document = useQuery({ queryKey: ['history-document', selected, showVersions ? page : 1], queryFn: () => get<HistoryDocument>(`/api/history/document?path=${encodeURIComponent(selected)}&page=${showVersions ? page : 1}`), refetchInterval: 5000 });
+  const document = useQuery({ queryKey: ['history-document', selected, showVersions ? page : 1], queryFn: () => get<HistoryDocument>(`/api/history/document?path=${encodeURIComponent(selected)}&page=${showVersions ? page : 1}`), enabled: !showComponents, refetchInterval: 5000 });
   const navigation = [
     { value: '版本记录.md', label: '版本记录' },
-    { value: '组件与页面实现.md', label: '组件与页面实现' },
+    { value: 'components', label: '公共组件' },
   ];
   const templates = templatePaths.filter(path => list.data?.some(item => item.path === path)).map(path => ({ value: path, label: path.replace(/\.md$/, '') }));
   const openDocument = (value: string) => {
@@ -55,7 +57,7 @@ export default function History() {
   };
   const pagination = showVersions && document.data && <Pagination page={document.data.page} total={document.data.total} pageSize={document.data.pageSize} change={changePage} />;
   return <PreviewContext.Provider value={item => setPreview(item.key!)}>
-    <PageCheckStatus queries={[list, document]} />
+    <PageCheckStatus queries={showComponents ? [list] : [list, document]} />
     <PageHeader eyebrow="开发跟踪" title="版本与开发记录" />
     <div className="history-layout">
       <aside className="history-sidebar" aria-label="开发文档导航">
@@ -66,8 +68,8 @@ export default function History() {
         </details>
       </aside>
       <article className={showVersions ? "panel history-versions" : "panel"}>
-        <Result page loading={list.isPending || document.isPending} error={document.error || list.error} retry={document.error ? document.refetch : list.refetch} retrying={document.isFetching || list.isFetching} />
-        {document.data && <>
+        <Result page loading={list.isPending || (!showComponents && document.isPending)} error={(!showComponents && document.error) || list.error} retry={!showComponents && document.error ? document.refetch : list.refetch} retrying={document.isFetching || list.isFetching} />
+        {showComponents ? <ComponentShowcase onImplementation={() => setPreview('组件与页面实现.md')} /> : document.data && <>
           <Document key={`${selected}:${showVersions ? document.data.page : 1}`} value={document.data} showChapters={!showVersions} />
           {pagination}
         </>}
