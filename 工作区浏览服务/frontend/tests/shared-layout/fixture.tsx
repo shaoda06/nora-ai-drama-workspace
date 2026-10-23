@@ -1,3 +1,4 @@
+import { FeedbackFixture } from './feedback';
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
@@ -22,6 +23,7 @@ function Fixture() {
   const [wide, setWide] = useState(false);
   const [selection, setSelection] = useState({ stage: '一采', key: videos[0].key });
   return <div className="workspace-with-tasks"><main className="project-page">
+    <FeedbackFixture />
     <section data-testid="showcase"><ComponentShowcase onImplementation={() => {}} /></section>
     <section data-testid="business" className="panel episode-detail"><div className="episode-scene-content">
       <SegmentWorkspace scope={{ project: 'fixture-only', episode: 'EP001', scene: 'C001' }}

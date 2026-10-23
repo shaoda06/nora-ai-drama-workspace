@@ -17,6 +17,8 @@ test('native UI and direct copy implementations are blocked outside their owners
     assert.ok(errors('NewPage.tsx', text).length, text);
   }
   assert.equal(errors('components.tsx', '<dialog />').length, 0);
+  assert.equal(errors('components.tsx', '<button className="dialog-close" />').length, 0);
+  assert.equal(errors('Page.tsx', '<button className="dialog-close" />').length, 1);
   assert.equal(errors('components/TabSelect.tsx', '<button role="combobox" />').length, 0);
   assert.equal(errors('components/CopyButton.tsx', 'navigator.clipboard.writeText("text")').length, 0);
   assert.equal(errors('Page.tsx', '<TabSelect items={[]} selected="" />').length, 0);
@@ -33,6 +35,7 @@ test('layout allocation is allowed, while page-qualified component appearance is
   assert.equal(errors('Page.css', '[data-label=".tab-select"]{color:red}').length, 0);
   assert.equal(errors('Page.css', '.panel dialog{padding:0}').length, 1);
   assert.equal(errors('style.css', 'dialog.dialog-compact{padding:10px}').length, 0);
+  assert.equal(errors('Page.css', '.page .dialog-close{padding:0}').length, 1);
   assert.equal(errors('Page.css', '.header:has(.tabs-grouped){flex-wrap:wrap}').length, 0);
   assert.equal(errors('Page.css', '.header:has(:is(.tabs,.tab-select)){display:flex}').length, 0);
   assert.equal(errors('Page.css', '.header:has(.tabs) .tab-select{padding:1px}').length, 1);

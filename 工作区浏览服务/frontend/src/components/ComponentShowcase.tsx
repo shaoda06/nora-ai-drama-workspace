@@ -25,6 +25,8 @@ const options = [
   { value: 'long', label: '这是一条较长的选项名称，用来查看菜单在窄屏下的换行效果' },
 ];
 const sampleText = '这是一段公共组件演示文字。';
+const longSampleText = '这是长文字演示，用来检查手机上的换行与关闭入口，不读取或修改项目资料。'.repeat(4) + 'LongUnbrokenReference'.repeat(10);
+const longSampleTitle = '长标题与正文换行演示：' + 'DocumentRevisionReference'.repeat(4);
 const sampleDocument = { html: '<h1>示例阅读文档</h1><p>这里的内容仅用于演示，不属于任何项目。</p><h2 id="demo-overview">内容概览</h2><p>可以展开章节导航、跳到指定章节，也可以复制示例文字。</p><h3 id="demo-detail">阅读细节</h3><p>正文沿用网站的字体、段落与表格样式。</p><h2 id="demo-checks">示例清单</h2><ul><li>打开文档弹窗</li><li>查看章节与正文</li><li>关闭后继续浏览组件</li></ul><table><thead><tr><th>状态</th><th>说明</th></tr></thead><tbody><tr><td>示例</td><td>不读取或修改真实项目资料</td></tr></tbody></table>' };
 const sampleItems = Array.from({ length: 18 }, (_, i) => `示例记录 ${String(i + 1).padStart(2, '0')}`);
 
@@ -71,8 +73,8 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
         <p className="component-draft">已选择：{options.find(item => item.value === selection)!.label}</p>
       </Example>}
       {category === 'messages' && <>
-        <Example title="公共消息" rule="成功提示3秒消失，错误提示不定时消失；所有提示都可关闭。关闭持续提示不会结束演示状态。" usage="保存、复制、下载进度、读取错误与更新提醒">
-          <div className="component-demo-row"><button onClick={() => showNotice('演示：操作成功')}>显示成功提示</button><button onClick={() => showNotice('演示：操作失败，请重试', 'error')}>显示错误提示</button><button disabled={pending} onClick={() => setPending(true)}>显示持续提示</button></div>
+        <Example title="公共消息" rule="成功提示3秒消失，错误提示不定时消失；所有提示都可关闭。长消息最多520像素，手机上换行；关闭持续提示不会结束演示状态。" usage="保存、复制、下载进度、读取错误与更新提醒">
+          <div className="component-demo-row"><button onClick={() => showNotice('演示：操作成功')}>显示成功提示</button><button onClick={() => showNotice('演示：操作失败，请重试', 'error')}>显示错误提示</button><button onClick={() => showNotice(longSampleText, 'error')}>显示长错误提示</button><button disabled={pending} onClick={() => setPending(true)}>显示持续提示</button></div>
           <p>演示状态：{pending ? '进行中' : '未进行'}</p>
           <div className="component-demo-row"><button disabled={!pending} onClick={() => { setPending(false); showNotice('演示已结束'); }}>结束演示</button><button className="link" onClick={clearNotices}>清除演示消息</button></div>
         </Example>
@@ -80,8 +82,8 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
           <MessagePanel label="示例页面说明" messages={[{ id: 'info', content: '这是随页面展示的资料说明。', detail: '此处使用公共MessagePanel与详情提示组件。' }, { id: 'warning', tone: 'warning', content: '示例资料待确认。', actions: <button className="link" onClick={() => setDialog('示例资料说明')}>查看说明</button> }]} />
         </Example>
       </>}
-      {category === 'reading' && <Example title="文档弹窗" rule="弹窗复用正文排版和章节导航。点击关闭、按Esc或点击遮罩可退出，回到原阅读位置。" usage="开发记录、项目总索引、项目文档预览">
-        <div className="component-demo-row"><button onClick={() => setDialog('示例阅读文档')}>打开示例文档</button><button onClick={() => { setDialogBusy(false); setDialog('紧凑弹窗示例'); }}>打开紧凑弹窗</button></div>
+      {category === 'reading' && <Example title="文档弹窗" rule="弹窗复用正文排版和章节导航。点击关闭、按Esc或点击遮罩可退出，回到原阅读位置。长标题不挤压关闭按钮，正文连续长串也会换行。" usage="开发记录、项目总索引、项目文档预览">
+        <div className="component-demo-row"><button onClick={() => setDialog('示例阅读文档')}>打开示例文档</button><button onClick={() => { setDialogBusy(false); setDialog('紧凑弹窗示例'); }}>打开紧凑弹窗</button><button onClick={() => setDialog(longSampleTitle)}>打开长内容弹窗</button></div>
         <p>打开后可展开章节、跳转正文，或复制示例文字。</p>
       </Example>}
       {category === 'lists' && <>
@@ -97,6 +99,6 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
       <ShowcaseExamples key={category} category={category} />
     </div>
     {pending && <FloatingMessage>演示进行中。关闭消息不会结束演示，可在展示页点击“结束演示”。</FloatingMessage>}
-    {dialog === '紧凑弹窗示例' ? <Dialog title={dialog} size="compact" closeDisabled={dialogBusy} close={closeDialog}><p>仅模拟提交状态，不执行保存。开启后，关闭按钮、Esc和遮罩都不能关闭弹窗。</p><Switch label="模拟提交中" checked={dialogBusy} onChange={setDialogBusy} /></Dialog> : dialog && <Dialog title={dialog} close={closeDialog}><div className="component-demo-row"><CopyButton text={sampleText} label="复制示例文字" /></div><Document value={sampleDocument} showOriginal={false} /></Dialog>}
+    {dialog === longSampleTitle ? <Dialog title={longSampleTitle} close={closeDialog}><p>{longSampleText}</p><button onClick={() => showNotice(longSampleText, 'error')}>弹窗内错误提示</button>{Array.from({ length: 8 }, (_, i) => <p key={i}>{longSampleText}</p>)}</Dialog> : dialog === '紧凑弹窗示例' ? <Dialog title={dialog} size="compact" closeDisabled={dialogBusy} close={closeDialog}><p>仅模拟提交状态，不执行保存。开启后，关闭按钮、Esc和遮罩都不能关闭弹窗。</p><Switch label="模拟提交中" checked={dialogBusy} onChange={setDialogBusy} /></Dialog> : dialog && <Dialog title={dialog} close={closeDialog}><div className="component-demo-row"><CopyButton text={sampleText} label="复制示例文字" /></div><Document value={sampleDocument} showOriginal={false} /></Dialog>}
   </div>;
 }

@@ -11,6 +11,7 @@ const owners = {
   Notifications: 'components/Notifications.tsx',
 };
 const classes = {
+  'dialog-close': ['Dialog', 'style.css'],
   'tab-select': ['TabSelect', 'components/TabSelect.css', 'style.css'],
   tabs: ['TabNav', 'style.css'], 'underline-tabs': ['UnderlineTabs', 'style.css'],
   'ui-switch': ['Switch', 'components/Switch.css'], pagination: ['Pagination', 'style.css'],
