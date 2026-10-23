@@ -9,6 +9,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from urllib.parse import unquote
 
 import video_adopt as adopt
 import scene_finalize as final
@@ -44,6 +45,44 @@ def source_items(root, plan, stage):
                     raise ValueError('同一批准身份存在不同执行来源：' + identity)
                 found[identity] = item
     return found
+
+
+def adopted_source(root, identity, stage):
+    """Resolve the exact adopted identity through its linked records, never latest-R scans."""
+    part = identity.rsplit('-', 2)[0]
+    episode, scene, _ = part.split('-')
+    draft = root / '09-剧集制作' / episode / '其他资料/工作稿' / (part + '-视频制作-工作稿.md')
+    text = draft.read_text('utf-8-sig')
+    candidates = []
+    headings = re.findall(r'^### (定稿留档-' + re.escape(episode + '-' + scene + '-' + stage) + r'[^\n]*)$', text, re.M)
+    for heading in headings:
+        start, end = adopt.section(text, heading)
+        for reference in re.findall(r'\[留档记录\]\(([^)]+)\)', text[start:end]):
+            record = adopt.load(adopt.local_path(root, draft.parent / unquote(reference)))
+            if record['state'] != 'completed' or record['stage'] != stage:
+                continue
+            for source in record['sources']:
+                if source['identity'] == identity:
+                    item = {key: source[key] for key in ('identity', 'mapping', 'api', 'canvas', 'receipt')}
+                    if item not in candidates:
+                        candidates.append(item)
+    if candidates:
+        if len(candidates) != 1:
+            raise ValueError('当前采用身份的留档来源不唯一：' + identity)
+        return candidates[0]
+    row = adopt.selected_row(text, stage)[2]
+    anchor = re.findall(r'\]\(#([^)]*)\)', row.strip().strip('|').split('|')[-1])[0]
+    heading = next(h for h in re.findall(r'^### (.+)$', text, re.M) if h.lower() == anchor.lower())
+    start, end = adopt.section(text, heading)
+    review = text[start:end]
+    mappings = re.findall(r'^- 来源任务[^：\n]*：\[' + re.escape(identity) + r'\]\(([^)]+)\)', review, re.M)
+    receipts = re.findall(r'^- agent取回及展示入口：\[实际输出凭据\]\(([^)]+)\)', review, re.M)
+    if len(mappings) != 1 or len(receipts) != 1:
+        raise ValueError('当前采用身份缺少明确的执行来源或取回凭据：' + identity)
+    mapping = adopt.local_path(root, draft.parent / unquote(mappings[0]))
+    return {'identity': identity, 'mapping': str(mapping),
+            'receipt': str(adopt.local_path(root, draft.parent / unquote(receipts[0]))),
+            'api': str(mapping.parent / '任务.api.json'), 'canvas': str(mapping.parent / '任务.workflow.json')}
 
 
 def record_updates(root, episode, summary):
@@ -189,7 +228,7 @@ def approve(args):
         update_business(root, episode, scene, stage, summary, [i for i in chosen if i], False, False)
         if ready and stage in final.FINALIZATION_STAGES:
             result['phase'] = 'finalization'
-            chosen_items = [dict(available[i]) for i in chosen]
+            chosen_items = [dict(available[i]) if i in available else adopted_source(root, i, stage) for i in chosen]
             final_plan = {'episode': episode, 'scene': scene_number, 'stage': stage, 'items': chosen_items, 'summary': str(summary)}
             if plan.get('source_finalization'):
                 origin = adopt.load(adopt.local_path(root, plan['source_finalization']))

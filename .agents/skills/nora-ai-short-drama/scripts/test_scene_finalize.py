@@ -254,6 +254,22 @@ class FinalizeTests(unittest.TestCase):
         self.assertEqual(NativeClient.calls, [])
         self.assertEqual(before, {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()})
 
+    def test_automatic_edition_reuses_matching_numbered_pair_without_exporting_again(self):
+        self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
+        first = self.run_plan()
+        old = {Path(first[key]): Path(first[key]).read_bytes() for key in ('pack', 'canvas', 'record')}
+        self.plan['edition'] = '002'
+        second = self.run_plan()
+        self.plan.pop('edition')
+        calls = len(NativeClient.calls)
+        preview = self.run_plan(False)
+        self.assertEqual(preview['pack'], second['pack'])
+        self.assertEqual(preview['canvas'], second['canvas'])
+        self.assertEqual(self.run_plan()['pack'], second['pack'])
+        self.assertEqual(len(NativeClient.calls), calls)
+        for path, content in old.items():
+            self.assertEqual(path.read_bytes(), content)
+
     def test_both_generation_stages_single_pair_repeat_and_originals(self):
         for stage in tool.FINALIZATION_STAGES:
             with self.subTest(stage=stage):

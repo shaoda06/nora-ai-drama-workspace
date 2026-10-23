@@ -4,6 +4,8 @@ import copy
 import contextlib
 import json
 import io
+import shutil
+import zipfile
 import urllib.parse
 from pathlib import Path
 import unittest
@@ -91,6 +93,124 @@ class ApprovalTests(unittest.TestCase):
 
         with patch.object(tool.final.client, 'Client', NativeClient), patch.object(tool, 'browser_sync', side_effect=verify):
             return tool.approve(argparse.Namespace(project=str(self.root), plan=str(self.request), apply=apply, timeout=30))
+
+    def revision(self, original_item, revision='R002'):
+        old_identity = original_item['identity']
+        part = old_identity.split('-')[2]
+        stage = old_identity.split('-')[-1]
+        identity = old_identity.replace('R001', revision)
+        original = Path(original_item['mapping']).parent
+        folder = original.with_name(identity)
+        shutil.copytree(original, folder)
+        for path in folder.rglob('*'):
+            if path.is_file() and path.suffix in ('.json', '.txt', '.md'):
+                path.write_text(path.read_text().replace(str(original), str(folder))
+                                .replace(old_identity, identity).replace('"round": "R001"', '"round": "' + revision + '"'))
+        item = {key: str(folder / Path(value).name) for key, value in original_item.items() if key != 'identity'}
+        item['identity'] = identity
+        workflow = tool.adopt.load(Path(item['api']))
+        node = next(n for n in workflow.values() if n['class_type'] == 'MiniMaxH3Director')
+        timeline = json.loads(node['inputs']['timeline_data'])
+        timeline['segments'][0]['prompt'] = part + '修订 <Picture 1>'
+        timeline['batchWorkspaces']['r2v']['segments'] = copy.deepcopy(timeline['segments'])
+        self.fixture.replace_timeline(item, timeline)
+        (folder / '模型提示词.txt').write_text('共同正文\n\n' + part + '修订 <Picture 1>')
+        for suffix in ('api.json', 'workflow.json'):
+            shutil.copyfile(folder / ('实际.' + suffix), folder / ('任务.' + suffix))
+        candidate = self.fixture.extra / '候选视频' / (identity + '.mp4')
+        candidate.write_bytes(old_identity.encode())
+        draft = self.fixture.extra / '工作稿' / ('EP001-C001-' + part + '-视频制作-工作稿.md')
+        draft.write_text(draft.read_text() + '\n### ' + revision + '-' + stage + '\n- 处理阶段：' + stage + '\n- 用户决定：待审核\n')
+        submission = folder / '返修任务清单.json'
+        self.fixture.put(submission, {'tasks': [{'record_dir': str(folder), 'task_type': {
+            '一采': 'video-first-pass', '二采': 'video-second-pass'}[stage]}]})
+        self.request = folder / '返修批准收尾请求.json'
+        self.plan = {'identities': [identity], 'approval_text': part + '返修版批准采用。',
+                     'submission_plans': [str(submission)]}
+        return item
+
+    def test_single_revision_recovers_other_sources_and_saves_next_pair_without_overwriting(self):
+        for stage, index in (('一采', 0), ('一采', 1), ('二采', 0), ('二采', 1)):
+            with self.subTest(stage=stage, revised_part=index):
+                case = ApprovalTests()
+                case.setUp()
+                try:
+                    originals = case.setup_stage(stage)
+                    first = case.run_plan()
+                    self.assertEqual(first['state'], 'completed', first)
+                    old = {Path(first['finalization'][key]): Path(first['finalization'][key]).read_bytes()
+                           for key in ('pack', 'canvas', 'record')}
+                    for revision in ('R002', 'R003'):
+                        item = case.revision(originals[index], revision)
+                        result = case.run_plan()
+                        self.assertEqual(result['state'], 'completed', result)
+                        expected = [source['identity'] for source in originals]
+                        expected[index] = item['identity']
+                        self.assertEqual([s['identity'] for s in result['finalization']['sources']], expected)
+                        self.assertIn('-' + revision[1:] + '-导演包', result['finalization']['pack'])
+                        self.assertTrue(Path(result['finalization']['canvas']).is_file())
+                        with zipfile.ZipFile(result['finalization']['pack']) as archive:
+                            timeline = json.loads(archive.read('timeline.json'))
+                        prompts = ['P001 <Picture 1>', 'P002 <Picture 1>']
+                        prompts[index] = ('P001' if index == 0 else 'P002') + '修订 <Picture 1>'
+                        self.assertEqual([g['prompt'] for g in timeline['segments']], prompts)
+                        old.update({Path(result['finalization'][key]): Path(result['finalization'][key]).read_bytes()
+                                    for key in ('pack', 'canvas', 'record')})
+                        calls = len(NativeClient.calls)
+                        self.assertTrue(case.run_plan()['reused'])
+                        self.assertEqual(len(NativeClient.calls), calls)
+                        for path, content in old.items():
+                            self.assertEqual(path.read_bytes(), content)
+                finally:
+                    case.doCleanups()
+
+    def test_missing_adopted_source_stops_without_exporting_or_overwriting_old_pair(self):
+        originals = self.setup_stage('一采')
+        first = self.run_plan()
+        old_pair = {Path(first['finalization'][key]): Path(first['finalization'][key]).read_bytes()
+                    for key in ('pack', 'canvas')}
+        self.revision(originals[1])
+        Path(originals[0]['mapping']).unlink()
+        calls = list(NativeClient.calls)
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'needs_attention', result)
+        self.assertEqual(result['phase'], 'finalization')
+        self.assertEqual(NativeClient.calls, calls)
+        for path, content in old_pair.items():
+            self.assertEqual(path.read_bytes(), content)
+
+    def test_revision_browser_recovery_keeps_assigned_edition_and_never_exports_again(self):
+        originals = self.setup_stage('一采')
+        self.run_plan()
+        self.revision(originals[1])
+        failed = self.run_plan(browser_error='模拟网页失败')
+        self.assertEqual(failed['state'], 'browser_pending', failed)
+        pair = {Path(failed['finalization'][key]): Path(failed['finalization'][key]).read_bytes()
+                for key in ('pack', 'canvas')}
+        calls = len(NativeClient.calls)
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'completed', result)
+        self.assertEqual(result['finalization']['pack'], failed['finalization']['pack'])
+        self.assertEqual(len(NativeClient.calls), calls)
+        for path, content in pair.items():
+            self.assertEqual(path.read_bytes(), content)
+
+    def test_last_partial_generation_approval_recovers_previous_adopted_source(self):
+        self.setup_stage('一采')
+        ids = self.plan['identities'][:]
+        submission = tool.adopt.load(Path(self.plan['submission_plans'][0]))
+        self.plan['identities'] = ids[:1]
+        first_list = self.request.with_name('第一段任务清单.json')
+        self.fixture.put(first_list, {'tasks': submission['tasks'][:1]})
+        self.plan['submission_plans'] = [str(first_list)]
+        self.assertEqual(self.run_plan()['state'], 'adopted_partial')
+        self.request = Path(submission['tasks'][1]['record_dir']) / '批准收尾请求.json'
+        second_list = self.request.with_name('第二段任务清单.json')
+        self.fixture.put(second_list, {'tasks': submission['tasks'][1:]})
+        self.plan = {'identities': ids[1:], 'submission_plans': [str(second_list)], 'approval_text': '第二段也批准。'}
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'completed', result)
+        self.assertEqual([s['identity'] for s in result['finalization']['sources']], ids)
 
     def test_explicit_new_finalization_edition_is_forwarded(self):
         self.setup_stage(stage='一采',parts=('P001',))

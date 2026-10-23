@@ -345,9 +345,31 @@ def prepare(root, plan, batch_parts=None, batch_name=None):
     edition = plan.get('edition', '')
     if edition and not re.fullmatch(r'\d{3}', edition):
         raise ValueError('edition 须为三位留档序号，不是生成R编号')
-    stem = f'{episode}-{scene}-{stage}定稿' + ('-' + batch_name if batch_name else '') + ('-' + edition if edition else '')
+    base = f'{episode}-{scene}-{stage}定稿' + ('-' + batch_name if batch_name else '')
     final = adopt.local_path(root, ep / '06-阶段采用视频' / adopt.STAGES[stage] / f'{scene}-场次' / '导演包')
     record = sources[0][0]['mapping_path'].parent
+    if not edition:
+        versions = set()
+        for directory in (final, record):
+            for path in directory.glob(base + '*'):
+                match = re.fullmatch(re.escape(base) + r'(?:-(\d{3}))?(?:-导演包\.mmxpack\.zip|\.workflow\.json|-留档记录\.json|\.api\.json|-导出响应\.json)', path.name)
+                if match:
+                    versions.add(match[1] or '')
+        for version in sorted(versions, key=lambda v: int(v or '1'), reverse=True):
+            previous_path = record / (base + ('-' + version if version else '') + '-留档记录.json')
+            if previous_path.is_file():
+                previous = adopt.load(previous_path)
+                if (previous['sources'] == evidence and previous['stage'] == stage
+                        and previous.get('configuration_batch_authorization') == plan.get('configuration_batch_authorization')):
+                    edition = version
+                    break
+        else:
+            if versions:
+                number = max(int(v or '1') for v in versions) + 1
+                if number > 999:
+                    raise ValueError('本场该阶段留档序号已用至999，不能覆盖已有版本')
+                edition = f'{number:03d}'
+    stem = base + ('-' + edition if edition else '')
     return {'workflow': workflow, 'canvas': canvas, 'timeline': timeline, 'node': key,
             'url': next(iter(urls)), 'sources': sources, 'evidence': evidence, 'media': media,
             'pack': final / (stem + '-导演包.mmxpack.zip'), 'canvas_path': final / (stem + '.workflow.json'),
