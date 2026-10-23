@@ -1,5 +1,7 @@
 .director-sheet-toolbar{justify-content:space-between}
 .director-sheet-record{margin-left:auto}
+.director-sheet-source{font-size:15px;font-weight:600}
+.director-sheet-viewer{position:relative}
 .director-sheet-image{display:block;width:100%;padding:12px;border:1px solid var(--line);background:#f7f9f6;border-radius:8px}
 .director-sheet-image img{display:block;width:100%;height:auto;max-height:72vh;object-fit:contain}
 .director-sheet-files{display:flex;justify-content:flex-end;margin-top:12px}
