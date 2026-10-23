@@ -227,131 +227,6 @@ class FinalizeTests(unittest.TestCase):
             self.run_plan()
         self.assertFalse(NativeClient.calls)
 
-    def test_postprocess_without_uploads_uses_successful_task_upload_records(self):
-        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
-        self.plan['stage'] = '后处理'
-        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
-        originals = {}
-        for item in self.plan['items']:
-            folder = Path(item['mapping']).parent
-            mapping = tool.adopt.load(Path(item['mapping']))
-            upload = mapping.pop('uploads')[0]
-            request = tool.adopt.load(folder / '请求.json')
-            loader = next(n for n in request['prompt'].values() if n['class_type'] == 'LoadVideo')
-            loader['inputs']['file'] = 'uploaded/' + loader['inputs']['file']
-            self.put(folder / '请求.json', request)
-            self.put(Path(item['mapping']), mapping)
-            self.put(folder / '后台过程记录.json', [
-                {'stage': 'upload', 'result': 'started', 'file': upload['file']},
-                {'stage': 'upload', 'result': 'success', 'file': upload['file'], 'remote': {
-                    'input_path': loader['inputs']['file'], 'bytes': mapping['source_bytes'],
-                    'sha256': mapping['source_sha256']}}])
-            originals[Path(item['mapping'])] = Path(item['mapping']).read_bytes()
-        result = self.run_plan()
-        self.assertEqual(result['state'], 'completed')
-        canvas = tool.adopt.load(Path(result['canvas']))
-        paths = [n['widgets_values_named']['file'] for n in canvas['nodes'] if n['type'] == 'LoadVideo']
-        self.assertEqual(paths, ['uploaded/EP001-C001-P001-R001-二采.mp4',
-                                 'uploaded/EP001-C001-P002-R001-二采.mp4'])
-        for path, data in originals.items():
-            current = tool.adopt.load(path)
-            self.assertNotIn('uploads', current)
-            del current['scene_finalizations']
-            self.assertEqual(current, json.loads(data))
-
-    def test_postprocess_source_fingerprint_comes_from_actual_upload_receipt(self):
-        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
-        self.plan['stage'] = '后处理'
-        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
-        for item in self.plan['items']:
-            path = Path(item['mapping'])
-            mapping = tool.adopt.load(path)
-            upload = mapping['uploads'][0]
-            receipt = {'input_path': upload['input_path'], 'bytes': mapping.pop('source_bytes'),
-                       'sha256': mapping.pop('source_sha256')}
-            upload['input_path'] = 'planned/' + upload['input_path']
-            self.put(path, mapping)
-            self.put(path.parent / '后台过程记录.json', [
-                {'stage': 'upload', 'result': 'success', 'file': upload['file'], 'remote': receipt}])
-        result = self.run_plan()
-        self.assertEqual(result['state'], 'completed')
-        for item in self.plan['items']:
-            mapping = tool.adopt.load(Path(item['mapping']))
-            self.assertNotIn('source_bytes', mapping)
-            self.assertNotIn('source_sha256', mapping)
-
-    def test_postprocess_authorized_prepared_input_keeps_original_second_pass_identity(self):
-        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
-        self.plan['stage'] = '后处理'
-        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
-        originals = {}
-        for item in self.plan['items']:
-            path = Path(item['mapping'])
-            mapping = tool.adopt.load(path)
-            original = Path(item['source_video'])
-            originals[original] = original.read_bytes()
-            prepared = path.parent / '输入素材/前3秒.mkv'
-            self.put(prepared, b'trimmed first three seconds')
-            upload = mapping['uploads'][0]
-            upload['file'] = str(prepared)
-            mapping['preprocessing'] = {'source_video': str(original), 'prepared_video': str(prepared)}
-            mapping.pop('source_bytes')
-            mapping.pop('source_sha256')
-            self.put(path, mapping)
-            self.put(path.parent / '后台过程记录.json', [{'stage': 'upload', 'result': 'success',
-                'file': str(prepared), 'remote': {'input_path': upload['input_path'],
-                    'bytes': prepared.stat().st_size, 'sha256': hashlib.sha256(prepared.read_bytes()).hexdigest()}}])
-        result = self.run_plan()
-        self.assertEqual(result['state'], 'completed')
-        for file, data in originals.items():
-            self.assertEqual(file.read_bytes(), data)
-        self.assertEqual([s['content_identity'] for s in result['sources']], [c['identity'] for c in contents])
-
-    def test_postprocess_prepared_input_cannot_claim_another_second_pass_source(self):
-        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
-        self.plan['stage'] = '后处理'
-        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
-        item = self.plan['items'][0]
-        path = Path(item['mapping'])
-        mapping = tool.adopt.load(path)
-        mapping['preprocessing'] = {'source_video': self.plan['items'][1]['source_video'],
-                                    'prepared_video': item['source_video']}
-        self.put(path, mapping)
-        with self.assertRaisesRegex(ValueError, '来源与获批二采不对应'):
-            self.run_plan()
-        self.assertFalse(NativeClient.calls)
-
-    def test_postprocess_missing_upload_records_does_not_infer_from_request(self):
-        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
-        self.plan['stage'] = '后处理'
-        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
-        item = self.plan['items'][0]
-        mapping = tool.adopt.load(Path(item['mapping']))
-        del mapping['uploads']
-        self.put(Path(item['mapping']), mapping)
-        with self.assertRaisesRegex(ValueError, '后台成功上传记录'):
-            self.run_plan()
-        self.assertFalse(NativeClient.calls)
-
-    def test_postprocess_upload_record_must_match_exact_source_not_basename(self):
-        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
-        self.plan['stage'] = '后处理'
-        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
-        item = self.plan['items'][0]
-        folder = Path(item['mapping']).parent
-        mapping = tool.adopt.load(Path(item['mapping']))
-        upload = mapping.pop('uploads')[0]
-        wrong_source = self.root / '其他素材' / Path(upload['file']).name
-        self.put(wrong_source, Path(upload['file']).read_bytes())
-        self.put(Path(item['mapping']), mapping)
-        self.put(folder / '后台过程记录.json', [{
-            'stage': 'upload', 'result': 'success', 'file': str(wrong_source), 'remote': {
-                'input_path': upload['input_path'], 'bytes': mapping['source_bytes'],
-                'sha256': mapping['source_sha256']}}])
-        with self.assertRaisesRegex(ValueError, '实际输入视频与上传映射不对应'):
-            self.run_plan()
-        self.assertFalse(NativeClient.calls)
-
     def test_backend_metadata_and_outputs_are_read_without_backfilling_frozen_mapping(self):
         self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
         for item in self.plan['items']:
@@ -371,15 +246,19 @@ class FinalizeTests(unittest.TestCase):
             self.assertNotIn('outputs', saved)
             self.assertIn('一采', saved['scene_finalizations'])
 
-    def test_all_three_stages_single_pair_repeat_and_originals(self):
-        for stage in tool.adopt.STAGES:
+    def test_postprocess_is_rejected_without_export_or_record_changes(self):
+        self.plan['stage'] = '后处理'
+        before = {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
+        with self.assertRaisesRegex(ValueError, '后处理不导出导演包'):
+            tool.finalize(argparse.Namespace(project=str(self.root), apply=True, timeout=30), plan=self.plan)
+        self.assertEqual(NativeClient.calls, [])
+        self.assertEqual(before, {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()})
+
+    def test_both_generation_stages_single_pair_repeat_and_originals(self):
+        for stage in tool.FINALIZATION_STAGES:
             with self.subTest(stage=stage):
                 self.plan['stage'] = stage
-                if stage == '后处理':
-                    contents = self.plan['items']
-                    self.plan['items'] = [self.item(f'P{i + 1:03d}', stage, c) for i, c in enumerate(contents)]
-                else:
-                    self.plan['items'] = [self.item(p, stage) for p in ('P001', 'P002')]
+                self.plan['items'] = [self.item(p, stage) for p in ('P001', 'P002')]
                 before = len(NativeClient.calls)
                 preview = self.run_plan(False)
                 self.assertEqual(preview['state'], 'ready')
@@ -392,13 +271,6 @@ class FinalizeTests(unittest.TestCase):
                 self.assertEqual(files, {p: p.read_bytes() for p in self.root.rglob('*') if p.is_file()})
                 self.assertFalse(list(self.extra.rglob('*.zip')))
                 self.assertEqual(len(list(Path(result['pack']).parent.glob('*.workflow.json'))), 1)
-                canvas = tool.adopt.load(Path(result['canvas']))
-                if stage == '后处理':
-                    self.assertEqual(sum(n['type'] == 'RTXVideoSuperResolution' for n in canvas['nodes']), 2)
-                    self.assertEqual(sum(n['type'] == 'NoraRIFEInterpolationCutTest' for n in canvas['nodes']), 2)
-                    cells = tool.project_progress.phase_row((self.root / '项目进度.md').read_text(), 'EP001')[1]
-                    self.assertEqual(cells[2], '已完成')
-                    self.assertEqual(cells[4:], ['- 无', '- 无'])
                 for path, data in self.originals.items():
                     self.assertEqual(path.read_bytes(), data)
 
@@ -488,28 +360,6 @@ class FinalizeTests(unittest.TestCase):
         self.assertEqual(result['state'], 'completed')
         for item in self.plan['items']:
             self.assertEqual(Path(item['canvas']).read_bytes(), self.originals[Path(item['canvas'])])
-    def test_post_upload_path_restored_only_with_exact_request_and_upload(self):
-        contents = [self.item(p, '二采') for p in ('P001', 'P002')]
-        self.plan['stage'] = '后处理'
-        self.plan['items'] = [self.item(p, '后处理', c) for p, c in zip(('P001', 'P002'), contents)]
-        item = self.plan['items'][0]
-        folder = Path(item['mapping']).parent
-        request = tool.adopt.load(folder / '请求.json')
-        loader = next(n for n in request['prompt'].values() if n['class_type'] == 'LoadVideo')
-        loader['inputs']['file'] = 'uploaded/' + loader['inputs']['file']
-        mapping = tool.adopt.load(Path(item['mapping']))
-        mapping['uploads'][0]['input_path'] = loader['inputs']['file']
-        self.put(folder / '请求.json', request)
-        self.put(Path(item['mapping']), mapping)
-        result = self.run_plan()
-        self.assertTrue(result['sources'][0]['restoration'])
-        for field in ('api', 'canvas'):
-            self.assertEqual(Path(item[field]).read_bytes(), self.originals[Path(item[field])])
-        model = next(n for n in request['prompt'].values() if n['class_type'] == 'RTXVideoSuperResolution')
-        model['inputs']['scale'] = 999
-        self.put(folder / '请求.json', request)
-        with self.assertRaisesRegex(ValueError, '实际获批任务'):
-            self.run_plan()
 
     def test_authorized_configuration_batches_full_coverage_and_resume(self):
         self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]

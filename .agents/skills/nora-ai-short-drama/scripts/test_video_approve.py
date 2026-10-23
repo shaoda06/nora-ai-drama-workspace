@@ -74,8 +74,6 @@ class ApprovalTests(unittest.TestCase):
         self.request = submission.with_name('批准收尾请求.json')
         self.plan = {'submission_plans': [str(submission)], 'identities': [i['identity'] for i in items],
                      'approval_text': '这两段都批准了。'}
-        if stage == '后处理':
-            self.plan['source_finalization'] = str(source)
         self.fixture.put(self.request, self.plan)
         NativeClient.calls = []
         return items
@@ -128,7 +126,9 @@ class ApprovalTests(unittest.TestCase):
         self.assertTrue(result['episode_completed'])
         self.assertEqual(len(result['adoption']['items']), 12)
         self.assertEqual(result['episode_missing'], [])
-        self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 1)
+        self.assertNotIn('finalization', result)
+        self.assertFalse(list((self.fixture.ep / '06-阶段采用视频/03-后处理').rglob('*.mmxpack.zip')))
+        self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 0)
         self.assertIn('| 已完成 |', (self.root / '项目进度.md').read_text())
         cells = tool.project_progress.phase_row((self.root / '项目进度.md').read_text(), 'EP001')[1]
         self.assertEqual(cells[4:], ['- 无', '- 无'])
@@ -136,7 +136,21 @@ class ApprovalTests(unittest.TestCase):
         for path, data in original.items():
             self.assertEqual(path.read_bytes(), data)
         self.assertEqual(self.run_plan()['state'], 'completed')
-        self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 1)
+        self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 0)
+
+    def test_postprocess_ignores_legacy_director_source_and_keeps_generation_archives_required(self):
+        self.setup_stage()
+        self.plan['source_finalization'] = '不存在的旧二采定稿请求.json'
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'completed')
+        self.assertTrue(result['episode_completed'])
+        self.assertNotIn('finalization', result)
+        self.assertEqual(NativeClient.calls, [])
+        archive = next((self.fixture.ep / '06-阶段采用视频/02-二采').rglob('*.mmxpack.zip'))
+        archive.unlink()
+        missing = tool.episode_missing(self.root, 'EP001')
+        self.assertTrue(any('二采缺少当前版本定稿留档' in item for item in missing))
+        self.assertFalse(any('后处理缺少' in item for item in missing))
 
     def test_partial_approval_does_not_approve_other_file_or_export(self):
         self.setup_stage()
@@ -168,7 +182,7 @@ class ApprovalTests(unittest.TestCase):
         recovered = self.run_plan()
         self.assertEqual(recovered['state'], 'completed')
         self.assertEqual(recovered['previous_failures'][0]['error'], '模拟网页失败')
-        self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 1)
+        self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 0)
 
     def test_empty_approval_stops_before_moving(self):
         self.setup_stage()
@@ -180,13 +194,13 @@ class ApprovalTests(unittest.TestCase):
         self.assertEqual(NativeClient.calls, [])
 
     def test_finalization_failure_keeps_adoption_and_does_not_finish_episode(self):
-        self.setup_stage()
+        self.setup_stage('一采')
         NativeClient.corrupt = True
         self.assertEqual(self.run_plan()['state'], 'needs_attention')
         report = tool.adopt.load(self.request.with_name('批准收尾请求-结果.json'))
         self.assertEqual(report['phase'], 'finalization')
         self.assertEqual(report['state'], 'needs_attention')
-        self.assertEqual(tool.selected(self.root, 'EP001-C001-P001', '后处理'), self.plan['identities'][0])
+        self.assertEqual(tool.selected(self.root, 'EP001-C001-P001', '一采'), self.plan['identities'][0])
         self.assertNotIn('| 已完成 |', (self.root / '项目进度.md').read_text())
         self.assertEqual(self.browser_calls, [])
 
@@ -200,7 +214,7 @@ class ApprovalTests(unittest.TestCase):
         self.request = self.fixture.extra / '执行附件' / all_ids[1] / '批准收尾请求.json'
         result = self.run_plan()
         self.assertTrue(result['episode_completed'])
-        self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 1)
+        self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 0)
 
     def test_browser_verification_uses_existing_endpoints_and_exact_scene_revision(self):
         self.setup_stage()
@@ -317,7 +331,8 @@ class ApprovalTests(unittest.TestCase):
                 self.assertEqual(len(called), 2)
 
     def test_existing_authorized_configuration_batches_are_preserved(self):
-        self.setup_stage()
+        self.setup_stage('一采')
+        self.plan['source_finalization'] = str(self.request.with_name('来源二采定稿请求.json'))
         source = Path(self.plan['source_finalization'])
         origin = tool.adopt.load(source)
         origin.update(configuration_batches=[
@@ -327,7 +342,7 @@ class ApprovalTests(unittest.TestCase):
         self.fixture.put(source, origin)
         result = self.run_plan()
         self.assertEqual(result['state'], 'completed')
-        self.assertTrue(result['episode_completed'])
+        self.assertFalse(result['episode_completed'])
         self.assertEqual(len(result['finalization']['batches']), 2)
         self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 2)
 

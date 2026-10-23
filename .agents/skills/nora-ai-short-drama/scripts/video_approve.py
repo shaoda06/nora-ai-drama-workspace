@@ -58,7 +58,8 @@ def record_updates(root, episode, summary):
 def update_business(root, episode, scene, stage, summary, identities, finalized, complete):
     status = (episode + '分段制作与交付已完成。' if complete else
               scene + '的' + stage + '已采用' + str(len(identities)) + '段；'
-              + ('本场该阶段定稿留档完成。' if finalized else '本场该阶段定稿尚未完成。'))
+              + (('本场后处理采用已齐备。' if finalized else '本场后处理采用尚未齐备。') if stage == '后处理' else
+                 ('本场该阶段定稿留档完成。' if finalized else '本场该阶段定稿尚未完成。')))
     text = summary.read_text('utf-8-sig')
     if re.search(r'^- 当前状态及待办：', text, re.M):
         text = re.sub(r'^- 当前状态及待办：[^\n]*', '- 当前状态及待办：' + status, text, count=1, flags=re.M)
@@ -176,7 +177,7 @@ def approve(args):
                 result['finalization'] = previous['finalization']
             result.update(phase='browser', local_completed=True)
             result['browser'] = browser_sync(root, episode, stage, ids, result['episode_completed'], args.timeout)
-            result['state'] = 'completed' if 'finalization' in result else 'adopted_partial'
+            result['state'] = 'completed' if all(selected(root, p, stage) for p in expected) else 'adopted_partial'
             return result
         result['adoption'] = adopt.adoption(args, plan=adoption_plan)
         result['timings_seconds']['adoption'] = round(time.monotonic() - start, 3)
@@ -186,22 +187,15 @@ def approve(args):
         ready = all(chosen)
         result['phase'] = 'business_records'
         update_business(root, episode, scene, stage, summary, [i for i in chosen if i], False, False)
-        if ready:
+        if ready and stage in final.FINALIZATION_STAGES:
             result['phase'] = 'finalization'
             chosen_items = [dict(available[i]) for i in chosen]
             final_plan = {'episode': episode, 'scene': scene_number, 'stage': stage, 'items': chosen_items, 'summary': str(summary)}
-            if stage == '后处理' or plan.get('source_finalization'):
+            if plan.get('source_finalization'):
                 origin = adopt.load(adopt.local_path(root, plan['source_finalization']))
                 for key in ('configuration_batches', 'configuration_batch_authorization'):
                     if key in origin:
                         final_plan[key] = origin[key]
-                if stage == '后处理':
-                    content = {i['identity']: i for i in origin['items']}
-                    for item in chosen_items:
-                        mapping = adopt.load(Path(item['mapping']))
-                        source = next(c['source'] for c in mapping['generation_contexts'] if c['identity'] == item['identity'])
-                        item['content'] = {k: content[source][k] for k in ('identity', 'mapping', 'api', 'canvas')}
-                        item['source_video'] = mapping['source_video']
             for key in ('configuration_batches', 'configuration_batch_authorization', 'edition'):
                 if key in plan:
                     final_plan[key] = plan[key]
