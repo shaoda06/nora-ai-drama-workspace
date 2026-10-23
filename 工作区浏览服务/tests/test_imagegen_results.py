@@ -72,6 +72,74 @@ class NativeImageTests(unittest.TestCase):
         self.assertFalse((self.project / self.spec['draft']).exists())
         self.assertEqual(progress.read_text(), row)
 
+    def test_invalid_associated_updates_stop_before_handoff(self):
+        path = '03-人物资料/人物索引.md'
+        for update in (dict(path=path, old='不存在的旧文字', new='新文字'),
+                       dict(path=path, old='CH001', new='{{unsupported}}'),
+                       dict(path=path, old='CH001', new='新文字', extra=True)):
+            with self.subTest(update=update):
+                self.spec['record_updates'] = [update]
+                self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+                with self.assertRaises(ValueError):
+                    native.prepare(self.project, self.request)
+                self.assertFalse((self.project / self.spec['draft']).exists())
+
+    def test_record_repair_preserves_user_note_and_original_manifest(self):
+        path = '03-人物资料/人物索引.md'
+        old = (self.project / path).read_text()
+        updates = [dict(path=path, old=old, new=old.replace('主角', '主角；本轮{{specs}}'))]
+        self.spec['record_updates'] = updates
+        self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+        self.prepare()
+        manifest = (self.project / self.job['manifest']).read_bytes()
+        current = old + '\n用户新备注\n'
+        (self.project / path).write_text(current)
+        # The exact old row still matches, so force a real source conflict within it.
+        current = current.replace('主角', '主角（用户补充）')
+        (self.project / path).write_text(current)
+        with self.assertRaises(ValueError):
+            native.complete(self.project, self.job['manifest'], self.result, self.projects)
+        repair = dict(reason='保留用户补充并完成原记录同步', expected_updates=updates,
+                      updates=[dict(path=path, old='主角（用户补充）', new='主角（用户补充）；本轮已保存')])
+        report_file = self.project / self.job['report']
+        original_report = report_file.read_bytes()
+        other = self.result.with_name('不同来源凭据.json')
+        other.write_text(json.dumps(dict(source='另一张图.png', actual_prompt=self.spec['prompt'])))
+        with self.assertRaisesRegex(ValueError, '不属于原任务或成果'):
+            native.complete(self.project, self.job['manifest'], other, self.projects, repair=repair)
+        self.assertEqual(report_file.read_bytes(), original_report)
+        report = native.complete(self.project, self.job['manifest'], self.result, self.projects, repair=repair)
+        self.assertTrue(report['user_message_ready'])
+        self.assertIn('用户新备注', (self.project / path).read_text())
+        self.assertIn('主角（用户补充）', (self.project / path).read_text())
+        self.assertEqual((self.project / self.job['manifest']).read_bytes(), manifest)
+        self.assertEqual((self.project / self.job['candidate']).read_bytes(), self.source.read_bytes())
+
+    def test_legacy_bad_token_without_journal_can_repair_existing_result(self):
+        path = '03-人物资料/人物索引.md'
+        updates = [dict(path=path, old='主角', new='{{unsupported}}')]
+        self.spec['record_updates'] = updates
+        self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+        with patch.object(images, 'validate_record_updates'):
+            self.prepare()  # Simulates a historical handoff created before preflight existed.
+        manifest = (self.project / self.job['manifest']).read_bytes()
+        with self.assertRaisesRegex(ValueError, '未知占位符'):
+            native.complete(self.project, self.job['manifest'], self.result, self.projects)
+        self.assertFalse((self.project / self.job['report']).exists())
+        repair = dict(reason='修正历史格式错误', expected_updates=updates,
+                      updates=[dict(path=path, old='主角', new='主角；已保存')])
+        repair_file = self.project / self.job['record'] / '登记修复请求.json'
+        repair_file.write_text(json.dumps(repair, ensure_ascii=False))
+        result = subprocess.run([sys.executable, '-B', str(native.SKILL / 'scripts/imagegen_results.py'),
+            'complete', '--project', str(self.project), '--manifest', self.job['manifest'],
+            '--source', str(self.source), '--record-repair', str(repair_file)], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue(json.loads(result.stdout)['user_message_ready'])
+        for _ in range(2):
+            self.assertTrue(native.complete(self.project, self.job['manifest'], self.result,
+                                           self.projects, repair=repair)['user_message_ready'])
+        self.assertEqual((self.project / self.job['manifest']).read_bytes(), manifest)
+
     def test_matching_progress_phase_is_prepared_without_early_publication(self):
         row = '| 人物参考图 | 会话 | 进行中 | 尚未生成 | - 无 | - 无 |'
         progress = self.project / '项目进度.md'

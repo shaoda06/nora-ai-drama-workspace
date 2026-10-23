@@ -557,6 +557,28 @@ async def execute(store, payload):
     if payload.reprepare and not payload.prepare_only:
         raise ValueError('重新装配仅用于--prepare-only，不会直接入队')
     journal_file = plan_file.with_name(plan_file.stem + '-装配结果.json')
+    if getattr(payload, 'record_repairs', None) is not None:
+        from backend.services import local_images
+        if not payload.record_repairs:
+            raise ValueError('登记修复映射不能为空，不执行原任务清单')
+        if payload.prepare_only or payload.reprepare or payload.start_paused:
+            raise ValueError('登记修复不能与准备或暂停提交混用')
+        journal = json.loads(journal_file.read_text('utf-8-sig'))
+        if journal['thread_id'] != payload.thread_id or journal['source'] != source:
+            raise ValueError('登记修复须引用原来源及未变化的原清单')
+        targets = {project_file(root, task['record_dir']): task for task in journal['tasks']}
+        repairs = []
+        for path, repair in payload.record_repairs.items():
+            task = targets[project_file(root, path)]
+            if not task.get('image_plan', {}).get('local_processing'):
+                raise ValueError('此入口只接续已有本地图片成果，远端任务走通知登记修复')
+            data = TaskInput(**task, url=store.remote_urls()[0], thread_id=payload.thread_id, desktop=payload.desktop)
+            store.resolve_input(data)
+            repairs.append((data, repair))
+        results = []
+        for data, repair in repairs:
+            results.append(await asyncio.to_thread(local_images.repair, store, data, repair))
+        return dict(status='completed', tasks=results, next_action='end-turn')
     journal = None
     documents = None
     if journal_file.exists():

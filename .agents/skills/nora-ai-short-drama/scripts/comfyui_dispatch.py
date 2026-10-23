@@ -19,6 +19,8 @@ def load_config(project, timeout):
 
 
 def dispatch(args):
+    if getattr(args, 'record_repairs', None) and (not args.plan or args.prepare_only or args.reprepare or args.start_paused):
+        raise ValueError('--record-repairs只与原--plan合用，仅接续本地成果登记，不准备或生成')
     if getattr(args, 'reprepare', False) and (not args.plan or not args.prepare_only):
         raise ValueError('--reprepare必须与--plan和--prepare-only一起使用；只重新准备，不入队')
     if getattr(args, 'plan', None):
@@ -43,6 +45,7 @@ def parser():
     p = client.Parser(description=__doc__)
     p.add_argument('--project', required=True, help='Project root under workspace/projects; relative to cwd; uses workspace comfyui-config.json')
     p.add_argument('--plan', help='Preferred one-call task list JSON, project-relative or absolute: builds artifacts, checks the whole batch, queues authorized tasks and returns end-turn; --prepare-only stops before queueing')
+    p.add_argument('--record-repairs', help='Existing local image results only: JSON object from record_dir to reason/expected_updates/updates; never runs image processing or queues tasks')
     p.add_argument('--task-type', choices=TASK_TYPES, help='Legacy prepared-input mode only: authorized task stage')
     p.add_argument('--workflow', help='Legacy prepared-input mode only: prepared API JSON')
     p.add_argument('--eligible-url', help='Optional expected primary address; identity check only, no capability probe')

@@ -21,6 +21,100 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
     asyncSetUp = base.TaskTests.asyncSetUp
     asyncTearDown = base.TaskTests.asyncTearDown
 
+    async def test_repair_after_progress_edit_before_journal_keeps_original_task(self):
+        from copy import deepcopy
+        import asyncio, os, shutil, sys
+        from fastapi import FastAPI
+        from backend import main
+        from tests.test_queue_recovery import serving
+        self.setup_image()
+        progress = self.project / '项目进度.md'
+        row = '| 人物参考图 | 会话 | 进行中 | 尚未生成 | - 无 | - 无 |'
+        progress.write_text(row)
+        updates = [dict(path='项目进度.md', old=row, new=row.replace('尚未生成', '{{outputs}}；{{specs}}'))]
+        self.data.image_plan['record_updates'] = updates
+        image.validate_plan(self.data)
+        original = deepcopy(self.data.image_plan)
+        current = row.replace('尚未生成', '用户补充备注')
+        progress.write_text(current)
+        with self.assertRaises(ValueError):
+            registration.register(self.store, 'task')
+        self.assertFalse((self.record / registration.REPORT).exists())
+        repair = dict(reason='原授权内同步并保留用户备注', expected_updates=updates,
+                      updates=[dict(path='项目进度.md', old=current, new=current.replace('用户补充备注', '用户补充备注；已保存'))])
+        app = FastAPI()
+        app.state.comfy_tasks = self.store
+        app.add_api_route('/api/internal/comfy/notifications/{batch_id}/register-results', main.agent_register_results, methods=['POST'])
+        cli = self.root / '.agents/skills/nora-ai-short-drama/scripts/browser_tasks.py'
+        cli.parent.mkdir(parents=True)
+        shutil.copyfile(tasks.SKILL / 'scripts/browser_tasks.py', cli)
+        repair_file = self.record / '登记修复请求.json'
+        repair_file.write_text(json.dumps({'task': repair}, ensure_ascii=False))
+        async with serving(app) as url:
+            config = self.root / '工作区浏览服务/runtime/task-service.json'
+            config.parent.mkdir(parents=True)
+            config.write_text(json.dumps(dict(url=url, token=self.store.token)))
+            with patch.object(registration, 'batch_tasks', return_value=(['task'], None)), \
+                    patch.object(main, 'store', self.store.projects):
+                process = await asyncio.create_subprocess_exec(sys.executable, '-B', str(cli),
+                    'register-results', '--notification-id', 'batch', '--image-repairs', str(repair_file),
+                    stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+                    env={**os.environ, 'CODEX_THREAD_ID': self.data.thread_id})
+                stdout, stderr = await asyncio.wait_for(process.communicate(), 15)
+                self.assertEqual(process.returncode, 0, stderr.decode())
+                result = json.loads(stdout)
+        self.assertTrue(result['user_message_ready'], result)
+        self.assertIn('用户补充备注；已保存', progress.read_text())
+        self.assertEqual(self.data.image_plan, original)
+
+    def test_invalid_associated_updates_stop_before_registration(self):
+        self.setup_image()
+        for update in (dict(path='03-人物资料/人物索引.md', old='没有的原文', new='新文字'),
+                       dict(path='03-人物资料/人物索引.md', old='CH001', new='{{unsupported}}')):
+            with self.subTest(update=update):
+                self.data.image_plan['record_updates'] = [update]
+                with self.assertRaises(ValueError):
+                    image.validate_plan(self.data)
+
+    async def test_repair_existing_journal_is_audited_and_idempotent(self):
+        self.setup_image()
+        path = '03-人物资料/人物索引.md'
+        old = (self.project / path).read_text()
+        updates = [dict(path=path, old=old, new=old.replace('主角', '主角；{{specs}}'))]
+        self.data.image_plan['record_updates'] = updates
+        with patch.object(image, 'apply', side_effect=ValueError('登记中断')):
+            with self.assertRaisesRegex(ValueError, '登记中断'):
+                registration.register(self.store, 'task')
+        current = old.replace('主角', '主角（用户备注）')
+        (self.project / path).write_text(current)
+        repair = dict(reason='保留备注接续登记', expected_updates=updates,
+                      updates=[dict(path=path, old='主角（用户备注）', new='主角（用户备注）；已保存')])
+        with patch.object(registration, 'batch_tasks', return_value=(['task'], None)):
+            for _ in range(2):
+                result = await registration.closeout(self.store, self.store.projects, 'batch', self.data.thread_id,
+                                                      image_repairs={'task': repair})
+                self.assertTrue(result['user_message_ready'])
+        self.assertEqual((self.project / path).read_text().count('；已保存'), 1)
+        self.assertEqual(len(list(self.record.glob('*登记修复前-*.json'))), 1)
+        self.assertEqual(self.draft.read_text().count('### 审阅-生成记录-001-001'), 1)
+
+    def test_record_repair_rejects_new_targets_stale_requests_and_approval_changes(self):
+        self.setup_image()
+        old = self.draft.read_text()
+        confirmation = '#### 4. 用户确认\n\n- 结论：批准采用\n- 批准的具体候选：原图\n'
+        self.draft.write_text(old + '\n' + confirmation)
+        updates = [dict(path=self.rel(self.draft), old='原图', new='原图；关联补齐')]
+        report_file = self.record / '独立修复报告.json'
+        for expected, new in (([], updates),
+                              (updates, [dict(path='项目进度.md', old='旧', new='新')]),
+                              (updates, [dict(path=self.rel(self.draft), old='批准采用', new='待确认')])):
+            with self.subTest(expected=expected, updates=new):
+                with self.assertRaises(ValueError):
+                    image.repair_record_updates(self.project, [self.rel(self.draft)], updates,
+                        dict(reason='测试保护', expected_updates=expected, updates=new), report_file)
+        self.assertIn(confirmation, self.draft.read_text())
+        self.assertFalse(list(self.record.glob('*登记修复前-*.json')))
+
     def setup_image(self, kind='人物', scope='03-人物资料'):
         self.draft = self.project / scope / '其他资料/工作稿/CH001-参考图-工作稿.md'
         self.draft.parent.mkdir(parents=True)

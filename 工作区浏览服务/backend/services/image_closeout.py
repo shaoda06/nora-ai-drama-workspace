@@ -35,20 +35,86 @@ def progress_phases(root, drafts):
     return phases
 
 
-def validate_progress_updates(root, drafts, updates):
-    """Reject cross-phase progress edits before generating or processing an image."""
-    progress = root / '项目进度.md'
-    updates = [u for u in updates if project_file(root, u['path']) == progress]
-    if not updates:
-        return
-    before = text = progress.read_text('utf-8-sig')
+def validate_record_updates(root, drafts, updates, *, tokens=(), contents=None):
+    """Preview exact association edits without publishing them or rendering future outputs."""
+    edits = {}
     for update in updates:
-        if text.count(update['new']) == 1:
+        if (set(update) != {'path', 'old', 'new'}
+                or any(not isinstance(update[name], str) or not update[name] for name in update)):
+            raise ValueError('图片关联更新须为非空path/old/new文字')
+        path = project_file(root, update['path'])
+        if path.suffix != '.md':
+            raise ValueError('图片关联更新只允许项目Markdown')
+        if set(re.findall(r'\{\{[^{}]+\}\}', update['new'])) - set(tokens):
+            raise ValueError('图片关联更新有未知占位符')
+        if path not in edits:
+            text = contents[path] if contents is not None and path in contents else path.read_text('utf-8-sig')
+            edits[path] = text, text
+        before, text = edits[path]
+        if update['old'] == update['new'] or text.count(update['new']) == 1:
             continue
         if text.count(update['old']) != 1:
-            raise ValueError('项目进度更新源文字变化或不唯一，请修正清单后再准备')
-        text = text.replace(update['old'], update['new'], 1)
-    project_progress.validate_update(before, text, phases=progress_phases(root, drafts))
+            raise ValueError('图片关联更新源文字变化或不唯一：' + str(path))
+        edits[path] = before, text.replace(update['old'], update['new'], 1)
+    progress = root / '项目进度.md'
+    if progress in edits:
+        project_progress.validate_update(*edits[progress], phases=progress_phases(root, drafts))
+    return edits
+
+
+def record_updates(plan):
+    return [*plan.get('record_updates', []), *plan.get('upscale', {}).get('record_updates', [])]
+
+
+def with_record_updates(plan, updates):
+    plan = deepcopy(plan)
+    plan['record_updates'] = [] if plan.get('upscale') else updates
+    if plan.get('upscale'):
+        plan['upscale']['record_updates'] = updates
+    return plan
+
+
+def repair_record_updates(root, drafts, current, repair, report_file, *, identity=None):
+    """Repair only exact record edits; retain immutable task/approval evidence and an audit copy."""
+    previous = json.loads(report_file.read_text('utf-8-sig')) if report_file.exists() else None
+    if previous and identity and any(previous.get(name) != value for name, value in identity.items()):
+        raise ValueError('登记修复报告不属于原任务或成果，不覆盖')
+    if previous and previous.get('record_repair') == repair:
+        return repair['updates']
+    if (set(repair) != {'reason', 'expected_updates', 'updates'}
+            or not isinstance(repair['reason'], str) or not repair['reason'].strip()
+            or repair['expected_updates'] != current):
+        raise ValueError('登记修复须说明原因并匹配当前关联更新，不覆盖其他修复')
+    if previous and previous['status'] in ('registered', 'completed'):
+        raise ValueError('图片已登记，不再改写登记计划；网页失败只接续核验')
+    allowed = {project_file(root, item['path']) for item in current}
+    if any(project_file(root, item['path']) not in allowed for item in repair['updates']):
+        raise ValueError('登记修复不能新增写入文件')
+    edits = validate_record_updates(root, drafts, repair['updates'])
+    for before, after in edits.values():
+        confirmations = re.findall(r'^#### 4\. 用户确认\s*\n.*?(?=^#### |^### |^## |\Z)', before, re.M | re.S)
+        if any(block not in after for block in confirmations):
+            raise ValueError('登记修复不能改写已有用户确认或批准依据')
+    if previous:
+        count = len(current)
+        prefix = previous['updates'][:-count] if count else previous['updates']
+        tail = previous['updates'][-count:] if count else []
+        if [(u['path'], u['old']) for u in tail] != [(u['path'], u['old']) for u in current]:
+            raise ValueError('收尾报告与关联更新不符，不猜测或改写系统登记项')
+        # Keep system-generated edits intact; they still undergo the final source/approval checks.
+        revised = {**previous, 'updates': [*prefix, *repair['updates']],
+                   'record_repair': repair, 'registration_updates': repair['updates']}
+    index = 1
+    archive = report_file.with_name(report_file.stem + f'-登记修复前-{index:03d}.json')
+    while archive.exists():
+        index += 1
+        archive = report_file.with_name(report_file.stem + f'-登记修复前-{index:03d}.json')
+    write_json(archive, {'report': previous, 'record_updates': current, 'repair': repair})
+    if previous:
+        if json.loads(report_file.read_text('utf-8-sig')) != previous:
+            raise ValueError('收尾报告并发变化，不覆盖')
+        write_json(report_file, revised)
+    return repair['updates']
 
 
 def section(text, heading):
@@ -124,7 +190,7 @@ def png(raw):
     return width, height
 
 
-def validate_plan(data):
+def validate_plan(data, *, check_records=True):
     plan = data.image_plan
     if plan is None:
         raise ValueError('图片缺少image_plan收尾关联；旧任务需显式补充原记录关联，不自动猜测')
@@ -207,12 +273,9 @@ def validate_plan(data):
             raise ValueError('超分须预先提供正式资产表及关联入口的采用更新')
     elif up:
         raise ValueError('普通图片不能带超分采用计划')
-    updates = [*plan.get('record_updates', []), *(up['record_updates'] if up else [])]
-    for update in updates:
-        path = project_file(root, update['path'])
-        if path.suffix != '.md' or set(update) != {'path', 'old', 'new'} or not update['old'] or not update['new']:
-            raise ValueError('图片关联更新须为项目Markdown中的非空path/old/new')
-    validate_progress_updates(root, [plan['draft']], updates)
+    tokens = ['{{outputs}}', '{{specs}}', '{{time}}', '{{evidence}}'] + (['{{file}}'] if up else [])
+    if check_records:
+        validate_record_updates(root, [plan['draft']], record_updates(plan), tokens=tokens)
     return draft, text, planned
 
 
@@ -248,6 +311,8 @@ def register(store, key, outputs, report_file):
     data, state = store.rows[key]['input'], store.rows[key]['state']
     if data.image_plan is None and state.get('image_closeout_plan'):
         data = data.model_copy(update={'image_plan': state['image_closeout_plan']})
+    if 'image_registration_updates' in state:
+        data = data.model_copy(update={'image_plan': with_record_updates(data.image_plan, state['image_registration_updates'])})
     previous = json.loads(report_file.read_text('utf-8')) if report_file.exists() else None
     if previous:
         if previous['task_id'] != key or previous['prompt_id'] != state['prompt_id']:

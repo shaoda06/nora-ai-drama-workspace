@@ -26,6 +26,7 @@ def main():
         if command == 'complete':
             item.add_argument('--source', required=True, help='内置Imagegen实际返回的本机原生PNG绝对路径；只复制，不改原图')
             item.add_argument('--actual-prompt-file', help='可选；默认从执行清单读取提示词文件，无需重复填写长路径；仍核对正文')
+            item.add_argument('--record-repair', help='已有成果的登记修复JSON：reason/expected_updates/updates，不改原执行清单或批准')
         if command == 'fail':
             item.add_argument('--error-file', required=True, help='实际错误的UTF-8文件；不自动重试或改换模型／能力')
     args = parser.parse_args()
@@ -51,7 +52,8 @@ def main():
                     raise ValueError('实际调用凭据已存在不同内容，不覆盖')
             else:
                 write_json(receipt, content)
-            result = native.complete(root, args.manifest, receipt, ProjectStore(root.parent))
+            repair = json.loads(Path(args.record_repair).read_text('utf-8-sig')) if args.record_repair else None
+            result = native.complete(root, args.manifest, receipt, ProjectStore(root.parent), repair=repair)
         elif args.command == 'fail':
             result = native.fail(root, args.manifest, Path(args.error_file).read_text('utf-8-sig'))
         else:

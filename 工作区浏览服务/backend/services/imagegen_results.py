@@ -36,7 +36,6 @@ def prepare(project, request_file):
     if len(spec['formal_size']) != 2 or any(type(n) is not int or n <= 0 for n in spec['formal_size']):
         raise ValueError('正式尺寸须为两个正整数；不代表Imagegen原生像素保证')
     draft = project_file(root, spec['draft'])
-    images.validate_progress_updates(root, [spec['draft']], spec.get('record_updates', []))
     documents = Documents(root)
     text = documents.read(draft)
     template = (SKILL / 'references/模板' / images.TEMPLATES[spec['kind']]).read_text('utf-8-sig')
@@ -108,11 +107,13 @@ def prepare(project, request_file):
             'generatedImage(imagegenResult);\n')
     documents.put(job['generation_call_file'], call)
     documents.new_json(manifest, job)
+    images.validate_record_updates(root, [spec['draft']], spec.get('record_updates', []),
+        tokens=('{{outputs}}', '{{specs}}'), contents={draft: documents.read(draft)})
     publish(root, documents.writes())
     return job
 
 
-def complete(project, manifest_file, result_file, projects):
+def complete(project, manifest_file, result_file, projects, *, repair=None):
     root = Path(project).resolve()
     job = json.loads(project_file(root, manifest_file).read_text('utf-8-sig'))
     result_file = project_file(root, result_file)
@@ -120,6 +121,12 @@ def complete(project, manifest_file, result_file, projects):
     if result['actual_prompt'] != job['request']['prompt']:
         raise ValueError('实际Imagegen提示词与交接正文不符，不登记为本次结果')
     report_file = project_file(root, job['report'])
+    if repair is not None:
+        prior = json.loads(report_file.read_text('utf-8-sig')) if report_file.exists() else {}
+        current = prior.get('registration_updates', job['request'].get('record_updates', []))
+        updates = images.repair_record_updates(root, [job['draft']], current, repair, report_file,
+                                               identity={'source': result['source'], 'manifest': job['manifest']})
+        job['request']['record_updates'] = updates
     if report_file.exists():
         report = json.loads(report_file.read_text('utf-8-sig'))
         if report['source'] != result['source'] or report['manifest'] != job['manifest']:
@@ -169,6 +176,8 @@ def complete(project, manifest_file, result_file, projects):
             'status': 'registering', 'recorded_at': now(), 'user_message_ready': False,
             'items': [dict(path=job['candidate'], width=width, height=height, format='PNG',
                            bytes=len(raw), decoded=True, draft=job['draft'], image=True)], 'updates': updates}
+        if repair is not None:
+            report.update(record_repair=repair, registration_updates=repair['updates'])
         write_json(report_file, report)
     if report['status'] != 'registered':
         images.apply_updates(root, report, report_file)

@@ -637,6 +637,49 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
             result = await plans.execute(self.store, self.payload)
         self.assertEqual(result['status'], 'completed')
 
+    async def test_local_record_repair_resumes_without_processing_or_queueing(self):
+        from copy import deepcopy
+        from backend.services import image_closeout as images
+        _, formal, spec = self.approved_local_spec([2, 1])
+        row = '| 人物参考图 | 会话 | 进行中 | 待正式保存 | - 无 | - 无 |'
+        progress = self.project / '项目进度.md'
+        progress.write_text(row)
+        spec['adoption_updates'] = [dict(path='项目进度.md', old=row, new=row.replace('待正式保存', '{{file}}'))]
+        self.write_plan(spec)
+        apply = images.apply_updates
+        def user_edit(root, report, report_file):
+            progress.write_text(row.replace('待正式保存', '待正式保存（用户备注）'))
+            return apply(root, report, report_file)
+        with patch.object(images, 'apply_updates', side_effect=user_edit):
+            result = await plans.execute(self.store, self.payload)
+        self.assertEqual(result['status'], 'failed')
+        journal = json.loads(self.plan_file.with_name(self.plan_file.stem + '-装配结果.json').read_text())
+        task = journal['tasks'][0]
+        original = self.plan_file.read_bytes()
+        expected = images.record_updates(task['image_plan'])
+        revised = deepcopy(expected)
+        revised[-1] = dict(path='项目进度.md', old=progress.read_text(),
+                           new=progress.read_text().replace('待正式保存', '已正式保存'))
+        self.payload.record_repairs = {task['record_dir']: dict(reason='保留用户备注完成原登记',
+                                                               expected_updates=expected, updates=revised)}
+        # Repairs use actual result links, never placeholders from the original plan.
+        revised[0]['new'] = revised[0]['new'].replace('{{file}}', images.link(self.draft, formal))
+        with patch('PIL.ImageOps.fit', side_effect=AssertionError('no repeated processing')), \
+                patch.object(self.store, 'enqueue', side_effect=AssertionError('no queue')):
+            for _ in range(2):
+                result = await plans.execute(self.store, self.payload)
+                self.assertEqual(result['status'], 'completed')
+        self.assertTrue(formal.exists())
+        self.assertIn('已正式保存（用户备注）', progress.read_text())
+        self.assertEqual(self.plan_file.read_bytes(), original)
+
+    async def test_empty_record_repair_never_falls_through_to_generation(self):
+        self.write_plan(self.spec())
+        self.payload.record_repairs = {}
+        with patch.object(self.store, 'enqueue', side_effect=AssertionError('repair must never queue')):
+            with self.assertRaisesRegex(ValueError, '不能为空'):
+                await plans.execute(self.store, self.payload)
+
     async def test_identical_size_copies_original_without_resampling(self):
         source, formal, spec = self.approved_local_spec([4, 3])
         self.write_plan(spec)

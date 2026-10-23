@@ -34,6 +34,10 @@ def submit_plan(args):
     payload = dict(project=project.name, plan_file=plan.relative_to(project).as_posix(), thread_id=thread,
                    desktop=desktop, timeout=args.timeout, prepare_only=args.prepare_only,
                    reprepare=getattr(args, 'reprepare', False), start_paused=args.start_paused)
+    if getattr(args, 'record_repairs', None):
+        payload['record_repairs'] = json.loads(Path(args.record_repairs).read_text('utf-8-sig'))
+        if not isinstance(payload['record_repairs'], dict) or not payload['record_repairs']:
+            raise ValueError('登记修复映射须为非空JSON对象，不执行原任务清单')
     return local_post(config, '/submit-plan', payload, args.timeout)
 
 
@@ -95,6 +99,7 @@ def main():
         item.add_argument('--notification-id', required=True, help='Notification batch UUID from received message')
         if name == 'register-results':
             item.add_argument('--image-plans', help='Explicit legacy repair only: JSON object from local task UUID to its image closeout plan; cannot replace an accepted association')
+            item.add_argument('--image-repairs', help='JSON object from task UUID to reason/expected_updates/updates; repairs only existing record targets, never generation or approval')
             item.add_argument('--record-updates', help='UTF-8 JSON array of exact path/old/new updates for this batch progress or production checks; paths relative to the project')
     commands.choices['report'].add_argument('--details', action='store_true', help='显式读取完整报告；正常图片／视频报告只返回成果、数量和审核入口，异常自动保留完整报告')
     item = commands.add_parser('resolve', help='Close an investigated needs_attention task; preserve its original exception')
@@ -110,6 +115,8 @@ def main():
             payload['record_updates'] = json.loads(Path(args.record_updates).read_text('utf-8-sig'))
         if args.command == 'register-results' and args.image_plans:
             payload['image_plans'] = json.loads(Path(args.image_plans).read_text('utf-8-sig'))
+        if args.command == 'register-results' and args.image_repairs:
+            payload['image_repairs'] = json.loads(Path(args.image_repairs).read_text('utf-8-sig'))
         result = service_call('notifications/' + args.notification_id + '/' + args.command, payload)
         if args.command == 'report' and not args.details and result.get('user_message_ready') and result.get('delivery') is not None:
             result = {name: result[name] for name in ('notification_id', 'status', 'reused', 'user_message_ready', 'delivery')}

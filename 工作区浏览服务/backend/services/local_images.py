@@ -11,7 +11,8 @@ from backend.services.result_registration import verify_image_entries
 
 
 def prepare(store, data):
-    images.validate_plan(data)
+    # Existing results resume their journal; placeholder source rows may already be applied.
+    images.validate_plan(data, check_records=not (Path(data.record_dir) / '结果收尾报告.json').exists())
     plan, root = data.image_plan, Path(data.project)
     source = project_file(root, plan['upscale']['source'])
     report = dict(ok=True, new_task_ready=True, checked_at=store.client.now(),
@@ -24,6 +25,17 @@ def prepare(store, data):
         raise ValueError('正式文件已存在，缺少替换归档入口')
     checks.write_report(data, report)
     return dict(prepared=True, report=checks.REPORT)
+
+
+def repair(store, data, request):
+    root, plan = Path(data.project), data.image_plan
+    report_file = Path(data.record_dir) / '结果收尾报告.json'
+    report = json.loads(report_file.read_text('utf-8-sig'))
+    if report.get('provider') != 'local':
+        raise ValueError('没有可接续的本地图片结果')
+    current = report.get('registration_updates', images.record_updates(plan))
+    images.repair_record_updates(root, [plan['draft']], current, request, report_file)
+    return complete(store, data)
 
 
 def complete(store, data):
