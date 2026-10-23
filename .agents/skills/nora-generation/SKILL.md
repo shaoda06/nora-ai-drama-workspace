@@ -14,7 +14,7 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 | 本次动作 | 必要入口 |
 | --- | --- |
 | 封面生成、采用后的规格处理 | [封面专项](../nora-drama-assets/references/封面资料与制作规范.md)；默认Imagegen、Qwen备用，登记类型为“封面”，后处理只为达到目标规格 |
-| 社交媒体头像／主页背景图生成、结果保存及尺寸处理 | [社交图片生成与记录](../nora-social-visuals/references/生成与记录规范.md)；复用Imagegen共用执行规则，按该用途交接与记录，不冒充旧登记类型 |
+| 社交媒体头像／主页背景图生成、结果保存及尺寸处理 | [社交图片生成与记录](../nora-social-visuals/references/生成与记录规范.md)；按本批选定能力进入对应执行分支，按该用途交接与记录，不冒充旧登记类型 |
 | 已明确选用Imagegen生成／编辑 | [Imagegen子代理执行](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)；主控准备，固定6 Luna／medium执行；收尾按图片用途进入固定脚本或社交专项，不装配为Qwen任务 |
 | 已备内容的ComfyUI图片或超分提交 | [一次装配入队](../nora-ai-short-drama/references/comfyui-scripts/README.md#一次装配与批量入队)、[图片执行分工](references/ComfyUI-服务配置与任务提交规范.md#图片执行分工)；当前任务数据与授权 |
 | 已备内容的视频提交 | 已有任务的局部返修先读[执行快照与素材路径](references/ComfyUI-MiniMaxH3导演台节点使用规范.md#611-局部返修的执行快照与素材路径)并落实来源副本和素材绑定；标准版再按[标准版配置选择](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)询问本次四选一（已有明确选择沿用），再用同一装配工具及[视频执行分工](references/ComfyUI-服务配置与任务提交规范.md#视频执行分工)；不重新读节点全规范 |

@@ -1,4 +1,4 @@
 interface:
   display_name: "Nora 社交媒体主页视觉"
-  short_description: "设计与管理社交媒体头像和主页背景图，衔接人物参考、生成执行及采用归档"
+  short_description: "设计与管理社交媒体头像和主页背景图，衔接素材参考、生成执行及采用归档"
   default_prompt: "使用 $nora-social-visuals，按本次授权制作社交媒体头像或主页背景图。"
