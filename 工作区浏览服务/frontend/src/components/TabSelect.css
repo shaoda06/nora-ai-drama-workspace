@@ -1,4 +1,5 @@
-.tab-select.tab-select-marked[data-active]{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;max-width:100%;min-width:0;appearance:auto;background-image:none;padding:7px 12px;text-align:center;background-color:white;color:var(--green)}
+.tab-select.tab-select-marked[data-active]{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;max-width:100%;min-width:0;appearance:auto;padding:7px 12px;text-align:center;background-color:white;color:var(--green)}
+button.tab-select.tab-select-marked[data-active]{background-image:none}
 .tab-select.tab-select-marked[data-active]:not(.tab-select-icon){display:inline-grid;grid-template-columns:12px minmax(0,1fr) 12px;gap:4px}
 .tab-select.tab-select-marked:not(.tab-select-icon)::before{content:''}
 
