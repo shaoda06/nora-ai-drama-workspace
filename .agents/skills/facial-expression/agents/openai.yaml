@@ -1,4 +1,4 @@
 interface:
   display_name: "表情拆解"
-  short_description: "把抽象表情转成具体面部变化，适配图片视频并按真实使用反馈更新"
-  default_prompt: "使用 $facial-expression，把分镜中的抽象表情细化为适合当前图片或视频模型的面部变化。"
+  short_description: "把抽象表情转成具体面部变化，吸收学习材料并按实际反馈持续维护参考表"
+  default_prompt: "使用 $facial-expression，将抽象表情细化为面部变化，或吸收我提供的学习材料并维护参考表。"
