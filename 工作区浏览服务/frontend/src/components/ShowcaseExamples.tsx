@@ -82,8 +82,8 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
     </>}
     {category === 'files' && <>
-      <ComponentExample fullWidth title="只读成片目录" rule="直接使用公共文件树，按文件与子目录浏览，保留空目录。点击示例视频可预览并下载，不提供改名、移动或删除。示例不使用真实项目文件。" usage="发布成片及项目文件目录">
-        <FileTree items={[{ kind: 'video', name: '示例发布成片.webm', url: video.url },
+      <ComponentExample fullWidth title="只读成片目录" rule="直接使用公共文件树，按文件与子目录浏览，保留空目录。列表只保留文件名预览入口，不显示确认状态；查看与下载放在预览弹窗中，不提供改名、移动或删除。示例不使用真实项目文件。" usage="发布成片及项目文件目录">
+        <FileTree showOriginal={false} showStatus={false} items={[{ kind: 'video', name: '示例发布成片.webm', url: video.url },
           { kind: 'group', name: '分平台', children: [{ kind: 'video', name: '示例竖屏版本.webm', url: video.url }] },
           { kind: 'group', name: '待导出空目录', children: [] }]} />
       </ComponentExample>

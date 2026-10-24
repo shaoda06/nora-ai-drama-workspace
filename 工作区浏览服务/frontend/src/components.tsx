@@ -48,12 +48,12 @@ export function Rich({ html = '', languages = {} }: { html?: string; languages?:
     return <CodeBlock key={index} text={block.text} languages={block.languageGroup ? languages[block.languageGroup] : undefined} />;
   })}</div>;
 }
-export function FileLink({ item, showOriginal = true }: { item: FileItem; showOriginal?: boolean }) {
+export function FileLink({ item, showOriginal = true, showStatus = true }: { item: FileItem; showOriginal?: boolean; showStatus?: boolean }) {
   const preview = useContext(PreviewContext);
   const target = item.kind === 'reference' && item.media ? { ...item.media, name: item.name, prompts: item.prompts } : item;
-  return <div className="file"><div className="file-entry-main"><button className="link" onClick={() => preview(target)}>{item.name}</button>{showOriginal && <FileActions url={target.url} />}</div><div className="file-actions">{item.statusHtml ? <Rich html={item.statusHtml} /> : <span className="status-badge status-gray">未知</span>}</div></div>;
+  return <div className="file"><div className="file-entry-main"><button className="link" onClick={() => preview(target)}>{item.name}</button>{showOriginal && <FileActions url={target.url} />}</div>{showStatus && <div className="file-actions">{item.statusHtml ? <Rich html={item.statusHtml} /> : <span className="status-badge status-gray">未知</span>}</div>}</div>;
 }
-export function FileTree({ items, showOriginal = true }: { items: FileItem[]; showOriginal?: boolean }) {
+export function FileTree({ items, showOriginal = true, showStatus = true }: { items: FileItem[]; showOriginal?: boolean; showStatus?: boolean }) {
   const entries: FileItem[] = [];
   const folders = new Map<string, FileItem>();
   for (const item of items) {
@@ -68,13 +68,13 @@ export function FileTree({ items, showOriginal = true }: { items: FileItem[]; sh
     folders.get(name)!.files!.push({ ...item, name: item.name.slice(separator + 1) });
   }
   return <div className="tree">{entries.map(item => item.kind === 'group' || item.children || item.files ?
-    <Folder key={item.key || item.name} item={item} showOriginal={showOriginal} /> :
-    <div key={item.key || item.name}><FileLink item={item} showOriginal={showOriginal} />{item.summary && <p className="muted">{item.summary}</p>}<Rich html={(item as RecordData).sourceHtml} />{(item as RecordData).duration && <p className="muted">实测时长：{(item as RecordData).duration}</p>}</div>)}</div>;
+    <Folder key={item.key || item.name} item={item} showOriginal={showOriginal} showStatus={showStatus} /> :
+    <div key={item.key || item.name}><FileLink item={item} showOriginal={showOriginal} showStatus={showStatus} />{item.summary && <p className="muted">{item.summary}</p>}<Rich html={(item as RecordData).sourceHtml} />{(item as RecordData).duration && <p className="muted">实测时长：{(item as RecordData).duration}</p>}</div>)}</div>;
 }
-function Folder({ item, showOriginal = true }: { item: FileItem; showOriginal?: boolean }) {
+function Folder({ item, showOriginal = true, showStatus = true }: { item: FileItem; showOriginal?: boolean; showStatus?: boolean }) {
   const [open, setOpen] = useState(false);
   return <details open={open} onToggle={event => setOpen(event.currentTarget.open)}><summary>{item.name}</summary>
-    {open && <FileTree items={item.children || item.files || []} showOriginal={showOriginal} />}</details>;
+    {open && <FileTree items={item.children || item.files || []} showOriginal={showOriginal} showStatus={showStatus} />}</details>;
 }
 export function Groups({ groups = [], chapter = false }: { groups?: Group[]; chapter?: boolean }) {
   const [open, setOpen] = useState(false);
