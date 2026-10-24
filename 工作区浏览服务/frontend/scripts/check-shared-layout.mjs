@@ -130,6 +130,9 @@ try {
     assert.equal(await sheetPages.getByRole('button', { name: '3', exact: true }).getAttribute('aria-current'), 'page');
     await sheetPages.getByRole('button', { name: '1', exact: true }).click();
     await contained(sheetPages, `${width}px / 导演表数字页码`);
+    const pageCenter = await sheetPages.boundingBox();
+    const toolbarCenter = await sheets.locator('.director-sheet-toolbar').boundingBox();
+    assert.ok(Math.abs(pageCenter.x + pageCenter.width / 2 - toolbarCenter.x - toolbarCenter.width / 2) < 1, '数字页码相对整条工具栏居中');
     const sourceLabel = sheets.getByText('场次分镜：V07', { exact: true });
     assert.equal(await sourceLabel.count(), 1);
     assert.equal(await sourceLabel.evaluate(el => getComputedStyle(el).fontSize), '15px', '版本标签放大');
@@ -211,6 +214,9 @@ try {
     assert.equal(await sheetPages.getByRole('button', { name: '6', exact: true }).getAttribute('aria-current'), 'page');
     await contained(sheets.locator('.director-sheet-pages'), `${width}px / 七页候选数字选择容器`);
     assert.equal(await sheetPages.evaluate(el => getComputedStyle(el).overflowX), 'auto', '窄屏页码只在自身横向滚动');
+    const sevenCenter = await sheets.locator('.director-sheet-pages').boundingBox();
+    const sevenToolbar = await sheets.locator('.director-sheet-toolbar').boundingBox();
+    assert.ok(Math.abs(sevenCenter.x + sevenCenter.width / 2 - sevenToolbar.x - sevenToolbar.width / 2) < 1, '七页组在桌面及窄屏工具栏中居中');
     const selectedPageBounds = await sheetPages.evaluate(el => {
       const box = el.getBoundingClientRect(), current = el.querySelector('[aria-current="page"]').getBoundingClientRect();
       return { left: box.left, right: box.right, selectedLeft: current.left, selectedRight: current.right };
