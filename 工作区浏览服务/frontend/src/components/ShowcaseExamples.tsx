@@ -83,8 +83,8 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
     </>}
     {category === 'files' && <>
-      <ComponentExample fullWidth title="发布成片选集与播放" rule="分页中间每页5个实际文件名（不带扩展名），整组靠左，翻页按钮保留正常左右内边距、与选集相隔12px；极窄时翻页控件可换行，文件名仍单行滚动。右侧下载当前选集，空间不足时换行靠右。项目标题单独显示总数，视频居中保留原比例，不自动播放、不修改文件。这里只播放和下载固定示例媒体。" usage="项目发布成片；Pagination按内容收紧、TabNav横向滚动及DownloadButton指定文件名规格">
-        <ReleaseFilms items={Array.from({ length: 12 }, (_, index) => ({ ...video, name: `第${index + 1}集.webm`, key: `示例/第${index + 1}集.webm` }))} />
+      <ComponentExample fullWidth title="发布成片选集与播放" rule="先将片头、片尾排在整个列表前两位，其余保留路径自然数字排序，再分页中间每页显示5个实际文件名（不带扩展名）。整组靠左，翻页按钮保留正常左右内边距、与选集相隔12px；极窄时翻页控件可换行，文件名仍单行滚动。右侧下载当前选集，空间不足时换行靠右。项目标题单独显示总数，视频居中保留原比例，不自动播放、不修改文件。这里只播放和下载固定示例媒体。" usage="项目发布成片；Pagination按内容收紧、TabNav横向滚动及DownloadButton指定文件名规格">
+        <ReleaseFilms items={[...Array.from({ length: 12 }, (_, index) => `第${index + 1}集`), '片尾', '片头'].map(name => ({ ...video, name: `${name}.webm`, key: `示例/${name}.webm` }))} />
       </ComponentExample>
       <ComponentExample fullWidth title="只读文件目录" rule="直接使用公共文件树，按文件与子目录浏览，保留空目录。列表只保留文件名预览入口，不显示确认状态；查看与下载放在预览弹窗中，不提供改名、移动或删除。示例不使用真实项目文件。" usage="仅文件名入口的目录资料">
         <FileTree showOriginal={false} showStatus={false} items={[{ kind: 'video', name: '示例发布成片.webm', url: video.url },

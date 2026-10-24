@@ -17,6 +17,7 @@ const file = (name, parent = '') => ({ kind: 'video', name, key: `98-发布成�
 const rootFile = file('第1集.webm');
 const longFile = file('第12集-' + '中文长名称与LongUnbrokenReference'.repeat(5) + '.webm', '子目录/');
 const episodes = Array.from({ length: 10 }, (_, index) => file(`第${index + 1}集.webm`)).reverse();
+const intro = file('片头.webm', '靠后目录/'), outro = file('片尾.webm', '子目录/');
 const tree = { kind: 'group', name: '发布成片', key: '98-发布成片', note: '只读浏览，不修改用户文件。', children: [rootFile,
   ...episodes.filter(item => item.name !== rootFile.name),
   { kind: 'group', name: '子目录', children: [file('第11集.webm', '子目录/'), longFile] },
@@ -47,7 +48,10 @@ const server = await createServer({ configFile: false, root: fileURLToPath(new U
         { kind: 'group', name: '通用目录', children: [longFile] }] };
       else if (pathname.endsWith('/sections/98-发布成片')) {
         if (mode === 'error') { response.statusCode = 503; data = { detail: '本地模拟读取失败' }; }
-        else data = { ...tree, children: mode === 'empty' ? [] : mode === 'single' ? [rootFile] : tree.children };
+        else data = { ...tree, children: mode === 'empty' ? [] : mode === 'single' ? [rootFile] : mode === 'priority' ? [
+          ...tree.children, { kind: 'group', name: '靠后目录', children: [intro] },
+          { kind: 'group', name: '片尾目录', children: [outro] },
+        ] : tree.children };
       } else { unexpected.push(pathname); response.statusCode = 404; data = {}; }
       response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(data));
     });
@@ -176,6 +180,26 @@ try {
     mode = 'files'; await failure.getByRole('button', { name: '重新读取', exact: true }).click();
     await selector.getByRole('button', { name: '第1集', exact: true }).waitFor();
     await failure.waitFor({ state: 'detached' });
+    mode = 'priority'; await page.reload(); await entry.click();
+    await selector.getByRole('button', { name: '片头', exact: true }).waitFor();
+    assert.deepEqual(await selector.getByRole('button').allTextContents(), ['片头', '片尾', '第1集', '第2集', '第3集'], '全局排序后再分页，子目录片头和片尾优先');
+    await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText('发布成片（14）', { exact: true }).waitFor();
+    assert.equal(await player.getAttribute('aria-label'), intro.name);
+    await downloadCurrent(intro.name);
+    await selector.getByRole('button', { name: '片尾', exact: true }).click();
+    assert.equal(await player.getAttribute('aria-label'), outro.name);
+    await downloadCurrent(outro.name);
+    const priorityNotices = page.getByRole('button', { name: '关闭通知', exact: true });
+    while (await priorityNotices.count()) await priorityNotices.first().click();
+    await page.screenshot({ path: path.join(screenshots, `${viewport.width}-intro-outro.png`), animations: 'disabled' });
+    await panel.getByRole('button', { name: '下一页', exact: true }).click();
+    assert.deepEqual(await selector.getByRole('button').allTextContents(), ['第4集', '第5集', '第6集', '第7集', '第8集']);
+    assert.equal(await player.getAttribute('aria-label'), '第4集.webm');
+    await panel.getByRole('button', { name: '下一页', exact: true }).click();
+    assert.deepEqual(await selector.getByRole('button').allTextContents(), ['第9集', '第10集', '第11集', longFile.name.replace(/\.[^.]+$/, '')], '其他视频保留原路径自然数字排序');
+    await panel.getByRole('button', { name: '上一页', exact: true }).click();
+    await panel.getByRole('button', { name: '上一页', exact: true }).click();
+    assert.equal(await player.getAttribute('aria-label'), intro.name);
     assert.equal(await page.locator('vite-error-overlay').count(), 0);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     assert.deepEqual(errors, []); assert.deepEqual(writes, []); assert.deepEqual(unexpected, []);

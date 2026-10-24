@@ -6,9 +6,13 @@ import { FloatingMessage } from './Notifications';
 import { DownloadButton } from './DownloadButton';
 import './ReleaseFilms.css';
 
+const releaseOrder = new Map([['片头', 0], ['片尾', 1]]);
+
 export function releaseVideos(items: FileItem[]): FileItem[] {
   return items.flatMap(item => item.children || item.files ? releaseVideos(item.children || item.files!) : item.kind === 'video' ? [item] : [])
-    .sort((a, b) => (a.key || a.name).localeCompare(b.key || b.name, 'zh-CN', { numeric: true }));
+    .sort((a, b) => (releaseOrder.get(a.name.replace(/\.[^.]+$/, '')) ?? 2)
+      - (releaseOrder.get(b.name.replace(/\.[^.]+$/, '')) ?? 2)
+      || (a.key || a.name).localeCompare(b.key || b.name, 'zh-CN', { numeric: true }));
 }
 
 export function ReleaseFilms({ items, active = true }: { items: FileItem[]; active?: boolean }) {
