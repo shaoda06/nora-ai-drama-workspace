@@ -17,7 +17,7 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 | 社交媒体头像／主页背景图生成、结果保存及尺寸处理 | [社交图片生成与记录](../nora-social-visuals/references/生成与记录规范.md)；按本批选定能力进入对应执行分支，按该用途交接与记录，不冒充旧登记类型 |
 | 已明确选用Imagegen生成／编辑 | [Imagegen子代理执行](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)；主控准备，固定6 Luna／medium执行；收尾按图片用途进入固定脚本或社交专项，不装配为Qwen任务 |
 | 已备内容的ComfyUI图片或超分提交 | [一次装配入队](../nora-ai-short-drama/references/comfyui-scripts/README.md#一次装配与批量入队)、[图片执行分工](references/ComfyUI-服务配置与任务提交规范.md#图片执行分工)；当前任务数据与授权 |
-| 已备内容的视频提交 | 先按[整段生成与剪辑授权](references/视频阶段与返修执行规范.md#整段生成与剪辑授权)确定本次制作方式；已有任务的局部返修再读[执行快照与素材路径](references/ComfyUI-MiniMaxH3导演台节点使用规范.md#611-局部返修的执行快照与素材路径)并落实来源副本和素材绑定；标准版按[标准版配置选择](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)询问本次四选一（已有明确选择沿用），再用同一装配工具及[视频执行分工](references/ComfyUI-服务配置与任务提交规范.md#视频执行分工)；不重新读节点全规范 |
+| 已备内容的视频提交 | 先按[整段生成与剪辑授权](references/视频阶段与返修执行规范.md#整段生成与剪辑授权)确定本次制作方式；已有任务的局部返修再读[执行快照与素材路径](references/ComfyUI-MiniMaxH3导演台节点使用规范.md#611-局部返修的执行快照与素材路径)并落实来源副本和素材绑定；标准版按[标准版配置选择](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)确定项目默认与本批覆盖后的实际配置，仅在该节规定的选择条件下询问四选一，再用同一装配工具及[视频执行分工](references/ComfyUI-服务配置与任务提交规范.md#视频执行分工)；不重新读节点全规范 |
 | 首次完整准备图片分支 | [图片执行](references/图片生成执行规范.md)，先按已选能力分支；Qwen再根据T2I／Edit进入对应执行规则；内容缺项交资产或首帧负责人 |
 | 首次完整准备H3任务或调整导演台 | [H3执行](references/H3视频执行规范.md)及其按阶段引用；内容核对交[视频提示词](../nora-video-prompts/SKILL.md) |
 | 仅准备ComfyUI任务、不生成 | [准备分工](references/ComfyUI-服务配置与任务提交规范.md#执行前检查与复用)，固定入口使用--prepare-only |
@@ -39,7 +39,7 @@ description: 为 Nora 调用固定工具准备和提交图片视频任务、查�
 
 准备、提交或获授权直接操作远端API时，读取随包[comfyui-api](../nora-ai-short-drama/dependencies/comfyui-api/SKILL.md)及当前调用说明；普通后台查询和通知不需要它。异常按需使用[comfyui-troubleshooter](../nora-ai-short-drama/dependencies/comfyui-troubleshooter/SKILL.md)，明确要求能力盘点或依赖诊断时才使用[comfyui-inventory](../nora-ai-short-drama/dependencies/comfyui-inventory/SKILL.md)。沿现有真源，不另复制安装。
 
-标准版视频生成前按[四种配置与生成前询问](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)取得本次配置与画幅，沿该节选择LoRA、采样与尺寸参数及超分／裁切后处理分支；询问选项使用该节规定的完整原文。已有明确选择直接沿用，不重复询问。
+标准版视频生成前按[四种配置与生成前询问](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)取得本次配置与画幅，沿该节选择LoRA、采样与尺寸参数及超分／裁切后处理分支；需要询问时使用该节规定的完整选项及推荐标记；已有项目默认或本批选择时按该节直接沿用。
 
 Imagegen原生生成与编辑由固定执行子代理调用内置工具，保存与交付职责见[Imagegen分支](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)；主控接收报告后交付，不重复收尾。以下API装配、入队和后台收尾适用于ComfyUI任务。
 
