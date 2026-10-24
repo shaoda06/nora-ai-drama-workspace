@@ -6,9 +6,10 @@ import './SceneDownloads.css';
 type Request = { time: string; message: string; failed: boolean };
 export type DownloadState = Request & { busy: boolean };
 
-export function DownloadButton({ url, label, title, pack = false, disabled = false, onStateChange, file }: {
+export function DownloadButton({ url, label, title, pack = false, disabled = false, onStateChange, file, filename: providedFilename }: {
   url: string | null; label: string; title: string; pack?: boolean; disabled?: boolean;
   file?: { text: string; name: string; type: string };
+  filename?: string;
   onStateChange?: (state: DownloadState) => void;
 }) {
   const [busy, setBusy] = useState(false);
@@ -41,11 +42,14 @@ export function DownloadButton({ url, label, title, pack = false, disabled = fal
             ? (await response.json()).detail : await response.text();
           throw new Error(message || `下载失败（${response.status}）`);
         }
-        const disposition = response.headers.get('Content-Disposition') || '';
-        const encoded = disposition.match(/filename\*=utf-8''([^;]+)/i);
-        const plain = disposition.match(/filename="([^"]+)"/i);
-        if (!encoded && !plain) throw new Error('下载响应缺少文件名，请重试。');
-        filename = encoded ? decodeURIComponent(encoded[1]) : plain![1];
+        if (providedFilename) filename = providedFilename;
+        else {
+          const disposition = response.headers.get('Content-Disposition') || '';
+          const encoded = disposition.match(/filename\*=utf-8''([^;]+)/i);
+          const plain = disposition.match(/filename="([^"]+)"/i);
+          if (!encoded && !plain) throw new Error('下载响应缺少文件名，请重试。');
+          filename = encoded ? decodeURIComponent(encoded[1]) : plain![1];
+        }
         update('正在接收文件，请稍候…');
         blob = await response.blob();
       }

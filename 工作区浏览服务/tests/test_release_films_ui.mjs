@@ -22,7 +22,7 @@ const tree = { kind: 'group', name: '发布成片', key: '98-发布成片', note
   { kind: 'group', name: '子目录', children: [file('第11集.webm', '子目录/'), longFile] },
   { kind: 'group', name: '待导出空目录', children: [] },
   { kind: 'text', name: '说明.txt', key: '98-发布成片/说明.txt' }] };
-let mode = 'files', unexpected = [], writes = [];
+let mode = 'files', failDownload = false, unexpected = [], writes = [];
 // Serve downloads over real local HTTP; browser route interception cannot reliably complete attachments.
 const server = await createServer({ configFile: false, root: fileURLToPath(new URL('../frontend', import.meta.url)),
   define: { __APP_VERSION__: JSON.stringify('release-fixture') }, server: { host: '127.0.0.1', port: 0 },
@@ -33,6 +33,7 @@ const server = await createServer({ configFile: false, root: fileURLToPath(new U
       if (request.method !== 'GET') { writes.push(request.url); response.writeHead(405); return response.end(); }
       let data;
       if (pathname.includes('/files/')) {
+        if (failDownload && request.headers['sec-fetch-dest'] === 'empty') { response.writeHead(503, { 'Content-Type': 'text/plain; charset=utf-8' }); return response.end('示例下载失败'); }
         response.setHeader('Content-Type', 'video/webm');
         if (url.searchParams.has('download')) response.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(rootFile.name)}`);
         return response.end(sample);
@@ -60,7 +61,7 @@ try {
   for (const viewport of [{ width: 1362, height: 918 }, { width: 390, height: 844 }, { width: 320, height: 740 }]) {
     const context = await browser.newContext({ viewport });
     const page = await context.newPage(), errors = [];
-    mode = 'files'; unexpected = []; writes = [];
+    mode = 'files'; failDownload = false; unexpected = []; writes = [];
     page.on('pageerror', error => errors.push(String(error)));
     page.on('console', message => { if (message.type() === 'error' && !message.text().includes('503 (Service Unavailable)')) errors.push(message.text()); });
     await page.goto(base + '/tests/release-films.html');
@@ -97,8 +98,16 @@ try {
     assert.ok(geometry.tops.every(top => Math.abs(top - geometry.navTop) < 1), '五个文件名始终在同一行');
     assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
     const player = panel.locator('video');
+    const downloadCurrent = async name => {
+      const event = page.waitForEvent('download');
+      await panel.getByRole('button', { name: '下载', exact: true }).click();
+      const saved = await event;
+      assert.equal(saved.suggestedFilename(), name);
+      assert.deepEqual(await readFile(await saved.path()), sample);
+    };
     assert.equal(await player.count(), 1);
     assert.equal(await player.evaluate(el => el.autoplay), false);
+    await downloadCurrent(rootFile.name);
     await player.evaluate(async el => { el.muted = true; await el.play(); });
     await page.waitForFunction(() => document.querySelector('section.panel:not([hidden]) video').currentTime > 0);
     const previous = await player.elementHandle();
@@ -106,6 +115,16 @@ try {
     assert.equal(await previous.evaluate(el => el.isConnected), false, '切集卸载原视频');
     assert.equal(await player.getAttribute('aria-label'), '第3集.webm');
     assert.equal(await player.evaluate(el => el.paused), true);
+    await downloadCurrent('第3集.webm');
+    failDownload = true;
+    await panel.getByRole('button', { name: '下载', exact: true }).click();
+    const downloadFailure = page.locator('.floating-message').filter({ hasText: '示例下载失败' });
+    await downloadFailure.waitFor();
+    await downloadFailure.getByRole('button', { name: '关闭通知', exact: true }).click();
+    failDownload = false;
+    await downloadCurrent('第3集.webm');
+    const notices = page.getByRole('button', { name: '关闭通知', exact: true });
+    while (await notices.count()) await notices.first().click();
     await panel.getByRole('button', { name: '下一页', exact: true }).click();
     assert.deepEqual(await selector.getByRole('button').allTextContents(), ['第6集', '第7集', '第8集', '第9集', '第10集']);
     assert.equal(await player.getAttribute('aria-label'), '第6集.webm');
@@ -133,15 +152,21 @@ try {
     const size = await player.evaluate(el => ({ width: el.getBoundingClientRect().width, height: el.getBoundingClientRect().height, ratio: el.videoWidth / el.videoHeight, limit: innerHeight * .65 }));
     assert.ok(Math.abs(size.width / size.height - size.ratio) < .01, '视频框与实际视频比例一致，无额外黑边');
     assert.ok(size.height <= size.limit + 1);
+    const positions = await player.evaluate(el => { const video = el.getBoundingClientRect(), parent = el.parentElement.getBoundingClientRect(); return { center: video.left + video.width / 2, expected: parent.left + parent.width / 2 }; });
+    assert.ok(Math.abs(positions.center - positions.expected) <= 1, '视频水平居中');
     await page.screenshot({ path: path.join(screenshots, `${viewport.width}-release-player.png`), animations: 'disabled' });
     mode = 'single'; await page.reload(); await entry.click();
     await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText('发布成片（1）', { exact: true }).waitFor();
+    const singleLayout = await panel.locator('.release-films-toolbar').evaluate(el => { const row = el.getBoundingClientRect(), pager = el.querySelector('.pagination').getBoundingClientRect(), download = el.querySelector('.release-films-download').getBoundingClientRect(); return { left: pager.left - row.left, width: pager.width, right: row.right - download.right }; });
+    assert.ok(Math.abs(singleLayout.left) < 1 && singleLayout.width < 200, '单集整组分页靠左，下一页紧随文件名');
+    assert.ok(Math.abs(singleLayout.right) < 1, '下载操作靠右');
     assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
     assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).isDisabled(), true);
     mode = 'empty'; await page.reload(); await entry.click();
     await panel.getByText('暂无发布成片视频。', { exact: true }).waitFor();
     assert.equal(await player.count(), 0);
     await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText('发布成片（0）', { exact: true }).waitFor();
+    assert.equal(await panel.getByRole('button', { name: '下载', exact: true }).isDisabled(), true);
     mode = 'error'; await page.reload(); await entry.click();
     const failure = page.locator('.floating-message').filter({ hasText: '资料读取失败' });
     await failure.getByRole('button', { name: '重新读取', exact: true }).waitFor();
@@ -151,7 +176,7 @@ try {
     assert.equal(await page.locator('vite-error-overlay').count(), 0);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     assert.deepEqual(errors, []); assert.deepEqual(writes, []); assert.deepEqual(unexpected, []);
-    console.log(`${viewport.width}px: compact filename pagination, one row/5 names, breadcrumb counts, intrinsic video ratio/no added bars, selection/playback/cleanup, single/empty/error/retry; no errors/writes passed`);
+    console.log(`${viewport.width}px: left-packed pagination, right download/current filename+bytes/failure/retry/empty disabled, centered native-ratio player, selection and media/read retry; no errors/writes passed`);
     await context.close();
   }
   console.log(`Screenshots: ${screenshots}`);
