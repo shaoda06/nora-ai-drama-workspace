@@ -91,10 +91,10 @@ export function ShowcaseExamples({ category }: { category: string }) {
           { kind: 'group', name: '分平台', children: [{ kind: 'video', name: '示例竖屏版本.webm', url: video.url }] },
           { kind: 'group', name: '待导出空目录', children: [] }]} />
       </ComponentExample>
-      <ComponentExample title="原文件与下载" rule="查看和下载使用固定示例文本。下载会保存component-sample.txt，不读取项目文件；支持自定义查看和下载文案。" usage="文件目录、资料卡、制作资源下载">
+      <ComponentExample title="原文件与下载" rule="查看和下载使用固定示例文本。下载会保存component-sample.txt，不读取项目文件；支持自定义文案、仅下载及整行居中。图片预览使用居中的仅下载规格，其他文件默认保留查看和下载。" usage="文件目录、资料卡、制作资源下载">
         <div className="component-demo-row"><Original url={fileUrl} label="示例原文件" /><FileActions url={fileUrl} /></div>
         <DownloadButton url={fileUrl + '?download=true'} label="下载示例文件" title="组件示例文件" />
-        <FileActions url={fileUrl} downloadOnly />
+        <FileActions url={fileUrl} downloadOnly centered />
         <FileActions url={fileUrl} viewLabel="查看原图" downloadLabel="下载原图" />
         <DownloadButton url={null} file={{ text: "本地导出示例。\n", name: "component-export.md", type: "text/markdown;charset=utf-8" }} label="下载本地导出示例" title="本地导出示例" />
         <DownloadButton url={null} label="没有文件时禁用" title="暂无示例文件" />
@@ -121,7 +121,7 @@ export function ShowcaseExamples({ category }: { category: string }) {
     </>}
     {category === 'media' && <>
       {sound.player}
-      <ComponentExample fullWidth title="图片与候选卡片" rule="点击图片在公共预览中放大；候选分组按类型展开。图片为随服务提供的示例图形。" usage="人物、场景、道具、封面">
+      <ComponentExample fullWidth title="图片与候选卡片" rule="尺寸来自加载图片的真实像素宽高，网页计算并在括号显示最简比例。点击图片在公共预览中放大，只保留整行居中的下载入口；候选分组按类型展开。图片为随服务提供的示例图形。" usage="人物、场景、道具、封面">
         <AssetMedia items={[imageRecord]} revision={1} formal />
         <AssetCandidateMedia items={[imageRecord]} revision={1} />
       </ComponentExample>

@@ -25,13 +25,15 @@ export function TabSelect({ items, selected, onChange, label, disabled, iconOnly
   const [position, setPosition] = useState<CSSProperties>({});
   const positionMenu = useCallback(() => {
     const rect = trigger.current!.getBoundingClientRect();
-    const width = Math.min(iconOnly ? 340 : rect.width, window.innerWidth - 16);
     const below = window.innerHeight - rect.bottom - 12;
     const above = rect.top - 12;
     const openAbove = below < 320 && above > below;
+    menu.current!.style.minWidth = `${Math.min(rect.width, window.innerWidth - 16)}px`;
+    menu.current!.style.maxHeight = `${Math.min(320, openAbove ? above : below)}px`;
+    const width = menu.current!.getBoundingClientRect().width;
     setPosition({ left: Math.max(8, Math.min(rect.left, window.innerWidth - width - 8)),
-      top: openAbove ? undefined : rect.bottom + 4, bottom: openAbove ? window.innerHeight - rect.top + 4 : undefined, width, maxHeight: Math.min(320, openAbove ? above : below) });
-  }, [iconOnly]);
+      top: openAbove ? undefined : rect.bottom + 4, bottom: openAbove ? window.innerHeight - rect.top + 4 : undefined, maxHeight: Math.min(320, openAbove ? above : below) });
+  }, []);
   useEffect(() => {
     if (!expanded) return;
     window.addEventListener('resize', positionMenu);
@@ -61,14 +63,16 @@ export function TabSelect({ items, selected, onChange, label, disabled, iconOnly
   return <>
     <button ref={trigger} type="button" className={`tab-select tab-select-marked tab-select-${variant} tab-select-${size}${highlightSelected ? " tab-select-highlight" : ""}${iconOnly ? ' tab-select-icon' : ''}`} role="combobox" aria-label={label}
       aria-haspopup="listbox" aria-controls={id} aria-expanded={expanded} aria-activedescendant={expanded ? `${id}-${active}` : undefined}
-      disabled={disabled || enabledIndices.length === 0} data-active={Boolean(selected)} data-value={selected} onKeyDown={keyDown} popoverTarget={id}
+      disabled={disabled || enabledIndices.length === 0} data-active={Boolean(selected)} data-value={selected} onKeyDown={keyDown}
       onClick={() => {
-        if (!expanded) {
+        if (expanded) close();
+        else {
+          menu.current!.showPopover();
           positionMenu();
           const selectedIndex = items.findIndex(item => item.value === selected && !item.disabled);
           setActive(selectedIndex >= 0 ? selectedIndex : enabledIndices[0]);
+          setExpanded(true);
         }
-        setExpanded(!expanded);
       }}>
       {!iconOnly && <span className="tab-select-label">{items.find(item => item.value === selected)?.label || label}{items.find(item => item.value === selected)?.badge && <span className="tab-select-status">{items.find(item => item.value === selected)!.badge}</span>}</span>}
       <svg aria-hidden="true" width="12" height="12" viewBox="0 0 12 12"><path d="m3 4.5 3 3 3-3" fill="none" stroke="currentColor" /></svg>

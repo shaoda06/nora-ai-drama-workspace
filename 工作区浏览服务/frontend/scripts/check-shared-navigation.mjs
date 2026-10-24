@@ -40,7 +40,7 @@ export async function checkSharedNavigation(page, width, selfTest) {
       await fits(menu, `${width}/菜单`);
       const menuBox = await menu.boundingBox();
       const comboBox = await combo.boundingBox();
-      assert.ok(Math.abs(menuBox.width - Math.min(comboBox.width, width - 16)) <= 1, '文字下拉菜单随触发按钮宽度，不固定340px');
+      assert.ok(menuBox.width >= Math.min(comboBox.width, width - 16) - 1 && menuBox.width <= width - 16 + 1, '菜单以按钮宽度为最小值，由内容撑宽，只受屏幕限制');
       assert.ok(menuBox.y >= 0 && menuBox.y + menuBox.height <= 918, '菜单必须处于屏幕内');
       const unavailable = menu.getByRole('option', { name: '不可选择', exact: true });
       assert.equal(await unavailable.isDisabled(), true, '分组/下拉禁用选项必须不可点击');
@@ -156,7 +156,7 @@ export async function checkSharedNavigation(page, width, selfTest) {
     await combo.click();
     const menu = page.getByRole('listbox', { name, exact: true });
     const triggerBox = await combo.boundingBox(), menuBox = await menu.boundingBox();
-    assert.ok(Math.abs(menuBox.width - Math.min(triggerBox.width, width - 16)) <= 1, `${name}菜单跟随按钮宽度`);
+    assert.ok(menuBox.width >= Math.min(triggerBox.width, width - 16) - 1 && menuBox.width <= width - 16 + 1, `${name}菜单宽度随内容且不小于按钮`);
     await fits(menu, `${width}/${name}/长文字及当前标记`);
     assert.equal(await menu.getByRole('option', { name: '暂不可选', exact: true }).isDisabled(), true);
     if (name === '表单选项示例') {
@@ -164,7 +164,7 @@ export async function checkSharedNavigation(page, width, selfTest) {
       await page.waitForFunction(() => {
         const trigger = document.querySelector('[role=combobox][aria-label="表单选项示例"]').getBoundingClientRect();
         const menu = document.querySelector('[role=listbox][aria-label="表单选项示例"]').getBoundingClientRect();
-        return Math.abs(menu.width - Math.min(trigger.width, innerWidth - 16)) <= 1 && menu.left >= 8 && menu.right <= innerWidth - 8;
+        return menu.width >= Math.min(trigger.width, innerWidth - 16) - 1 && menu.left >= 8 && menu.right <= innerWidth - 8;
       });
       await page.setViewportSize({ width, height: 918 });
     }

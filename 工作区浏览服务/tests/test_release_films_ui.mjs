@@ -220,12 +220,12 @@ try {
     const iconTrigger = page.getByRole('combobox', { name: '项目切换示例', exact: true });
     await iconTrigger.click();
     const iconMenu = page.getByRole('listbox', { name: '项目切换示例', exact: true });
-    assert.ok(Math.abs((await iconMenu.boundingBox()).width - Math.min(340, viewport.width - 16)) <= 1, '纯三角入口保留可读菜单，不压成22px');
+    assert.ok((await iconMenu.boundingBox()).width > (await iconTrigger.boundingBox()).width && (await iconMenu.boundingBox()).width <= viewport.width - 16 + 1, '纯三角菜单由内容撑开，不固定340px');
     await iconTrigger.press('Escape');
     const menu = page.getByRole('listbox', { name: '发布资料', exact: true });
     await entry.click();
     assert.deepEqual(await menu.locator('[role=option] > span:first-child').allTextContents(), ['封面资料', '账号资料', '发布成片'], '顺序不依赖后端目录排列');
-    assert.ok(Math.abs((await menu.boundingBox()).width - (await entry.boundingBox()).width) <= 1, '项目发布资料菜单与按钮同宽');
+    assert.ok((await menu.boundingBox()).width >= (await entry.boundingBox()).width - 1 && (await menu.boundingBox()).width <= viewport.width - 16 + 1, '项目发布资料菜单以按钮为最小宽度');
     await page.screenshot({ path: path.join(screenshots, `${viewport.width}-menu-width.png`), animations: 'disabled' });
     await entry.press('Escape');
     const related = projectNav.getByRole('combobox', { name: '相关资料', exact: true });

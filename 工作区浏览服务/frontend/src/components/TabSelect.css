@@ -4,6 +4,7 @@ button.tab-select.tab-select-marked[data-active]{background-image:none}
 .tab-select.tab-select-marked:not(.tab-select-icon)::before{content:''}
 
 .tab-select.tab-select-marked.tab-select-highlight[data-active=true]{background-color:var(--green);color:white}
+.tab-select-menu{width:max-content}
 .tab-select-menu [role=option]{flex-wrap:wrap;gap:4px 8px}
 .tab-select-menu [role=option]>span:first-child{flex:1 1 auto;min-width:min(4em,100%);overflow-wrap:anywhere}
 .tab-select.tab-select-marked.tab-select-field{width:100%;color:#25352f;font-size:14px}

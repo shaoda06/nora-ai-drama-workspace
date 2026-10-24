@@ -15,7 +15,12 @@ export function AssetMediaCard({ title, item, revision, formal = false, onDetail
   return <article className="asset-media-card">
     <PointerTooltip text={title}><h3 >{title}</h3></PointerTooltip>
     <div className="asset-media-item">
-      {item.media ? <button className="cover" onClick={() => preview(item.media)}><img className="reference" loading="lazy" src={item.media.url + `?v=${revision}`} alt={item.media.name} onLoad={event => setDimensions(`${event.currentTarget.naturalWidth} × ${event.currentTarget.naturalHeight}`)} /></button> : <p className="muted">已登记，图片文件缺失。</p>}
+      {item.media ? <button className="cover" onClick={() => preview(item.media)}><img className="reference" loading="lazy" src={item.media.url + `?v=${revision}`} alt={item.media.name} onLoad={event => {
+        const { naturalWidth: width, naturalHeight: height } = event.currentTarget;
+        let divisor = width, remainder = height;
+        while (remainder) [divisor, remainder] = [remainder, divisor % remainder];
+        setDimensions(`${width} × ${height}（${width / divisor}:${height / divisor}）`);
+      }} /></button> : <p className="muted">已登记，图片文件缺失。</p>}
       {item.media && <p className="asset-media-field"><span className="field-label">尺寸：</span>{dimensions || '读取中'}</p>}
       {item.media && !onDetails && <div className="asset-media-field file-entry-main"><span className="field-label">文件：</span><FileActions url={item.media.url} /></div>}
       {version ? <p className="asset-media-field"><span className="field-label">{formal ? '采用版本' : '版本'}：</span>{version}</p> : null}

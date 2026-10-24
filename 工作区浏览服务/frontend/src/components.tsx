@@ -203,10 +203,10 @@ export function Preview({ project, item, revision, close }: { project: string; i
   const video = kind === 'video' || /\.(mp4|webm|mov)$/i.test(key || item.name);
   const audio = kind === 'audio' || /\.(mp3|wav|ogg|flac|m4a)$/i.test(key || item.name);
   return <Dialog title={item.name} close={close}>
-    {kind !== 'progress' && !(kind === 'document' && item.doc) && <FileActions url={item.url} />}
+    {kind !== 'progress' && !(kind === 'document' && item.doc) && <FileActions url={item.url} downloadOnly={image} centered={image} />}
     {text && !item.doc && revision !== openedRevision && <FloatingMessage>项目资料有更新。<button onClick={() => setOpenedRevision(revision)}>读取新版本</button></FloatingMessage>}
     {kind === 'progress' && item.doc ? <div className="phase-progress"><div className="phase-progress-meta"><div className="phase-progress-status"><strong>当前状态：</strong><Rich html={String(item.doc.statusHtml)} /></div><FileActions url={item.url} /></div><Rich html={String(item.doc.html)} /></div> : item.doc ? kind === 'document' ? <Document value={item.doc} /> : <Rich html={String(item.doc.html)} /> : text ? <><Result loading={query.isPending} error={query.error} retry={query.refetch} retrying={query.isFetching} />{query.data && (query.data.html ? <Document value={query.data} showOriginal={false} /> : <><p>{query.data.notice}</p><pre>{query.data.text}</pre></>)}</> :
-      image ? <img className="preview-image" src={item.url} alt={item.name} onError={() => setMediaError('图片无法加载，请使用原文件入口。')} /> :
+      image ? <img className="preview-image" src={item.url} alt={item.name} onError={() => setMediaError('图片无法加载，请下载原文件查看。')} /> :
       video ? <video controls preload="metadata" src={item.url} onError={() => setMediaError('视频无法加载，请使用原文件入口。')} /> :
       audio ? <audio controls preload="metadata" src={item.url} onError={() => setMediaError('音频无法加载，请使用原文件入口。')} /> : <p>此格式暂不支持页内预览，请打开原文件。</p>}
     {mediaError && <FloatingMessage tone="error">{mediaError}</FloatingMessage>}
