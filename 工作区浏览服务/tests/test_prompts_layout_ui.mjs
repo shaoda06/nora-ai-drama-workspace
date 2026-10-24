@@ -101,6 +101,23 @@ try {
   assert.equal(doc.category, '', 'choosing a category must not save automatically');
   await tree.getByRole('button', { name: /^主目录 \(\d+\)$/ }).click();
   await page.getByRole('dialog', { name: '修改尚未保存' }).waitFor();
+  const unsaved = page.getByRole('dialog', { name: '修改尚未保存', exact: true });
+  for (const width of [1362, 390, 320]) {
+    await page.setViewportSize({ width, height: 918 });
+    const actions = unsaved.locator('.prompt-actions');
+    assert.deepEqual(await actions.getByRole('button').allTextContents(), ['保存并继续', '放弃修改', '继续编辑']);
+    const group = await actions.boundingBox(), buttons = await actions.getByRole('button').all();
+    const rows = new Map();
+    for (const button of buttons) {
+      const box = await button.boundingBox();
+      assert.ok(box.x >= group.x - 1 && box.x + box.width <= group.x + group.width + 1);
+      rows.set(Math.round(box.y), Math.max(rows.get(Math.round(box.y)) || 0, box.x + box.width));
+    }
+    for (const right of rows.values()) assert.ok(Math.abs(right - group.x - group.width) <= 1, 'each button row aligns to the right');
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    await unsaved.screenshot({ path: path.join(out, `${width}-unsaved-actions.png`) });
+  }
+  await page.setViewportSize({ width: 1362, height: 918 });
   await page.getByRole('button', { name: '继续编辑', exact: true }).click();
   assert.equal(await category.innerText(), '图片/反推');
   await category.click();

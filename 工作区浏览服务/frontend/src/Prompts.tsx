@@ -174,7 +174,7 @@ export default function Prompts() {
         </> : <div className="prompt-empty"><span className="prompt-empty-icon">▤</span><h2>你的提示词资料库</h2><p>选择一份提示词查看和编辑，<br />或新建一份，把好用的写法留下来。</p></div>}
       </section>
     </div>
-    {unsavedOpen && <Dialog size="compact" closeDisabled={busy} title="修改尚未保存" close={() => { if (!busy) cancelPending(); }}><p>保存后继续，或放弃这次修改。</p><div className="prompt-actions"><button disabled={busy || !draft?.title.trim()} onClick={async () => { if (await save()) proceed(); }}>保存并继续</button><button disabled={busy} onClick={() => { clearSelection(); proceed(); }}>放弃修改</button><button disabled={busy} onClick={cancelPending}>继续编辑</button></div></Dialog>}
+    {unsavedOpen && <Dialog size="compact" closeDisabled={busy} title="修改尚未保存" close={() => { if (!busy) cancelPending(); }}><p>保存后继续，或放弃这次修改。</p><div className="prompt-actions prompt-actions-end"><button disabled={busy || !draft?.title.trim()} onClick={async () => { if (await save()) proceed(); }}>保存并继续</button><button disabled={busy} onClick={() => { clearSelection(); proceed(); }}>放弃修改</button><button disabled={busy} onClick={cancelPending}>继续编辑</button></div></Dialog>}
     {categoryEdit && <Dialog size="compact" closeDisabled={busy} title={categoryEdit.source ? '修改分类' : '新建分类'} close={() => { if (!busy) setCategoryEdit(null); }}><form className="prompt-form" onSubmit={event => { event.preventDefault(); void run(async () => {
       if (categoryDelete) return;
       const source = categoryEdit.source;

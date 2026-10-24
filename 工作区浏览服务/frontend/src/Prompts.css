@@ -21,6 +21,7 @@ main:has(.prompt-page){height:calc(100dvh - var(--site-header-height) - var(--si
 .prompt-detail .prompt-form-field{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;gap:10px;margin-bottom:12px;font-size:13px;color:var(--muted)}
 .prompt-detail>.prompt-body,.prompt-detail>.prompt-preview,.prompt-detail>.prompt-trash-body{flex:1;min-height:0;overflow:auto;margin:0}
 .prompt-detail>.prompt-actions{margin-top:16px}
+.prompt-actions-end{justify-content:flex-end}
 
 .prompt-controls{display:flex;align-items:center;flex-wrap:wrap;gap:12px 24px;margin:12px 0}
 .prompt-edit-control{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
