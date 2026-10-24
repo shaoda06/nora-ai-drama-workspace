@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+
+export async function checkEpisodeDirectorSheets(page, fixture, width) {
+  await fixture.getByRole('button', { name: '模拟整集六页', exact: true }).click();
+  const viewer = fixture.getByRole('region', { name: '整集导演分镜表', exact: true });
+  const image = viewer.locator('.director-sheet-image img');
+  const count = viewer.locator('.director-sheet-page-count');
+  const pages = viewer.getByRole('navigation', { name: '导演分镜表页码' });
+  assert.deepEqual(await pages.getByRole('button').allTextContents(), ['1', '2', '3', '4', '5', '6']);
+  assert.match(await image.getAttribute('alt'), /C001.*第01页/);
+  await viewer.getByRole('button', { name: '下一张图', exact: true }).click();
+  assert.match(await count.innerText(), /整集第2页 \/ 共6页 · C002 第1页 \/ 共3页/);
+  assert.match(await image.getAttribute('alt'), /C002.*v01.*第01页/, '采用候选优先，页码按数值排序');
+  await viewer.getByRole('button', { name: '查看导演表生成与审阅记录', exact: true }).click();
+  assert.equal(await page.getByRole('dialog').getByText('C002记录正文', { exact: true }).count(), 1, '记录跟随当前图片场次');
+  await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();
+  await pages.getByRole('button', { name: '4', exact: true }).click();
+  await viewer.getByRole('button', { name: '全屏查看第04页导演分镜表', exact: true }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: '下一张图', exact: true }).click();
+  assert.match(await dialog.locator('img').getAttribute('alt'), /C003/);
+  await dialog.getByRole('button', { name: '下一张图', exact: true }).click();
+  assert.match(await dialog.locator('img').getAttribute('alt'), /C004/);
+  assert.equal(await dialog.getByRole('button', { name: '下一张图', exact: true }).count(), 0);
+  await page.keyboard.press('Escape');
+  assert.match(await count.innerText(), /整集第6页 \/ 共6页 · C004/);
+  await pages.getByRole('button', { name: '2', exact: true }).click();
+  await viewer.getByRole('combobox', { name: '导演分镜表候选', exact: true }).click();
+  await page.getByRole('option', { name: '候选2（1张）', exact: true }).click();
+  assert.match(await count.innerText(), /整集第2页 \/ 共4页 · C002/);
+  assert.match(await image.getAttribute('alt'), /C002.*v02/);
+  await viewer.getByRole('button', { name: '上一张图', exact: true }).click();
+  assert.match(await image.getAttribute('alt'), /C001.*v01/, '不同场次候选选择相互独立');
+  await viewer.getByRole('button', { name: '下一张图', exact: true }).click();
+  await viewer.getByRole('combobox', { name: 'C002 修改轮次', exact: true }).click();
+  await page.getByRole('option', { name: '第1轮：剧本缺失 · 分镜v01', exact: true }).click();
+  assert.equal(await viewer.getByText('场次 C002：分镜 v01 尚未制作导演分镜表。', { exact: true }).count(), 1);
+  assert.match(await count.innerText(), /共3页/, '无对应来源图片的场次不替换成新版本');
+  await viewer.getByRole('combobox', { name: 'C002 修改轮次', exact: true }).click();
+  await page.getByRole('option', { name: '第2轮：剧本缺失 · 分镜v07', exact: true }).click();
+  assert.match(await image.getAttribute('alt'), /C002.*v02/, '切回来源版本恢复该场候选并定位本场');
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  await viewer.screenshot({ path: `/tmp/nora-w385-viewer-${width}.png` });
+  console.log(`整集导演表：${width}px六页、场次边界、全屏跨场、候选隔离、记录跟随、来源空态与恢复通过。`);
+}

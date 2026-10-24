@@ -1,3 +1,4 @@
+import { checkEpisodeDirectorSheets } from './check-episode-director-sheets.mjs';
 import { checkSharedInputs } from './check-shared-inputs.mjs';
 import { checkSharedPlayback } from './check-shared-playback.mjs';
 import { checkSharedNavigation } from './check-shared-navigation.mjs';
@@ -235,6 +236,7 @@ try {
     await sheets.getByRole('button', { name: '模拟空场次', exact: true }).click();
     assert.equal(await sheets.getByText('分镜 v07 尚未制作导演分镜表。', { exact: true }).count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, '导演表手机无横向溢出');
+    await checkEpisodeDirectorSheets(page, sheets, width);
     console.log(`导演分镜表检查：${width}px单图、版本文字、数字跳页与高亮同步、圆形箭头、首尾隐藏、紧凑页码和原图入口、全视口看图与退出、审阅入口靠右、来源版本筛选、候选采用状态、单页及空场次通过。`);
     await showcase.getByRole('button', { name: '列表与分页', exact: true }).click();
     const sheetPagination = showcase.locator('.pagination').last();
