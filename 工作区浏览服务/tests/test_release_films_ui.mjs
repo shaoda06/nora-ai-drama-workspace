@@ -46,6 +46,7 @@ const server = await createServer({ configFile: false, root: fileURLToPath(new U
         { name: '08-参考视频', label: '参考视频' },
         ...(navigation === 'full' ? [{ name: '11-社交媒体资料', label: '账号资料' }, { name: '10-封面资料', label: '封面资料' },
           { name: '03-人物资料', label: '人物资料' }, { name: '04-场景资料', label: '场景资料' }, { name: '05-道具资料', label: '道具资料' },
+          { name: '01-主旨与简介', label: '主旨与简介' }, { name: '02-故事大纲', label: '故事大纲' }, { name: '06-分集大纲', label: '分集大纲' },
           { name: '07-参考音频', label: '参考音频' }] : navigation === 'account' ? [{ name: '11-社交媒体资料', label: '账号资料' }] : [])] };
       else if (pathname.endsWith('/sections/00-项目定位')) data = { kind: 'group', children: [
         { ...rootFile, statusHtml: '<span class="status-badge status-green">已确认</span>' },
@@ -103,7 +104,7 @@ try {
       const r = el.getBoundingClientRect(), nav = el.querySelector('nav').getBoundingClientRect();
       return { height: r.height, navTop: nav.top, tops: [...el.querySelectorAll('nav > button')].map(button => button.getBoundingClientRect().top), margin: getComputedStyle(el).marginTop };
     });
-    assert.ok(geometry.height < 65, '分页栏收紧上下留白');
+    assert.ok(geometry.height < (viewport.width === 320 ? 110 : 65), '分页栏保持紧凑；含40px侧栏的320px容器允许原有控件换行');
     assert.equal(geometry.margin, '0px');
     assert.ok(geometry.tops.every(top => Math.abs(top - geometry.navTop) < 1), '五个文件名始终在同一行');
     const spacing = await pagination.evaluate(el => ({ gap: getComputedStyle(el).columnGap, buttons: [...el.querySelectorAll(':scope > button')].map(button => ({ width: button.getBoundingClientRect().width, padding: getComputedStyle(button).paddingLeft })) }));
@@ -209,9 +210,23 @@ try {
     navigation = 'full'; mode = 'files'; await page.reload();
     await entry.waitFor();
     const projectNav = page.getByRole('navigation', { name: '项目栏目', exact: true });
+    if (viewport.width === 1362) {
+      const headerLayout = await page.locator('.header-main').evaluate(el => ({ brand: el.querySelector('.brand-project-switcher').getBoundingClientRect().top, nav: el.querySelector('nav').getBoundingClientRect().top, width: el.getBoundingClientRect().width }));
+      assert.ok(Math.abs(headerLayout.brand - headerLayout.nav) < 1, '1362px顶部利用可用宽度，品牌与8个栏目同一行');
+      await page.setViewportSize({ width: 1800, height: viewport.height });
+      assert.ok(await page.locator('.header-main').evaluate(el => el.getBoundingClientRect().width) > headerLayout.width + 400, '扩大CSS视口后顶部实际空间同步增加，不锁在1280px');
+      await page.setViewportSize(viewport);
+    }
+    const iconTrigger = page.getByRole('combobox', { name: '项目切换示例', exact: true });
+    await iconTrigger.click();
+    const iconMenu = page.getByRole('listbox', { name: '项目切换示例', exact: true });
+    assert.ok(Math.abs((await iconMenu.boundingBox()).width - Math.min(340, viewport.width - 16)) <= 1, '纯三角入口保留可读菜单，不压成22px');
+    await iconTrigger.press('Escape');
     const menu = page.getByRole('listbox', { name: '发布资料', exact: true });
     await entry.click();
     assert.deepEqual(await menu.locator('[role=option] > span:first-child').allTextContents(), ['封面资料', '账号资料', '发布成片'], '顺序不依赖后端目录排列');
+    assert.ok(Math.abs((await menu.boundingBox()).width - (await entry.boundingBox()).width) <= 1, '项目发布资料菜单与按钮同宽');
+    await page.screenshot({ path: path.join(screenshots, `${viewport.width}-menu-width.png`), animations: 'disabled' });
     await entry.press('Escape');
     const related = projectNav.getByRole('combobox', { name: '相关资料', exact: true });
     await related.click();

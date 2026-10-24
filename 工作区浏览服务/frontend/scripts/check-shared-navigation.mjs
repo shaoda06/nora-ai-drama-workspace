@@ -39,6 +39,8 @@ export async function checkSharedNavigation(page, width, selfTest) {
       const menu = page.getByRole('listbox', { name: id === 'nav-group' ? '分组长选项' : '长选项下拉', exact: true });
       await fits(menu, `${width}/菜单`);
       const menuBox = await menu.boundingBox();
+      const comboBox = await combo.boundingBox();
+      assert.ok(Math.abs(menuBox.width - Math.min(comboBox.width, width - 16)) <= 1, '文字下拉菜单随触发按钮宽度，不固定340px');
       assert.ok(menuBox.y >= 0 && menuBox.y + menuBox.height <= 918, '菜单必须处于屏幕内');
       const unavailable = menu.getByRole('option', { name: '不可选择', exact: true });
       assert.equal(await unavailable.isDisabled(), true, '分组/下拉禁用选项必须不可点击');
@@ -149,9 +151,28 @@ export async function checkSharedNavigation(page, width, selfTest) {
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, '导航测试页面不可横向越界');
   const showcase = page.getByTestId('showcase');
   await showcase.getByRole('button', { name: '下拉菜单', exact: true }).click();
-  await showcase.getByRole('combobox', { name: '示例选项', exact: true }).click();
-  assert.equal(await page.getByRole('option', { name: '暂不可选', exact: true }).isDisabled(), true);
-  await page.keyboard.press('Escape');
+  for (const name of ['示例选项', '紧凑选项示例', '小号选项示例', '高亮选项示例', '表单选项示例']) {
+    const combo = showcase.getByRole('combobox', { name, exact: true });
+    await combo.click();
+    const menu = page.getByRole('listbox', { name, exact: true });
+    const triggerBox = await combo.boundingBox(), menuBox = await menu.boundingBox();
+    assert.ok(Math.abs(menuBox.width - Math.min(triggerBox.width, width - 16)) <= 1, `${name}菜单跟随按钮宽度`);
+    await fits(menu, `${width}/${name}/长文字及当前标记`);
+    assert.equal(await menu.getByRole('option', { name: '暂不可选', exact: true }).isDisabled(), true);
+    if (name === '表单选项示例') {
+      await page.setViewportSize({ width: width + 80, height: 918 });
+      await page.waitForFunction(() => {
+        const trigger = document.querySelector('[role=combobox][aria-label="表单选项示例"]').getBoundingClientRect();
+        const menu = document.querySelector('[role=listbox][aria-label="表单选项示例"]').getBoundingClientRect();
+        return Math.abs(menu.width - Math.min(trigger.width, innerWidth - 16)) <= 1 && menu.left >= 8 && menu.right <= innerWidth - 8;
+      });
+      await page.setViewportSize({ width, height: 918 });
+    }
+    await menu.getByRole('option').last().click();
+    await combo.click();
+    await fits(menu, `${width}/${name}/选中长项`);
+    await combo.press('Escape');
+  }
   await showcase.getByRole('button', { name: '按钮与切换', exact: true }).click();
   const demo = showcase.getByRole('navigation', { name: '长文字页签演示', exact: true });
   await demo.getByRole('button').last().click();

@@ -82,7 +82,7 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
           </div>
         </Example>
       </>}
-      {category === 'select' && <Example title="选项菜单" rule="选中项右侧统一显示“当前”，支持方向键、Enter选择与Esc关闭；禁用选项不可选择，键盘会跳过。长选项在菜单内换行，触发按钮显示省略。表单、紧凑、小号、工具栏和选中高亮均为公共规格。" usage="项目切换、场次轮次、视频候选、提示词分类">
+      {category === 'select' && <Example title="选项菜单" rule="文字按钮的菜单与按钮同宽，长选项在菜单内换行，当前标记空间不足时另起一行；窗口缩放时重新定位。纯三角入口保留可读菜单宽度。选中项右侧统一显示“当前”，支持方向键、Enter选择与Esc关闭；禁用选项不可选择，键盘会跳过。长选项在菜单内换行，触发按钮显示省略。表单、紧凑、小号、工具栏和选中高亮均为公共规格。" usage="项目切换、场次轮次、视频候选、提示词分类">
         <div className="component-demo-row"><TabSelect label="示例选项" items={options} selected={selection} onChange={setSelection} disabled={disabled} /><span>禁用菜单</span><Switch label="禁用示例菜单" checked={disabled} onChange={setDisabled} /></div>
         <div className="component-demo-stack"><TabSelect variant="field" label="表单选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} />
         <div className="component-demo-row"><TabSelect size="compact" label="紧凑选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} /><TabSelect size="small" label="小号选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} /><TabSelect size="toolbar" highlightSelected label="高亮选项示例" items={options} selected={selection} onChange={setSelection} disabled={disabled} /></div></div>

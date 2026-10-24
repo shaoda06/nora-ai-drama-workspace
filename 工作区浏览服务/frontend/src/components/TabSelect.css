@@ -4,7 +4,8 @@ button.tab-select.tab-select-marked[data-active]{background-image:none}
 .tab-select.tab-select-marked:not(.tab-select-icon)::before{content:''}
 
 .tab-select.tab-select-marked.tab-select-highlight[data-active=true]{background-color:var(--green);color:white}
-.tab-select-menu [role=option]>span:first-child{min-width:0;overflow-wrap:anywhere}
+.tab-select-menu [role=option]{flex-wrap:wrap;gap:4px 8px}
+.tab-select-menu [role=option]>span:first-child{flex:1 1 auto;min-width:min(4em,100%);overflow-wrap:anywhere}
 .tab-select.tab-select-marked.tab-select-field{width:100%;color:#25352f;font-size:14px}
 .tab-select.tab-select-marked.tab-select-small{font-size:11px;padding:4px 6px;max-width:130px;line-height:1.6}
 .tab-select.tab-select-marked.tab-select-icon{width:22px;height:28px;justify-content:center;padding:2px;border:0;background:transparent}
