@@ -18,6 +18,7 @@ import { HeaderControlsContext } from './components/AppShell';
 import { SyncNotification } from './components/SyncNotification';
 import { EpisodeProduction } from './components/EpisodeProduction';
 import { EpisodeOutlines } from './components/EpisodeOutlines';
+import { ReleaseFilms } from './components/ReleaseFilms';
 import { AssetMedia } from './components/AssetMedia';
 import { AssetCandidateMedia } from './components/AssetCandidateMedia';
 import { PersonImages, personImageCategory, personImageTabs } from './components/PersonImages';
@@ -98,7 +99,7 @@ function SectionPane({ project, section, revision, active, episode, onEpisodeCha
 }
 function Section({ value, project, section, revision, active, episode, onEpisodeChange, asset, onAssetChange }: { value: RecordData; project: string; section: string; revision: number; active: boolean; episode: string | null; onEpisodeChange: (episode: string | null) => void } & AssetNavigation) {
   if (section === '09-剧集制作') return <EpisodeProduction project={project} statistics={value.statistics} items={value.children} selected={episode} onSelect={onEpisodeChange} revision={revision} />;
-  if (section === '98-发布成片') return <>{!value.children.length && <p className="muted">暂无资料。</p>}<FileTree items={value.children} showOriginal={false} showStatus={false} /></>;
+  if (section === '98-发布成片') return <ReleaseFilms items={value.children} active={active} />;
   if (value.kind === 'covers') return <CoverLibrary value={value} revision={revision} />;
   if (value.kind === 'accounts') return <AccountLibrary value={value} revision={revision} />;
   if (section === '06-分集大纲') return <EpisodeOutlines value={value} />;

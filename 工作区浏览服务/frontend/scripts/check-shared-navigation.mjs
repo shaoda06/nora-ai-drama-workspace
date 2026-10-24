@@ -86,6 +86,13 @@ export async function checkSharedNavigation(page, width, selfTest) {
     await fixture.getByRole('button', { name, exact: true }).click();
     assert.equal(await pagination.getByRole('button').count(), 0);
   }
+  for (const [id, count] of [['pagination-single', 1], ['pagination-empty', 0]]) {
+    const fixed = fixture.getByTestId(id);
+    assert.equal(await fixed.getByRole('button').count(), 2, 'alwaysShow单页及空页保留翻页按钮');
+    for (const button of await fixed.getByRole('button').all()) assert.equal(await button.isDisabled(), true);
+    assert.match(await fixed.innerText(), new RegExp(`共${count}集`), '自定义条目单位');
+    await fits(fixed.locator('.pagination'), `${width}/${id}`);
+  }
   await fixture.getByRole('button', { name: '第九页', exact: true }).click();
   await fits(pagination, `${width}/分页`);
   const before = await positions(pagination);

@@ -31,6 +31,8 @@ export function NavigationFixture() {
     <button onClick={() => { setPage(1); setTotal(10); }}>单页</button>
     <button onClick={() => { setPage(1); setTotal(0); }}>空页</button>
     <div data-testid="pagination"><Pagination page={page} total={total} pageSize={10} change={setPage} /></div>
+    <div data-testid="pagination-single"><Pagination alwaysShow itemLabel="集" page={1} total={1} pageSize={5} change={setPage} /></div>
+    <div data-testid="pagination-empty"><Pagination alwaysShow itemLabel="集" page={1} total={0} pageSize={5} change={setPage} /></div>
     <output data-testid="page-value">{page}</output>
     <div data-testid="switch-content" style={{ height: page % 2 ? 40 : 1600 }}>模拟不同页内容高度</div>
   </section>;

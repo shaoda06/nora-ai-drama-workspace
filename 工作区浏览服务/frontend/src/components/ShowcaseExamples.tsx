@@ -22,6 +22,7 @@ import { SegmentLayout } from './SegmentLayout';
 import type { SegmentVideoHandle } from './SegmentVideo';
 import { PromptSections } from './PromptSections';
 import { TaskCard } from './TaskCard';
+import { ReleaseFilms } from './ReleaseFilms';
 import { LocalQueueCard } from './LocalQueueCard';
 
 export function ComponentExample({ title, rule, usage, children, fullWidth = false }: { fullWidth?: boolean; title: string; rule: string; usage: string; children: ReactNode }) {
@@ -82,7 +83,10 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
     </>}
     {category === 'files' && <>
-      <ComponentExample fullWidth title="只读成片目录" rule="直接使用公共文件树，按文件与子目录浏览，保留空目录。列表只保留文件名预览入口，不显示确认状态；查看与下载放在预览弹窗中，不提供改名、移动或删除。示例不使用真实项目文件。" usage="发布成片及项目文件目录">
+      <ComponentExample fullWidth title="发布成片选集与播放" rule="每页5集，翻页选中该页第一集；不足一页仍显示上一页、下一页和总集数。选集只切换下方视频，不自动播放，不修改文件。这里只播放固定示例媒体。" usage="项目发布成片">
+        <ReleaseFilms items={Array.from({ length: 12 }, (_, index) => ({ ...video, name: `第${index + 1}集.webm`, key: `示例/第${index + 1}集.webm` }))} />
+      </ComponentExample>
+      <ComponentExample fullWidth title="只读文件目录" rule="直接使用公共文件树，按文件与子目录浏览，保留空目录。列表只保留文件名预览入口，不显示确认状态；查看与下载放在预览弹窗中，不提供改名、移动或删除。示例不使用真实项目文件。" usage="仅文件名入口的目录资料">
         <FileTree showOriginal={false} showStatus={false} items={[{ kind: 'video', name: '示例发布成片.webm', url: video.url },
           { kind: 'group', name: '分平台', children: [{ kind: 'video', name: '示例竖屏版本.webm', url: video.url }] },
           { kind: 'group', name: '待导出空目录', children: [] }]} />

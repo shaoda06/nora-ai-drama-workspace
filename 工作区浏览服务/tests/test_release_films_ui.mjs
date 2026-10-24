@@ -1,4 +1,4 @@
-// Real Project, FileTree, Preview and FileActions; all API responses are local fixtures.
+// Real Project, ReleaseFilms, TabNav and Pagination; all API responses are local fixtures.
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { mkdtemp, readFile } from 'node:fs/promises';
@@ -14,10 +14,14 @@ const screenshots = await mkdtemp(path.join(os.tmpdir(), 'nora-release-films-'))
 const sample = await readFile(new URL('../frontend/public/component-samples/video.webm', import.meta.url));
 const file = (name, parent = '') => ({ kind: 'video', name, key: `98-发布成片/${parent}${name}`,
   url: '/api/projects/fixture/files/' + encodeURIComponent(`98-发布成片/${parent}${name}`) });
-const rootFile = file('最终 成片 #1.webm');
-const longFile = file('中文长名称与LongUnbrokenReference'.repeat(5) + '.webm', '分平台/');
+const rootFile = file('第1集.webm');
+const longFile = file('第12集-' + '中文长名称与LongUnbrokenReference'.repeat(5) + '.webm', '子目录/');
+const episodes = Array.from({ length: 10 }, (_, index) => file(`第${index + 1}集.webm`)).reverse();
 const tree = { kind: 'group', name: '发布成片', key: '98-发布成片', note: '只读浏览，不修改用户文件。', children: [rootFile,
-  { kind: 'group', name: '分平台', children: [longFile] }, { kind: 'group', name: '待导出空目录', children: [] }] };
+  ...episodes.filter(item => item.name !== rootFile.name),
+  { kind: 'group', name: '子目录', children: [file('第11集.webm', '子目录/'), longFile] },
+  { kind: 'group', name: '待导出空目录', children: [] },
+  { kind: 'text', name: '说明.txt', key: '98-发布成片/说明.txt' }] };
 let mode = 'files', unexpected = [], writes = [];
 // Serve downloads over real local HTTP; browser route interception cannot reliably complete attachments.
 const server = await createServer({ configFile: false, root: fileURLToPath(new URL('../frontend', import.meta.url)),
@@ -42,7 +46,7 @@ const server = await createServer({ configFile: false, root: fileURLToPath(new U
         { kind: 'group', name: '通用目录', children: [longFile] }] };
       else if (pathname.endsWith('/sections/98-发布成片')) {
         if (mode === 'error') { response.statusCode = 503; data = { detail: '本地模拟读取失败' }; }
-        else data = mode === 'empty' ? { ...tree, children: [] } : tree;
+        else data = { ...tree, children: mode === 'empty' ? [] : mode === 'single' ? [rootFile] : tree.children };
       } else { unexpected.push(pathname); response.statusCode = 404; data = {}; }
       response.setHeader('Content-Type', 'application/json'); response.end(JSON.stringify(data));
     });
@@ -69,48 +73,71 @@ try {
     const entry = page.getByRole('navigation', { name: '项目栏目', exact: true }).getByRole('button', { name: '发布成片', exact: true });
     await entry.click();
     const panel = page.locator('section.panel:not([hidden])');
-    await panel.getByRole('button', { name: rootFile.name, exact: true }).waitFor();
+    const selector = panel.getByRole('navigation', { name: '发布成片选集', exact: true });
+    await selector.getByRole('button', { name: '第1集', exact: true }).waitFor();
     assert.equal(await entry.getAttribute('aria-current'), 'page');
     assert.equal(await page.getByRole('navigation', { name: '项目栏目', exact: true }).locator(':scope > button').last().innerText(), '发布成片');
     assert.equal(await panel.getByRole('searchbox').count(), 0);
     assert.equal(await panel.locator(':scope > p.muted').count(), 0, '不显示目录说明');
     assert.equal(await panel.getByRole('link').count(), 0, '列表不再显示查看和下载');
     assert.equal(await panel.locator('.file-actions, .status-badge').count(), 0, '发布成片不显示确认状态');
-    assert.deepEqual(await panel.locator(':scope > .tree > *').evaluateAll(els => els.map(el => el.tagName)), ['DIV', 'DETAILS', 'DETAILS']);
-    await panel.locator('summary').filter({ hasText: '待导出空目录' }).click();
-    assert.equal(await panel.locator('details[open]').count(), 1);
-    await panel.locator('summary').filter({ hasText: '分平台' }).click();
-    await panel.getByRole('button', { name: longFile.name, exact: true }).waitFor();
-    assert.equal(await panel.getByRole('link').count(), 0, '子目录沿用相同的精简规格');
-    assert.equal(await panel.locator('.file-actions, .status-badge').count(), 0, '子目录同样隐藏确认状态');
-    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'long user filename must wrap');
-    await panel.getByRole('button', { name: rootFile.name, exact: true }).click();
-    const dialog = page.getByRole('dialog', { name: rootFile.name, exact: true });
-    await dialog.locator('video').waitFor();
-    assert.equal(await dialog.locator('video').evaluate(el => el.autoplay), false);
-    await dialog.locator('video').evaluate(async el => { el.muted = true; await el.play(); });
-    await page.waitForFunction(() => document.querySelector('dialog video').currentTime > 0);
-    await dialog.locator('video').evaluate(el => el.pause());
-    const downloadEvent = page.waitForEvent('download');
-    await dialog.getByRole('link', { name: '下载', exact: true }).click();
-    const download = await downloadEvent;
-    assert.deepEqual(await readFile(await download.path()), sample);
-    assert.equal(download.suggestedFilename(), rootFile.name);
-    await page.keyboard.press('Escape');
-    await dialog.waitFor({ state: 'detached' });
-    await page.screenshot({ path: path.join(screenshots, `${viewport.width}-release-tree.png`), animations: 'disabled' });
+    assert.equal(await panel.locator('.tree, details').count(), 0, '取消目录列表');
+    assert.deepEqual(await selector.getByRole('button').allTextContents(), ['第1集', '第2集', '第3集', '第4集', '第5集']);
+    await panel.getByText('1 / 3 · 共12集', { exact: true }).waitFor();
+    assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
+    const player = panel.locator('video');
+    assert.equal(await player.count(), 1);
+    assert.equal(await player.evaluate(el => el.autoplay), false);
+    await player.evaluate(async el => { el.muted = true; await el.play(); });
+    await page.waitForFunction(() => document.querySelector('section.panel:not([hidden]) video').currentTime > 0);
+    const previous = await player.elementHandle();
+    await selector.getByRole('button', { name: '第3集', exact: true }).click();
+    assert.equal(await previous.evaluate(el => el.isConnected), false, '切集卸载原视频');
+    assert.equal(await player.getAttribute('aria-label'), '第3集.webm');
+    assert.equal(await player.evaluate(el => el.paused), true);
+    await panel.getByRole('button', { name: '下一页', exact: true }).click();
+    assert.deepEqual(await selector.getByRole('button').allTextContents(), ['第6集', '第7集', '第8集', '第9集', '第10集']);
+    assert.equal(await player.getAttribute('aria-label'), '第6集.webm');
+    await panel.getByRole('button', { name: '下一页', exact: true }).click();
+    assert.equal(await selector.getByRole('button').count(), 2);
+    assert.equal(await player.getAttribute('aria-label'), '第11集.webm', '子目录视频纳入选集');
+    assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).isDisabled(), true);
+    await selector.getByRole('button').last().click();
+    assert.equal(await player.getAttribute('aria-label'), longFile.name);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, '长名称不得越界');
+    await page.screenshot({ path: path.join(screenshots, `${viewport.width}-long-name.png`), animations: 'disabled' });
+    await panel.getByRole('button', { name: '上一页', exact: true }).click();
+    assert.equal(await player.getAttribute('aria-label'), '第6集.webm');
+    await player.dispatchEvent('error');
+    const mediaFailure = page.locator('.floating-message').filter({ hasText: '无法播放' });
+    await mediaFailure.getByRole('button', { name: '重新加载视频', exact: true }).click();
+    await mediaFailure.waitFor({ state: 'detached' });
+    await player.evaluate(async el => { el.muted = true; await el.play(); });
+    await page.getByRole('navigation', { name: '项目栏目', exact: true }).getByRole('button', { name: '项目定位', exact: true }).click();
+    assert.equal(await page.locator('.release-films-player').count(), 0, '离开栏目卸载播放器');
+    await entry.click();
+    assert.equal(await player.getAttribute('aria-label'), '第1集.webm', '重新进入栏目默认第一集');
+    assert.equal(await player.evaluate(el => el.paused), true);
+    await page.waitForFunction(() => document.querySelector('section.panel:not([hidden]) video')?.videoWidth > 0);
+    await page.screenshot({ path: path.join(screenshots, `${viewport.width}-release-player.png`), animations: 'disabled' });
+    mode = 'single'; await page.reload(); await entry.click();
+    await panel.getByText('1 / 1 · 共1集', { exact: true }).waitFor();
+    assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
+    assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).isDisabled(), true);
     mode = 'empty'; await page.reload(); await entry.click();
-    await panel.getByText('暂无资料。', { exact: true }).waitFor();
+    await panel.getByText('暂无发布成片视频。', { exact: true }).waitFor();
+    assert.equal(await player.count(), 0);
+    await panel.getByText('1 / 1 · 共0集', { exact: true }).waitFor();
     mode = 'error'; await page.reload(); await entry.click();
     const failure = page.locator('.floating-message').filter({ hasText: '资料读取失败' });
     await failure.getByRole('button', { name: '重新读取', exact: true }).waitFor();
     mode = 'files'; await failure.getByRole('button', { name: '重新读取', exact: true }).click();
-    await panel.getByRole('button', { name: rootFile.name, exact: true }).waitFor();
+    await selector.getByRole('button', { name: '第1集', exact: true }).waitFor();
     await failure.waitFor({ state: 'detached' });
     assert.equal(await page.locator('vite-error-overlay').count(), 0);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     assert.deepEqual(errors, []); assert.deepEqual(writes, []); assert.deepEqual(unexpected, []);
-    console.log(`${viewport.width}px: last navigation entry, original tree/empty folders, long filenames, no note/search/inline actions/status, preview/download bytes, empty/error/retry; no writes or unexpected API passed`);
+    console.log(`${viewport.width}px: 5-per-page selection, natural numeric order, 12 videos including subdirectories, one inline player, manual playback, switching/unloading, long names, single/empty pagination, media and read retry; no errors/writes passed`);
     await context.close();
   }
   console.log(`Screenshots: ${screenshots}`);
