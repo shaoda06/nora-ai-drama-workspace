@@ -6,8 +6,8 @@ import path from 'node:path';
 import os from 'node:os';
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
-const [base, project] = process.argv.slice(2);
-assert.ok(base && project, 'Usage: node tests/test_scene_rounds_ui.mjs URL PROJECT');
+const [base, project, episode = 'EP003'] = process.argv.slice(2);
+assert.ok(base && project, 'Usage: node tests/test_scene_rounds_ui.mjs URL PROJECT [EP]');
 const out = path.join(os.tmpdir(), 'nora-scene-rounds-ui');
 await mkdir(out, { recursive: true });
 const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'msedge', headless: true });
@@ -33,7 +33,7 @@ try {
     script: document('剧本', number === 1 ? 'v1' : 'v2'), storyboard: document('分镜', number === 1 ? 'v1' : 'v2'),
     segments: ids.map(id => ({ id, duration: 3, stage: '一采', run: number === 2 && id === 'P001' ? 'R002' : 'R001', scriptHtml: `${id}轮次分镜` })) });
   const fixtureRounds = [round(1, ['P003', 'P001', 'P002']), round(2, ['P001', 'P002'])];
-  await page.route('**/episodes/EP003', async route => {
+  await page.route(`**/episodes/${episode}`, async route => {
     const response = await route.fetch();
     const data = await response.json();
     data.scenes = ['C001']; data.previousEpisode = null; data.productionIssues = []; data.warnings = [];
@@ -41,12 +41,12 @@ try {
     await route.fulfill({ response, json: data });
   });
   await page.route('**/revision-notes/**', route => route.fulfill({ json: { rounds: {}, notes: {
-    'P001/一采/R001': { segment: 'P001', run: 'R001', stage: '一采', text: '旧轮意见', updatedAt: '2026-10-17T20:00:00+08:00', fileRevision: 'fixture-old' },
-    'P001/一采/R002': { segment: 'P001', run: 'R002', stage: '一采', text: '新轮意见', updatedAt: '2026-10-17T20:00:00+08:00', fileRevision: 'fixture-new' }
+    'round/1/P001/一采/R001': { roundNumber: 1, segment: 'P001', run: 'R001', stage: '一采', text: '旧轮意见', updatedAt: '2026-10-17T20:00:00+08:00', fileRevision: 'fixture-old' },
+    'round/2/P001/一采/R002': { roundNumber: 2, segment: 'P001', run: 'R002', stage: '一采', text: '新轮意见', updatedAt: '2026-10-17T20:00:00+08:00', fileRevision: 'fixture-new' }
   } } }));
   await page.goto(base + '/#/projects/' + encodeURIComponent(project), { waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: '剧集制作', exact: true }).click();
-  await page.getByRole('button').filter({ hasText: 'EP003' }).first().click();
+  await page.getByRole('button').filter({ hasText: episode }).first().click();
   const choose = page.getByRole('combobox', { name: '场次修改轮次', exact: true });
   await choose.waitFor();
   const chooseRound = async number => { await choose.click(); await page.getByRole('option', { name: new RegExp('^第' + number + '轮：') }).click(); };

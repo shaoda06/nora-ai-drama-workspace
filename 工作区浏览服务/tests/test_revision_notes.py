@@ -16,7 +16,7 @@ class RevisionNotesTests(HttpTestCase):
     def setUp(self):
         super().setUp()
         self.temp = tempfile.TemporaryDirectory()
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
         self.project = self.root / '示例项目'
         for project in ('示例项目', '另一个项目'):
             for episode in ('EP001', 'EP002'):
@@ -117,6 +117,69 @@ class RevisionNotesTests(HttpTestCase):
 
     def export_put(self, notes=None, rounds=None):
         return self.client.put(self.url + '/export', json={'notes': notes or [], 'rounds': rounds or []}, headers={'Origin': 'http://localhost:8782'})
+
+    def test_reused_video_notes_are_independent_per_review_round(self):
+        self.round_manifest()
+        for number in (1, 2):
+            response = self.put(self.value | {'roundNumber': number, 'text': f'第{number}轮意见'})
+            self.assertEqual(response.status_code, 200, response.text)
+        notes = self.client.get(self.url).json()['notes']
+        self.assertEqual(notes['round/1/P001/一采/R001']['text'], '第1轮意见')
+        self.assertEqual(notes['round/2/P001/一采/R001']['text'], '第2轮意见')
+        change = self.value | {'roundNumber': 2, 'text': '', 'expectedText': '第2轮意见'}
+        response = self.export_put([change])
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()['notes']['round/1/P001/一采/R001']['text'], '第1轮意见')
+        self.assertEqual(response.json()['notes']['round/2/P001/一采/R001']['text'], '')
+        self.assertEqual(self.export_put([change]).status_code, 409)
+        self.assertEqual(self.put(self.value | {'roundNumber': 0}).status_code, 422)
+        self.assertEqual(self.put(self.value | {'roundNumber': 9}).status_code, 503)
+
+    def test_legacy_notes_use_registration_time_not_reused_video_membership(self):
+        self.round_manifest()
+        manifest = self.project / '09-剧集制作/EP001/其他资料/工作稿/EP001-C001-场次修改轮次.json'
+        data = json.loads(manifest.read_text('utf-8'))
+        for entry in data['rounds']:
+            entry['created_at'] = f'2026-10-24T{entry["number"]:02}:00:00+08:00'
+        manifest.write_text(json.dumps(data), 'utf-8')
+        self.put()
+        target = main.revision_notes.path(self.project, 'EP001', 'C001')
+        saved = json.loads(target.read_text('utf-8'))
+        saved['notes']['P001/一采/R001'].pop('roundNumber')
+        saved['notes']['P001/一采/R001']['updatedAt'] = '2026-10-24T01:30:00+08:00'
+        target.write_text(json.dumps(saved), 'utf-8')
+        original = target.read_bytes()
+        notes = self.client.get(self.url).json()['notes']
+        self.assertEqual(notes['round/1/P001/一采/R001']['roundNumber'], 1)
+        self.assertNotIn('round/2/P001/一采/R001', notes)
+        self.assertEqual(target.read_bytes(), original, 'GET must not migrate files on disk')
+        self.assertEqual(self.put(self.value | {'roundNumber': 2, 'text': '第二轮新意见'}).status_code, 200)
+        notes = RevisionNotes().read(self.project, 'EP001', 'C001').notes
+        self.assertEqual(notes['round/1/P001/一采/R001'].text, self.value['text'])
+        self.assertEqual(notes['round/2/P001/一采/R001'].text, '第二轮新意见')
+
+    def test_legacy_without_registration_time_remains_unassigned_history(self):
+        self.round_manifest()
+        self.put()
+        target = main.revision_notes.path(self.project, 'EP001', 'C001')
+        raw = json.loads(target.read_text('utf-8'))
+        raw['notes']['P001/一采/R001'].pop('roundNumber')
+        target.write_text(json.dumps(raw), 'utf-8')
+        self.put(self.value | {'roundNumber': 2, 'text': '本轮意见'})
+        notes = self.client.get(self.url).json()['notes']
+        self.assertEqual(notes['P001/一采/R001']['text'], self.value['text'])
+        self.assertIsNone(notes['P001/一采/R001']['roundNumber'])
+        self.assertEqual(notes['round/2/P001/一采/R001']['text'], '本轮意见')
+        # Editing unassigned history later must not turn it into current-round feedback.
+        manifest = target.with_name('EP001-C001-场次修改轮次.json')
+        data = json.loads(manifest.read_text('utf-8'))
+        for entry in data['rounds']:
+            entry['created_at'] = f'2020-01-01T0{entry["number"]}:00:00+08:00'
+        manifest.write_text(json.dumps(data), 'utf-8')
+        response = self.export_put([self.value | {'text': '补充旧意见', 'expectedText': self.value['text']}])
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()['notes']['P001/一采/R001']['text'], '补充旧意见')
+        self.assertEqual(response.json()['notes']['round/2/P001/一采/R001']['text'], '本轮意见')
 
     def test_export_batch_and_rounds_persist_without_changing_other_entries(self):
         self.round_manifest()

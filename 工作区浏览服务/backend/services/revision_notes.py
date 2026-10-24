@@ -21,6 +21,11 @@ class NoteInput(BaseModel):
     run: Annotated[str, Field(pattern=r'^R[0-9]{3,}$')]
     text: Annotated[str, Field(max_length=20000)]
     fileRevision: Annotated[str, Field(min_length=1, max_length=128)]
+    roundNumber: Annotated[int, Field(ge=1)] | None = None
+
+    def key(self) -> str:
+        video = f'{self.segment}/{self.stage}/{self.run}'
+        return f'round/{self.roundNumber}/{video}' if self.roundNumber is not None else video
 
 
 class RevisionNote(NoteInput):
@@ -84,16 +89,50 @@ class RevisionNotes:
                 return SceneNotes(episode=episode, scene=scene, notes={})
             data = SceneNotes.model_validate_json(target.read_text('utf-8'))
             if data.episode != episode or data.scene != scene or any(
-                key != f'{note.segment}/{note.stage}/{note.run}' for key, note in data.notes.items()
+                key != note.key() for key, note in data.notes.items()
             ) or any(key != str(note.number) for key, note in data.rounds.items()):
                 raise ValueError('修改意见文件中的归属与入口不一致')
+            self.assign_legacy_rounds(project, episode, scene, data)
             return data
 
+    def assign_legacy_rounds(self, project: Path, episode: str, scene: str, data: SceneNotes):
+        # Old notes have no round identity. Only use the active registered round
+        # at their save time, never all rounds that happen to reuse the video.
+        from backend.parsers.scene_rounds import rounds
+        target = project / rounds.manifest_key(episode, scene)
+        if not any('roundNumber' not in note.model_fields_set for note in data.notes.values()) or not target.exists():
+            return
+        entries = rounds.validate_manifest(json.loads(target.read_text('utf-8-sig')), episode, scene)['rounds']
+        if not entries or any(not entry.get('created_at') for entry in entries):
+            return
+        starts = [datetime.fromisoformat(entry['created_at']) for entry in entries]
+        if any(start.tzinfo is None for start in starts) or starts != sorted(starts):
+            return
+        for key, note in list(data.notes.items()):
+            if 'roundNumber' in note.model_fields_set:
+                continue
+            saved = datetime.fromisoformat(note.updatedAt)
+            if saved.tzinfo is None:
+                continue
+            active = [entry for entry, start in zip(entries, starts) if start <= saved]
+            if not active:
+                continue
+            entry = active[-1]
+            if not any(segment['id'] == note.segment and segment['stage'] == note.stage and segment['run'] == note.run for segment in entry['segments']):
+                continue
+            assigned = note.model_copy(update={'roundNumber': entry['number']})
+            if assigned.key() not in data.notes:
+                del data.notes[key]
+                data.notes[assigned.key()] = assigned
+
     def save(self, project: Path, episode: str, scene: str, value: NoteInput) -> RevisionNote:
+        from backend.parsers.scene_rounds import rounds
         with self.lock:
             data = self.read(project, episode, scene)
+            if value.roundNumber is not None:
+                rounds.referenced_round(project, f'{episode}-{scene}', value.roundNumber)
             note = RevisionNote(**value.model_dump(), updatedAt=datetime.now().astimezone().isoformat(timespec='seconds'))
-            data.notes[f'{value.segment}/{value.stage}/{value.run}'] = note
+            data.notes[value.key()] = note
             self.write(project, episode, scene, data)
             return note
 
@@ -102,7 +141,9 @@ class RevisionNotes:
         with self.lock:
             data = self.read(project, episode, scene)
             for value in changes.notes:
-                old = data.notes.get(f'{value.segment}/{value.stage}/{value.run}')
+                if value.roundNumber is not None:
+                    rounds.referenced_round(project, f'{episode}-{scene}', value.roundNumber)
+                old = data.notes.get(value.key())
                 if (old.text if old else '') != value.expectedText:
                     raise NotesChangedError('分段意见已在其他位置更新，请保留当前输入，重新读取后核对。')
             for value in changes.rounds:
@@ -112,7 +153,7 @@ class RevisionNotes:
                     raise NotesChangedError('整场意见已在其他位置更新，请保留当前输入，重新读取后核对。')
             updated = datetime.now().astimezone().isoformat(timespec='seconds')
             for value in changes.notes:
-                key = f'{value.segment}/{value.stage}/{value.run}'
+                key = value.key()
                 fields = value.model_dump(exclude={'expectedText'})
                 if key in data.notes:
                     fields['fileRevision'] = data.notes[key].fileRevision
