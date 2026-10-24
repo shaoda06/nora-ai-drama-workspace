@@ -3,6 +3,7 @@ import type { DirectorSheets } from '../api';
 import { Dialog, PreviewContext } from '../components';
 import { FileActions } from './FileActions';
 import { Pagination } from './Pagination';
+import { TabNav } from './TabNav';
 import { TabSelect } from './TabSelect';
 import './SceneDirectorSheets.css';
 
@@ -31,6 +32,9 @@ export function SceneDirectorSheets({ sheets, storyboardVersion, revision }: { s
     <div className="toolbar director-sheet-toolbar">
       <div className="director-sheet-choice"><span className="director-sheet-source">{storyboardVersion ? `场次分镜：${storyboardVersion.toUpperCase()}` : '未确定来源分镜版本'}</span>
         {options.length > 0 && <TabSelect highlightSelected label="导演分镜表候选" selected={selected} onChange={value => { setChoice(value); setPageKey(''); }} items={options} />}</div>
+      {current && <div className="director-sheet-pages"><TabNav compact scrollable label="导演分镜表页码"
+        items={images.map((item, index) => ({ value: String(item.page), label: String(index + 1) }))}
+        selected={String(current.page)} onChange={setPageKey} /></div>}
       {sheets?.record && <div className="director-sheet-record"><button className="link" onClick={() => preview(sheets.record!)}>查看导演表生成与审阅记录</button></div>}
     </div>
     {current ? <>

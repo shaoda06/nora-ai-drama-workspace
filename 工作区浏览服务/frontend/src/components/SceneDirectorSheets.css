@@ -14,3 +14,5 @@
 @media(max-width:600px){.director-sheet-footer{grid-template-columns:minmax(0,1fr)}.director-sheet-page-count,.director-sheet-file-actions{grid-column:1}}
 
 .director-sheet-choice{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0}
+
+.director-sheet-pages{min-width:0;max-width:100%}

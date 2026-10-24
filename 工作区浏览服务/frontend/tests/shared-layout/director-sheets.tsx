@@ -16,9 +16,10 @@ export function DirectorSheetsFixture() {
   const [mode, setMode] = useState('formal');
   const [preview, setPreview] = useState<FileItem | null>(null);
   const version = mode === 'old' ? 'v01' : mode === 'other' ? 'v08' : 'v07';
-  const data = mode === 'empty' ? undefined : mode === 'candidate' ? { ...sheets, formal: [], candidates: sheets.candidates.map(item => ({ ...item, adopted: false })) } : sheets;
+  const data = mode === 'seven' ? { ...sheets, formal: [], candidates: Array.from({ length: 7 }, (_, index) => image(index + 1)) } : mode === 'empty' ? undefined : mode === 'candidate' ? { ...sheets, formal: [], candidates: sheets.candidates.map(item => ({ ...item, adopted: false })) } : sheets;
   return <section data-testid="director-sheets" className="panel">
     <h2>导演分镜表隔离检查</h2>
+    <button onClick={() => setMode('seven')}>模拟七页候选</button>
     <button onClick={() => setMode('candidate')}>模拟仅候选</button>
     <button onClick={() => setMode('empty')}>模拟空场次</button>
     <button onClick={() => setMode('old')}>模拟无图旧版分镜</button>

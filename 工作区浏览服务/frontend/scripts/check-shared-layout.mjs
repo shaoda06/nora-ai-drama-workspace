@@ -123,7 +123,13 @@ try {
       assert.ok(Math.abs(actions.x + actions.width - footer.x - footer.width) < 1, '原图入口靠右');
     }
 
-    assert.equal(await sheets.getByRole('navigation', { name: '导演分镜表页码' }).count(), 0, '移除上方页码条');
+    const sheetPages = sheets.getByRole('navigation', { name: '导演分镜表页码' });
+    assert.equal(await sheetPages.getByRole('button').count(), 3);
+    await sheetPages.getByRole('button', { name: '3', exact: true }).click();
+    assert.match(await sheetImage.getAttribute('alt'), /第03页/);
+    assert.equal(await sheetPages.getByRole('button', { name: '3', exact: true }).getAttribute('aria-current'), 'page');
+    await sheetPages.getByRole('button', { name: '1', exact: true }).click();
+    await contained(sheetPages, `${width}px / 导演表数字页码`);
     const sourceLabel = sheets.getByText('场次分镜：V07', { exact: true });
     assert.equal(await sourceLabel.count(), 1);
     assert.equal(await sourceLabel.evaluate(el => getComputedStyle(el).fontSize), '15px', '版本标签放大');
@@ -195,6 +201,21 @@ try {
     assert.match(await sheetImage.getAttribute('alt'), /v01-第03页/);
     await contained(sheets.locator('.director-sheet-image'), `${width}px / 导演表单页`);
     await contained(sheetArrows, `${width}px / 图片左右箭头`);
+    assert.equal(await sheetPages.getByRole('button', { name: '2', exact: true }).getAttribute('aria-current'), 'page', '缺页候选按阅读顺序显示，仍定位实际图片页号');
+    await sheets.getByRole('button', { name: '模拟七页候选', exact: true }).click();
+    assert.deepEqual(await sheetPages.getByRole('button').allTextContents(), ['1', '2', '3', '4', '5', '6', '7']);
+    await sheetPages.getByRole('button', { name: '7', exact: true }).click();
+    assert.match(await sheetImage.getAttribute('alt'), /第07页/);
+    assert.match(await sheetCount.innerText(), /第7页 \/ 共7页/);
+    await sheetArrows.getByRole('button', { name: '上一张图', exact: true }).click();
+    assert.equal(await sheetPages.getByRole('button', { name: '6', exact: true }).getAttribute('aria-current'), 'page');
+    await contained(sheets.locator('.director-sheet-pages'), `${width}px / 七页候选数字选择容器`);
+    assert.equal(await sheetPages.evaluate(el => getComputedStyle(el).overflowX), 'auto', '窄屏页码只在自身横向滚动');
+    const selectedPageBounds = await sheetPages.evaluate(el => {
+      const box = el.getBoundingClientRect(), current = el.querySelector('[aria-current="page"]').getBoundingClientRect();
+      return { left: box.left, right: box.right, selectedLeft: current.left, selectedRight: current.right };
+    });
+    assert.ok(selectedPageBounds.selectedLeft >= selectedPageBounds.left - 1 && selectedPageBounds.selectedRight <= selectedPageBounds.right + 1, '直接选择后的当前页在滚动区域可见');
     await sheets.getByRole('button', { name: '模拟仅候选', exact: true }).click();
     assert.match(await sheets.getByRole('combobox', { name: '导演分镜表候选' }).innerText(), /候选2/);
     assert.equal(await sheetImage.count(), 1, '无采用时默认当前来源最新候选');
@@ -208,7 +229,7 @@ try {
     await sheets.getByRole('button', { name: '模拟空场次', exact: true }).click();
     assert.equal(await sheets.getByText('分镜 v07 尚未制作导演分镜表。', { exact: true }).count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, '导演表手机无横向溢出');
-    console.log(`导演分镜表检查：${width}px单图、版本文字、移除页码条、圆形箭头、首尾隐藏、紧凑页码和原图入口、全视口看图与退出、审阅入口靠右、来源版本筛选、候选采用状态、单页及空场次通过。`);
+    console.log(`导演分镜表检查：${width}px单图、版本文字、数字跳页与高亮同步、圆形箭头、首尾隐藏、紧凑页码和原图入口、全视口看图与退出、审阅入口靠右、来源版本筛选、候选采用状态、单页及空场次通过。`);
     await showcase.getByRole('button', { name: '列表与分页', exact: true }).click();
     const sheetPagination = showcase.locator('.pagination').last();
     await sheetPagination.getByRole('button', { name: '下一页', exact: true }).click();
