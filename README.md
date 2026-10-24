@@ -27,6 +27,7 @@
 | `sd-combat-engine/`、`sd-xuanhuan-engine/`、`sd-real-engine/` | 位于 `.agents/skills/`，由业务技能按戏型选择通用、玄幻、写实打戏方法 |
 | 主技能内 `dependencies/` | 三个ComfyUI适配技能的真源；节点源码目录或ZIP安装包统一放在其 `ComfyUI节点资源/` 子目录，保留来源、版本与许可证 |
 | `.agents/skills/krea2-style-library/` | 风格库使用与维护指引 |
+| `.agents/skills/nora-prompt-library/` | [提示词管理子技能](.agents/skills/nora-prompt-library/SKILL.md)，由Nora主控按需调用或独立使用，管理共用提示词两库 |
 | `共享提示词/` | 随公共仓库分发的提示词；网页新建默认保存到这里，一份提示词对应一个MD文件 |
 | `提示词管理/` | 仅本地保存的提示词与原有资料库，不入Git；与共享内容在同一页面管理 |
 | `工作区浏览服务/` | React＋FastAPI浏览服务、双击启动、共用解析器与开发历史 |

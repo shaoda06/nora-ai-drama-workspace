@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nora 提示词管理"
+  short_description: "按现有分类收录、检索和整理提示词，维护正文及公开或隐私归属"
+  default_prompt: "使用 $nora-prompt-library 按当前工作区的分类和公开／隐私要求整理提示词库。"
