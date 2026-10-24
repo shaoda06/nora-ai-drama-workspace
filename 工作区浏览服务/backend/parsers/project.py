@@ -686,7 +686,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
         return dict(link)
 
     def review_section(review, heading):
-        text = texts.get(review["key"], "")
+        text = read(review["key"], preview=False) or ""
         fragment = unquote(urlsplit(review["url"]).fragment)
         if fragment:
             headings = list(re.finditer(r"^(#{1,6}) (.+?)\s*$", text, re.M))

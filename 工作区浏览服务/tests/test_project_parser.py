@@ -71,6 +71,50 @@ class ProjectParserTests(unittest.TestCase):
         self.assertEqual(len(data["groups"][0]["files"]), 2)
         self.assertFalse((self.root / portal.POSITION).exists())
 
+    def test_scoped_asset_views_load_linked_review_documents(self):
+        self.person_fixture()
+        self.prop_fixture()
+        self.scene_fixture()
+        for stage, kind in ((portal.PEOPLE, "people"), (portal.PROPS, "props"),
+                            (portal.SCENES, "scenes")):
+            with self.subTest(stage=stage):
+                data = portal.build_data(self.root.resolve(), load_scope=stage)
+                assets = data[kind][0]["formal"]
+                self.assertTrue(assets)
+                self.assertTrue(all(asset["approved"] for asset in assets))
+                self.assertFalse(any("图片批准依据" in warning for warning in data["warnings"]))
+                for asset in assets:
+                    for review in asset["reviews"]:
+                        self.assertIn(review["key"], data["sources"])
+
+    def test_scoped_people_load_exact_review_from_shared_or_position_work_draft(self):
+        _, record = self.person_fixture()
+        original = record.read_text()
+        old_link = "../../审阅记录/CH001-审阅-001.md"
+        for folder in (portal.PEOPLE, "00-项目定位"):
+            key = folder + "/其他资料/工作稿/共享审阅-工作稿.md"
+            self.put(key, "# 工作稿\n\n### 审阅-历史图片01-001\n"
+                     "#### 4. 用户确认\n- 结论：不采用\n\n"
+                     "### 审阅-历史图片02-001\n"
+                     "#### 4. 用户确认\n- 结论：批准采用\n"
+                     "#### 5. 采用与后续影响\n- 留存用途：角色展示\n"
+                     "- 当前制作适用性：正常比例与Q版\n")
+            target = Path(os.path.relpath(self.root / key, record.parent)).as_posix()
+            for anchor, approved in (("审阅-历史图片02-001", True),
+                                     ("审阅-历史图片01-001", False),
+                                     ("审阅-不存在-001", False), ("", False)):
+                with self.subTest(folder=folder, anchor=anchor):
+                    link = target + ("#" + anchor if anchor else "")
+                    record.write_text(original.replace(old_link, link))
+                    data = portal.build_data(self.root.resolve(), load_scope=portal.PEOPLE)
+                    asset = data["people"][0]["formal"][0]
+                    self.assertEqual(asset["approved"], approved)
+                    if approved:
+                        self.assertEqual(asset["reviewDecision"], "批准采用")
+                        self.assertEqual(asset["retentionPurpose"], "角色展示")
+                        self.assertEqual(asset["applicability"], "正常比例与Q版")
+                        self.assertIn(key, data["sources"])
+
     def test_image_work_draft_uses_scoped_approval_and_original_asset_folder(self):
         _, person_record = self.person_fixture()
         prop_record = self.prop_fixture()
