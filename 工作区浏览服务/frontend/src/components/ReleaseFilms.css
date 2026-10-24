@@ -1,3 +1,2 @@
-.release-films{display:grid;gap:20px;min-width:0}
-.release-films-selector{display:flex;flex-wrap:wrap;align-items:center;gap:12px;min-width:0}
-.release-films-player{display:block;width:100%;max-height:65vh;object-fit:contain;background:#101916;border-radius:8px}
+.release-films{display:grid;gap:12px;min-width:0}
+.release-films-player{display:block;justify-self:start;width:auto;height:auto;max-width:100%;max-height:65vh;border-radius:8px}

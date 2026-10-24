@@ -11,6 +11,7 @@ export function NavigationFixture() {
   const [page, setPage] = useState(9);
   const [total, setTotal] = useState(1000);
   const [disabled, setDisabled] = useState(false);
+  const [filename, setFilename] = useState('one');
   return <section data-testid="navigation" className="panel">
     <button onClick={() => setDisabled(value => !value)}>切换导航禁用</button>
     <button onClick={() => setSelected('short')}>重置导航</button>
@@ -33,6 +34,9 @@ export function NavigationFixture() {
     <div data-testid="pagination"><Pagination page={page} total={total} pageSize={10} change={setPage} /></div>
     <div data-testid="pagination-single"><Pagination alwaysShow itemLabel="集" page={1} total={1} pageSize={5} change={setPage} /></div>
     <div data-testid="pagination-empty"><Pagination alwaysShow itemLabel="集" page={1} total={0} pageSize={5} change={setPage} /></div>
+    <div data-testid="filename-pagination" style={{ maxWidth: 161 }}><Pagination compact alwaysShow page={1} total={5} pageSize={5} change={setPage}>
+      <TabNav scrollable disabled={disabled} label="文件名分页示例" selected={filename} onChange={setFilename} items={[{ value: 'one', label: '第1集' }, { value: 'two', label: '第2集' }, { value: 'three', label: '第3集' }, { value: 'four', label: '第4集' }, { value: 'long', label: longLabel }]} />
+    </Pagination><output data-testid="filename-value">{filename}</output></div>
     <output data-testid="page-value">{page}</output>
     <div data-testid="switch-content" style={{ height: page % 2 ? 40 : 1600 }}>模拟不同页内容高度</div>
   </section>;

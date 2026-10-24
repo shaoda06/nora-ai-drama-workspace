@@ -83,7 +83,7 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
     </>}
     {category === 'files' && <>
-      <ComponentExample fullWidth title="发布成片选集与播放" rule="每页5集，翻页选中该页第一集；不足一页仍显示上一页、下一页和总集数。选集只切换下方视频，不自动播放，不修改文件。这里只播放固定示例媒体。" usage="项目发布成片">
+      <ComponentExample fullWidth title="发布成片选集与播放" rule="紧凑分页中间显示每页5个实际文件名（不带扩展名），保持一行，窄屏仅选集区域横向滚动。翻页选中该页第一集，不显示页码或总数；项目标题在括号中单独显示总数。视频只限最大高度，宽度保持原比例，不自动播放、不修改文件。这里只播放固定示例媒体。" usage="项目发布成片；Pagination中间内容及TabNav横向滚动规格">
         <ReleaseFilms items={Array.from({ length: 12 }, (_, index) => ({ ...video, name: `第${index + 1}集.webm`, key: `示例/第${index + 1}集.webm` }))} />
       </ComponentExample>
       <ComponentExample fullWidth title="只读文件目录" rule="直接使用公共文件树，按文件与子目录浏览，保留空目录。列表只保留文件名预览入口，不显示确认状态；查看与下载放在预览弹窗中，不提供改名、移动或删除。示例不使用真实项目文件。" usage="仅文件名入口的目录资料">

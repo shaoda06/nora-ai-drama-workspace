@@ -18,7 +18,7 @@ import { HeaderControlsContext } from './components/AppShell';
 import { SyncNotification } from './components/SyncNotification';
 import { EpisodeProduction } from './components/EpisodeProduction';
 import { EpisodeOutlines } from './components/EpisodeOutlines';
-import { ReleaseFilms } from './components/ReleaseFilms';
+import { ReleaseFilms, releaseVideos } from './components/ReleaseFilms';
 import { AssetMedia } from './components/AssetMedia';
 import { AssetCandidateMedia } from './components/AssetCandidateMedia';
 import { PersonImages, personImageCategory, personImageTabs } from './components/PersonImages';
@@ -66,6 +66,8 @@ export default function Project() {
   const episodeItem = production.data?.children?.find((item: FileItem) => item.name === episode);
   const episodeTitle = (episodeItem?.title || (episode === '片头' || episode === '片尾' ? '全剧通用' : '题名未记录')) + (episodeItem?.titleStatus ? `（${episodeItem.titleStatus === '工作集名' ? '工作集名，未最终定名' : episodeItem.titleStatus}）` : '');
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
+  const releaseCount = section === '98-发布成片' && production.data?.key === '98-发布成片' ? releaseVideos(production.data.children).length : null;
+  const sectionTitle = (overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')) + (releaseCount === null ? '' : `（${releaseCount}）`);
   const warnings = [...new Set<string>([...(overview.data?.warnings || []), ...(production.data?.warnings || [])])];
   useEffect(() => {
     if (overview.data && !overview.data.directories.some((dir: RecordData) => dir.name === section)) {
@@ -82,7 +84,7 @@ export default function Project() {
         <div className="activity-items">{overview.data.active.length ? overview.data.active.map((item: RecordData) => <div className="activity-item" key={item.name}><strong>{item.name}</strong><button className="activity-state" aria-label={`${item.name}：${item.status}，查看待决事项`} onClick={() => setPreview({ kind: 'progress', name: `${item.name} · 待决事项与下一步`, doc: { statusHtml: item.statusHtml, html: '<h3>待决事项</h3>' + item.pendingHtml + '<h3>下一步</h3>' + item.nextHtml }, key: `项目进度.md#${item.anchor}`, url: `${projectUrl(name)}/files/${encodeURIComponent('项目进度.md')}#${item.anchor}` })}><Rich html={item.statusHtml} /></button></div>) : <span className="muted">未记录进行中或待确认阶段</span>}</div>
       </div>
     )}
-      <Breadcrumbs currentRef={currentPath} actionsRef={setBreadcrumbActions} selectorRef={section === '09-剧集制作' && episode ? setBreadcrumbSelector : undefined} items={[{ label: overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, ''), href: `#/projects/${encodeURIComponent(name)}`, onClick: () => openSection(section) }, ...(section === '09-剧集制作' && episode ? [{ label: `${episode} · ${episodeTitle}` }] : asset ? [{ label: `${asset.id} · ${asset.name}` }] : [])]} />
+      <Breadcrumbs currentRef={currentPath} actionsRef={setBreadcrumbActions} selectorRef={section === '09-剧集制作' && episode ? setBreadcrumbSelector : undefined} items={[{ label: sectionTitle, href: `#/projects/${encodeURIComponent(name)}`, onClick: () => openSection(section) }, ...(section === '09-剧集制作' && episode ? [{ label: `${episode} · ${episodeTitle}` }] : asset ? [{ label: `${asset.id} · ${asset.name}` }] : [])]} />
     </PageHeader>
     <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} retry={status.error ? status.refetch : overview.refetch} retrying={status.isFetching || overview.isFetching} />
     {overview.data && <>

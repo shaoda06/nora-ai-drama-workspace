@@ -31,6 +31,8 @@ test('layout allocation is allowed, while page-qualified component appearance is
   assert.equal(errors('style.css', '.panel .tab-select{padding:1px}').length, 1);
   assert.equal(errors('components/TabSelect.css', '.panel .tab-select{padding:1px}').length, 1);
   assert.equal(errors('components/TabSelect.css', '.tab-select.tab-select-compact{padding:1px}').length, 0);
+  assert.equal(errors('components/TabNav.css', '.tabs.tabs-scroll{flex-wrap:nowrap}').length, 0);
+  assert.equal(errors('components/TabNav.css', '.page .tabs{flex-wrap:nowrap}').length, 1);
   assert.equal(errors('Page.css', '/* .panel .tab-select{color:red} */ .panel{color:red}').length, 0);
   assert.equal(errors('Page.css', '[data-label=".tab-select"]{color:red}').length, 0);
   assert.equal(errors('Page.css', '.panel dialog{padding:0}').length, 1);

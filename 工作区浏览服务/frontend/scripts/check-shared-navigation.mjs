@@ -93,6 +93,20 @@ export async function checkSharedNavigation(page, width, selfTest) {
     assert.match(await fixed.innerText(), new RegExp(`共${count}集`), '自定义条目单位');
     await fits(fixed.locator('.pagination'), `${width}/${id}`);
   }
+  const filenames = fixture.getByTestId('filename-pagination');
+  const compact = filenames.locator('.pagination');
+  assert.equal(await compact.locator(':scope > span').count(), 0, '自定义中间内容替代页码和总数');
+  assert.equal(await compact.locator('nav > button').count(), 5);
+  const layout = await compact.evaluate(el => ({ margin: getComputedStyle(el).marginTop, height: el.getBoundingClientRect().height,
+    rows: [...el.querySelectorAll('nav > button')].map(button => button.getBoundingClientRect().top) }));
+  assert.equal(layout.margin, '0px');
+  assert.ok(layout.height < 65 && layout.rows.every(top => Math.abs(top - layout.rows[0]) < 1), '紧凑文件名保持单行');
+  assert.ok(await compact.locator('nav').evaluate(el => el.clientWidth >= 44), '161px窄容器仍保留可点击选集区');
+  const boundary = await compact.evaluate(el => ({ left: el.getBoundingClientRect().left, right: el.getBoundingClientRect().right, width: el.clientWidth, scroll: el.scrollWidth, viewport: innerWidth }));
+  assert.ok(boundary.left >= -1 && boundary.right <= boundary.viewport + 1 && boundary.scroll <= boundary.width + 1, '紧凑分页不越界；文件名内部允许滚动和省略');
+  await compact.locator('nav > button').last().click();
+  assert.equal(await filenames.getByTestId('filename-value').innerText(), 'long');
+  assert.equal(await compact.locator('nav > button').last().getAttribute('title'), await compact.locator('nav > button').last().innerText());
   await fixture.getByRole('button', { name: '第九页', exact: true }).click();
   await fits(pagination, `${width}/分页`);
   const before = await positions(pagination);

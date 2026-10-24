@@ -13,7 +13,7 @@ const owners = {
 const classes = {
   'dialog-close': ['Dialog', 'style.css'],
   'tab-select': ['TabSelect', 'components/TabSelect.css', 'style.css'],
-  tabs: ['TabNav', 'style.css'], 'underline-tabs': ['UnderlineTabs', 'style.css'],
+  tabs: ['TabNav', 'style.css', 'components/TabNav.css'], 'underline-tabs': ['UnderlineTabs', 'style.css'],
   'ui-switch': ['Switch', 'components/Switch.css'], pagination: ['Pagination', 'style.css', 'components/Pagination.css'],
   'page-heading': ['PageHeader', 'style.css'], 'search-field': ['SearchField', 'style.css'],
   'floating-message': ['Notifications', 'components/Notifications.css'],

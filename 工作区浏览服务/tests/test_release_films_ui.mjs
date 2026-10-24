@@ -83,7 +83,18 @@ try {
     assert.equal(await panel.locator('.file-actions, .status-badge').count(), 0, '发布成片不显示确认状态');
     assert.equal(await panel.locator('.tree, details').count(), 0, '取消目录列表');
     assert.deepEqual(await selector.getByRole('button').allTextContents(), ['第1集', '第2集', '第3集', '第4集', '第5集']);
-    await panel.getByText('1 / 3 · 共12集', { exact: true }).waitFor();
+    await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText('发布成片（12）', { exact: true }).waitFor();
+    const pagination = panel.locator('.pagination');
+    assert.equal(await pagination.locator(':scope > nav').count(), 1, '文件名只显示在分页中间');
+    assert.equal(await pagination.locator('.pagination-current').count(), 0, '不再显示页码和总计');
+    assert.deepEqual(await pagination.locator(':scope > button').allTextContents(), ['上一页', '下一页']);
+    const geometry = await pagination.evaluate(el => {
+      const r = el.getBoundingClientRect(), nav = el.querySelector('nav').getBoundingClientRect();
+      return { height: r.height, navTop: nav.top, tops: [...el.querySelectorAll('nav > button')].map(button => button.getBoundingClientRect().top), margin: getComputedStyle(el).marginTop };
+    });
+    assert.ok(geometry.height < 65, '分页栏收紧上下留白');
+    assert.equal(geometry.margin, '0px');
+    assert.ok(geometry.tops.every(top => Math.abs(top - geometry.navTop) < 1), '五个文件名始终在同一行');
     assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
     const player = panel.locator('video');
     assert.equal(await player.count(), 1);
@@ -119,15 +130,18 @@ try {
     assert.equal(await player.getAttribute('aria-label'), '第1集.webm', '重新进入栏目默认第一集');
     assert.equal(await player.evaluate(el => el.paused), true);
     await page.waitForFunction(() => document.querySelector('section.panel:not([hidden]) video')?.videoWidth > 0);
+    const size = await player.evaluate(el => ({ width: el.getBoundingClientRect().width, height: el.getBoundingClientRect().height, ratio: el.videoWidth / el.videoHeight, limit: innerHeight * .65 }));
+    assert.ok(Math.abs(size.width / size.height - size.ratio) < .01, '视频框与实际视频比例一致，无额外黑边');
+    assert.ok(size.height <= size.limit + 1);
     await page.screenshot({ path: path.join(screenshots, `${viewport.width}-release-player.png`), animations: 'disabled' });
     mode = 'single'; await page.reload(); await entry.click();
-    await panel.getByText('1 / 1 · 共1集', { exact: true }).waitFor();
+    await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText('发布成片（1）', { exact: true }).waitFor();
     assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
     assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).isDisabled(), true);
     mode = 'empty'; await page.reload(); await entry.click();
     await panel.getByText('暂无发布成片视频。', { exact: true }).waitFor();
     assert.equal(await player.count(), 0);
-    await panel.getByText('1 / 1 · 共0集', { exact: true }).waitFor();
+    await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText('发布成片（0）', { exact: true }).waitFor();
     mode = 'error'; await page.reload(); await entry.click();
     const failure = page.locator('.floating-message').filter({ hasText: '资料读取失败' });
     await failure.getByRole('button', { name: '重新读取', exact: true }).waitFor();
@@ -137,7 +151,7 @@ try {
     assert.equal(await page.locator('vite-error-overlay').count(), 0);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     assert.deepEqual(errors, []); assert.deepEqual(writes, []); assert.deepEqual(unexpected, []);
-    console.log(`${viewport.width}px: 5-per-page selection, natural numeric order, 12 videos including subdirectories, one inline player, manual playback, switching/unloading, long names, single/empty pagination, media and read retry; no errors/writes passed`);
+    console.log(`${viewport.width}px: compact filename pagination, one row/5 names, breadcrumb counts, intrinsic video ratio/no added bars, selection/playback/cleanup, single/empty/error/retry; no errors/writes passed`);
     await context.close();
   }
   console.log(`Screenshots: ${screenshots}`);

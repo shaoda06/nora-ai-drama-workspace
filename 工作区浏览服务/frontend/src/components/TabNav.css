@@ -1,0 +1,2 @@
+.tabs.tabs-scroll{flex-wrap:nowrap;overflow-x:auto;min-width:0;max-width:100%;margin:0}
+.tabs-scroll>button{flex:none;max-width:min(180px,100%);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
