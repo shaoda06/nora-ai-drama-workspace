@@ -96,6 +96,9 @@ try {
     assert.ok(geometry.height < 65, '分页栏收紧上下留白');
     assert.equal(geometry.margin, '0px');
     assert.ok(geometry.tops.every(top => Math.abs(top - geometry.navTop) < 1), '五个文件名始终在同一行');
+    const spacing = await pagination.evaluate(el => ({ gap: getComputedStyle(el).columnGap, buttons: [...el.querySelectorAll(':scope > button')].map(button => ({ width: button.getBoundingClientRect().width, padding: getComputedStyle(button).paddingLeft })) }));
+    assert.equal(spacing.gap, '12px');
+    assert.ok(spacing.buttons.every(button => button.width >= 74 && button.padding === '14px'), '上一页下一页恢复正常宽度');
     assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
     const player = panel.locator('video');
     const downloadCurrent = async name => {
@@ -158,7 +161,7 @@ try {
     mode = 'single'; await page.reload(); await entry.click();
     await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText('发布成片（1）', { exact: true }).waitFor();
     const singleLayout = await panel.locator('.release-films-toolbar').evaluate(el => { const row = el.getBoundingClientRect(), pager = el.querySelector('.pagination').getBoundingClientRect(), download = el.querySelector('.release-films-download').getBoundingClientRect(); return { left: pager.left - row.left, width: pager.width, right: row.right - download.right }; });
-    assert.ok(Math.abs(singleLayout.left) < 1 && singleLayout.width < 200, '单集整组分页靠左，下一页紧随文件名');
+    assert.ok(Math.abs(singleLayout.left) < 1 && singleLayout.width < 260, '单集整组分页靠左，保留按钮正常宽度和间距');
     assert.ok(Math.abs(singleLayout.right) < 1, '下载操作靠右');
     assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
     assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).isDisabled(), true);

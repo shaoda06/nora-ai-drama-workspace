@@ -1,6 +1,7 @@
-.pagination.pagination-compact{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;gap:4px;margin:0;min-width:0}
-.pagination-compact>button{padding:7px 0}
-.pagination.pagination-compact.pagination-fit{grid-template-columns:48px minmax(0,max-content) 48px;width:fit-content;max-width:100%;justify-self:start}
+.pagination.pagination-compact{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:12px;margin:0;min-width:0}
+.pagination-compact>button{padding:7px 14px;flex:none}
+.pagination-compact>nav{flex:1 1 44px;min-width:44px}
+.pagination.pagination-compact.pagination-fit{width:fit-content;max-width:100%;justify-self:start}
 .pagination-arrows{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 12px;pointer-events:none}
 .pagination-arrows>button{display:grid;place-items:center;flex:none;width:40px;height:40px;padding:6px;border-radius:50%;background:#fffffff2;box-shadow:0 2px 10px #24342d15;pointer-events:auto}
 .pagination-arrows>button[data-direction=next]{margin-left:auto}

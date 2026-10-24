@@ -100,7 +100,10 @@ export async function checkSharedNavigation(page, width, selfTest) {
   const layout = await compact.evaluate(el => ({ margin: getComputedStyle(el).marginTop, height: el.getBoundingClientRect().height,
     rows: [...el.querySelectorAll('nav > button')].map(button => button.getBoundingClientRect().top) }));
   assert.equal(layout.margin, '0px');
-  assert.ok(layout.height < 65 && layout.rows.every(top => Math.abs(top - layout.rows[0]) < 1), '紧凑文件名保持单行');
+  assert.ok(layout.height < 110 && layout.rows.every(top => Math.abs(top - layout.rows[0]) < 1), '极窄容器翻页可换行，文件名仍保持单行');
+  const pagerButtons = await compact.locator(':scope > button').evaluateAll(buttons => buttons.map(el => ({ width: el.getBoundingClientRect().width, padding: getComputedStyle(el).paddingLeft, scroll: el.scrollWidth, client: el.clientWidth })));
+  assert.ok(pagerButtons.every(button => button.width >= 74 && button.padding === '14px' && button.scroll <= button.client + 1), '翻页文字保留正常宽度及左右内边距');
+  assert.equal(await compact.evaluate(el => getComputedStyle(el).columnGap), '12px');
   assert.ok(await compact.locator('nav').evaluate(el => el.clientWidth >= 44), '161px窄容器仍保留可点击选集区');
   const boundary = await compact.evaluate(el => ({ left: el.getBoundingClientRect().left, right: el.getBoundingClientRect().right, width: el.clientWidth, scroll: el.scrollWidth, viewport: innerWidth }));
   assert.ok(boundary.left >= -1 && boundary.right <= boundary.viewport + 1 && boundary.scroll <= boundary.width + 1, '紧凑分页不越界；文件名内部允许滚动和省略');
