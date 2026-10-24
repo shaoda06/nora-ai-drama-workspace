@@ -30,6 +30,7 @@ import { AccountLibrary } from './components/AccountLibrary';
 
 type AssetSelection = { id: string; name: string };
 type AssetNavigation = { asset: AssetSelection | null; onAssetChange: (asset: AssetSelection | null) => void };
+const releaseSections = ['10-封面资料', '11-社交媒体资料', '98-发布成片'];
 
 export default function Project() {
   const controlsRoot = useContext(HeaderControlsContext);
@@ -89,7 +90,7 @@ export default function Project() {
     <Result page loading={status.isPending || overview.isPending} error={status.error || overview.error} retry={status.error ? status.refetch : overview.refetch} retrying={status.isFetching || overview.isFetching} />
     {overview.data && <>
       {warnings.length > 0 && <details className="notice"><summary>资料提示（{warnings.length}）</summary>{warnings.map((warning: string) => <p key={warning}>{warning}</p>)}</details>}
-      {controlsRoot && createPortal(<TabNav wide label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料', '10-封面资料', '11-社交媒体资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }]} items={[...overview.data.directories].sort((a: RecordData, b: RecordData) => Number(a.name === '98-发布成片') - Number(b.name === '98-发布成片') || Number(['07-参考音频', '08-参考视频'].includes(a.name)) - Number(['07-参考音频', '08-参考视频'].includes(b.name))).map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={openSection} />, controlsRoot)}
+      {controlsRoot && createPortal(<TabNav wide label="项目栏目" groups={[{ label: '相关资料', values: ['03-人物资料', '04-场景资料', '05-道具资料'] }, { label: '参考素材', values: ['07-参考音频', '08-参考视频'] }, { label: '发布资料', values: releaseSections.filter(value => overview.data.directories.some((dir: RecordData) => dir.name === value)) }]} items={[...overview.data.directories].sort((a: RecordData, b: RecordData) => Number(releaseSections.includes(a.name)) - Number(releaseSections.includes(b.name)) || Number(['07-参考音频', '08-参考视频'].includes(a.name)) - Number(['07-参考音频', '08-参考视频'].includes(b.name)) || releaseSections.indexOf(a.name) - releaseSections.indexOf(b.name)).map((dir: RecordData) => ({ value: dir.name, label: dir.label }))} selected={section} onChange={openSection} />, controlsRoot)}
       {visited.filter(label => overview.data.directories.some((dir: RecordData) => dir.name === label)).map(label => <SectionPane key={name + '/' + label + '/' + (entries[label] || 0)} project={name} section={label} revision={revision} active={label === section} asset={label === section ? asset : null} onAssetChange={value => { setAsset(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} episode={episode} onEpisodeChange={value => { setEpisode(value); if (value) requestAnimationFrame(() => { currentPath.current!.scrollIntoView({ block: 'start' }); currentPath.current!.focus({ preventScroll: true }); }); }} />)}
     </>}
     {preview && <Preview key={preview.key || preview.url} project={name} item={preview} revision={revision} close={() => setPreview(null)} />}
