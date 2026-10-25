@@ -7,7 +7,7 @@ import { PreviewContext, Result, Rich } from '../components';
 import { TabNav } from './TabNav';
 import { Pagination } from './Pagination';
 import { EpisodeButton } from './EpisodeButton';
-import { SceneWorkspace } from './SceneWorkspace';
+import { SceneWorkspace, type EpisodePlayback } from './SceneWorkspace';
 import { useRefreshState } from '../refreshPosition';
 import { BreadcrumbActionsContext, BreadcrumbSelectorContext } from './Breadcrumbs';
 import { TabSelect } from './TabSelect';
@@ -24,6 +24,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
   const [sceneView, setSceneView] = useRefreshState(`project/${project}/production/${selected || ''}/scene-view`, 'segments');
   const [integrateSheets, setIntegrateSheets] = useRefreshState(`project/${project}/production/${selected || ''}/integrate-sheets`, false);
   const [page, setPage] = useState(1);
+  const [playback, setPlayback] = useState<{ episode: string; rounds: Record<string, number | undefined>; start?: EpisodePlayback['start'] } | null>(null);
   const cards = useRef<HTMLDivElement>(null);
   const previousEpisode = useRef(selected);
   useEffect(() => {
@@ -56,6 +57,26 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
   const sceneRounds = current?.sceneRounds?.[selectedScene] || [];
   const selectedRound = roundNumbers[(current?.name || '') + '/' + selectedScene] ?? sceneRounds.at(-1)?.number;
   const round = sceneRounds.find(item => item.number === selectedRound);
+  const continuous = !!playback && playback.episode === current?.name;
+  const nextScene = scenes[scenes.indexOf(selectedScene) + 1];
+  const nextRoundNumber = continuous ? playback!.rounds[nextScene] : undefined;
+  const nextRound = current?.sceneRounds?.[nextScene]?.find(item => item.number === nextRoundNumber);
+  const nextEntry = nextRound?.segments[0];
+  const nextVideo = nextEntry && current?.segments?.[nextScene]?.find(item => item.id === nextEntry.id)?.videos
+    .find(video => video.stage === nextEntry.stage && video.run === nextEntry.run);
+  const episodePlayback: EpisodePlayback = {
+    continuous,
+    start: continuous ? playback!.start : undefined,
+    next: nextScene ? { scene: nextScene, round: nextRoundNumber, segment: nextEntry?.id, video: nextVideo } : undefined,
+    onChange: checked => setPlayback(checked ? { episode: current!.name, rounds: Object.fromEntries(scenes.map(id =>
+      [id, roundNumbers[current!.name + '/' + id] ?? current?.sceneRounds?.[id]?.at(-1)?.number])) } : null),
+    onNext: () => {
+      setRoundNumbers(previous => ({ ...previous, [current!.name + '/' + nextScene]: nextRoundNumber! }));
+      setPlayback(previous => ({ ...previous!, start: { segment: nextEntry!.id, selection: { stage: nextVideo!.stage, key: nextVideo!.key } } }));
+      setScene(nextScene);
+    },
+  };
+
   useEffect(() => {
     const key = (current?.name || '') + '/' + selectedScene;
     if (current && selectedScene && sceneRounds.length && roundNumbers[key] === undefined)
@@ -78,6 +99,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     directorFiles = directorFiles?.find(item => item.name === folder)?.children;
   }
   const open = (name: string) => {
+    setPlayback(null);
     setScene('');
     onSelect(name);
   };
@@ -89,7 +111,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
       url={`${projectUrl(project)}/episodes/${current.name}/download`} label={`${sharedSelected ? current.name : '本集'}打包下载`}
       title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理已采用视频`} />, breadcrumbActions)}
     <div className="episode-scene-header">
-      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
+      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={value => { setPlayback(null); setScene(value); }} />}
       <PointerTooltip text={script ? undefined : `${contentLabel}尚未建立`}><button className="link episode-script-link" disabled={!script} onClick={() => preview(script!)}>查看{contentLabel}</button></PointerTooltip>
     </div>
     {!!current.warnings?.length && <details className="notice"><summary>资料提示（{current.warnings.length}）</summary>{current.warnings.map(message => <p key={message}>{message}</p>)}</details>}
@@ -99,7 +121,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
         <PointerTooltip text={issue.key}><button className="link"  onClick={() => preview({ kind: 'document', key: issue.key, name: issue.key.split('/').pop()! })}>{issue.key.split('/').pop()}</button></PointerTooltip>：{issue.message}
       </li>)}</ul>
     </div> : null}
-    {selectedScene ? <SceneWorkspace view={sceneView} onViewChange={setSceneView} key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} directorScenes={directorScenes} integrateSheets={integrateSheets} onIntegrateSheetsChange={setIntegrateSheets} storyboardVersion={round ? round.storyboard?.version || '' : current.storyboards?.[selectedScene]?.version || ''} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
+    {selectedScene ? <SceneWorkspace episodePlayback={episodePlayback} view={sceneView} onViewChange={setSceneView} key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} directorScenes={directorScenes} integrateSheets={integrateSheets} onIntegrateSheetsChange={setIntegrateSheets} storyboardVersion={round ? round.storyboard?.version || '' : current.storyboards?.[selectedScene]?.version || ''} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
       : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
     {!!current.materials?.length && <details className="asset-candidate-type production-materials"><summary>专用素材与图片候选（{current.materials.length}）</summary>
       {current.materialRecord && <p><button className="link" onClick={() => preview(current.materialRecord!)}>查看素材生成与审阅记录</button></p>}

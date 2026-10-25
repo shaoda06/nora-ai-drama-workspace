@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { get, projectUrl } from '../api';
-import type { FileItem, RecordData, SceneRound } from '../api';
+import type { FileItem, RecordData, SceneRound, SegmentVideo as VideoItem } from '../api';
 import { Document, Result } from '../components';
 import { UnderlineTabs } from './UnderlineTabs';
 import { latestVideo, missingVideoState, selectedRevision } from './SegmentVideo';
@@ -23,9 +23,17 @@ import type { PreviousEpisodeEnding } from '../previousEpisodeEnding';
 
 type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
+export type EpisodePlayback = {
+  continuous: boolean;
+  start?: { segment: string; selection: Selection };
+  next?: { scene: string; round?: number; segment?: string; video?: VideoItem };
+  onChange: (checked: boolean) => void;
+  onNext: () => void;
+};
+
 type ReviewRound = { stage: string; order: string[]; versions: ReviewVersions };
 
-export function SceneWorkspace({ view, onViewChange, scope, segments: allSegments, sceneRounds = [], selectedRound, onRoundChange, previousEnding, emptyMessage, revision, storyboardDocument, directorScenes, integrateSheets, onIntegrateSheetsChange, storyboardVersion }: { view: string; onViewChange: (view: string) => void; scope: NoteScope; segments: Segments; sceneRounds?: SceneRound[]; selectedRound?: number; onRoundChange: (number: number) => void; previousEnding: PreviousEpisodeEnding | null; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData; directorScenes: DirectorSheetScene[]; integrateSheets: boolean; onIntegrateSheetsChange: (value: boolean) => void; storyboardVersion: string }) {
+export function SceneWorkspace({ episodePlayback, view, onViewChange, scope, segments: allSegments, sceneRounds = [], selectedRound, onRoundChange, previousEnding, emptyMessage, revision, storyboardDocument, directorScenes, integrateSheets, onIntegrateSheetsChange, storyboardVersion }: { episodePlayback: EpisodePlayback; view: string; onViewChange: (view: string) => void; scope: NoteScope; segments: Segments; sceneRounds?: SceneRound[]; selectedRound?: number; onRoundChange: (number: number) => void; previousEnding: PreviousEpisodeEnding | null; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData; directorScenes: DirectorSheetScene[]; integrateSheets: boolean; onIntegrateSheetsChange: (value: boolean) => void; storyboardVersion: string }) {
   const { scene } = scope;
   const productionRound = sceneRounds.find(item => item.number === selectedRound);
   const latestRound = sceneRounds.at(-1);
@@ -40,9 +48,10 @@ export function SceneWorkspace({ view, onViewChange, scope, segments: allSegment
   const storyboardPath = `09-剧集制作/${scope.episode}/03-分镜脚本/${scope.episode}-${scene}-场次分镜.md`;
   const storyboard = useQuery({ queryKey: ['document', scope.project, storyboardPath, revision], queryFn: () => get<RecordData>(`${projectUrl(scope.project)}/document?path=${encodeURIComponent(storyboardPath)}`), enabled: view === 'storyboard' && !!scene && !storyboardDocument && !productionRound, placeholderData: previous => previous });
   const previousVideo = latestVideo(previousEnding?.segment?.videos.filter(video => video.url) || []);
+  const [arrival, setArrival] = useState(episodePlayback.start);
   const [requestedSegment, setSegment] = useRefreshState(positionKey + '/segment', segments[0]?.id || '');
-  const viewingPrevious = requestedSegment === PREVIOUS_ENDING && !!previousVideo;
-  const segment = viewingPrevious ? PREVIOUS_ENDING : segments.some(item => item.id === requestedSegment) ? requestedSegment : segments[0]?.id || '';
+  const viewingPrevious = !arrival && requestedSegment === PREVIOUS_ENDING && !!previousVideo;
+  const segment = arrival?.segment || (viewingPrevious ? PREVIOUS_ENDING : segments.some(item => item.id === requestedSegment) ? requestedSegment : segments[0]?.id || '');
   const displayScope = viewingPrevious ? { ...scope, episode: previousEnding!.episode, scene: previousEnding!.scene } : scope;
   const [selections, setSelections] = useRefreshState<Record<string, Selection>>(positionKey + (productionRound ? `/round/${productionRound.number}` : '') + '/selections', {});
   const [pendingSelection, setPendingSelection] = useState<{ round: number; segment: string; value: Selection } | null>(null);
@@ -59,17 +68,26 @@ export function SceneWorkspace({ view, onViewChange, scope, segments: allSegment
   const roundStages = new Set(productionRound?.segments.map(entry => entry.stage));
   const reviewRound: (ReviewRound & { label?: string }) | null = productionRound ? { stage: roundStages.size === 1 ? productionRound.segments[0].stage : '混合阶段',
     label: `第${productionRound.number}轮`, order: productionRound.segments.map(entry => entry.id), versions: fixedVersions } : null;
-  const [continuous, setContinuous] = useState(false);
+  const { continuous, onChange: setContinuous } = episodePlayback;
   const [wideVideo, setWideVideo] = useRefreshState(positionKey + '/wideVideo', false);
   const [segmentTab, setSegmentTab] = useRefreshState(positionKey + '/segmentTab', 'script');
-  const [autoPlay, setAutoPlay] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(!!episodePlayback.start);
   const [error, setError] = useState<{ message: string; unavailable: boolean } | null>(null);
+  useEffect(() => {
+    if (arrival) {
+      const { segment, selection } = arrival;
+      setSegment(segment);
+      setSelections(previous => ({ ...previous, [segment]: selection }));
+      setArrival(undefined);
+    }
+  }, []);
+
   const currentSegment = viewingPrevious ? previousEnding!.segment : segments.find(item => item.id === segment);
   const latest = viewingPrevious ? previousVideo : currentSegment && latestVideo(currentSegment.videos);
   const roundEntry = productionRound?.segments.find(item => item.id === segment);
   const roundDefault = roundEntry && currentSegment?.videos.find(video => video.stage === roundEntry.stage && video.run === roundEntry.run);
-  const savedSelection = pendingSelection?.round === productionRound?.number && pendingSelection?.segment === segment
-    ? pendingSelection.value : selections[segment];
+  const savedSelection = arrival?.selection || (pendingSelection?.round === productionRound?.number && pendingSelection?.segment === segment
+    ? pendingSelection.value : selections[segment]);
   const savedRevision = savedSelection && currentSegment && selectedRevision(currentSegment.videos, savedSelection);
   const chosen = savedRevision ? { stage: savedRevision.stage, key: savedRevision.key }
     : savedSelection && (!savedSelection.key || reviewRound) ? savedSelection : { stage: roundDefault?.stage || latest?.stage || '', key: roundDefault?.key || latest?.key || '' };
@@ -133,7 +151,19 @@ export function SceneWorkspace({ view, onViewChange, scope, segments: allSegment
   }, [segments, reviewRound]);
   const advance = () => {
     const next = reviewRound?.order[reviewRound.order.indexOf(segment) + 1];
-    if (!continuous || !next) { setAutoPlay(false); return; }
+    if (!continuous) { setAutoPlay(false); return; }
+    if (!next) {
+      const target = episodePlayback.next;
+      setAutoPlay(false);
+      if (!target) return;
+      if (!target.round || !target.segment || !target.video?.url) {
+        const issue = missingVideoState(target.video);
+        setError({ unavailable: issue.unavailable, message: `${target.scene}${!target.round ? '尚未登记整场轮次' : !target.segment ? '本轮尚无分段' : `的第${target.round}轮 ${target.segment}${issue.message}`}；连续播放已停止，不会跳过场次或换用其他版本。` });
+        return;
+      }
+      episodePlayback.onNext();
+      return;
+    }
     const video = roundVideo(next);
     if (!video?.url) { const issue = roundVideoIssue(next); setAutoPlay(false); setError({ ...issue, message: `${issue.message}连续播放已停在当前分段；不会换用其他版本。` }); return; }
     setSelections(previous => ({ ...previous, [next]: { stage: video.stage, key: video.key } }));

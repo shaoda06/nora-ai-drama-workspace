@@ -58,7 +58,7 @@ function mount({ mixed = true, pending = false, registered = true } = {}) {
   }
   dependencies['./SegmentVideo'] = load('SegmentVideo');
   const { SceneWorkspace } = load('SceneWorkspace');
-  const props = { view: 'segments', onViewChange(view) { props.view = view; }, scope, segments, sceneRounds: registered ? [round] : [], selectedRound: registered ? 1 : undefined,
+  const props = { episodePlayback: { continuous: false, onNext() {}, onChange(value) { props.episodePlayback.continuous = value; } }, view: 'segments', onViewChange(view) { props.view = view; }, scope, segments, sceneRounds: registered ? [round] : [], selectedRound: registered ? 1 : undefined,
     onRoundChange(number) { props.selectedRound = number; }, previousEnding: null, emptyMessage: '', revision: 1, directorFiles: [] };
   const find = (node, type) => {
     if (!node || typeof node !== 'object') return;
@@ -232,4 +232,19 @@ test('continuous playback stops at missing next-round media rather than substitu
   assert.equal(state.workspace.segment, 'P001');
   assert.equal(state.workspace.autoPlay, false);
   assert.match(state.messages.messages.find(message => message?.id === 'playback').content, /不会换用其他版本/);
+});
+
+
+test('scene handoff mounts the requested first segment and version with autoplay already enabled', () => {
+  const app = mount();
+  app.props.episodePlayback.continuous = true;
+  app.props.episodePlayback.start = { segment: 'P003', selection: { stage: '二采', key: 'P003-R009-二采' } };
+  let state = app.render();
+  assert.equal(state.workspace.segment, 'P003');
+  assert.equal(state.workspace.selection.key, 'P003-R009-二采');
+  assert.equal(state.workspace.autoPlay, true, 'autoplay must be true on the video element initial mount');
+  app.flush();
+  state = app.render();
+  assert.equal(state.workspace.segment, 'P003');
+  assert.equal(state.workspace.selection.key, 'P003-R009-二采');
 });
