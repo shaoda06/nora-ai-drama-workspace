@@ -35,6 +35,28 @@ class CoverParserTests(unittest.TestCase):
         self.assertEqual(data['items'][0]['original']['ratio'], '11:17')
         self.assertEqual(len(data['candidates']), 1)
 
+    def test_set_and_platforms_are_read_from_explicit_columns(self):
+        path = self.root / INDEX
+        text = path.read_text().replace('| 封面名称 |', '| 套组名称 | 适用平台 | 目标格式 | 规格依据 | 封面名称 |', 1)
+        text = text.replace('| --- |', '| --- | --- | --- | --- | --- |', 1)
+        text = text.replace('| 通用竖版 |', '| 系列通用 | 快手、小红书 | PNG | 用户指定规格 | 通用竖版 |', 1)
+        path.write_text(text)
+        item = self.covers()['items'][0]
+        self.assertEqual(item['setName'], '系列通用')
+        self.assertEqual(item['platforms'], ['快手', '小红书'])
+        self.assertEqual(item['specBasis'], '用户指定规格')
+        self.assertEqual(item['targetFormat'], 'PNG')
+        self.assertTrue(item['ready'])
+
+    def test_legacy_index_does_not_infer_set_or_platform(self):
+        path = self.root / INDEX
+        path.write_text('- 适用平台：抖音\n' + path.read_text())
+        item = self.covers()['items'][0]
+        self.assertEqual(item['setName'], '')
+        self.assertEqual(item['platforms'], [])
+        self.assertEqual(item['specBasis'], '')
+        self.assertTrue(item['ready'])
+
     def test_failed_attempt_does_not_claim_later_successful_file(self):
         path = self.root / RECORD
         path.write_text(path.read_text().replace('## 4. 审阅区', '### 生成记录-007\n- 真实执行状态：failed；未自动重试\n- 候选文件入口：尚未生成；计划：[同名原图](素材/原图.png)\n## 4. 审阅区'))

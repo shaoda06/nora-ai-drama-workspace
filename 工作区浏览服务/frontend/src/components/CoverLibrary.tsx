@@ -8,15 +8,25 @@ import { FileActions } from './FileActions';
 export function CoverLibrary({ value, revision }: { value: RecordData; revision: number }) {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [detail, setDetail] = useState<{ item: RecordData; candidate: boolean } | null>(null);
+  const sets = new Map<string, RecordData[]>();
+  for (const item of value.items) {
+    const name = item.setName || '未登记套组';
+    const items = sets.get(name);
+    if (items) items.push(item);
+    else sets.set(name, [item]);
+  }
   return <>
     <div className="toolbar"><h2>当前采用封面</h2><RecordLinks items={[value.index, value.record]} /></div>
-    <div className="asset-media-grid">{value.items.map((item: RecordData) => {
+    {[...sets].map(([name, items]) => <section key={name} aria-label={`封面套组：${name}`}>
+      <div className="toolbar"><h3>套组：{name}</h3><span className="muted">适用平台：{[...new Set(items.flatMap(item => item.platforms || []))].join('、') || '未登记'}</span></div>
+      <div className="asset-media-grid">{items.map((item: RecordData) => {
       const image = item.media || item.original;
       return <AssetMediaCard key={item.name} title={item.name} revision={revision} formal item={{
         media: image && { ...image, kind: 'image', name: item.name }, version: item.version,
         statusHtml: item.statusHtml, scope: item.scope + ' · ' + item.layout,
       }} onDetails={() => setDetail({ item, candidate: false })} />;
     })}</div>
+    </section>)}
     {!value.items.length && <p className="muted">尚无已登记的采用封面，可先查看候选和制作记录。</p>}
     <details className="cover-library-history" onToggle={event => setHistoryOpen(event.currentTarget.open)}>
       <summary>候选与历史（{value.candidates.length}）</summary>
@@ -35,7 +45,10 @@ export function CoverLibrary({ value, revision }: { value: RecordData; revision:
         <Rich html={detail.item.statusHtml} />
         {!detail.item.media && detail.item.original && <p className="muted">当前预览为采用原图，成品待规格处理。</p>}
         <dl className="cover-library-facts">
-          <dt>目标规格</dt><dd>{detail.item.targetSize} · {detail.item.targetRatio}</dd>
+          <dt>套组</dt><dd>{detail.item.setName || '未登记'}</dd>
+          <dt>适用平台</dt><dd>{detail.item.platforms?.join('、') || '未登记'}</dd>
+          {detail.item.specBasis && <><dt>规格依据</dt><dd>{detail.item.specBasis}</dd></>}
+          <dt>目标规格</dt><dd>{detail.item.targetSize} · {detail.item.targetRatio}{detail.item.targetFormat && ` · ${detail.item.targetFormat}`}</dd>
           <dt>成品</dt><dd className="cover-library-file"><span>{detail.item.media ? `${detail.item.media.width}×${detail.item.media.height} · ${detail.item.media.ratio}` : '待处理'}</span><FileActions url={detail.item.media?.url} /></dd>
           <dt>原图</dt><dd className="cover-library-file"><span>{detail.item.original ? `${detail.item.original.width}×${detail.item.original.height} · ${detail.item.original.ratio}` : '尚未登记'}</span><FileActions url={detail.item.original?.url} /></dd>
         </dl>

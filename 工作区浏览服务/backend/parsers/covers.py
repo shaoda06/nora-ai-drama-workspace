@@ -62,7 +62,10 @@ def build_covers(project, read):
                      and media['width'] * int(ratio[2]) == media['height'] * int(ratio[1]))
         status = '已采用' if ready else ('待规格处理' if approved else '未确认')
         items.append(dict(name=row['封面名称'], scope=row['适用范围'], layout=row['版式'],
+                          setName=row.get('套组名称', ''),
+                          platforms=[name.strip() for name in row.get('适用平台', '').split('、') if name.strip()],
                           targetRatio=row['目标比例'], targetSize=row['目标尺寸'], version=row['采用版本'],
+                          targetFormat=row.get('目标格式', ''), specBasis=row.get('规格依据', ''),
                           media=media, original=original, review=review,
                           processing=linked(row['处理记录'], INDEX), approved=approved, ready=ready,
                           status=status, statusHtml=status_markup(status, INDEX)))
