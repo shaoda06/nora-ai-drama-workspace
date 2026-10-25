@@ -1559,6 +1559,61 @@ class ProjectParserTests(unittest.TestCase):
         self.assertFalse(person["formal"][0]["approved"])
         self.assertIn("修改后再审", person["formal"][0]["statusHtml"])
 
+    def test_people_explicit_list_cover_overrides_portrait(self):
+        _, record = self.person_fixture()
+        self.put("03-人物资料/CH001-小林/参考图/双形象.png", "fixture image")
+        text = record.read_text().replace("| 审阅记录 |", "| 审阅记录 | 列表封面 |")
+        text = text.replace("| --- | --- | --- | --- | --- | --- |", "| --- | --- | --- | --- | --- | --- | --- |")
+        row = "| 人物上半身正面肖像图 | 少年 | 基础服 | [图](正式.png) | v01 | [审阅](../../审阅记录/CH001-审阅-001.md) |"
+        explicit = row.replace("人物上半身正面肖像图", "角色双形象展示图").replace("正式.png", "双形象.png") + " 是 |"
+        for rows in (row + " 否 |\n" + explicit, explicit + "\n" + row + " 否 |"):
+            with self.subTest(rows=rows):
+                record.write_text(text.replace(row, rows))
+                person = portal.build_data(self.root)["people"][0]
+                self.assertEqual(person["cover"]["type"], "角色双形象展示图")
+                self.assertTrue(person["cover"]["listCover"])
+                self.assertEqual(len(person["formal"]), 2)
+                self.assertTrue(all(a["approved"] for a in person["formal"]))
+
+    def test_people_automatic_cover_priority_and_other_formal_fallback(self):
+        _, record = self.person_fixture()
+        original = record.read_text()
+        row = "| 人物上半身正面肖像图 | 少年 | 基础服 | [图](正式.png) | v01 | [审阅](../../审阅记录/CH001-审阅-001.md) |"
+        other = row.replace("人物上半身正面肖像图", "全身造型参考图")
+        views = row.replace("人物上半身正面肖像图", "角色多视角参考图")
+        for rows, expected in ((other + "\n" + views + "\n" + row, "人物上半身正面肖像图"),
+                               (other + "\n" + views, "角色多视角参考图"),
+                               (other, "全身造型参考图")):
+            with self.subTest(expected=expected):
+                record.write_text(original.replace(row, rows))
+                cover = portal.build_data(self.root)["people"][0]["cover"]
+                self.assertEqual(cover["type"], expected)
+                self.assertFalse(cover["listCover"])
+
+    def test_people_invalid_list_cover_does_not_grant_approval_or_hide_conflict(self):
+        _, record = self.person_fixture()
+        original = record.read_text().replace("| 审阅记录 |", "| 审阅记录 | 列表封面 |")
+        original = original.replace("| --- | --- | --- | --- | --- | --- |", "| --- | --- | --- | --- | --- | --- | --- |")
+        row = "| 人物上半身正面肖像图 | 少年 | 基础服 | [图](正式.png) | v01 | [审阅](../../审阅记录/CH001-审阅-001.md) |"
+        marked = row + " 是 |"
+        for problem in ("unapproved", "missing", "not-applicable", "duplicate"):
+            with self.subTest(problem=problem):
+                text = original.replace(row, marked)
+                review = "# 审阅\n## 4. 用户确认\n- 结论：批准采用。\n"
+                if problem == "unapproved":
+                    review = review.replace("批准采用", "修改后再审")
+                elif problem == "missing":
+                    text = text.replace("(正式.png)", "(缺失.png)")
+                elif problem == "not-applicable":
+                    review += "## 5. 采用与后续影响\n- 当前制作适用性：不适用\n"
+                else:
+                    text = text.replace(marked, marked + "\n" + marked.replace("人物上半身正面肖像图", "全身造型参考图"))
+                self.put("03-人物资料/审阅记录/CH001-审阅-001.md", review)
+                record.write_text(text)
+                data = portal.build_data(self.root)
+                self.assertIsNone(data["people"][0]["cover"])
+                self.assertTrue(any("列表封面" in w for w in data["warnings"]))
+
     def test_people_history_or_loose_files_are_not_current_assets(self):
         _, record = self.person_fixture()
         record.write_text("# 记录\n## 1. 当前正式资产\n暂无\n", encoding="utf-8")

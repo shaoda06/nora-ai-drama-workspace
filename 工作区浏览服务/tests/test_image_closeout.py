@@ -277,8 +277,8 @@ class ImageCloseoutTests(unittest.IsolatedAsyncioTestCase):
         plan = self.data.image_plan
         plan['images'] = [dict(path=self.rel(out), width=8, height=6)]
         formal = self.project / '03-人物资料/CH001-男主/参考图/CH001-日常-服装参考图.png'
-        header = '| 图片类型 | 人物状态 | 服装状态 | 正式文件 | 采用的候选版本 | 适用范围 | 审阅记录 |\n| --- | --- | --- | --- | --- | --- | --- |'
-        plan['upscale'] = dict(number='超分-001', source=self.rel(source), approval=plan['draft'] + '#' + plan['review'], formal=self.rel(formal), record_updates=[dict(path=plan['draft'], old=header, new=header + '\n| 服装参考图 | 大学 | 日常 | {{file}} | v01／超分001 | 首集 | [批准](#审阅-生成记录-001-001) |')])
+        header = '| 图片类型 | 人物状态 | 服装状态 | 正式文件 | 采用的候选版本 | 适用范围 | 审阅记录 | 列表封面 |\n| --- | --- | --- | --- | --- | --- | --- | --- |'
+        plan['upscale'] = dict(number='超分-001', source=self.rel(source), approval=plan['draft'] + '#' + plan['review'], formal=self.rel(formal), record_updates=[dict(path=plan['draft'], old=header, new=header + '\n| 服装参考图 | 大学 | 日常 | {{file}} | v01／超分001 | 首集 | [批准](#审阅-生成记录-001-001) | |')])
         base.TaskTests.seed(self, status='completed')
         self.store.save('task', collected=1)
         self.request()

@@ -581,6 +581,24 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
     async def test_upscale_builds_formal_adoption_and_closes_bound_upload(self):
         await self.check_upscale_adoption()
 
+    def test_adoption_keeps_optional_list_cover_on_replacement(self):
+        draft = self.project / self.spec()['draft']
+        source = draft.parent / '素材/图片-候选-v02.png'
+        spec = dict(self.spec(), upscale_number='超分-001')
+        header = ('# 工作稿\n## 1. 当前正式资产\n'
+                  '| 正式文件 | 采用的候选版本 | 审阅记录 | 列表封面 |\n'
+                  '| --- | --- | --- | --- |\n')
+        previous = '| ' + image.link(draft, self.project / spec['formal']) + ' | v01 | [批准](#旧批准) | 是 |\n'
+        generation = '\n## 2. 逐次生成记录\n### 生成记录-002\n- 图片类型：角色多视角参考图\n'
+        for old, fields, expected in (('', {}, ''), (previous, {}, '是'),
+                                      (previous, {'列表封面': '否'}, '否')):
+            with self.subTest(existing=bool(old), fields=fields):
+                updates = plans.adoption_updates(self.project, draft, header + old + generation,
+                    '生成记录-002', '审阅-生成记录-002-001', source,
+                    dict(spec, adoption_fields=fields))
+                self.assertEqual(updates[0]['new'].splitlines()[-1].strip('|').split('|')[-1].strip(), expected)
+                self.assertIn('v02／超分-001', updates[0]['new'])
+
     def approved_local_spec(self, size):
         source = image_tests.ImageCloseoutTests.setup_image(self)
         result_registration.register(self.store, 'task')

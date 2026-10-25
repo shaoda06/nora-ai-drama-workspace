@@ -861,6 +861,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                            "versionHtml": inline(entry["采用的候选版本"], record_key),
                            "recordUrl": record_url,
                            "scope": entry.get("适用范围", "未记录"), "media": media,
+                           "listCover": entry.get("列表封面", "").strip() == "是",
                            "reviews": reviews, **review_data})
         for match in re.finditer(r"^### (生成记录-\d+)\s*\n(.*?)(?=^### |\Z)", record, re.M | re.S):
             name, chunk = match.group(1), match.group(2)
@@ -887,9 +888,20 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
         person_groups = [{"name": group["name"], "files": [f for f in group["files"]
                           if any(part.startswith(number + "-") for part in Path(f["key"]).parts)]}
                          for group in people_groups]
-        # The current registry determines which images are eligible as covers.
-        cover = next((a for a in formal if a["media"] and a["approved"] and a["coverApplicable"] and a["type"] == "人物上半身正面肖像图"),
-                     next((a for a in formal if a["media"] and a["approved"] and a["coverApplicable"] and a["type"] == "角色多视角参考图"), None))
+        eligible = [a for a in formal if a["media"] and a["approved"] and a["coverApplicable"]]
+        designated = [a for a in formal if a["listCover"]]
+        cover = None
+        if len(designated) > 1:
+            warnings.append(record_key + "：列表封面标记重复，每个人物只能指定一张，请核对。")
+        elif designated:
+            if designated[0] in eligible:
+                cover = designated[0]
+            else:
+                warnings.append(record_key + "：指定的列表封面缺少可读取的当前正式图片、有效批准或制作适用性，请核对。")
+        else:
+            cover = next((a for a in eligible if a["type"] == "人物上半身正面肖像图"),
+                         next((a for a in eligible if a["type"] == "角色多视角参考图"),
+                              next(iter(eligible), None)))
         voice_field = re.search(r"^- 说话声音参考音频（可选）：(.*?)(?=^- \S|^## |\Z)",
                                 texts.get(card_key, ""), re.M | re.S)
         voice = next((media for link in markdown_links(voice_field[1], card_key)

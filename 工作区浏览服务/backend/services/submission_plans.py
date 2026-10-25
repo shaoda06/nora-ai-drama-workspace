@@ -323,10 +323,9 @@ def adoption_updates(root, draft, text, generation, heading, source, spec):
     values.update(spec.get('adoption_fields', {}))
     missing = [name for name in columns if not values.get(name) or values[name] == '不适用']
     # 不适用 is a valid explicit state for portraits/base bodies, but not a missing scope or view.
-    missing = [name for name in missing if name not in ('人物状态', '服装状态')]
+    missing = [name for name in missing if name not in ('人物状态', '服装状态', '列表封面')]
     if missing:
         raise ValueError('正式资产表缺少已确认内容，请在adoption_fields填写：' + '、'.join(missing))
-    replacement = '| ' + ' | '.join(values[name] for name in columns) + ' |'
     formal = project_file(root, spec['formal'])
     previous = []
     for row in rows[2:]:
@@ -335,6 +334,10 @@ def adoption_updates(root, draft, text, generation, heading, source, spec):
             previous.append(row)
     if len(previous) > 1:
         raise ValueError('正式资产表中同一正式文件重复')
+    if '列表封面' in columns and '列表封面' not in spec.get('adoption_fields', {}):
+        values['列表封面'] = (previous[0].strip('|').split('|')[columns.index('列表封面')].strip()
+                            if previous else '')
+    replacement = '| ' + ' | '.join(values[name] for name in columns) + ' |'
     old = previous[0] if previous else '\n'.join(rows[:2])
     new = replacement if previous else old + '\n' + replacement
     return [dict(path=draft.relative_to(root).as_posix(), old=old, new=new), *spec.get('adoption_updates', [])]
