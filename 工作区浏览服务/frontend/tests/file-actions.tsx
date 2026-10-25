@@ -20,7 +20,7 @@ function Demo() {
       <FileTree items={[{ kind: 'markdown', name: name + '-资料卡.md', key: name + '.md', url: files + '/fixture/' + name + '.md?revision=7#章节' }]} />
     </section>)}
     <section aria-label="正文"><Document value={{ html: '<h2>资料卡正文</h2>', url: '/fixture/正文.md' }} /></section>
-    <section aria-label="封面"><CoverLibrary revision={1} value={{ items: [{ name: '封面', media: { ...media('成品'), width: 4, height: 3, ratio: '4:3' }, original: { ...media('原图'), width: 8, height: 6, ratio: '4:3' }, targetSize: '4×3', targetRatio: '4:3', scope: '通用', layout: '横版', version: 'v01' }], candidates: [], groups: [] }} /></section>
+    <section aria-label="封面"><CoverLibrary revision={1} value={{ items: [{ name: '封面', setName: '测试套组', platforms: ['通用'], media: { ...media('成品'), width: 4, height: 3, ratio: '4:3' }, original: { ...media('原图'), width: 8, height: 6, ratio: '4:3' }, targetSize: '4×3', targetRatio: '4:3', scope: '通用', layout: '横版', version: 'v01' }], candidates: [], groups: [] }} /></section>
     {preview && <Preview key={preview.key} project="文件测试" item={preview} revision={1} close={() => setPreview(null)} />}
   </main></PreviewContext.Provider>;
 }

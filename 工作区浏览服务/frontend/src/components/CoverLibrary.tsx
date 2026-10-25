@@ -4,37 +4,35 @@ import type { RecordData } from '../api';
 import { AssetMediaCard } from './AssetMediaCard';
 import { Dialog, Groups, PreviewContext, Rich } from '../components';
 import { FileActions } from './FileActions';
+import { UnderlineTabs } from './UnderlineTabs';
+
+const coverPlatforms = ['通用', '抖音', '小红书', '快手'];
 
 export function CoverLibrary({ value, revision }: { value: RecordData; revision: number }) {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [detail, setDetail] = useState<{ item: RecordData; candidate: boolean } | null>(null);
-  const sets = new Map<string, RecordData[]>();
-  for (const item of value.items) {
-    const name = item.setName || '未登记套组';
-    const items = sets.get(name);
-    if (items) items.push(item);
-    else sets.set(name, [item]);
-  }
+  const [platform, setPlatform] = useState(() => coverPlatforms.find(name => value.items.some((item: RecordData) => item.platforms?.includes(name))) || '通用');
+  const items = value.items.filter((item: RecordData) => item.platforms?.includes(platform));
+  const candidates = value.candidates.filter((item: RecordData) => item.platforms?.includes(platform));
+  const unassigned = value.items.filter((item: RecordData) => !item.platforms?.length);
+  const unassignedCandidates = value.candidates.filter((item: RecordData) => !item.platforms?.length);
   return <>
     <div className="toolbar"><h2>当前采用封面</h2><RecordLinks items={[value.index, value.record]} /></div>
-    {[...sets].map(([name, items]) => <section key={name} aria-label={`封面套组：${name}`}>
-      <div className="toolbar"><h3>套组：{name}</h3><span className="muted">适用平台：{[...new Set(items.flatMap(item => item.platforms || []))].join('、') || '未登记'}</span></div>
-      <div className="asset-media-grid">{items.map((item: RecordData) => {
-      const image = item.media || item.original;
-      return <AssetMediaCard key={item.name} title={item.name} revision={revision} formal item={{
-        media: image && { ...image, kind: 'image', name: item.name }, version: item.version,
-        statusHtml: item.statusHtml, scope: item.scope + ' · ' + item.layout,
-      }} onDetails={() => setDetail({ item, candidate: false })} />;
-    })}</div>
-    </section>)}
-    {!value.items.length && <p className="muted">尚无已登记的采用封面，可先查看候选和制作记录。</p>}
-    <details className="cover-library-history" onToggle={event => setHistoryOpen(event.currentTarget.open)}>
-      <summary>候选与历史（{value.candidates.length}）</summary>
-      {historyOpen && <div className="asset-media-grid">{value.candidates.map((item: RecordData) => <AssetMediaCard
-        key={item.media.key} title={item.name} revision={revision} item={{
-          media: { ...item.media, kind: 'image' }, generation: item.generation, userState: item.status,
-        }} onDetails={() => setDetail({ item, candidate: true })} />)}</div>}
+    <UnderlineTabs label="封面平台" items={coverPlatforms.map(name => ({ value: name, label: name }))} selected={platform} onChange={name => { setPlatform(name); setHistoryOpen(false); setDetail(null); }} />
+    <CoverSets items={items} revision={revision} onSelect={item => setDetail({ item, candidate: false })} />
+    {!items.length && <p className="muted">{platform}暂无已登记的采用封面。</p>}
+    <details className="cover-library-history" open={historyOpen} onToggle={event => setHistoryOpen(event.currentTarget.open)}>
+      <summary>候选与历史（{candidates.length}）</summary>
+      {historyOpen && <CoverCandidates items={candidates} revision={revision} onSelect={item => setDetail({ item, candidate: true })} />}
     </details>
+    {unassigned.length > 0 && <details className="cover-library-history">
+      <summary>未登记平台的采用封面（{unassigned.length}）</summary>
+      <CoverSets items={unassigned} revision={revision} onSelect={item => setDetail({ item, candidate: false })} />
+    </details>}
+    {unassignedCandidates.length > 0 && <details className="cover-library-history">
+      <summary>未登记平台的候选与历史（{unassignedCandidates.length}）</summary>
+      <CoverCandidates items={unassignedCandidates} revision={revision} onSelect={item => setDetail({ item, candidate: true })} />
+    </details>}
     <Groups groups={value.groups} />
     {detail && <Dialog title={`${detail.item.name} · 详情`} close={() => setDetail(null)}>
       {detail.candidate ? <>
@@ -56,6 +54,34 @@ export function CoverLibrary({ value, revision }: { value: RecordData; revision:
       </>}
     </Dialog>}
   </>;
+}
+
+
+function CoverSets({ items, revision, onSelect }: { items: RecordData[]; revision: number; onSelect: (item: RecordData) => void }) {
+  const sets = new Map<string, RecordData[]>();
+  for (const item of items) {
+    const name = item.setName || '未登记套组';
+    const entries = sets.get(name);
+    if (entries) entries.push(item);
+    else sets.set(name, [item]);
+  }
+  return <>{[...sets].map(([name, entries]) => <section key={name} aria-label={`封面套组：${name}`}>
+    <div className="toolbar"><h3>套组：{name}</h3><span className="muted">适用平台：{[...new Set(entries.flatMap(item => item.platforms || []))].join('、') || '未登记'}</span></div>
+    <div className="asset-media-grid">{entries.map(item => {
+      const image = item.media || item.original;
+      return <AssetMediaCard key={item.name} title={item.name} revision={revision} formal item={{
+        media: image && { ...image, kind: 'image', name: item.name }, version: item.version,
+        statusHtml: item.statusHtml, scope: item.scope + ' · ' + item.layout,
+      }} onDetails={() => onSelect(item)} />;
+    })}</div>
+  </section>)}</>;
+}
+
+function CoverCandidates({ items, revision, onSelect }: { items: RecordData[]; revision: number; onSelect: (item: RecordData) => void }) {
+  return <div className="asset-media-grid">{items.map(item => <AssetMediaCard
+    key={item.media.key} title={item.name} revision={revision} item={{
+      media: { ...item.media, kind: 'image' }, generation: item.generation, userState: item.status,
+    }} onDetails={() => onSelect(item)} />)}</div>;
 }
 
 function RecordLinks({ items }: { items: (RecordData | null)[] }) {

@@ -30,28 +30,55 @@ try {
     await page.route('**/fixtures/cover.svg*', route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="#e6efeb"/></svg>' }));
     await page.goto(base + '/tests/cover-sets.html');
     assert.equal(await page.title(), '封面套组测试');
-    const first = page.getByRole('region', { name: '封面套组：系列通用', exact: true });
-    await first.getByRole('heading', { name: '套组：系列通用', exact: true }).waitFor();
-    assert.equal(await first.locator('.asset-media-card').count(), 2);
-    assert.equal(await first.getByText('适用平台：快手', { exact: true }).count(), 1);
-    assert.equal(await page.getByRole('region', { name: '封面套组：EP002', exact: true }).getByText('适用平台：快手、小红书', { exact: true }).count(), 1);
-    const legacy = page.getByRole('region', { name: '封面套组：未登记套组', exact: true });
-    assert.equal(await legacy.getByText('适用平台：未登记', { exact: true }).count(), 1);
-    assert.equal(await page.locator('.asset-media-card .file-action-links').count(), 0);
-    for (const region of [first, page.getByRole('region', { name: '封面套组：EP002', exact: true }), legacy]) {
-      await region.getByRole('button', { name: '查看详情', exact: true }).first().click();
+    const tabs = page.getByRole('navigation', { name: '封面平台', exact: true });
+    assert.deepEqual(await tabs.getByRole('button').allTextContents(), ['通用', '抖音', '小红书', '快手']);
+    for (const [platform, count, candidateNames] of [['通用', 1, []], ['抖音', 1, ['多平台候选']], ['小红书', 1, ['多平台候选']], ['快手', 3, ['快手候选']]]) {
+      await tabs.getByRole('button', { name: platform, exact: true }).click();
+      assert.equal(await tabs.getByRole('button', { name: platform, exact: true }).getAttribute('aria-current'), 'page');
+      const cards = page.locator('.asset-media-card').filter({ visible: true });
+      assert.equal(await cards.count(), count);
+      for (const title of await cards.locator('h3').allTextContents()) assert.ok(title.includes(platform), title);
+      const first = cards.first();
+      await first.getByRole('button', { name: '查看详情', exact: true }).click();
       const dialog = page.getByRole('dialog');
       assert.equal(await dialog.locator('dd .file-action-links').count(), 2);
       assert.equal(await dialog.getByText(itemBasis, { exact: true }).count(), 1);
       assert.equal(await dialog.evaluate(el => el.scrollWidth > el.clientWidth), false);
-      await page.screenshot({ path: path.join(out, width + '-' + (region === first ? 'detail' : region === legacy ? 'legacy' : 'multi') + '.png') });
+      await page.screenshot({ path: path.join(out, width + '-' + platform + '-detail.png') });
       await dialog.getByRole('button', { name: '关闭', exact: true }).click();
+      const history = page.locator('details.cover-library-history').filter({ has: page.locator('summary').filter({ hasText: /^候选与历史/ }) });
+      assert.equal(await history.locator('summary').innerText(), '候选与历史（' + candidateNames.length + '）');
+      await history.locator('summary').click();
+      if (candidateNames.length) await history.locator('.asset-media-card h3').first().waitFor();
+      assert.deepEqual(await history.locator('.asset-media-card h3').allTextContents(), candidateNames);
+      if (candidateNames.length) {
+        await history.getByRole('button', { name: '查看详情', exact: true }).click();
+        assert.equal(await page.getByRole('dialog').locator('dd .file-action-links').count(), 1);
+        await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();
+      }
     }
+    const legacy = page.locator('details').filter({ has: page.locator('summary').getByText('未登记平台的采用封面（1）', { exact: true }) });
+    await legacy.locator('summary').click();
+    assert.equal(await legacy.getByText('适用平台：未登记', { exact: true }).count(), 1);
+    await legacy.getByRole('button', { name: '查看详情', exact: true }).click();
+    assert.equal(await page.getByRole('dialog').locator('dd').getByText('未登记', { exact: true }).count(), 2);
+    await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();
+    const oldCandidates = page.locator('details').filter({ has: page.locator('summary').getByText('未登记平台的候选与历史（1）', { exact: true }) });
+    await oldCandidates.locator('summary').click();
+    assert.equal(await oldCandidates.getByRole('heading', { name: '旧候选', exact: true }).count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     assert.equal(await page.locator('vite-error-overlay').count(), 0);
     assert.deepEqual(errors, []); assert.deepEqual(api, []);
     await page.screenshot({ path: path.join(out, width + '-sets.png') });
-    await page.close(); console.log(width + 'px: grouped pair, multiple platforms, legacy metadata and detail/file actions passed');
+    await page.goto(base + '/tests/cover-sets.html?only-kuaishou');
+    await tabs.waitFor();
+    assert.equal(await tabs.getByRole('button', { name: '小红书', exact: true }).getAttribute('aria-current'), 'page');
+    // The shared EP002 file supports both platforms; canonical first populated tab is 小红书.
+    await tabs.getByRole('button', { name: '通用', exact: true }).click();
+    assert.equal(await page.getByText('通用暂无已登记的采用封面。', { exact: true }).count(), 1);
+    assert.equal(await page.locator('.asset-media-card').filter({ visible: true }).count(), 0);
+    assert.deepEqual(errors, []); assert.deepEqual(api, []);
+    await page.close(); console.log(width + 'px: four platform tabs, shared multi-platform covers/candidates, per-platform empty states and legacy entries passed');
   }
   console.log('Screenshots: ' + out);
 } finally { await browser.close(); server.kill(); }

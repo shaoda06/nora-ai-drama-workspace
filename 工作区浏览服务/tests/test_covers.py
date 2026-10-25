@@ -57,6 +57,16 @@ class CoverParserTests(unittest.TestCase):
         self.assertEqual(item['specBasis'], '')
         self.assertTrue(item['ready'])
 
+    def test_candidate_platforms_use_the_generation_record(self):
+        path = self.root / RECORD
+        path.write_text(path.read_text().replace('### 生成记录-006\n', '### 生成记录-006\n- 套组名称：系列通用\n- 适用平台：抖音、小红书\n', 1))
+        candidate = self.covers()['candidates'][0]
+        self.assertEqual(candidate['setName'], '系列通用')
+        self.assertEqual(candidate['platforms'], ['抖音', '小红书'])
+
+    def test_legacy_candidate_keeps_an_unassigned_platform(self):
+        self.assertEqual(self.covers()['candidates'][0]['platforms'], [])
+
     def test_failed_attempt_does_not_claim_later_successful_file(self):
         path = self.root / RECORD
         path.write_text(path.read_text().replace('## 4. 审阅区', '### 生成记录-007\n- 真实执行状态：failed；未自动重试\n- 候选文件入口：尚未生成；计划：[同名原图](素材/原图.png)\n## 4. 审阅区'))
