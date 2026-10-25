@@ -34,6 +34,7 @@ export function NavigationFixture() {
     <div data-testid="pagination"><Pagination page={page} total={total} pageSize={10} change={setPage} /></div>
     <div data-testid="pagination-single"><Pagination alwaysShow itemLabel="集" page={1} total={1} pageSize={5} change={setPage} /></div>
     <div data-testid="pagination-empty"><Pagination alwaysShow itemLabel="集" page={1} total={0} pageSize={5} change={setPage} /></div>
+    {[0, 1, 5, 6].map(count => <div key={count} data-testid={`custom-pagination-${count}`}><Pagination compact page={1} total={count} pageSize={5} change={setPage}><span>自定义选集内容</span></Pagination></div>)}
     <div data-testid="filename-pagination" style={{ maxWidth: 161 }}><Pagination compact fitContent alwaysShow page={1} total={5} pageSize={5} change={setPage}>
       <TabNav scrollable disabled={disabled} label="文件名分页示例" selected={filename} onChange={setFilename} items={[{ value: 'one', label: '第1集' }, { value: 'two', label: '第2集' }, { value: 'three', label: '第3集' }, { value: 'four', label: '第4集' }, { value: 'long', label: longLabel }]} />
     </Pagination><output data-testid="filename-value">{filename}</output></div>

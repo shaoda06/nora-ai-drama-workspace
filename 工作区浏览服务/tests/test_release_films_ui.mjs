@@ -63,7 +63,8 @@ const server = await createServer({ configFile: false, root: fileURLToPath(new U
       else if (pathname.endsWith('/sections/98-发布成片')) {
         if (mode === 'error') { response.statusCode = 503; data = { detail: '本地模拟读取失败' }; }
         else data = { ...tree, children: mode === 'grouped' ? [...grouped, rootFile, { kind: 'group', name: '其他目录', children: [file('旧片尾.webm', '其他目录/')] }]
-          : mode === 'grouped-clean' ? grouped : mode === 'empty' ? [] : mode === 'single' ? [rootFile] : mode === 'priority' ? [
+          : mode === 'grouped-clean' ? grouped : mode === 'five' || mode === 'six' ? Array.from({ length: mode === 'five' ? 5 : 6 }, (_, i) => file(`第${i + 1}集.webm`))
+          : mode === 'empty' ? [] : mode === 'single' ? [rootFile] : mode === 'priority' ? [
           ...tree.children, { kind: 'group', name: '靠后目录', children: [intro] },
           { kind: 'group', name: '片尾目录', children: [outro] },
         ] : tree.children };
@@ -189,12 +190,31 @@ try {
     mode = 'single'; await page.reload(); await openRelease();
     await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText('发布成片（1）', { exact: true }).waitFor();
     const singleLayout = await panel.locator('.release-films-toolbar').evaluate(el => { const row = el.getBoundingClientRect(), pager = el.querySelector('.pagination').getBoundingClientRect(), download = el.querySelector('.release-films-download').getBoundingClientRect(); return { left: pager.left - row.left, width: pager.width, right: row.right - download.right }; });
-    assert.ok(Math.abs(singleLayout.left) < 1 && singleLayout.width < 260, '单集整组分页靠左，保留按钮正常宽度和间距');
+    assert.ok(Math.abs(singleLayout.left) < 1 && singleLayout.width < 150, '单集文件名保留并靠左，不留两侧翻页占位');
     assert.ok(Math.abs(singleLayout.right) < 1, '下载操作靠右');
+    assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).count(), 0);
+    assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).count(), 0);
+    assert.deepEqual(await selector.getByRole('button').allTextContents(), ['第1集']);
+    await page.screenshot({ path: path.join(screenshots, `${viewport.width}-single-no-paging.png`), animations: 'disabled' });
+    mode = 'five'; await page.reload(); await openRelease();
+    assert.equal(await selector.getByRole('button').count(), 5);
+    assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).count(), 0);
+    assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).count(), 0);
+    await selector.getByRole('button', { name: '第5集', exact: true }).click();
+    assert.equal(await player.getAttribute('aria-label'), '第5集.webm');
+    mode = 'six'; await page.reload(); await openRelease();
     assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
+    assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).isEnabled(), true);
+    await panel.getByRole('button', { name: '下一页', exact: true }).click();
+    assert.deepEqual(await selector.getByRole('button').allTextContents(), ['第6集']);
+    assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isEnabled(), true, '6个视频末页即使只有1项仍保留翻页');
     assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).isDisabled(), true);
+    await panel.getByRole('button', { name: '上一页', exact: true }).click();
+    assert.equal(await player.getAttribute('aria-label'), '第1集.webm');
     mode = 'empty'; await page.reload(); await openRelease();
     await panel.getByText('暂无片头视频。', { exact: true }).waitFor();
+    assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).count(), 0);
+    assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).count(), 0);
     const categories = panel.getByRole('navigation', { name: '发布成片分类', exact: true });
     assert.deepEqual(await categories.getByRole('button').allTextContents(), ['片头', '片尾', '成片']);
     await categories.getByRole('button', { name: '片尾', exact: true }).click();

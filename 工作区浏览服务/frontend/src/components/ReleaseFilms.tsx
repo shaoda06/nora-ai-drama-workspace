@@ -43,7 +43,7 @@ function ReleaseFilmList({ videos, category }: { videos: FileItem[]; category: s
   const current = videos[index];
   return <>
     <div className="release-films-toolbar">
-      <Pagination compact fitContent alwaysShow pageSize={5} page={page} total={videos.length} change={page => setSelected(videos[(page - 1) * 5].key || videos[(page - 1) * 5].url!)}>
+      <Pagination compact fitContent pageSize={5} page={page} total={videos.length} change={page => setSelected(videos[(page - 1) * 5].key || videos[(page - 1) * 5].url!)}>
         <TabNav scrollable label="发布成片选集" items={videos.slice((page - 1) * 5, page * 5).map(item => ({ value: item.key || item.url!, label: item.name.replace(/\.[^.]+$/, '') }))} selected={current?.key || current?.url || ''} onChange={setSelected} />
       </Pagination>
       <div className="release-films-download"><DownloadButton key={current?.key || current?.url || 'empty'} url={current?.url || null} filename={current?.name} label="下载" title={current ? `下载${current.name}` : `暂无${category}视频`} /></div>

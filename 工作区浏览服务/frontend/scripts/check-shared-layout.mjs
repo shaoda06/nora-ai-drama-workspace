@@ -283,9 +283,13 @@ try {
     const releaseCategories = release.getByRole('navigation', { name: '发布成片分类', exact: true });
     assert.deepEqual(await releaseCategories.getByRole('button').allTextContents(), ['片头', '片尾', '成片', '未分类']);
     assert.equal(await release.locator('video').getAttribute('aria-label'), '先导版.webm');
+    assert.equal(await release.getByRole('button', { name: '上一页', exact: true }).count(), 0);
+    assert.equal(await release.getByRole('button', { name: '下一页', exact: true }).count(), 0);
     await releaseCategories.getByRole('button', { name: '片尾', exact: true }).click();
     assert.equal(await release.locator('video').getAttribute('aria-label'), '结束版.webm');
     await releaseCategories.getByRole('button', { name: '成片', exact: true }).click();
+    assert.equal(await release.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
+    assert.equal(await release.getByRole('button', { name: '下一页', exact: true }).isEnabled(), true);
     const releaseFiles = release.getByRole('navigation', { name: '发布成片选集', exact: true });
     assert.deepEqual(await releaseFiles.getByRole('button').allTextContents(), ['第1集', '第2集', '第3集', '第4集', '第5集']);
     await release.getByRole('button', { name: '下一页', exact: true }).click();

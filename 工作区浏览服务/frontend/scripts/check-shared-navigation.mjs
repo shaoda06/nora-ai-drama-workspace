@@ -96,6 +96,12 @@ export async function checkSharedNavigation(page, width, selfTest) {
     await fits(fixed.locator('.pagination'), `${width}/${id}`);
   }
   const filenames = fixture.getByTestId('filename-pagination');
+  for (const count of [0, 1, 5, 6]) {
+    const custom = fixture.getByTestId(`custom-pagination-${count}`);
+    assert.equal(await custom.locator('.pagination > span').innerText(), '自定义选集内容', '单页保留自定义中间内容');
+    assert.equal(await custom.getByRole('button').count(), count > 5 ? 2 : 0, '只有总数超过每页数量才显示翻页按钮');
+    await fits(custom.locator('.pagination'), `${width}/自定义选集-${count}`);
+  }
   const compact = filenames.locator('.pagination');
   assert.equal(await compact.locator(':scope > span').count(), 0, '自定义中间内容替代页码和总数');
   assert.equal(await compact.locator('nav > button').count(), 5);
