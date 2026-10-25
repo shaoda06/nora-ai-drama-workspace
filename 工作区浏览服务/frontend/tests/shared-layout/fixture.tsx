@@ -1,3 +1,4 @@
+import { DownloadsFixture } from './downloads';
 import { InputsFixture } from './inputs';
 import { NavigationFixture } from './navigation';
 import { FeedbackFixture } from './feedback';
@@ -28,6 +29,7 @@ function Fixture() {
   const [ended, setEnded] = useState(0);
   const [selection, setSelection] = useState({ stage: '一采', key: videos[0].key });
   return <div className="workspace-with-tasks"><main className="project-page">
+    <DownloadsFixture />
     <FeedbackFixture />
     <DirectorSheetsFixture />
     <NavigationFixture />

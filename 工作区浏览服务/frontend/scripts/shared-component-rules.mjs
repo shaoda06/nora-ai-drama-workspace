@@ -7,7 +7,7 @@ const owners = {
   SearchField: 'components/SearchField.tsx', Switch: 'components/Switch.tsx',
   TabNav: 'components/TabNav.tsx', UnderlineTabs: 'components/UnderlineTabs.tsx',
   Pagination: 'components/Pagination.tsx', PageHeader: 'components/PageHeader.tsx',
-  FileActions: 'components/FileActions.tsx', CopyButton: 'components/CopyButton.tsx',
+  DownloadControl: 'components/DownloadControl.tsx', FileActions: 'components/FileActions.tsx', CopyButton: 'components/CopyButton.tsx',
   Notifications: 'components/Notifications.tsx',
 };
 const classes = {
@@ -17,6 +17,7 @@ const classes = {
   'ui-switch': ['Switch', 'components/Switch.css'], pagination: ['Pagination', 'style.css', 'components/Pagination.css'],
   'page-heading': ['PageHeader', 'style.css'], 'search-field': ['SearchField', 'style.css'],
   'floating-message': ['Notifications', 'components/Notifications.css'],
+  'download-control': ['DownloadControl', 'components/DownloadControl.css'],
   'file-action-links': ['FileActions', 'components/FileActions.css'],
 };
 const componentClass = name => Object.keys(classes).find(prefix => name === prefix || name.startsWith(prefix + '-'));
@@ -80,7 +81,7 @@ export function inspectSource(path, text) {
       if (tag === 'dialog') report(node, 'Dialog');
       if (tag === 'select') report(node, 'TabSelect');
       if (tag === 'input' && literal(attrs.get('type')) === 'search') report(node, 'SearchField');
-      if (tag === 'a' && attrs.has('download')) report(node, 'FileActions');
+      if (tag === 'a' && attrs.has('download')) report(node, 'DownloadControl');
       const role = literal(attrs.get('role'));
       if (role === 'switch') report(node, 'Switch');
       if (role === 'combobox' || role === 'listbox') report(node, 'TabSelect');

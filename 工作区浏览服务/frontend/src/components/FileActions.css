@@ -1,4 +1,4 @@
-.file-action-links{display:inline-flex;align-items:baseline;gap:14px;white-space:nowrap;flex:none}
+.file-action-links{display:inline-flex;align-items:center;flex-wrap:wrap;gap:14px;max-width:100%;min-width:0}
 .file-action-links.file-action-links-center{display:flex;justify-content:center;width:100%}
 .file-entry-main{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 14px;min-width:0}
 .file-entry-main>.link{min-width:0;text-align:left;overflow-wrap:anywhere}

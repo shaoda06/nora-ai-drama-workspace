@@ -1,3 +1,4 @@
+import { checkSharedDownloads } from './check-shared-downloads.mjs';
 import { checkEpisodeDirectorSheets } from './check-episode-director-sheets.mjs';
 import { checkSharedInputs } from './check-shared-inputs.mjs';
 import { checkSharedPlayback } from './check-shared-playback.mjs';
@@ -66,6 +67,7 @@ try {
     });
     await page.goto(origin + '/tests/shared-layout/index.html');
     assert.equal(await page.title(), '公共组件布局自动检查');
+    await checkSharedDownloads(page, width);
     await checkSharedInputs(page, width, selfTest);
     const showcase = page.getByTestId('showcase'), business = page.getByTestId('business');
     await showcase.getByRole('button', { name: '布局与搜索', exact: true }).click();

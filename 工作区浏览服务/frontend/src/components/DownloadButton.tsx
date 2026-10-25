@@ -1,7 +1,6 @@
-import { PointerTooltip } from './PointerTooltip';
+import { DownloadControl } from './DownloadControl';
 import { useState } from 'react';
 import { FloatingMessage, useNotify } from './Notifications';
-import './SceneDownloads.css';
 
 type Request = { time: string; message: string; failed: boolean };
 export type DownloadState = Request & { busy: boolean };
@@ -73,12 +72,9 @@ export function DownloadButton({ url, label, title, pack = false, disabled = fal
     }
   }
 
-  return <div className="stage-download-row">
-    <PointerTooltip text={title}><button type="button" className="stage-download-link" disabled={(!url && !file) || busy || disabled} aria-busy={busy}
-       onClick={download}>
-      {busy && <span className="loading-spinner download-spinner" aria-hidden="true" />}
-      {busy ? (pack ? '正在打包…' : '正在准备…') : label}
-    </button></PointerTooltip>
+  return <>
+    <DownloadControl title={title} disabled={(!url && !file) || disabled} busy={busy} onClick={download}
+      label={busy ? (pack ? '正在打包…' : '正在准备…') : label} />
     {progress && <FloatingMessage>{title}：{progress.message}</FloatingMessage>}
-  </div>;
+  </>;
 }

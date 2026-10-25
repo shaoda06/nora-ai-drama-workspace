@@ -1,0 +1,10 @@
+.download-control{display:inline-flex;align-items:center;justify-content:center;gap:8px;justify-self:start;max-width:100%;min-width:0;box-sizing:border-box;background:white;color:var(--green);border:1px solid #97b8ac;border-radius:7px;padding:7px 14px;font-family:inherit;font-size:15px;font-weight:400;line-height:1.7;text-decoration:none;white-space:normal;cursor:pointer}
+.download-control:hover:not(:disabled){background:#edf5f1;color:var(--green);border-color:var(--green);text-decoration:none}
+.download-control:disabled{opacity:.42;cursor:not-allowed}
+.download-control[aria-busy=true]{opacity:.75;cursor:wait}
+.download-control-icon,.download-control-spinner{width:16px;height:16px;flex:0 0 16px;box-sizing:border-box}
+.download-control-label{min-width:0;overflow-wrap:anywhere}
+.download-control-spinner{border:2px solid #bdd5cd;border-top-color:currentColor;border-radius:50%;animation:download-control-spin .8s linear infinite}
+@keyframes download-control-spin{to{transform:rotate(360deg)}}
+@media(pointer:coarse){.download-control{min-height:44px}}
+@media(prefers-reduced-motion:reduce){.download-control-spinner{animation:none}}

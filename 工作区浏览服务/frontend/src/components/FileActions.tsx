@@ -1,3 +1,4 @@
+import { DownloadControl } from './DownloadControl';
 import './FileActions.css';
 
 export function Original({ url, label = '原文件' }: { url?: string; label?: string }) {
@@ -11,6 +12,6 @@ export function FileActions({ url, downloadOnly = false, centered = false, viewL
   download.searchParams.set('download', 'true');
   return <span className={`file-action-links${centered ? ' file-action-links-center' : ''}`}>
     {!downloadOnly && <Original url={url} label={viewLabel} />}
-    <a href={download.href} download>{downloadLabel}</a>
+    <DownloadControl href={download.href} label={downloadLabel} />
   </span>;
 }

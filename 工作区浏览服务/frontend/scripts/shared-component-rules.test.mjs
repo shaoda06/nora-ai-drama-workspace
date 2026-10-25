@@ -109,3 +109,12 @@ test('real Git hook checks the index: rejects staged violations even when worktr
     assert.doesNotMatch(docs.stdout + docs.stderr, /公共组件自动检查/);
   } finally { rmSync(repo, { recursive: true, force: true }); }
 });
+
+
+test('download appearance and native anchors belong to DownloadControl', () => {
+  assert.equal(errors('components/DownloadControl.tsx', '<a className="download-control" download />').length, 0);
+  assert.equal(errors('components/FileActions.tsx', '<a download />').length, 1);
+  assert.equal(errors('Page.tsx', '<button className="download-control" />').length, 1);
+  assert.equal(errors('Page.css', '.workflow .download-control{font-size:13px}').length, 1);
+  assert.equal(errors('components/DownloadControl.css', '.download-control{font-size:15px}').length, 0);
+});
