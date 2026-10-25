@@ -79,8 +79,7 @@ export function SceneDirectorSheets({ sheets, storyboardVersion = '', scenes, on
         <Pagination variant="arrows" page={pageIndex + 1} total={pages.length} pageSize={1} change={selectPage} />
       </div>
       <div className="director-sheet-footer">
-        <p className="director-sheet-page-count" aria-live="polite">{count}{sceneCount}</p>
-        <div className="director-sheet-file-actions"><FileActions url={current.image.url} viewLabel="查看原图" downloadLabel="下载原图" /></div>
+        <FileActions url={current.image.url} downloadOnly centered downloadLabel="下载原图" />
       </div>
       {fullscreen && <Dialog size="fullscreen" showHeader={false} title={`导演分镜表 · ${count}${sceneCount}`} close={() => setFullscreen(false)}>
         <div className="director-sheet-fullscreen">

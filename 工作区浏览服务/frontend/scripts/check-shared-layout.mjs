@@ -104,25 +104,21 @@ try {
     const sheets = page.getByTestId('director-sheets');
     const sheetImage = sheets.locator('.director-sheet-image img');
     const sheetArrows = sheets.locator('.pagination-arrows');
-    const sheetCount = sheets.locator('.director-sheet-page-count');
+    assert.equal(await sheets.locator('.director-sheet-page-count').count(), 0, '不再显示底部页数');
     const directorGap = await sheets.locator('.director-sheet-toolbar').evaluate(el =>
       el.getBoundingClientRect().top - el.closest('.episode-scene-content').getBoundingClientRect().top);
     assert.equal(directorGap, 21, '标签栏后只保留内容区20px内边距及1px分隔线，不叠加工具栏外边距');
     assert.equal(await sheetImage.count(), 1, '导演表每次仅显示一张大图');
     const originalLink = sheets.getByRole('link', { name: '查看原图 ↗', exact: true });
     const downloadLink = sheets.getByRole('link', { name: '下载原图', exact: true });
-    assert.equal(await originalLink.count(), 1);
+    assert.equal(await originalLink.count(), 0);
     assert.equal(await downloadLink.count(), 1);
-    assert.equal(await originalLink.getAttribute('target'), '_blank');
     assert.match(await downloadLink.getAttribute('href'), /download=true/);
-    await contained(sheets.locator('.director-sheet-footer'), `${width}px / 页码与原图入口`);
-    if (width > 600) {
-      const footer = await sheets.locator('.director-sheet-footer').boundingBox();
-      const caption = await sheetCount.boundingBox();
-      const actions = await sheets.locator('.director-sheet-file-actions').boundingBox();
-      assert.ok(Math.abs(caption.x + caption.width / 2 - footer.x - footer.width / 2) < 1, '页码保持居中');
-      assert.ok(Math.abs(actions.x + actions.width - footer.x - footer.width) < 1, '原图入口靠右');
-    }
+    await contained(sheets.locator('.director-sheet-footer'), `${width}px / 居中下载入口`);
+    const footer = await sheets.locator('.director-sheet-footer').boundingBox();
+    const downloadBounds = await downloadLink.boundingBox();
+    assert.ok(Math.abs(downloadBounds.x + downloadBounds.width / 2 - footer.x - footer.width / 2) < 1, '桌面与手机下载入口均在本行居中');
+    assert.equal(await sheets.locator('.director-sheet-footer').innerText(), '下载原图', '底部只有下载');
 
     const sheetPages = sheets.getByRole('navigation', { name: '导演分镜表页码' });
     assert.equal(await sheetPages.getByRole('button').count(), 3);
@@ -143,16 +139,16 @@ try {
       return { width: box.width, height: box.height, radius: style.borderRadius, rightGap: frame.right - box.right };
     });
     assert.deepEqual(arrowCircle, { width: 40, height: 40, radius: '50%', rightGap: 12 }, '圆形右箭头固定在图片右侧');
-    const countGap = await sheetCount.evaluate(el => el.closest('.director-sheet-footer').getBoundingClientRect().top - el.closest('.director-sheet-footer').previousElementSibling.getBoundingClientRect().bottom);
-    assert.equal(countGap, 10, '页码距图片10px');
+    const downloadGap = await sheets.locator('.director-sheet-footer').evaluate(el => el.getBoundingClientRect().top - el.previousElementSibling.getBoundingClientRect().bottom);
+    assert.equal(downloadGap, 10, '下载行距图片10px');
     await sheetArrows.getByRole('button', { name: '下一张图', exact: true }).click();
-    assert.equal(await sheets.getByText('第2页 / 共3页', { exact: true }).count(), 1, '箭头同步底部分页');
+    assert.equal(await sheetPages.getByRole('button', { name: '2', exact: true }).getAttribute('aria-current'), 'page', '箭头同步顶部页码');
     await sheetArrows.getByRole('button', { name: '下一张图', exact: true }).click();
     assert.match(await sheetImage.getAttribute('alt'), /第03页/);
     assert.equal(await sheetArrows.getByRole('button', { name: '下一张图', exact: true }).count(), 0, '末张隐藏下一张');
     await sheetArrows.getByRole('button', { name: '上一张图', exact: true }).click();
     assert.match(await sheetImage.getAttribute('alt'), /第02页/);
-    assert.equal(await sheets.getByText('第2页 / 共3页', { exact: true }).count(), 1);
+    assert.equal(await sheetPages.getByRole('button', { name: '2', exact: true }).getAttribute('aria-current'), 'page');
     await sheets.getByRole('button', { name: '全屏查看第02页导演分镜表', exact: true }).click();
     const sheetDialog = page.getByRole('dialog');
     await sheetDialog.waitFor({ state: 'visible' });
@@ -208,7 +204,7 @@ try {
     assert.deepEqual(await sheetPages.getByRole('button').allTextContents(), ['1', '2', '3', '4', '5', '6', '7']);
     await sheetPages.getByRole('button', { name: '7', exact: true }).click();
     assert.match(await sheetImage.getAttribute('alt'), /第07页/);
-    assert.match(await sheetCount.innerText(), /第7页 \/ 共7页/);
+    assert.equal(await sheetPages.getByRole('button', { name: '7', exact: true }).getAttribute('aria-current'), 'page');
     await sheetArrows.getByRole('button', { name: '上一张图', exact: true }).click();
     assert.equal(await sheetPages.getByRole('button', { name: '6', exact: true }).getAttribute('aria-current'), 'page');
     await contained(sheets.locator('.director-sheet-pages'), `${width}px / 七页候选数字选择容器`);
@@ -229,13 +225,13 @@ try {
     assert.equal(await sheetImage.count(), 0, '旧分镜不换用新图');
     await sheets.getByRole('button', { name: '模拟其他来源分镜', exact: true }).click();
     assert.match(await sheetImage.getAttribute('alt'), /v03-第01页/, '仅显示匹配来源候选');
-    assert.equal(await sheets.getByText('第1页 / 共1页', { exact: true }).count(), 1);
+    assert.equal(await sheetPages.getByRole('button').count(), 1);
     assert.equal(await sheetArrows.count(), 0, '单页不出现翻页箭头');
     await sheets.getByRole('button', { name: '模拟空场次', exact: true }).click();
     assert.equal(await sheets.getByText('分镜 v07 尚未制作导演分镜表。', { exact: true }).count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, '导演表手机无横向溢出');
     await checkEpisodeDirectorSheets(page, sheets, width);
-    console.log(`导演分镜表检查：${width}px单图、移除重复版本文字、数字跳页与高亮同步、圆形箭头、首尾隐藏、紧凑页码和原图入口、全视口看图与退出、审阅入口靠右、来源版本筛选、候选采用状态、单页及空场次通过。`);
+    console.log(`导演分镜表检查：${width}px单图、移除重复版本文字、数字跳页与高亮同步、圆形箭头、首尾隐藏、底部仅居中下载、全视口看图与退出、审阅入口靠右、来源版本筛选、候选采用状态、单页及空场次通过。`);
     await showcase.getByRole('button', { name: '列表与分页', exact: true }).click();
     const sheetPagination = showcase.locator('.pagination').last();
     await sheetPagination.getByRole('button', { name: '下一页', exact: true }).click();
