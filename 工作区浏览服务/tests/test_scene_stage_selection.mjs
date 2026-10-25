@@ -58,7 +58,7 @@ function mount({ mixed = true, pending = false, registered = true } = {}) {
   }
   dependencies['./SegmentVideo'] = load('SegmentVideo');
   const { SceneWorkspace } = load('SceneWorkspace');
-  const props = { scope, segments, sceneRounds: registered ? [round] : [], selectedRound: registered ? 1 : undefined,
+  const props = { view: 'segments', onViewChange(view) { props.view = view; }, scope, segments, sceneRounds: registered ? [round] : [], selectedRound: registered ? 1 : undefined,
     onRoundChange(number) { props.selectedRound = number; }, previousEnding: null, emptyMessage: '', revision: 1, directorFiles: [] };
   const find = (node, type) => {
     if (!node || typeof node !== 'object') return;

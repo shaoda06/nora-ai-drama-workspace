@@ -25,7 +25,7 @@ type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
 type ReviewRound = { stage: string; order: string[]; versions: ReviewVersions };
 
-export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [], selectedRound, onRoundChange, previousEnding, emptyMessage, revision, storyboardDocument, directorSheets, storyboardVersion }: { scope: NoteScope; segments: Segments; sceneRounds?: SceneRound[]; selectedRound?: number; onRoundChange: (number: number) => void; previousEnding: PreviousEpisodeEnding | null; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData; directorSheets?: DirectorSheets; storyboardVersion: string }) {
+export function SceneWorkspace({ view, onViewChange, scope, segments: allSegments, sceneRounds = [], selectedRound, onRoundChange, previousEnding, emptyMessage, revision, storyboardDocument, directorSheets, storyboardVersion }: { view: string; onViewChange: (view: string) => void; scope: NoteScope; segments: Segments; sceneRounds?: SceneRound[]; selectedRound?: number; onRoundChange: (number: number) => void; previousEnding: PreviousEpisodeEnding | null; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData; directorSheets?: DirectorSheets; storyboardVersion: string }) {
   const { scene } = scope;
   const productionRound = sceneRounds.find(item => item.number === selectedRound);
   const latestRound = sceneRounds.at(-1);
@@ -37,7 +37,6 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
   const segments = productionRound ? productionRound.segments.map(entry => ({ ...allSegments.find(item => item.id === entry.id)!, ...entry })) : allSegments.filter(item => !item.historical);
   const queryClient = useQueryClient();
   const positionKey = `scene/${scope.project}/${scope.episode}/${scene}`;
-  const [view, setView] = useRefreshState(positionKey + '/view', 'segments');
   const storyboardPath = `09-剧集制作/${scope.episode}/03-分镜脚本/${scope.episode}-${scene}-场次分镜.md`;
   const storyboard = useQuery({ queryKey: ['document', scope.project, storyboardPath, revision], queryFn: () => get<RecordData>(`${projectUrl(scope.project)}/document?path=${encodeURIComponent(storyboardPath)}`), enabled: view === 'storyboard' && !!scene && !storyboardDocument && !productionRound, placeholderData: previous => previous });
   const previousVideo = latestVideo(previousEnding?.segment?.videos.filter(video => video.url) || []);
@@ -175,7 +174,7 @@ export function SceneWorkspace({ scope, segments: allSegments, sceneRounds = [],
   };
   return <>
     <div className="scene-workspace-tabs">
-      <UnderlineTabs label="场次内容" items={[{ value: 'segments', label: '分段制作' }, { value: 'storyboard', label: '场次分镜' }, { value: 'director-sheets', label: '导演分镜表' }, { value: 'dialogue', label: '分镜修改' }, { value: 'downloads', label: '资源下载' }]} selected={view} onChange={value => { setAutoPlay(false); setView(value); }} />
+      <UnderlineTabs label="场次内容" items={[{ value: 'segments', label: '分段制作' }, { value: 'storyboard', label: '场次分镜' }, { value: 'director-sheets', label: '导演分镜表' }, { value: 'dialogue', label: '分镜修改' }, { value: 'downloads', label: '资源下载' }]} selected={view} onChange={value => { setAutoPlay(false); onViewChange(value); }} />
     {sceneRounds.length > 0 && <div className="scene-round-selector">
       <span className="production-latest">当前最新{selectedRound !== latestRound!.number && <>：第{latestRound!.number}轮：剧本{latestRound!.script?.version || '缺失'} · 分镜{latestRound!.storyboard?.version || '缺失'}，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => changeRound(latestRound!.number)}>点击切换</button></>}</span>
       <TabSelect size="toolbar" highlightSelected label="场次修改轮次" selected={String(selectedRound)} onChange={value => changeRound(Number(value))}

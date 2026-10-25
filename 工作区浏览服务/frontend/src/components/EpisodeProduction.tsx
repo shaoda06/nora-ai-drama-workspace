@@ -22,6 +22,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
   const breadcrumbActions = useContext(BreadcrumbActionsContext);
   const breadcrumbSelector = useContext(BreadcrumbSelectorContext);
   const [scene, setScene] = useRefreshState(`project/${project}/production/scene`, '');
+  const [sceneView, setSceneView] = useRefreshState(`project/${project}/production/${selected || ''}/scene-view`, 'segments');
   const [page, setPage] = useState(1);
   const cards = useRef<HTMLDivElement>(null);
   const previousEpisode = useRef(selected);
@@ -100,7 +101,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
       </li>)}</ul>
     </div> : null}
     {viewingSheets ? <div className="episode-scene-content"><SceneDirectorSheets key={current.name} scenes={directorScenes} revision={revision}
-      onRoundChange={(id, number) => setRoundNumbers(previous => ({ ...previous, [current.name + '/' + id]: number }))} /></div> : selectedScene ? <SceneWorkspace key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} directorSheets={current.directorSheets?.[selectedScene]} storyboardVersion={round ? round.storyboard?.version || '' : current.storyboards?.[selectedScene]?.version || ''} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
+      onRoundChange={(id, number) => setRoundNumbers(previous => ({ ...previous, [current.name + '/' + id]: number }))} /></div> : selectedScene ? <SceneWorkspace view={sceneView} onViewChange={setSceneView} key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} directorSheets={current.directorSheets?.[selectedScene]} storyboardVersion={round ? round.storyboard?.version || '' : current.storyboards?.[selectedScene]?.version || ''} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
       : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
     {!!current.materials?.length && <details className="asset-candidate-type production-materials"><summary>专用素材与图片候选（{current.materials.length}）</summary>
       {current.materialRecord && <p><button className="link" onClick={() => preview(current.materialRecord!)}>查看素材生成与审阅记录</button></p>}
