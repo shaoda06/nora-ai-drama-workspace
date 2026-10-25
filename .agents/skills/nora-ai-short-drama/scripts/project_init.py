@@ -31,6 +31,7 @@ def initialize(project, episode=None, *, cover=False, intro=False, outro=False):
     project = Path(project).expanduser().resolve()
     if episode is None:
         directories = (".", *PROJECT_DIRECTORIES,
+                       "98-发布成片/片头", "98-发布成片/片尾", "98-发布成片/成片",
                        *("99-综合资料/" + item for item in GENERAL_DIRECTORIES))
         if cover:
             directories += ("10-封面资料",)
