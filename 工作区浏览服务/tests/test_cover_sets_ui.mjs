@@ -59,7 +59,7 @@ try {
     }
     const legacy = page.locator('details').filter({ has: page.locator('summary').getByText('未登记平台的采用封面（1）', { exact: true }) });
     await legacy.locator('summary').click();
-    assert.equal(await legacy.getByText('适用平台：未登记', { exact: true }).count(), 1);
+    assert.equal(await legacy.getByRole('heading', { name: '历史封面', exact: true }).count(), 1);
     await legacy.getByRole('button', { name: '查看详情', exact: true }).click();
     assert.equal(await page.getByRole('dialog').locator('dd').getByText('未登记', { exact: true }).count(), 2);
     await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();

@@ -66,7 +66,6 @@ function CoverSets({ items, revision, onSelect }: { items: RecordData[]; revisio
     else sets.set(name, [item]);
   }
   return <>{[...sets].map(([name, entries]) => <section key={name} aria-label={`封面套组：${name}`}>
-    <div className="toolbar"><h3>套组：{name}</h3><span className="muted">适用平台：{[...new Set(entries.flatMap(item => item.platforms || []))].join('、') || '未登记'}</span></div>
     <div className="asset-media-grid">{entries.map(item => {
       const image = item.media || item.original;
       return <AssetMediaCard key={item.name} title={item.name} revision={revision} formal item={{
