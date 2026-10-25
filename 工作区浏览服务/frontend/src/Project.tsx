@@ -34,8 +34,12 @@ type AssetNavigation = { asset: AssetSelection | null; onAssetChange: (asset: As
 const releaseSections = ['11-社交媒体资料', '10-封面资料', '98-发布成片'];
 
 export default function Project() {
-  const controlsRoot = useContext(HeaderControlsContext);
   const { name = '' } = useParams();
+  return <ProjectPage key={name} name={name} />;
+}
+
+function ProjectPage({ name }: { name: string }) {
+  const controlsRoot = useContext(HeaderControlsContext);
   const [section, setSection] = useRefreshState(`project/${name}/section`, '00-项目定位');
   const [visited, setVisited] = useState([section]);
   const [entries, setEntries] = useState<Record<string, number>>({});
