@@ -21,6 +21,7 @@ license: MIT
 | 人物场景道具、图片提示词 | [资产与提示词审查](references/rubric-assets-prompts.md)及[资产专项](../nora-drama-assets/SKILL.md)对应类型 |
 | 分镜、首帧与视频提示词文本 | [视觉运动审查](references/rubric-visual-motion.md)、[文本方法适配](references/文本审查与返修规范.md#文本审查的方法补充)，核对当前镜头、P段和实际输入 |
 | 表情表达检查或生成后的具体表情反馈 | [表情拆解](../facial-expression/SKILL.md)；分镜允许抽象表情，模型正文检查具体面部变化。文本检查不构成生成验证；真实反馈按该技能更新参考表的验证情况，不因此取得修改项目来源或查看媒体的授权 |
+| 镜头表达检查或针对实际镜头效果的反馈 | [镜头语言与表达](../camera-language/SKILL.md)，核对观看目的、可见过程及相容性；指南验证更新沿其反馈规则，文本检查不等于生成有效，也不扩大媒体查看或项目修订授权 |
 | 如何说明问题与复核 | [审查方法](references/review-method.md)；返修归属以[共用规则](../nora-ai-short-drama/references/共用规则/制作返修与完整重做规范.md)为准 |
 | 模板感及重复写法 | [反模板方法](references/anti-template-repair.md)，具体表达可按需使用humanizer-zh |
 | 用户授权的媒体审查与生产观察 | [生产质量参考](references/production-quality-gates.md)、[项目校准方法](references/project-calibration.md)，仅在主控允许的查看范围内使用 |
