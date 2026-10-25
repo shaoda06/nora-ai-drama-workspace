@@ -84,10 +84,11 @@ class CommonProductionTests(HttpTestCase):
         for name in ('片头', '片尾'):
             base, _, _ = self.unit(name)
             request = self.write(base + '/其他资料/执行附件/请求.json', json.dumps({
-                'kind': '剧集素材', 'object': name, 'image_type': '片尾静态图',
+                'kind': '剧集素材', 'object': name, 'image_type': name + '静态图',
                 'title': '独立共用对象', 'purpose': '临时测试',
                 'draft': base + '/其他资料/工作稿/' + name + '-专用素材制作-工作稿.md',
-                'output': base + '/其他资料/工作稿/素材/' + name + '-候选-v01.png',
+                'formal': base + '/04-专用素材/' + name + '-静态图.png',
+                'output': base + '/其他资料/工作稿/素材/' + name + '-静态图-候选-v01.png',
                 'prompt': '测试原文', 'authorization': '隔离测试，不调用生成',
                 'ratio': '16:9', 'formal_size': [1920, 1080]}, ensure_ascii=False))
             job = native.prepare(self.project, request)

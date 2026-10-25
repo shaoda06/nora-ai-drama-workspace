@@ -77,6 +77,7 @@ class NativeCoverTests(unittest.TestCase):
     def test_free_prompt_cover_visible_without_adoption_index(self):
         self.spec.update(kind='封面', object='通用', image_type='竖版封面', draft=RECORD,
                          prompt='自由编写的完整画面与文案。', ratio='3:4', formal_size=[1080, 1440],
+                         formal=DIRECTORY + '/正式封面/通用-竖版封面.png',
                          output=DIRECTORY + '/其他资料/工作稿/素材/通用-竖版封面-候选-v01.png')
         self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
         self.prepare()
@@ -98,6 +99,7 @@ class QwenCoverTests(unittest.TestCase):
             spec = dict(task_type='image', object='通用', title='备用封面', kind='封面',
                         image_type='横版封面', draft=RECORD, authorization='用户选择备用千问',
                         supplementary=True, size=[1536, 1152],
+                        formal=DIRECTORY + '/正式封面/通用-横版封面.png',
                         prompt=dict(rewritten_prompt='自由描述画面、标题和排版。', wh_ratio='4:3', ratio_follow=''))
             task = plans.build_image(root, SKILL, spec, documents, '2026-10-22')
             self.assertEqual(task['image_plan']['kind'], '封面')

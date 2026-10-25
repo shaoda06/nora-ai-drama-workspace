@@ -652,17 +652,21 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             except WebSocketDisconnect:
                 pass
         self.upload()
+        image_draft = self.project / '03-人物资料/其他资料/工作稿/CH001-参考图-工作稿.md'
+        image_draft.parent.mkdir(parents=True)
+        self.data.outputs[0].path = str(image_draft.parent / '素材/CH001-基础-人物上半身正面肖像图-候选-v01.png')
         workflow = self.record / 'input.json'
         workflow.write_text(json.dumps(self.data.workflow), 'utf-8')
         uploads = self.record / 'uploads.json'
         uploads.write_text(json.dumps(self.data.uploads), 'utf-8')
         outputs = self.record / 'outputs.json'
         outputs.write_text(json.dumps([out.model_dump() for out in self.data.outputs]), 'utf-8')
-        image_draft = self.project / 'image-draft.md'
         image_draft.write_text('# 工作稿\n### 生成记录-001\n- 执行状态：等待\n- 输出候选文件：未取得\n'
             '- 实际尺寸、格式及数量：待核对\n- 文件核对结论：待核对\n- 审阅记录入口：尚无\n## 4. 审阅区\n', 'utf-8')
         image_plan = self.record / 'image-plan.json'
-        image_plan.write_text(json.dumps(dict(draft='image-draft.md', kind='人物', generation='生成记录-001',
+        image_plan.write_text(json.dumps(dict(draft=image_draft.relative_to(self.project).as_posix(), kind='人物',
+            image_type='人物上半身正面肖像图',
+            formal='03-人物资料/CH001-人物/参考图/CH001-基础-人物上半身正面肖像图.png', generation='生成记录-001',
             review='审阅-生成记录-001-001', images=[dict(path=self.data.outputs[0].path, width=4, height=3)])), 'utf-8')
         adapter = self.root / 'codex/plugins/cache/openai-bundled/codex-app-tools/test/server.mjs'
         adapter.parent.mkdir(parents=True)
