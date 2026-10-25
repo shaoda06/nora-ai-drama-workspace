@@ -258,6 +258,26 @@ try {
     assert.equal(await fullExample.locator(':scope > header').count(), 0, '展示页使用真实无顶部栏规格');
     assert.equal((await fullExample.boundingBox()).width, width);
     await fullExample.getByRole('button', { name: '关闭', exact: true }).click();
+    await showcase.getByRole('button', { name: '图片与音视频', exact: true }).click();
+    const detailCards = showcase.locator('.asset-media-card').filter({ has: page.locator('.asset-media-details') });
+    assert.equal(await detailCards.count(), 2);
+    for (const card of await detailCards.all()) {
+      const detailButton = card.getByRole('button', { name: '查看详情', exact: true });
+      const edges = await detailButton.evaluate(el => ({ button: el.getBoundingClientRect().right, footer: el.parentElement.getBoundingClientRect().right }));
+      assert.ok(Math.abs(edges.button - edges.footer) <= 1, `${width}px / 图片详情按钮右对齐`);
+      const record = card.getByRole('link', { name: '生成记录', exact: true });
+      if (await record.count()) {
+        const edges = await record.evaluate(el => ({ link: el.getBoundingClientRect().left, footer: el.parentElement.getBoundingClientRect().left }));
+        assert.ok(Math.abs(edges.link - edges.footer) <= 1, `${width}px / 生成记录保留左侧`);
+        await record.click();
+        await page.getByRole('dialog').getByText('本地示例生成记录。', { exact: true }).waitFor();
+        await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();
+      }
+      await detailButton.click();
+      await page.getByRole('dialog').getByText('本地图片详情示例。', { exact: true }).waitFor();
+      await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();
+    }
+    console.log(`图片卡片：${width}px仅详情／记录同排的右对齐、左侧记录和本地预览通过。`);
     await showcase.getByRole('button', { name: '文件与正文', exact: true }).click();
     const release = showcase.locator('.release-films');
     const releaseCategories = release.getByRole('navigation', { name: '发布成片分类', exact: true });

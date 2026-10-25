@@ -39,7 +39,10 @@ try {
       assert.equal(await cards.count(), count);
       for (const title of await cards.locator('h3').allTextContents()) assert.ok(title.includes(platform), title);
       const first = cards.first();
-      await first.getByRole('button', { name: '查看详情', exact: true }).click();
+      const detailButton = first.getByRole('button', { name: '查看详情', exact: true });
+      const edges = await detailButton.evaluate(el => ({ button: el.getBoundingClientRect().right, footer: el.parentElement.getBoundingClientRect().right }));
+      assert.ok(Math.abs(edges.button - edges.footer) <= 1, width + 'px cover details right aligned');
+      await detailButton.click();
       const dialog = page.getByRole('dialog');
       assert.equal(await dialog.locator('dd .file-action-links').count(), 2);
       assert.equal(await dialog.getByText(itemBasis, { exact: true }).count(), 1);

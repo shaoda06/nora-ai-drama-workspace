@@ -3,6 +3,7 @@ import postcss from 'postcss';
 
 // These are implementation owners, not page exemptions. Extend with a real shared component.
 const owners = {
+  AssetMediaCard: 'components/AssetMediaCard.tsx',
   Dialog: 'components.tsx', TabSelect: 'components/TabSelect.tsx',
   SearchField: 'components/SearchField.tsx', Switch: 'components/Switch.tsx',
   TabNav: 'components/TabNav.tsx', UnderlineTabs: 'components/UnderlineTabs.tsx',
@@ -11,6 +12,7 @@ const owners = {
   Notifications: 'components/Notifications.tsx',
 };
 const classes = {
+  'asset-media-details': ['AssetMediaCard', 'style.css'],
   'dialog-close': ['Dialog', 'style.css'],
   'tab-select': ['TabSelect', 'components/TabSelect.css', 'style.css'],
   tabs: ['TabNav', 'style.css', 'components/TabNav.css'], 'underline-tabs': ['UnderlineTabs', 'style.css'],

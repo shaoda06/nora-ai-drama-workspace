@@ -14,6 +14,7 @@ import { FileActions, Original } from './FileActions';
 import { SyncNotification } from './SyncNotification';
 import { TabNav } from './TabNav';
 import { AssetMedia } from './AssetMedia';
+import { AssetMediaCard } from './AssetMediaCard';
 import { AssetCandidateMedia } from './AssetCandidateMedia';
 import { ReferenceMediaCard } from './ReferenceMediaCard';
 import { AudioPreviewButton, useAudioPreview } from './AudioPreviewButton';
@@ -38,6 +39,7 @@ const fileUrl = '/api/component-samples/file';
 const image: FileItem = { kind: 'image', name: '示例图形', key: 'image.svg', url: '/component-samples/image.svg' };
 const audio: FileItem = { kind: 'audio', name: '示例提示音', key: 'tone.wav', url: '/component-samples/tone.wav' };
 const video: FileItem = { kind: 'video', name: '示例视频', key: 'video.webm', url: '/component-samples/video.webm' };
+const imageDetails: FileItem = { kind: 'document', name: '图片详情示例', key: 'asset-details-demo', doc: { html: '<p>本地图片详情示例。</p>' } };
 const imageRecord = { type: '示例参考图', media: image, version: 'v1.0', statusHtml: '<span class="status-badge status-gray">示例</span>', scope: '仅供组件展示' };
 const videoRecord: VideoItem = { key: 'sample-video', url: video.url!, stage: '一采', run: 'R001', approved: true, candidateNumber: 1, fileRevision: 'sample-1', deliveryStatus: '已取回', taskStatus: '已完成', checkedAt: '' };
 const segments = [{ id: 'P001', duration: 2, scriptHtml: '', videos: [videoRecord] }, { id: 'P002', duration: 3, scriptHtml: '', videos: [] }];
@@ -129,9 +131,15 @@ export function ShowcaseExamples({ category }: { category: string }) {
     </>}
     {category === 'media' && <>
       {sound.player}
-      <ComponentExample fullWidth title="图片与候选卡片" rule="尺寸来自加载图片的真实像素宽高，网页计算并在括号显示最简比例。点击图片在公共预览中放大，只保留整行居中的下载入口；候选分组按类型展开。图片为随服务提供的示例图形。" usage="人物、场景、道具、封面">
+      <ComponentExample fullWidth title="图片与候选卡片" rule="尺寸来自加载图片的真实像素宽高，网页计算并在括号显示最简比例。点击图片在公共预览中放大，只保留整行居中的下载入口；候选分组按类型展开。图片为随服务提供的示例图形。查看详情固定在底部右侧，生成记录保留左侧；下方记录和详情使用本地示例正文。" usage="人物、场景、道具、封面">
         <AssetMedia items={[imageRecord]} revision={1} formal />
         <AssetCandidateMedia items={[imageRecord]} revision={1} />
+        <PreviewContext.Provider value={item => setPreview(item.kind === 'markdown' ? { ...item, kind: 'document', doc: { html: '<p>本地示例生成记录。</p>' } } : item)}>
+          <div className="asset-media-grid">
+            <AssetMediaCard title="仅有查看详情" item={imageRecord} revision={1} formal onDetails={() => setPreview(imageDetails)} />
+            <AssetMediaCard title="生成记录与查看详情" item={{ ...imageRecord, recordUrl: '/component-samples/files/示例生成记录.md', generation: '生成记录-示例' }} revision={1} formal onDetails={() => setPreview(imageDetails)} />
+          </div>
+        </PreviewContext.Provider>
       </ComponentExample>
       <ComponentExample title="音视频卡片与试听" rule="试听播放2秒轻提示音，可暂停；视频入口打开公共预览。无音频时按钮禁用。" usage="参考音视频、人物音色">
         <ReferenceMediaCard item={{ kind: 'reference', name: audio.name, media: audio, approvalHtml: '<span class="status-badge status-gray">示例</span>' }} audio playing={sound.playingId === 'sample'} progress={sound.progress} onPlay={() => sound.toggle('sample', audio.url!)} onSelect={() => setPreview(audio)} />
