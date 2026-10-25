@@ -103,7 +103,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
       : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
     {!!current.materials?.length && <details className="asset-candidate-type production-materials"><summary>专用素材与图片候选（{current.materials.length}）</summary>
       {current.materialRecord && <p><button className="link" onClick={() => preview(current.materialRecord!)}>查看素材生成与审阅记录</button></p>}
-      <div className="asset-media-grid">{current.materials.map(file => <article className="asset-media-card" key={file.key}>
+      <div className="asset-media-grid">{[...current.materials].sort((a, b) => b.name.replace(/\.[^.]+$/, '').localeCompare(a.name.replace(/\.[^.]+$/, ''), 'zh-CN', { numeric: true })).map(file => <article className="asset-media-card" key={file.key}>
         <h3>{file.name}</h3><button className="production-image-preview" onClick={() => preview(file)} aria-label={`查看${file.name}`}><img loading="lazy" src={file.url} alt={file.name} /></button>
         <div className="asset-media-footer"><DownloadButton url={file.url!} label="下载原图" title={`下载${file.name}`} /></div>
       </article>)}</div>

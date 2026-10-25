@@ -2,6 +2,13 @@ import assert from 'node:assert/strict';
 
 export async function checkEpisodeDirectorSheets(page, fixture, width) {
   await fixture.getByRole('button', { name: '模拟整集六页', exact: true }).click();
+  const materials = fixture.locator('.production-materials');
+  await materials.locator('summary').click();
+  assert.deepEqual(await materials.locator('h3').allTextContents(), ['P010-参考图-001-候选-v10.png', 'P010-参考图-001-候选-v02.png', 'P002-参考图-001-候选-v01.png', 'P002-参考图-001.png'], '素材编号及候选版本按数值倒序');
+  await materials.getByRole('button', { name: '查看P010-参考图-001-候选-v10.png', exact: true }).click();
+  assert.equal(await page.getByRole('dialog').locator('img').getAttribute('alt'), 'P010-参考图-001-候选-v10.png');
+  await page.keyboard.press('Escape');
+  await materials.locator('summary').click();
   const scenes = fixture.getByRole('navigation', { name: '本集场次' });
   assert.deepEqual(await scenes.getByRole('button').allTextContents(), ['场次 C001', '场次 C002', '场次 C003', '场次 C004'], '没有独立整集入口');
   await scenes.getByRole('button', { name: '场次 C002', exact: true }).click();

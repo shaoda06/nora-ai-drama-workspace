@@ -32,6 +32,8 @@ export function DirectorSheetsFixture() {
     client.setQueryDefaults(['episode', 'director-fixture'], { staleTime: Infinity });
     client.setQueryData(['episode', 'director-fixture', 'EP001', 1], {
       name: 'EP001', scenes: episode.map(item => item.id),
+      materials: ['P002-参考图-001.png', 'P010-参考图-001-候选-v02.png', 'P002-参考图-001-候选-v01.png', 'P010-参考图-001-候选-v10.png']
+        .map(name => ({ kind: 'image', key: name, name, url: '/component-samples/image.svg' })),
       segments: Object.fromEntries(episode.map(item => [item.id, [{ id: 'P001', duration: 1, videos: [] }]])),
       sceneRounds: Object.fromEntries(episode.map(item => [item.id, rounds])),
       directorSheets: Object.fromEntries(episode.map(item => [item.id, item.sheets])),
