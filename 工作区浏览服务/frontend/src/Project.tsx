@@ -31,7 +31,7 @@ import { AccountLibrary } from './components/AccountLibrary';
 
 type AssetSelection = { id: string; name: string };
 type AssetNavigation = { asset: AssetSelection | null; onAssetChange: (asset: AssetSelection | null) => void };
-const releaseSections = ['10-封面资料', '11-社交媒体资料', '98-发布成片'];
+const releaseSections = ['11-社交媒体资料', '10-封面资料', '98-发布成片'];
 
 export default function Project() {
   const controlsRoot = useContext(HeaderControlsContext);
