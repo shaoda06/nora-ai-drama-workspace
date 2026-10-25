@@ -68,6 +68,11 @@ try {
     assert.equal(await page.title(), '公共组件布局自动检查');
     await checkSharedInputs(page, width, selfTest);
     const showcase = page.getByTestId('showcase'), business = page.getByTestId('business');
+    await showcase.getByRole('button', { name: '布局与搜索', exact: true }).click();
+    const namingPath = showcase.getByRole('navigation', { name: '当前位置', exact: true });
+    assert.match(await namingPath.innerText(), /EP001 · 组件演示集/);
+    assert.doesNotMatch(await namingPath.innerText(), /（最终定名）/);
+    await contained(namingPath.locator('.episode-title-status.status-green'), `${width}px / 标题集名状态`);
     await showcase.getByRole('button', { name: '下拉菜单', exact: true }).click();
     const reference = showcase.getByRole('combobox', { name: '高亮选项示例', exact: true });
     const expected = await styleOf(reference);

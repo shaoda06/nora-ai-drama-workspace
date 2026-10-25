@@ -19,7 +19,8 @@ function component(file, dependencies = {}) {
   return module.exports;
 }
 const tooltip = component('PointerTooltip');
-const { EpisodeButton } = component('EpisodeButton', { './PointerTooltip': tooltip });
+const titleStatusComponent = component('EpisodeTitleStatus', { './PointerTooltip': tooltip });
+const { EpisodeButton } = component('EpisodeButton', { './PointerTooltip': tooltip, './EpisodeTitleStatus': titleStatusComponent });
 
 test('working title has a visible marker independent of document approval', () => {
   const html = renderToStaticMarkup(React.createElement(EpisodeButton, {
@@ -51,4 +52,13 @@ test('pending episode naming remains independent of production status', () => {
   }));
   assert.match(html, /class="episode-title-status status-gray">待定集名<\/span>/);
   assert.match(html, /class="status-badge">进行中<\/span>/);
+});
+
+
+test('breadcrumb title displays the shared naming badge without parentheses', () => {
+  const { Breadcrumbs } = component('Breadcrumbs');
+  const html = renderToStaticMarkup(React.createElement(Breadcrumbs, { items: [{ label: React.createElement(React.Fragment, null, 'EP002 · AI又不是许愿池 ', React.createElement(titleStatusComponent.EpisodeTitleStatus, { status: '最终定名' })) }] }));
+  assert.match(html, /episode-title-status status-green/);
+  assert.match(html, /AI又不是许愿池/);
+  assert.doesNotMatch(html, /（最终定名）/);
 });
