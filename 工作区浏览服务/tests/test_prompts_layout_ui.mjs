@@ -105,7 +105,11 @@ try {
   for (const width of [1362, 390, 320]) {
     await page.setViewportSize({ width, height: 918 });
     const actions = unsaved.locator('.prompt-actions');
-    assert.deepEqual(await actions.getByRole('button').allTextContents(), ['保存并继续', '放弃修改', '继续编辑']);
+    assert.deepEqual(await actions.getByRole('button').allTextContents(), ['保存并继续', '继续修改', '放弃修改']);
+    const dangerStyle = locator => locator.evaluate(el => { const style = getComputedStyle(el); return [style.color, style.backgroundColor, style.borderColor]; });
+    const discard = actions.getByRole('button', { name: '放弃修改', exact: true });
+    assert.ok(await discard.evaluate(el => el.classList.contains('danger-button')));
+    assert.deepEqual(await dangerStyle(discard), await dangerStyle(page.locator('.prompt-detail .danger-button')), 'discard reuses shared danger styling');
     const group = await actions.boundingBox(), buttons = await actions.getByRole('button').all();
     const rows = new Map();
     for (const button of buttons) {
@@ -118,7 +122,7 @@ try {
     await unsaved.screenshot({ path: path.join(out, `${width}-unsaved-actions.png`) });
   }
   await page.setViewportSize({ width: 1362, height: 918 });
-  await page.getByRole('button', { name: '继续编辑', exact: true }).click();
+  await page.getByRole('button', { name: '继续修改', exact: true }).click();
   assert.equal(await category.innerText(), '图片/反推');
   await category.click();
   await page.waitForFunction(() => document.querySelector('[role="combobox"][aria-label="提示词所在分类"]').getAttribute('aria-expanded') === 'true');
@@ -224,7 +228,7 @@ try {
   await localOnly.click();
   await tree.getByRole('button', { name: /^主目录 \(\d+\)$/ }).click();
   await page.getByRole('dialog', { name: '修改尚未保存', exact: true }).waitFor();
-  await page.getByRole('button', { name: '继续编辑', exact: true }).click();
+  await page.getByRole('button', { name: '继续修改', exact: true }).click();
   assert.equal(await localOnly.getAttribute('aria-checked'), 'false', 'unsaved storage selection is preserved');
   await page.getByRole('button', { name: '保存', exact: true }).click();
   await page.getByRole('button', { name: '保存', exact: true }).waitFor();
