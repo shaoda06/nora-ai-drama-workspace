@@ -69,7 +69,10 @@ export function SceneDirectorSheets({ sheets, storyboardVersion = '', scenes, on
       {current && <div className="director-sheet-pages"><TabNav compact scrollable label="导演分镜表页码"
         items={pages.map((item, index) => ({ value: item.key, label: String(index + 1) }))}
         selected={current.key} onChange={setPageKey} /></div>}
-      {active.sheets?.record && <div className="director-sheet-record"><button className="link" onClick={() => preview(active.sheets!.record!)}>查看导演表生成与审阅记录</button></div>}
+      {(active.sheets?.record || current) && <div className="director-sheet-record">
+        {active.sheets?.record && <button className="link" onClick={() => preview(active.sheets!.record!)}>查看记录</button>}
+        {current && <FileActions url={current.image.url} downloadOnly downloadLabel="下载原图" />}
+      </div>}
     </div>}
     {current ? <>
       <div className="director-sheet-viewer">
@@ -77,9 +80,6 @@ export function SceneDirectorSheets({ sheets, storyboardVersion = '', scenes, on
           <img src={current.image.url + `?v=${revision}`} alt={current.image.name} />
         </button>
         <Pagination variant="arrows" page={pageIndex + 1} total={pages.length} pageSize={1} change={selectPage} />
-      </div>
-      <div className="director-sheet-footer">
-        <FileActions url={current.image.url} downloadOnly centered downloadLabel="下载原图" />
       </div>
       {fullscreen && <Dialog size="fullscreen" showHeader={false} title={`导演分镜表 · ${count}${sceneCount}`} close={() => setFullscreen(false)}>
         <div className="director-sheet-fullscreen">

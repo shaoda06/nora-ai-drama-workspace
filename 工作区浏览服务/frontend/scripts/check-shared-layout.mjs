@@ -114,11 +114,12 @@ try {
     assert.equal(await originalLink.count(), 0);
     assert.equal(await downloadLink.count(), 1);
     assert.match(await downloadLink.getAttribute('href'), /download=true/);
-    await contained(sheets.locator('.director-sheet-footer'), `${width}px / 居中下载入口`);
-    const footer = await sheets.locator('.director-sheet-footer').boundingBox();
+    await contained(sheets.locator('.director-sheet-record'), `${width}px / 记录与下载入口`);
+    const recordBounds = await sheets.getByRole('button', { name: '查看记录', exact: true }).boundingBox();
     const downloadBounds = await downloadLink.boundingBox();
-    assert.ok(Math.abs(downloadBounds.x + downloadBounds.width / 2 - footer.x - footer.width / 2) < 1, '桌面与手机下载入口均在本行居中');
-    assert.equal(await sheets.locator('.director-sheet-footer').innerText(), '下载原图', '底部只有下载');
+    assert.ok(downloadBounds.x >= recordBounds.x + recordBounds.width, '下载位于记录右侧');
+    assert.ok(Math.abs(downloadBounds.y + downloadBounds.height / 2 - recordBounds.y - recordBounds.height / 2) < 2, '记录与下载同排居中');
+    assert.equal(await sheets.locator('.director-sheet-footer').count(), 0, '图片底部不再放下载行');
 
     const sheetPages = sheets.getByRole('navigation', { name: '导演分镜表页码' });
     assert.equal(await sheetPages.getByRole('button').count(), 3);
@@ -139,8 +140,6 @@ try {
       return { width: box.width, height: box.height, radius: style.borderRadius, rightGap: frame.right - box.right };
     });
     assert.deepEqual(arrowCircle, { width: 40, height: 40, radius: '50%', rightGap: 12 }, '圆形右箭头固定在图片右侧');
-    const downloadGap = await sheets.locator('.director-sheet-footer').evaluate(el => el.getBoundingClientRect().top - el.previousElementSibling.getBoundingClientRect().bottom);
-    assert.equal(downloadGap, 10, '下载行距图片10px');
     await sheetArrows.getByRole('button', { name: '下一张图', exact: true }).click();
     assert.equal(await sheetPages.getByRole('button', { name: '2', exact: true }).getAttribute('aria-current'), 'page', '箭头同步顶部页码');
     await sheetArrows.getByRole('button', { name: '下一张图', exact: true }).click();
@@ -187,7 +186,7 @@ try {
     const recordBox = await sheets.locator('.director-sheet-record').boundingBox();
     const toolbarBox = await sheets.locator('.director-sheet-toolbar').boundingBox();
     assert.ok(Math.abs(recordBox.x + recordBox.width - toolbarBox.x - toolbarBox.width) < 2, '审阅记录靠右');
-    await sheets.getByRole('button', { name: '查看导演表生成与审阅记录', exact: true }).click();
+    await sheets.getByRole('button', { name: '查看记录', exact: true }).click();
     await sheetDialog.waitFor({ state: 'visible' });
     assert.equal(await sheetDialog.getByText('隔离示例审阅记录', { exact: true }).count(), 1);
     await sheetDialog.getByRole('button', { name: '关闭', exact: true }).click();
@@ -231,7 +230,7 @@ try {
     assert.equal(await sheets.getByText('分镜 v07 尚未制作导演分镜表。', { exact: true }).count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, '导演表手机无横向溢出');
     await checkEpisodeDirectorSheets(page, sheets, width);
-    console.log(`导演分镜表检查：${width}px单图、移除重复版本文字、数字跳页与高亮同步、圆形箭头、首尾隐藏、底部仅居中下载、全视口看图与退出、审阅入口靠右、来源版本筛选、候选采用状态、单页及空场次通过。`);
+    console.log(`导演分镜表检查：${width}px单图、移除重复版本文字、数字跳页与高亮同步、圆形箭头、首尾隐藏、记录与下载同排靠右、全视口看图与退出、审阅入口靠右、来源版本筛选、候选采用状态、单页及空场次通过。`);
     await showcase.getByRole('button', { name: '列表与分页', exact: true }).click();
     const sheetPagination = showcase.locator('.pagination').last();
     await sheetPagination.getByRole('button', { name: '下一页', exact: true }).click();

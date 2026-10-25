@@ -4,7 +4,8 @@ export async function checkEpisodeDirectorSheets(page, fixture, width) {
   await fixture.getByRole('button', { name: '模拟整集六页', exact: true }).click();
   const viewer = fixture.getByRole('region', { name: '整集导演分镜表', exact: true });
   const image = viewer.locator('.director-sheet-image img');
-  assert.equal(await viewer.locator('.director-sheet-footer').innerText(), '下载原图');
+  assert.equal(await viewer.locator('.director-sheet-record').getByRole('link', { name: '下载原图', exact: true }).count(), 1);
+  assert.equal(await viewer.locator('.director-sheet-footer').count(), 0);
   const pages = viewer.getByRole('navigation', { name: '导演分镜表页码' });
   assert.deepEqual(await pages.getByRole('button').allTextContents(), ['1', '2', '3', '4', '5', '6']);
   assert.match(await image.getAttribute('alt'), /C001.*第01页/);
@@ -13,7 +14,7 @@ export async function checkEpisodeDirectorSheets(page, fixture, width) {
   assert.equal(await pages.getByRole('button', { name: '2', exact: true }).getAttribute('aria-current'), 'page');
   assert.equal(await viewer.locator('.director-sheet-source').innerText(), '场次 C002');
   assert.match(await image.getAttribute('alt'), /C002.*v01.*第01页/, '采用候选优先，页码按数值排序');
-  await viewer.getByRole('button', { name: '查看导演表生成与审阅记录', exact: true }).click();
+  await viewer.getByRole('button', { name: '查看记录', exact: true }).click();
   assert.equal(await page.getByRole('dialog').getByText('C002记录正文', { exact: true }).count(), 1, '记录跟随当前图片场次');
   await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();
   await pages.getByRole('button', { name: '4', exact: true }).click();
