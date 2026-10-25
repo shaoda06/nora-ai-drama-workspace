@@ -139,7 +139,7 @@ export function ShowcaseExamples({ category }: { category: string }) {
     </>}
     {category === 'production' && <>
       <ComponentExample title="选集按钮" rule="点击只更新示例选集，题名和状态使用正式组件排版。" usage="分集大纲、剧集制作">
-        <EpisodeButton item={{ kind: 'episode', name: 'EP001', title: '组件演示集', titleStatus: '工作集名', statusHtml: '<span class="status-badge status-gray">未开始</span>' }} onSelect={setSelected} /><p>已选择：{selected === 'one' ? '尚未选集' : selected}</p>
+        <EpisodeButton item={{ kind: 'episode', name: 'EP001', title: '组件演示集', titleStatus: '临时集名', statusHtml: '<span class="status-badge status-gray">未开始</span>' }} onSelect={setSelected} /><p>已选择：{selected === 'one' ? '尚未选集' : selected}</p>
       </ComponentExample>
       <ComponentExample fullWidth title="分段与制作状态" rule="P001标记本轮新生成；可切换分段和横竖布局，悬停状态图标查看详情。" usage="分段制作、宽屏分段导航">
         <button onClick={() => setVertical(!vertical)}>{vertical ? '切换横排' : '切换竖排'}</button>

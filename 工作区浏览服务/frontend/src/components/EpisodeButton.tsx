@@ -6,7 +6,7 @@ export function EpisodeButton({ item, onSelect }: { item: FileItem; onSelect: (e
   const status = item.statusHtml?.match(/^<span class="status-badge.*?<\/span>/s)?.[0] || '';
   return <button className="episode-button" data-episode={item.name} onClick={() => onSelect(item.name)}>
     <strong>{item.name}</strong><PointerTooltip text={title}><span className="episode-button-title" >{title}</span></PointerTooltip>
-    {item.titleStatus && <PointerTooltip text={item.titleStatus === '工作集名' ? '工作集名，尚未最终定名' : item.titleStatus}><span className="episode-title-status">{item.titleStatus}</span></PointerTooltip>}
+    {item.titleStatus && <PointerTooltip text={item.titleStatus === '临时集名' ? '临时集名，尚未最终定名' : item.titleStatus}><span className="episode-title-status">{item.titleStatus}</span></PointerTooltip>}
     <PointerTooltip text={status.replace(/<[^>]+>/g, '')}><span className="episode-button-status"  dangerouslySetInnerHTML={{ __html: status }} /></PointerTooltip>
   </button>;
 }

@@ -1180,10 +1180,11 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                                   + r"[ \t]*[｜|][ \t]*([^｜|\n]+?)[ \t]*[｜|][ \t]*本集(?:故事)?剧本[ \t]*$",
                                   source, re.M)
         title = match[1].strip() if match else ""
-        status = re.search(r"^(?:-[ \t]*)?集名状态[:：][ \t]*(工作集名|最终定名|待定)[ \t]*$", source, re.M)
-        working = title and re.search(r"^(?:-[ \t]*)?工作集名[:：][ \t]*" + re.escape(title)
+        status = re.search(r"^(?:-[ \t]*)?集名状态[:：][ \t]*(待定集名|临时集名|最终定名|工作集名|待定)[ \t]*$", source, re.M)
+        working = title and re.search(r"^(?:-[ \t]*)?(?:工作|临时)集名[:：][ \t]*" + re.escape(title)
                                      + r"(?:[ \t]*[（(]非最终发行集名[）)])?[ \t]*$", source, re.M)
-        return {"title": title, "titleStatus": (status[1] if status else "工作集名" if working else "") if title else ""}
+        value = status[1] if status else "临时集名" if working else ""
+        return {"title": title, "titleStatus": {"工作集名": "临时集名", "待定": "待定集名"}.get(value, value) if title else ""}
 
     outline_text = read(outline_index) or ""
     outline_items, indexed, planned_episodes = [], set(), set()

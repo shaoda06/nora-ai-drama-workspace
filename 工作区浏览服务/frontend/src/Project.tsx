@@ -65,7 +65,7 @@ export default function Project() {
   const revision = status.data?.revision || 1;
   const production = useQuery<RecordData>({ queryKey: ['section', name, section, revision], enabled: false, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   const episodeItem = production.data?.children?.find((item: FileItem) => item.name === episode);
-  const episodeTitle = (episodeItem?.title || (episode === '片头' || episode === '片尾' ? '全剧通用' : '题名未记录')) + (episodeItem?.titleStatus ? `（${episodeItem.titleStatus === '工作集名' ? '工作集名，未最终定名' : episodeItem.titleStatus}）` : '');
+  const episodeTitle = (episodeItem?.title || (episode === '片头' || episode === '片尾' ? '全剧通用' : '题名未记录')) + (episodeItem?.titleStatus ? `（${episodeItem.titleStatus === '临时集名' ? '临时集名，未最终定名' : episodeItem.titleStatus}）` : '');
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   const releaseCount = section === '98-发布成片' && production.data?.key === '98-发布成片' ? releaseVideos(production.data.children).length : null;
   const sectionTitle = (overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')) + (releaseCount === null ? '' : `（${releaseCount}）`);
