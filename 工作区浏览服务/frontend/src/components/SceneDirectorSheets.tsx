@@ -60,10 +60,11 @@ export function SceneDirectorSheets({ sheets, storyboardVersion = '', scenes, sc
           setPageKey(event.target.checked ? current?.key || `${sceneId}/` : `${sceneId}/`);
           onIntegratedChange(event.target.checked);
         }} />整合本集</label>}
+        {integrated && <span className="director-sheet-source">场次 {active.id}</span>}
         {active.options.length > 0 && <TabSelect highlightSelected label="导演分镜表候选" selected={active.selected} onChange={value => {
           setChoices(previous => ({ ...previous, [active.sourceKey]: value })); setPageKey(`${active.id}/`);
         }} items={active.options} />}
-        {integrated && <span className="director-sheet-source">场次 {active.id}</span>}</div>
+      </div>
       {current && <div className="director-sheet-pages"><TabNav compact scrollable label="导演分镜表页码"
         items={pages.map((item, index) => ({ value: item.key, label: String(index + 1) }))}
         selected={current.key} onChange={setPageKey} /></div>}
