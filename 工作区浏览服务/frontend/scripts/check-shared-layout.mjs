@@ -251,6 +251,17 @@ try {
     await showcase.getByRole('button', { name: '文件与正文', exact: true }).click();
     assert.equal(await showcase.getByRole('link', { name: '查看原图 ↗', exact: true }).count(), 1);
     assert.equal(await showcase.getByRole('link', { name: '下载原图', exact: true }).count(), 1);
+    await showcase.getByRole('button', { name: '选集与分段', exact: true }).click();
+    for (const [titleStatus, background, color] of [
+      ['待定集名', 'rgb(239, 241, 239)', 'rgb(105, 118, 111)'],
+      ['临时集名', 'rgb(255, 241, 220)', 'rgb(162, 105, 22)'],
+      ['最终定名', 'rgb(227, 242, 233)', 'rgb(36, 122, 72)'],
+    ]) {
+      const badge = showcase.locator('.episode-title-status').filter({ hasText: titleStatus });
+      assert.deepEqual(await badge.evaluate(el => ({ background: getComputedStyle(el).backgroundColor, color: getComputedStyle(el).color })), { background, color }, `${width}px / ${titleStatus}颜色`);
+      await contained(badge, `${width}px / ${titleStatus}标签`);
+    }
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, '集名状态示例不可横向越界');
     await checkSharedNavigation(page, width, selfTest);
     await checkSharedPlayback(page, width);
     assert.deepEqual(forbidden, [], '测试不得访问API、外部网络或写入业务');

@@ -138,8 +138,8 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
     </>}
     {category === 'production' && <>
-      <ComponentExample title="选集按钮" rule="点击只更新示例选集，题名和状态使用正式组件排版。" usage="分集大纲、剧集制作">
-        <EpisodeButton item={{ kind: 'episode', name: 'EP001', title: '组件演示集', titleStatus: '临时集名', statusHtml: '<span class="status-badge status-gray">未开始</span>' }} onSelect={setSelected} /><p>已选择：{selected === 'one' ? '尚未选集' : selected}</p>
+      <ComponentExample title="选集按钮" rule="点击只更新示例选集；集名状态采用灰色待定、黄色临时、绿色最终定名，与制作进度独立。" usage="分集大纲、剧集制作">
+        <div className="component-demo-stack">{(['待定集名', '临时集名', '最终定名'] as const).map((titleStatus, i) => <EpisodeButton key={titleStatus} item={{ kind: 'episode', name: `EP00${i + 1}`, title: titleStatus === '待定集名' ? '待定' : '组件演示集', titleStatus, statusHtml: '<span class="status-badge status-gray">未开始</span>' }} onSelect={setSelected} />)}</div><p>已选择：{selected === 'one' ? '尚未选集' : selected}</p>
       </ComponentExample>
       <ComponentExample fullWidth title="分段与制作状态" rule="P001标记本轮新生成；可切换分段和横竖布局，悬停状态图标查看详情。" usage="分段制作、宽屏分段导航">
         <button onClick={() => setVertical(!vertical)}>{vertical ? '切换横排' : '切换竖排'}</button>

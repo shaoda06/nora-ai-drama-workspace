@@ -143,7 +143,7 @@ dialog header:has(.revision-export-close-actions){flex-wrap:wrap}.revision-expor
 
 
 
-.episode-title-status{flex-shrink:0;font-size:11px;color:#805616;background:#fff2d6;border-radius:4px;padding:0 5px;white-space:nowrap}
+.episode-title-status{flex-shrink:0;font-size:11px;border-radius:4px;padding:0 5px;white-space:nowrap}
 
 .video-task-placeholder { flex-direction: column; gap: 12px; text-align: center; padding: 20px; }
 
