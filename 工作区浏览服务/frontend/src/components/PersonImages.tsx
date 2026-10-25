@@ -7,8 +7,8 @@ export const personImageTabs = ['人物基础', '服装', '穿衣造型'];
 
 export function personImageCategory(item: RecordData) {
   if (item.type === '服装参考图') return '服装';
-  if (item.type === '角色多视角参考图') return '穿衣造型';
-  return '人物基础';
+  if (!item.type || ['人物上半身正面肖像', '人物上半身正面肖像图', '人物多视角参考图', '人物多视角参考图（人物本体六视图）'].includes(item.type)) return '人物基础';
+  return '穿衣造型';
 }
 
 // 只编排人物资产登记的展示，不改写图片身份和审批状态。
