@@ -32,8 +32,9 @@ export function DirectorSheetsFixture() {
     client.setQueryDefaults(['episode', 'director-fixture'], { staleTime: Infinity });
     client.setQueryData(['episode', 'director-fixture', 'EP001', 1], {
       name: 'EP001', scenes: episode.map(item => item.id),
-      materials: ['P002-参考图-001.png', 'P010-参考图-001-候选-v02.png', 'P002-参考图-001-候选-v01.png', 'P010-参考图-001-候选-v10.png']
-        .map(name => ({ kind: 'image', key: name, name, url: '/component-samples/image.svg' })),
+      materials: [...['P002-参考图-001.png', 'P010-参考图-001-候选-v02.png', 'P002-参考图-001-候选-v01.png', 'P010-参考图-001-候选-v10.png']
+        .map(name => ({ kind: 'image', key: name, name, url: '/component-samples/image.svg', materialGroup: 'pending', materialStatus: '待审核', approvalHtml: '待确认', materialNote: '等待审核', materialReview: { kind: 'markdown', name: '审阅记录', doc: { html: '<p>候选的具体审阅依据</p>' } } })),
+        ...['adopted', 'revision', 'history', 'unknown'].map(materialGroup => ({ kind: 'image', key: materialGroup, name: materialGroup + '.png', url: '/component-samples/image.svg', materialGroup, materialStatus: { adopted: '当前采用', revision: '待修改', history: '旧版留档（曾获批准）', unknown: '状态待核对' }[materialGroup], approvalHtml: materialGroup === 'history' ? '批准采用' : '', materialNote: '这是用于核对不同状态以及窄屏换行的较长适用范围说明；不会自动改变用户批准。' }))],
       segments: Object.fromEntries(episode.map(item => [item.id, [{ id: 'P001', duration: 1, videos: [] }]])),
       sceneRounds: Object.fromEntries(episode.map(item => [item.id, rounds])),
       directorSheets: Object.fromEntries(episode.map(item => [item.id, item.sheets])),

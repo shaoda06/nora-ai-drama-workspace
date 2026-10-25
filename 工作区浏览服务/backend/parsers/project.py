@@ -1373,7 +1373,10 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                 for kind in ('formal', 'candidates'):
                     collection[kind].sort(key=lambda item: (int(item['version'][1:]) if item['version'] else 0, item['page']))
                     sheet_keys.update(item['key'] for item in collection[kind])
-            episode_node['materials'] = [item for item in episode_node['materials'] if item['key'] not in sheet_keys]
+            from backend.parsers.production_materials import material_review_states
+            episode_node['materials'] = material_review_states(
+                [item for item in episode_node['materials'] if item['key'] not in sheet_keys],
+                read(material_key) or '', material_key)
             issues = episode_node["productionIssues"] = []
             episode_node["script"], script = latest_episode_document(
                 episode_root + "/02-剧集剧本/" + number + "-本集剧本.md", work_root + number + "-本集剧本-工作稿.md")

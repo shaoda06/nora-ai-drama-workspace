@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import type { FileItem } from '../api';
-import { PreviewContext, Result } from '../components';
+import { PreviewContext, Result, Rich } from '../components';
 import { TabNav } from './TabNav';
 import { Pagination } from './Pagination';
 import { EpisodeButton } from './EpisodeButton';
@@ -103,10 +103,25 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
       : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
     {!!current.materials?.length && <details className="asset-candidate-type production-materials"><summary>专用素材与图片候选（{current.materials.length}）</summary>
       {current.materialRecord && <p><button className="link" onClick={() => preview(current.materialRecord!)}>查看素材生成与审阅记录</button></p>}
-      <div className="asset-media-grid">{[...current.materials].sort((a, b) => b.name.replace(/\.[^.]+$/, '').localeCompare(a.name.replace(/\.[^.]+$/, ''), 'zh-CN', { numeric: true })).map(file => <article className="asset-media-card" key={file.key}>
-        <h3>{file.name}</h3><button className="production-image-preview" onClick={() => preview(file)} aria-label={`查看${file.name}`}><img loading="lazy" src={file.url} alt={file.name} /></button>
-        <div className="asset-media-footer"><DownloadButton url={file.url!} label="下载原图" title={`下载${file.name}`} /></div>
-      </article>)}</div>
+      {(['pending', 'revision', 'adopted', 'unknown', 'history'] as const).map(group => {
+        const images = current.materials!.filter(file => (file.materialGroup || 'unknown') === group)
+          .sort((a, b) => b.name.replace(/\.[^.]+$/, '').localeCompare(a.name.replace(/\.[^.]+$/, ''), 'zh-CN', { numeric: true }));
+        const label = { pending: '待审核', revision: '待修改', adopted: '当前采用', unknown: '状态待核对', history: '旧版留档与已采用源图' }[group];
+        return images.length || group === 'adopted' ? <details key={group} className="asset-candidate-type" data-material-group={group} open={group !== 'history'}>
+          <summary>{label}（{images.length}）</summary>
+          {!images.length && <p className="muted">暂无适用于当前制作的已采用专用图；项目人物、场景和道具资产仍按素材索引引用。</p>}
+          <div className="asset-media-grid">{images.map(file => <article className="asset-media-card" key={file.key}>
+            <h3>{file.name}</h3>
+            <p><span className={`status-badge status-${group === 'adopted' ? 'green' : group === 'history' ? 'gray' : 'orange'}`}>{file.materialStatus || '状态待核对'}</span></p>
+            {file.approvalHtml && <div className="asset-media-field"><span className="field-label">审核决定：</span><Rich html={file.approvalHtml} /></div>}
+            <p className="asset-media-field">{file.materialNote}</p>
+            <button className="production-image-preview" onClick={() => preview(file)} aria-label={`查看${file.name}`}><img loading="lazy" src={file.url} alt={file.name} /></button>
+            <div className="asset-media-footer"><DownloadButton url={file.url!} label="下载原图" title={`下载${file.name}`} />
+              {file.materialReview && <button className="link" onClick={() => preview(file.materialReview!)}>查看审阅记录</button>}
+            </div>
+          </article>)}</div>
+        </details> : null;
+      })}
     </details>}
   </div> : <>
     <div ref={cards}>
