@@ -56,6 +56,24 @@ class CoverParserTests(unittest.TestCase):
         self.assertIsNone(data['items'][0]['original'])
         self.assertEqual(data['candidates'], [])
 
+    def test_history_is_newest_first_for_assigned_and_unassigned_platforms(self):
+        self.put(INDEX, '')
+        records = []
+        for generation, name, platform in [('010', '候选-v01', '快手'), ('002', '候选-v99', ''),
+                                            ('1000', '最新-v01', ''), ('006', '候选-v03', '快手')]:
+            self.put(DIRECTORY + '/其他资料/工作稿/素材/' + name + '.png', png(12, 16))
+            records.append(f'### 生成记录-{generation}\n- 候选文件入口：[{name}](素材/{name}.png)\n'
+                           + (f'- 适用平台：{platform}\n' if platform else '')
+                           + '- 用户决定及具体候选、批准依据：待确认\n')
+        self.put(RECORD, '## 2. 逐次生成记录\n' + ''.join(records) + '## 4. 审阅区\n')
+        candidates = self.covers()['candidates']
+        self.assertEqual([item['generation'] for item in candidates],
+                         ['生成记录-1000', '生成记录-010', '生成记录-006', '生成记录-002'])
+        self.assertEqual([item['generation'] for item in candidates if item['platforms']],
+                         ['生成记录-010', '生成记录-006'])
+        self.assertEqual([item['generation'] for item in candidates if not item['platforms']],
+                         ['生成记录-1000', '生成记录-002'])
+
     def test_set_and_platforms_are_read_from_explicit_columns(self):
         path = self.root / INDEX
         text = path.read_text().replace('| 封面名称 |', '| 套组名称 | 适用平台 | 目标格式 | 规格依据 | 封面名称 |', 1)

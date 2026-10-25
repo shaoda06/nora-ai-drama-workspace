@@ -88,6 +88,7 @@ def build_covers(project, read):
                                        setName=field(body, '套组名称'),
                                        platforms=[] if platform == '未记录' else [name.strip() for name in platform.split('、') if name.strip()],
                                        record=dict(name='制作记录', key=RECORD, url=RECORD + '#' + match[1])))
+    candidates.sort(key=lambda item: int(item['generation'].rsplit('-', 1)[1]), reverse=True)
     return dict(kind='covers', key=DIRECTORY, name='封面资料', items=items, candidates=candidates,
                 index=dict(kind='document', name='封面索引', key=INDEX, url=INDEX) if index else None,
                 record=dict(kind='document', name='制作记录', key=RECORD, url=RECORD) if record else None)
