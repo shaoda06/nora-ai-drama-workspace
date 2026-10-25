@@ -28,12 +28,33 @@ class CoverParserTests(unittest.TestCase):
     def covers(self):
         return build_data(self.root, load_scope=DIRECTORY)['catalogues'][DIRECTORY]
 
-    def test_measures_both_files_and_keeps_candidate(self):
+    def test_adopted_source_stays_in_details_not_history(self):
         data = self.covers()
         self.assertTrue(data['items'][0]['ready'])
         self.assertEqual(data['items'][0]['media']['ratio'], '3:4')
         self.assertEqual(data['items'][0]['original']['ratio'], '11:17')
-        self.assertEqual(len(data['candidates']), 1)
+        self.assertEqual(data['candidates'], [])
+        self.assertEqual(data['items'][0]['original']['key'], DIRECTORY + '/其他资料/工作稿/素材/原图.png')
+
+    def test_other_candidate_is_kept_even_with_same_approved_status(self):
+        path = self.root / RECORD
+        path.write_text(path.read_text().replace('## 4. 审阅区',
+            '### 生成记录-007\n- 候选文件入口：[另一张](素材/另一张.png)\n'
+            '- 用户决定及具体候选、批准依据：批准采用；旧批准仍保留\n## 4. 审阅区'))
+        self.put(DIRECTORY + '/其他资料/工作稿/素材/另一张.png', png(11, 17))
+        self.assertEqual([item['generation'] for item in self.covers()['candidates']], ['生成记录-007'])
+
+    def test_source_returns_to_history_when_no_longer_current(self):
+        self.assertEqual(self.covers()['candidates'], [])
+        self.put(INDEX, '')
+        self.assertEqual([item['generation'] for item in self.covers()['candidates']], ['生成记录-006'])
+
+    def test_missing_original_does_not_hide_the_formal_cover(self):
+        (self.root / DIRECTORY / '其他资料/工作稿/素材/原图.png').unlink()
+        data = self.covers()
+        self.assertTrue(data['items'][0]['ready'])
+        self.assertIsNone(data['items'][0]['original'])
+        self.assertEqual(data['candidates'], [])
 
     def test_set_and_platforms_are_read_from_explicit_columns(self):
         path = self.root / INDEX
@@ -58,6 +79,7 @@ class CoverParserTests(unittest.TestCase):
         self.assertTrue(item['ready'])
 
     def test_candidate_platforms_use_the_generation_record(self):
+        self.put(INDEX, '')
         path = self.root / RECORD
         path.write_text(path.read_text().replace('### 生成记录-006\n', '### 生成记录-006\n- 套组名称：系列通用\n- 适用平台：抖音、小红书\n', 1))
         candidate = self.covers()['candidates'][0]
@@ -65,9 +87,11 @@ class CoverParserTests(unittest.TestCase):
         self.assertEqual(candidate['platforms'], ['抖音', '小红书'])
 
     def test_legacy_candidate_keeps_an_unassigned_platform(self):
+        self.put(INDEX, '')
         self.assertEqual(self.covers()['candidates'][0]['platforms'], [])
 
     def test_failed_attempt_does_not_claim_later_successful_file(self):
+        self.put(INDEX, '')
         path = self.root / RECORD
         path.write_text(path.read_text().replace('## 4. 审阅区', '### 生成记录-007\n- 真实执行状态：failed；未自动重试\n- 候选文件入口：尚未生成；计划：[同名原图](素材/原图.png)\n## 4. 审阅区'))
         self.assertEqual(len(self.covers()['candidates']), 1)
@@ -76,6 +100,7 @@ class CoverParserTests(unittest.TestCase):
         path = self.root / RECORD
         path.write_text(path.read_text().replace('决定：批准采用', '决定：待确认'))
         self.assertFalse(self.covers()['items'][0]['approved'])
+        self.assertEqual(len(self.covers()['candidates']), 1)
 
     def test_approval_must_point_to_the_selected_source(self):
         path = self.root / RECORD
@@ -87,6 +112,7 @@ class CoverParserTests(unittest.TestCase):
         item = self.covers()['items'][0]
         self.assertTrue(item['approved'])
         self.assertEqual(item['status'], '待规格处理')
+        self.assertEqual(len(self.covers()['candidates']), 1)
 
     def test_target_ratio_is_also_checked(self):
         path = self.root / INDEX

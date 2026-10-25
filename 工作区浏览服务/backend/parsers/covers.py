@@ -69,12 +69,15 @@ def build_covers(project, read):
                           media=media, original=original, review=review,
                           processing=linked(row['处理记录'], INDEX), approved=approved, ready=ready,
                           status=status, statusHtml=status_markup(status, INDEX)))
+    adopted_sources = {item['original']['key'] for item in items if item['ready'] and item['original']}
     candidates = []
     for match in re.finditer(r'^### (生成记录-\d+)\s*\n(.*?)(?=^#{1,3} |\Z)', record, re.M | re.S):
         body = match[2]
         if field(body, '真实执行状态').startswith('failed'):
             continue
         for link in markdown_links(field(body, '候选文件入口') if '候选文件入口：' in body else field(body, '输出候选文件'), RECORD):
+            if link['key'] in adopted_sources:
+                continue
             if not link['key'].startswith(DIRECTORY + '/') or not link['key'].lower().endswith('.png'):
                 continue
             media = image(link)
