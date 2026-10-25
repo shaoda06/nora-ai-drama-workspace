@@ -56,6 +56,9 @@ try {
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     await page.route('**/*', route => {
       const request = route.request(), url = new URL(request.url());
+      // Local fixture responses only; no request reaches a project service.
+      if (url.origin === origin && /^\/api\/projects\/director-fixture\/revision-notes\/EP001\/C00[1-4]$/.test(url.pathname) && request.method() === 'GET')
+        return route.fulfill({ json: { notes: {}, rounds: {} } });
       if (url.origin !== origin || url.pathname.startsWith('/api/') || !['GET', 'HEAD'].includes(request.method())) {
         forbidden.push(request.url()); return route.abort();
       }

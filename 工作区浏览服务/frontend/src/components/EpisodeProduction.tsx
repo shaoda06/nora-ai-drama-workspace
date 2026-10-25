@@ -8,7 +8,6 @@ import { TabNav } from './TabNav';
 import { Pagination } from './Pagination';
 import { EpisodeButton } from './EpisodeButton';
 import { SceneWorkspace } from './SceneWorkspace';
-import { SceneDirectorSheets } from './SceneDirectorSheets';
 import { useRefreshState } from '../refreshPosition';
 import { BreadcrumbActionsContext, BreadcrumbSelectorContext } from './Breadcrumbs';
 import { TabSelect } from './TabSelect';
@@ -23,6 +22,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
   const breadcrumbSelector = useContext(BreadcrumbSelectorContext);
   const [scene, setScene] = useRefreshState(`project/${project}/production/scene`, '');
   const [sceneView, setSceneView] = useRefreshState(`project/${project}/production/${selected || ''}/scene-view`, 'segments');
+  const [integrateSheets, setIntegrateSheets] = useRefreshState(`project/${project}/production/${selected || ''}/integrate-sheets`, false);
   const [page, setPage] = useState(1);
   const cards = useRef<HTMLDivElement>(null);
   const previousEpisode = useRef(selected);
@@ -44,13 +44,12 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
   }, [selected, selectedItem, onSelect]);
   const [roundNumbers, setRoundNumbers] = useRefreshState<Record<string, number>>(`project/${project}/production/rounds`, {});
   const scenes = current?.scenes || [];
-  const viewingSheets = scene === 'director-sheets';
   const selectedScene = scenes.includes(scene) ? scene : scenes[0] || '';
   const directorScenes = scenes.map(id => {
     const rounds = current?.sceneRounds?.[id] || [];
-    const selectedRound = roundNumbers[current!.name + '/' + id] ?? rounds.at(-1)?.number;
+    const selectedRound = id === selectedScene ? roundNumbers[current!.name + '/' + id] ?? rounds.at(-1)?.number : rounds.at(-1)?.number;
     const round = rounds.find(item => item.number === selectedRound);
-    return { id, sheets: current?.directorSheets?.[id], rounds, selectedRound,
+    return { id, sheets: current?.directorSheets?.[id],
       storyboardVersion: round ? round.storyboard?.version || '' : current?.storyboards?.[id]?.version || '' };
   });
   const segments = current?.segments?.[selectedScene] || [];
@@ -64,7 +63,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
   }, [current?.name, selectedScene, sceneRounds, roundNumbers, setRoundNumbers]);
   const script = round ? round.script : current?.script;
   const selectRound = (number: number) => setRoundNumbers(previous => ({ ...previous, [current!.name + '/' + selectedScene]: number }));
-  const issues = (current?.productionIssues || []).filter(issue => viewingSheets || !issue.scene || issue.scene === selectedScene);
+  const issues = (current?.productionIssues || []).filter(issue => !issue.scene || issue.scene === selectedScene);
   const episodeComplete = current?.productionComplete && !current.productionIssues?.length && scenes.length > 0 && scenes.every(id => {
     const sceneSegments = current.segments?.[id] || [];
     return sceneSegments.length > 0 && sceneSegments.every(item =>
@@ -90,7 +89,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
       url={`${projectUrl(project)}/episodes/${current.name}/download`} label={`${sharedSelected ? current.name : '本集'}打包下载`}
       title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理已采用视频`} />, breadcrumbActions)}
     <div className="episode-scene-header">
-      {scenes.length > 0 && <TabNav label="本集场次" items={[...scenes.map(id => ({ value: id, label: '场次 ' + id })), { value: 'director-sheets', label: '整集导演分镜表' }]} selected={viewingSheets ? 'director-sheets' : selectedScene} onChange={setScene} />}
+      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={setScene} />}
       <PointerTooltip text={script ? undefined : `${contentLabel}尚未建立`}><button className="link episode-script-link" disabled={!script} onClick={() => preview(script!)}>查看{contentLabel}</button></PointerTooltip>
     </div>
     {!!current.warnings?.length && <details className="notice"><summary>资料提示（{current.warnings.length}）</summary>{current.warnings.map(message => <p key={message}>{message}</p>)}</details>}
@@ -100,8 +99,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
         <PointerTooltip text={issue.key}><button className="link"  onClick={() => preview({ kind: 'document', key: issue.key, name: issue.key.split('/').pop()! })}>{issue.key.split('/').pop()}</button></PointerTooltip>：{issue.message}
       </li>)}</ul>
     </div> : null}
-    {viewingSheets ? <div className="episode-scene-content"><SceneDirectorSheets key={current.name} scenes={directorScenes} revision={revision}
-      onRoundChange={(id, number) => setRoundNumbers(previous => ({ ...previous, [current.name + '/' + id]: number }))} /></div> : selectedScene ? <SceneWorkspace view={sceneView} onViewChange={setSceneView} key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} directorSheets={current.directorSheets?.[selectedScene]} storyboardVersion={round ? round.storyboard?.version || '' : current.storyboards?.[selectedScene]?.version || ''} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
+    {selectedScene ? <SceneWorkspace view={sceneView} onViewChange={setSceneView} key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} directorScenes={directorScenes} integrateSheets={integrateSheets} onIntegrateSheetsChange={setIntegrateSheets} storyboardVersion={round ? round.storyboard?.version || '' : current.storyboards?.[selectedScene]?.version || ''} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
       : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
     {!!current.materials?.length && <details className="asset-candidate-type production-materials"><summary>专用素材与图片候选（{current.materials.length}）</summary>
       {current.materialRecord && <p><button className="link" onClick={() => preview(current.materialRecord!)}>查看素材生成与审阅记录</button></p>}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { get, projectUrl } from '../api';
-import type { FileItem, RecordData, SceneRound, DirectorSheets } from '../api';
+import type { FileItem, RecordData, SceneRound } from '../api';
 import { Document, Result } from '../components';
 import { UnderlineTabs } from './UnderlineTabs';
 import { latestVideo, missingVideoState, selectedRevision } from './SegmentVideo';
@@ -11,7 +11,7 @@ import { useSceneVideoCache } from './useSceneVideoCache';
 import type { NoteScope, ReviewVersions } from './RevisionNotes';
 import { useRefreshState } from '../refreshPosition';
 import { SceneStoryboardEditor } from './SceneStoryboardEditor';
-import { SceneDirectorSheets } from './SceneDirectorSheets';
+import { SceneDirectorSheets, type DirectorSheetScene } from './SceneDirectorSheets';
 import { SceneDownloads } from './SceneDownloads';
 import { SegmentStageStrip } from './SegmentStageStrip';
 import { TabSelect } from './TabSelect';
@@ -25,7 +25,7 @@ type Segments = NonNullable<FileItem['segments']>[string];
 type Selection = { stage: string; key: string };
 type ReviewRound = { stage: string; order: string[]; versions: ReviewVersions };
 
-export function SceneWorkspace({ view, onViewChange, scope, segments: allSegments, sceneRounds = [], selectedRound, onRoundChange, previousEnding, emptyMessage, revision, storyboardDocument, directorSheets, storyboardVersion }: { view: string; onViewChange: (view: string) => void; scope: NoteScope; segments: Segments; sceneRounds?: SceneRound[]; selectedRound?: number; onRoundChange: (number: number) => void; previousEnding: PreviousEpisodeEnding | null; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData; directorSheets?: DirectorSheets; storyboardVersion: string }) {
+export function SceneWorkspace({ view, onViewChange, scope, segments: allSegments, sceneRounds = [], selectedRound, onRoundChange, previousEnding, emptyMessage, revision, storyboardDocument, directorScenes, integrateSheets, onIntegrateSheetsChange, storyboardVersion }: { view: string; onViewChange: (view: string) => void; scope: NoteScope; segments: Segments; sceneRounds?: SceneRound[]; selectedRound?: number; onRoundChange: (number: number) => void; previousEnding: PreviousEpisodeEnding | null; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData; directorScenes: DirectorSheetScene[]; integrateSheets: boolean; onIntegrateSheetsChange: (value: boolean) => void; storyboardVersion: string }) {
   const { scene } = scope;
   const productionRound = sceneRounds.find(item => item.number === selectedRound);
   const latestRound = sceneRounds.at(-1);
@@ -222,6 +222,6 @@ export function SceneWorkspace({ view, onViewChange, scope, segments: allSegment
         {!storyboardDocument && !productionRound && <Result loading={storyboard.isPending} error={storyboard.error} retry={storyboard.refetch} retrying={storyboard.isFetching} />}
         {(storyboardDocument || (!productionRound && storyboard.data)) && <Document key={productionRound?.number || 'current'} value={storyboardDocument || storyboard.data!} />}
       </>}
-    </div> : view === 'director-sheets' ? <SceneDirectorSheets key={positionKey + '/' + storyboardVersion} sheets={directorSheets} storyboardVersion={storyboardVersion} revision={revision} /> : view === 'dialogue' ? productionRound && productionRound.number !== sceneRounds.at(-1)?.number ? null : <SceneStoryboardEditor key={positionKey} scope={scope} segments={segments} /> : <SceneDownloads project={scope.project} episode={scope.episode} scene={scene} revision={revision} />}
+    </div> : view === 'director-sheets' ? <SceneDirectorSheets key={positionKey + '/' + storyboardVersion} scenes={directorScenes} sceneId={scene} integrated={integrateSheets} onIntegratedChange={onIntegrateSheetsChange} revision={revision} /> : view === 'dialogue' ? productionRound && productionRound.number !== sceneRounds.at(-1)?.number ? null : <SceneStoryboardEditor key={positionKey} scope={scope} segments={segments} /> : <SceneDownloads project={scope.project} episode={scope.episode} scene={scene} revision={revision} />}
   </div></>;
 }
