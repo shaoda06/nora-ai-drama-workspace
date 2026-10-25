@@ -39,6 +39,10 @@ def prepare(project, request_file):
         raise ValueError('正式尺寸须为两个正整数；不代表Imagegen原生像素保证')
     draft = project_file(root, spec['draft'])
     documents = Documents(root)
+    cover_metadata = spec.get('fields', {})
+    if spec['kind'] == '封面':
+        from backend.parsers.covers import cover_fields
+        cover_metadata = cover_fields(cover_metadata, documents.read)
     text = documents.read(draft)
     template = (SKILL / 'references/模板' / images.TEMPLATES[spec['kind']]).read_text('utf-8-sig')
     template = re.search(r'````markdown\n(.*?)\n````', template, re.S)[1]
@@ -57,7 +61,7 @@ def prepare(project, request_file):
         raise ValueError('计划候选已存在，不覆盖：' + spec['output'])
     body = images.section(template, '生成记录-001')[0].replace('生成记录-001', generation, 1)
     values = {name: '不适用' for name in re.findall(r'^- ([^：\n]+)：', body, re.M)}
-    values.update(spec.get('fields', {}))
+    values.update(cover_metadata)
     request_link = images.link(draft, request_file, '完整生成请求')
     values.update({'创建时间': now(), '图片类型': spec['image_type'],
         '生成／修改授权与计数': spec['authorization'] + '；本条目标1张；实际调用结果见执行凭据',

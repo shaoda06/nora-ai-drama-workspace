@@ -10,6 +10,12 @@ from tests import test_imagegen_results as native_tests
 from backend.services import imagegen_results as native
 
 
+def declared_cover(layout='竖版'):
+    return ('| 封面编号 | 套组名称 | 适用平台 | 封面名称 | 适用范围 | 版式 | 目标比例 | 目标尺寸 | 成品文件 | 采用原图 | 采用版本 | 审阅记录 | 处理记录 |\n'
+            '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n'
+            f'| COV001 | 系列通用 | 快手 | {layout}封面 | 系列通用 | {layout} | 3:4 | 12×16 | 待处理 | 待生成 | 无 | 无 | 无 |\n')
+
+
 class CoverParserTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -137,6 +143,62 @@ class CoverParserTests(unittest.TestCase):
         path.write_text(path.read_text().replace('| 3:4 |', '| 4:3 |'))
         self.assertFalse(self.covers()['items'][0]['ready'])
 
+    def identify_cover(self):
+        path = self.root / INDEX
+        text = path.read_text().replace('| 封面名称 |', '| 封面编号 | 套组名称 | 适用平台 | 封面名称 |', 1)
+        text = text.replace('| --- |', '| --- | --- | --- | --- |', 1)
+        path.write_text(text.replace('| 通用竖版 |', '| COV001 | 系列通用 | 快手 | 通用竖版 |', 1))
+        path = self.root / RECORD
+        path.write_text(path.read_text().replace('### 生成记录-006\n',
+            '### 生成记录-006\n- 封面编号：COV001\n- 修订轮次：R001\n- 轮次名称：初稿\n', 1))
+
+    def add_revision(self, revision='R002'):
+        self.put(DIRECTORY + '/其他资料/工作稿/素材/新版.png', png(11, 17))
+        path = self.root / RECORD
+        path.write_text(path.read_text().replace('## 4. 审阅区',
+            f'### 生成记录-007\n- 封面编号：COV001\n- 修订轮次：{revision}\n- 轮次名称：视线调整\n'
+            '- 候选文件入口：[新版](素材/新版.png)\n- 用户决定及具体候选、批准依据：待确认\n'
+            '- 正式文件入口：[当前文件不可充当本轮成品](../../正式封面/竖版.png)\n## 4. 审阅区', 1))
+
+    def test_current_and_new_candidate_share_one_cover(self):
+        self.identify_cover()
+        self.add_revision()
+        asset = self.covers()['assets'][0]
+        self.assertTrue(asset['current']['ready'])
+        self.assertTrue(asset['hasUpdate'])
+        self.assertEqual(asset['latest']['generation'], '生成记录-007')
+        self.assertEqual([entry['id'] for entry in asset['rounds']], ['R002', 'R001'])
+        self.assertEqual(len(self.covers()['assets']), 1)
+        self.assertIsNone(asset['latest']['formal'])
+
+    def test_two_candidates_in_one_round_are_not_two_covers(self):
+        self.identify_cover()
+        self.add_revision('R001')
+        asset = self.covers()['assets'][0]
+        self.assertEqual(len(asset['rounds']), 1)
+        self.assertEqual(len(asset['rounds'][0]['candidates']), 2)
+        self.assertTrue(asset['rounds'][0]['current'])
+        self.assertTrue(asset['hasUpdate'])
+        self.assertEqual(asset['current']['original']['key'], DIRECTORY + '/其他资料/工作稿/素材/原图.png')
+
+    def test_historical_mapping_and_processed_file_preserve_original_records(self):
+        self.identify_cover()
+        self.add_revision()
+        path = self.root / RECORD
+        text = path.read_text().replace('- 封面编号：COV001\n', '').replace('- 修订轮次：R002\n', '')
+        text = text.replace('- 候选文件入口：[新版](素材/新版.png)',
+            '- 候选文件入口：[新版](素材/新版.png)\n- 超分输出文件及实际规格：[本轮输出](素材/本轮输出.png)')
+        path.write_text(text)
+        self.put(DIRECTORY + '/其他资料/工作稿/素材/本轮输出.png', png(12, 16))
+        index = self.root / INDEX
+        index.write_text(index.read_text() + '\n| 生成记录 | 封面编号 | 修订轮次 | 轮次名称 |\n| --- | --- | --- | --- |\n'
+                         '| 生成记录-007 | COV001 | R002 | 视线调整 |\n')
+        data = self.covers()
+        self.assertEqual(data['unassigned'], [])
+        self.assertEqual(data['assets'][0]['latest']['formal']['key'], DIRECTORY + '/其他资料/工作稿/素材/本轮输出.png')
+        self.assertEqual(path.read_text(), text)
+
+
 
 class NativeCoverTests(unittest.TestCase):
     setUp = native_tests.NativeImageTests.setUp
@@ -150,19 +212,41 @@ class NativeCoverTests(unittest.TestCase):
             native.prepare(self.project, self.request)
         self.assertFalse((self.project / self.spec['draft']).exists())
 
-    def test_free_prompt_cover_visible_without_adoption_index(self):
+    def test_free_prompt_cover_visible_before_adoption(self):
         self.spec.update(kind='封面', object='通用', image_type='竖版封面', draft=RECORD,
                          prompt='自由编写的完整画面与文案。', ratio='3:4', formal_size=[1080, 1440],
+                         fields={'封面编号': 'COV001', '修订轮次': 'R001', '轮次名称': '初稿'},
                          formal=DIRECTORY + '/正式封面/通用-竖版封面.png',
                          output=DIRECTORY + '/其他资料/工作稿/素材/通用-竖版封面-候选-v01.png')
+        index = self.project / INDEX
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text(declared_cover())
         self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
         self.prepare()
         result = native.complete(self.project, self.job['manifest'], self.result, self.projects)
         self.assertTrue(result['user_message_ready'])
         data = self.projects.section(self.project.name, DIRECTORY)['catalogues'][DIRECTORY]
         self.assertEqual(len(data['candidates']), 1)
-        self.assertEqual(data['items'], [])
+        self.assertFalse(data['assets'][0]['current']['ready'])
+        self.assertEqual(data['assets'][0]['rounds'][0]['id'], 'R001')
         self.assertIn('自由编写的完整画面与文案。', (self.project / RECORD).read_text())
+
+    def test_new_cover_requires_declared_identity_and_revision(self):
+        self.spec.update(kind='封面', image_type='竖版封面', draft=RECORD,
+                         formal=DIRECTORY + '/正式封面/通用-竖版封面.png',
+                         output=DIRECTORY + '/其他资料/工作稿/素材/通用-竖版封面-候选-v01.png')
+        self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+        with self.assertRaisesRegex(ValueError, '封面编号'):
+            native.prepare(self.project, self.request)
+        self.assertFalse((self.project / RECORD).exists())
+        self.spec['fields'] = {'封面编号': 'COV001', '修订轮次': 'R001', '版式': '横版'}
+        index = self.project / INDEX
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text(declared_cover())
+        self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
+        with self.assertRaisesRegex(ValueError, '版式.*不一致'):
+            native.prepare(self.project, self.request)
+
 
 
 class QwenCoverTests(unittest.TestCase):
@@ -172,8 +256,10 @@ class QwenCoverTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary).resolve()
             documents = plans.Documents(root)
+            documents.put(INDEX, declared_cover('横版'))
             spec = dict(task_type='image', object='通用', title='备用封面', kind='封面',
                         image_type='横版封面', draft=RECORD, authorization='用户选择备用千问',
+                        fields={'封面编号': 'COV001', '修订轮次': 'R001', '轮次名称': '初稿'},
                         supplementary=True, size=[1536, 1152],
                         formal=DIRECTORY + '/正式封面/通用-横版封面.png',
                         prompt=dict(rewritten_prompt='自由描述画面、标题和排版。', wh_ratio='4:3', ratio_follow=''))

@@ -1,7 +1,6 @@
-// Real CoverLibrary grouping and detail checks; fixture media only, no project API.
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { spawn } from 'node:child_process';
 import { mkdtemp } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -18,8 +17,7 @@ const base = await new Promise((resolve, reject) => {
   server.once('error', reject);
   server.once('exit', code => reject(new Error(`Vite exited (${code}): ${output}`)));
 });
-const itemBasis = '用户指定；未核实为平台官方规格';
-const out = await mkdtemp(path.join(os.tmpdir(), 'nora-cover-sets-'));
+const out = await mkdtemp(path.join(os.tmpdir(), 'nora-cover-lineage-'));
 const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome', headless: true });
 try {
   for (const width of [1362, 390, 320]) {
@@ -27,61 +25,71 @@ try {
     page.on('pageerror', error => errors.push(String(error)));
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     await page.route('**/api/**', route => { api.push(route.request().url()); return route.abort(); });
-    await page.route('**/fixtures/cover.svg*', route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="#e6efeb"/></svg>' }));
+    await page.route('**/fixtures/**', route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><rect width="400" height="300" fill="#e6efeb"/></svg>' }));
     await page.goto(base + '/tests/cover-sets.html');
     assert.equal(await page.title(), '封面套组测试');
     const tabs = page.getByRole('navigation', { name: '封面平台', exact: true });
     assert.deepEqual(await tabs.getByRole('button').allTextContents(), ['通用', '抖音', '小红书', '快手']);
-    for (const [platform, count, candidateNames] of [['通用', 1, []], ['抖音', 1, ['多平台候选']], ['小红书', 1, ['多平台候选']], ['快手', 3, ['快手候选']]]) {
+    for (const [platform, count] of [['通用', 1], ['抖音', 1], ['小红书', 1], ['快手', 3]]) {
       await tabs.getByRole('button', { name: platform, exact: true }).click();
       assert.equal(await tabs.getByRole('button', { name: platform, exact: true }).getAttribute('aria-current'), 'page');
       const cards = page.locator('.asset-media-card').filter({ visible: true });
       assert.equal(await cards.count(), count);
-      for (const title of await cards.locator('h3').allTextContents()) assert.ok(title.includes(platform), title);
-      const first = cards.first();
-      const detailButton = first.getByRole('button', { name: '查看详情', exact: true });
-      const edges = await detailButton.evaluate(el => ({ button: el.getBoundingClientRect().right, footer: el.parentElement.getBoundingClientRect().right }));
-      assert.ok(Math.abs(edges.button - edges.footer) <= 1, width + 'px cover details right aligned');
-      await detailButton.click();
+      for (const title of await cards.locator('h3').allTextContents()) assert.match(title, /^(横版|竖版)封面$/);
+      await cards.first().getByRole('button', { name: '查看详情', exact: true }).click();
       const dialog = page.getByRole('dialog');
       assert.equal(await dialog.locator('dd .file-action-links').count(), 2);
-      assert.equal(await dialog.getByText(itemBasis, { exact: true }).count(), 1);
+      assert.equal(await dialog.getByText('工作区交付预设；实际上传未验证', { exact: true }).count(), 1);
       assert.equal(await dialog.evaluate(el => el.scrollWidth > el.clientWidth), false);
-      await page.screenshot({ path: path.join(out, width + '-' + platform + '-detail.png') });
       await dialog.getByRole('button', { name: '关闭', exact: true }).click();
-      const history = page.locator('details.cover-library-history').filter({ has: page.locator('summary').filter({ hasText: /^候选与历史/ }) });
-      assert.equal(await history.locator('summary').innerText(), '候选与历史（' + candidateNames.length + '）');
-      await history.locator('summary').click();
-      if (candidateNames.length) await history.locator('.asset-media-card h3').first().waitFor();
-      assert.deepEqual(await history.locator('.asset-media-card h3').allTextContents(), candidateNames);
-      if (candidateNames.length) {
-        await history.getByRole('button', { name: '查看详情', exact: true }).click();
-        assert.equal(await page.getByRole('dialog').locator('dd .file-action-links').count(), 1);
-        await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();
-      }
     }
-    const legacy = page.locator('details').filter({ has: page.locator('summary').getByText('未登记平台的采用封面（1）', { exact: true }) });
-    await legacy.locator('summary').click();
-    assert.equal(await legacy.getByRole('heading', { name: '历史封面', exact: true }).count(), 1);
-    await legacy.getByRole('button', { name: '查看详情', exact: true }).click();
-    assert.equal(await page.getByRole('dialog').locator('dd').getByText('未登记', { exact: true }).count(), 2);
-    await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();
-    const oldCandidates = page.locator('details').filter({ has: page.locator('summary').getByText('未登记平台的候选与历史（1）', { exact: true }) });
-    await oldCandidates.locator('summary').click();
-    assert.equal(await oldCandidates.getByRole('heading', { name: '旧候选', exact: true }).count(), 1);
-    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
-    assert.equal(await page.locator('vite-error-overlay').count(), 0);
-    assert.deepEqual(errors, []); assert.deepEqual(api, []);
-    await page.screenshot({ path: path.join(out, width + '-sets.png') });
+    const first = page.locator('.asset-media-card').filter({ visible: true }).first();
+    assert.match(await first.innerText(), /有新候选待确认/);
+    assert.match(await first.innerText(), /v02/);
+    await first.getByRole('button', { name: '查看详情', exact: true }).click();
+    const dialog = page.getByRole('dialog'), detailTabs = dialog.getByRole('navigation', { name: '封面详情', exact: true });
+    await detailTabs.getByRole('button', { name: '最新候选', exact: true }).click();
+    assert.equal(await dialog.locator('.asset-media-card').count(), 1);
+    assert.match(await dialog.locator('.asset-media-card').innerText(), /v03/);
+    await detailTabs.getByRole('button', { name: '版本记录（3）', exact: true }).click();
+    assert.deepEqual(await dialog.locator('details.cover-version summary strong').allTextContents(), ['视线调整', '配色整合', '初稿']);
+    assert.equal(await dialog.locator('.asset-media-card').filter({ visible: true }).count(), 0);
+    const adopted = dialog.locator('details.cover-version').nth(1);
+    assert.match(await adopted.locator('summary').innerText(), /当前正式/);
+    await adopted.locator('summary').click();
+    assert.equal(await adopted.locator('.asset-media-card').filter({ visible: true }).count(), 1);
+    assert.equal(await adopted.locator('.cover-library-file .file-action-links').count(), 1);
+    await page.screenshot({ path: path.join(out, width + '-versions.png') });
+    await dialog.getByRole('button', { name: '关闭', exact: true }).click();
+    assert.equal(await page.locator('.asset-media-card').filter({ visible: true }).count(), 3);
+    const unassigned = page.locator('details.cover-library-history');
+    assert.match(await unassigned.locator('summary').innerText(), /待归类资料（2）/);
+    await unassigned.locator('summary').click();
+    assert.equal(await unassigned.locator('.asset-media-card').count(), 0);
+    assert.equal(await unassigned.getByText('归属未知的旧图.png', { exact: true }).count(), 1);
     await page.goto(base + '/tests/cover-sets.html?only-kuaishou');
     await tabs.waitFor();
     assert.equal(await tabs.getByRole('button', { name: '小红书', exact: true }).getAttribute('aria-current'), 'page');
-    // The shared EP002 file supports both platforms; canonical first populated tab is 小红书.
     await tabs.getByRole('button', { name: '通用', exact: true }).click();
-    assert.equal(await page.getByText('通用暂无已登记的采用封面。', { exact: true }).count(), 1);
-    assert.equal(await page.locator('.asset-media-card').filter({ visible: true }).count(), 0);
+    assert.equal(await page.getByText('通用暂无已登记的封面。', { exact: true }).count(), 1);
+    for (const mode of ['pending', 'empty']) {
+      await page.goto(base + '/tests/cover-sets.html?' + mode);
+      const card = page.locator('.asset-media-card').first();
+      assert.match(await card.innerText(), /尚无正式版/);
+      if (mode === 'empty') assert.match(await card.innerText(), /尚未生成图片/);
+      else assert.match(await card.locator('img').getAttribute('src'), /PENDING-候选-v01/);
+      await card.getByRole('button', { name: '查看详情', exact: true }).click();
+      const modal = page.getByRole('dialog');
+      if (mode === 'pending') assert.equal(await modal.getByRole('navigation', { name: '封面详情' }).getByRole('button', { name: '最新候选' }).getAttribute('aria-current'), 'page');
+      await modal.getByRole('button', { name: '当前正式', exact: true }).click();
+      assert.equal(await modal.getByText('尚无已采用且达到目标规格的正式版。', { exact: true }).count(), 1);
+      assert.equal(await modal.evaluate(el => el.scrollWidth > el.clientWidth), false);
+      await modal.getByRole('button', { name: '关闭', exact: true }).click();
+    }
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    assert.equal(await page.locator('vite-error-overlay').count(), 0);
     assert.deepEqual(errors, []); assert.deepEqual(api, []);
-    await page.close(); console.log(width + 'px: four platform tabs, shared multi-platform covers/candidates, per-platform empty states and legacy entries passed');
+    await page.close(); console.log(width + 'px: stable cover cards, formal/latest separation, revision groups, multi-platform and unclassified/empty states passed');
   }
   console.log('Screenshots: ' + out);
 } finally { await browser.close(); server.kill(); }

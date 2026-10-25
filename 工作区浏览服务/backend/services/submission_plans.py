@@ -321,11 +321,6 @@ def adoption_updates(root, draft, text, generation, heading, source, spec):
         '采用的候选版本': ('v' + version[1] if version else source.stem) + '／' + spec['upscale_number'],
         '采用候选版本': ('v' + version[1] if version else source.stem) + '／' + spec['upscale_number']})
     values.update(spec.get('adoption_fields', {}))
-    missing = [name for name in columns if not values.get(name) or values[name] == '不适用']
-    # 不适用 is a valid explicit state for portraits/base bodies, but not a missing scope or view.
-    missing = [name for name in missing if name not in ('人物状态', '服装状态', '列表封面')]
-    if missing:
-        raise ValueError('正式资产表缺少已确认内容，请在adoption_fields填写：' + '、'.join(missing))
     formal = project_file(root, spec['formal'])
     previous = []
     for row in rows[2:]:
@@ -334,6 +329,13 @@ def adoption_updates(root, draft, text, generation, heading, source, spec):
             previous.append(row)
     if len(previous) > 1:
         raise ValueError('正式资产表中同一正式文件重复')
+    if '封面编号' in columns and not values.get('封面编号') and previous:
+        values['封面编号'] = previous[0].strip('|').split('|')[columns.index('封面编号')].strip()
+    missing = [name for name in columns if not values.get(name) or values[name] == '不适用']
+    # 不适用 is a valid explicit state for portraits/base bodies, but not a missing scope or view.
+    missing = [name for name in missing if name not in ('人物状态', '服装状态', '列表封面')]
+    if missing:
+        raise ValueError('正式资产表缺少已确认内容，请在adoption_fields填写：' + '、'.join(missing))
     if '列表封面' in columns and '列表封面' not in spec.get('adoption_fields', {}):
         values['列表封面'] = (previous[0].strip('|').split('|')[columns.index('列表封面')].strip()
                             if previous else '')
@@ -344,6 +346,9 @@ def adoption_updates(root, draft, text, generation, heading, source, spec):
 
 
 def build_image(root, skill, spec, documents, now):
+    if spec['kind'] == '封面' and spec['task_type'] == 'image':
+        from backend.parsers.covers import cover_fields
+        spec = {**spec, 'fields': cover_fields(spec.get('fields', {}), documents.read)}
     draft = project_file(root, spec['draft'])
     text = documents.read(draft)
     if text is None:

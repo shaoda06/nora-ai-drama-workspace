@@ -131,12 +131,13 @@ export function ShowcaseExamples({ category }: { category: string }) {
     </>}
     {category === 'media' && <>
       {sound.player}
-      <ComponentExample fullWidth title="图片与候选卡片" rule="尺寸来自加载图片的真实像素宽高，网页计算并在括号显示最简比例。点击图片在公共预览中放大，只保留整行居中的下载入口；候选分组按类型展开。图片为随服务提供的示例图形。查看详情固定在底部右侧，生成记录保留左侧；下方记录和详情使用本地示例正文。" usage="人物、场景、道具、封面">
+      <ComponentExample fullWidth title="图片与候选卡片" rule="尺寸来自加载图片的真实像素宽高，网页计算并在括号显示最简比例。点击图片在公共预览中放大，只保留整行居中的下载入口；候选分组按类型展开。图片为随服务提供的示例图形。已登记但尚未生成时可通过emptyLabel说明空态。查看详情固定在底部右侧，生成记录保留左侧；下方记录和详情使用本地示例正文。" usage="人物、场景、道具、封面">
         <AssetMedia items={[imageRecord]} revision={1} formal />
         <AssetCandidateMedia items={[imageRecord]} revision={1} />
         <PreviewContext.Provider value={item => setPreview(item.kind === 'markdown' ? { ...item, kind: 'document', doc: { html: '<p>本地示例生成记录。</p>' } } : item)}>
           <div className="asset-media-grid">
             <AssetMediaCard title="仅有查看详情" item={imageRecord} revision={1} formal onDetails={() => setPreview(imageDetails)} />
+            <AssetMediaCard title="已登记尚未生成" item={{ emptyLabel: '尚未生成图片' }} revision={1} onDetails={() => setPreview(imageDetails)} />
             <AssetMediaCard title="生成记录与查看详情" item={{ ...imageRecord, recordUrl: '/component-samples/files/示例生成记录.md', generation: '生成记录-示例' }} revision={1} formal onDetails={() => setPreview(imageDetails)} />
           </div>
         </PreviewContext.Provider>

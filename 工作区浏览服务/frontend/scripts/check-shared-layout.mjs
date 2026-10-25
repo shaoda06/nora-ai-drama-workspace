@@ -260,7 +260,10 @@ try {
     await fullExample.getByRole('button', { name: '关闭', exact: true }).click();
     await showcase.getByRole('button', { name: '图片与音视频', exact: true }).click();
     const detailCards = showcase.locator('.asset-media-card').filter({ has: page.locator('.asset-media-details') });
-    assert.equal(await detailCards.count(), 2);
+    assert.equal(await detailCards.count(), 3);
+    const pendingCard = detailCards.filter({ hasText: '已登记尚未生成' });
+    assert.equal(await pendingCard.getByText('尚未生成图片', { exact: true }).count(), 1);
+    assert.equal(await pendingCard.locator('img').count(), 0);
     for (const card of await detailCards.all()) {
       const detailButton = card.getByRole('button', { name: '查看详情', exact: true });
       const edges = await detailButton.evaluate(el => ({ button: el.getBoundingClientRect().right, footer: el.parentElement.getBoundingClientRect().right }));
@@ -277,7 +280,7 @@ try {
       await page.getByRole('dialog').getByText('本地图片详情示例。', { exact: true }).waitFor();
       await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();
     }
-    console.log(`图片卡片：${width}px仅详情／记录同排的右对齐、左侧记录和本地预览通过。`);
+    console.log(`图片卡片：${width}px仅详情／记录同排／未生成空态的右对齐、左侧记录和本地预览通过。`);
     await showcase.getByRole('button', { name: '文件与正文', exact: true }).click();
     const release = showcase.locator('.release-films');
     const releaseCategories = release.getByRole('navigation', { name: '发布成片分类', exact: true });
