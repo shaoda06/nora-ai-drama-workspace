@@ -18,6 +18,15 @@ const rootFile = file('第1集.webm');
 const longFile = file('第12集-' + '中文长名称与LongUnbrokenReference'.repeat(5) + '.webm', '子目录/');
 const episodes = Array.from({ length: 10 }, (_, index) => file(`第${index + 1}集.webm`)).reverse();
 const intro = file('片头.webm', '靠后目录/'), outro = file('片尾.webm', '子目录/');
+const groupedIntro = file('先导版.webm', '片头/'), groupedOutro = file('结束版.webm', '片尾/');
+const grouped = [
+  { kind: 'group', name: '片头', children: [groupedIntro] },
+  { kind: 'group', name: '片尾', children: [groupedOutro] },
+  { kind: 'group', name: '成片', children: [
+    ...Array.from({ length: 11 }, (_, index) => file(`第${index + 1}集.webm`, '成片/')),
+    { kind: 'group', name: '子目录', children: [file(longFile.name, '成片/子目录/')] },
+  ] },
+];
 const tree = { kind: 'group', name: '发布成片', key: '98-发布成片', note: '只读浏览，不修改用户文件。', children: [rootFile,
   ...episodes.filter(item => item.name !== rootFile.name),
   { kind: 'group', name: '子目录', children: [file('第11集.webm', '子目录/'), longFile] },
@@ -53,7 +62,8 @@ const server = await createServer({ configFile: false, root: fileURLToPath(new U
         { kind: 'group', name: '通用目录', children: [longFile] }] };
       else if (pathname.endsWith('/sections/98-发布成片')) {
         if (mode === 'error') { response.statusCode = 503; data = { detail: '本地模拟读取失败' }; }
-        else data = { ...tree, children: mode === 'empty' ? [] : mode === 'single' ? [rootFile] : mode === 'priority' ? [
+        else data = { ...tree, children: mode === 'grouped' ? [...grouped, rootFile, { kind: 'group', name: '其他目录', children: [file('旧片尾.webm', '其他目录/')] }]
+          : mode === 'grouped-clean' ? grouped : mode === 'empty' ? [] : mode === 'single' ? [rootFile] : mode === 'priority' ? [
           ...tree.children, { kind: 'group', name: '靠后目录', children: [intro] },
           { kind: 'group', name: '片尾目录', children: [outro] },
         ] : tree.children };
@@ -82,7 +92,14 @@ try {
     await generic.getByText('未知', { exact: true }).waitFor();
     assert.equal(await generic.getByRole('link', { name: '下载', exact: true }).count(), 2, '通用文件树默认状态及操作保持');
     const entry = page.getByRole('navigation', { name: '项目栏目', exact: true }).getByRole('combobox', { name: '发布资料', exact: true });
-    const openRelease = async () => { await entry.click(); await page.getByRole('option', { name: /^发布成片(?:\s+当前)?$/ }).click(); };
+    const openRelease = async () => {
+      await entry.click(); await page.getByRole('option', { name: /^发布成片(?:\s+当前)?$/ }).click();
+      if (mode === 'error') return;
+      const categories = page.getByRole('navigation', { name: '发布成片分类', exact: true });
+      await categories.waitFor();
+      const unclassified = categories.getByRole('button', { name: '未分类', exact: true });
+      if (await unclassified.count()) await unclassified.click();
+    };
     await openRelease();
     const panel = page.locator('section.panel:not([hidden])');
     const selector = panel.getByRole('navigation', { name: '发布成片选集', exact: true });
@@ -177,7 +194,13 @@ try {
     assert.equal(await panel.getByRole('button', { name: '上一页', exact: true }).isDisabled(), true);
     assert.equal(await panel.getByRole('button', { name: '下一页', exact: true }).isDisabled(), true);
     mode = 'empty'; await page.reload(); await openRelease();
-    await panel.getByText('暂无发布成片视频。', { exact: true }).waitFor();
+    await panel.getByText('暂无片头视频。', { exact: true }).waitFor();
+    const categories = panel.getByRole('navigation', { name: '发布成片分类', exact: true });
+    assert.deepEqual(await categories.getByRole('button').allTextContents(), ['片头', '片尾', '成片']);
+    await categories.getByRole('button', { name: '片尾', exact: true }).click();
+    await panel.getByText('暂无片尾视频。', { exact: true }).waitFor();
+    await categories.getByRole('button', { name: '成片', exact: true }).click();
+    await panel.getByText('暂无成片视频。', { exact: true }).waitFor();
     assert.equal(await player.count(), 0);
     await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText('发布成片（0）', { exact: true }).waitFor();
     assert.equal(await panel.getByRole('button', { name: '下载', exact: true }).isDisabled(), true);
@@ -185,6 +208,7 @@ try {
     const failure = page.locator('.floating-message').filter({ hasText: '资料读取失败' });
     await failure.getByRole('button', { name: '重新读取', exact: true }).waitFor();
     mode = 'files'; await failure.getByRole('button', { name: '重新读取', exact: true }).click();
+    await categories.getByRole('button', { name: '未分类', exact: true }).click();
     await selector.getByRole('button', { name: '第1集', exact: true }).waitFor();
     await failure.waitFor({ state: 'detached' });
     mode = 'priority'; await page.reload(); await openRelease();
@@ -207,6 +231,42 @@ try {
     await panel.getByRole('button', { name: '上一页', exact: true }).click();
     await panel.getByRole('button', { name: '上一页', exact: true }).click();
     assert.equal(await player.getAttribute('aria-label'), intro.name);
+    mode = 'grouped'; await page.reload(); await openRelease();
+    assert.deepEqual(await categories.getByRole('button').allTextContents(), ['片头', '片尾', '成片', '未分类']);
+    assert.deepEqual(new Set(await selector.getByRole('button').allTextContents()), new Set(['第1集', '旧片尾']), '根目录及非固定目录视频只放入未分类，不按名称猜归属');
+    await categories.getByRole('button', { name: '片头', exact: true }).click();
+    assert.deepEqual(await selector.getByRole('button').allTextContents(), ['先导版']);
+    assert.equal(await player.getAttribute('aria-label'), groupedIntro.name, '按实际子目录分类，不要求文件名叫片头');
+    await downloadCurrent(groupedIntro.name);
+    await player.evaluate(async el => { el.muted = true; await el.play(); });
+    const introPlayer = await player.elementHandle();
+    await categories.getByRole('button', { name: '片尾', exact: true }).click();
+    assert.equal(await introPlayer.evaluate(el => el.isConnected), false, '切分类卸载正在播放的视频');
+    assert.equal(await player.getAttribute('aria-label'), groupedOutro.name);
+    assert.equal(await player.evaluate(el => el.paused), true);
+    await downloadCurrent(groupedOutro.name);
+    await categories.getByRole('button', { name: '成片', exact: true }).click();
+    assert.deepEqual(await selector.getByRole('button').allTextContents(), ['第1集', '第2集', '第3集', '第4集', '第5集']);
+    assert.ok(decodeURIComponent(await player.getAttribute('src')).includes('98-发布成片/成片/第1集.webm'), '与根目录同名文件保持独立');
+    await downloadCurrent('第1集.webm');
+    await panel.getByRole('button', { name: '下一页', exact: true }).click();
+    assert.equal(await player.getAttribute('aria-label'), '第6集.webm');
+    await panel.getByRole('button', { name: '下一页', exact: true }).click();
+    assert.equal(await selector.getByRole('button').count(), 2, '成片子目录中的视频递归参与本类分页');
+    await selector.getByRole('button').last().click();
+    assert.equal(await player.getAttribute('aria-label'), longFile.name);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    await page.screenshot({ path: path.join(screenshots, `${viewport.width}-categories.png`), animations: 'disabled' });
+    await player.dispatchEvent('error');
+    await mediaFailure.waitFor();
+    await categories.getByRole('button', { name: '片头', exact: true }).click();
+    await mediaFailure.waitFor({ state: 'detached' });
+    await categories.getByRole('button', { name: '成片', exact: true }).click();
+    assert.equal(await player.getAttribute('aria-label'), '第1集.webm', '重新进入分类回到第一页，不沿用别类页码');
+    await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText('发布成片（16）', { exact: true }).waitFor();
+    mode = 'grouped-clean'; await page.reload(); await openRelease();
+    assert.deepEqual(await categories.getByRole('button').allTextContents(), ['片头', '片尾', '成片'], '没有旧视频时不显示未分类');
+    assert.equal(await categories.getByRole('button', { name: '片头', exact: true }).getAttribute('aria-current'), 'page');
     navigation = 'full'; mode = 'files'; await page.reload();
     await entry.waitFor();
     const projectNav = page.getByRole('navigation', { name: '项目栏目', exact: true });
@@ -224,7 +284,7 @@ try {
     await iconTrigger.press('Escape');
     const menu = page.getByRole('listbox', { name: '发布资料', exact: true });
     await entry.click();
-    assert.deepEqual(await menu.locator('[role=option] > span:first-child').allTextContents(), ['封面资料', '账号资料', '发布成片'], '顺序不依赖后端目录排列');
+    assert.deepEqual(await menu.locator('[role=option] > span:first-child').allTextContents(), ['账号资料', '封面资料', '发布成片'], '顺序不依赖后端目录排列');
     assert.ok((await menu.boundingBox()).width >= (await entry.boundingBox()).width - 1 && (await menu.boundingBox()).width <= viewport.width - 16 + 1, '项目发布资料菜单以按钮为最小宽度');
     await page.screenshot({ path: path.join(screenshots, `${viewport.width}-menu-width.png`), animations: 'disabled' });
     await entry.press('Escape');
@@ -240,11 +300,11 @@ try {
       await page.getByRole('navigation', { name: '当前位置', exact: true }).getByText(label === '发布成片' ? '发布成片（12）' : label, { exact: true }).waitFor();
     }
     await entry.focus(); await entry.press('ArrowDown'); await entry.press('Home'); await entry.press('Enter');
-    assert.equal(await entry.getAttribute('data-value'), '10-封面资料', '键盘可返回封面资料');
+    assert.equal(await entry.getAttribute('data-value'), '11-社交媒体资料', '键盘可返回首项账号资料');
     await page.screenshot({ path: path.join(screenshots, `${viewport.width}-release-group.png`), animations: 'disabled' });
     navigation = 'account'; await page.reload(); await entry.click();
     assert.deepEqual(await menu.locator('[role=option] > span:first-child').allTextContents(), ['账号资料'], '没有封面和成片时仍显示已有账号');
-    await menu.getByRole('option', { name: '账号资料', exact: true }).click();
+    await menu.getByRole('option', { name: /^账号资料(?:\s+当前)?$/ }).click();
     assert.equal(await entry.getAttribute('data-value'), '11-社交媒体资料');
     navigation = 'none'; await page.reload(); await projectNav.waitFor();
     assert.equal(await entry.count(), 0, '没有发布相关目录时不显示空分组');
