@@ -1,0 +1,4 @@
+interface:
+  display_name: "镜头语言与表达"
+  short_description: "选择并细化镜头表达，吸收图文视频技巧，结合实际反馈持续维护参考指南"
+  default_prompt: "使用 $camera-language，帮助我选择和细化镜头表达，或学习我提供的材料并维护镜头语言参考指南。"

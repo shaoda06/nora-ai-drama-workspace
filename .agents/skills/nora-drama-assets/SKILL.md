@@ -23,6 +23,7 @@ description: 为 Nora 制作人物、场景、道具资料卡与参考图设计�
 | 手绘导演分镜表的图像准备 | [导演分镜表规范](../short-drama-storyboard/references/手绘导演分镜表规范.md)及其固定模板；使用分镜技能已提取的当页内容，不自行改写剧情或镜头 |
 | 图片提示词编写或修订 | [图片提示词规则](references/图片提示词规范.md)；Qwen调用对应适配，已选Imagegen进入[Imagegen分支](../nora-generation/references/Imagegen生成与尺寸处理规范.md) |
 | 人物表情转写或生成后的具体表情反馈 | [表情拆解](../facial-expression/SKILL.md)，按静帧选择面部状态；收到真实反馈后复核相应写法及验证情况 |
+| 图片构图、机位、光影、焦点表达及实际反馈 | [镜头语言与表达](../camera-language/SKILL.md)，按资产展示或叙事用途选择静帧表达；不改变已确认设计、固定视图及正式分镜，候选写法与反馈由其维护 |
 | 参考音视频与人物声音 | [参考音视频管理](references/参考音视频管理规范.md)，沿项目级RA／RV与固定分类 |
 | 阅读视频讲解或分析表演、动作与构图 | [视频读取与分析](../video-study/SKILL.md)；项目素材的分析附件按[分析与入库边界](references/参考音视频管理规范.md#视频内容分析与正式入库)保存 |
 | 图片交付、批准采用、替换和归档 | [核心参考图的验收与保存](references/核心参考图制作规范.md#85-验收记录与保存)，批准后超分交[生成执行](../nora-generation/SKILL.md) |
