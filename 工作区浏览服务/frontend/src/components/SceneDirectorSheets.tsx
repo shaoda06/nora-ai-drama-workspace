@@ -61,7 +61,7 @@ export function SceneDirectorSheets({ sheets, storyboardVersion = '', scenes, on
   return <section aria-label={scenes ? '整集导演分镜表' : '本场导演分镜表'}>
     {scenes && <h3>整集导演分镜表</h3>}
     {active && <div className="toolbar director-sheet-toolbar">
-      <div className="director-sheet-choice"><span className="director-sheet-source">{scenes && `场次 ${active.id} · `}{active.storyboardVersion ? `场次分镜：${active.storyboardVersion.toUpperCase()}` : '未确定来源分镜版本'}</span>
+      <div className="director-sheet-choice">{scenes && <span className="director-sheet-source">场次 {active.id}</span>}
         {roundSelector(active)}
         {active.options.length > 0 && <TabSelect highlightSelected label="导演分镜表候选" selected={active.selected} onChange={value => {
           setChoices(previous => ({ ...previous, [active.sourceKey]: value })); setPageKey(`${active.id}/`);

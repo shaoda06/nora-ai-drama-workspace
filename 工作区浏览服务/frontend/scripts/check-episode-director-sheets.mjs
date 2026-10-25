@@ -8,8 +8,10 @@ export async function checkEpisodeDirectorSheets(page, fixture, width) {
   const pages = viewer.getByRole('navigation', { name: '导演分镜表页码' });
   assert.deepEqual(await pages.getByRole('button').allTextContents(), ['1', '2', '3', '4', '5', '6']);
   assert.match(await image.getAttribute('alt'), /C001.*第01页/);
+  assert.equal(await viewer.locator('.director-sheet-source').innerText(), '场次 C001', '整集仅显示所属场次');
   await viewer.getByRole('button', { name: '下一张图', exact: true }).click();
   assert.match(await count.innerText(), /整集第2页 \/ 共6页 · C002 第1页 \/ 共3页/);
+  assert.equal(await viewer.locator('.director-sheet-source').innerText(), '场次 C002');
   assert.match(await image.getAttribute('alt'), /C002.*v01.*第01页/, '采用候选优先，页码按数值排序');
   await viewer.getByRole('button', { name: '查看导演表生成与审阅记录', exact: true }).click();
   assert.equal(await page.getByRole('dialog').getByText('C002记录正文', { exact: true }).count(), 1, '记录跟随当前图片场次');
