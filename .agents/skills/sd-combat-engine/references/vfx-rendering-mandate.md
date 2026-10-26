@@ -100,16 +100,7 @@
 
 ## 四、原型色彩绑定与本包既有规则的接口
 
-> 外部包的"原型色彩绑定"（执笔者紫+墨 / 燃命者红+金 / 妖物紫粉等）**与本包已有能力重叠**，
-> 不整库收录。真正需要对齐的只有两条**色彩纪律**，它们与本包 `sd-xuanhuan-engine/references/xuanhuan-elements-vfx.md`
-> 的"冷暖对抗"、`sd-xuanhuan-engine/references/epic-battlefield-protocols.md` 的"阵营色彩锁"是同一件事，此处只作交叉提醒：
-
-- **同色相撞大忌**：严禁"紫电打紫雾"——同色系对轰时，必须用**墨黑 / 白炽**做主角侧分离色；
-- **三方强分离**：`主冲击色 vs 敌人主体色 vs 场景基底色` **两两可辨**；
-- **色彩明暗**：通过环境基调、局部亮度和前后层次让主效果可辨；双方已定法术色可以同时出现，不用“只留一种鲜艳颜色”抹去对抗。控制遮挡的方法见[强效果与画面可读性](../../sd-xuanhuan-engine/references/xuanhuan-elements-vfx.md#强效果与画面可读性)。
-
-> 阵营色彩锁的**硬条与机检口径**仍以 `sd-xuanhuan-engine/references/epic-battlefield-protocols.md` 为准
-> （敌我两套色系全片禁互串，已立为一票否决硬条）。
+角色配色沿已确认设定，手绘笔法不另指定阵营色。玄幻对抗按[对抗辨识与色彩](../../sd-xuanhuan-engine/references/xuanhuan-elements-vfx.md#2-对抗辨识与色彩)取用分离方法，连续群战按[阵营色彩锁](../../sd-xuanhuan-engine/references/epic-battlefield-protocols.md#一阵营色彩锁faction-color-lock)维护已定归属；本节不重复设定冷暖、同色或分离色限制。控制遮挡的方法见[强效果与画面可读性](../../sd-xuanhuan-engine/references/xuanhuan-elements-vfx.md#强效果与画面可读性)。
 
 ---
 
