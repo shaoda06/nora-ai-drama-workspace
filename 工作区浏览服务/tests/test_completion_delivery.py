@@ -113,7 +113,10 @@ class CompletionDeliveryTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(entry['videos'][0]['file'], str(candidate))
             self.assertEqual(entry['videos'][0]['identity'], candidate.stem)
             self.assertEqual(entry['videos'][0]['draft_file'], str(draft))
-            self.assertEqual(self.store.read_report(batch, self.data.thread_id), report)
+            again = self.store.read_report(batch, self.data.thread_id)
+            self.assertTrue(report['should_notify_user'])
+            self.assertFalse(again['should_notify_user'])
+            self.assertEqual(again['delivery'], report['delivery'])
         self.assertEqual(draft.read_bytes(), before)
 
     async def test_video_report_preserves_each_stage_and_media_metadata(self):

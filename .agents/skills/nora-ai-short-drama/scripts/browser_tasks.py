@@ -122,7 +122,8 @@ def main():
             payload['image_repairs'] = json.loads(Path(args.image_repairs).read_text('utf-8-sig'))
         result = service_call('notifications/' + args.notification_id + '/' + args.command, payload)
         if args.command == 'report' and not args.details and result.get('user_message_ready') and result.get('delivery') is not None:
-            result = {name: result[name] for name in ('notification_id', 'status', 'reused', 'user_message_ready', 'delivery')}
+            result = {name: result[name] for name in ('notification_id', 'status', 'reused', 'user_message_ready',
+                                                     'should_notify_user', 'new_task_ids', 'delivery') if name in result}
     elif args.command == 'repair-collection':
         payload = json.loads(Path(args.repair).read_text('utf-8-sig'))
         payload['thread_id'] = os.environ.get('CODEX_THREAD_ID')

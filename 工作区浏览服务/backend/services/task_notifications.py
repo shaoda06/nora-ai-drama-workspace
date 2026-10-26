@@ -9,6 +9,14 @@ from backend.services.result_summary import summary, batch_tasks, image_delivery
 
 
 class TaskNotifications:
+    def notice_outcome(self, key):
+        state = self.rows[key]['state']
+        closeout = state.get('closeout') or {}
+        return {**{name: state.get(name) for name in ('prompt_id', 'status', 'error', 'failure_stage',
+                                                     'collected', 'expected', 'collection_attempt',
+                                                     'dispatch_attempt', 'preparation_attempt')},
+                'closeout_status': closeout.get('status'), 'closeout_error': closeout.get('error')}
+
     def image_batch_waiting(self, key):
         row = self.rows[key]
         data, state = row['input'], row['state']
@@ -32,6 +40,10 @@ class TaskNotifications:
                 notice['delivery'] = 'not_required'
                 self.record(key, 'notification', 'not_required', message='超分完成并正式保存，正常结果静默',
                             _changes={'notification': 'not_required', 'notice_wait_reason': None})
+            elif state.get('reported_outcome') == self.notice_outcome(key):
+                notice['delivery'] = 'acknowledged'
+                self.record(key, 'notification', 'already_received', message='本次实际结果已通过report读取，不再发送',
+                            _changes={'notification': 'acknowledged', 'notice_wait_reason': None})
             elif self.image_batch_waiting(key):
                 if state.get('notice_wait_reason') != 'image_batch':
                     self.record(key, 'notification', 'waiting_batch',
@@ -98,13 +110,25 @@ class TaskNotifications:
     def read_report(self, batch_id, thread_id):
         ids, delivery = batch_tasks(self, batch_id, thread_id)
         reused = self.mark_received(batch_id, ids, delivery)
+        has_report = self.db.execute('SELECT 1 FROM notification_reports WHERE batch_id=?', (batch_id,)).fetchone()
+        new_ids = []
+        if has_report:
+            for key in ids:
+                outcome = self.notice_outcome(key)
+                if self.rows[key]['state'].get('reported_outcome') != outcome:
+                    new_ids.append(key)
+                    self.record(key, 'report', 'outcome_received', notification_id=batch_id,
+                                _changes={'reported_outcome': outcome})
+        elif not reused:
+            new_ids = ids
         self.refresh_reports(ids)
         saved = self.db.execute('SELECT report FROM notification_reports WHERE batch_id=?', (batch_id,)).fetchone()
         # Old delivered notices have no snapshot. Reading them never restarts collection/registration.
         report = json.loads(saved[0]) if saved else {
             'tasks': [summary(self, key) for key in ids], 'legacy_report': True,
             'user_message_ready': False, 'results': []}
-        return {**report, 'notification_id': batch_id, 'status': 'acknowledged', 'reused': reused}
+        return {**report, 'notification_id': batch_id, 'status': 'acknowledged', 'reused': reused,
+                'should_notify_user': bool(new_ids), 'new_task_ids': new_ids}
 
     def refresh_reports(self, ids):
         """Refresh existing reports from task state, without media work or a new notice."""
@@ -265,6 +289,7 @@ class TaskNotifications:
             batch_id = str(uuid.uuid4())
             prompt = (f'后台任务结果通知。通知ID：{batch_id}；来源会话：{data.thread_id}。\n'
                       '请调用 browser_tasks.py report --notification-id 上述ID，读取后台已保存的最新结果；读取同时自动确认收到。\n'
+                      '先静默读取report；若should_notify_user=false，表示实际结果此前已读取，只确认接收，不再发进度、解释或完成回复；否则仅汇报new_task_ids中的新结果。\n'
                       '通知可能延迟送达，当前状态、异常是否已修复及成果清单以本次report为准，历史经过保留在过程记录。\n'
                       + '\n'.join(self.notification_text(task) for task in ids)
                       + '\n图片、超分与视频的技术核验、记录更新及网页核验由后台执行，以报告结果为准；正常成功只读取report，图片按本批完整清单集中展示成果和审核入口，视频汇报数量与审核入口。正常超分静默；历史已发出的正常超分通知只读确认，不发处理进度、完成回复或图片。正常成功时不再调用ack、register-results或重复查文件／刷新网页。成果保存不等于内容获批。'
