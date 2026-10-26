@@ -94,6 +94,44 @@ class ApprovalTests(unittest.TestCase):
         with patch.object(tool.final.client, 'Client', NativeClient), patch.object(tool, 'browser_sync', side_effect=verify):
             return tool.approve(argparse.Namespace(project=str(self.root), plan=str(self.request), apply=apply, timeout=30))
 
+    def register_final(self, item):
+        identity = item['identity']; part = identity.rsplit('-', 2)[0]
+        directory = self.fixture.extra / '执行附件' / identity
+        target = directory / '配套交付' / (identity + '-透明.mov')
+        self.fixture.put(target, b'alpha final')
+        self.fixture.put(directory / '后处理产物.json', {'products': [
+            {'id': 'alpha', 'label': '透明 MOV', 'role': '最终产物', 'file': str(target.relative_to(self.root))}]})
+        draft = self.fixture.extra / '工作稿' / (part + '-视频制作-工作稿.md')
+        text = draft.read_text(); row = tool.adopt.selected_row(text, '后处理')[2]
+        reference = tool.adopt.link(draft, target)
+        text = text.replace(row, '| 后处理 | [最终](' + reference + ') | R001 | 已记录 | [采用](#审阅-最终交付) |')
+        text += '\n### 审阅-最终交付\n- 对应具体输出：' + target.name + '\n- 决定：批准采用\n'
+        self.fixture.put(draft, text)
+        return draft, target
+
+    def test_final_product_survives_reapproval_and_counts_as_complete(self):
+        items = self.setup_stage(parts=('P001',))
+        self.run_plan()
+        draft, target = self.register_final(items[0]); text = draft.read_text()
+        self.assertEqual(tool.selected(self.root, 'EP001-C001-P001', '后处理'), items[0]['identity'])
+        self.assertEqual(tool.episode_missing(self.root, 'EP001'), [])
+        self.request = self.request.with_name('批准复核.json')
+        result = self.run_plan()
+        self.assertTrue(result['episode_completed'])
+        self.assertEqual(draft.read_text(), text)
+        self.assertEqual(result['adoption']['items'][0]['selected_path'], str(target))
+        self.assertEqual(result['adoption']['selected_approved_counts']['后处理'], 1)
+        summary = self.fixture.extra / '工作稿/EP001-生成说明-工作稿.md'
+        self.assertIn(tool.adopt.link(summary, target), summary.read_text())
+
+    def test_final_manifest_without_final_approval_does_not_complete_episode(self):
+        items = self.setup_stage(parts=('P001',)); self.run_plan()
+        draft, target = self.register_final(items[0])
+        text = draft.read_text().replace('- 决定：批准采用\n', '- 决定：待审核\n')
+        self.fixture.put(draft, text)
+        self.assertIsNone(tool.selected(self.root, 'EP001-C001-P001', '后处理'))
+        self.assertIn('EP001-C001-P001 后处理未采用', tool.episode_missing(self.root, 'EP001'))
+
     def revision(self, original_item, revision='R002'):
         old_identity = original_item['identity']
         part = old_identity.split('-')[2]

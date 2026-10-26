@@ -49,11 +49,8 @@ def indexed_parts(root, episode):
 def selected(root, part, stage):
     draft = root / '09-剧集制作' / part.split('-')[0] / '其他资料/工作稿' / (part + '-视频制作-工作稿.md')
     text = draft.read_text('utf-8-sig')
-    _, _, row = adopt.selected_row(text, stage)
-    names = re.findall(re.escape(part) + r'-R\d{3}-' + stage + r'\.\w+', row)
-    anchors = re.findall(r'\]\(#([^)]*)\)', row.strip().strip('|').split('|')[-1])
-    approved = names and len(anchors) == 1 and adopt.approved_row(text, names[0] + ' [审核](#' + anchors[0] + ')', names[0])
-    return Path(names[0]).stem if approved else None
+    output = adopt.selected_output(root, draft, text, part, stage)
+    return output['identity'] if output else None
 
 
 def episode_missing(root, episode):

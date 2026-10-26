@@ -67,6 +67,17 @@ try {
     });
     await page.goto(origin + '/tests/shared-layout/index.html');
     assert.equal(await page.title(), '公共组件布局自动检查');
+    for (const [id, prefix] of [['single-revision', 'media-'], ['product-revision', 'source-']]) {
+      const player = page.getByTestId(id), media = player.locator('video');
+      const observed = player.getByLabel('已加载审阅版本');
+      await media.evaluate(el => el.dispatchEvent(new Event('loadedmetadata')));
+      assert.equal(await observed.innerText(), prefix + 'old');
+      await player.getByRole('button', { name: '更新测试文件' }).click();
+      await media.evaluate(el => el.dispatchEvent(new Event('loadedmetadata')));
+      assert.equal(await observed.innerText(), prefix + 'old', '尚未加载新文件时，保留实际旧媒体审阅版本');
+      await page.getByRole('button', { name: '加载新文件', exact: true }).click();
+      assert.equal(await observed.innerText(), prefix + 'new');
+    }
     await checkSharedDownloads(page, width);
     await checkSharedInputs(page, width, selfTest);
     const showcase = page.getByTestId('showcase'), business = page.getByTestId('business');

@@ -107,7 +107,16 @@ def update_business(root, episode, scene, stage, summary, identities, finalized,
         text = first + '\n\n- 当前状态及待办：' + status + '\n' + rest
     heading = '批准收尾-' + scene + '-' + stage
     folder = root / '09-剧集制作' / episode / '06-阶段采用视频' / adopt.STAGES[stage] / (scene.split('-')[1] + '-场次')
-    body = '\n- 状态：' + status + '\n- 当前采用顺序：' + ' → '.join(identities) + '\n- 文件入口：[阶段采用视频](' + adopt.link(summary, folder) + ')\n'
+    file_entry = '[阶段采用视频](' + adopt.link(summary, folder) + ')'
+    if stage == '后处理':
+        links = []
+        for identity in identities:
+            part = identity.rsplit('-', 2)[0]
+            draft = root / '09-剧集制作' / episode / '其他资料/工作稿' / (part + '-视频制作-工作稿.md')
+            output = adopt.selected_output(root, draft, draft.read_text('utf-8-sig'), part, stage)
+            links.append('[' + identity + '](' + adopt.link(summary, output['path']) + ')')
+        file_entry = '；'.join(links)
+    body = '\n- 状态：' + status + '\n- 当前采用顺序：' + ' → '.join(identities) + '\n- 文件入口：' + file_entry + '\n'
     if re.search(r'^### ' + re.escape(heading) + r'\s*$', text, re.M):
         a, b = adopt.section(text, heading)
         text = text[:a] + body + '\n' + text[b:]

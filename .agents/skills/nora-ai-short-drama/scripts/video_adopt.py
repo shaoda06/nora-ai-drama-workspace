@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from urllib.parse import unquote
 import re
 import sys
 import tempfile
@@ -136,6 +137,37 @@ def approved_row(text, row, filename):
                 and filename in outputs)
 
 
+def selected_output(root, draft, text, part, stage):
+    """Resolve the current approved file, including an explicitly registered final product."""
+    row = selected_row(text, stage)[2]
+    columns = [cell.strip() for cell in row.strip().strip('|').split('|')]
+    run = columns[2]
+    identity = part + '-' + run + '-' + stage
+    if not IDENTITY.fullmatch(identity):
+        return None
+    manifest = root / '09-剧集制作' / part.split('-')[0] / '其他资料/执行附件' / identity / '后处理产物.json'
+    final_path = None
+    if stage == '后处理' and manifest.is_file():
+        products = load(manifest)['products']
+        finals = [item for item in products if item['role'] == '最终产物']
+        if len(finals) != 1:
+            raise ValueError('后处理产物清单须且只能指定一项最终产物：' + str(manifest))
+        final_path = local_path(root, finals[0]['file'])
+    references = re.findall(r'\]\(([^)#]+)\)', columns[1])
+    if len(references) != 1:
+        return None
+    path = local_path(root, draft.parent / unquote(references[0]))
+    if final_path is not None:
+        if path != final_path or not path.is_file():
+            return None
+    elif path.stem != identity:
+        return None
+    anchors = re.findall(r'\]\(#([^)]*)\)', columns[-1])
+    if len(anchors) != 1 or not approved_row(text, path.name + ' [审核](#' + anchors[0] + ')', path.name):
+        return None
+    return {'identity': identity, 'path': path}
+
+
 def adoption(args, *, plan=None):
     root = Path(args.project).resolve(strict=True)
     if plan is None:
@@ -258,6 +290,11 @@ def adoption(args, *, plan=None):
         else:
             check_file(source, receipt)
             moves.append((source, target))
+        selected_delivery = selected_output(root, draft, data, f'{ep}-{scene}-{part}', stage)
+        if (stage == '后处理' and selected_delivery and selected_delivery['identity'] == identity
+                and selected_delivery['path'] != target):
+            results.append({'identity': identity, 'state': 'already_adopted', 'selected_path': str(selected_delivery['path'])})
+            continue
         already = approved_row(data, row, filename) and link(draft, target) in row
         adoptions = mapped.get('adoptions', [])
         existing = [a for a in adoptions if a.get('identity') == identity and a.get('selected_path')
@@ -278,7 +315,8 @@ def adoption(args, *, plan=None):
                 later = list(STAGES)[list(STAGES).index(stage) + 1:]
                 for later_stage in later:
                     _, _, downstream = selected_row(data, later_stage)
-                    if any(IDENTITY.fullmatch(Path(url).stem) for url in re.findall(r'\]\(([^)#]+\.[A-Za-z0-9]+)\)', downstream)):
+                    if (any(IDENTITY.fullmatch(Path(url).stem) for url in re.findall(r'\]\(([^)#]+\.[A-Za-z0-9]+)\)', downstream))
+                            or selected_output(root, draft, data, f'{ep}-{scene}-{part}', later_stage)):
                         raise ValueError(f'{identity}更换采用会影响已选定{later_stage}，须先明确下游处置')
                 previous = local_path(root, extra / '候选视频' / old.name)
                 if not old.is_file() or previous.exists():
@@ -397,8 +435,7 @@ def adoption(args, *, plan=None):
             text = texts.get(draft, draft.read_text(encoding='utf-8-sig'))
             for stage in STAGES:
                 _, _, row = selected_row(text, stage)
-                name = re.search(r'((?:EP\d{3}|片头|片尾)-C\d{3}-P\d{3}-R\d{3}-' + stage + r'\.[A-Za-z0-9]+)', row)
-                if name and approved_row(text, row, name[0]):
+                if selected_output(root, draft, text, draft.stem.removesuffix('-视频制作-工作稿'), stage):
                     counts[stage] += 1
     changed_maps = [str(path) for path, value in maps.items() if load(path) != value]
     if args.apply:

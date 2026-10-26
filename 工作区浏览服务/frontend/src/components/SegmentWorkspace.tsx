@@ -58,7 +58,7 @@ export function SegmentWorkspace({ scope, segment, revision, roundNumber, items,
   const product = products.find(item => productSelection.version === current?.key && item.id === productSelection.id)
     || products.find(item => item.role === '最终产物');
   const displayVideo = current && product ? { ...current, url: product.previewUrl || product.url,
-    downloadUrl: product.url, previewNote: product.previewNote,
+    downloadUrl: product.url, previewNote: product.previewNote, reviewFileRevision: current.fileRevision,
     fileRevision: product.fileRevision + ':' + (product.previewRevision || '') } : current;
   const identity = current && `${scope.episode}-${scope.scene}-${segment}-${current.run}-${current.stage}`;
   const detail = useQuery({ queryKey: ['generation-context', scope.project, identity, revision],
@@ -102,7 +102,7 @@ export function SegmentWorkspace({ scope, segment, revision, roundNumber, items,
     </div>;
   return <>
     {!wideVideo && selectors}
-    <SegmentLayout wide={wideVideo} navigation={segmentNavigation} player={<SegmentVideo playerRef={player} selectorControl={wideVideo ? selectors : undefined} key={`${current?.key || 'empty'}/${product?.id || ''}`} wide={wideVideo} onToggleWide={onToggleWide} continuous={continuous} continuousControl={continuousControl} current={displayVideo} cachedSource={displayVideo && cachedSources[displayVideo.url]} retainSource={retainSource} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={() => setLoadedFile({ key: current!.key, revision: current!.fileRevision })} />}>
+    <SegmentLayout wide={wideVideo} navigation={segmentNavigation} player={<SegmentVideo playerRef={player} selectorControl={wideVideo ? selectors : undefined} key={`${current?.key || 'empty'}/${product?.id || ''}`} wide={wideVideo} onToggleWide={onToggleWide} continuous={continuous} continuousControl={continuousControl} current={displayVideo} cachedSource={displayVideo && cachedSources[displayVideo.url]} retainSource={retainSource} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />}>
       <SegmentReferences context={context} />
       <section className="segment-script" aria-label="分镜脚本、提示词与修改意见区域">
         <div className="segment-script-header">

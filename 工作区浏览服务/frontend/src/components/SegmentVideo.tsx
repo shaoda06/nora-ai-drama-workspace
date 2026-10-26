@@ -203,7 +203,7 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
   const description = current && `${current.stage} · ${current.run} · ${candidateLabel(current.candidateNumber, current.approved)}`;
   return <section className="segment-video" aria-label="视频区域">
     {loaded?.url ? <video ref={video} key={`${loaded.fileRevision}:${reloadCount}`} controls loop={repeat && !continuous} autoPlay={playOnLoad} preload="metadata" src={source} aria-label={description}
-      onLoadedMetadata={event => { if (restore.current) { Object.assign(event.currentTarget, restore.current); restore.current = null; } if (pendingSeek.current !== null) seekTo(pendingSeek.current); else onTimeChange(event.currentTarget.currentTime); onFileRevision?.(loaded.fileRevision); }}
+      onLoadedMetadata={event => { if (restore.current) { Object.assign(event.currentTarget, restore.current); restore.current = null; } if (pendingSeek.current !== null) seekTo(pendingSeek.current); else onTimeChange(event.currentTarget.currentTime); onFileRevision?.(loaded.reviewFileRevision || loaded.fileRevision); }}
       onLoadedData={() => setRecovering(false)}
       onTimeUpdate={event => onTimeChange(event.currentTarget.currentTime)}
       onSeeked={event => onTimeChange(event.currentTarget.currentTime)}
@@ -220,7 +220,7 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
       </div>
     </div>
     {loaded?.previewNote && <p className="muted">{loaded.previewNote}</p>}
-  {updated && <FloatingMessage>视频已有更新<button onClick={() => { setPlayOnLoad(video.current ? !video.current.paused : false); setLoaded(current); setSource(cachedSource || current.url); attempts.current = 0; pendingSeek.current = null; restore.current = null; setRecovering(false); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></FloatingMessage>}
+  {updated && <FloatingMessage>视频已有更新<button onClick={() => { setPlayOnLoad(video.current ? !video.current.paused : false); setLoaded(current); setSource(cachedSource || current.url); attempts.current = 0; pendingSeek.current = null; restore.current = null; setRecovering(false); setError(false); onTimeChange(0); onFileRevision?.(current.reviewFileRevision || current.fileRevision); }}>加载新文件</button></FloatingMessage>}
     {detailId && <TaskDetailDialog id={detailId} updatedAt={task.data?.updated_at} nodes={[]} close={() => setDetailId('')} openTask={setDetailId} />}
     {recovering && <p role="status">正在恢复视频画面…</p>}
     {error && <FloatingMessage tone="error">视频画面恢复失败。<button onClick={() => { attempts.current = 0; recoverPlayback(); }}>重新加载视频</button>，也可打开原文件检查。</FloatingMessage>}
