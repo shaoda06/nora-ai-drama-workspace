@@ -98,11 +98,10 @@ class RevisionNotes:
     def assign_legacy_rounds(self, project: Path, episode: str, scene: str, data: SceneNotes):
         # Old notes have no round identity. Only use the active registered round
         # at their save time, never all rounds that happen to reuse the video.
-        from backend.parsers.scene_rounds import rounds
-        target = project / rounds.manifest_key(episode, scene)
-        if not any('roundNumber' not in note.model_fields_set for note in data.notes.values()) or not target.exists():
+        from backend.parsers.scene_rounds import scene_entries
+        if not any('roundNumber' not in note.model_fields_set for note in data.notes.values()):
             return
-        entries = rounds.validate_manifest(json.loads(target.read_text('utf-8-sig')), episode, scene)['rounds']
+        entries = scene_entries(project, episode, scene)
         if not entries or any(not entry.get('created_at') for entry in entries):
             return
         starts = [datetime.fromisoformat(entry['created_at']) for entry in entries]

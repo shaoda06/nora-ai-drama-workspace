@@ -881,15 +881,17 @@ python .agents/skills/nora-ai-short-drama/scripts/video_revision_migrate.py --pr
 
 编号迁移完成后，有原任务清单的执行目录自动保存`迁移后来源清单.json`，仅供批准收尾的`submission_plans`指向实际当前执行目录；它链接原提交清单及完成的迁移报告，不用于提交生成。普通编号迁移和单次执行拆分均在当前输入映射中关联`identity_migration.report`，原请求及下载凭据不改字节。
 
-## 场次修改轮次登记
+<a id="场次修改轮次登记"></a>
 
-规则见[场次修改轮次](../共用规则/场次版本组合规范.md#场次修改轮次)，计划字段见[模板](../模板/场次修改轮次模板.md)。在当前集中修改形成送审或执行方案后调用一次；不是每次保存、失败重试或结果取回都调用。完整计划列出全部分段；局部计划明确`base_round`及完整的`segment_changes`条目，由工具展开沿用项。未提供的剧本／分镜引用沿用基轮，不能增加、删除或重排分段；新布局必须提供完整`segments`。两种计划互斥，不从执行时间线或R最大值拼造播放组合。
+## 修改轮次登记
+
+规则见[修改轮次](../共用规则/场次版本组合规范.md#场次修改轮次)，计划字段见[模板](../模板/场次修改轮次模板.md)。同一集的一批修改形成送审或执行方案后调用一次，可同时修改一个或多个场次；不是每场、每次保存、失败重试或结果取回各调用一次。计划在`script`指定共用剧本，`scenes`列出本批修改场次，各场填写完整`segments`，或明确`base_round`与完整的`segment_changes`条目，由工具展开沿用项。局部修改不能增加、删除或重排分段；新布局提供完整`segments`。不从执行时间线或R最大值拼造播放组合。
 
 ```powershell
-python -X utf8 .agents/skills/nora-ai-short-drama/scripts/scene_rounds.py --project "项目根目录绝对路径" --episode EP003 --scene C001 --plan "完整组合计划.json"
+python -X utf8 .agents/skills/nora-ai-short-drama/scripts/scene_rounds.py --project "项目根目录绝对路径" --episode EP003 --plan "完整组合计划.json"
 ```
 
-从工作区根目录运行，Python标准库即可。`--project`指定实际项目根目录，`--episode`和`--scene`为目标集／场次；`--plan`是UTF-8 JSON文件路径。工具核对文件范围、文档版本和分段身份，保留剧本分镜副本并调整相对链接，向唯一组合JSON追加下一轮；原R、提示词、输入素材、执行和审核记录不改。未变文档复用上一轮副本，旧轮次不覆盖。成功输出组合文件、轮次整数和分段数，错误以非零退出，不联网、不生成媒体、不登记后台任务。新视频任务输入映射必须使用输出的轮次整数填写`scene_modification_round`，并填写`screenplay_version`、`scene_storyboard_version`及选中组的`duration_seconds`（兼容既有`durationSec`）。准备报告保存所引用的组合，校验选中组身份、版本和计划时长；生成长于成片时，每段额外填写`playback_duration_seconds`（如3），保留`duration_seconds`为实际模型请求（如4）；轮次`duration`仍为成片3秒，生成说明记录采用0–3秒及余量用途。工具分别检查两种时长，并拒绝请求短于成片；未传新字段的旧式同长任务保持原检查。未选中组仍可保留原缓存时间线，不用它确定整场播放候选。后续增加其他轮次不会使该报告失效。只有原先已登记的旧任务保留无此字段的恢复兼容，不改原执行证据、不补造轮次归属；旧报告不能用于跳过新任务准备。
+从工作区根目录运行，Python标准库即可。`--project`指定实际项目根目录，`--episode`指定集号；`--plan`是UTF-8 JSON文件路径。仅本批改单场时，可附加`--scene C001`并直接提供该场计划；它仍登记一轮单集组合。工具核对文件范围、文档版本及全部场次与分段身份，保留剧本分镜副本并调整相对链接，向`EP编号-修改轮次.json`追加下一轮；原R、提示词、输入素材、执行和审核记录不改。旧场次JSON只读保留，首次新轮接该集已有最大轮号；后续未改场次沿用基轮，未变文档复用已有副本。成功输出组合文件、共同轮次整数、场次及分段数，错误以非零退出，不联网、不生成媒体、不登记后台任务。新视频任务输入映射仍使用字段`scene_modification_round`，值为该单集共同轮号，并填写`screenplay_version`、`scene_storyboard_version`及选中组的`duration_seconds`（兼容既有`durationSec`）。准备报告保存所引用场次在共同轮次中的组合，校验选中组身份、版本和计划时长；生成长于成片时，每段额外填写`playback_duration_seconds`（如3），保留`duration_seconds`为实际模型请求（如4）；轮次`duration`仍为成片3秒，生成说明记录采用0–3秒及余量用途。工具分别检查两种时长，并拒绝请求短于成片；未传新字段的旧式同长任务保持原检查。未选中组仍可保留原缓存时间线，不用它确定播放候选。后续增加其他轮次不会使该报告失效。只有原先已登记的旧任务保留旧场次轮次及无此字段的恢复兼容，不改原执行证据、不补造归属；旧报告不能用于跳过新任务准备。
 
 回归检查（工作区根目录，隔离临时项目与模拟端点）：
 
@@ -897,7 +899,7 @@ python -X utf8 .agents/skills/nora-ai-short-drama/scripts/scene_rounds.py --proj
 工作区浏览服务/.venv/Scripts/python.exe -X utf8 -B -m unittest discover -s 工作区浏览服务/tests -t 工作区浏览服务 -p test_scene_rounds.py -q
 ```
 
-此项覆盖完整与局部组合、沿用项、执行旧缓存组与播放身份分离、版本与时长不符；准备复用、旧任务恢复和只回写实际成果分别由`tests.test_submission_lifecycle`、`tests.test_result_closeout`覆盖，从`工作区浏览服务`目录运行相应unittest模块。退出码0且显示OK为通过，不调用真实服务、不生成媒体。
+此项覆盖完整与局部组合、沿用项、执行旧缓存组与播放身份分离、版本与时长不符；`tests.test_episode_rounds`补充跨场同轮、接续旧最大编号、缺场拒绝及并发编号。准备复用、旧任务恢复和只回写实际成果分别由`tests.test_submission_lifecycle`、`tests.test_result_closeout`覆盖，从`工作区浏览服务`目录运行相应unittest模块。macOS设置`TMPDIR=/private/tmp`使用物理临时目录。退出码0且显示OK为通过，不调用真实服务、不生成媒体。
 
 
 ## H3正文与内容核对检查

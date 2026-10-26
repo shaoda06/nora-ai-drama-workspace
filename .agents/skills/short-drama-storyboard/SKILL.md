@@ -43,4 +43,4 @@ license: MIT
 
 剧情、原台词及决定因果的必要动作回[剧本写作](../short-drama-write/SKILL.md)维护；取景、镜头和P段由本技能维护。参考图由[资产设计](../nora-drama-assets/SKILL.md)补齐，已确认镜头交[视频提示词](../nora-video-prompts/SKILL.md)转写。不得为迁就参考图、旧P段或缓存保留不合理镜头；具体完整重做范围沿上方规则。
 
-按[文本自检](../short-drama-review/references/文本自检与订正规范.md#文本交付前的自检与订正)落实当前阶段的必需检查和方法，合并订正后交付。送审或完整制作组合形成时读[场次修改轮次](../nora-ai-short-drama/references/共用规则/场次版本组合规范.md#场次修改轮次)，使用既有工具登记；不将执行缓存组当成播放组合。写入后按[主控完成标准](../nora-ai-short-drama/SKILL.md#完成标准)交付，文本完成不授权生成。
+按[文本自检](../short-drama-review/references/文本自检与订正规范.md#文本交付前的自检与订正)落实当前阶段的必需检查和方法，合并订正后交付。本批修改形成送审或执行方案时读[修改轮次](../nora-ai-short-drama/references/共用规则/场次版本组合规范.md#场次修改轮次)，使用既有工具一次登记该集组合；不按场次分别增轮，不将执行缓存组当成播放组合。写入后按[主控完成标准](../nora-ai-short-drama/SKILL.md#完成标准)交付，文本完成不授权生成。

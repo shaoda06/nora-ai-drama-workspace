@@ -24,6 +24,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
   const [sceneView, setSceneView] = useRefreshState(`project/${project}/production/${selected || ''}/scene-view`, 'segments');
   const [integrateSheets, setIntegrateSheets] = useRefreshState(`project/${project}/production/${selected || ''}/integrate-sheets`, false);
   const [page, setPage] = useState(1);
+  const [roundEntry, setRoundEntry] = useState(0);
   const [playback, setPlayback] = useState<{ episode: string; rounds: Record<string, number | undefined>; start?: EpisodePlayback['start'] } | null>(null);
   const cards = useRef<HTMLDivElement>(null);
   const previousEpisode = useRef(selected);
@@ -43,19 +44,29 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
   useEffect(() => {
     if (selected && !selectedItem) onSelect(null);
   }, [selected, selectedItem, onSelect]);
-  const [roundNumbers, setRoundNumbers] = useRefreshState<Record<string, number>>(`project/${project}/production/rounds`, {});
-  const scenes = current?.scenes || [];
+  const [roundNumbers, setRoundNumbers] = useRefreshState<Record<string, number | null>>(`project/${project}/production/rounds`, {});
+  const episodeRounds = current?.episodeRounds || [];
+  const episodeChoice = current ? roundNumbers[current.name] === undefined ? episodeRounds.at(-1)?.number : roundNumbers[current.name] : undefined;
+  const episodeRound = episodeRounds.find(item => item.number === episodeChoice);
+  const scenes = episodeRound?.scenes || (episodeChoice === null
+    ? (current?.scenes || []).filter(id => current?.sceneRounds?.[id]?.some(item => !item.episodeRound)) : current?.scenes || []);
   const selectedScene = scenes.includes(scene) ? scene : scenes[0] || '';
+  const roundNumberForScene = (id: string) => {
+    if (episodeRound) return episodeRound.number;
+    const rounds = (current?.sceneRounds?.[id] || []).filter(item => episodeChoice !== null || !item.episodeRound);
+    return rounds.find(item => item.number === roundNumbers[current!.name + '/' + id])?.number ?? rounds.at(-1)?.number;
+  };
   const directorScenes = scenes.map(id => {
     const rounds = current?.sceneRounds?.[id] || [];
-    const selectedRound = id === selectedScene ? roundNumbers[current!.name + '/' + id] ?? rounds.at(-1)?.number : rounds.at(-1)?.number;
+    const selectedRound = episodeRound?.number ?? (id === selectedScene ? roundNumberForScene(id)
+      : rounds.filter(item => episodeChoice !== null || !item.episodeRound).at(-1)?.number);
     const round = rounds.find(item => item.number === selectedRound);
     return { id, sheets: current?.directorSheets?.[id],
       storyboardVersion: round ? round.storyboard?.version || '' : current?.storyboards?.[id]?.version || '' };
   });
   const segments = current?.segments?.[selectedScene] || [];
   const sceneRounds = current?.sceneRounds?.[selectedScene] || [];
-  const selectedRound = roundNumbers[(current?.name || '') + '/' + selectedScene] ?? sceneRounds.at(-1)?.number;
+  const selectedRound = roundNumberForScene(selectedScene);
   const round = sceneRounds.find(item => item.number === selectedRound);
   const continuous = !!playback && playback.episode === current?.name;
   const nextScene = scenes[scenes.indexOf(selectedScene) + 1];
@@ -69,7 +80,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     start: continuous ? playback!.start : undefined,
     next: nextScene ? { scene: nextScene, round: nextRoundNumber, segment: nextEntry?.id, video: nextVideo } : undefined,
     onChange: checked => setPlayback(checked ? { episode: current!.name, rounds: Object.fromEntries(scenes.map(id =>
-      [id, roundNumbers[current!.name + '/' + id] ?? current?.sceneRounds?.[id]?.at(-1)?.number])) } : null),
+      [id, roundNumberForScene(id)])) } : null),
     onNext: () => {
       setRoundNumbers(previous => ({ ...previous, [current!.name + '/' + nextScene]: nextRoundNumber! }));
       setPlayback(previous => ({ ...previous!, start: { segment: nextEntry!.id, selection: { stage: nextVideo!.stage, key: nextVideo!.key } } }));
@@ -78,12 +89,23 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
   };
 
   useEffect(() => {
+    if (current && episodeRounds.length && roundNumbers[current.name] === undefined)
+      setRoundNumbers(previous => ({ ...previous, [current.name]: episodeRounds.at(-1)!.number }));
     const key = (current?.name || '') + '/' + selectedScene;
-    if (current && selectedScene && sceneRounds.length && roundNumbers[key] === undefined)
-      setRoundNumbers(previous => ({ ...previous, [key]: sceneRounds.at(-1)!.number }));
-  }, [current?.name, selectedScene, sceneRounds, roundNumbers, setRoundNumbers]);
+    const fallback = episodeChoice === null ? sceneRounds.filter(item => !item.episodeRound).at(-1) : sceneRounds.at(-1);
+    if (current && selectedScene && fallback && roundNumbers[key] === undefined)
+      setRoundNumbers(previous => ({ ...previous, [key]: fallback.number }));
+  }, [current?.name, selectedScene, sceneRounds, episodeRounds, roundNumbers, setRoundNumbers]);
   const script = round ? round.script : current?.script;
-  const selectRound = (number: number) => setRoundNumbers(previous => ({ ...previous, [current!.name + '/' + selectedScene]: number }));
+  const selectRound = (number: number) => {
+    setPlayback(null);
+    setRoundNumbers(previous => ({ ...previous, [current!.name + '/' + selectedScene]: number,
+      ...(episodeRounds.length ? { [current!.name]: episodeRounds.some(item => item.number === number) ? number : null } : {}) }));
+  };
+  const openRound = (number: number) => {
+    setRoundEntry(previous => previous + 1);
+    selectRound(number);
+  };
   const issues = (current?.productionIssues || []).filter(issue => !issue.scene || issue.scene === selectedScene);
   const episodeComplete = current?.productionComplete && !current.productionIssues?.length && scenes.length > 0 && scenes.every(id => {
     const sceneSegments = current.segments?.[id] || [];
@@ -110,6 +132,11 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     {breadcrumbActions && episodeComplete && createPortal(<DownloadButton key={current.name} pack
       url={`${projectUrl(project)}/episodes/${current.name}/download`} label={`${sharedSelected ? current.name : '本集'}打包下载`}
       title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理已采用视频`} />, breadcrumbActions)}
+    {episodeRounds.length > 0 && <div className="episode-scene-header"><div className="scene-round-selector">
+      <span className="production-latest">当前最新{selectedRound !== episodeRounds.at(-1)!.number && <>：第{episodeRounds.at(-1)!.number}轮，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => openRound(episodeRounds.at(-1)!.number)}>点击切换</button></>}</span>
+      <TabSelect size="toolbar" highlightSelected label="修改轮次" selected={String(selectedRound)} onChange={value => openRound(Number(value))}
+        items={[...sceneRounds].reverse().map(item => ({ value: String(item.number), label: `第${item.number}轮` }))} />
+    </div></div>}
     <div className="episode-scene-header">
       {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={value => { setPlayback(null); setScene(value); }} />}
       <PointerTooltip text={script ? undefined : `${contentLabel}尚未建立`}><button className="link episode-script-link" disabled={!script} onClick={() => preview(script!)}>查看{contentLabel}</button></PointerTooltip>
@@ -121,7 +148,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
         <PointerTooltip text={issue.key}><button className="link"  onClick={() => preview({ kind: 'document', key: issue.key, name: issue.key.split('/').pop()! })}>{issue.key.split('/').pop()}</button></PointerTooltip>：{issue.message}
       </li>)}</ul>
     </div> : null}
-    {selectedScene ? <SceneWorkspace episodePlayback={episodePlayback} view={sceneView} onViewChange={setSceneView} key={current.name + '/' + selectedScene} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} directorScenes={directorScenes} integrateSheets={integrateSheets} onIntegrateSheetsChange={setIntegrateSheets} storyboardVersion={round ? round.storyboard?.version || '' : current.storyboards?.[selectedScene]?.version || ''} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
+    {selectedScene ? <SceneWorkspace episodePlayback={episodePlayback} view={sceneView} onViewChange={setSceneView} key={current.name + '/' + selectedScene + (episodeRounds.length ? '/' + roundEntry : '')} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} showRoundSelector={!episodeRounds.length} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} directorScenes={directorScenes} integrateSheets={integrateSheets} onIntegrateSheetsChange={setIntegrateSheets} storyboardVersion={round ? round.storyboard?.version || '' : current.storyboards?.[selectedScene]?.version || ''} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
       : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
     {!!current.materials?.length && <details className="asset-candidate-type production-materials"><summary>专用素材与图片候选（{current.materials.length}）</summary>
       {current.materialRecord && <p><button className="link" onClick={() => preview(current.materialRecord!)}>查看素材生成与审阅记录</button></p>}

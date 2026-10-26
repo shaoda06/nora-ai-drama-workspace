@@ -1,24 +1,31 @@
-"""Read explicit scene revision compositions without inferring history from media."""
+"""Project episode compositions and retain explicit legacy scene history."""
 import importlib.util
 import json
+import sys
 from pathlib import Path
 from urllib.parse import quote
 
 SCRIPT = Path(__file__).resolve().parents[3] / '.agents/skills/nora-ai-short-drama/scripts/scene_rounds.py'
+sys.path.insert(0, str(SCRIPT.parent))
 spec = importlib.util.spec_from_file_location('nora_scene_rounds', SCRIPT)
 rounds = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(rounds)
 
+from episode_rounds import episode_manifest_key, scene_entries, validate_episode_manifest
+
+
+def load_episode_rounds(episode, read):
+    raw = read(episode_manifest_key(episode))
+    if raw is None:
+        return []
+    return [{'number': item['number'], 'scenes': list(item['scenes'])}
+            for item in validate_episode_manifest(json.loads(raw), episode)['rounds']]
+
 def load_scene_rounds(project, episode, scene, read):
     from .project import field, markdown, document_header
     from .generation import segment_body
-    key = rounds.manifest_key(episode, scene)
-    raw = read(key)
-    if raw is None:
-        return []
-    data = rounds.validate_manifest(json.loads(raw), episode, scene)
     result = []
-    for entry in data['rounds']:
+    for entry in scene_entries(project, episode, scene, read):
         item = {**entry, 'issues': []}
         documents = {}
         for kind in ('script', 'storyboard'):

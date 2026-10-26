@@ -402,10 +402,8 @@ def document_preview(text, source):
 
 
 def production_scene_ids(text, episode):
-    chapter = r"(?:3\.[ \t]*动画内容|1\.[ \t]*故事剧本正文)" if episode in ("片头", "片尾") else r"1\.[ \t]*故事剧本正文"
-    body = re.search(r"^##[ \t]+" + chapter + r"[ \t]*\n(.*?)(?=^##[ \t]|\Z)", text, re.M | re.S)
-    return list(dict.fromkeys(re.findall(r"^###[ \t]+" + re.escape(episode) + r"-(C\d{3,})[ \t]*$",
-                                        body[1] if body else "", re.M)))
+    from .scene_rounds import rounds
+    return rounds.production_scene_ids(text, episode)
 
 
 def storyboard_index_identity(episode, scenes, row):
@@ -1392,9 +1390,12 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             source_scenes = episode_node["scenes"]
             if not source_scenes:
                 episode_node["scenes"] = board_scenes
+            from .scene_rounds import load_episode_rounds, load_scene_rounds
+            episode_node['episodeRounds'] = load_episode_rounds(number, read) if episode_mode != 'ending' else []
+            episode_node['scenes'] = list(dict.fromkeys([*episode_node['scenes'],
+                *(scene for item in episode_node['episodeRounds'] for scene in item['scenes'])]))
             episode_node["segments"] = {scene: [] for scene in episode_node["scenes"]}
             episode_node["storyboards"] = {}
-            from .scene_rounds import load_scene_rounds
             episode_node['sceneRounds'] = {scene: load_scene_rounds(project, number, scene, read)
                                           for scene in episode_node['scenes']} if episode_mode != 'ending' else {}
             storyboard_texts = {}

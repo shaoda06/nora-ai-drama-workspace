@@ -12,7 +12,7 @@ from tests.test_generation_context import writer
 class SceneRoundTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
-        self.project = Path(self.temp.name) / '示例项目'
+        self.project = (Path(self.temp.name) / '示例项目').resolve()
         self.root = '09-剧集制作/EP001'
         self.script = self.root + '/02-剧集剧本/EP001-本集剧本.md'
         self.board = self.root + '/03-分镜脚本/EP001-C001-场次分镜.md'
@@ -120,7 +120,7 @@ class SceneRoundTests(unittest.TestCase):
     def test_missing_or_changed_snapshot_does_not_use_current_document(self):
         result = self.create()
         data = json.loads(Path(result['file']).read_text('utf-8'))
-        (self.project / data['rounds'][0]['storyboard']['file']).unlink()
+        (self.project / data['rounds'][0]['scenes']['C001']['storyboard']['file']).unlink()
         round_item = self.episode()['sceneRounds']['C001'][0]
         self.assertIsNone(round_item['storyboard'])
         self.assertTrue(round_item['issues'])
@@ -198,8 +198,8 @@ class SceneRoundTests(unittest.TestCase):
                      'segment_changes': [{'id': 'P002', 'run': 'R002', 'stage': '一采', 'duration': 3}]})
         data = json.loads(Path(first['file']).read_text('utf-8'))
         self.assertEqual(before, data['rounds'][0])
-        self.assertEqual([s['run'] for s in data['rounds'][1]['segments']], ['R009', 'R002', 'R007'])
-        self.assertEqual(data['rounds'][1]['changed_segments'], ['P002'])
+        self.assertEqual([s['run'] for s in data['rounds'][1]['scenes']['C001']['segments']], ['R009', 'R002', 'R007'])
+        self.assertEqual(data['rounds'][1]['scenes']['C001']['changed_segments'], ['P002'])
         self.assertEqual(data['rounds'][1]['script'], before['script'])
         saved = Path(first['file']).read_bytes()
         for plan in [{'segment_changes': []}, {'base_round': 1, 'segment_changes': [{'id': 'P004'}]},

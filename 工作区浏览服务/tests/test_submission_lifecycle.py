@@ -76,13 +76,13 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         mapping = dict(scene='EP001-C001', scene_storyboard_version='v1', selected_indices=[0], storyboard_file='storyboard.md',
             screenplay_version='v1', scene_modification_round=1,
             uploads=[], segments=[dict(segment='EP001-C001-P001', round='R001', duration_seconds=3, local_execution_dir=str(self.record))])
-        manifest = self.project / '09-剧集制作/EP001/其他资料/工作稿/EP001-C001-场次修改轮次.json'
+        manifest = self.project / '09-剧集制作/EP001/其他资料/工作稿/EP001-修改轮次.json'
         manifest.parent.mkdir(parents=True, exist_ok=True)
         self.scene_rounds_file = manifest
-        manifest.write_text(json.dumps({'episode': 'EP001', 'scene': 'C001', 'rounds': [{
-            'number': 1, 'script': {'file': 'screenplay.md', 'version': 'v1'},
-            'storyboard': {'file': 'storyboard.md', 'version': 'v1'},
-            'segments': [{'id': 'P001', 'stage': '一采', 'run': 'R001', 'duration': 3}]}]}), 'utf-8')
+        manifest.write_text(json.dumps({'episode': 'EP001', 'rounds': [{
+            'number': 1, 'created_at': '2026-10-26T00:00:00+08:00', 'script': {'file': 'screenplay.md', 'version': 'v1'},
+            'scenes': {'C001': {'storyboard': {'file': 'storyboard.md', 'version': 'v1'},
+            'segments': [{'id': 'P001', 'stage': '一采', 'run': 'R001', 'duration': 3}]}}}]}), 'utf-8')
         attach_review(self.project, self.record, workflow, mapping)
         (self.record / '输入映射.json').write_text(json.dumps(mapping), 'utf-8')
         self.data.uploads = [dict(file=str(source), node='502', input='timeline_data', subfolder='task',
@@ -100,10 +100,28 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             upload.assert_not_called(); submit.assert_not_called()
         self.assertFalse(self.store.rows)
 
+    async def test_old_scene_round_recovers_but_cannot_prepare_a_new_video(self):
+        self.video()
+        episode = json.loads(self.scene_rounds_file.read_text('utf-8'))
+        item = episode['rounds'][0]
+        legacy = self.scene_rounds_file.with_name('EP001-C001-场次修改轮次.json')
+        legacy.write_text(json.dumps({'episode': 'EP001', 'scene': 'C001', 'rounds': [
+            {**item['scenes']['C001'], 'number': 1, 'created_at': item['created_at'], 'script': item['script']}]}), 'utf-8')
+        self.scene_rounds_file.unlink()
+        before = legacy.read_bytes()
+        with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as submit:
+            with self.assertRaisesRegex(ValueError, '单集共用'):
+                await self.store.prepare_only(self.data)
+            upload.assert_not_called(); submit.assert_not_called()
+        checks.prepare_report(self.store, self.data, at_execution=True)
+        self.assertEqual(checks.read_report(self.data)['prepared_input']['scene_composition']['number'], 1)
+        self.assertTrue(checks.check_prepared(self.store, self.data, legacy=True)['ok'])
+        self.assertEqual(legacy.read_bytes(), before)
+
     async def test_preparation_pins_referenced_round_not_entire_round_history(self):
         self.video()
         original = json.loads(self.scene_rounds_file.read_text('utf-8'))
-        original['rounds'][0]['segments'].append({'id': 'P002', 'stage': '一采', 'run': 'R009', 'duration': 3})
+        original['rounds'][0]['scenes']['C001']['segments'].append({'id': 'P002', 'stage': '一采', 'run': 'R009', 'duration': 3})
         self.scene_rounds_file.write_text(json.dumps(original), 'utf-8')
         await self.store.prepare_only(self.data)
         report = checks.read_report(self.data)
@@ -116,7 +134,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(checks, 'fixed_checks', side_effect=AssertionError('adding a round must not repeat fixed checks')):
             self.assertTrue(checks.check_prepared(self.store, self.data)['ok'])
             self.assertTrue((await self.store.prepare_only(self.data))['reused'])
-        data['rounds'][0]['segments'][1]['run'] = 'R010'
+        data['rounds'][0]['scenes']['C001']['segments'][1]['run'] = 'R010'
         self.scene_rounds_file.write_text(json.dumps(data), 'utf-8')
         with patch.object(t.client, 'upload') as upload, patch.object(t.client, 'submit') as submit:
             with self.assertRaisesRegex(ValueError, '准备资料已变化'):

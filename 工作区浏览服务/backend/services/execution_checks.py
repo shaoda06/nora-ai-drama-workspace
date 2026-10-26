@@ -378,7 +378,13 @@ def prepare_report(store, data, *, at_execution=False, previous=...):
         if not at_execution and data.task_type.startswith('video-'):
             if 'scene_composition' not in report['prepared_input']:
                 check_new_targets(data)
-                raise ValueError('新视频任务必须填写scene_modification_round，关联完整场次组合后再准备；不得用执行时间线代替')
+                raise ValueError('新视频任务必须填写scene_modification_round，关联单集修改轮次后再准备；不得用执行时间线代替')
+            from episode_rounds import episode_manifest_key, validate_episode_manifest
+            episode = mapping['scene'].split('-')[0]
+            manifest = Path(data.project) / episode_manifest_key(episode)
+            if not manifest.exists() or not any(item['number'] == mapping['scene_modification_round']
+                    for item in validate_episode_manifest(json.loads(manifest.read_text('utf-8-sig')), episode)['rounds']):
+                raise ValueError('新视频任务须先登记单集共用的修改轮次，旧场次轮次仅用于历史任务')
         composition = report['prepared_input'].get('scene_composition')
         expected = previous['prepared_input'].copy() if previous else {}
         if previous and 'title' not in expected:
