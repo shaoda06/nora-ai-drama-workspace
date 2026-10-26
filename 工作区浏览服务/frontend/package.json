@@ -1,6 +1,6 @@
 {
   "name": "nora-workspace-browser",
-  "version": "0.8.118",
+  "version": "0.8.119",
   "private": true,
   "type": "module",
   "scripts": {

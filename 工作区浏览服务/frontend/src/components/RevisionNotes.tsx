@@ -10,11 +10,9 @@ import { candidateLabel } from './SegmentVideo';
 import { TabNav } from './TabNav';
 
 export interface NoteScope { project: string; episode: string; scene: string }
-export function RevisionNoteEditor({ scope, segment, current, fileRevision, time, shot, roundNumber }: { scope: NoteScope; segment: string; current: SegmentVideo; fileRevision: string; time: number; shot?: string; roundNumber?: number }) {
+export function RevisionNoteEditor({ scope, segment, current, fileRevision, time, shot, shotStart, roundNumber }: { scope: NoteScope; segment: string; current: SegmentVideo; fileRevision: string; time: number; shot?: string; shotStart?: number; roundNumber?: number }) {
   const textarea = useRef<HTMLTextAreaElement>(null);
   const notify = useNotify();
-  const tenths = Math.floor(time * 10);
-  const timestamp = `${String(Math.floor(tenths / 600)).padStart(2, '0')}.${String(Math.floor(tenths / 10) % 60).padStart(2, '0')}.${tenths % 10}秒${shot ? `，${shot}` : ''}：`;
   const data = useSceneNotes(scope.project, scope.episode, scope.scene);
   const identity = { roundNumber, segment, stage: current.stage, run: current.run };
   const key = noteKey(identity);
@@ -24,7 +22,9 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
   useEffect(() => () => { void saveNote(data.url, key); }, [data.url, key]);
   const status = draft ? { waiting: '等待保存', saving: '保存中…', saved: '已保存', error: '未保存' }[draft.status] : note ? '已保存' : '尚未填写';
   const statusKind = data.error ? 'error' : data.loading ? 'loading' : draft?.status ?? (note ? 'saved' : 'empty');
-  const insertTime = () => {
+  const insertTime = (passedShot = false) => {
+    const tenths = passedShot ? Math.round(shotStart! * 10) : Math.floor(time * 10);
+    const timestamp = `${String(Math.floor(tenths / 600)).padStart(2, '0')}.${String(Math.floor(tenths / 10) % 60).padStart(2, '0')}.${tenths % 10}秒${shot ? `，${shot}` : ''}：${passedShot ? '这个分镜没问题' : ''}`;
     const editor = textarea.current!;
     const editing = document.activeElement === editor;
     const start = editing ? editor.selectionStart : text.length;
@@ -42,10 +42,10 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
   return <div className="revision-note-editor">
     <p className="revision-note-identity">{scope.project} / {scope.episode} / {scope.scene} / {roundNumber ? `第${roundNumber}轮 / ` : ''}{segment} / {current.stage} / {candidateLabel(current.candidateNumber, current.approved)} · {current.run}</p>
     <div className="revision-note-heading">
-      <div className="revision-note-label"><label htmlFor="revision-note-text">修改意见</label><button className="link" disabled={!data.loaded || !current.url} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={insertTime}>插入时间</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
+      <div className="revision-note-label"><button className="link" disabled={!data.loaded || !current.url || shotStart === undefined} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={() => insertTime(true)}>本镜通过</button><button className="link" disabled={!data.loaded || !current.url} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={() => insertTime()}>插入时间</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
       <div className="revision-note-status" role="status"><span className="revision-note-state" data-state={statusKind}>{data.error ? '读取失败' : data.loading ? '正在读取…' : status}</span>{note && <span className="muted">更新于 {new Date(note.updatedAt).toLocaleString('zh-CN')}</span>}{draft?.status === 'error' && <button onClick={() => { void saveNote(data.url, key); }}>重试保存</button>}</div>
     </div>
-    <textarea ref={textarea} id="revision-note-text" placeholder="填写修改意见..." maxLength={20000} disabled={!data.loaded} value={text}
+    <textarea ref={textarea} id="revision-note-text" aria-label="修改意见" placeholder="填写修改意见..." maxLength={20000} disabled={!data.loaded} value={text}
       onChange={event => editNote(data.url, { ...identity, text: event.target.value, fileRevision })} onBlur={() => { void saveNote(data.url, key); }} />
 
     {draft?.error && <FloatingMessage tone="error">{draft.error}</FloatingMessage>}

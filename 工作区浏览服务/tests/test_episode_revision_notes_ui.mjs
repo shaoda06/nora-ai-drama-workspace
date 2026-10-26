@@ -13,7 +13,11 @@ const sample = await readFile(new URL('../frontend/public/component-samples/vide
 const screenshots = await mkdtemp(path.join(os.tmpdir(), 'nora-episode-notes-'));
 const key = note => `round/${note.roundNumber}/${note.segment}/${note.stage}/${note.run}`;
 const video = (scene, run, stage = '一采') => ({ key: `${scene}-${stage}-${run}`, run, stage, url: '/fixture/video.webm', candidateNumber: Number(run.slice(1)), approved: false,
-  fileRevision: 'fixture', deliveryStatus: '已取回', taskStatus: '成功', checkedAt: '', context: { scriptHtml: '<p>测试分镜</p>', shots: [], prompts: {}, references: { common: [], segment: [] }, issues: [] } });
+  fileRevision: 'fixture', deliveryStatus: '已取回', taskStatus: '成功', checkedAt: '', context: { scriptHtml: '<p>测试分镜</p>', shots: run === 'R002' ? [
+    { id: `EP001-${scene}-SH001`, duration: 0.3, html: '<p>第一镜</p>' },
+    { id: `EP001-${scene}-SH002`, duration: 0.6, html: '<p>第二镜</p>' },
+    { id: `EP001-${scene}-SH003`, duration: 1.1, html: '<p>第三镜</p>' },
+  ] : [], prompts: {}, references: { common: [], segment: [] }, issues: [] } });
 const doc = title => ({ kind: 'document', name: title, key: title + '.md', version: 'v01', doc: { title, html: `<p>${title}</p>` } });
 const round = (scene, number) => ({ number, episodeRound: true, created_at: '2026-10-26T00:00:00+08:00', script: doc('剧本'), storyboard: doc(scene), issues: [],
   segments: scene === 'C001' ? [{ id: 'P001', duration: 2, stage: '一采', run: 'R002' }, { id: 'P002', duration: 2, stage: '二采', run: 'R004' }]
@@ -138,6 +142,43 @@ try {
   await choose.click(); await page.getByRole('option', { name: /^第8轮/ }).click();
   await open(); assert.equal(await dialog.getByRole('textbox', { name: '第8轮 本轮汇总意见', exact: true }).inputValue(), '');
   await dialog.getByRole('button', { name: '关闭', exact: true }).click();
+  // Real player time -> historical shot start -> cursor insertion -> in-memory autosave.
+  await page.getByRole('button', { name: '场次 C001', exact: true }).click();
+  await page.getByRole('button', { name: /^分段 P001，/ }).click();
+  await page.getByRole('button', { name: '修改意见', exact: true }).click();
+  const editor = page.getByRole('textbox', { name: '修改意见', exact: true });
+  const pass = page.getByRole('button', { name: '本镜通过', exact: true });
+  assert.deepEqual(await page.locator('.revision-note-label button').allTextContents(), ['本镜通过', '插入时间', '清空']);
+  assert.equal(await page.locator('.revision-note-label label').count(), 0);
+  await page.locator('.segment-video video').evaluate(video => video.play());
+  await page.waitForFunction(() => document.querySelector('.segment-video video')?.currentTime >= 1.2);
+  const playTenths = await page.locator('.segment-video video').evaluate(video => { video.pause(); return Math.floor(video.currentTime * 10); });
+  await page.getByRole('button', { name: /^跳转到.*SH003，/ }).and(page.locator('[aria-current="step"]')).waitFor();
+  await pass.click();
+  const approved = '00.00.9秒，SH003：这个分镜没问题';
+  await page.waitForFunction(text => document.querySelector('#revision-note-text')?.value.endsWith(text), approved);
+  await page.locator('.revision-note-state[data-state="saved"]').waitFor();
+  assert.ok(saved.scenes.C001.notes['round/8/P001/一采/R002'].text.endsWith(approved));
+  await page.getByRole('button', { name: '插入时间', exact: true }).click();
+  assert.ok((await editor.inputValue()).endsWith(`00.01.${playTenths - 10}秒，SH003：`), '插入时间保留当前播放位置');
+  await page.waitForFunction(() => { const input = document.querySelector('#revision-note-text'); return document.activeElement === input && input.selectionStart === input.value.length; });
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
+  await editor.fill('前缀替换后缀');
+  await page.waitForFunction(() => document.querySelector('#revision-note-text')?.value === '前缀替换后缀');
+  await editor.evaluate(input => { input.focus(); input.setSelectionRange(2, 4); });
+  await pass.click();
+  assert.equal(await editor.inputValue(), '前缀\n' + approved + '后缀');
+  await page.waitForFunction(position => document.querySelector('#revision-note-text')?.selectionStart === position, ('前缀\n' + approved).length);
+  await page.locator('.segment-video video').evaluate(video => { video.currentTime = 0; video.dispatchEvent(new Event('timeupdate')); });
+  await pass.focus(); await pass.press('Enter');
+  assert.ok((await editor.inputValue()).endsWith('00.00.0秒，SH001：这个分镜没问题'), '键盘使用首镜真实0秒');
+  await page.locator('.revision-note-state[data-state="saved"]').waitFor();
+  await page.screenshot({ path: path.join(screenshots, `shot-pass-${width}.png`) });
+  const box = await pass.boundingBox(); assert.ok(box.x >= 0 && box.x + box.width <= width);
+  await page.getByRole('button', { name: '场次 C002', exact: true }).click();
+  await page.getByRole('button', { name: '修改意见', exact: true }).click();
+  assert.equal(await pass.isDisabled(), true, '缺少当前候选分镜时长时不能猜测起点');
+  assert.equal(await page.getByRole('button', { name: '插入时间', exact: true }).isDisabled(), false);
   assert.deepEqual(errors, []); assert.deepEqual(unexpected, []);
   await context.close(); console.log(`PASS ${width}px: 整集汇总排序、候选身份、统一总体意见、跨场恢复、旧历史及冲突保留输入`);
  }
