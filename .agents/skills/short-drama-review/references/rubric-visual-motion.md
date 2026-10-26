@@ -33,6 +33,7 @@
 - Do framing and camera behavior serve attention, alignment, pressure, reveal, or
   rhythm rather than decorate the prose?
 - Apply [镜头选择与观看效果复核](../../short-drama-storyboard/references/场次分镜制作规范.md#运镜构图与切镜的选择) to the actual fields together: can the necessary detail, action, reaction or relation be read, and does the chosen camera behavior serve the scene's purpose? State the specific information or performance lost when proposing a correction. A fixed climax, repeated framing or a different reasonable choice is not a failure by itself; do not demand a separate reason field or movement quota.
+- 对白切点按[对白选择与审查标准](../../short-drama-storyboard/references/场次分镜制作规范.md#对白反应与多人镜头的取舍)判断；提出机械切镜问题时，指出具体损失，不把一句一镜本身当成缺陷，也不因合镜或增加运镜自动加分。
 - Are Location/View, axis, screen direction, eyelines, entrances, positions,
   hands, and props coherent?
 - Are exact asset variants bound?
