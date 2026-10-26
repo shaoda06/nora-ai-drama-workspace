@@ -93,6 +93,25 @@ class RevisionMigrationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             Migration(self.project, self.request).apply(dbpath, self.report)
 
+    def test_episode_notes_and_legacy_round_keys_keep_review_identity(self):
+        for identity in (self.first, self.second, self.post):
+            self.write('其他资料/候选视频/' + identity + '.mp4', b'video')
+        notes = {f'round/{number}/P001/后处理/R011': {
+            'roundNumber': number, 'segment': 'P001', 'stage': '后处理', 'run': 'R011',
+            'text': f'第{number}轮原文', 'updatedAt': '', 'fileRevision': 'fixture'} for number in (4, 5)}
+        overall = {'4': {'number': 4, 'text': '整集汇总', 'updatedAt': ''}}
+        episode = self.write('其他资料/工作稿/EP001-视频修改意见.json',
+            json.dumps({'episode': 'EP001', 'notes': {'C001': notes}, 'rounds': overall}))
+        legacy = self.write('其他资料/工作稿/EP001-C001-视频修改意见.json',
+            json.dumps({'episode': 'EP001', 'scene': 'C001', 'notes': notes, 'rounds': {}}))
+        Migration(self.project, self.request).apply(None, self.report)
+        saved = json.loads(episode.read_text())
+        self.assertEqual(saved['rounds'], overall)
+        for entries in (saved['notes']['C001'], json.loads(legacy.read_text())['notes']):
+            self.assertEqual(set(entries), {'round/4/P001/后处理/R002', 'round/5/P001/后处理/R002'})
+            self.assertEqual(entries['round/4/P001/后处理/R002']['text'], '第4轮原文')
+            self.assertEqual(entries['round/5/P001/后处理/R002']['roundNumber'], 5)
+
     def test_overlapping_old_and_new_names_do_not_cascade_or_overwrite(self):
         old1, old2 = 'EP001-C001-P001-R000-一采', 'EP001-C001-P001-R001-一采'
         new2 = 'EP001-C001-P001-R002-一采'

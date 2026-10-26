@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { get, projectUrl } from '../api';
 import type { FileItem, RecordData, SceneRound, SegmentVideo as VideoItem } from '../api';
@@ -33,7 +33,7 @@ export type EpisodePlayback = {
 
 type ReviewRound = { stage: string; order: string[]; versions: ReviewVersions };
 
-export function SceneWorkspace({ episodePlayback, view, onViewChange, scope, segments: allSegments, sceneRounds = [], selectedRound, onRoundChange, showRoundSelector = true, previousEnding, emptyMessage, revision, storyboardDocument, directorScenes, integrateSheets, onIntegrateSheetsChange, storyboardVersion }: { episodePlayback: EpisodePlayback; view: string; onViewChange: (view: string) => void; scope: NoteScope; segments: Segments; sceneRounds?: SceneRound[]; selectedRound?: number; onRoundChange: (number: number) => void; showRoundSelector?: boolean; previousEnding: PreviousEpisodeEnding | null; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData; directorScenes: DirectorSheetScene[]; integrateSheets: boolean; onIntegrateSheetsChange: (value: boolean) => void; storyboardVersion: string }) {
+export function SceneWorkspace({ episodeNotesExportControl, episodePlayback, view, onViewChange, scope, segments: allSegments, sceneRounds = [], selectedRound, onRoundChange, showRoundSelector = true, previousEnding, emptyMessage, revision, storyboardDocument, directorScenes, integrateSheets, onIntegrateSheetsChange, storyboardVersion }: { episodeNotesExportControl?: ReactNode; episodePlayback: EpisodePlayback; view: string; onViewChange: (view: string) => void; scope: NoteScope; segments: Segments; sceneRounds?: SceneRound[]; selectedRound?: number; onRoundChange: (number: number) => void; showRoundSelector?: boolean; previousEnding: PreviousEpisodeEnding | null; emptyMessage: string; revision: number; directorFiles: FileItem[]; storyboardDocument?: RecordData; directorScenes: DirectorSheetScene[]; integrateSheets: boolean; onIntegrateSheetsChange: (value: boolean) => void; storyboardVersion: string }) {
   const { scene } = scope;
   const productionRound = sceneRounds.find(item => item.number === selectedRound);
   const latestRound = sceneRounds.at(-1);
@@ -245,7 +245,7 @@ export function SceneWorkspace({ episodePlayback, view, onViewChange, scope, seg
       continuousControl={<label className="scene-continuous"><input type="checkbox" checked={continuous} disabled={!chosen.stage || !productionRound || !viewingRoundRevision} onChange={event => toggleContinuous(event.target.checked)} />连续播放</label>}
       autoPlay={autoPlay} onVideoError={() => setAutoPlay(false)} onVideoEnded={advance}
       onSelectionChange={changeSelection}
-      notesExportControl={notesExport.control} />}
+      notesExportControl={viewingPrevious ? notesExport.control : episodeNotesExportControl || notesExport.control} />}
     {notesExport.dialog}
     </> : view === 'storyboard' ? <div className="scene-storyboard">
       {!scene ? <p className="muted">本集尚无场次分镜。</p> : <>

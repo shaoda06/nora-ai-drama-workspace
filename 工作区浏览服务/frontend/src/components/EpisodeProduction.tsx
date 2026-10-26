@@ -14,6 +14,8 @@ import { TabSelect } from './TabSelect';
 import { get, projectUrl } from '../api';
 import { DownloadButton } from './DownloadButton';
 import { previousEpisodeEnding } from '../previousEpisodeEnding';
+import type { EpisodeReview } from '../episodeRevisionNotes';
+import { useRevisionNotesExport } from './RevisionNotes';
 import './SceneDownloads.css';
 
 export function EpisodeProduction({ project, items, statistics, selected, onSelect, revision }: { project: string; items: FileItem[]; statistics: { total: number; completed: number; notStarted: number; running: number }; selected: string | null; onSelect: (episode: string | null) => void; revision: number }) {
@@ -56,6 +58,15 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     const rounds = (current?.sceneRounds?.[id] || []).filter(item => episodeChoice !== null || !item.episodeRound);
     return rounds.find(item => item.number === roundNumbers[current!.name + '/' + id])?.number ?? rounds.at(-1)?.number;
   };
+  const episodeReview: EpisodeReview | undefined = current ? {
+    number: episodeRound?.number, rounds: episodeRounds.map(item => item.number),
+    scenes: scenes.map(id => {
+      const number = roundNumberForScene(id);
+      const round = current.sceneRounds?.[id]?.find(item => item.number === number);
+      return { id, number, segments: current.segments?.[id] || [], versions: round?.segments || [] };
+    }),
+  } : undefined;
+  const episodeNotesExport = useRevisionNotesExport(current && selectedScene ? { project, episode: current.name, scene: selectedScene } : null, [], null, undefined, episodeReview);
   const directorScenes = scenes.map(id => {
     const rounds = current?.sceneRounds?.[id] || [];
     const selectedRound = episodeRound?.number ?? (id === selectedScene ? roundNumberForScene(id)
@@ -148,8 +159,9 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
         <PointerTooltip text={issue.key}><button className="link"  onClick={() => preview({ kind: 'document', key: issue.key, name: issue.key.split('/').pop()! })}>{issue.key.split('/').pop()}</button></PointerTooltip>：{issue.message}
       </li>)}</ul>
     </div> : null}
-    {selectedScene ? <SceneWorkspace episodePlayback={episodePlayback} view={sceneView} onViewChange={setSceneView} key={current.name + '/' + selectedScene + (episodeRounds.length ? '/' + roundEntry : '')} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} showRoundSelector={!episodeRounds.length} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} directorScenes={directorScenes} integrateSheets={integrateSheets} onIntegrateSheetsChange={setIntegrateSheets} storyboardVersion={round ? round.storyboard?.version || '' : current.storyboards?.[selectedScene]?.version || ''} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
+    {selectedScene ? <SceneWorkspace episodeNotesExportControl={episodeNotesExport.control} episodePlayback={episodePlayback} view={sceneView} onViewChange={setSceneView} key={current.name + '/' + selectedScene + (episodeRounds.length ? '/' + roundEntry : '')} scope={{ project, episode: current.name, scene: selectedScene }} segments={segments} sceneRounds={sceneRounds} selectedRound={selectedRound} onRoundChange={selectRound} showRoundSelector={!episodeRounds.length} previousEnding={previousEpisodeEnding(current.previousEpisode ? [current.previousEpisode] : [], current.name)} emptyMessage={emptyMessage} revision={revision} directorFiles={directorFiles || []} directorScenes={directorScenes} integrateSheets={integrateSheets} onIntegrateSheetsChange={setIntegrateSheets} storyboardVersion={round ? round.storyboard?.version || '' : current.storyboards?.[selectedScene]?.version || ''} storyboardDocument={round ? round.storyboard?.doc : current.storyboards?.[selectedScene]?.doc} />
       : <div className="scene-empty" role="status"><h3>暂无可显示的场次</h3><p className="muted">{emptyMessage}</p></div>}
+    {episodeNotesExport.dialog}
     {!!current.materials?.length && <details className="asset-candidate-type production-materials"><summary>专用素材与图片候选（{current.materials.length}）</summary>
       {current.materialRecord && <p><button className="link" onClick={() => preview(current.materialRecord!)}>查看素材生成与审阅记录</button></p>}
       {(['pending', 'revision', 'adopted', 'unknown', 'history'] as const).map(group => {

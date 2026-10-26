@@ -202,16 +202,21 @@ class Migration:
             elif path.name.endswith('-视频修改意见.json'):
                 original = path.read_text('utf-8-sig')
                 data = json.loads(original)
-                scene = data['scene']
-                notes = {}
-                for key, item in data['notes'].items():
-                    old = f"{self.episode}-{scene}-{item['segment']}-{item['run']}-{item['stage']}"
-                    new = self.identities.get(old, old).split('-')[3]
-                    new_key = f"{item['segment']}/{item['stage']}/{new}"
-                    if new_key in notes:
-                        raise ValueError('备注身份冲突：' + new_key)
-                    notes[new_key] = dict(item, run=new)
-                data['notes'] = notes
+                groups = {data['scene']: data['notes']} if 'scene' in data else data['notes']
+                for scene, entries in groups.items():
+                    notes = {}
+                    for key, item in entries.items():
+                        old = f"{self.episode}-{scene}-{item['segment']}-{item['run']}-{item['stage']}"
+                        new = self.identities.get(old, old).split('-')[3]
+                        prefix = f"round/{item['roundNumber']}/" if item.get('roundNumber') is not None else ''
+                        new_key = prefix + f"{item['segment']}/{item['stage']}/{new}"
+                        if new_key in notes:
+                            raise ValueError('备注身份冲突：' + new_key)
+                        notes[new_key] = dict(item, run=new)
+                    if 'scene' in data:
+                        data['notes'] = notes
+                    else:
+                        data['notes'][scene] = notes
                 updated = json.dumps(data, ensure_ascii=False, indent=2) + '\n'
             else:
                 continue  # Requests, workflows, replies, receipts and media retain bytes.

@@ -31,22 +31,23 @@ try {
     const response = await route.fetch();
     const data = await response.json();
     await route.fulfill({ response, json: { ...data, scenes: ['C001'], previousEpisode: null, productionIssues: [], warnings: [], segments: { C001: [segment] },
-      sceneRounds: { C001: [1, 2].map(number => ({ number, created_at: `2026-10-24T0${number}:00:00+08:00`, issues: [], script: doc('v' + number), storyboard: doc('v' + number), segments: [{ id: 'P002', duration: 3, stage: '一采', run: 'R001' }] })) } } });
+      episodeRounds: [1, 2].map(number => ({ number, scenes: ['C001'] })),
+      sceneRounds: { C001: [1, 2].map(number => ({ number, episodeRound: true, created_at: `2026-10-24T0${number}:00:00+08:00`, issues: [], script: doc('v' + number), storyboard: doc('v' + number), segments: [{ id: 'P002', duration: 3, stage: '一采', run: 'R001' }] })) } } });
   });
   await page.route('**/revision-notes/**', async route => {
     const request = route.request();
-    if (request.method() === 'GET') return route.fulfill({ json: saved });
+    if (request.method() === 'GET') return route.fulfill({ json: new URL(request.url()).pathname.endsWith('/' + episode) ? { episode, scenes: { C001: saved }, rounds: {} } : saved });
     assert.equal(request.method(), 'PUT');
     const value = request.postDataJSON();
     puts.push(value);
     if (new URL(request.url()).pathname.endsWith('/export')) {
       for (const note of value.notes) {
         assert.equal(saved.notes[key(note)]?.text ?? '', note.expectedText);
-        const { expectedText, ...fields } = note;
+        const { expectedText, scene, ...fields } = note;
         saved.notes[key(note)] = { ...fields, updatedAt: new Date().toISOString() };
       }
       for (const round of value.rounds) saved.rounds[round.number] = { ...round, updatedAt: new Date().toISOString() };
-      return route.fulfill({ json: saved });
+      return route.fulfill({ json: { episode, scenes: { C001: saved }, rounds: {} } });
     }
     assert.ok(value.roundNumber, 'editor must send the selected review round');
     const note = { ...value, updatedAt: new Date().toISOString() };
@@ -56,9 +57,9 @@ try {
   await page.goto(base + '/#/projects/' + encodeURIComponent(project), { waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: '剧集制作', exact: true }).click();
   await page.getByRole('button').filter({ hasText: episode }).first().click();
-  const choose = page.getByRole('combobox', { name: '场次修改轮次', exact: true });
+  const choose = page.getByRole('combobox', { name: '修改轮次', exact: true });
   await choose.waitFor();
-  const chooseRound = async number => { await choose.click(); await page.getByRole('option', { name: new RegExp('^第' + number + '轮：') }).click(); };
+  const chooseRound = async number => { await choose.click(); await page.getByRole('option', { name: new RegExp('^第' + number + '轮') }).click(); await page.getByRole('button', { name: '修改意见', exact: true }).click(); };
   await chooseRound(2);
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
   const editor = page.locator('#revision-note-text');

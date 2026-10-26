@@ -46,7 +46,7 @@ def live_task_record(relative):
 
 def live_revision_notes(relative):
     # Review notes have their own live API; they are not compiled project sources.
-    return re.fullmatch(r"09-剧集制作/((?:EP\d{3,}|片头|片尾))/其他资料/工作稿/\1-C\d{3,}-视频修改意见\.json",
+    return re.fullmatch(r"09-剧集制作/((?:EP\d{3,}|片头|片尾))/其他资料/工作稿/\1(?:-C\d{3,})?-视频修改意见\.json",
                         Path(relative).as_posix()) is not None
 
 

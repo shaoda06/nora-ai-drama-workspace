@@ -35,6 +35,7 @@ from backend.services.result_summary import summary as result_summary
 from backend.services.result_registration import closeout as result_closeout
 from websockets.exceptions import WebSocketException
 from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes, ExportChanges, NotesChangedError
+from backend.services.episode_revision_notes import EpisodeRevisionNotes, EpisodeNotes, EpisodeExportChanges
 
 TOOL = Path(__file__).resolve().parent.parent
 WORKSPACE = Path(os.environ.get('NORA_WORKSPACE', TOOL.parent)).resolve()
@@ -591,10 +592,34 @@ def project_file(name: str, path: str, request: Request, v: str | None = None, d
     return response
 
 
+@app.get('/api/projects/{name}/revision-notes/{episode}')
+def episode_revision_notes(name: str, episode: Episode) -> EpisodeNotes:
+    try:
+        return EpisodeRevisionNotes(revision_notes).read(store.project(name), episode)
+    except FileNotFoundError as error:
+        raise HTTPException(404, str(error)) from error
+    except (OSError, ValueError, UnicodeError) as error:
+        raise HTTPException(503, '修改意见读取失败：' + str(error)) from error
+
+
+@app.put('/api/projects/{name}/revision-notes/{episode}/export')
+def save_episode_revision_export(name: str, episode: Episode, value: EpisodeExportChanges, request: Request) -> EpisodeNotes:
+    if not local_write_request(request):
+        raise HTTPException(403, '修改意见仅限本机或局域网地址，并要求同源请求')
+    try:
+        return EpisodeRevisionNotes(revision_notes).save(store.project(name), episode, value)
+    except NotesChangedError as error:
+        raise HTTPException(409, str(error)) from error
+    except FileNotFoundError as error:
+        raise HTTPException(404, str(error)) from error
+    except (OSError, ValueError, UnicodeError) as error:
+        raise HTTPException(503, '修改意见未保存：' + str(error)) from error
+
+
 @app.get('/api/projects/{name}/revision-notes/{episode}/{scene}')
 def scene_revision_notes(name: str, episode: Episode, scene: Scene) -> SceneNotes:
     try:
-        return revision_notes.read(store.project(name), episode, scene)
+        return EpisodeRevisionNotes(revision_notes).read_scene(store.project(name), episode, scene)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except (OSError, ValueError, UnicodeError) as error:
@@ -606,7 +631,7 @@ def save_revision_note(name: str, episode: Episode, scene: Scene, value: NoteInp
     if not local_write_request(request):
         raise HTTPException(403, '修改意见仅限本机或局域网地址，并要求同源请求')
     try:
-        return revision_notes.save(store.project(name), episode, scene, value)
+        return EpisodeRevisionNotes(revision_notes).save_note(store.project(name), episode, scene, value)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except (OSError, ValueError, UnicodeError) as error:
@@ -618,7 +643,7 @@ def save_revision_export(name: str, episode: Episode, scene: Scene, value: Expor
     if not local_write_request(request):
         raise HTTPException(403, '修改意见仅限本机或局域网地址，并要求同源请求')
     try:
-        return revision_notes.save_export(store.project(name), episode, scene, value)
+        return EpisodeRevisionNotes(revision_notes).save_scene_export(store.project(name), episode, scene, value)
     except NotesChangedError as error:
         raise HTTPException(409, str(error)) from error
     except FileNotFoundError as error:

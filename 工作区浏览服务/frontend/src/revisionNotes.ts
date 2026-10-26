@@ -101,9 +101,9 @@ window.addEventListener('beforeunload', event => {
     event.preventDefault();
   }
 });
-export function useSceneNotes(project: string, episode: string, scene: string) {
+export function useSceneNotes(project: string, episode: string, scene: string, enabled = true) {
   const url = sceneNotesUrl(project, episode, scene);
   const value = useSyncExternalStore(subscribe, () => state(url));
-  useEffect(() => { void loadNotes(url); }, [url]);
+  useEffect(() => { if (enabled) void loadNotes(url); }, [url, enabled]);
   return { ...value, url };
 }
