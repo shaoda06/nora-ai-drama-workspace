@@ -105,6 +105,9 @@ def main():
     item = commands.add_parser('resolve', help='Close an investigated needs_attention task; preserve its original exception')
     item.add_argument('--task-id', required=True, help='Backend local UUID, not remote prompt_id')
     item.add_argument('--resolution', required=True, help='UTF-8 JSON resolution file with original prompt ID, evidence and replacement IDs')
+    item = commands.add_parser('repair-collection', help='仅修复原H3任务取回根目录，保留生成输入；不重新生成或自动重试')
+    item.add_argument('--task-id', required=True)
+    item.add_argument('--repair', required=True, help='含expected_prompt_id、output_root、reason的UTF-8 JSON文件')
     args = parser.parse_args()
     if args.command in ('report', 'ack', 'register-results'):
         thread = os.environ.get('CODEX_THREAD_ID')
@@ -120,6 +123,10 @@ def main():
         result = service_call('notifications/' + args.notification_id + '/' + args.command, payload)
         if args.command == 'report' and not args.details and result.get('user_message_ready') and result.get('delivery') is not None:
             result = {name: result[name] for name in ('notification_id', 'status', 'reused', 'user_message_ready', 'delivery')}
+    elif args.command == 'repair-collection':
+        payload = json.loads(Path(args.repair).read_text('utf-8-sig'))
+        payload['thread_id'] = os.environ.get('CODEX_THREAD_ID')
+        result = service_call('tasks/' + args.task_id + '/repair-collection', payload)
     elif args.command == 'resolve':
         result = service_call('tasks/' + args.task_id + '/resolve',
                               json.loads(Path(args.resolution).read_text('utf-8-sig')))

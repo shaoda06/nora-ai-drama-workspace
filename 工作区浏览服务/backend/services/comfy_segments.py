@@ -91,10 +91,8 @@ def validate(data, *, mapping=None, timelines=None, path_scope=None):
     return context
 
 
-async def finish(store, key, result):
-    from backend.services.comfy_tasks import paths as project_paths
-    data, state = store.rows[key]['input'], store.rows[key]['state']
-    row = store.rows[key]
+def export_paths(data, result):
+    """Read the original final report using the task's actual export stage."""
     # Standalone SelfLift exports its completed first pass as the final segment MP4.
     pre_refine = data.task_type == 'video-first-pass'
     director_inputs = data.workflow[data.segment_plan.director_node]['inputs']
@@ -106,17 +104,27 @@ async def finish(store, key, result):
     for index, group in enumerate(timeline['segments']):
         mode = group.get('taskType') or group.get('task_type') or timeline.get('global', {}).get('taskType') or director_inputs.get('task_type', 'r2v')
         pre_refine_by_index[index] = pre_refine and not (mode.startswith('fl2v') and refine.get('skip_fl2v'))
+    outputs = result['history'].get('outputs', {}).get(data.segment_plan.report_node, {})
+    text = '\n'.join(value for values in outputs.values() if isinstance(values, list)
+                     for value in values if isinstance(value, str))
+    paths = {}
+    for match in REPORT.finditer(text):
+        if (match[2] == '一采 mp4') == pre_refine_by_index[int(match[1]) - 1]:
+            paths[int(match[1]) - 1] = match[4].strip()
+    return paths, pre_refine_by_index
+
+
+async def finish(store, key, result):
+    from backend.services.comfy_tasks import paths as project_paths
+    data, state = store.rows[key]['input'], store.rows[key]['state']
+    row = store.rows[key]
     if row.get('_segment_result') is not result:
-        outputs = result['history'].get('outputs', {}).get(data.segment_plan.report_node, {})
-        text = '\n'.join(value for values in outputs.values() if isinstance(values, list)
-                         for value in values if isinstance(value, str))
-        paths = {}
-        for match in REPORT.finditer(text):
-            if (match[2] == '一采 mp4') == pre_refine_by_index[int(match[1]) - 1]:
-                paths[int(match[1]) - 1] = match[4].strip()
+        paths, row['_segment_pre_refine'] = export_paths(data, result)
         row['_segment_paths'], row['_segment_result'] = paths, result
         row['_segment_sources'] = {}
     paths = row['_segment_paths']
+    pre_refine_by_index = row['_segment_pre_refine']
+    output_root = state.get('collection_output_root', data.segment_plan.output_root)
     problems, collected = [], 0
     state.setdefault('segments', {})
     expected_targets = store.rows[key].get('_collection_targets')
@@ -136,7 +144,7 @@ async def finish(store, key, result):
                 try:
                     if index not in paths:
                         raise ValueError('最终报告缺少该段的保存路径')
-                    source = remote_file(data.segment_plan.output_root, paths[index])
+                    source = remote_file(output_root, paths[index])
                     expected = f"seg_{index:04d}{'_pre' if pre_refine else ''}.mp4"
                     if source['filename'] != expected:
                         raise ValueError('最终报告路径与分段身份不一致')

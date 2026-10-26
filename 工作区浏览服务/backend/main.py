@@ -30,6 +30,7 @@ from backend.routes.prompts import create_router as prompt_router
 from backend.services.assets import AssetLibrary
 from backend.routes.assets import create_router as asset_router
 from backend.services.task_resolution import ResolutionInput, resolve_task
+from backend.services.collection_repair import CollectionRepairInput, repair_collection
 from backend.services.result_summary import summary as result_summary
 from backend.services.result_registration import closeout as result_closeout
 from websockets.exceptions import WebSocketException
@@ -263,6 +264,15 @@ async def agent_retry_collection(key: str, request: Request) -> dict[str, Any]:
     try:
         return await tasks.retry_collection(key)
     except ValueError as error:
+        raise HTTPException(409, str(error)) from error
+
+
+@app.post('/api/internal/comfy/tasks/{key}/repair-collection')
+async def agent_repair_collection(key: str, data: CollectionRepairInput, request: Request) -> dict[str, Any]:
+    tasks = agent_request(request)
+    try:
+        return repair_collection(tasks, key, data)
+    except (ValueError, OSError, KeyError) as error:
         raise HTTPException(409, str(error)) from error
 
 

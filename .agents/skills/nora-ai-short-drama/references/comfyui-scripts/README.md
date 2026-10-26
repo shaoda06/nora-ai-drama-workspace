@@ -480,6 +480,17 @@ python "实际技能目录/scripts/browser_tasks.py" register-results --notifica
 - **Imagegen原生结果**：沿原`complete_command`及真实`--source`追加`--record-repair 修复请求.json`。保留原执行清单、提示词及实际调用凭据；已有图但尚未建立收尾报告时也可修复，不新增生成。
 - **已有本地规格处理结果**：在原附件保存`{原执行附件record_dir: 上述修复JSON}`，调用`comfyui_dispatch.py --project 原项目 --plan 原任务清单 --record-repairs 修复映射.json`。仅接续原清单、原来源且已有本地收尾报告的指定任务；不执行清单中的其他任务，不重新处理图片，也不重新入队。不能与`--prepare-only`、`--reprepare`或`--start-paused`混用。
 
+### 后台取回配置修复
+
+仅当原生H3视频生成成功、后台为`collection_failed`，且错误确认来自登记的output根目录时使用。原来源会话准备JSON，填写原`expected_prompt_id`、已核实的`output_root`和具体`reason`，保存到原执行附件；通过以下入口修复，不改任务清单、原报告或数据库。
+
+```sh
+python "实际技能目录/scripts/browser_tasks.py" repair-collection \
+  --task-id 原本地任务UUID --repair 原执行附件/取回配置修复.json
+```
+
+后台核对来源会话、远端ID、生成成功终态、全部选中分段的实际导出路径及文件身份，只单独保存取回根目录覆盖值和修复前后事件，保留已接受生成输入。重复同一修复不增加事件；不会上传、生成、下载、改变批准或自动重试。返回`status=repaired`后，用下方`retry-collection`接续原取回及正常登记。已有成功文件和凭据沿原规则复用；人工独立取回的文件不得覆盖，保留原件及凭据后按原取回规则接续。
+
 ### 后台取回重试
 
 后台在整项生成成功后取回全部成果；暂时性下载故障最多自动重试3次，间隔10、30、60秒，HTTP 429遵从有效Retry-After。自动重试期间保持 `collecting`，不重复唤醒Agent；达到上限或发现资料、HTTP权限／缺项、本机文件等不可重试问题后，才进入 `collection_failed` 并通知。次数、等待时间、每轮原因及成功凭据持久保存，后台重启接续原周期，详见[异常处理与授权](../../../nora-generation/references/ComfyUI-任务监控规范.md#31-异常检查与连接恢复)。
@@ -578,7 +589,7 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 {"task_type":"video-first-pass","title":"EP001-C001 · 一采","authorization":"用户明确授权本次一采",
  "canvas":"09-剧集制作/EP001/其他资料/执行附件/EP001-C001-P001-R001-一采/任务.workflow.json",
  "record_dir":"09-剧集制作/EP001/其他资料/执行附件/EP001-C001-P001-R001-一采",
- "output_nodes":["403","504","506"],"report_node":"403","output_root":"E:/ComfyUI/output",
+ "output_nodes":["403","504","506"],"report_node":"403","output_root":"E:/实际ComfyUI/output",
  "references":[{"file":"03-人物资料/CH001-男主/参考图/当前角色.png","placeholder":"planned/CH001.png"}]}
 ```
 
