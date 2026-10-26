@@ -25,6 +25,20 @@ async function stable(locator, before, context) {
 }
 export async function checkSharedNavigation(page, width, selfTest) {
   const fixture = page.getByTestId('navigation');
+  for (const label of ['短轮次下拉', '图标短选项']) {
+    const combo = fixture.getByRole('combobox', { name: label, exact: true });
+    await combo.click();
+    const menu = page.getByRole('listbox', { name: label, exact: true });
+    const selected = menu.getByRole('option', { selected: true });
+    const bounds = await selected.evaluate(el => {
+      const title = el.firstElementChild.getBoundingClientRect(), badge = el.lastElementChild.getBoundingClientRect();
+      return { titleTop: title.top, titleBottom: title.bottom, badgeTop: badge.top, badgeBottom: badge.bottom, height: el.getBoundingClientRect().height };
+    });
+    assert.ok(bounds.badgeTop < bounds.titleBottom && bounds.badgeBottom > bounds.titleTop, `${width}/${label}: 当前标记不能另起一行`);
+    assert.ok(Math.abs(bounds.height - (await menu.getByRole('option').last().boundingBox()).height) <= 1, '短选项的选中行与普通行应等高');
+    await fits(menu, `${width}/${label}/菜单及当前标记`);
+    await combo.press('Escape');
+  }
   for (const id of ['nav-normal', 'nav-group', 'nav-grid', 'nav-scroll', 'underline', 'underline-scroll', 'select-field']) {
     await fixture.getByRole('button', { name: '重置导航', exact: true }).click();
     const host = fixture.getByTestId(id);
@@ -177,6 +191,11 @@ export async function checkSharedNavigation(page, width, selfTest) {
     await menu.getByRole('option').last().click();
     await combo.click();
     await fits(menu, `${width}/${name}/选中长项`);
+    const currentRow = await menu.getByRole('option', { selected: true }).evaluate(el => {
+      const title = el.firstElementChild.getBoundingClientRect(), badge = el.lastElementChild.getBoundingClientRect();
+      return { titleTop: title.top, titleBottom: title.bottom, badgeTop: badge.top, badgeBottom: badge.bottom, badgeHeight: badge.height };
+    });
+    assert.ok(currentRow.badgeTop < currentRow.titleBottom && currentRow.badgeBottom > currentRow.titleTop && currentRow.badgeHeight < 30, `${name}: 长文字可换行，当前标记仍在右侧同一行`);
     await combo.press('Escape');
   }
   await showcase.getByRole('button', { name: '按钮与切换', exact: true }).click();

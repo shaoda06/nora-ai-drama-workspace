@@ -25,6 +25,8 @@ export function NavigationFixture() {
     <div data-testid="select-field"><TabSelect variant="field" label="长选项下拉" items={items} selected={selected} onChange={setSelected} disabled={disabled} /></div>
     <TabSelect label="全禁用菜单" items={items.map(item => ({ ...item, disabled: true }))} selected="short" onChange={setSelected} />
     <TabSelect label="空菜单" items={[]} selected="" onChange={setSelected} />
+    <TabSelect size="toolbar" highlightSelected label="短轮次下拉" items={[{ value: '11', label: '第11轮' }, { value: '10', label: '第10轮' }]} selected="11" onChange={() => {}} disabled={disabled} />
+    <TabSelect iconOnly label="图标短选项" items={[{ value: 'one', label: '一' }, { value: 'two', label: '二' }]} selected="one" onChange={() => {}} disabled={disabled} />
     <button onClick={() => { setPage(1); setTotal(1000); }}>首页</button>
     <button onClick={() => { setPage(100); setTotal(1000); }}>末页</button>
     <button onClick={() => { setPage(9); setTotal(1000); }}>第九页</button>
