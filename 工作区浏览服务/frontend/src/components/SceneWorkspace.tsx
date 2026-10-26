@@ -1,3 +1,4 @@
+import { newVideoSegmentsForRound } from '../sceneRoundVideos';
 import { useEffect, useState, type ReactNode } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { get, projectUrl } from '../api';
@@ -37,11 +38,7 @@ export function SceneWorkspace({ segmentTab, onSegmentTabChange, episodeNotesExp
   const { scene } = scope;
   const productionRound = sceneRounds.find(item => item.number === selectedRound);
   const latestRound = sceneRounds.at(-1);
-  const newVideoSegments = new Set((productionRound?.segments || []).filter(entry =>
-    allSegments.find(item => item.id === entry.id)?.videos.some(video => video.stage === entry.stage && video.run === entry.run && video.url)
-    && !sceneRounds.some(round => round.number < productionRound!.number
-      && round.segments.some(previous => previous.id === entry.id && previous.stage === entry.stage && previous.run === entry.run))
-  ).map(entry => entry.id));
+  const newVideoSegments = newVideoSegmentsForRound(allSegments, sceneRounds, selectedRound);
   const segments = productionRound ? productionRound.segments.map(entry => ({ ...allSegments.find(item => item.id === entry.id)!, ...entry })) : allSegments.filter(item => !item.historical);
   const queryClient = useQueryClient();
   const positionKey = `scene/${scope.project}/${scope.episode}/${scene}`;

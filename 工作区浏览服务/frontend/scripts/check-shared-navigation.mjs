@@ -25,6 +25,15 @@ async function stable(locator, before, context) {
 }
 export async function checkSharedNavigation(page, width, selfTest) {
   const fixture = page.getByTestId('navigation');
+  const marked = fixture.getByTestId('nav-normal').getByRole('button', { name: '简短', exact: true });
+  assert.equal(await marked.getAttribute('aria-description'), '本轮新生成视频');
+  const dot = await marked.locator('.round-new-dot').evaluate(el => {
+    const r = el.getBoundingClientRect(), parent = el.parentElement.getBoundingClientRect();
+    return { width: r.width, height: r.height, top: r.top - parent.top, right: parent.right - r.right, color: getComputedStyle(el).backgroundColor };
+  });
+  assert.equal(dot.width, 7); assert.equal(dot.height, 7);
+  assert.equal(dot.color, 'rgb(223, 146, 27)');
+  assert.ok(dot.top >= 5 && dot.top <= 7 && dot.right >= 5 && dot.right <= 7, '黄点固定在按钮右上角内部');
   for (const label of ['短轮次下拉', '图标短选项']) {
     const combo = fixture.getByRole('combobox', { name: label, exact: true });
     await combo.click();

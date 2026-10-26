@@ -1,3 +1,4 @@
+import { newVideoSegmentsForRound } from '../sceneRoundVideos';
 import { PointerTooltip } from './PointerTooltip';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -145,7 +146,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
       url={`${projectUrl(project)}/episodes/${current.name}/download`} label={`${sharedSelected ? current.name : '本集'}打包下载`}
       title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理已采用视频`} />, breadcrumbActions)}
     <div className="episode-scene-header">
-      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={value => { setPlayback(null); setScene(value); }} />}
+      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id, marker: newVideoSegmentsForRound(current.segments?.[id] || [], current.sceneRounds?.[id] || [], roundNumberForScene(id)).size ? '本轮新生成视频' : undefined }))} selected={selectedScene} onChange={value => { setPlayback(null); setScene(value); }} />}
       <div className="episode-scene-actions">
     {episodeRounds.length > 0 && <div className="scene-round-selector">
       <span className="production-latest">当前最新{selectedRound !== episodeRounds.at(-1)!.number && <>：第{episodeRounds.at(-1)!.number}轮，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => openRound(episodeRounds.at(-1)!.number)}>点击切换</button></>}</span>

@@ -72,6 +72,9 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
           <UnderlineTabs label="长文字页签演示" items={[{ value: 'one', label: '简短页签' }, { value: 'long', label: '长文字与连续英文换行：' + 'LongNavigationReference'.repeat(4) }]} selected={longTab} onChange={setLongTab} />
           <p>{tab === 'overview' ? '这里是概览内容。' : '这里是详情内容。'}</p>
         </Example>
+        <Example title="轮次修改标记" rule="普通页签右上角的小黄点表示本轮有新视频，与分段条共用；选中与未选中时都保留标记。" usage="场次标签、分段条">
+          <TabNav label="场次标记示例" items={[{ value: 'one', label: '场次 C001' }, { value: 'long', label: '场次 C002', marker: '本轮新生成视频' }]} selected={longTab} onChange={setLongTab} />
+        </Example>
         <Example title="文本输入与禁用" rule="单行与多行输入沿用网站全局样式；长内容在输入框内部显示，窄容器不越界。禁用后不能编辑，只读内容可以选择但不能修改。开关支持点击、空格和回车，长标签不压缩开关。" usage="提示词标题与正文、分类表单、编辑模式">
           <div className="component-demo-row"><span>禁用输入</span><Switch label="禁用输入示例" checked={fieldsDisabled} onChange={setFieldsDisabled} /><button disabled={fieldsDisabled} onClick={() => setFieldDraft(longSampleText)}>填入长文字</button></div>
           <div className="component-demo-stack">

@@ -5,7 +5,7 @@ import { TabSelect } from '../../src/components/TabSelect';
 import { Pagination } from '../../src/components/Pagination';
 
 const longLabel = '很长的导航选项说明与版本名称' + 'LongUnbrokenReference'.repeat(5);
-const items = [{ value: 'short', label: '简短' }, { value: 'disabled', label: '不可选择', disabled: true }, { value: 'long', label: longLabel }];
+const items = [{ value: 'short', label: '简短', marker: '本轮新生成视频' }, { value: 'disabled', label: '不可选择', disabled: true }, { value: 'long', label: longLabel }];
 export function NavigationFixture() {
   const [selected, setSelected] = useState('short');
   const [page, setPage] = useState(9);

@@ -13,7 +13,7 @@ const sample = await readFile(new URL('../frontend/public/component-samples/vide
 const screenshots = await mkdtemp(path.join(os.tmpdir(), 'nora-episode-notes-'));
 const key = note => `round/${note.roundNumber}/${note.segment}/${note.stage}/${note.run}`;
 const video = (scene, run, stage = '一采') => ({ key: `${scene}-${stage}-${run}`, run, stage, url: '/fixture/video.webm', candidateNumber: Number(run.slice(1)), approved: false,
-  fileRevision: 'fixture', deliveryStatus: '已取回', taskStatus: '成功', checkedAt: '', context: { scriptHtml: '<p>测试分镜</p>', shots: run === 'R002' ? [
+  fileRevision: 'fixture', deliveryStatus: '已取回', taskStatus: '成功', checkedAt: '', context: { scriptHtml: '<p>测试分镜</p>', shots: scene === 'C001' && run === 'R002' ? [
     { id: `EP001-${scene}-SH001`, duration: 0.3, html: '<p>第一镜</p>' },
     { id: `EP001-${scene}-SH002`, duration: 0.6, html: '<p>第二镜</p>' },
     { id: `EP001-${scene}-SH003`, duration: 1.1, html: '<p>第三镜</p>' },
@@ -21,7 +21,7 @@ const video = (scene, run, stage = '一采') => ({ key: `${scene}-${stage}-${run
 const doc = title => ({ kind: 'document', name: title, key: title + '.md', version: 'v01', doc: { title, html: `<p>${title}</p>` } });
 const round = (scene, number) => ({ number, episodeRound: true, created_at: '2026-10-26T00:00:00+08:00', script: doc('剧本'), storyboard: doc(scene), issues: [],
   segments: scene === 'C001' ? [{ id: 'P001', duration: 2, stage: '一采', run: 'R002' }, { id: 'P002', duration: 2, stage: '二采', run: 'R004' }]
-    : [{ id: 'P001', duration: 2, stage: '一采', run: 'R003' }] });
+    : [{ id: 'P001', duration: 2, stage: '一采', run: number === 8 ? 'R002' : 'R003' }] });
 let legacy = false, conflict = false, failRead = false;
 let saved, puts;
 function reset() {
@@ -36,7 +36,7 @@ const episode = () => ({ kind: 'group', name: 'EP001', title: '意见示例', ch
   episodeRounds: legacy ? [] : [8, 9].map(number => ({ number, scenes: ['C001', 'C002'] })),
   sceneRounds: Object.fromEntries(['C001', 'C002'].map(scene => [scene, (legacy ? [scene === 'C001' ? 5 : 7] : [8, 9]).map(number => ({ ...round(scene, number), episodeRound: !legacy }))])),
   segments: { C001: [{ id: 'P001', duration: 2, videos: [video('C001', 'R001'), video('C001', 'R002')] }, { id: 'P002', duration: 2, videos: [video('C001', 'R004', '二采')] }],
-    C002: [{ id: 'P001', duration: 2, videos: [video('C002', 'R003')] }] } });
+    C002: [{ id: 'P001', duration: 2, videos: [video('C002', 'R002'), video('C002', 'R003')] }] } });
 reset();
 const unexpected = [];
 const server = await createServer({ configFile: false, root: fileURLToPath(new URL('../frontend', import.meta.url)), define: { __APP_VERSION__: JSON.stringify('notes-fixture') }, server: { host: '127.0.0.1', port: 0 },
@@ -95,12 +95,17 @@ try {
   await page.getByRole('button').filter({ hasText: 'EP001' }).first().click();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
   const scene = id => page.getByRole('button', { name: '场次 ' + id, exact: true });
+  assert.equal(await scene('C001').locator('.round-new-dot').count(), 0, '沿用视频的场次没有黄点');
+  assert.equal(await scene('C002').locator('.round-new-dot').count(), 1, '本轮新视频所在场次显示黄点');
+  assert.equal(await scene('C002').getAttribute('aria-description'), '本轮新生成视频');
+  await page.screenshot({ path: path.join(screenshots, `scene-dots-${width}.png`) });
   const contentTab = name => page.locator('.segment-script [aria-label="分段文字内容"] button').filter({ hasText: new RegExp('^' + name + '$') });
   const pendingNote = 'C001切场前的待保存意见';
   const flushed = page.waitForResponse(response => response.url().endsWith('/revision-notes/EP001/C001') && response.request().method() === 'PUT');
   await page.getByRole('textbox', { name: '修改意见', exact: true }).fill(pendingNote);
   await scene('C002').click();
   await flushed;
+  assert.equal(await page.locator('.segment-strip .round-new-dot').count(), 1, '场次与分段标记一致');
   assert.equal(await contentTab('修改意见').getAttribute('aria-current'), 'page', '手动切场保持修改意见');
   assert.equal(saved.scenes.C001.notes['round/9/P001/一采/R002'].text, pendingNote, '切场保存原场待保存输入');
   assert.equal(await page.getByRole('textbox', { name: '修改意见', exact: true }).inputValue(), '00.00.0秒，SH001：C002第一段', '不得把上场意见带到本场');
@@ -167,6 +172,8 @@ try {
   await dialog.getByRole('button', { name: '关闭', exact: true }).click();
   const choose = page.getByRole('combobox', { name: '修改轮次', exact: true });
   await choose.click(); await page.getByRole('option', { name: /^第8轮/ }).click();
+  assert.equal(await scene('C001').locator('.round-new-dot').count(), 1, '切换历史轮次后重新计算C001');
+  assert.equal(await scene('C002').locator('.round-new-dot').count(), 1, '历史轮次首次生成的C002显示标记');
   await open(); assert.equal(await dialog.getByRole('textbox', { name: '第8轮 本轮汇总意见', exact: true }).inputValue(), '');
   await dialog.getByRole('button', { name: '关闭', exact: true }).click();
   // Real player time -> historical shot start -> cursor insertion -> in-memory autosave.

@@ -9,9 +9,10 @@ const owners = {
   TabNav: 'components/TabNav.tsx', UnderlineTabs: 'components/UnderlineTabs.tsx',
   Pagination: 'components/Pagination.tsx', PageHeader: 'components/PageHeader.tsx',
   DownloadControl: 'components/DownloadControl.tsx', FileActions: 'components/FileActions.tsx', CopyButton: 'components/CopyButton.tsx',
-  Notifications: 'components/Notifications.tsx',
+  Notifications: 'components/Notifications.tsx', RoundNewDot: 'components/RoundNewDot.tsx',
 };
 const classes = {
+  'round-new-dot': ['RoundNewDot', 'components/RoundNewDot.css'],
   'asset-media-details': ['AssetMediaCard', 'style.css'],
   'dialog-close': ['Dialog', 'style.css'],
   'tab-select': ['TabSelect', 'components/TabSelect.css', 'style.css'],
