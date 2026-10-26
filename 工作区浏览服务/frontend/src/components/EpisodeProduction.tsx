@@ -154,7 +154,6 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
       <PointerTooltip text={script ? undefined : `${contentLabel}尚未建立`}><button className="link episode-script-link" disabled={!script} onClick={() => preview(script!)}>查看{contentLabel}</button></PointerTooltip>
       </div>
     </div>
-    {!!current.warnings?.length && <details className="notice"><summary>资料提示（{current.warnings.length}）</summary>{current.warnings.map(message => <p key={message}>{message}</p>)}</details>}
     {issues.length > 0 ? <div className="notice episode-data-issues" role="alert">
       <strong>制作资料需要修正</strong>
       <ul>{issues.map((issue, index) => <li key={index}>

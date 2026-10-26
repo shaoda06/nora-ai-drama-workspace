@@ -74,7 +74,10 @@ function ProjectPage({ name }: { name: string }) {
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
   const releaseCount = section === '98-发布成片' && production.data?.key === '98-发布成片' ? releaseVideos(production.data.children).length : null;
   const sectionTitle = (overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')) + (releaseCount === null ? '' : `（${releaseCount}）`);
-  const warnings = [...new Set<string>([...(overview.data?.warnings || []), ...(production.data?.warnings || [])])];
+  const episodeDetail = useQuery<FileItem>({ queryKey: ['episode', name, episode, revision], enabled: false });
+  const episodeWarnings = section === '09-剧集制作' && episodeDetail.data?.name === episode
+    ? episodeDetail.data.warnings || [] : [];
+  const warnings = [...new Set<string>([...(overview.data?.warnings || []), ...(production.data?.warnings || []), ...episodeWarnings])];
   useEffect(() => {
     if (overview.data && !overview.data.directories.some((dir: RecordData) => dir.name === section)) {
       setSection('00-项目定位'); setVisited(['00-项目定位']); setEpisode(null); setAsset(null);
