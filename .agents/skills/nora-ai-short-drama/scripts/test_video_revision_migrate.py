@@ -100,13 +100,15 @@ class RevisionMigrationTests(unittest.TestCase):
             'roundNumber': number, 'segment': 'P001', 'stage': '后处理', 'run': 'R011',
             'text': f'第{number}轮原文', 'updatedAt': '', 'fileRevision': 'fixture'} for number in (4, 5)}
         overall = {'4': {'number': 4, 'text': '整集汇总', 'updatedAt': ''}}
+        combinations = {'C001:4': {'scenes': {'C001': 4}, 'text': '旧组合整集汇总', 'updatedAt': ''}}
         episode = self.write('其他资料/工作稿/EP001-视频修改意见.json',
-            json.dumps({'episode': 'EP001', 'notes': {'C001': notes}, 'rounds': overall}))
+            json.dumps({'episode': 'EP001', 'notes': {'C001': notes}, 'rounds': overall, 'combinations': combinations}))
         legacy = self.write('其他资料/工作稿/EP001-C001-视频修改意见.json',
             json.dumps({'episode': 'EP001', 'scene': 'C001', 'notes': notes, 'rounds': {}}))
         Migration(self.project, self.request).apply(None, self.report)
         saved = json.loads(episode.read_text())
         self.assertEqual(saved['rounds'], overall)
+        self.assertEqual(saved['combinations'], combinations)
         for entries in (saved['notes']['C001'], json.loads(legacy.read_text())['notes']):
             self.assertEqual(set(entries), {'round/4/P001/后处理/R002', 'round/5/P001/后处理/R002'})
             self.assertEqual(entries['round/4/P001/后处理/R002']['text'], '第4轮原文')

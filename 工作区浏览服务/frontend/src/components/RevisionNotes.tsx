@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { get, projectUrl, type SegmentVideo } from '../api';
-import { episodeExportNotes, shotOrderedText, type EpisodeReview, type SavedEpisodeNotes } from '../episodeRevisionNotes';
+import { combinationKey, combinationLabel, episodeExportNotes, shotOrderedText, type CombinationSummary, type EpisodeReview, type SavedEpisodeNotes } from '../episodeRevisionNotes';
 import { Dialog } from '../components';
 import { editNote, loadNotes, noteKey, prepareNotesExport, saveNote, saveNotesExport, sceneNotesUrl, useSceneNotes } from '../revisionNotes';
 import type { NoteInput } from '../revisionNotes';
@@ -58,7 +58,8 @@ type ExportMode = 'round' | 'history';
 type ExportNote = NoteInput & { key: string; title: string; original: string; scene?: string; current?: boolean; editable?: boolean };
 type ExportOverall = { number: number; text: string; original: string };
 type LegacyOverall = { scene: string; number: number; text: string };
-type ExportDraft = { notes: ExportNote[]; rounds: ExportOverall[]; legacyRounds: LegacyOverall[]; number?: number; label: string; scope: NoteScope; url: string; episode: boolean };
+type ExportCombination = { key: string; scenes: Record<string, number>; text: string; original: string };
+type ExportDraft = { notes: ExportNote[]; rounds: ExportOverall[]; legacyRounds: LegacyOverall[]; combination: ExportCombination | null; combinationHistory: CombinationSummary[]; number?: number; label: string; scope: NoteScope; url: string; episode: boolean };
 
 export function useRevisionNotesExport(scope: NoteScope | null, segments: { id: string; videos: SegmentVideo[] }[], review: { stage: string; label?: string; number?: number; versions: ReviewVersions } | null, loadHistorySegments?: () => Promise<{ id: string; videos: SegmentVideo[] }[]>, episodeReview?: EpisodeReview) {
   const data = useSceneNotes(scope?.project || '', scope?.episode || '', scope?.scene || '', !!scope);
@@ -70,7 +71,7 @@ export function useRevisionNotesExport(scope: NoteScope | null, segments: { id: 
   const [message, setMessage] = useState('');
   const notify = useNotify();
   const [exportError, setExportError] = useState('');
-  const changed = draft !== null && [...draft.notes, ...draft.rounds].some(item => item.text !== item.original);
+  const changed = draft !== null && ([...draft.notes, ...draft.rounds].some(item => item.text !== item.original) || !!draft.combination && draft.combination.text !== draft.combination.original);
   useEffect(() => {
     if (!changed) return;
     const warn = (event: BeforeUnloadEvent) => event.preventDefault();
@@ -95,7 +96,15 @@ export function useRevisionNotesExport(scope: NoteScope | null, segments: { id: 
         rounds.sort((a, b) => a.number - b.number);
         const legacyRounds = Object.entries(values.scenes).flatMap(([scene, saved]) => Object.values(saved.rounds).map(item => ({ scene, number: item.number, text: item.text })))
           .filter(item => item.text.trim()).sort((a, b) => Number(a.scene.slice(1)) - Number(b.scene.slice(1)) || a.number - b.number);
-        setDraft({ notes: episodeExportNotes(values, episodeReview), rounds, legacyRounds, number: episodeReview.number,
+        let combination: ExportCombination | null = null;
+        if (!episodeReview.number && episodeReview.scenes.length && episodeReview.scenes.every(scene => scene.number != null)) {
+          const scenes = Object.fromEntries(episodeReview.scenes.map(scene => [scene.id, scene.number!]));
+          const key = combinationKey(scenes);
+          const text = values.combinations?.[key]?.text || '';
+          combination = { key, scenes, text, original: text };
+        }
+        const combinationHistory = Object.entries(values.combinations || {}).filter(([key, item]) => key !== combination?.key && item.text.trim()).map(([, item]) => item);
+        setDraft({ notes: episodeExportNotes(values, episodeReview), rounds, legacyRounds, combination, combinationHistory, number: episodeReview.number,
           label: episodeReview.number ? `第${episodeReview.number}轮` : '当前各场组合', scope: { ...scope }, url, episode: true });
       } else {
         const [saved, exportSegments] = await Promise.all([prepareNotesExport(data.url), loadHistorySegments ? loadHistorySegments() : Promise.resolve(segments)]);
@@ -109,7 +118,7 @@ export function useRevisionNotesExport(scope: NoteScope | null, segments: { id: 
         const rounds = Object.values(saved.rounds).map(item => ({ number: item.number, text: item.text, original: item.text }));
         if (review?.number && !rounds.some(item => item.number === review.number)) rounds.push({ number: review.number, text: '', original: '' });
         rounds.sort((a, b) => a.number - b.number);
-        setDraft({ notes, rounds, legacyRounds: [], number: review?.number, label: review?.label || '浏览片单', scope: { ...scope }, url: data.url, episode: false });
+        setDraft({ notes, rounds, legacyRounds: [], combination: null, combinationHistory: [], number: review?.number, label: review?.label || '浏览片单', scope: { ...scope }, url: data.url, episode: false });
       }
       setMode('round'); setConfirmClose(false); setMessage('');
     } catch (error) { setExportError(String(error)); }
@@ -121,6 +130,8 @@ export function useRevisionNotesExport(scope: NoteScope | null, segments: { id: 
   const text = draft ? `${draft.scope.project} / ${draft.scope.episode}${draft.episode ? '' : ' / ' + draft.scope.scene} ${mode === 'round' ? draft.label + '审看意见' : '全部历史意见'}\n\n` + [
     ...visibleNotes.filter(item => item.text.trim()).map(item => `【${item.title}】\n${shotOrderedText(item.text)}`),
     ...visibleRounds.filter(item => item.text.trim()).map(item => `【第${item.number}轮 · ${overallLabel}】\n${item.text}`),
+    ...(draft.combination?.text.trim() ? [`【本轮汇总意见（${combinationLabel(draft.combination.scenes)}）】\n${draft.combination.text}`] : []),
+    ...(mode === 'history' ? draft.combinationHistory.map(item => `【整集汇总意见（${combinationLabel(item.scenes)}）】\n${item.text}`) : []),
     ...(mode === 'history' ? draft.legacyRounds.map(item => `【${item.scene} / 第${item.number}轮 · 整场总体意见（历史）】\n${item.text}`) : []),
   ].join('\n\n') : '';
   const save = async () => {
@@ -130,14 +141,15 @@ export function useRevisionNotesExport(scope: NoteScope | null, segments: { id: 
       const notes = opened.notes.filter(item => item.text !== item.original).map(({ roundNumber, segment, stage, run, text, fileRevision, original, scene }) => ({ roundNumber, segment, stage, run, text, fileRevision, expectedText: original, ...(opened.episode ? { scene } : {}) }));
       const rounds = opened.rounds.filter(item => item.text !== item.original).map(({ number, text, original }) => ({ number, text, expectedText: original }));
       if (opened.episode) {
-        const response = await fetch(opened.url + '/export', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ notes, rounds }) });
+        const combination = opened.combination && opened.combination.text !== opened.combination.original ? { scenes: opened.combination.scenes, text: opened.combination.text, expectedText: opened.combination.original } : undefined;
+        const response = await fetch(opened.url + '/export', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ notes, rounds, combination }) });
         if (!response.ok) {
           const error = await response.json();
           throw new Error(typeof error.detail === 'string' ? error.detail : `保存失败（${response.status}）`);
         }
         await Promise.all([...new Set(notes.map(item => item.scene!))].map(scene => loadNotes(sceneNotesUrl(opened.scope.project, opened.scope.episode, scene), true)));
       } else await saveNotesExport(opened.url, { notes, rounds });
-      setDraft({ ...opened, notes: opened.notes.map(item => ({ ...item, original: item.text })), rounds: opened.rounds.map(item => ({ ...item, original: item.text })) });
+      setDraft({ ...opened, notes: opened.notes.map(item => ({ ...item, original: item.text })), rounds: opened.rounds.map(item => ({ ...item, original: item.text })), combination: opened.combination ? { ...opened.combination, original: opened.combination.text } : null });
       notify('已保存。'); setConfirmClose(false);
     } catch (error) { setMessage(`未保存：${error instanceof Error ? error.message : String(error)}`); }
     finally { setSaving(false); }
@@ -156,11 +168,13 @@ export function useRevisionNotesExport(scope: NoteScope | null, segments: { id: 
           {!visibleNotes.length && <p className="muted">{mode === 'round' ? '当前范围暂无分段意见。' : '暂无分段意见。'}</p>}
           <section className="revision-export-overall" aria-label={overallLabel}>
             {visibleRounds.map(item => <label key={item.number}><strong>第{item.number}轮 · {overallLabel}</strong><textarea aria-label={`第${item.number}轮 ${overallLabel}`} placeholder={draft.episode ? '填写整集本轮共用的意见…' : '填写整场共用的意见…'} maxLength={20000} value={item.text} onChange={event => { setDraft({ ...draft, rounds: draft.rounds.map(note => note.number === item.number ? { ...note, text: event.target.value } : note) }); setConfirmClose(false); setMessage(''); }} /></label>)}
-            {!visibleRounds.length && <p className="muted">{draft.episode ? draft.number ? '暂无本轮汇总意见。' : '当前为各场历史轮次组合；登记整集修改轮次后，可在此填写一份本轮汇总意见。' : mode === 'round' ? '整场总体意见按已登记的场次轮次保存；请先选择本场次的修改轮次。' : '暂无按轮次保存的整场总体意见。'}</p>}
+            {draft.combination && <label><strong>本轮汇总意见</strong><textarea aria-label="本轮汇总意见" placeholder="填写整集本轮共用的意见…" maxLength={20000} value={draft.combination.text} onChange={event => { setDraft({ ...draft, combination: { ...draft.combination!, text: event.target.value } }); setConfirmClose(false); setMessage(''); }} /></label>}
+            {!visibleRounds.length && !draft.combination && <p className="muted">{draft.episode ? '请先选择各场已登记的修改轮次，再填写整集汇总意见。' : mode === 'round' ? '整场总体意见按已登记的场次轮次保存；请先选择本场次的修改轮次。' : '暂无按轮次保存的整场总体意见。'}</p>}
           </section>
+          {mode === 'history' && draft.combinationHistory.map(item => <section className="revision-export-legacy" key={combinationKey(item.scenes)}><strong>整集汇总意见（{combinationLabel(item.scenes)}）</strong><textarea aria-label={`整集汇总意见（${combinationLabel(item.scenes)}）`} readOnly value={item.text} /></section>)}
           {mode === 'history' && draft.legacyRounds.map(item => <section className="revision-export-legacy" key={`${item.scene}/${item.number}`}><strong>{item.scene} / 第{item.number}轮 · 整场总体意见（历史）</strong><textarea aria-label={`${item.scene} 第${item.number}轮 整场总体意见（历史只读）`} readOnly value={item.text} /></section>)}
         </fieldset>
-        <footer className="revision-export-save"><button disabled={!changed || saving} onClick={() => { void save(); }}>{saving ? '保存中…' : '保存'}</button><button disabled={!changed || saving} onClick={() => { setDraft({ ...draft, notes: draft.notes.map(item => ({ ...item, text: item.original })), rounds: draft.rounds.map(item => ({ ...item, text: item.original })) }); setConfirmClose(false); setMessage(''); }}>还原</button><div className="revision-export-toolbar"><CopyButton label="复制" text={text} successMessage={changed ? '已复制；有未保存的修改' : '已复制'} /></div><span role="status" className="muted">{changed ? '有未保存的修改' : ''}</span>{message && <FloatingMessage tone="error">{message}</FloatingMessage>}</footer>
+        <footer className="revision-export-save"><button disabled={!changed || saving} onClick={() => { void save(); }}>{saving ? '保存中…' : '保存'}</button><button disabled={!changed || saving} onClick={() => { setDraft({ ...draft, notes: draft.notes.map(item => ({ ...item, text: item.original })), rounds: draft.rounds.map(item => ({ ...item, text: item.original })), combination: draft.combination ? { ...draft.combination, text: draft.combination.original } : null }); setConfirmClose(false); setMessage(''); }}>还原</button><div className="revision-export-toolbar"><CopyButton label="复制" text={text} successMessage={changed ? '已复制；有未保存的修改' : '已复制'} /></div><span role="status" className="muted">{changed ? '有未保存的修改' : ''}</span>{message && <FloatingMessage tone="error">{message}</FloatingMessage>}</footer>
       </div>
     </Dialog> };
 }

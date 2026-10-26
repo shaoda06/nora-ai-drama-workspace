@@ -6,6 +6,8 @@ from pathlib import Path
 import re
 from tempfile import NamedTemporaryFile
 
+from typing import Annotated
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from backend.parsers.scene_rounds import load_episode_rounds, rounds
@@ -15,11 +17,29 @@ from backend.services.revision_notes import (
 )
 
 
+class CombinationInput(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+    scenes: Annotated[dict[Scene, Annotated[int, Field(ge=1)]], Field(min_length=1)]
+    text: Annotated[str, Field(max_length=20000)]
+
+    def key(self) -> str:
+        return '|'.join(f'{scene}:{self.scenes[scene]}' for scene in sorted(self.scenes, key=lambda value: int(value[1:])))
+
+
+class CombinationNote(CombinationInput):
+    updatedAt: str
+
+
+class CombinationChange(CombinationInput):
+    expectedText: Annotated[str, Field(max_length=20000)]
+
+
 class EpisodeNotesFile(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     episode: Episode
     notes: dict[Scene, dict[str, RevisionNote]] = Field(default_factory=dict)
     rounds: dict[str, OverallNote] = Field(default_factory=dict)
+    combinations: dict[str, CombinationNote] = Field(default_factory=dict)
 
 
 class EpisodeNotes(BaseModel):
@@ -27,6 +47,7 @@ class EpisodeNotes(BaseModel):
     episode: Episode
     scenes: dict[Scene, SceneNotes] = Field(default_factory=dict)
     rounds: dict[str, OverallNote] = Field(default_factory=dict)
+    combinations: dict[str, CombinationNote] = Field(default_factory=dict)
 
 
 class SceneNoteChange(NoteChange):
@@ -37,6 +58,7 @@ class EpisodeExportChanges(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
     notes: list[SceneNoteChange]
     rounds: list[OverallChange]
+    combination: CombinationChange | None = None
 
 
 class EpisodeRevisionNotes:
@@ -63,7 +85,7 @@ class EpisodeRevisionNotes:
         data = EpisodeNotesFile.model_validate_json(target.read_text('utf-8')) if target.exists() else EpisodeNotesFile(episode=episode)
         if data.episode != episode or any(key != str(item.number) for key, item in data.rounds.items()) or any(
             key != note.key() for notes in data.notes.values() for key, note in notes.items()
-        ):
+        ) or any(key != note.key() for key, note in data.combinations.items()):
             raise ValueError('整集修改意见文件中的归属与入口不一致')
         return data
 
@@ -87,7 +109,7 @@ class EpisodeRevisionNotes:
                 value = self.notes.read(project, episode, scene)
                 value.notes.update(saved.notes.get(scene, {}))
                 merged[scene] = value
-            return EpisodeNotes(episode=episode, rounds=saved.rounds, scenes=merged)
+            return EpisodeNotes(episode=episode, rounds=saved.rounds, scenes=merged, combinations=saved.combinations)
 
     def save_note(self, project: Path, episode: str, scene: str, value: NoteInput) -> RevisionNote:
         with self.notes.lock:
@@ -120,6 +142,13 @@ class EpisodeRevisionNotes:
                 old = saved.rounds.get(str(value.number))
                 if (old.text if old else '') != value.expectedText:
                     raise NotesChangedError('本轮汇总意见已在其他位置更新，请保留当前输入，重新读取后核对。')
+            combination = changes.combination
+            if combination is not None:
+                for scene, number in combination.scenes.items():
+                    rounds.referenced_round(project, f'{episode}-{scene}', number)
+                old = saved.combinations.get(combination.key())
+                if (old.text if old else '') != combination.expectedText:
+                    raise NotesChangedError('本轮汇总意见已在其他位置更新，请保留当前输入，重新读取后核对。')
             updated = datetime.now().astimezone().isoformat(timespec='seconds')
             for value in changes.notes:
                 old = data.scenes.get(value.scene)
@@ -130,7 +159,9 @@ class EpisodeRevisionNotes:
                 saved.notes.setdefault(value.scene, {})[value.key()] = RevisionNote(**fields, updatedAt=updated)
             for value in changes.rounds:
                 saved.rounds[str(value.number)] = OverallNote(number=value.number, text=value.text, updatedAt=updated)
-            if changes.notes or changes.rounds:
+            if combination is not None:
+                saved.combinations[combination.key()] = CombinationNote(scenes=combination.scenes, text=combination.text, updatedAt=updated)
+            if changes.notes or changes.rounds or combination is not None:
                 self.write(project, episode, saved)
             return self.read(project, episode)
 

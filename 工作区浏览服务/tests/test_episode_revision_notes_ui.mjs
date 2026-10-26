@@ -25,7 +25,7 @@ function reset() {
   const c1 = [note('P002', '二采', 'R004', '00.03.0秒，SH004：后面的镜头\n00.01.0秒，SH003：前面的镜头'), note('P001', '一采', 'R002', '00.00.0秒，SH001：C001第一段'), note('P001', '一采', 'R002', '旧轮意见不可带入', 8), note('P001', '一采', 'R001', '组合外版本不可带入')];
   const c2 = [note('P001', '一采', 'R003', '00.00.0秒，SH001：C002第一段')];
   saved = { episode: 'EP001', scenes: { C002: { notes: Object.fromEntries(c2.map(n => [key(n), n])), rounds: {} },
-    C001: { notes: Object.fromEntries(c1.map(n => [key(n), n])), rounds: { 5: { number: 5, text: '旧整场意见', updatedAt: '' } } } }, rounds: {} };
+    C001: { notes: Object.fromEntries(c1.map(n => [key(n), n])), rounds: { 5: { number: 5, text: '旧整场意见', updatedAt: '' } } } }, rounds: {}, combinations: {} };
   puts = [];
 }
 const episode = () => ({ kind: 'group', name: 'EP001', title: '意见示例', children: [], materials: [], previousEpisode: null, warnings: [], productionIssues: [], script: doc('剧本'), scenes: ['C001', 'C002'],
@@ -54,6 +54,12 @@ const server = await createServer({ configFile: false, root: fileURLToPath(new U
           saved.scenes[scene].notes[key(note)] = { ...fields, updatedAt: '' };
         }
         for (const item of value.rounds) saved.rounds[item.number] = { number: item.number, text: item.text, updatedAt: '' };
+        if (value.combination) {
+          const item = value.combination;
+          const id = Object.keys(item.scenes).sort().map(scene => `${scene}:${item.scenes[scene]}`).join('|');
+          assert.equal(saved.combinations[id]?.text ?? '', item.expectedText);
+          saved.combinations[id] = { scenes: item.scenes, text: item.text, updatedAt: '' };
+        }
         data = saved;
       } else {
         const scene = url.split('/').at(-1), note = { ...value, updatedAt: '' };
@@ -135,6 +141,7 @@ try {
   assert.deepEqual(errors, []); assert.deepEqual(unexpected, []);
   await context.close(); console.log(`PASS ${width}px: 整集汇总排序、候选身份、统一总体意见、跨场恢复、旧历史及冲突保留输入`);
  }
+ for (const width of [1362, 390, 320]) {
  legacy = true; reset();
  for (const [scene, value] of Object.entries(saved.scenes)) {
   value.notes = Object.fromEntries(Object.values(value.notes).map(note => {
@@ -142,7 +149,7 @@ try {
    return [key(value), value];
   }));
  }
- const context = await browser.newContext({ viewport: { width: 390, height: 916 } });
+ const context = await browser.newContext({ viewport: { width, height: 916 } });
  const page = await context.newPage();
  await page.goto(base + '/tests/project-switch.html#/projects/' + encodeURIComponent('意见示例'));
  await page.getByRole('button', { name: '剧集制作', exact: true }).click();
@@ -154,8 +161,28 @@ try {
  assert.equal(await dialog.locator('.revision-export-note').count(), 3);
  const legacyTitles = await dialog.locator('.revision-export-note strong').allTextContents();
  assert.ok(legacyTitles[0].includes('C001 / 第5轮') && legacyTitles[2].includes('C002 / 第7轮'));
- assert.equal(await dialog.locator('.revision-export-overall textarea').count(), 0);
+ const summary = dialog.getByRole('textbox', { name: '本轮汇总意见', exact: true });
+ assert.equal(await summary.count(), 1);
  assert.equal(await dialog.locator('.revision-export-note textarea:not([readonly])').count(), 0);
+ await summary.fill('当前这一轮的整集汇总意见');
+ await dialog.getByRole('button', { name: '关闭', exact: true }).click();
+ await dialog.getByRole('button', { name: '继续编辑', exact: true }).click();
+ assert.equal(await summary.inputValue(), '当前这一轮的整集汇总意见');
+ await dialog.getByRole('button', { name: '保存', exact: true }).click();
+ await page.getByText('已保存。', { exact: true }).waitFor();
+ assert.equal(saved.combinations['C001:5|C002:7'].text, '当前这一轮的整集汇总意见');
+ assert.deepEqual(saved.rounds, {}, '不能创建虚构的整集修改轮次');
+ assert.equal(saved.scenes.C001.rounds[5].text, '旧整场意见');
+ await page.screenshot({ path: path.join(screenshots, `legacy-${width}.png`) });
+ await dialog.getByRole('button', { name: '关闭', exact: true }).click();
+ await page.getByRole('button', { name: '场次 C002', exact: true }).click();
+ await page.getByRole('button', { name: '修改意见', exact: true }).click();
+ await page.getByRole('button', { name: '导出修改意见', exact: true }).click();
+ assert.equal(await summary.inputValue(), '当前这一轮的整集汇总意见');
+ await page.evaluate(() => { window.__copied = ''; Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async text => { window.__copied = text; } } }); });
+ await dialog.getByRole('button', { name: '复制', exact: true }).click();
+ const copied = await page.evaluate(() => window.__copied);
+ assert.ok(copied.includes('本轮汇总意见（C001第5轮、C002第7轮）') && copied.includes('当前这一轮的整集汇总意见'));
  await dialog.getByRole('button', { name: '关闭', exact: true }).click();
  failRead = true;
  await page.getByRole('button', { name: '导出修改意见', exact: true }).click();
@@ -163,8 +190,9 @@ try {
  await message.waitFor(); failRead = false;
  await message.getByRole('button', { name: '重试', exact: true }).click();
  await page.locator('.revision-export-structured').waitFor();
- assert.equal(puts.length, 0, '旧组合及失败重试不能写入或创建整集轮次');
+ assert.equal(puts.length, 1, '只保存一次整集组合汇总，失败重试不额外写入');
  await context.close();
- console.log('PASS legacy: 不同旧轮号只读汇总、不伪造整集汇总意见、读取失败后可重试');
+ console.log(`PASS legacy ${width}px: 当前旧组合整集汇总保存、跨场恢复、复制、未保存提醒、原场意见保留与失败重试`);
+ }
  console.log('截图：' + screenshots);
 } finally { await browser.close(); await server.close(); }

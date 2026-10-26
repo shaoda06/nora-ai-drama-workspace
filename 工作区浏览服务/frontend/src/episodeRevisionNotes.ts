@@ -9,7 +9,10 @@ export interface EpisodeReview {
   scenes: { id: string; number?: number; segments: { id: string; videos: SegmentVideo[] }[];
     versions: { id: string; stage: string; run: string }[] }[];
 }
-export interface SavedEpisodeNotes { episode: string; scenes: Record<string, SavedSceneNotes>; rounds: Record<string, OverallNote> }
+export interface CombinationSummary { scenes: Record<string, number>; text: string; updatedAt: string }
+export const combinationKey = (scenes: Record<string, number>) => Object.keys(scenes).sort((a, b) => Number(a.slice(1)) - Number(b.slice(1))).map(scene => `${scene}:${scenes[scene]}`).join('|');
+export const combinationLabel = (scenes: Record<string, number>) => Object.keys(scenes).sort((a, b) => Number(a.slice(1)) - Number(b.slice(1))).map(scene => `${scene}第${scenes[scene]}轮`).join('、');
+export interface SavedEpisodeNotes { episode: string; scenes: Record<string, SavedSceneNotes>; rounds: Record<string, OverallNote>; combinations?: Record<string, CombinationSummary> }
 export type EpisodeExportNote = NoteInput & { scene: string; key: string; title: string; original: string; current: boolean; editable: boolean };
 
 export function episodeExportNotes(saved: SavedEpisodeNotes, review: EpisodeReview): EpisodeExportNote[] {

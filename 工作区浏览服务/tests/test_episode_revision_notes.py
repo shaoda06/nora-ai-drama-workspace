@@ -50,14 +50,14 @@ class EpisodeRevisionNotesTests(HttpTestCase):
              'script': {'file': 'script.md', 'version': 'v1'}, 'scenes': {'C001': scene, 'C002': scene}}
             for number in (3, 4)]}), 'utf-8')
 
-    def export(self, notes=None, rounds=None, headers=None):
-        return self.client.put(self.episode_url + '/export', json={'notes': notes or [], 'rounds': rounds or []},
+    def export(self, notes=None, rounds=None, headers=None, combination=None):
+        return self.client.put(self.episode_url + '/export', json={'notes': notes or [], 'rounds': rounds or [], 'combination': combination},
                                headers=headers if headers is not None else {'Origin': 'http://localhost:8782'})
 
     def test_read_empty_is_read_only(self):
         response = self.client.get(self.episode_url)
         self.assertEqual(response.status_code, 200, response.text)
-        self.assertEqual(response.json(), {'episode': 'EP001', 'rounds': {}, 'scenes': {}})
+        self.assertEqual(response.json(), {'episode': 'EP001', 'rounds': {}, 'scenes': {}, 'combinations': {}})
         self.assertFalse((self.project / '09-剧集制作/EP001/其他资料').exists())
 
     def test_episode_notes_do_not_invalidate_compiled_project_sources(self):
@@ -161,3 +161,35 @@ class EpisodeRevisionNotesTests(HttpTestCase):
         response = self.client.put(self.url + '/export', json={'notes': [], 'rounds': [{'number': 3, 'text': '不能单场保存', 'expectedText': ''}]}, headers=headers)
         self.assertEqual(response.status_code, 503)
         self.assertEqual(self.client.get(self.episode_url).json()['rounds'], {})
+
+    def test_legacy_combination_accepts_one_episode_summary_without_migrating_notes(self):
+        self.round_manifest()
+        directory = self.project / '09-剧集制作/EP001/其他资料/工作稿'
+        manifest = json.loads((directory / 'EP001-C001-场次修改轮次.json').read_text())
+        manifest['scene'] = 'C002'
+        manifest['rounds'] = [manifest['rounds'][0] | {'number': 7}]
+        (directory / 'EP001-C002-场次修改轮次.json').write_text(json.dumps(manifest))
+        for scene, number in [('C001', 2), ('C002', 7)]:
+            self.assertEqual(self.put(self.value | {'roundNumber': number, 'text': scene}, self.url.replace('C001', scene)).status_code, 200)
+        originals = {path: path.read_bytes() for path in directory.glob('*.json')}
+        value = {'scenes': {'C002': 7, 'C001': 2}, 'text': '本轮整集节奏再快一点', 'expectedText': ''}
+        response = self.export(combination=value)
+        self.assertEqual(response.status_code, 200, response.text)
+        key = 'C001:2|C002:7'
+        self.assertEqual(response.json()['combinations'][key]['text'], value['text'])
+        self.assertEqual(response.json()['rounds'], {})
+        self.assertEqual(self.client.get(self.episode_url).json()['combinations'][key]['scenes'], value['scenes'])
+        for path, content in originals.items():
+            self.assertEqual(path.read_bytes(), content)
+        self.assertFalse((directory / 'EP001-修改轮次.json').exists())
+        self.assertEqual(self.export(combination=value | {'text': '过时覆盖'}).status_code, 409)
+        self.assertEqual(self.export(combination=value | {'scenes': {'C001': 99}}).status_code, 503)
+        self.assertEqual(self.export(combination=value | {'scenes': {}}).status_code, 422)
+        other = value | {'scenes': {'C001': 1, 'C002': 7}, 'text': '另一组合意见'}
+        self.assertEqual(self.export(combination=other).status_code, 200)
+        self.assertEqual(len(self.client.get(self.episode_url).json()['combinations']), 2)
+        target = directory / 'EP001-视频修改意见.json'
+        before = target.read_bytes()
+        with patch('backend.services.episode_revision_notes.os.replace', side_effect=OSError('磁盘不可写')):
+            self.assertEqual(self.export(combination=value | {'text': '未保存', 'expectedText': value['text']}).status_code, 503)
+        self.assertEqual(target.read_bytes(), before)
