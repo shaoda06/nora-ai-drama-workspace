@@ -1,4 +1,4 @@
 interface:
-  display_name: "表情拆解"
-  short_description: "把抽象表情转成具体面部变化，吸收学习材料并按实际反馈持续维护参考表"
-  default_prompt: "使用 $facial-expression，将抽象表情细化为面部变化，或吸收我提供的学习材料并维护参考表。"
+  display_name: "表情拆解（兼容入口）"
+  short_description: "旧入口仅跳转到创作技法学习与维护，使用其中的表情拆解方法与参考表"
+  default_prompt: "使用 $facial-expression 兼容入口转到 $creative-techniques，处理当前表情方法、学习材料或实际反馈；此入口只用于兼容。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "创作技法学习与维护"
+  short_description: "统一学习图文视频技巧，查用表情和镜头方法，维护对应参考与实际反馈结论"
+  default_prompt: "使用 $creative-techniques 学习我提供的创作技巧，检查重复和冲突后更新对应参考，或将相关方法用于当前创作。"

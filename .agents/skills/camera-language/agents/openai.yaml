@@ -1,4 +1,4 @@
 interface:
-  display_name: "镜头语言与表达"
-  short_description: "选择并细化镜头表达，吸收图文视频技巧，结合实际反馈持续维护参考指南"
-  default_prompt: "使用 $camera-language，帮助我选择和细化镜头表达，或学习我提供的材料并维护镜头语言参考指南。"
+  display_name: "镜头语言（兼容入口）"
+  short_description: "旧入口仅跳转到创作技法学习与维护，使用其中的镜头指南与反馈规则"
+  default_prompt: "使用 $camera-language 兼容入口转到 $creative-techniques，处理当前镜头方法、学习材料或实际反馈；此入口只用于兼容。"

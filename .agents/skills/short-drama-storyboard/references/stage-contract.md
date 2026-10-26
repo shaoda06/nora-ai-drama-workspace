@@ -15,7 +15,7 @@
 | SHT-01 | structural_invariant | Every production-relevant scene action, line, sound and on-screen text is carried by a shot or explicitly omitted with a creative reason. Each shot's 来源 names scene ids that exist in `剧本.md`, and every scene is either claimed by a shot or recorded with its reason on the storyboard's `未拍场次` line. |
 | SHT-02 | reviewed_invariant | Each shot has a dramatic/viewing purpose and preserves its source meaning. |
 | SHT-03 | craft_default | Keep a short shot focused on the smallest action/reaction unit that carries its purpose; combine or split it according to performance, information, and continuity rather than a fixed count. |
-| SHT-04 | craft_default | 摄影机行为的选择与复核统一执行[镜头选择](场次分镜制作规范.md#运镜构图与切镜的选择)；具体方法读取[动态配合与取舍](../../camera-language/references/镜头语言参考指南.md#51-构图与运镜的配合)，不另设运动优先级或强调手段清单。 |
+| SHT-04 | craft_default | 摄影机行为的选择与复核统一执行[镜头选择](场次分镜制作规范.md#运镜构图与切镜的选择)；具体方法读取[动态配合与取舍](../../creative-techniques/references/镜头语言参考指南.md#51-构图与运镜的配合)，不另设运动优先级或强调手段清单。 |
 | SHT-05 | structural_invariant | A keyframe projects one shot boundary and the shot's declared visual basis. Any `IMG-...` used is an existing image-prompt heading, not a claim that generated media exists; when none is suitable, the shot names the relevant textual visual-setting entries without inventing an ID. |
 | SHT-06 | reviewed_invariant | A keyframe is one freezeable instant, not an ordered action chain. |
 | SHT-07 | taste_option | Lens vocabulary, tempo, and locked/handheld/formal style follow visual direction. |
