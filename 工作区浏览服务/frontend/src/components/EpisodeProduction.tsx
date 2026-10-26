@@ -143,14 +143,16 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     {breadcrumbActions && episodeComplete && createPortal(<DownloadButton key={current.name} pack
       url={`${projectUrl(project)}/episodes/${current.name}/download`} label={`${sharedSelected ? current.name : '本集'}打包下载`}
       title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理已采用视频`} />, breadcrumbActions)}
-    {episodeRounds.length > 0 && <div className="episode-scene-header"><div className="scene-round-selector">
+    <div className="episode-scene-header">
+      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={value => { setPlayback(null); setScene(value); }} />}
+      <div className="episode-scene-actions">
+    {episodeRounds.length > 0 && <div className="scene-round-selector">
       <span className="production-latest">当前最新{selectedRound !== episodeRounds.at(-1)!.number && <>：第{episodeRounds.at(-1)!.number}轮，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => openRound(episodeRounds.at(-1)!.number)}>点击切换</button></>}</span>
       <TabSelect size="toolbar" highlightSelected label="修改轮次" selected={String(selectedRound)} onChange={value => openRound(Number(value))}
         items={[...sceneRounds].reverse().map(item => ({ value: String(item.number), label: `第${item.number}轮` }))} />
-    </div></div>}
-    <div className="episode-scene-header">
-      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id }))} selected={selectedScene} onChange={value => { setPlayback(null); setScene(value); }} />}
+    </div>}
       <PointerTooltip text={script ? undefined : `${contentLabel}尚未建立`}><button className="link episode-script-link" disabled={!script} onClick={() => preview(script!)}>查看{contentLabel}</button></PointerTooltip>
+      </div>
     </div>
     {!!current.warnings?.length && <details className="notice"><summary>资料提示（{current.warnings.length}）</summary>{current.warnings.map(message => <p key={message}>{message}</p>)}</details>}
     {issues.length > 0 ? <div className="notice episode-data-issues" role="alert">
