@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 from datetime import datetime
 from urllib.parse import quote, unquote, urlsplit
+from backend.parsers.video_products import load_products
 
 class SourceChangedError(RuntimeError):
     """A source document was edited while the project was being read."""
@@ -1476,6 +1477,13 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                     record_key = episode_root + "/其他资料/执行附件/" + segment_identity + "-生成记录.md"
                     record = read(record_key) or ""
                 current_results = re.search(r"^## 1\. 当前选定结果\s*\n(.*?)(?=^## |\Z)", record, re.M | re.S)
+                product_sets = {}
+                def products_for(run, stage):
+                    if stage != '后处理':
+                        return []
+                    if run not in product_sets:
+                        product_sets[run] = load_products(project, segment_identity + '-' + run + '-后处理', read)
+                    return product_sets[run]
                 approved_keys = set()
                 for adopted in table_records(current_results[1] if current_results else "", ("处理阶段", "当前选定文件", "R编号", "人工批准依据")):
                     if re.match(r"^(?:未选定|尚未选定|未采用|尚未采用)(?:$|[；;，,。：:\s])", adopted["当前选定文件"]):
@@ -1483,7 +1491,9 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                     for link in markdown_links(adopted["当前选定文件"], record_key):
                         name = Path(link['key']).name
                         if not re.fullmatch(re.escape(segment_identity + '-' + adopted['R编号'] + '-' + adopted['处理阶段'])
-                                            + r'\.(?:mp4|webm|mov)', name):
+                                            + r'\.(?:mp4|webm|mov)', name) and not any(
+                                product['key'] == link['key'] and product['role'] == '最终产物'
+                                for product in products_for(adopted['R编号'], adopted['处理阶段'])):
                             continue
                         if video_adoption_approved(adopted, record, record_key, name):
                             approved_keys.add(link['key'])
@@ -1544,6 +1554,11 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                     video["taskStateUrl"] = next((link["url"] for link in state_links
                                                   if Path(link["key"]).name == "后台任务状态.json"), "")
                     video["candidateNumber"] = int(video["run"][1:])
+                    products = products_for(video['run'], video['stage'])
+                    if products:
+                        video['products'] = products
+                        video['approved'] = any(
+                            product['key'] in approved_keys and product['role'] == '最终产物' for product in products)
                     if episode_mode == 'full':
                         video["context"] = resolve_context(segment_identity + "-" + video["run"] + "-" + video["stage"],
                             generation_contexts, project, read, read_plain, text_previews)

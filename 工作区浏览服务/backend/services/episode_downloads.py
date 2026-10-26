@@ -6,6 +6,7 @@ from zipfile import ZIP_STORED, ZipFile
 
 from fastapi.responses import FileResponse
 from backend.services.jianying_draft import draft_files
+from backend.parsers.video_products import final_product
 
 STAGES = {'后处理': '03-后处理', '二采': '02-二采', '一采': '01-一采'}
 KINDS = {'videos': '已采用视频', 'director': '导演包', 'canvas': '画布'}
@@ -44,7 +45,7 @@ def completed_episode_videos(store, name, episode, data):
             videos = [video for video in segment['videos'] if video['stage'] == '后处理' and video['approved']]
             if len(videos) != 1:
                 raise ValueError('本集尚未全部批准后处理已采用')
-            video = videos[0]
+            video = final_product(videos[0])
             path = store.file(name, video['key'])
             stat = path.stat()
             if video['fileRevision'] != str(stat.st_mtime_ns) + '-' + str(stat.st_size):
@@ -64,7 +65,8 @@ def resources(store, name, episode, data, scene=None):
         for segment_number, segment in enumerate(selected['segments'][selected_scene], 1):
             for video in segment['videos']:
                 if video['approved']:
-                    path = store.file(name, video['key'], video['fileRevision'])
+                    product = final_product(video)
+                    path = store.file(name, product['key'], product['fileRevision'])
                     result[video['stage']]['videos'].append((path, video_member_name(path, scene_number, segment_number)))
 
     root = store.project(name)

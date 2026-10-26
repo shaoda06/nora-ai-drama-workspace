@@ -216,10 +216,11 @@ export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded,
         <label className="scene-continuous"><input type="checkbox" checked={repeat && !continuous} disabled={continuous || !loaded?.url} onChange={event => setRepeat(event.target.checked)} />重复播放</label>
         {continuousControl}
         <button className="video-layout-toggle" aria-pressed={wide} onClick={onToggleWide}>{wide ? '恢复布局' : '宽屏显示'}</button>
-        {loaded?.url && <Original url={loaded.url} label="查看视频原文件" />}
+        {loaded?.url && <Original url={loaded.downloadUrl || loaded.url} label="查看视频原文件" />}
       </div>
     </div>
-    {updated && <FloatingMessage>视频已有更新<button onClick={() => { setPlayOnLoad(video.current ? !video.current.paused : false); setLoaded(current); setSource(cachedSource || current.url); attempts.current = 0; pendingSeek.current = null; restore.current = null; setRecovering(false); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></FloatingMessage>}
+    {loaded?.previewNote && <p className="muted">{loaded.previewNote}</p>}
+  {updated && <FloatingMessage>视频已有更新<button onClick={() => { setPlayOnLoad(video.current ? !video.current.paused : false); setLoaded(current); setSource(cachedSource || current.url); attempts.current = 0; pendingSeek.current = null; restore.current = null; setRecovering(false); setError(false); onTimeChange(0); onFileRevision?.(current.fileRevision); }}>加载新文件</button></FloatingMessage>}
     {detailId && <TaskDetailDialog id={detailId} updatedAt={task.data?.updated_at} nodes={[]} close={() => setDetailId('')} openTask={setDetailId} />}
     {recovering && <p role="status">正在恢复视频画面…</p>}
     {error && <FloatingMessage tone="error">视频画面恢复失败。<button onClick={() => { attempts.current = 0; recoverPlayback(); }}>重新加载视频</button>，也可打开原文件检查。</FloatingMessage>}

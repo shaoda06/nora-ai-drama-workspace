@@ -12,7 +12,14 @@ export interface GenerationContext {
   references: Record<'common' | 'segment', { name: string; label: string; kind: 'image' | 'video' | 'audio'; url?: string; missing?: boolean }[]>;
 }
 // One recorded revision/stage; url and fileRevision are empty until a video exists.
-export interface SegmentVideo { key: string; url: string; run: string; stage: string; approved: boolean; candidateNumber: number; context?: GenerationContext; fileRevision: string; deliveryStatus: string; taskStatus: string; taskStateUrl?: string; checkedAt: string }
+export interface VideoProduct {
+  id: string; label: string; role: '最终产物' | '过程产物'; key: string; url: string; fileRevision: string;
+  previewUrl?: string; previewRevision?: string; previewNote?: string;
+}
+export interface SegmentVideo {
+  products?: VideoProduct[];
+  downloadUrl?: string;
+  previewNote?: string; key: string; url: string; run: string; stage: string; approved: boolean; candidateNumber: number; context?: GenerationContext; fileRevision: string; deliveryStatus: string; taskStatus: string; taskStateUrl?: string; checkedAt: string }
 export interface SceneRound { number: number; created_at: string; note?: string; episodeRound?: boolean; script: (FileItem & { version: string }) | null; storyboard: (FileItem & { version: string }) | null; issues: string[]; segments: { id: string; duration: number; stage: string; run: string; scriptHtml: string; scriptUrl: string }[] }
 export type DirectorSheetImage = FileItem & { page: number; version: string; sourceVersion: string; candidateNumber?: number | null; adopted?: boolean };
 export interface DirectorSheets { formal: DirectorSheetImage[]; candidates: DirectorSheetImage[]; record: FileItem | null }

@@ -91,6 +91,22 @@ try {
         await menu.getByRole('option', { name: new RegExp(candidate) }).click();
         const context = `${width}px / ${wide ? '宽屏' : '普通'} / ${candidate}`;
         for (const name of ['画质选择', '版本切换']) await sameStyle(business.getByRole('combobox', { name, exact: true }), expected, `${context} / ${name}`);
+        const productSelect = business.getByRole('combobox', { name: '产物选择', exact: true });
+        assert.equal(await productSelect.count(), candidate === '候选二' ? 1 : 0);
+        if (candidate === '候选二') {
+          await sameStyle(productSelect, expected, `${context} / 产物选择`);
+          assert.match(await productSelect.innerText(), /最终产物/);
+          await productSelect.click();
+          const productMenu = page.getByRole('listbox', { name: '产物选择', exact: true });
+          const productBounds = await productMenu.boundingBox();
+          assert.ok(productBounds.x >= 0 && productBounds.x + productBounds.width <= width, '[产物菜单越界]');
+          await productMenu.getByRole('option', { name: /绿底 MP4 过程产物/ }).click();
+          assert.match(await business.getByRole('link', { name: /查看视频原文件/ }).getAttribute('href'), /process=1/);
+          await productSelect.click();
+          await productMenu.getByRole('option', { name: /透明 MOV 最终产物/ }).click();
+          assert.match(await business.getByRole('link', { name: /查看视频原文件/ }).getAttribute('href'), /final=1/);
+          assert.match(await business.locator('.segment-video video').getAttribute('src'), /preview=1/);
+        }
         await contained(selectors, context);
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
         assert.equal(overflow, false, `[页面越界] ${context}`);

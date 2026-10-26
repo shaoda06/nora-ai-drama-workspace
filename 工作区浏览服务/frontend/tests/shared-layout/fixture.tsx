@@ -18,6 +18,10 @@ import.meta.glob('../../src/**/*.css', { eager: true });
 const videos: SegmentVideo[] = [1, 2].map(candidateNumber => ({
   key: `fixture-${candidateNumber}`, stage: '一采', run: `R00${candidateNumber}`,
   candidateNumber, approved: candidateNumber === 1, url: '/component-samples/video.webm',
+  products: candidateNumber === 2 ? [
+    { id: 'final', label: '透明 MOV', role: '最终产物', key: 'fixture-final.mov', url: '/component-samples/video.webm?final=1', previewUrl: '/component-samples/video.webm?preview=1', fileRevision: 'final', previewRevision: 'preview', previewNote: '示例透明预览。' },
+    { id: 'process', label: '绿底 MP4', role: '过程产物', key: 'fixture-process.mp4', url: '/component-samples/video.webm?process=1', fileRevision: 'process' },
+  ] : undefined,
   fileRevision: 'fixture', deliveryStatus: '已取回', taskStatus: '已完成', checkedAt: '',
   context: { scriptHtml: '<p>自动检查模拟分镜</p>', shots: [], issues: [],
     prompts: { english: 'Fixture only.', chinese: '仅供自动检查。' }, references: { common: [], segment: [] } },

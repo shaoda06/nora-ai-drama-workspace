@@ -53,6 +53,13 @@ export function SegmentWorkspace({ scope, segment, revision, roundNumber, items,
   const latest = latestVideo(items.filter(item => item.stage === stage));
   const versions = items.filter(item => item.stage === stage).sort((a, b) => b.candidateNumber - a.candidateNumber);
   const current = versions.find(item => item.key === selected);
+  const [productSelection, setProductSelection] = useState({ version: '', id: '' });
+  const products = current?.products || [];
+  const product = products.find(item => productSelection.version === current?.key && item.id === productSelection.id)
+    || products.find(item => item.role === '最终产物');
+  const displayVideo = current && product ? { ...current, url: product.previewUrl || product.url,
+    downloadUrl: product.url, previewNote: product.previewNote,
+    fileRevision: product.fileRevision + ':' + (product.previewRevision || '') } : current;
   const identity = current && `${scope.episode}-${scope.scene}-${segment}-${current.run}-${current.stage}`;
   const detail = useQuery({ queryKey: ['generation-context', scope.project, identity, revision],
     queryFn: () => get<GenerationContext>(`${projectUrl(scope.project)}/episodes/${scope.episode}/contexts/${encodeURIComponent(identity!)}`),
@@ -90,11 +97,12 @@ export function SegmentWorkspace({ scope, segment, revision, roundNumber, items,
   const selectors = <div className="segment-selectors">
       <TabSelect size="toolbar" highlightSelected label="画质选择" selected={stage} onChange={value => onSelectionChange({ stage: value, key: '' })} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
       <TabSelect size="toolbar" highlightSelected label="版本切换" reselect disabled={!stage} selected={current?.key || ''} onChange={key => onSelectionChange({ stage, key })} items={versions.map(item => ({ value: item.key, label: candidateLabel(item.candidateNumber), badge: item.approved ? '已采用' : undefined }))} />
+      {products.length > 1 && <TabSelect size="toolbar" highlightSelected label="产物选择" selected={product!.id} onChange={id => setProductSelection({ version: current!.key, id })} items={products.map(item => ({ value: item.id, label: item.label, badge: item.role }))} />}
       <span className="production-latest">当前最新{latest ? selected !== latest.key && <>：{candidateLabel(latest.candidateNumber)}，<button className="production-latest-link" aria-label="切换到本段最新版本" onClick={() => onSelectionChange({ stage: latest.stage, key: latest.key })}>点击切换</button></> : '：暂无版本'}</span>
     </div>;
   return <>
     {!wideVideo && selectors}
-    <SegmentLayout wide={wideVideo} navigation={segmentNavigation} player={<SegmentVideo playerRef={player} selectorControl={wideVideo ? selectors : undefined} key={current?.key || 'empty'} wide={wideVideo} onToggleWide={onToggleWide} continuous={continuous} continuousControl={continuousControl} current={current} cachedSource={current && cachedSources[current.url]} retainSource={retainSource} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={revision => setLoadedFile({ key: current!.key, revision })} />}>
+    <SegmentLayout wide={wideVideo} navigation={segmentNavigation} player={<SegmentVideo playerRef={player} selectorControl={wideVideo ? selectors : undefined} key={`${current?.key || 'empty'}/${product?.id || ''}`} wide={wideVideo} onToggleWide={onToggleWide} continuous={continuous} continuousControl={continuousControl} current={displayVideo} cachedSource={displayVideo && cachedSources[displayVideo.url]} retainSource={retainSource} autoPlay={autoPlay} onEnded={onVideoEnded} onError={onVideoError} onTimeChange={time => setPlayback({ key: current!.key, time })} onFileRevision={() => setLoadedFile({ key: current!.key, revision: current!.fileRevision })} />}>
       <SegmentReferences context={context} />
       <section className="segment-script" aria-label="分镜脚本、提示词与修改意见区域">
         <div className="segment-script-header">
