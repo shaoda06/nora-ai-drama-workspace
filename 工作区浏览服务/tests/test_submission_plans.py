@@ -110,24 +110,24 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
     async def test_batch_builds_both_pairs_and_records_before_one_queue_handoff(self):
         self.write_plan(self.spec(), self.spec('CH002'))
         events = []
-        prepare, enqueue = self.store.prepare_only, self.store.enqueue
+        prepare, enqueue = self.store.prepare_only, self.store.enqueue_group
         async def checked(data):
             events.append('prepare:' + data.title)
             return await prepare(data)
-        async def accepted(data):
-            events.append('enqueue:' + data.title)
-            return await enqueue(data)
-        with patch.object(self.store, 'prepare_only', side_effect=checked), patch.object(self.store, 'enqueue', side_effect=accepted), \
+        async def accepted(inputs, title):
+            events.append('group:' + title)
+            return await enqueue(inputs, title)
+        with patch.object(self.store, 'prepare_only', side_effect=checked), patch.object(self.store, 'enqueue_group', side_effect=accepted), \
                 patch.object(t.client.Client, 'json', side_effect=AssertionError('no remote request')), \
                 patch('backend.services.projects.ProjectStore.get', side_effect=AssertionError('no web scan')):
             result = await plans.execute(self.store, self.payload)
-        self.assertEqual([e.split(':')[0] for e in events], ['prepare','prepare','enqueue','enqueue'])
+        self.assertEqual([e.split(':')[0] for e in events], ['prepare','prepare','group'])
         self.assertEqual(result['next_action'], 'end-turn')
         self.assertEqual(len(result['tasks']), 2)
         for row in self.store.rows.values():
             data = row['input']
-            self.assertEqual(data.image_batch_id, self.rel(self.plan_file))
-            self.assertEqual(data.image_batch_size, 2)
+            self.assertEqual(row['state']['group_id'], result['group_id'])
+            self.assertIsNone(data.image_batch_id)
             self.assertEqual(data.workflow['514']['inputs']['width'], 2048)
             self.assertEqual(data.workflow['515']['inputs']['seed'], 103)
             record = Path(data.record_dir)
@@ -256,23 +256,22 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
             await plans.execute(self.store, self.payload)
         self.assertFalse(self.store.rows)
 
-    async def test_partial_registration_returns_existing_ids_and_resume_does_not_duplicate(self):
+    async def test_committed_group_recovers_after_journal_write_failure(self):
         self.write_plan(self.spec(), self.spec('CH002'))
-        enqueue, calls = self.store.enqueue, []
-        async def fail(data):
-            calls.append(1)
-            if len(calls) == 2:
-                raise OSError('disk temporarily unavailable')
-            return await enqueue(data)
-        with patch.object(self.store, 'enqueue', side_effect=fail):
-            result = await plans.execute(self.store, self.payload)
-        self.assertEqual(result['status'], 'partial')
-        self.assertEqual(len(result['tasks']), 1)
-        first = result['tasks'][0]['local_task_id']
+        write = plans.write_json
+        def fail(path, value):
+            if str(path).endswith('-装配结果.json') and value.get('accepted'):
+                raise OSError('journal temporarily unavailable')
+            return write(path, value)
+        with patch.object(plans, 'write_json', side_effect=fail), self.assertRaises(OSError):
+            await plans.execute(self.store, self.payload)
+        first = list(self.store.rows)
+        self.assertEqual(len(first), 2)
         result = await plans.execute(self.store, self.payload)
         self.assertEqual(result['status'], 'enqueued')
-        self.assertEqual(result['tasks'][0]['local_task_id'], first)
-        self.assertEqual(len(self.store.rows), 2)
+        self.assertEqual([t['local_task_id'] for t in result['tasks']], first)
+        self.assertEqual(result['group']['expected_tasks'], 2)
+        self.assertEqual(len(self.store.groups), 1)
 
     async def test_concurrent_source_edit_is_preserved(self):
         self.write_plan(self.spec())

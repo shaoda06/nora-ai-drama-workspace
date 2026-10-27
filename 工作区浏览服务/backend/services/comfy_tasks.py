@@ -81,7 +81,10 @@ class TaskInput(BaseModel):
     image_batch_size: int = Field(default=1, ge=1)
 
 
-class TaskStore(LocalQueue, TaskNotifications):
+from backend.services.task_groups import TaskGroups
+
+
+class TaskStore(LocalQueue, TaskNotifications, TaskGroups):
     queue_notifications = sys.platform == 'darwin'
 
     def __init__(self, runtime: Path, workspace: Path):
@@ -93,6 +96,7 @@ class TaskStore(LocalQueue, TaskNotifications):
         self.db.execute('CREATE TABLE IF NOT EXISTS notification_batches (id TEXT PRIMARY KEY, thread_id TEXT NOT NULL, task_ids TEXT NOT NULL, payload TEXT NOT NULL, state TEXT NOT NULL)')
         self.db.execute('CREATE TABLE IF NOT EXISTS notification_reports (batch_id TEXT PRIMARY KEY, report TEXT NOT NULL)')
         self.db.commit()
+        self.groups_init()
         self.rows = {}
         for key, payload, state in self.db.execute('SELECT id, payload, state FROM tasks'):
             data = TaskInput.model_validate_json(payload)
@@ -419,8 +423,6 @@ class TaskStore(LocalQueue, TaskNotifications):
     async def start(self):
         for key, row in self.rows.items():
             state = row['state']
-            if state['status'] == 'resolved':
-                continue
             if state['status'] not in TERMINAL and not state.get('source_session_name'):
                 self.session_readers[key] = asyncio.create_task(self.read_session_name(key))
             for notice in state.get('notices', []):
@@ -430,7 +432,7 @@ class TaskStore(LocalQueue, TaskNotifications):
                 self.save(key, notification='delivery_unknown')
             if any(item['delivery'] == 'pending' for item in state.get('notices', [])):
                 self.notifiers[key] = asyncio.create_task(self.notify(key))
-            if state['status'] in LOCAL or state['status'] == 'cancelled':
+            if state['status'] in LOCAL or state['status'] in ('cancelled', 'resolved'):
                 continue
             if state['status'] == 'preparing':
                 self.record(key, 'restart', 'resume_local', _changes={'status': 'local_queued'})
@@ -454,6 +456,8 @@ class TaskStore(LocalQueue, TaskNotifications):
                 self.workers[key] = asyncio.create_task(self.collect_saved(key))
             else:
                 self.workers[key] = asyncio.create_task(self.watch(key))
+        for group in self.groups.values():
+            self.wake_group(group['task_ids'][0])
         for batch_id, in self.db.execute("SELECT id FROM notification_batches WHERE state IN ('sending','delivery_unknown')"):
             self.db.execute('UPDATE notification_batches SET state=? WHERE id=?', ('delivery_unknown', batch_id))
             self.notifiers['ack:' + batch_id] = asyncio.create_task(self.wait_ack(batch_id))

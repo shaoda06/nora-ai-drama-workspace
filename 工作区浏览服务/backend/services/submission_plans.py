@@ -562,6 +562,16 @@ def build_video(root, spec, documents):
         request_name='请求.json', response_name='提交响应.json', history_name='执行结果.json')
 
 
+def submission_response(store, journal, *, reused=False):
+    accepted = journal['accepted']
+    ids = [item['local_task_id'] for item in accepted if item.get('local_task_id')]
+    group_id = store.rows[ids[0]]['state'].get('group_id') if ids else None
+    group = store.group_status(group_id) if group_id else None
+    return dict(status=('completed' if group and group['status'] == 'completed' or not group and all(item['status'] == 'completed' for item in accepted) else 'enqueued'),
+                tasks=accepted, reused=reused, next_action='end-turn',
+                **({'group_id': group_id, 'group': group} if group else {}))
+
+
 async def execute(store, payload):
     from backend.services.comfy_tasks import TaskInput, SKILL
     root = project_file(store.workspace / 'projects', payload.project)
@@ -648,7 +658,7 @@ async def execute(store, payload):
             journal['published'] = False
             write_json(journal_file, journal)
         if len(journal.get('accepted', [])) == len(journal['tasks']):
-            return dict(status='completed' if all(item['status'] == 'completed' for item in journal['accepted']) else 'enqueued', tasks=journal['accepted'], reused=True, next_action='end-turn')
+            return submission_response(store, journal, reused=True)
     else:
         documents = documents or Documents(root)
         tasks = []
@@ -658,14 +668,13 @@ async def execute(store, payload):
             spec = {**entry, 'authorization': entry.get('authorization', '仅准备，尚未执行授权'), 'submission_plan': str(plan_file)}
             task = build_image(root, SKILL, spec, documents, store.client.now()) if spec['task_type'].startswith('image') else build_video(root, spec, documents)
             tasks.append(task)
-        image_count = sum(task['task_type'] == 'image' for task in tasks)
-        for task in tasks:
-            if task['task_type'] == 'image':
-                task.update(image_batch_id=plan_file.relative_to(root).as_posix(), image_batch_size=image_count)
         journal = dict(source=source, thread_id=payload.thread_id, tasks=tasks, writes=documents.writes())
         write_json(journal_file, journal)
     if not payload.prepare_only and any(not entry.get('authorization') for entry in source['tasks']):
         raise ValueError('此清单仅准备，尚缺实际执行授权依据')
+    local_flags = [bool(task.get('image_plan', {}).get('local_processing')) for task in journal['tasks']]
+    if any(local_flags) and not all(local_flags):
+        raise ValueError('同步本地规格处理与后台任务请分别提交；后台任务清单按完整任务组登记')
     accepted = journal.setdefault('accepted', [])
     while len(accepted) < len(journal['tasks']):
         task = journal['tasks'][len(accepted)]
@@ -675,6 +684,9 @@ async def execute(store, payload):
         if not any(row['input'].record_dir == data.record_dir for row in store.rows.values()):
             break
         result = await store.enqueue(data)
+        group_id = store.rows[result['local_task_id']]['state'].get('group_id')
+        if group_id:
+            journal['group_id'] = group_id
         accepted.append(dict(title=data.title, task_type=data.task_type, local_task_id=result['local_task_id'],
                              status=result['status'], record_dir=data.record_dir))
         write_json(journal_file, journal)
@@ -701,6 +713,16 @@ async def execute(store, payload):
         inputs.append(data)
     if payload.prepare_only or payload.start_paused and any(data.image_plan and data.image_plan.get('local_processing') for data in inputs):
         return dict(status='prepared', tasks=prepared, next_action='review-content')
+    if inputs and not accepted and not any(local_flags):
+        result = await store.enqueue_group(inputs, source.get('group_title') or plan_file.stem)
+        journal['group_id'] = result['group_id']
+        journal['accepted'] = [dict(title=data.title, task_type=data.task_type,
+            local_task_id=item['local_task_id'], status=item['status'], record_dir=data.record_dir)
+            for data, item in zip(inputs, result['tasks'])]
+        write_json(journal_file, journal)
+        return submission_response(store, journal)
+    # Only synchronous local processing and recovery of pre-group partial
+    # submissions use this compatibility path. New background plans register above.
     for data in inputs:
         try:
             if data.image_plan and data.image_plan.get('local_processing'):
@@ -714,4 +736,4 @@ async def execute(store, payload):
                              status=result['status'], record_dir=data.record_dir,
                              **({'provider': 'local', 'report': result['report']} if result.get('provider') == 'local' else {})))
         write_json(journal_file, journal)
-    return dict(status='completed' if all(item['status'] == 'completed' for item in accepted) else 'enqueued', tasks=accepted, next_action='end-turn')
+    return submission_response(store, journal)

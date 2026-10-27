@@ -11,7 +11,7 @@ export interface LocalTask {
   error: string | null; collected: number; expected: number;
   created_at: string; started_at?: string | null;
   submitted_at?: string;
-  source_session_name?: string;
+  source_session_name?: string; group_id?: string;
   director_progress?: { segment: number; segment_total: number; phase_label: string };
   segment_warning?: string | null;
 }
@@ -37,7 +37,7 @@ export function localDateTime(date: Date) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-export function TaskCard({ task }: { task: Task }) {
+export function TaskCard({ task, onDetails }: { task: Task; onDetails?: (id: string) => void }) {
   const external = task.source === 'external';
   const queued = task.status === 'queued' || task.status === 'submitting';
   const [now, setNow] = useState(Date.now);
@@ -69,6 +69,7 @@ export function TaskCard({ task }: { task: Task }) {
       <div className="comfy-local-title">
         <div className="comfy-task-description">
           <h2>{task.title}</h2>
+          {task.group_id && onDetails && <button className="link" onClick={() => onDetails(task.id)}>任务组进度 →</button>}
           <PointerTooltip text={task.source_session_name}><p className="comfy-task-session" >来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip>
         </div>
         <div className="comfy-task-timing">

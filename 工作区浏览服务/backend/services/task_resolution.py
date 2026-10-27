@@ -58,4 +58,6 @@ def resolve_task(store, key, request):
     store.record(key, 'resolution', 'resolved', _changes={'status': 'resolved', 'resolution': resolution},
                  summary=decision['summary'], outcome=decision['outcome'],
                  evidence_files=evidence, replacement_task_ids=replacements)
+    if state.get('group_id'):
+        store.queue_notice(key, 'resolved', 'terminal', '子任务已结案，按原组汇总')
     return {'local_task_id': key, 'status': 'resolved', 'duplicate': False}

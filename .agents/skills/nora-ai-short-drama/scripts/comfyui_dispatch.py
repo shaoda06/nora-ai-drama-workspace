@@ -44,7 +44,7 @@ def dispatch(args):
 def parser():
     p = client.Parser(description=__doc__)
     p.add_argument('--project', required=True, help='Project root under workspace/projects; relative to cwd; uses workspace comfyui-config.json')
-    p.add_argument('--plan', help='Preferred one-call task list JSON, project-relative or absolute: builds artifacts, checks the whole batch, queues authorized tasks and returns end-turn; --prepare-only stops before queueing')
+    p.add_argument('--plan', help='Task group JSON, project-relative or absolute: optional group_title plus tasks (one or more); checks all members, atomically registers one group, returns group_id and child IDs; --prepare-only never registers')
     p.add_argument('--record-repairs', help='Existing local image results only: JSON object from record_dir to reason/expected_updates/updates; never runs image processing or queues tasks')
     p.add_argument('--task-type', choices=TASK_TYPES, help='Legacy prepared-input mode only: authorized task stage')
     p.add_argument('--workflow', help='Legacy prepared-input mode only: prepared API JSON')

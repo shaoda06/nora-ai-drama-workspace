@@ -421,6 +421,15 @@ Nora任务准备、查询和取回时，读取[监控规范的精简留档规则
 
 ### 后台状态查询
 
+新任务优先按提交返回的真实组ID查询：
+
+```sh
+python .agents/skills/nora-ai-short-drama/scripts/browser_tasks.py status --group-id 真实任务组UUID
+```
+
+返回组名、`expected_tasks/completed_tasks`、成果取回计数、`status/terminal/review_ready`、缺项及各子任务的状态和错误。一个子任务可能生成多段，任务数不当分段数；具体问题仍用下方`--task-id`查询。查询不轮询远端、不重新提交。
+
+
 适用于用户主动查询已有任务进度，或处理结果时核对最新后台状态。读取原入队响应的 `local_task_id` 或后台记录的本地任务 `id`；它不是远端 `prompt_id`。
 
 ```sh
@@ -441,12 +450,12 @@ python "实际技能目录/scripts/browser_tasks.py" report --notification-id �
 
 后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。通知只提供任务身份和报告入口；命令按后台已有的最新任务状态刷新持久报告并自动记录收到，异常修复后的旧通知也返回当前结果，不重新收尾、扫描或发送。原通知和错误经过保留在过程记录。正常图片及超分默认返回通知身份、接收回执、交接信息及`delivery`，避免展开重复的状态／收尾内容；`delivery`包含完成任务数、图片数，以及每项标题、任务类型`task_type`、本地任务ID、成果绝对路径、候选路径、实际宽高／格式／字节数、工作稿／收尾报告绝对路径和可直接打开的`review_url`。普通图片按[批次通知规则](../../../nora-generation/references/ComfyUI-任务监控规范.md#图片批次通知与超分静默)集中展示，不再拼路径、数文件、翻记录或查网页；正常超分不发送通知，历史正常超分通知只读确认，不输出进度、完成消息或图片。`user_message_ready=true`表示本报告所含成果的入口可审；整轮汇报仍须满足上述交付条件，成功读取不表示用户批准。历史图片／超分缺少展示字段时保留完整报告，按任务类型处理，不补做收尾。正常视频同样返回这些精简字段及`delivery`：`video_count`为本报告所含实际完成数量，`tasks`含标题、阶段身份、文件绝对路径、媒体信息及可直接打开的审核链接；达到整轮交付条件后，一采、二采对话只汇报汇总数量和审核入口；后处理沿[自动采用](../流程规范/逐集目录与资产管理规范.md#后处理自动采用)完成收尾，并按[后处理完成汇报](../../../nora-generation/references/ComfyUI-任务监控规范.md#后处理完成汇报)汇总实际处理及配套交付；精简报告没有处理明细时复用本任务执行记录，必要时用下述--details读取现成完整报告。异常仍返回完整`tasks/results`，据失败阶段定位；显式追溯时可加`--details`读取完整报告，不触发重新核验或补做制作登记；仍按上方规则刷新报告并记录接收回执。未带展示清单的历史报告保留原格式。重复读取`reused=true`且不重复确认事件。
 
-视频报告的`rounds`为原任务清单范围汇总，直接使用`rounds[].delivery`中的成果及审核入口，不根据最后一份通知重复数文件。字段与整轮／已读／已交付边界见[跟进与通知](../../../nora-generation/references/ComfyUI-任务监控规范.md#3-跟进与通知)。原清单来源不完整时返回`status=needs_attention`及具体原因，不猜测合批。新任务的原清单关联由统一装配入口保存，Agent不手填后台字段；历史已登记任务不自动回填。报告读取只刷新已有任务事实和接收回执，不上传、生成、补登记或发送通知。
+新组报告的`groups`为数据库固定成员范围，正常完成和异常通知均包含全组状态；`tasks/results/delivery`包含全组现有结果，终态交付不能只取new_task_ids。历史无组视频报告的`rounds`为原任务清单范围汇总，直接使用`rounds[].delivery`中的成果及审核入口，不根据最后一份通知重复数文件。字段与整轮／已读／已交付边界见[跟进与通知](../../../nora-generation/references/ComfyUI-任务监控规范.md#3-跟进与通知)。原清单来源不完整时返回`status=needs_attention`及具体原因，不猜测合批。新任务的原清单关联由统一装配入口保存，Agent不手填后台字段；历史已登记任务不自动回填。报告读取只刷新已有任务事实和接收回执，不上传、生成、补登记或发送通知。
 
 `business_sync.entries[].updated_fields`列出工具维护的字段；`actions`列出需Agent处理的具体字段、原因及责任方，`next_action=resolve-business-fields`时只处理所列项。正常自动事实同步及正式说明引用方式见[技术记录与业务记录分工](../流程规范/会话与进度管理规范.md#技术记录与业务记录的分工)。
 
 
-精简及完整报告保留`handoff={receipt_only:true,scope:"notification",next_action:"resume-round-delivery",record_dirs:[项目相对执行附件路径]}`。它提供原记录入口，不建立新的交付台账。`should_notify_user`及`new_task_ids`只标识本次新接收结果，不能决定整轮是否可交付，也不能证明用户已收到；`false`或空列表仍需核对共同工作记录中的未交付范围。达到整轮条件时合并此前静默已读的结果，完成交付后在原共同记录注明范围与时间，已交付结果不重复汇报。
+精简及完整组报告保留`handoff={receipt_only:true,scope:"task-group",next_action:"resume-group-delivery",record_dirs:[项目相对执行附件路径]}`；历史无组报告保留scope=notification及resume-round-delivery。它提供原记录入口，不建立新的交付台账。`should_notify_user`及`new_task_ids`只标识本次新接收结果，不能决定整轮是否可交付，也不能证明用户已收到；`false`或空列表仍需核对共同工作记录中的未交付范围。达到整轮条件时合并此前静默已读的结果，完成交付后在原共同记录注明范围与时间，已交付结果不重复汇报。
 
 各任务收尾保存`business_sync`，report按`[{task_id,...business_sync}]`汇总；状态可为`needs_attention`、`not_current`或`updated`。`entries`逐项给出`episode`、现有业务文件`paths`、`status`及`reason`；`updated_fields`列工具维护的字段，`actions`列需接手的具体字段。`not_current`表示历史任务不覆盖当前摘要；`entries[].status=preserved`表示保留已有制作完成决定，事实仍在原结果报告。技术成功与业务摘要已同步分别判断，接续按上方记录分工处理，不重复已完成的核验和登记。
 
@@ -579,7 +588,7 @@ python .agents/skills/nora-ai-short-drama/scripts/video_postprocess_plan.py \
 
 ### 一次装配与批量入队
 
-默认入口只传项目和一份项目内任务清单；相同一批图片、超分或视频可混合放在`tasks`数组。提示词先按对应技能及固定模板完成内容核对，以下示例正文是字段示意，不可作为最终模型正文。
+默认入口只传项目和一份项目内任务清单；一份清单登记为一个固定成员任务组，相同授权且可同时提交的图片、超分或视频可混合放在`tasks`数组，支持跨场次及单成员。可选顶层`group_title`，不填使用清单文件名。先检查全组，再原子登记；返回`group_id`及子任务ID。重复提交原清单复用原ID，不能追加／替换成员。执行、排队和修复仍按子任务进行。同步本地规格处理与后台任务分开提交。提示词先按对应技能及固定模板完成内容核对，以下示例正文是字段示意，不可作为最终模型正文。
 
 ```sh
 python /实际技能目录/scripts/comfyui_dispatch.py \
@@ -594,7 +603,7 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 图片条目示例：
 
 ```json
-{"tasks":[{
+{"group_title":"首集人物参考图", "tasks":[{
   "task_type":"image", "object":"CH001", "title":"CH001 · 首集角色六视图",
   "kind":"人物", "image_type":"角色多视角参考图", "state":"大学", "costume":"首集",
   "draft":"03-人物资料/其他资料/工作稿/CH001-参考图-工作稿.md",
@@ -611,7 +620,7 @@ python /实际技能目录/scripts/comfyui_dispatch.py \
 
 - `kind`为人物／场景／道具／剧集素材／封面，沿用各自既有工作稿模板。封面不设固定提示词句式，Qwen备用调用仍遵守接口字段格式。有对应正式图片的新图片条目须填写`formal`，候选名和版本按该正式文件名分配，不从`image_type`拼接；同一正式图片独立累计v版本。画风样例保留固定对象名和样例身份，不虚构正式资产；手绘导演分镜表按正式场次及页码独立维护图表版本。工具自动建工作稿或追加下一生成编号、候选版本及同前缀执行附件；不另建人工调度台账。`fields`可提供该模板中特有的已确认业务内容，技术字段由工具填写。`record_dir`、`generation`、`output`只在明确指定既定入口时填写，显式`output`仍须与`formal`对应。
 - 人物肖像默认1024×1024、本体六视图和角色六视图默认2048×2048、服装默认1152×864；其他类型或用户明确变更须填`size:[宽,高]`，沿用原规格。`prompt`仍按Qwen规则填写文生图两字段／编辑三字段及准确画幅；工具只注入正文，不优化或扩写。文生图`parameters`只接受已明确的`negative_prompt`；其模型、40步和TE加速等固定值按[文生图说明](../../../nora-generation/references/ComfyUI-文生图执行规范.md#2-提示词与参数映射)维护，配置变更另行授权。图生图`parameters`同样只接受`negative_prompt`；按[图生图说明](../../../nora-generation/references/ComfyUI-图生图执行规范.md#3-参数映射)保留40步、TE加速、参考条件缓存和每张1.5MP缩放。支持1–10张参考图，由工具按清单顺序生成加载、缩放及上传绑定，直接保存解码原图。
-- 同一清单的所有`task_type:image`由工具登记相同`image_batch_id`及完整`image_batch_size`；这两个后台关联字段无需Agent手填，不影响生成参数。超分和视频不计入本批图片范围。恢复同清单保留原关联，正常结果按[图片批次通知规则](../../../nora-generation/references/ComfyUI-任务监控规范.md#图片批次通知与超分静默)等齐集中通知。无批次关联的历史或旧式单任务按单任务处理，不追溯猜测合批。
+- 新清单全体后台任务统一登记任务组，`group_id`由工具产生，Agent不手填。正常结果等全组完成后通知，异常提前按组报告；见[组级通知](../../../nora-generation/references/ComfyUI-任务监控规范.md#3-跟进与通知)。历史`image_batch_id/image_batch_size`仅兼容已登记图片批次；无组历史任务沿原记录接续，不追溯猜测合批。
 - 不传`seed`时由工具读取项目七类默认种子表；首次类别选定、登记并在同批复用，输入原始种子从批准记录读取。七类之外的图传`supplementary:true`，每次选择新种子，不新增类别默认值。来源／类别冲突停止，不暗中改已确认种子。用户指定参考图改用`user_reference:true,basis:"真实指定依据"`；可提供`source_seed`，非生成图写`source_kind:"非生成"`，生成来源种子未知须有`unknown_seed_basis:"用户明确允许按未知继续的依据"`。既有审批与未知来源处理规则保持。
 
 超分条目只需关联已批准原图及正式目标，不手填RTX工作流、上传／输出映射、收尾JSON或正式表的整行替换：
@@ -665,7 +674,7 @@ H3局部返修复用已核实的远端素材时，内容画布保留来源实际
 
 - 成功：`status=enqueued,tasks:[{local_task_id,title,task_type,status,record_dir}],next_action=end-turn`。**立即汇报数量并结束本轮**，不再补ID、进度、技术记录或检查网页；后台保存动态状态和成果。
 - 仅准备：同一命令加`--prepare-only`，返回`status=prepared`；不入队／上传／生成。内容不变时可只补充各条`authorization`再正式调用；模型正文、素材或范围变更属于新的准备，不能覆盖已接受清单。原逐项入口也保留仅准备能力。
-- 异常：整批先完成准备，任一准备失败则不入队；若登记中断，`partial`返回已接受ID及错误。`任务清单-装配结果.json`保存装配及已接受项；同清单恢复先找回原ID，只登记尚未接受部分，不重复POST。已登记任务的内容或来源不能覆盖原装配记录；尚未登记的准备修正按下方接口办理。只在异常时查这些附件，不在正常成功后再读一遍。
+- 异常：全组先完成准备，任一准备失败则不入队；新后台清单原子登记，失败不留下半组。`任务清单-装配结果.json`保存装配、group_id及成员ID；回执丢失沿原清单找回原组和全部成员，不重复POST。仅无组历史部分提交或同步本地处理保留`partial`兼容路径，按原已接受ID接续。已登记任务的内容或来源不能覆盖原装配记录；尚未登记的准备修正按下方接口办理。只在异常时查这些附件，不在正常成功后再读一遍。
 
 #### 未登记清单的重新准备
 

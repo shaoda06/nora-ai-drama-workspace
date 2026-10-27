@@ -79,7 +79,7 @@ def outputs(store, key):
 def summary(store, key):
     row = store.rows[key]
     state, data = row['state'], row['input']
-    fields = ('id', 'project', 'title', 'task_type', 'status', 'prompt_id', 'collected', 'expected',
+    fields = ('id', 'group_id', 'project', 'title', 'task_type', 'status', 'prompt_id', 'collected', 'expected',
               'created_at', 'updated_at', 'started_at', 'ended_at', 'progress', 'node', 'connection',
               'notification', 'director_progress', 'collection_next_retry_at', 'collection_errors',
               'error', 'error_details', 'failure_stage', 'collection_attempt', 'collection_auto_retry',
@@ -146,3 +146,19 @@ def video_delivery(store, tasks):
             videos=[dict(identity=item['identity'], file=str(Path(data.project)/item['path']),
                 draft_file=str(Path(data.project)/item['draft']), metadata=item.get('metadata')) for item in videos]))
     return dict(completed=len(ready), video_count=sum(len(item['videos']) for item in ready), tasks=ready)
+
+
+def group_delivery(store, tasks):
+    """One ordered delivery for a group that may contain different media types."""
+    pictures = [task for task in tasks if task['task_type'] in ('image', 'image-upscale')]
+    videos = [task for task in tasks if task['task_type'].startswith('video-')]
+    if not pictures:
+        return video_delivery(store, videos)
+    if not videos:
+        return image_delivery(store, pictures)
+    images, clips = image_delivery(store, pictures), video_delivery(store, videos)
+    if images is None or clips is None:
+        return None  # Preserve the full report when a legacy result has no delivery fields.
+    entries = {item['task_id']: item for part in (images, clips) for item in part['tasks']}
+    return dict(completed=len(entries), image_count=images['image_count'], video_count=clips['video_count'],
+                tasks=[entries[task['id']] for task in tasks if task['id'] in entries])

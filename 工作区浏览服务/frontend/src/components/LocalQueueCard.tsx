@@ -13,7 +13,7 @@ export const statusLabels: Record<string, string> = { local_queued: '排队中',
 
 export interface LocalQueueTask {
   queue: 'local';
-  id: string; project: string; title: string;
+  id: string; project: string; title: string; group_id?: string;
   task_type: keyof typeof taskTypeLabels;
   status: string; category?: keyof typeof localQueueStates;
   source_session_name?: string; error?: string | null; notification?: string;
@@ -101,7 +101,7 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
     <div className="local-queue-card-body">
       <div className="local-queue-card-description">
         <div className="local-queue-card-title"><h2>{task.title}</h2>
-          {history && onDetails && <button type="button" className="local-queue-card-detail"
+          {(history || task.group_id) && onDetails && <button type="button" className="local-queue-card-detail"
             aria-label={`查看${task.title}详情`} onClick={() => onDetails(task.id)}>详情 →</button>}
         </div>
         {!history && <PointerTooltip text={task.source_session_name}><p className="local-queue-card-session" >来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip>}

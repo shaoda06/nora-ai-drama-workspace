@@ -46,7 +46,10 @@ async def task_detail(store, key):
             target = store.rows.get(identity)
             replacements.append({'id': identity, 'title': target['state']['title'] if target else identity,
                                  'status': target['state']['status'] if target else 'unknown'})
-    return {'summary': summary, 'events': timeline, 'outputs': files['outputs'],
+    group = store.group_status(state['group_id']) if state.get('group_id') else None
+    if group:
+        group.pop('thread_id')
+    return {'group': group, 'summary': summary, 'events': timeline, 'outputs': files['outputs'],
             'records': files['records'], 'notification_batches': batches,
             'resolution_evidence': evidence, 'replacement_tasks': replacements}
 

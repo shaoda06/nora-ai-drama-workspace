@@ -156,7 +156,16 @@ async def comfy_submit(request: Request, data: TaskInput) -> dict[str, Any]:
             or not secrets.compare_digest(request.headers.get('x-nora-task-token', ''), tasks.token)):
         raise HTTPException(403, '仅允许本机Agent通过专用凭证提交')
     try:
-        result = await tasks.enqueue(data)
+        tasks.resolve_input(data)
+        existing = next((row for row in tasks.rows.values() if row['input'].record_dir == data.record_dir), None)
+        if existing:
+            result = await tasks.enqueue(data)  # Recover a child without changing its membership.
+            if existing['state'].get('group_id'):
+                group_id = existing['state']['group_id']
+                result.update(group_id=group_id, group=tasks.group_status(group_id))
+        else:
+            group = await tasks.enqueue_group([data], data.title)
+            result = {**group['tasks'][0], 'group_id': group['group_id'], 'group': group['group']}
     except (ValueError, OSError, RuntimeError, WebSocketException) as error:
         raise HTTPException(409, str(error)) from error
     except comfy_client.ClientError as error:
@@ -306,6 +315,15 @@ async def agent_submit_plan(request: Request, data: SubmissionPlanInput) -> dict
         return await execute(tasks, data)
     except (ValueError, OSError, KeyError, TypeError, AssertionError, comfy_client.ClientError) as error:
         raise HTTPException(409, str(error)) from error
+
+
+@app.get('/api/internal/comfy/groups/{group_id}')
+async def agent_group_status(group_id: str, request: Request) -> dict[str, Any]:
+    tasks = agent_request(request)
+    try:
+        return tasks.group_status(group_id)
+    except ValueError as error:
+        raise HTTPException(404, str(error)) from error
 
 
 class NoticeReceipt(BaseModel):

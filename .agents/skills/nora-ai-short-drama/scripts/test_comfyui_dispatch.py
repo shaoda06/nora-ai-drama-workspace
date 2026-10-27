@@ -148,5 +148,15 @@ class DispatchTests(unittest.TestCase):
         self.assertTrue(post.call_args.args[2]['reprepare'])
         self.assertTrue(post.call_args.args[2]['prepare_only'])
 
+    def test_group_status_cli_uses_group_endpoint(self):
+        import io
+        from contextlib import redirect_stdout
+        with patch('sys.argv', ['browser_tasks.py', 'status', '--group-id', 'group-uuid']), \
+                patch.object(d.browser_tasks, 'service_call', return_value={'id': 'group-uuid', 'completed_tasks': 1}) as call, \
+                redirect_stdout(io.StringIO()) as output:
+            d.browser_tasks.main()
+        call.assert_called_once_with('groups/group-uuid')
+        self.assertEqual(json.loads(output.getvalue())['completed_tasks'], 1)
+
 
 if __name__=='__main__': unittest.main()

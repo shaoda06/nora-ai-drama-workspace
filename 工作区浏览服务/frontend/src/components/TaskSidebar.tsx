@@ -250,7 +250,7 @@ export function TaskSidebar() {
       {visibleTasks.length === 0 && <p className="comfy-empty">{!selectedNode ? '暂无配置的远端节点'
         : !selectedNode.updated_at ? selectedNode.connection === 'reconnecting' ? '尚未获取到远端队列' : '正在读取远端队列…'
         : '该节点暂无队列任务'}</p>}
-      <div className="comfy-task-items">{visibleTasks.map(task => <TaskCard key={task.id} task={task} />)}</div>
+      <div className="comfy-task-items">{visibleTasks.map(task => <TaskCard key={task.id} task={task} onDetails={setDetailId} />)}</div>
       </div>
       </section>
       <section className="comfy-queue" aria-label="本地队列">

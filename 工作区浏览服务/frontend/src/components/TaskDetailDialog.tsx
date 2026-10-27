@@ -13,6 +13,9 @@ interface Event {
   attempt?: number; auto_retry?: number; delay_seconds?: number; next_retry_at?: string; summary?: string;
 }
 interface Detail {
+  group?: { id: string; title: string; status: string; terminal: boolean;
+    completed_tasks: number; expected_tasks: number; collected_outputs: number; expected_outputs: number;
+    tasks: { task_id: string; title: string; status: string; completed: boolean; needs_attention: boolean }[] } | null;
   summary: {
     id: string; project: string; title: string; task_type: keyof typeof taskTypeLabels; status: string;
     source_session_name: string; enqueued_url: string; remote_url: string; prompt_id: string | null;
@@ -77,7 +80,7 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close, openTask }: {
     const body = await response.json();
     if (!response.ok) throw new Error(body.detail || '任务详情读取失败');
     return body;
-  }, retry: false });
+  }, retry: false, refetchInterval: query => query.state.data?.group && !query.state.data.group.terminal ? 5000 : false });
   const { refetch } = query;
   useEffect(() => { void refetch(); }, [updatedAt, refetch]);
   const data = query.data;
@@ -102,7 +105,7 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close, openTask }: {
     && events[index - 1]?.stage === 'execution' && events[index - 1]?.result === 'running')) ?? [];
   const duration = summary?.started_at && summary.ended_at
     ? Math.max(0, Math.floor((Date.parse(summary.ended_at) - Date.parse(summary.started_at)) / 1000)) : null;
-  return <Dialog title="任务历史详情" close={close}><div className="task-detail">
+  return <Dialog title="任务详情" close={close}><div className="task-detail">
     {query.isPending && <p role="status">正在读取任务详情…</p>}
     {query.isError && <FloatingMessage tone="error">{query.error.message}
       <button onClick={() => void refetch()}>重新读取</button></FloatingMessage>}
@@ -110,6 +113,17 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close, openTask }: {
       <div className="task-detail-title"><div><p>{summary.project} · {taskTypeLabels[summary.task_type]}</p>
         <h3>{summary.title}</h3><p>来源会话：{summary.source_session_name || '未记录'}</p></div>
         <strong data-status={summary.status}>{collectionStatus(summary)}</strong></div>
+      {data.group && <section className="task-detail-guidance" aria-label="任务组进度">
+        <h4>{data.group.title}</h4>
+        <p>全组收尾：{data.group.completed_tasks} / {data.group.expected_tasks} 项 · 成果取回：{data.group.collected_outputs} / {data.group.expected_outputs}</p>
+        <p>{data.group.status === 'completed' ? '全组已完成，统一通知来源 Agent。'
+          : data.group.status === 'terminal_partial' ? '本组已结束，部分任务未完成，详见下列任务。'
+          : data.group.status === 'needs_attention' ? '本组有待处理问题，其他任务继续执行。'
+          : '各任务独立排队执行，全组完成后统一通知。'}</p>
+        <ul>{data.group.tasks.map(task => <li key={task.task_id}>{openTask && task.task_id !== id
+          ? <button className="link" onClick={() => openTask(task.task_id)}>{task.title}</button> : task.title}
+          {' · '}{task.completed ? '已完成收尾' : task.needs_attention ? '需要处理' : collectionStatus(task)}</li>)}</ul>
+      </section>}
       {summary.resolution && <section className="task-detail-guidance" aria-label="异常结案">
         <h4>已结案 · {date(summary.resolution.resolved_at)}</h4><p>{summary.resolution.summary}</p>
         <p className="task-detail-muted">结案不代表原任务生成成功；原任务ID、异常和保存计数保留。</p>
