@@ -154,7 +154,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     </div>, breadcrumbActions)}
     {durations.failed > 0 && <FloatingMessage key={current.name + '/' + selectedRound} tone="error">{durations.failed}段视频时长读取失败，暂用计划时长（*）。<button className="link" onClick={durations.retry}>重新读取</button></FloatingMessage>}
     <div className="episode-scene-header">
-      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: `场次 ${id} · ${formatProductionDuration(durations.scenes[id])}`, marker: newVideoSegmentsForRound(current.segments?.[id] || [], current.sceneRounds?.[id] || [], roundNumberForScene(id)).size ? '本轮新生成视频' : undefined }))} selected={selectedScene} onChange={value => { setPlayback(null); setScene(value); }} />}
+      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: `场次 ${id} · ${formatProductionDuration(durations.scenes[id])}`, marker: newVideoSegmentsForRound(current.segments?.[id] || [], current.sceneRounds?.[id] || [], roundNumberForScene(id)).size ? '本轮新生成视频' : undefined }))} selected={selectedScene} onChange={value => { setPlayback(previous => previous ? { ...previous, start: undefined } : null); setScene(value); }} />}
       <div className="episode-scene-actions">
     {episodeRounds.length > 0 && <div className="scene-round-selector">
       <span className="production-latest">当前最新{selectedRound !== episodeRounds.at(-1)!.number && <>：第{episodeRounds.at(-1)!.number}轮，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => openRound(episodeRounds.at(-1)!.number)}>点击切换</button></>}</span>

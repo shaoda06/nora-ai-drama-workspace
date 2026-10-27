@@ -79,7 +79,18 @@ try {
   assert.equal(await choose.getAttribute('data-value'), '8');
   assert.equal(await continuous.isChecked(), true);
   await page.waitForFunction(() => { const v = document.querySelector('.segment-video video'); return v?.autoplay && !v.paused; });
-  await scene('C001').click(); await chooseRound(5); await waitRun('R001');
+  // A manual scene change keeps the armed episode queue but clears the old auto-arrival.
+  await page.locator('.segment-video video').evaluate(video => video.pause());
+  await scene('C001').click(); await waitRun('R002');
+  assert.equal(await continuous.isChecked(), true, '同集手动切场保留连续播放勾选');
+  await page.waitForFunction(() => { const v = document.querySelector('.segment-video video'); return v && !v.autoplay && v.paused; });
+  await page.screenshot({ path: path.join(screenshots, `${width}-manual-continuous.png`), fullPage: false });
+  await scene('C002').click(); await waitRun('R001');
+  assert.equal(await continuous.isChecked(), true, '再次切场仍保持勾选与原轮次');
+  await continuous.uncheck();
+  await scene('C001').click(); await waitRun('R002');
+  assert.equal(await continuous.isChecked(), false, '用户关闭后切场不会重新开启');
+  await chooseRound(5); await waitRun('R001');
   await scene('C002').click(); await page.waitForFunction(() => document.querySelector('[aria-label="修改轮次"]')?.getAttribute('data-value') === '7');
   await chooseRound(9);
   // Different episodes have independent counters and retain their own selection.
@@ -104,7 +115,7 @@ try {
   assert.equal(await page.locator('.segment-video video').count(), 0, '缺片不能顶替旧视频');
   assert.deepEqual(errors, []); assert.deepEqual(unexpected, []); assert.deepEqual(writes, []);
   await context.close();
-  console.log(`PASS ${width}px: 单集共轮、历史候选联动、跨场实际自动播放、旧记录、跨集独立及缺片停止`);
+  console.log(`PASS ${width}px: 单集共轮、历史候选联动、跨场实际自动播放、手动切场保留勾选并暂停、主动关闭不恢复、旧记录、跨集独立及缺片停止`);
  }
  console.log('截图：'+screenshots);
 } finally { await browser.close(); await server.close(); }
