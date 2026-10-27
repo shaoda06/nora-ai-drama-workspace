@@ -24,6 +24,7 @@ episode_missing = final.episode_missing
 def source_items(root, plan, stage):
     """Only use the explicitly supplied submission plans, never latest-R scans."""
     found = {}
+    wanted = set(plan['identities'])
     task_type = {'一采': 'video-first-pass', '二采': 'video-second-pass', '后处理': 'video-postprocess'}[stage]
     for name in plan['submission_plans']:
         for task in adopt.load(adopt.local_path(root, name))['tasks']:
@@ -32,10 +33,13 @@ def source_items(root, plan, stage):
             record = adopt.local_path(root, task['record_dir'])
             mapping_path = record / '输入映射.json'
             mapping = adopt.load(mapping_path)
+            identities = [mapping['segments'][index]['segment'] + '-' + mapping['segments'][index]['round'] + '-' + stage
+                          for index in mapping['selected_indices']]
+            identities = [identity for identity in identities if identity in wanted]
+            if not identities:
+                continue
             execution = adopt.execution_metadata(root, mapping_path, mapping)
-            for index in mapping['selected_indices']:
-                entry = mapping['segments'][index]
-                identity = entry['segment'] + '-' + entry['round'] + '-' + stage
+            for identity in identities:
                 if identity not in {c['identity'] for c in mapping['generation_contexts']}:
                     raise ValueError('提交清单的实际执行阶段与本次批准阶段不符：' + identity)
                 output = next(o for o in execution['outputs'] if o['identity'] == identity)

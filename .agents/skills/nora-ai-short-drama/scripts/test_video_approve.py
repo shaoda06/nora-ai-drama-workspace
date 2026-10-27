@@ -18,6 +18,26 @@ NativeClient = fixtures.NativeClient
 
 
 class ApprovalTests(unittest.TestCase):
+    def test_source_lookup_skips_unselected_failed_task(self):
+        self.setup_stage('二采')
+        submission = Path(self.plan['submission_plans'][0])
+        data = tool.adopt.load(submission)
+        failed = self.fixture.extra / '执行附件/未完成旧任务'
+        self.fixture.put(failed / '输入映射.json', {
+            'selected_indices': [0], 'segments': [{'segment': 'EP001-C002-P001', 'round': 'R001'}]})
+        data['tasks'].append({'record_dir': str(failed), 'task_type': 'video-second-pass'})
+        self.fixture.put(submission, data)
+        # Only the first identity is being approved, even though both successful P tasks are supplied.
+        self.plan['identities'] = self.plan['identities'][:1]
+        with patch.object(tool.adopt, 'execution_metadata', wraps=tool.adopt.execution_metadata) as read:
+            result = tool.source_items(self.root, self.plan, '二采')
+        self.assertEqual(set(result), set(self.plan['identities']))
+        self.assertEqual(read.call_count, 1)
+        # The missing execution must still fail if the caller actually selects that failed identity.
+        self.plan['identities'] = ['EP001-C002-P001-R001-二采']
+        with self.assertRaises((ValueError, FileNotFoundError, KeyError)):
+            tool.source_items(self.root, self.plan, '二采')
+
     def setUp(self):
         self.fixture = fixtures.FinalizeTests()
         self.fixture.setUp()
