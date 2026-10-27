@@ -11,6 +11,7 @@ import.meta.glob('../src/**/*.css', { eager: true });
 
 const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 client.setQueryDefaults(['section'], { queryFn: () => { throw new Error('缓存观察器不应主动读取'); } });
+client.setQueryDefaults(['episode'], { queryFn: () => { throw new Error('缓存观察器不应主动读取'); } });
 function Fixture() {
   const [header, setHeader] = useState<HTMLDivElement | null>(null);
   return <HeaderControlsContext.Provider value={header}><div className="workspace-with-tasks">

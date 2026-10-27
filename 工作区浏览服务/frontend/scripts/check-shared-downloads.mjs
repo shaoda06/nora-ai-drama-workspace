@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
 export async function checkSharedDownloads(page, width) {
+  await page.mouse.move(0, 0); // Compare normal styles before the explicit hover checks below.
   const fixture = page.getByTestId('downloads');
   const styles = await fixture.locator('.download-control').evaluateAll(elements => elements.slice(0, 4).map(el => {
     const style = getComputedStyle(el);

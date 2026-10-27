@@ -55,7 +55,7 @@ try {
   await page.getByRole('button', { name: '剧集制作', exact: true }).click();
   await page.getByRole('button').filter({ hasText: 'EP001' }).first().click();
   const choose = page.getByRole('combobox', { name: '修改轮次', exact: true });
-  const scene = id => page.getByRole('button', { name: '场次 ' + id, exact: true });
+  const scene = id => page.getByRole('button', { name: new RegExp('^场次 ' + id + ' ·') });
   const candidate = page.getByRole('combobox', { name: '版本切换', exact: true });
   const chooseRound = async n => { if (await choose.getAttribute('data-value') === String(n)) return; await choose.click(); await page.getByRole('option', { name: new RegExp(`^第${n}轮(?:当前)?$`) }).click(); };
   const waitRun = async run => page.waitForFunction(run => document.querySelector('[aria-label="版本切换"]')?.getAttribute('data-value')?.endsWith(run), run);
@@ -90,8 +90,7 @@ try {
   await page.waitForFunction(() => document.querySelector('[aria-label="修改轮次"]')?.getAttribute('data-value') === '9');
   const roundsBox = await choose.boundingBox(), sceneBox = await scene('C001').boundingBox();
   await page.screenshot({ path: path.join(screenshots, `${width}.png`), fullPage: false });
-  if (roundsBox.y + roundsBox.height > sceneBox.y + 1) console.error({ width, roundsBox, sceneBox, screenshots });
-  assert.ok(roundsBox.y + roundsBox.height <= sceneBox.y + 1, '轮次位于场次栏上方');
+  assert.ok(roundsBox.y >= sceneBox.y - 1, '轮次沿用场次同行或窄屏换行布局');
   assert.ok(roundsBox.x >= 0 && roundsBox.x + roundsBox.width <= width);
   await page.screenshot({ path: path.join(screenshots, `${width}.png`), fullPage: false });
   missing = true; await page.reload();

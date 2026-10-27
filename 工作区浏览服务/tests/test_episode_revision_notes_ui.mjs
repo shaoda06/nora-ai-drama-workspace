@@ -94,7 +94,7 @@ try {
   await page.getByRole('button', { name: '剧集制作', exact: true }).click();
   await page.getByRole('button').filter({ hasText: 'EP001' }).first().click();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
-  const scene = id => page.getByRole('button', { name: '场次 ' + id, exact: true });
+  const scene = id => page.getByRole('button', { name: new RegExp('^场次 ' + id + ' ·') });
   assert.equal(await scene('C001').locator('.round-new-dot').count(), 0, '沿用视频的场次没有黄点');
   assert.equal(await scene('C002').locator('.round-new-dot').count(), 1, '本轮新视频所在场次显示黄点');
   assert.equal(await scene('C002').getAttribute('aria-description'), '本轮新生成视频');
@@ -164,7 +164,7 @@ try {
   await page.screenshot({ path: path.join(screenshots, `${width}.png`) });
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
   await dialog.getByRole('button', { name: '关闭', exact: true }).click();
-  await page.getByRole('button', { name: '场次 C002', exact: true }).click();
+  await page.getByRole('button', { name: /^场次 C002 ·/ }).click();
   await open(); assert.equal(await summary.inputValue(), '整集节奏自然，不要字幕');
   await dialog.getByRole('button', { name: '全部历史意见', exact: true }).click();
   assert.ok((await notes.allTextContents()).some(t => t.includes('第8轮')));
@@ -177,7 +177,7 @@ try {
   await open(); assert.equal(await dialog.getByRole('textbox', { name: '第8轮 本轮汇总意见', exact: true }).inputValue(), '');
   await dialog.getByRole('button', { name: '关闭', exact: true }).click();
   // Real player time -> historical shot start -> cursor insertion -> in-memory autosave.
-  await page.getByRole('button', { name: '场次 C001', exact: true }).click();
+  await page.getByRole('button', { name: /^场次 C001 ·/ }).click();
   await page.getByRole('button', { name: /^分段 P001，/ }).click();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
   const editor = page.getByRole('textbox', { name: '修改意见', exact: true });
@@ -209,7 +209,7 @@ try {
   await page.locator('.revision-note-state[data-state="saved"]').waitFor();
   await page.screenshot({ path: path.join(screenshots, `shot-pass-${width}.png`) });
   const box = await pass.boundingBox(); assert.ok(box.x >= 0 && box.x + box.width <= width);
-  await page.getByRole('button', { name: '场次 C002', exact: true }).click();
+  await page.getByRole('button', { name: /^场次 C002 ·/ }).click();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
   assert.equal(await pass.isDisabled(), true, '缺少当前候选分镜时长时不能猜测起点');
   assert.equal(await page.getByRole('button', { name: '插入时间', exact: true }).isDisabled(), false);
@@ -250,7 +250,7 @@ try {
  assert.equal(saved.scenes.C001.rounds[5].text, '旧整场意见');
  await page.screenshot({ path: path.join(screenshots, `legacy-${width}.png`) });
  await dialog.getByRole('button', { name: '关闭', exact: true }).click();
- await page.getByRole('button', { name: '场次 C002', exact: true }).click();
+ await page.getByRole('button', { name: /^场次 C002 ·/ }).click();
  await page.getByRole('button', { name: '修改意见', exact: true }).click();
  await page.getByRole('button', { name: '导出修改意见', exact: true }).click();
  assert.equal(await summary.inputValue(), '当前这一轮的整集汇总意见');

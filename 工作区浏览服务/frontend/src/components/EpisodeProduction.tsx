@@ -17,7 +17,10 @@ import { DownloadButton } from './DownloadButton';
 import { previousEpisodeEnding } from '../previousEpisodeEnding';
 import type { EpisodeReview } from '../episodeRevisionNotes';
 import { useRevisionNotesExport } from './RevisionNotes';
+import { formatProductionDuration, sceneDurationEntries, useEpisodeDurations } from './useEpisodeDurations';
+import { FloatingMessage } from './Notifications';
 import './SceneDownloads.css';
+import './EpisodeProduction.css';
 
 export function EpisodeProduction({ project, items, statistics, selected, onSelect, revision }: { project: string; items: FileItem[]; statistics: { total: number; completed: number; notStarted: number; running: number }; selected: string | null; onSelect: (episode: string | null) => void; revision: number }) {
   const preview = useContext(PreviewContext);
@@ -60,6 +63,7 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     const rounds = (current?.sceneRounds?.[id] || []).filter(item => episodeChoice !== null || !item.episodeRound);
     return rounds.find(item => item.number === roundNumbers[current!.name + '/' + id])?.number ?? rounds.at(-1)?.number;
   };
+  const durations = useEpisodeDurations(Object.fromEntries(scenes.map(id => [id, sceneDurationEntries(current!, id, roundNumberForScene(id))])));
   const episodeReview: EpisodeReview | undefined = current ? {
     number: episodeRound?.number, rounds: episodeRounds.map(item => item.number),
     scenes: scenes.map(id => {
@@ -142,11 +146,15 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     {breadcrumbSelector && selectedItem && createPortal(<TabSelect iconOnly label="快速选择制作对象" selected={selected!} onChange={open}
       items={items.map(item => ({ value: item.name, label: `${item.name} · ${item.title || (item.name === '片头' || item.name === '片尾' ? '全剧通用' : '题名未记录')}${item.titleStatus ? `（${item.titleStatus}）` : ''}` }))} />, breadcrumbSelector)}
     {selectedItem && !current ? <Result page loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} /> : current ? <div className="episode-detail">
-    {breadcrumbActions && episodeComplete && createPortal(<DownloadButton key={current.name} pack
+    {breadcrumbActions && createPortal(<div className="episode-heading-actions">
+      <PointerTooltip text="按当前轮次统计；* 表示含计划时长"><span className="muted" aria-label="本集时长">{sharedSelected ? current.name : '本集'}时长：{formatProductionDuration(durations.total)}</span></PointerTooltip>
+      {episodeComplete && <DownloadButton key={current.name} pack
       url={`${projectUrl(project)}/episodes/${current.name}/download`} label={`${sharedSelected ? current.name : '本集'}打包下载`}
-      title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理已采用视频`} />, breadcrumbActions)}
+      title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理已采用视频`} />}
+    </div>, breadcrumbActions)}
+    {durations.failed > 0 && <FloatingMessage key={current.name + '/' + selectedRound} tone="error">{durations.failed}段视频时长读取失败，暂用计划时长（*）。<button className="link" onClick={durations.retry}>重新读取</button></FloatingMessage>}
     <div className="episode-scene-header">
-      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: '场次 ' + id, marker: newVideoSegmentsForRound(current.segments?.[id] || [], current.sceneRounds?.[id] || [], roundNumberForScene(id)).size ? '本轮新生成视频' : undefined }))} selected={selectedScene} onChange={value => { setPlayback(null); setScene(value); }} />}
+      {scenes.length > 0 && <TabNav label="本集场次" items={scenes.map(id => ({ value: id, label: `场次 ${id} · ${formatProductionDuration(durations.scenes[id])}`, marker: newVideoSegmentsForRound(current.segments?.[id] || [], current.sceneRounds?.[id] || [], roundNumberForScene(id)).size ? '本轮新生成视频' : undefined }))} selected={selectedScene} onChange={value => { setPlayback(null); setScene(value); }} />}
       <div className="episode-scene-actions">
     {episodeRounds.length > 0 && <div className="scene-round-selector">
       <span className="production-latest">当前最新{selectedRound !== episodeRounds.at(-1)!.number && <>：第{episodeRounds.at(-1)!.number}轮，<button className="production-latest-link" aria-label="切换到最新修改轮次" onClick={() => openRound(episodeRounds.at(-1)!.number)}>点击切换</button></>}</span>

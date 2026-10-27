@@ -20,7 +20,7 @@ try {
   const data = await (await fetch(api + prefix + '/episodes/EP003')).json();
   const video = (scene, id, run, pending = false) => ({ key: `${scene}-${id}-${run}`, stage: '一采', run, url: pending ? '' : `/fixture-${scene}-${id}-${run}.mp4`, approved: false, candidateNumber: Number(run.slice(1)), fileRevision: '', deliveryStatus: pending ? '未取回' : '已取回', taskStatus: pending ? '排队中' : '成功', context: { scriptHtml: '<p>fixture</p>', shots: [], prompts: {}, references: { common: [], segment: [] }, issues: [] } });
   const round = (number, ids, run) => ({ number, issues: [], segments: ids.map(id => ({ id, duration: 1, stage: '一采', run, scriptHtml: '<p>fixture</p>' })), script: null, storyboard: null });
-  data.scenes = ['C001', 'C002', 'C003']; data.previousEpisode = null; data.productionIssues = []; data.warnings = [];
+  data.scenes = ['C001', 'C002', 'C003']; data.episodeRounds = []; data.previousEpisode = null; data.productionIssues = []; data.warnings = [];
   data.materials = []; data.directorSheets = {}; data.storyboards = {};
   data.segments = {
     C001: ['P003', 'P001'].map(id => ({ id, duration: 1, videos: [video('C001', id, 'R001')] })),
@@ -44,7 +44,7 @@ try {
   await page.goto(base + '/#/projects/' + encodeURIComponent(project));
   await page.getByRole('button', { name: '剧集制作', exact: true }).click();
   await page.getByRole('button').filter({ hasText: 'EP003' }).first().click();
-  const scene = id => page.getByRole('button', { name: '场次 ' + id, exact: true });
+  const scene = id => page.getByRole('button', { name: new RegExp('^场次 ' + id + '(?: ·|$)') });
   const checked = page.getByRole('checkbox', { name: '连续播放', exact: true });
   const selectedScene = id => scene(id).getAttribute('aria-current');
   const chooseRound = async number => {

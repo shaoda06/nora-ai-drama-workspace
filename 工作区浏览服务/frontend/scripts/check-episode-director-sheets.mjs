@@ -21,8 +21,8 @@ export async function checkEpisodeDirectorSheets(page, fixture, width) {
   await page.keyboard.press('Escape');
   await materials.locator(':scope > summary').click();
   const scenes = fixture.getByRole('navigation', { name: '本集场次' });
-  assert.deepEqual(await scenes.getByRole('button').allTextContents(), ['场次 C001', '场次 C002', '场次 C003', '场次 C004'], '没有独立整集入口');
-  await scenes.getByRole('button', { name: '场次 C002', exact: true }).click();
+  assert.deepEqual(await scenes.getByRole('button').allTextContents(), ['场次 C001 · 1秒*', '场次 C002 · 1秒*', '场次 C003 · 1秒*', '场次 C004 · 1秒*'], '场次显示计划时长，没有独立整集入口');
+  await scenes.getByRole('button', { name: /^场次 C002 ·/ }).click();
   await fixture.getByRole('button', { name: '导演分镜表', exact: true }).click();
   const toggle = fixture.getByRole('checkbox', { name: '整合本集', exact: true });
   assert.equal(await toggle.isChecked(), false);
@@ -74,7 +74,7 @@ export async function checkEpisodeDirectorSheets(page, fixture, width) {
   await toggle.check();
   assert.equal(await viewer.getByText('场次 C002：分镜 v01 尚未制作导演分镜表。', { exact: true }).count(), 1, '当前场次保留所选旧轮次，不借用新轮次图片');
   assert.equal(await pages.getByRole('button').count(), 3);
-  await scenes.getByRole('button', { name: '场次 C001', exact: true }).click();
+  await scenes.getByRole('button', { name: /^场次 C001 ·/ }).click();
   assert.equal(await toggle.isChecked(), true, '切场保留整合勾选及导演表标签');
   assert.equal(await pages.getByRole('button').count(), 6, '其他场次取最新轮次，忽略之前选过的旧轮次');
   await pages.getByRole('button', { name: '2', exact: true }).click();
