@@ -133,8 +133,9 @@ def approved_row(text, row, filename):
     start, end = section(text, matching[0])
     body = text[start:end]
     outputs = '\n'.join(re.findall(r'^- (?:对应具体输出|被审具体输出文件及R编号／版本|具体输出|被审具体输出|采用文件)：([^\n]*)', body, re.M))
+    exact_output = re.search(r'(?<![\w.-])' + re.escape(filename) + r'(?![\w.-])', outputs)
     return bool(re.search(r'^- 决定：(?:批准采用(?:\s|[；。，]|$)|通过并采用(?:\s|[；。，]|本轮|P\d|$))', body, re.M)
-                and filename in outputs)
+                and exact_output)
 
 
 def postprocess_product(root, identity, available=None):
@@ -194,8 +195,10 @@ def selected_output(root, draft, text, part, stage, available=None):
     if len(references) != 1:
         return None
     path = local_path(root, draft.parent / unquote(references[0]))
+    if not (available or {}).get(path, path).is_file():
+        return None
     if final_path is not None:
-        if path != final_path or not (available or {}).get(path, path).is_file():
+        if path != final_path:
             return None
     elif path.stem != identity:
         return None

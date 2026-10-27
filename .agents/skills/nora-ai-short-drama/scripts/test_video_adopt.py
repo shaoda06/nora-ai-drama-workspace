@@ -570,6 +570,29 @@ class AdoptionTests(unittest.TestCase):
         self.put(draft, draft.read_text(encoding='utf-8').replace('- 决定：批准采用。', '- 决定：通过并采用P001 R001一采；依据为用户反馈。'))
         self.assertEqual(self.run_plan(False)['items'][0]['state'], 'already_adopted')
 
+    def test_selected_output_requires_file_but_accepts_planned_move_source(self):
+        _, draft, source, target = self.item()
+        self.run_plan()
+        text = draft.read_text()
+        target.rename(source)
+        self.assertIsNone(tool.selected_output(self.root, draft, text, 'EP001-C001-P001', '一采'))
+        selected = tool.selected_output(self.root, draft, text, 'EP001-C001-P001', '一采', {target: source})
+        self.assertEqual(selected['path'], target)
+
+    def test_review_filename_must_not_match_another_files_prefix_or_suffix(self):
+        _, draft, _, target = self.item()
+        self.run_plan()
+        text = draft.read_text()
+        review = tool.selected_row(text, '一采')[2].split('[本阶段人工审核决定](#')[1].split(')')[0]
+        review = next(line[4:] for line in text.splitlines() if line.startswith('### ') and line[4:].lower() == review)
+        start, end = tool.section(text, review)
+        for other in ('backup-' + target.name, 'backup.' + target.name, target.name + '.bak'):
+            with self.subTest(other=other):
+                body = text[start:end].replace(target.name, other)
+                changed = text[:start] + body + text[end:]
+                self.assertIsNone(tool.selected_output(self.root, draft, changed, 'EP001-C001-P001', '一采'))
+        self.assertIsNotNone(tool.selected_output(self.root, draft, text, 'EP001-C001-P001', '一采'))
+
     def test_interrupted_record_write_can_finish_without_removing_video(self):
         _, draft, source, target = self.item()
         with patch.object(tool.os, 'replace', side_effect=OSError('simulated disk write error')):

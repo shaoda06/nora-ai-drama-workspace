@@ -201,6 +201,35 @@ class ApprovalTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, '不能复用旧完成报告'):
             self.run_plan()
 
+    def test_missing_other_stage_file_prevents_new_episode_completion(self):
+        self.setup_stage()
+        missing = self.fixture.ep / '06-阶段采用视频/01-一采/C001-场次/EP001-C001-P001-R001-一采.mp4'
+        missing.unlink()
+        result = self.run_plan()
+        self.assertFalse(result['episode_completed'])
+        self.assertIn('EP001-C001-P001 一采未采用', result['episode_missing'])
+        self.assertIsNone(tool.selected(self.root, 'EP001-C001-P001', '一采'))
+        self.assertNotIn('EP001分段制作与交付已完成', (self.fixture.extra / '工作稿/EP001-生成说明-工作稿.md').read_text())
+
+    def test_completed_and_browser_pending_reports_recheck_other_stage_files(self):
+        self.setup_stage(parts=('P001',))
+        result = self.run_plan(browser_error='simulated browser failure')
+        self.assertTrue(result['episode_completed'])
+        report = self.request.with_name(self.request.stem + '-结果.json')
+        for stage in ('一采', '二采'):
+            with self.subTest(stage=stage):
+                path = self.fixture.ep / '06-阶段采用视频' / tool.adopt.STAGES[stage] / 'C001-场次' / ('EP001-C001-P001-R001-' + stage + '.mp4')
+                content = path.read_bytes(); path.unlink()
+                saved_report = report.read_bytes()
+                calls = len(self.browser_calls)
+                with patch.object(tool.adopt, 'adoption', side_effect=AssertionError('must not repeat adoption')):
+                    with self.assertRaisesRegex(ValueError, '不能复用整集完成报告.*' + stage):
+                        self.run_plan()
+                self.assertEqual(report.read_bytes(), saved_report)
+                self.assertEqual(len(self.browser_calls), calls)
+                path.write_bytes(content)
+                self.assertEqual(self.run_plan()['state'], 'completed')
+
     def test_legacy_completed_report_without_delivery_is_read_only_receipt(self):
         items = self.setup_stage(parts=('P001',))
         result = self.run_plan()
@@ -213,6 +242,7 @@ class ApprovalTests(unittest.TestCase):
         with patch.object(tool.adopt, 'adoption', side_effect=AssertionError('must not adopt')):
             repeated = self.run_plan()
         self.assertTrue(repeated['reused'])
+        self.assertTrue(repeated['historical_receipt'])
         self.assertEqual(report.read_bytes(), before)
         self.assertEqual(len(self.browser_calls), count)
         self.request = self.request.with_name('新请求不能继承旧报告.json')

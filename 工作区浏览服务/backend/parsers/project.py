@@ -719,7 +719,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             decision = field(section, '决定')
             outputs = '\n'.join(field(section, name) for name in (
                 '对应具体输出', '被审具体输出文件及R编号／版本', '具体输出', '被审具体输出', '采用文件'))
-            exact_output = re.search(r'(?<![\w-])' + re.escape(video_name) + r'(?![\w.-])', outputs)
+            exact_output = re.search(r'(?<![\w.-])' + re.escape(video_name) + r'(?![\w.-])', outputs)
             return bool(exact_output and re.match(r'^(?:批准采用(?:$|[。；，\s])|通过并采用(?:$|[。；，\s]|本轮|P\d))', decision))
         # Old execution-only approvals remain readable; new records link their review.
         return bool(re.match(r'^批准采用(?:$|[。；，\s])', field(body, '用户决定')))

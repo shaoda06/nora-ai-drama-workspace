@@ -44,7 +44,7 @@ class VideoProductTests(HttpTestCase):
         videos = self.parse()['segments']['C001'][0]['videos']
         self.assertEqual(len(videos), 1); self.assertNotIn('products', videos[0]); self.assertEqual(videos[0]['key'], self.base)
 
-    def test_manifest_approval_preview_and_download_share_one_revision(self):
+    def approved_final(self):
         self.save_manifest()
         self.write(self.episode + '/其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md', '''## 1. 当前选定结果
 | 处理阶段 | 当前选定文件 | R编号 | 人工批准依据 |
@@ -57,6 +57,9 @@ class VideoProductTests(HttpTestCase):
 - 对应具体输出：transparent.mov
 - 决定：批准采用
 ''')
+
+    def test_manifest_approval_preview_and_download_share_one_revision(self):
+        self.approved_final()
         episode = self.parse(); videos = episode['segments']['C001'][0]['videos']; self.assertEqual(len(videos), 1)
         video = videos[0]; self.assertTrue(video['approved']); self.assertEqual(video['candidateNumber'], 1)
         self.assertEqual([p['role'] for p in video['products']], ['最终产物', '过程产物'])
@@ -68,6 +71,51 @@ class VideoProductTests(HttpTestCase):
         self.assertEqual(completed_episode_videos(self.store, '示例项目', 'EP001', data)[0][0], (self.project / self.final).resolve())
         self.assertEqual(resources(self.store, '示例项目', 'EP001', data)['后处理']['videos'][0][0], (self.project / self.final).resolve())
         self.assertEqual(len(resources(self.store, '示例项目', 'EP001', data)['后处理']['videos']), 1)
+
+    def test_review_must_name_the_exact_final_file(self):
+        self.approved_final()
+        draft = self.project / self.episode / '其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md'
+        text = draft.read_text()
+        for name in ('backup.transparent.mov', 'not-transparent.mov', 'transparent.mov.bak'):
+            with self.subTest(name=name):
+                draft.write_text(text.replace('- 对应具体输出：transparent.mov', '- 对应具体输出：' + name))
+                store = ProjectStore(self.root)
+                data = store.section('示例项目', '09-剧集制作', 'EP001')
+                self.assertFalse(data['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos'][0]['approved'])
+
+    def test_relative_path_spellings_share_the_approved_product_key(self):
+        self.approved_final()
+        for spelling in ('./' + self.final, self.final.replace('/', '\\')):
+            with self.subTest(spelling=spelling):
+                self.rows[0]['file'] = spelling
+                self.rows[0]['preview'] = './' + self.preview
+                self.save_manifest()
+                store = ProjectStore(self.root)
+                data = store.section('示例项目', '09-剧集制作', 'EP001')
+                video = data['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos'][0]
+                self.assertTrue(video['approved'])
+                self.assertEqual(video['products'][0]['key'], self.final)
+                self.assertEqual(completed_episode_videos(store, '示例项目', 'EP001', {
+                    'catalogues': {'09-剧集制作': {'children': [{**data['catalogues']['09-剧集制作']['children'][0], 'productionComplete': True, 'productionIssues': []}]}}
+                })[0][0], (self.project / self.final).resolve())
+
+    def test_pre_normalized_product_cache_rebuilds_without_project_edits(self):
+        self.approved_final()
+        self.rows[0]['file'] = './' + self.final
+        self.save_manifest()
+        store = ProjectStore(self.root, cache_directory=self.root / '.cache')
+        store.section('示例项目', '09-剧集制作', 'EP001', mode='playback')
+        cache = self.root / '.cache/示例项目/09-剧集制作--EP001--playback.json'
+        saved = json.loads(cache.read_text())
+        saved['schema'] = 19
+        saved['data']['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos'][0]['approved'] = False
+        cache.write_text(json.dumps(saved))
+        snapshot = store.snapshot(self.project)
+        restart = ProjectStore(self.root, cache_directory=self.root / '.cache')
+        data = restart.section('示例项目', '09-剧集制作', 'EP001', mode='playback')
+        self.assertTrue(data['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos'][0]['approved'])
+        self.assertEqual(json.loads(cache.read_text())['schema'], 20)
+        self.assertEqual(restart.snapshot(self.project), snapshot)
 
     def test_manifest_does_not_approve_a_new_final_from_process_approval(self):
         self.save_manifest()

@@ -235,7 +235,7 @@ def approve(args):
     if (stage == '后处理' and 'postprocess_delivery' not in plan and args.apply
             and previous.get('request') == plan and previous.get('state') in ('completed', 'adopted_partial')):
         # Historical completed requests are receipts, not authorization for new adoption.
-        return {**previous, 'reused': True}
+        return {**previous, 'reused': True, 'historical_receipt': True}
     if stage == '后处理' and (not isinstance(deliveries, dict) or set(deliveries) != set(ids)
                               or any(value not in ('workflow', 'products') for value in deliveries.values())):
         raise ValueError('后处理收尾须用postprocess_delivery逐身份声明workflow或products；未齐备不收尾')
@@ -251,6 +251,11 @@ def approve(args):
             if (current is None or not current['path'].is_file()
                     or current['path'] != adopt.local_path(root, recorded['selected_path'])):
                 raise ValueError('后处理最终产物缺失或采用关联已变化，不能复用旧完成报告')
+    if previous.get('episode_completed') and (previous.get('local_completed')
+                                             or previous.get('state') in ('completed', 'adopted_partial')):
+        missing = episode_missing(root, episode)
+        if missing:
+            raise ValueError('本集交付存在缺项，不能复用整集完成报告：' + '；'.join(missing))
     if args.apply and previous.get('state') in ('completed', 'adopted_partial'):
         refreshed = completion_handoff(dict(previous), summary)
         if refreshed != previous:
@@ -324,7 +329,7 @@ def main():
     try:
         result = approve(args)
         compact = {k: result[k] for k in ('state', 'phase', 'episode_completed', 'episode_missing',
-                   'report_file', 'timings_seconds', 'error', 'reused', 'next_action', 'retrospective') if k in result}
+                   'report_file', 'timings_seconds', 'error', 'reused', 'historical_receipt', 'next_action', 'retrospective') if k in result}
         compact['identity_count'] = len(result['identities'])
         if 'browser' in result:
             compact['review_url'] = result['browser']['review_url']

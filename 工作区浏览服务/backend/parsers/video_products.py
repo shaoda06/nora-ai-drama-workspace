@@ -21,11 +21,13 @@ def load_products(project, identity, read):
     def media(key):
         if not isinstance(key, str) or not key or Path(key).is_absolute():
             raise ValueError(f'{manifest}：文件路径必须相对于项目根目录')
+        key = key.replace('\\', '/')
         path = (project / key).resolve()
         if not path.is_relative_to(project.resolve()) or not path.is_file():
             raise ValueError(f'{manifest}：产物文件不存在或越出项目：{key}')
         stat = path.stat()
         revision = f'{stat.st_mtime_ns}-{stat.st_size}'
+        key = path.relative_to(project.resolve()).as_posix()
         return {'key': key, 'url': quote(key, safe='/-._~') + '?v=' + revision, 'fileRevision': revision}
 
     for row in rows:
