@@ -23,7 +23,7 @@ class GenerationContextTests(HttpTestCase):
     def setUp(self):
         super().setUp()
         self.temp = tempfile.TemporaryDirectory()
-        self.project = Path(self.temp.name) / '示例项目'
+        self.project = (Path(self.temp.name) / '示例项目').resolve()
         self.episode = '09-剧集制作/EP001'
         self.write(self.episode + '/02-剧集剧本/EP001-本集剧本.md',
                    '## 1. 故事剧本正文\n### EP001-C001\n场次。\n')
@@ -558,7 +558,45 @@ class GenerationContextTests(HttpTestCase):
         context['prompts']['english'] = context['prompts']['chinese']
         self.write(root + '/执行-20261008-220000/输入映射.json', json.dumps({'generation_contexts': [context]}))
         with self.assertRaisesRegex(ValueError, '关联重复'):
-            self.videos()
+            build_data(self.project, web_episode_navigation=True, load_scope='09-剧集制作', episode_id='EP001')
+
+    def test_explicit_recovery_keeps_history_and_uses_latest_frozen_inputs(self):
+        context, root, _ = self.add_run('R001')
+        original = (self.project / root / '输入映射.json').read_bytes()
+        # Directory order and mtime are not execution order.
+        for folder, timestamp, text in (
+                ('恢复-Z', '2026-10-27T09:00:00+08:00', 'older recovery'),
+                ('恢复-A', '2026-10-27T02:00:00+00:00', 'latest recovery')):
+            recovered = json.loads(json.dumps(context))
+            recovered['prompts']['english'] = root + '/' + folder + '/模型提示词.txt'
+            self.write(recovered['prompts']['english'], text)
+            self.write(root + '/' + folder + '/输入映射.json', json.dumps({
+                'recovery': {'original_local_task_id': 'original-task'},
+                'generation_contexts_recorded_at': timestamp,
+                'generation_contexts': [recovered]}))
+        with patch.object(main, 'store', ProjectStore(self.project.parent)), TestClient(main.app) as client:
+            base = '/api/projects/示例项目/episodes/EP001'
+            for suffix in ('', '?view=full', '/contexts/' + context['identity']):
+                response = client.get(base + suffix)
+                self.assertEqual(response.status_code, 200, response.text)
+                if suffix.startswith('/contexts/'):
+                    self.assertEqual(response.json()['prompts']['english'], 'latest recovery')
+                elif suffix:
+                    self.assertIn('latest recovery', response.text)
+                    self.assertIn('恢复-Z', response.text)
+                    self.assertIn('恢复-A', response.text)
+            self.assertIsNone(client.get('/api/projects/示例项目/status').json()['error'])
+        self.assertEqual((self.project / root / '输入映射.json').read_bytes(), original)
+
+    def test_recovery_does_not_override_unrelated_task_mapping(self):
+        context, root, _ = self.add_run('R001')
+        context['prompts']['english'] = context['prompts']['chinese']
+        self.write(self.episode + '/其他资料/执行附件/另一任务/恢复/输入映射.json', json.dumps({
+            'recovery': {'original_local_task_id': 'another-task'},
+            'generation_contexts_recorded_at': '2026-10-27T10:00:00+08:00',
+            'generation_contexts': [context]}))
+        with self.assertRaisesRegex(ValueError, '关联重复'):
+            build_data(self.project, web_episode_navigation=True, load_scope='09-剧集制作', episode_id='EP001')
 
     def test_same_revision_replacement_retains_reviewed_file_bytes(self):
         _, _, candidate = self.add_run('R000')

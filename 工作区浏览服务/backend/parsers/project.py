@@ -1280,6 +1280,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
         files = inventory(root)
         episode_videos[episode.name] = [item for item in files if item["kind"] == "video"]
         if web_episode_navigation:
+            mappings = {}
             for item in files:
                 if item["name"] != "输入映射.json" or "执行附件" not in Path(item["key"]).parts:
                     continue
@@ -1289,13 +1290,32 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                 snapshot = text_previews[item["key"]]
                 mapping_text = ((project / item["key"]).read_text("utf-8-sig")
                                 if snapshot.get('deferred') or snapshot.get('notice') else snapshot["text"])
-                for context in json.loads(mapping_text).get("generation_contexts", []):
+                mappings[item['key']] = json.loads(mapping_text)
+            context_sources = {}
+            for key, mapping in mappings.items():
+                owner, priority = key, (False, 0.0)
+                if mapping.get('recovery', {}).get('original_local_task_id'):
+                    # Explicit recovery snapshots belong to their enclosing run;
+                    # keep both files, but display the latest frozen execution.
+                    for parent in Path(key).parent.parents:
+                        ancestor = (parent / '输入映射.json').as_posix()
+                        if ancestor in mappings:
+                            owner = ancestor
+                    if owner != key:
+                        priority = (True, datetime.fromisoformat(mapping['generation_contexts_recorded_at']).timestamp())
+                for context in mapping.get("generation_contexts", []):
                     identity = context["identity"]
                     if not re.fullmatch(re.escape(episode.name) + r"-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)", identity):
-                        raise ValueError(item["key"] + "：生成资料身份格式不正确")
-                    if identity in generation_contexts and generation_contexts[identity] != context:
-                        raise ValueError("生成资料关联重复：" + identity)
+                        raise ValueError(key + "：生成资料身份格式不正确")
+                    if identity in generation_contexts:
+                        previous_owner, previous_priority = context_sources[identity]
+                        if generation_contexts[identity] != context and (
+                                owner != previous_owner or priority == previous_priority):
+                            raise ValueError("生成资料关联重复：" + identity)
+                        if priority < previous_priority:
+                            continue
                     generation_contexts[identity] = context
+                    context_sources[identity] = (owner, priority)
         children = file_tree(files, root, episode.name)["children"] if episode_mode == 'full' else []
         present = {item["name"] for item in children}
         for directory in sorted(episode.iterdir()) if episode_mode == 'full' else []:

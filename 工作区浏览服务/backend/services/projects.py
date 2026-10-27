@@ -17,7 +17,7 @@ from project_index import read_index
 logger = logging.getLogger(__name__)
 
 # Increment only when the parsed project data or interpretation becomes incompatible.
-CACHE_SCHEMA = 17
+CACHE_SCHEMA = 18
 
 class ProjectStore:
     """Parse on demand; keep the last complete result while a change is read."""
