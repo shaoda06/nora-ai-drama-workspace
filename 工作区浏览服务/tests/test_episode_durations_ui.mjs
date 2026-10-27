@@ -48,8 +48,8 @@ const server = await createServer({ configFile: false, root: fileURLToPath(new U
   else if (url.endsWith('/status')) data = { revision: 1, updating: false, checking: false };
   else if (url.endsWith('/overview')) data = { active: [], warnings: [], directories: [{ name: '00-项目定位', label: '项目定位' }, { name: '09-剧集制作', label: '剧集制作' }] };
   else if (url.endsWith('/sections/00-项目定位')) data = { exists: false, groups: [] };
-  else if (url.endsWith('/sections/09-剧集制作')) data = { statistics: { total: 4, completed: 2, notStarted: 0, running: 2 }, children: ['EP001', 'EP002', 'EP003', 'EP004'].map(name => ({ kind: 'group', name, key: name, title: name === 'EP003' ? '很长的题名测试在手机中省略显示不能挤掉时长和制作状态' : '时长示例', titleStatus: '最终定名', statusHtml: '<span class="status-badge status-green">已完成</span>' })) };
-  else if (/\/episodes\/EP00[1-4]$/.test(url)) data = episode(url.slice(-5));
+  else if (url.endsWith('/sections/09-剧集制作')) data = { statistics: { total: 4, completed: 2, notStarted: 0, running: 2 }, children: ['EP001', 'EP002', 'EP003', 'EP004', '片头', '片尾'].map(name => ({ kind: 'group', name, key: name, title: name === 'EP003' ? '很长的题名测试在手机中省略显示不能挤掉时长和制作状态' : '时长示例', titleStatus: '最终定名', statusHtml: '<span class="status-badge status-green">已完成</span>' })) };
+  else if (/\/episodes\/(EP00[1-4]|片头|片尾)$/.test(url)) data = episode(url.split('/').at(-1));
   else if (url.includes('/revision-notes/')) data = { rounds: {}, notes: {} };
   else { unexpected.push(url); res.statusCode = 404; data = {}; }
   res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(data));
@@ -73,7 +73,7 @@ try {
   await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/tests/project-switch.html#/projects/${encodeURIComponent('时长示例')}`);
   assert.match(await page.title(), /项目切换/);
   await page.getByRole('button', { name: '剧集制作', exact: true }).click();
-  await page.getByRole('button').filter({ hasText: 'EP001' }).first().click();
+  await page.getByRole('button').filter({ hasText: 'EP001' }).first().press('Enter');
   const scene = id => page.getByRole('navigation', { name: '本集场次' }).getByRole('button', { name: new RegExp(`^场次 ${id} ·`) });
   const total = page.getByLabel('本集时长', { exact: true });
   const choose = page.getByRole('combobox', { name: '修改轮次', exact: true });
@@ -130,6 +130,21 @@ try {
   await page.screenshot({ path: path.join(screenshots, `${width}-list.png`), fullPage: false });
   await buttons.first().click();
   assert.equal(await total.textContent(), '本集时长：8秒', '进入详情沿用相同实际时长');
+  for (const shared of ['片头', '片尾']) {
+    await object.click(); await page.getByRole('option', { name: new RegExp('^' + shared) }).click();
+    await page.waitForFunction(label => document.querySelector('[aria-label="本集时长"]')?.textContent === label + '时长：4秒', shared);
+    await scene('C002').click();
+    assert.equal(await total.textContent(), shared + '时长：2秒', '切换独立方案只显示该场，不合计为8秒');
+    await chooseRound(9);
+    await scene('C002').click();
+    assert.equal(await total.textContent(), shared + '时长：1分3秒*', '历史轮次及计划时长标记仍随选中场次');
+    await chooseRound(10);
+    await scene('C001').click();
+    assert.equal(await total.textContent(), shared + '时长：4秒', '同一方案的多个P段继续累加');
+  }
+  await object.click(); await page.getByRole('option', { name: /^EP001/ }).click();
+  await scene('C002').click();
+  assert.equal(await total.textContent(), '本集时长：8秒', '切回正集仍合计全部场次');
   assert.deepEqual(errors, []);
   await context.close();
  }
