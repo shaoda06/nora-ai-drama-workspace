@@ -66,6 +66,8 @@ class AdoptionTests(unittest.TestCase):
         mapped['outputs'].append({'identity': identity, **data})
         self.write_json(mapping, mapped)
         item = {'identity': identity, 'mapping': str(mapping), 'receipt': str(receipt)}
+        if stage == '后处理':
+            item['postprocess_delivery'] = 'workflow'
         self.plan['items'].append(item)
         target = self.extra.parent / f'06-阶段采用视频/{tool.STAGES[stage]}/C001-场次/{identity}.mp4'
         return item, draft, source, target
@@ -74,6 +76,100 @@ class AdoptionTests(unittest.TestCase):
         path = self.extra / '执行附件/采用请求.json'
         self.write_json(path, self.plan)
         return tool.adoption(argparse.Namespace(project=str(self.root), plan=str(path), apply=apply))
+
+    def products(self, item, process_target):
+        identity = item['identity']
+        folder = self.extra / '执行附件' / identity
+        final = folder / '配套交付' / (identity + '-透明.mov')
+        preview = final.with_suffix('.mp4')
+        self.put(final, 'transparent delivery')
+        self.put(preview, 'checker preview')
+        manifest = folder / '后处理产物.json'
+        self.write_json(manifest, {'products': [
+            {'id': 'alpha', 'label': '透明', 'role': '最终产物', 'file': str(final.relative_to(self.root)),
+             'preview': str(preview.relative_to(self.root)), 'previewNote': '棋盘格预览'},
+            {'id': 'green', 'label': '过程', 'role': '过程产物', 'file': str(process_target.relative_to(self.root))}]})
+        item['postprocess_delivery'] = 'products'
+        return manifest, final, preview
+
+    def test_products_first_adoption_and_repeat_keep_source_and_final_distinct(self):
+        item, draft, source, process = self.item(stage='后处理')
+        item['review_entry'] = '[定制交付审核](http://localhost/review/final)'
+        manifest, final, _ = self.products(item, process)
+        content = source.read_bytes()
+        dry = self.run_plan(apply=False)
+        self.assertEqual(dry['selected_approved_counts']['后处理'], 1)
+        self.assertTrue(source.exists())
+        self.assertFalse(process.exists())
+        result = self.run_plan()
+        self.assertEqual(result['items'][0]['selected_path'], str(final))
+        self.assertEqual(process.read_bytes(), content)
+        self.assertFalse(source.exists())
+        self.assertEqual(tool.selected_output(self.root, draft, draft.read_text(), 'EP001-C001-P001', '后处理')['path'], final)
+        self.assertIn('原下载凭据不作为定制文件字节凭据', draft.read_text())
+        self.assertIn(item['review_entry'], draft.read_text())
+        record = tool.load(Path(item['mapping']))['adoptions'][0]
+        self.assertEqual(record['selected_path'], str(final.relative_to(self.root)))
+        before = {p: p.read_bytes() for p in (draft, Path(item['mapping']), manifest, final, process)}
+        repeat = self.run_plan()
+        self.assertEqual(repeat['items'][0]['state'], 'already_adopted')
+        self.assertEqual(before, {p: p.read_bytes() for p in before})
+
+    def test_postprocess_missing_or_conflicting_delivery_is_not_guessed(self):
+        item, draft, source, process = self.item(stage='后处理')
+        del item['postprocess_delivery']
+        with self.assertRaisesRegex(ValueError, 'postprocess_delivery'):
+            self.run_plan()
+        item['postprocess_delivery'] = 'products'
+        with self.assertRaisesRegex(ValueError, '缺少后处理产物清单'):
+            self.run_plan()
+        self.products(item, process)
+        item['postprocess_delivery'] = 'workflow'
+        with self.assertRaisesRegex(ValueError, '不能按workflow'):
+            self.run_plan()
+        self.assertTrue(source.exists())
+        self.assertFalse(process.exists())
+        self.assertNotIn('- 决定：批准采用', draft.read_text())
+
+    def test_missing_final_preview_or_process_blocks_whole_batch(self):
+        _, first_draft, first_source, first_target = self.item('P001', stage='后处理')
+        item, draft, source, process = self.item('P002', stage='后处理')
+        manifest, final, preview = self.products(item, process)
+        extra = final.with_name('额外过程.mp4')
+        data = tool.load(manifest)
+        data['products'].append({'id': 'extra', 'label': '额外过程', 'role': '过程产物', 'file': str(extra.relative_to(self.root))})
+        self.write_json(manifest, data)
+        self.put(extra, 'intermediate')
+        before = {p: p.read_bytes() for p in (first_draft, draft, self.summary, self.progress, Path(item['mapping']))}
+        for missing in (final, preview, extra):
+            with self.subTest(missing=missing.name):
+                content = missing.read_bytes(); missing.unlink()
+                with self.assertRaisesRegex(ValueError, '产物未齐备'):
+                    self.run_plan()
+                self.assertEqual(before, {p: p.read_bytes() for p in before})
+                self.assertTrue(first_source.exists() and source.exists())
+                self.assertFalse(first_target.exists() or process.exists())
+                missing.write_bytes(content)
+
+    def test_products_can_finish_existing_workflow_adoption_without_moving_it_back(self):
+        item, draft, source, process = self.item(stage='后处理')
+        self.run_plan()
+        _, final, _ = self.products(item, process)
+        self.run_plan()
+        self.assertTrue(process.exists())
+        self.assertFalse(source.exists())
+        self.assertEqual(tool.selected_output(self.root, draft, draft.read_text(), 'EP001-C001-P001', '后处理')['path'], final)
+
+    def test_products_cannot_keep_a_link_to_source_that_adoption_moves(self):
+        item, draft, source, process = self.item(stage='后处理')
+        manifest, _, _ = self.products(item, process)
+        data = tool.load(manifest)
+        data['products'][1]['file'] = str(source.relative_to(self.root))
+        self.write_json(manifest, data)
+        with self.assertRaisesRegex(ValueError, '将移动的候选文件'):
+            self.run_plan()
+        self.assertTrue(source.exists())
+        self.assertFalse(process.exists())
 
     def test_shared_units_adopt_each_stage_without_touching_numbered_episode(self):
         numbered_summary = self.summary

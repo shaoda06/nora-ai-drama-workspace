@@ -6,7 +6,7 @@ license: MIT
 
 # Nora 内容审查
 
-本技能承担 Nora 的当前业务交付。直接调用也遵循[主控读取范围](../nora-ai-short-drama/SKILL.md#读取范围)与[规则优先级](../nora-ai-short-drama/SKILL.md#外部技能协作与规则优先级)，不回主控重复走全流程。按当前任务选择下方入口；首次完整制作读完整适用要求和模板，局部修改只读受影响内容。方法库中的外部目录、配置、格式、发布及审批流程不替代Nora规则。写入前按[文件与版本](../nora-ai-short-drama/references/共用规则/文件版本与工作稿规范.md)的相关章节保存，交付按[主控完成标准](../nora-ai-short-drama/SKILL.md#完成标准)同步。
+本技能承担 Nora 的当前业务交付；直接调用遵循[业务技能共同约定](../nora-ai-short-drama/references/共用规则/主控操作规范.md#业务技能共同约定)，按下方当前任务入口接续。
 
 ## 合并自检与专项审查
 

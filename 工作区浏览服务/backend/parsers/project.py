@@ -803,7 +803,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                 state = match.group(1) if match else path.stem
                 image_type = "道具参考图"
             else:
-                match = re.fullmatch(re.escape(number) + r"-((?:EP\d{3,}|片头|片尾)-C\d{3,}(?:-V\d{3,})?)-场景参考图", path.stem)
+                match = re.fullmatch(re.escape(number) + r"-((?:EP\d{3,}|片头|片尾)-C\d{3,}(?:-V\d{3,})?|V\d{3,})-场景参考图", path.stem)
                 state = match.group(1) if match else path.stem
                 image_type = "场次环境图" if match else ("平面图" if "平面" in path.stem else "场景参考图")
             assets.append({kind: True, "type": image_type, "state": state, "media": media,
@@ -1018,8 +1018,8 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
             record_url = formal_record_url(entry["采用的候选版本"], record, record_key)
             review_data = asset_review_metadata(reviews, record_url, formal_key=links[0]["key"] if links else "", adopted_version=entry["采用的候选版本"])
             scope = entry["场景状态与适用条件"]
-            # Only an explicit scene-origin filename qualifies as an episode environment.
-            is_environment = bool(links and re.fullmatch(re.escape(number) + r"-(?:EP\d{3,}|片头|片尾)-C\d{3,}(?:-V\d{3,})?-场景参考图\.(?:png|jpg|jpeg|webp)", Path(links[0]["key"]).name))
+            # Formal views may precede episode planning; retain explicit SC/V identity.
+            is_environment = bool(links and re.fullmatch(re.escape(number) + r"-(?:(?:EP\d{3,}|片头|片尾)-C\d{3,}(?:-V\d{3,})?|V\d{3,})-场景参考图\.(?:png|jpg|jpeg|webp)", Path(links[0]["key"]).name))
             if re.search(r"仅.*(?:空间|布局|结构)|不是实际|仅供.*结构|结构辅助", scope):
                 is_environment = False
             asset = {"scene": True, "type": "场次环境图" if is_environment else "辅助／既有参考图",

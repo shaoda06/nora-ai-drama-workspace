@@ -13,7 +13,7 @@
 
 首帧任务先读取[首帧参考图规范](../../short-drama-storyboard/references/首帧参考图规范.md)，将其中的开始状态与画面要求落实到提示词；目录、命名和共用集内记录读取该规范第2、4、5节及其链接的集内素材规则。实际选择图生图时，本文只维护上传、连接、画布与执行映射。
 
-制作、修订和结果核对按[Qwen参考图生成与修订的七项约定](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#22-qwen参考图生成与修订的七项约定)执行；工具选型见[技能入口](../../nora-ai-short-drama/SKILL.md#当前参考图生成选型)。候选先交用户审核；修订按[参考图统一修订规则](../../nora-drama-assets/references/图片提示词规范.md#参考图统一修订规则)执行。
+制作、修订和结果核对按[Qwen参考图生成与修订的七项约定](../../nora-drama-assets/references/Qwen-Image-2.1-提示词规范.md#22-qwen参考图生成与修订的七项约定)执行；工具选型见[技能入口](../../nora-drama-assets/references/图片提示词规范.md#当前参考图生成选型)。候选先交用户审核；修订按[参考图统一修订规则](../../nora-drama-assets/references/图片提示词规范.md#参考图统一修订规则)执行。
 
 技术映射、规格核对及记录由脚本执行，职责以[图片执行分工](ComfyUI-服务配置与任务提交规范.md#图片执行分工)为准；Agent不因下列技术说明重新测文件、核对节点或抄写参数。
 

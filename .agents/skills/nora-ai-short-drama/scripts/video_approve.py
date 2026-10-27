@@ -214,12 +214,15 @@ def approve(args):
         raise ValueError('原提交清单未提供这些具体执行身份：' + ', '.join(sorted(set(ids) - available.keys())))
     items = [available[i] for i in ids]
     items.sort(key=lambda i: expected.index(i['identity'].rsplit('-', 2)[0]))
+    deliveries = plan.get('postprocess_delivery', {})
     if request_path.parent != Path(items[0]['mapping']).parent:
         raise ValueError('批准收尾请求须保存到本批最前P的实际共同执行附件')
     summary = adopt.local_path(root, plan.get('summary', '09-剧集制作/' + episode + '/其他资料/工作稿/' + episode + '-生成说明-工作稿.md'))
     adoption_plan = {k: plan[k] for k in ('approval_text', 'approval_time') if k in plan}
     adoption_plan.update(items=[{**{k: i[k] for k in ('identity', 'mapping', 'receipt')},
-                                 **({'approval_scope': plan['approval_scope']} if 'approval_scope' in plan else {})}
+                                 **({'approval_scope': plan['approval_scope']} if 'approval_scope' in plan else {}),
+                                 **({'postprocess_delivery': deliveries.get(i['identity'])}
+                                    if stage == '后处理' and isinstance(deliveries, dict) else {})}
                                 for i in items],
                          summary=str(summary), record_updates=record_updates(root, episode, summary))
     result = {'state': 'ready', 'phase': 'adoption', 'identities': ids, 'timings_seconds': {}, 'episode_completed': False}
@@ -229,6 +232,25 @@ def approve(args):
     previous = adopt.load(report) if report.exists() else {}
     if previous.get('request') and previous['request'] != plan:
         raise ValueError('已有批准收尾请求不同，请另存本次请求，保留原批准记录')
+    if (stage == '后处理' and 'postprocess_delivery' not in plan and args.apply
+            and previous.get('request') == plan and previous.get('state') in ('completed', 'adopted_partial')):
+        # Historical completed requests are receipts, not authorization for new adoption.
+        return {**previous, 'reused': True}
+    if stage == '后处理' and (not isinstance(deliveries, dict) or set(deliveries) != set(ids)
+                              or any(value not in ('workflow', 'products') for value in deliveries.values())):
+        raise ValueError('后处理收尾须用postprocess_delivery逐身份声明workflow或products；未齐备不收尾')
+    if stage == '后处理' and (previous.get('local_completed') or previous.get('state') in ('completed', 'adopted_partial')):
+        for identity in ids:
+            product = adopt.postprocess_product(root, identity)
+            if (deliveries[identity] == 'products') != (product is not None):
+                raise ValueError('后处理交付范围与原收尾不同，须核对并另存接续请求')
+            part = identity.rsplit('-', 2)[0]
+            draft = root / '09-剧集制作' / episode / '其他资料/工作稿' / (part + '-视频制作-工作稿.md')
+            current = adopt.selected_output(root, draft, draft.read_text('utf-8-sig'), part, stage)
+            recorded = next(item for item in previous['adoption']['items'] if item['identity'] == identity)
+            if (current is None or not current['path'].is_file()
+                    or current['path'] != adopt.local_path(root, recorded['selected_path'])):
+                raise ValueError('后处理最终产物缺失或采用关联已变化，不能复用旧完成报告')
     if args.apply and previous.get('state') in ('completed', 'adopted_partial'):
         refreshed = completion_handoff(dict(previous), summary)
         if refreshed != previous:

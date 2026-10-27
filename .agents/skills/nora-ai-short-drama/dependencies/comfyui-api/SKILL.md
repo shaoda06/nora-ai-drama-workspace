@@ -155,7 +155,7 @@ ComfyUI supports WebSocket; REST polling is the default here because it needs no
 
 ## Workflow Validation
 
-Local preparation validates JSON structure, declared bindings, paired local canvas/API and task-specific size/count constraints using the fixed tools. Ordinary submission assumes the selected remote supports the supplied workflow: do not query node/model catalogs or require inventory freshness before queuing. ComfyUI validates remote classes, model availability, input schemas and connections when it receives/executes the request. Preserve the original response/error details and report them to the Agent; rejected or uncertain POSTs are not automatically retried.
+Local preparation validates JSON structure, declared bindings and task-specific size/count constraints using the fixed tools. Ordinary submission assumes the selected remote supports the supplied workflow: do not query node/model catalogs or require inventory freshness before queuing. ComfyUI validates remote classes, model availability, input schemas and connections when it receives/executes the request. Preserve the original response/error details and report them to the Agent; rejected or uncertain POSTs are not automatically retried.
 
 Capability discovery is a separate authorized diagnostic task. When explicitly needed, use the installed `comfyui-inventory` skill and its documented cache location; do not infer another endpoint's capabilities or install/update dependencies automatically.
 

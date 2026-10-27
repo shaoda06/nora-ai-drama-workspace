@@ -123,6 +123,38 @@ class ProjectLoadingTests(HttpTestCase):
         self.assertEqual(len(sheets['formal']), 1)
         self.assertEqual(image.read_bytes(), b'unchanged image fixture')
 
+    def test_pre_sc_view_cache_rebuilds_classification_without_source_edits(self):
+        folder = self.project / '04-场景资料/SC001-办公室'
+        folder.mkdir(parents=True)
+        (folder / 'SC001-办公室-资料卡.md').write_text('# 办公室\n独立场景。\n', encoding='utf-8')
+        (folder.parent / '场景索引.md').write_text(
+            '| 场景编号 | 名称 | 场景类型 | 资料卡入口 |\n| --- | --- | --- | --- |\n'
+            '| SC001 | 办公室 | 室内 | [资料卡](SC001-办公室/SC001-办公室-资料卡.md) |\n', encoding='utf-8')
+        image = folder / '参考图/SC001-V001-场景参考图.png'
+        image.parent.mkdir()
+        image.write_bytes(b'unchanged scene image fixture')
+        self.store.section('示例项目', '04-场景资料')
+        cache = self.root / '.cache/示例项目/04-场景资料.json'
+        saved = json.loads(cache.read_text('utf-8'))
+        saved['schema'] = 18
+        scene = saved['data']['scenes'][0]
+        scene['auxiliary'] = scene['formal']
+        scene['formal'] = []
+        cache.write_text(json.dumps(saved, ensure_ascii=False), encoding='utf-8')
+        snapshot = self.store.snapshot(self.project)
+
+        restart = ProjectStore(self.root, cache_directory=self.root / '.cache', version='1.0')
+        parsed = restart.section('示例项目', '04-场景资料')
+        scene = parsed['scenes'][0]
+        self.assertEqual(len(scene['formal']), 1)
+        self.assertEqual(scene['formal'][0]['state'], 'V001')
+        self.assertFalse(scene['formal'][0]['approved'])
+        self.assertEqual(scene['auxiliary'], [])
+        self.assertIsNone(scene['cover'])
+        self.assertEqual(json.loads(cache.read_text('utf-8'))['schema'], 19)
+        self.assertEqual(self.store.snapshot(self.project), snapshot)
+        self.assertEqual(image.read_bytes(), b'unchanged scene image fixture')
+
     def test_playback_cache_survives_unrelated_edits_and_restart_but_refreshes_own_episode(self):
         root = self.project / '09-剧集制作/EP001'
         root.mkdir(parents=True)

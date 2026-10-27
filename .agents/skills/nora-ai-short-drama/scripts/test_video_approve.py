@@ -76,6 +76,8 @@ class ApprovalTests(unittest.TestCase):
         self.request = submission.with_name('批准收尾请求.json')
         self.plan = {'submission_plans': [str(submission)], 'identities': [i['identity'] for i in items],
                      'approval_text': '这两段都批准了。'}
+        if stage == '后处理':
+            self.plan['postprocess_delivery'] = {i['identity']: 'workflow' for i in items}
         self.fixture.put(self.request, self.plan)
         NativeClient.calls = []
         return items
@@ -109,10 +111,119 @@ class ApprovalTests(unittest.TestCase):
         self.fixture.put(draft, text)
         return draft, target
 
+    def prepare_products(self, item):
+        identity = item['identity']
+        directory = self.fixture.extra / '执行附件' / identity
+        final = directory / '配套交付' / (identity + '-透明.mov')
+        process = self.fixture.ep / '06-阶段采用视频/03-后处理/C001-场次' / (identity + '.mp4')
+        self.fixture.put(final, b'transparent final')
+        manifest = directory / '后处理产物.json'
+        self.fixture.put(manifest, {'products': [
+            {'id': 'alpha', 'label': '透明 MOV', 'role': '最终产物', 'file': str(final.relative_to(self.root))},
+            {'id': 'green', 'label': '绿底 MP4', 'role': '过程产物', 'file': str(process.relative_to(self.root))}]})
+        self.plan['postprocess_delivery'][identity] = 'products'
+        return manifest, final, process
+
+    def test_products_complete_and_repeat_through_one_entry(self):
+        items = self.setup_stage(parts=('P001',))
+        _, final, process = self.prepare_products(items[0])
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'completed')
+        self.assertTrue(result['episode_completed'])
+        self.assertEqual(result['adoption']['selected_approved_counts']['后处理'], 1)
+        self.assertEqual(result['adoption']['items'][0]['selected_path'], str(final))
+        self.assertTrue(process.is_file())
+        count = len(self.browser_calls)
+        self.assertTrue(self.run_plan()['reused'])
+        self.assertEqual(len(self.browser_calls), count)
+        self.request = self.request.with_name('另一次收尾请求.json')
+        result = self.run_plan()
+        self.assertTrue(result['episode_completed'])
+        self.assertEqual(result['adoption']['items'][0]['state'], 'already_adopted')
+
+    def test_incomplete_products_fail_before_batch_adoption(self):
+        items = self.setup_stage()
+        _, final, _ = self.prepare_products(items[-1])
+        final.unlink()
+        progress = (self.root / '项目进度.md').read_bytes()
+        result = self.run_plan()
+        self.assertEqual(result['state'], 'needs_attention')
+        self.assertIn('产物未齐备', result['error'])
+        self.assertEqual((self.root / '项目进度.md').read_bytes(), progress)
+        self.assertFalse(self.browser_calls)
+        for item in items:
+            self.assertTrue((self.fixture.extra / '候选视频' / (item['identity'] + '.mp4')).is_file())
+
+    def test_completed_and_browser_pending_recheck_delivery_before_reuse(self):
+        items = self.setup_stage(parts=('P001',))
+        manifest, final, process = self.prepare_products(items[0])
+        first = self.run_plan(browser_error='temporary browser error')
+        self.assertEqual(first['state'], 'browser_pending')
+        for missing in (process, final):
+            content = missing.read_bytes(); missing.unlink()
+            with self.assertRaisesRegex(ValueError, '不能复用旧完成报告'):
+                self.run_plan()
+            missing.write_bytes(content)
+        self.assertEqual(self.run_plan()['state'], 'completed')
+        data = tool.adopt.load(manifest)
+        other = final.with_name('different.mov')
+        self.fixture.put(other, b'different final')
+        data['products'][0]['file'] = str(other.relative_to(self.root))
+        self.fixture.put(manifest, data)
+        with self.assertRaisesRegex(ValueError, '不能复用旧完成报告'):
+            self.run_plan()
+
+    def test_new_postprocess_request_requires_exact_delivery_declarations(self):
+        self.setup_stage(parts=('P001',))
+        declarations = self.plan.pop('postprocess_delivery')
+        for invalid in (None, 'workflow', {}, {**declarations, 'EP001-C001-P099-R001-后处理': 'workflow'}):
+            with self.subTest(invalid=invalid):
+                if invalid is not None:
+                    self.plan['postprocess_delivery'] = invalid
+                else:
+                    self.plan.pop('postprocess_delivery', None)
+                with self.assertRaisesRegex(ValueError, 'postprocess_delivery'):
+                    self.run_plan()
+        self.assertFalse(self.browser_calls)
+
+    def test_completed_workflow_report_cannot_hide_a_new_product_manifest(self):
+        items = self.setup_stage(parts=('P001',))
+        self.run_plan()
+        self.prepare_products(items[0])
+        self.plan['postprocess_delivery'][items[0]['identity']] = 'workflow'
+        with self.assertRaisesRegex(ValueError, '交付范围与原收尾不同'):
+            self.run_plan()
+
+    def test_completed_workflow_report_checks_selected_file_still_exists(self):
+        self.setup_stage(parts=('P001',))
+        result = self.run_plan()
+        Path(result['adoption']['items'][0]['selected_path']).unlink()
+        with self.assertRaisesRegex(ValueError, '不能复用旧完成报告'):
+            self.run_plan()
+
+    def test_legacy_completed_report_without_delivery_is_read_only_receipt(self):
+        items = self.setup_stage(parts=('P001',))
+        result = self.run_plan()
+        self.plan.pop('postprocess_delivery')
+        report = self.request.with_name(self.request.stem + '-结果.json')
+        result['request'] = copy.deepcopy(self.plan)
+        self.fixture.put(report, result)
+        before = report.read_bytes()
+        count = len(self.browser_calls)
+        with patch.object(tool.adopt, 'adoption', side_effect=AssertionError('must not adopt')):
+            repeated = self.run_plan()
+        self.assertTrue(repeated['reused'])
+        self.assertEqual(report.read_bytes(), before)
+        self.assertEqual(len(self.browser_calls), count)
+        self.request = self.request.with_name('新请求不能继承旧报告.json')
+        with self.assertRaisesRegex(ValueError, 'postprocess_delivery'):
+            self.run_plan()
+
     def test_final_product_survives_reapproval_and_counts_as_complete(self):
         items = self.setup_stage(parts=('P001',))
         self.run_plan()
         draft, target = self.register_final(items[0]); text = draft.read_text()
+        self.plan['postprocess_delivery'][items[0]['identity']] = 'products'
         self.assertEqual(tool.selected(self.root, 'EP001-C001-P001', '后处理'), items[0]['identity'])
         self.assertEqual(tool.episode_missing(self.root, 'EP001'), [])
         self.request = self.request.with_name('批准复核.json')
@@ -377,6 +488,7 @@ class ApprovalTests(unittest.TestCase):
     def test_partial_approval_does_not_approve_other_file_or_export(self):
         self.setup_stage()
         self.plan['identities'] = self.plan['identities'][:1]
+        self.plan['postprocess_delivery'] = {i: 'workflow' for i in self.plan['identities']}
         result = self.run_plan()
         self.assertEqual(result['state'], 'adopted_partial')
         self.assertFalse(result['episode_completed'])
@@ -430,8 +542,10 @@ class ApprovalTests(unittest.TestCase):
         self.setup_stage()
         all_ids = self.plan['identities'][:]
         self.plan['identities'] = all_ids[:1]
+        self.plan['postprocess_delivery'] = {all_ids[0]: 'workflow'}
         self.assertEqual(self.run_plan()['state'], 'adopted_partial')
         self.plan['identities'] = all_ids[1:]
+        self.plan['postprocess_delivery'] = {all_ids[1]: 'workflow'}
         self.plan['approval_text'] = '第二段也批准了。'
         self.request = self.fixture.extra / '执行附件' / all_ids[1] / '批准收尾请求.json'
         result = self.run_plan()
