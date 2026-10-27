@@ -206,14 +206,14 @@ Ref2VA的主体定义、保留说明及逐镜状态归属统一执行[参考定�
 
 ## 5. 时长、帧数与编辑状态同步
 
-每组 `durationSec` 对应本P获批请求时长。按当前24fps的H3帧格换算：
+每组 `durationSec` 对应本P获批请求时长，并按[生成分段时长规则](../../nora-ai-short-drama/references/共用规则/层级编号与时长规范.md#1-层级编号与时长)核对制作上限；根总时长和参考素材容量不用于代替该检查。按当前24fps的H3帧格换算：
 
 ```text
 frameCount = max(5, round(durationSec * 24))
              + (5 - (max(5, round(durationSec * 24)) % 17)) % 17
 ```
 
-10秒对应243帧，15秒对应362帧。`length` 与frameCount一致；第一组start为0，后续start为前面各组frameCount之和；根totalFrames及导演台的total_frames为全部组frameCount之和。根durationSec保留原生界面的字段语义，不用它代替各组durationSec或真实输出时长；输出时长以本次文件的实际帧数和fps核对。
+10秒对应243帧，14秒对应345帧（24fps下实际为14.375秒）。`length` 与frameCount一致；第一组start为0，后续start为前面各组frameCount之和；根totalFrames及导演台的total_frames为全部组frameCount之和。根durationSec保留原生界面的字段语义，不用它代替各组durationSec或真实输出时长；输出时长以本次文件的实际帧数和fps核对。
 
 修改后同步核对：
 
