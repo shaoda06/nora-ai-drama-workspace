@@ -6,6 +6,7 @@ from zipfile import ZIP_STORED, ZipFile
 
 from fastapi.responses import FileResponse
 from backend.services.jianying_draft import draft_files
+from backend.services.jianying_package import encode_jypack
 from backend.parsers.video_products import final_product
 
 STAGES = {'后处理': '03-后处理', '二采': '02-二采', '一采': '01-一采'}
@@ -105,7 +106,7 @@ def clear_downloads():
         path.unlink()
 
 
-def zip_response(files, filename):
+def zip_response(files, filename, archive_format='zip'):
     # Videos are already compressed. Keep their original bytes.
     DOWNLOAD_DIRECTORY.mkdir(parents=True, exist_ok=True)
     with ExitStack() as stack:
@@ -121,6 +122,10 @@ def zip_response(files, filename):
                 bundle.write(source, member)
             for member, content in draft_files(files, Path(filename).stem).items():
                 bundle.writestr(member, content.encode('utf-8'))
-        response = VideoZipResponse(archive.name, media_type='application/zip', filename=filename)
+        if archive_format == 'jypack':
+            encode_jypack(path)
+            filename = str(Path(filename).with_suffix('.jypack'))
+        response = VideoZipResponse(archive.name, media_type=(
+            'application/vnd.bytedance.jypack' if archive_format == 'jypack' else 'application/zip'), filename=filename)
         stack.pop_all()
     return response

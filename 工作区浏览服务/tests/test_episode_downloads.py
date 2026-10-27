@@ -11,6 +11,7 @@ from zipfile import ZipFile
 
 from fastapi.testclient import TestClient
 from tests.http_case import HttpTestCase
+from tests.test_jianying_package import restore_package
 from backend import main
 from backend.services import episode_downloads, jianying_draft
 from backend.services.projects import ProjectStore
@@ -343,6 +344,37 @@ class EpisodeDownloadTests(HttpTestCase):
                     self.assertEqual(content['duration'], meta['tm_duration'])
                     self.assertEqual(content['materials']['videos'][0]['path'],
                                      jianying_draft.DRAFT_PATH + '第1场-第1段-已采用.mp4')
+
+    def test_native_packages_keep_scene_scope_and_complete_episode_contents(self):
+        first = self.video('后处理', 'C001', 'P001')[1]
+        second = self.video('后处理', 'C002', 'P001')[1]
+        cases = [(self.url + '/后处理/videos?scene=C002&format=jypack',
+                  {'第2场-第1段-已采用.mp4': second}),
+                 (self.url.replace('/downloads', '/download') + '?format=jypack',
+                  {'第1场-第1段-已采用.mp4': first, '第2场-第1段-已采用.mp4': second})]
+        for url, expected in cases:
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.headers['content-type'], 'application/vnd.bytedance.jypack')
+                self.assertIn('.jypack', response.headers['content-disposition'])
+                with ZipFile(BytesIO(restore_package(response.content))) as archive:
+                    self.assertIsNone(archive.testzip())
+                    for name, payload in expected.items():
+                        self.assertEqual(archive.read(name), payload)
+                    self.assertEqual(set(archive.namelist()), set(expected) | {
+                        'draft_info.json', 'draft_content.json', 'draft_meta_info.json'})
+                    self.assertEqual(archive.read('draft_info.json'), archive.read('draft_content.json'))
+                self.assertEqual(list((self.root / 'downloads').iterdir()), [])
+
+    def test_native_format_rejects_unknown_format_and_cleans_up_encoding_failure(self):
+        self.video('后处理', 'C001', 'P001')
+        url = self.url + '/后处理/videos?scene=C001'
+        self.assertEqual(self.client.get(url + '&format=unknown').status_code, 422)
+        with patch.object(episode_downloads, 'encode_jypack', side_effect=OSError('write failed')):
+            with self.assertRaisesRegex(OSError, 'write failed'):
+                self.client.get(url + '&format=jypack')
+        self.assertEqual(list((self.root / 'downloads').iterdir()), [])
 
     def test_invalid_video_does_not_deliver_a_zip_with_a_broken_draft(self):
         self.video('后处理', 'C001', 'P001')

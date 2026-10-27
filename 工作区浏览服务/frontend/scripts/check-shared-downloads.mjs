@@ -20,6 +20,7 @@ export async function checkSharedDownloads(page, width) {
   assert.deepEqual(hoverStyles[0], hoverStyles[1], '按钮和原生链接的悬停外观一致');
   await page.mouse.move(0, 0);
   assert.equal(await fixture.getByRole('button', { name: '下载 API 版', exact: true }).isDisabled(), true);
+  for (const summary of await fixture.locator('details > summary').all()) await summary.click();
   for (const button of await fixture.locator('.download-control').all()) {
     const bounds = await button.evaluate(el => {
       const r = el.getBoundingClientRect(), p = el.parentElement.getBoundingClientRect();
@@ -69,6 +70,24 @@ export async function checkSharedDownloads(page, width) {
   const closes = page.getByRole('button', { name: '关闭通知', exact: true });
   while (await closes.count()) await closes.first().click();
   await page.unroute('**/component-samples/download-check.txt');
+  const packButtons = fixture.getByRole('button', { name: '剪映草稿包', exact: true });
+  assert.equal(await packButtons.count(), 3);
+  assert.equal(await packButtons.nth(1).isDisabled(), true);
+  assert.equal(await packButtons.nth(2).isDisabled(), true);
+  await page.route('**/component-samples/native-pack?*', route => {
+    const query = new URL(route.request().url()).searchParams;
+    assert.equal(query.get('scene'), 'C002');
+    assert.equal(query.get('format'), 'jypack');
+    return route.fulfill({ headers: { 'Content-Type': 'application/vnd.bytedance.jypack',
+      'Content-Disposition': 'attachment; filename="fixture-C002.jypack"' }, body: 'native-container-fixture' });
+  });
+  const packSaved = page.waitForEvent('download');
+  await packButtons.first().click();
+  const packFile = await packSaved;
+  assert.equal(packFile.suggestedFilename(), 'fixture-C002.jypack');
+  assert.equal(await readFile(await packFile.path(), 'utf8'), 'native-container-fixture');
+  await page.unroute('**/component-samples/native-pack?*');
+  while (await closes.count()) await closes.first().click();
   await fixture.screenshot({ path: join(tmpdir(), `nora-download-${width}.png`) });
   console.log(`下载组件：${width}px统一外观、长文件名、原文件/本地导出/打包保存、禁用、忙碌、错误重试通过。`);
 }

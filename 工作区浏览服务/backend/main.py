@@ -535,10 +535,11 @@ def generation_context(name: str, episode: Episode, candidate: str) -> dict[str,
 
 
 @app.get('/api/projects/{name}/episodes/{episode}/download')
-def completed_episode_download(name: str, episode: Episode):
+def completed_episode_download(name: str, episode: Episode,
+                               archive_format: Annotated[Literal['zip', 'jypack'], Query(alias='format')] = 'zip'):
     try:
         files = completed_episode_videos(store, name, episode, entry(name, '09-剧集制作', episode, mode='playback')['data'])
-        return zip_response(files, video_archive_name(name, episode))
+        return zip_response(files, video_archive_name(name, episode), archive_format)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except ValueError as error:
@@ -563,14 +564,15 @@ def episode_download_list(name: str, episode: Episode, scene: Scene | None = Non
 
 @app.get('/api/projects/{name}/episodes/{episode}/downloads/{stage}/{kind}')
 def episode_download(name: str, episode: Episode, stage: Literal['一采', '二采', '后处理'],
-                     kind: Literal['videos'], scene: Scene | None = None):
+                     kind: Literal['videos'], scene: Scene | None = None,
+                     archive_format: Annotated[Literal['zip', 'jypack'], Query(alias='format')] = 'zip'):
     try:
         files = episode_resources(store, name, episode, entry(name, '09-剧集制作', episode, mode='playback')['data'], scene)[stage][kind]
         if not files:
             raise FileNotFoundError(('本场' if scene else '本集') + '该阶段没有可下载的' + KINDS[kind])
         label = episode if episode in ('片头', '片尾') else f'第{int(episode[2:])}集'
         filename = f'{name}-{label}-{scene}-{stage}-已采用视频.zip' if scene else video_archive_name(name, episode)
-        return zip_response(files, filename)
+        return zip_response(files, filename, archive_format)
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except ValueError as error:

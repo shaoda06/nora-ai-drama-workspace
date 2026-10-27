@@ -150,9 +150,12 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     {selectedItem && !current ? <Result page loading={detail.isPending} error={detail.error} retry={detail.refetch} retrying={detail.isFetching} /> : current ? <div className="episode-detail">
     {breadcrumbActions && createPortal(<div className="episode-heading-actions">
       <PointerTooltip text={sharedSelected ? "按当前轮次的选中场次统计；* 表示含计划时长" : "按当前轮次统计；* 表示含计划时长"}><span className="muted" aria-label="本集时长">{sharedSelected ? current.name : '本集'}时长：{formatProductionDuration(sharedSelected ? durations.scenes[selectedScene] : durations.total)}</span></PointerTooltip>
-      {episodeComplete && <DownloadButton key={current.name} pack
+      {episodeComplete && <><DownloadButton key={current.name + '/draft'} pack
+      url={`${projectUrl(project)}/episodes/${current.name}/download?format=jypack`} label="剪映草稿包"
+      title="下载全部后处理已采用视频的剪映草稿包；双击或拖入剪映导入，需对应会员权限" />
+      <DownloadButton key={current.name} pack
       url={`${projectUrl(project)}/episodes/${current.name}/download`} label={`${sharedSelected ? current.name : '本集'}打包下载`}
-      title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理已采用视频`} />}
+      title={`下载${current.name}全部${scenes.length}个场次、${segmentCount}段后处理已采用视频 ZIP 包`} /></>}
     </div>, breadcrumbActions)}
     {durations.failed > 0 && <FloatingMessage key={current.name + '/' + selectedRound} tone="error">{durations.failed}段视频时长读取失败，暂用计划时长（*）。<button className="link" onClick={durations.retry}>重新读取</button></FloatingMessage>}
     <div className="episode-scene-header">

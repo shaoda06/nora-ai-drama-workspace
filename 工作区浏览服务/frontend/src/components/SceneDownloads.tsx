@@ -25,9 +25,13 @@ export function SceneDownloads({ project, episode, scene, revision }: { project:
       <h3>{stage}</h3>
       <section className="stage-download-group" aria-label={stage + '已采用视频下载'}>
         <h4>已采用视频下载 <small className="stage-download-count muted">{downloads.data[stage].videos.count}个已采用视频</small></h4>
-        <DownloadButton url={downloads.data[stage].videos.url} label="本场打包下载" pack title={downloads.data[stage].videos.url
+        <div className="stage-download-actions">
+        <DownloadButton url={downloads.data[stage].videos.url ? downloads.data[stage].videos.url + '&format=jypack' : null}
+          label="剪映草稿包" pack title="下载后双击或拖入剪映，由剪映导入本场已采用视频；需支持原生草稿包导入及对应会员权限" />
+        <DownloadButton url={downloads.data[stage].videos.url} label="视频 ZIP 包" pack title={downloads.data[stage].videos.url
           ? `仅下载${episode}场次${scene}的${stage}已采用视频，共${downloads.data[stage].videos.count}段`
           : `场次${scene}的${stage}暂无已采用视频`} />
+        </div>
       </section>
       <details className="stage-download-group" aria-label={stage + '导演包下载'}>
         <summary>导演包下载</summary>
