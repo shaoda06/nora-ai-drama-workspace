@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Register a prepared, authorized task in the persistent local backend queue."""
+"""Submit authorized tasks as one group with --plan; remote execution remains per task."""
 import argparse
 from pathlib import Path
 import sys
@@ -44,9 +44,9 @@ def dispatch(args):
 def parser():
     p = client.Parser(description=__doc__)
     p.add_argument('--project', required=True, help='Project root under workspace/projects; relative to cwd; uses workspace comfyui-config.json')
-    p.add_argument('--plan', help='Task group JSON, project-relative or absolute: optional group_title plus tasks (one or more); checks all members, atomically registers one group, returns group_id and child IDs; --prepare-only never registers')
+    p.add_argument('--plan', help='Default submission: one task-group JSON for all ready tasks in this authorization, not one call per scene/segment; project-relative or absolute: optional group_title plus tasks (one or more); checks all members, atomically registers one group, returns group_id and child IDs; --prepare-only never registers')
     p.add_argument('--record-repairs', help='Existing local image results only: JSON object from record_dir to reason/expected_updates/updates; never runs image processing or queues tasks')
-    p.add_argument('--task-type', choices=TASK_TYPES, help='Legacy prepared-input mode only: authorized task stage')
+    p.add_argument('--task-type', choices=TASK_TYPES, help='Compatibility for existing tasks or an explicitly independent single task; use --plan for grouped submissions')
     p.add_argument('--workflow', help='Legacy prepared-input mode only: prepared API JSON')
     p.add_argument('--eligible-url', help='Optional expected primary address; identity check only, no capability probe')
     p.add_argument('--uploads', help='Optional upload bindings; file paths relative to the project root')
