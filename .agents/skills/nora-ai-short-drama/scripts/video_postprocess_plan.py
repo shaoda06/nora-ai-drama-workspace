@@ -30,13 +30,16 @@ def build(project, request, output):
     for name in request['approval_reports']:
         report_path = project_file(root, name)
         report = video_approve.adopt.load(report_path)
-        if report['state'] != 'completed' or report['finalization']['stage'] != '二采':
+        finalization = report['finalization']
+        batches = finalization['batches'] if 'batches' in finalization else [finalization]
+        if report['state'] != 'completed' or any(batch['stage'] != '二采' for batch in batches):
             raise ValueError('来源二采采用与定稿尚未完成：' + name)
-        for source in report['finalization']['sources']:
-            identity = source['identity']
-            if identity in sources:
-                raise ValueError('重复来源二采身份：' + identity)
-            sources[identity] = (source, report_path.relative_to(root).as_posix())
+        for batch in batches:
+            for source in batch['sources']:
+                identity = source['identity']
+                if identity in sources:
+                    raise ValueError('重复来源二采身份：' + identity)
+                sources[identity] = (source, report_path.relative_to(root).as_posix())
     baseline = workflow_file(PROFILES[profile])
     template = video_approve.adopt.load(baseline)
     width, height = (1920, 1080) if orientation == 'landscape' else (1080, 1920)

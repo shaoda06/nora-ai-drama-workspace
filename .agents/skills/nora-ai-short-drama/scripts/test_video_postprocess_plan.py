@@ -97,6 +97,22 @@ class PostprocessPlanTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, '尚未完成'):
             self.build()
 
+    def test_configuration_batches_preserve_sources_and_reject_wrong_stage(self):
+        sources = self.report['finalization']['sources']
+        batches = [{'stage': '二采', 'sources': [source]} for source in sources]
+        self.report['finalization'] = {'state': 'completed', 'batches': batches}
+        self.put('approved.json', self.report)
+        self.build()
+        plan = json.loads((self.root / 'plan.json').read_text())
+        self.assertEqual([t['mapping']['source_video'] for t in plan['tasks']],
+                         [source['selected_path'] for source in sources])
+        self.assertTrue(all(t['mapping']['approval_basis'] == 'approved.json' for t in plan['tasks']))
+        batches[1]['stage'] = '一采'
+        self.put('approved.json', self.report)
+        with self.assertRaisesRegex(ValueError, '尚未完成'):
+            self.build('rejected.json')
+        self.assertFalse((self.root / 'rejected.json').exists())
+
 
 if __name__ == '__main__':
     unittest.main()
