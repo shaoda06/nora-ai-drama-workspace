@@ -17,6 +17,39 @@ REVIEW_ITEMS = ('identity', 'space_action', 'continuity_sound', 'translation')
 TAG = re.compile(r'<(?:Subject|Picture|Audio|Video) \d+>|\[Shot \d+\]|\(S\d+\)')
 SUBJECT = re.compile(r'<Subject (\d+)>')
 HAN = re.compile(r'[\u3400-\u9fff]')
+CARDINAL = re.compile(
+    r'(?:东北|东南|西北|西南|[东西南北])(?:侧|方|向|面|缘|部|端|边|角|区|阵眼|阵脚|阵幕|幕|防线|冷月光)'
+    r'|(?:向|往|朝|由|从)(?:东北|东南|西北|西南|[东西南北])'
+    r'|[东西南北](?=在画面|\d|[一二三四五六七八九十]+米)'
+    r'|东南西北|南北轴|东西轴'
+    r'|\b(?:(?:north|south)(?:east|west)?|east|west)(?:ern|ward|wards)?\b', re.I)
+
+
+def shot_blocks(prompt, mode='r2v'):
+    parsed = sections(prompt, SECTIONS if mode in REFERENCE_MODES else BASE_SECTIONS,
+                      allow_prefix=mode not in REFERENCE_MODES)
+    body = parsed['detailed_description' if mode in REFERENCE_MODES else 'integrated_multimodal_description']
+    return [(int(m[1]), m[2].strip()) for m in re.finditer(
+        r'\[Shot (\d+)\](.*?)(?=\[Shot \d+\]|\Z)', body, re.S)]
+
+
+def spatial_review_findings(prompt, check, mode='r2v'):
+    blocks = shot_blocks(prompt, mode)
+    rows = check.get('shots', [])
+    if (not blocks or not isinstance(rows, list)
+            or any(not isinstance(row, dict) or type(row.get('shot')) is not int for row in rows)
+            or len({row['shot'] for row in rows}) != len(rows)
+            or sorted(row['shot'] for row in rows) != sorted(shot for shot, _ in blocks)):
+        return [{'code': 'review_shot_coverage', 'detail': 'space_action.shots必须逐项覆盖实际画面正文全部Shot，不重复、不遗漏'}]
+    errors = []
+    for row in rows:
+        body = next(body for shot, body in blocks if shot == row['shot'])
+        quote, note = row.get('prompt_quote'), row.get('note')
+        if not isinstance(quote, str) or not quote.strip() or quote not in body:
+            errors.append({'code': 'review_shot_evidence', 'detail': f"Shot {row['shot']}缺少该镜最终正文的准确片段"})
+        if not isinstance(note, str) or not note.strip():
+            errors.append({'code': 'review_shot_note', 'detail': f"Shot {row['shot']}缺少实际空间与动作判断"})
+    return errors
 
 
 def digest(text):
@@ -131,6 +164,21 @@ def text_findings(prompt, chinese=None, names=None, *, mode='r2v', images=None, 
             name = definitions.get(match[1])
             if name is None or not body[match.end():].lstrip().startswith(name):
                 issue('subject_reference', f'{section}中{match[0]}缺少对应中文全名')
+    # Spatial descriptions only: dialogue, visible quoted text and declared names
+    # are not geography instructions. Ambiguous direction words remain semantic review.
+    for language, parsed in [('模型正文', english), ('中文参考', sections(chinese, headings, allow_prefix=not reference) if chinese is not None else None)]:
+        if parsed is None:
+            continue
+        for section, body in parsed.items():
+            if section in ('overall_soundscape', 'non_diegetic_music'):
+                continue
+            body = re.sub(r'<d>.*?</d>|“[^”]*”|「[^」]*」|"[^"\n]*"', '', body, flags=re.S)
+            body = body.replace('东方幻想', '')  # Art direction, not a spatial coordinate.
+            for name in sorted(definitions.values(), key=len, reverse=True):
+                body = body.replace(name, '')
+            found = list(dict.fromkeys(m[0] for m in CARDINAL.finditer(body)))
+            if found:
+                issue('spatial_coordinates', f'{language}/{section}存在未换算的地理方位：' + '、'.join(found))
     # Only unequivocal named-role substitutions; ordinary pronouns and quoted dialogue
     # are left to the semantic review, not rejected by a broad natural-language regex.
     action = re.sub(r'<d>.*?</d>|“[^”]*”|"[^"\n]*"', '', english.get('detailed_description', ''), flags=re.S)
@@ -280,6 +328,8 @@ def audit(project, workflow, mapping):
                 quote = check.get('chinese_quote', '')
                 if not chinese or not isinstance(quote, str) or not quote.strip() or quote not in chinese:
                     issue('review_evidence', 'translation缺少对应中文片段')
+            if category == 'space_action' and not any(e['code'] == 'sections' for e in findings):
+                errors.extend(spatial_review_findings(prompt, check, mode))
             evidence = check.get('sources', [])
             if not isinstance(evidence, list) or not evidence:
                 issue('review_evidence', category + '缺少上游依据原文及路径')
@@ -312,16 +362,39 @@ def audit(project, workflow, mapping):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--project', required=True, help='Project root; all evidence must stay within this directory')
-    parser.add_argument('--workflow', required=True, help='Local API JSON; read only, no service connection')
-    parser.add_argument('--mapping', required=True, help='Existing 输入映射.json with content_review; read only')
+    parser.add_argument('--project', help='Project root; all evidence must stay within this directory')
+    parser.add_argument('--workflow', help='Local API JSON; read only, no service connection')
+    parser.add_argument('--mapping', help='Existing 输入映射.json with content_review; read only')
+    parser.add_argument('--document', action='append', help='Prompt Markdown document; repeatable offline text-only check, no workflow preparation')
+    parser.add_argument('--mode', default='r2v', choices=(*REFERENCE_MODES, 't2v', 'i2v', 'fl2v'), help='Document mode only; default r2v')
     parser.add_argument('--output', help='Optional NEW local JSON report; refuses to overwrite an existing file')
     parser.add_argument('--basis-file', action='append', default=[], help='Project-relative UTF-8 source to fingerprint for review evidence; repeatable, read only')
     args = parser.parse_args()
+    if args.document:
+        if args.project or args.workflow or args.mapping or args.basis_file:
+            parser.error('--document不能与工作流或证据绑定参数混用')
+    elif not all((args.project, args.workflow, args.mapping)):
+        parser.error('工作流核对需要--project、--workflow、--mapping；仅检查正文请用--document')
     try:
-        result = audit(args.project, json.loads(Path(args.workflow).read_text('utf-8-sig')),
+        if args.document:
+            documents = []
+            for name in args.document:
+                text = Path(name).read_text('utf-8-sig')
+                match = re.search(r'^## 提交给模型的完整提示词\s*\n(.*?)(?=^## |\Z)', text, re.M | re.S)
+                block = re.search(r'^```(?:text)?\s*\n(.*?)^```\s*$', match[1], re.M | re.S) if match else None
+                if not block:
+                    raise ValueError(name + '缺少完整模型正文text围栏')
+                prompt = block[1].strip()
+                issues = text_findings(prompt, chinese_text(text), mode=args.mode)
+                if len(prompt) > 7000:
+                    issues.append({'code': 'prompt_length', 'detail': '完整模型正文超过7000字符'})
+                documents.append({'file': name, 'characters': len(prompt), 'ok': not issues, 'issues': issues})
+            result = {'ok': all(d['ok'] for d in documents), 'documents': documents,
+                      'scope': '离线确定性正文检查；未检查输入绑定，不证明语义正确或已获生成授权'}
+        else:
+            result = audit(args.project, json.loads(Path(args.workflow).read_text('utf-8-sig')),
                        json.loads(Path(args.mapping).read_text('utf-8-sig')))
-        result['evidence_basis'] = [{'file': name, 'sha256': digest(project_file(Path(args.project).resolve(), name).read_text('utf-8-sig'))}
+            result['evidence_basis'] = [{'file': name, 'sha256': digest(project_file(Path(args.project).resolve(), name).read_text('utf-8-sig'))}
                                     for name in args.basis_file]
     except (ValueError, OSError, KeyError, TypeError) as exc:
         result = {'ok': False, 'error': str(exc)}

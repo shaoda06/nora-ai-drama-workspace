@@ -918,6 +918,16 @@ python -X utf8 .agents/skills/nora-ai-short-drama/scripts/h3_prompt_checks.py --
 
 `--output`可指定一个尚不存在的JSON报告文件；默认只向标准输出报告，不改写任何输入或历史报告。`--basis-file`可重复，用于返回所选依据文件的指纹，不替Agent填写判断。退出码0表示确定性检查和证据绑定通过，1表示失败；查看`issues`及各`groups[].issues`。输出的`input_sha256`用于标识本次实际启用的公共区与原组输入（含正文、素材、时长和接续）；变化后须先核对再更新记录，不直接刷新指纹冒充检查。
 
+只写或修订提示词、尚未装配工作流时，可直接检查正式提示词文档（可重复`--document`）：
+
+```sh
+python .agents/skills/nora-ai-short-drama/scripts/h3_prompt_checks.py --document "项目内/P001-视频提示词.md" --document "项目内/P002-视频提示词.md" --mode r2v --output "尚不存在的正文检查.json"
+```
+
+文档模式读取“提交给模型的完整提示词”和“中文提示词参考版”的text围栏，`--mode`默认r2v；不使用`--project`、`--workflow`、`--mapping`或`--basis-file`。输出`documents[].issues`及`ok`，退出码0为确定性正文检查通过，1为失败；不检查素材绑定或替Agent填写内容判断，不构成生成准备通过。正文检查会报告空间描述中的明确地理方位，忽略对白、引号内可见文字与已定义的主体专名；不据此声称所有自然语言方向问题均已识别。
+
+`space_action.shots`的`shot`为画面正文中从1开始的镜号，须完整覆盖、不重复；`prompt_quote`必须在对应Shot内，`note`为该镜的实际判断。工具只验证覆盖与原文，不推断判断正确；旧任务恢复沿原记录，新准备缺项须补做实际核对。
+
 既有`输入映射.json`中的`content_review`使用以下结构。每个选中原组一项，未选中组不纳入；`node`为字符串节点ID，`index`为从0开始的真实原组序。下例是字段说明，示例省略号不能提交。
 
 ```json
@@ -940,7 +950,7 @@ python -X utf8 .agents/skills/nora-ai-short-drama/scripts/h3_prompt_checks.py --
           "prompt_quote": "当前模型英文中的准确片段",
           "sources": [{"file": "上游依据的项目相对路径.md", "sha256": "依据指纹", "quote": "文件内实际原文"}]
         },
-        "space_action": {"status": "pending", "note": "...", "prompt_quote": "...", "sources": []},
+        "space_action": {"status": "pending", "note": "...", "prompt_quote": "...", "sources": [], "shots": [{"shot": 1, "prompt_quote": "该镜最终正文准确片段", "note": "本镜空间、各动作路径目标及结束接续的具体判断"}]},
         "continuity_sound": {"status": "pending", "note": "...", "prompt_quote": "...", "sources": []},
         "translation": {"status": "pending", "note": "...", "prompt_quote": "...", "chinese_quote": "对应中文准确片段", "sources": []}
       }
@@ -953,7 +963,7 @@ python -X utf8 .agents/skills/nora-ai-short-drama/scripts/h3_prompt_checks.py --
 
 字幕问题的处理条件与对照范围执行[提示词对照](../共用规则/画面文字与字幕规范.md#生成字幕问题的提示词对照)。用户明确授权省略模型正文中的字幕禁令时，在该组核对记录填写`subtitle_instruction_omission_authorization`非空字符串，记录本次授权。它仅豁免该组的`subtitle_rule`，在检查报告留存；默认任务及其余正文、翻译、依据和输入绑定检查保持。此字段属于制作记录，不进入模型正文，不用于推定生成结果没有字幕。
 
-确定性检查覆盖六节、Subject中文名称及引用、明确角色代称、默认全片无字幕指令及上述授权例外、逐节中英文标签／镜号／数字对应，以及检查证据原文存在性、当前输入／中文／依据的绑定。空间合理性、动作可实现性、完整翻译语义和参考图身份本身不由正则或指纹证明；`three-quarter view`等正常镜头术语不作为禁词。`passed`、非空备注或摘录存在均不能替代Agent实际连读和推演。
+确定性检查覆盖六节、明确未换算的空间方位、逐镜空间证据覆盖、Subject中文名称及引用、明确角色代称、默认全片无字幕指令及上述授权例外、逐节中英文标签／镜号／数字对应，以及检查证据原文存在性、当前输入／中文／依据的绑定。空间合理性、动作可实现性、完整翻译语义和参考图身份本身不由正则或指纹证明；`three-quarter view`等正常镜头术语不作为禁词。`passed`、非空备注或摘录存在均不能替代Agent实际连读和推演。
 
 新任务的提交条件与历史兼容只见[内容核对提交条件](../../../nora-generation/references/ComfyUI-服务配置与任务提交规范.md#内容核对的提交条件)。接口不提供跳过内容检查的参数，不自动修正文或制造通过结论。
 
@@ -963,4 +973,10 @@ python -X utf8 .agents/skills/nora-ai-short-drama/scripts/h3_prompt_checks.py --
 .venv/Scripts/python.exe -X utf8 -B -m unittest tests.test_prompt_review tests.test_execution_checks tests.test_preparation_policy tests.test_submission_lifecycle -q
 ```
 
-测试使用临时项目与模拟网络，覆盖英文违规、中文摘要、证据缺失、正文／依据变化、旧报告复用、新任务上传前停止及历史恢复，不生成视频。离线检查已有执行资料时使用独立新报告，不覆盖原执行检查报告。
+文档检查CLI的回归命令（工作区根目录）：
+
+```sh
+python -B -m unittest discover -s .agents/skills/nora-ai-short-drama/scripts -p test_h3_prompt_documents.py -q
+```
+
+测试使用临时项目与模拟网络，覆盖空间方位拦截与对白／专名保留、逐镜证据缺项、英文违规、中文摘要、证据缺失、正文／依据变化、旧报告复用、新任务上传前停止及历史恢复，不生成视频。离线检查已有执行资料时使用独立新报告，不覆盖原执行检查报告。

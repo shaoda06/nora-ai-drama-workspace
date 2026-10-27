@@ -24,7 +24,7 @@ description: 将 Nora 已确认分镜、P段和实际参考素材转写成视频
 
 ## 执行顺序与职责
 
-按[编写与检查顺序](references/视频提示词制作规范.md#提示词编写与检查顺序)：确定依据、建立主体对应、完整转写、逐节翻译、核对订正，再进入必要技术准备。identity、space_action、continuity_sound、translation的依据和结论写入既有content_review；工具判断确定性要求，Agent判断内容，具体要求只在制作规范维护。
+按[编写与检查顺序](references/视频提示词制作规范.md#提示词编写与检查顺序)：确定依据、建立主体对应、按[逐镜空间转写](references/视频提示词制作规范.md#逐镜空间转写)完成正文、逐节翻译、核对订正，再进入必要技术准备。identity、space_action、continuity_sound、translation的依据和结论写入既有content_review；工具判断确定性要求，Agent判断内容，具体要求只在制作规范维护。
 
 镜头设计、P段与动作缺项回[分镜](../short-drama-storyboard/SKILL.md)，剧情和原台词缺项回[写作](../short-drama-write/SKILL.md)，资产设计或来源缺项回[资产](../nora-drama-assets/SKILL.md)。已确认的动作和法术设计按上表适用方法转写，不能以“不改剧情”为由省略法术视觉细化；细化边界按玄幻使用路径处理。不在转写时另编故事，也不默认重新加载打戏或山音全库。
 

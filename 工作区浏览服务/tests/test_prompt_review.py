@@ -7,7 +7,7 @@ from unittest.mock import patch
 from backend.services import comfy_tasks as tasks, execution_checks as checks
 from tests import test_submission_lifecycle as lifecycle
 from tests.prompt_review_fixture import ENGLISH, CHINESE
-from h3_prompt_checks import audit, text_findings, group_mode, bind_review
+from h3_prompt_checks import audit, text_findings, group_mode, bind_review, spatial_review_findings
 
 FL_ENGLISH = '''How the reference pictures align with the target video — Picture 1 (from Shot 1) aligns with the 0.00-second mark of the target video; Picture 2 (from Shot 1) aligns with the 4.46-second mark of the target video.
 
@@ -26,6 +26,28 @@ non_diegetic_music: N/A'''
 
 
 class TextChecks(unittest.TestCase):
+    def test_spatial_geography_is_blocked_in_final_text_and_translation(self):
+        for phrase in ('stands to the north of the gate', '站在白台北3米', '西北冷月光照来', '贴水绕向西侧阵眼'):
+            with self.subTest(phrase=phrase):
+                bad = ENGLISH.replace('stands screen right', phrase)
+                self.assertIn('spatial_coordinates', [e['code'] for e in text_findings(bad)])
+        bad_cn = CHINESE.replace('站在画面右侧', '站在南侧')
+        self.assertIn('spatial_coordinates', [e['code'] for e in text_findings(ENGLISH, bad_cn)])
+
+    def test_spatial_words_in_names_dialogue_and_visible_text_are_preserved(self):
+        good = ENGLISH.replace('陈甲', '北方守卫').replace('stands screen right',
+            'says <d>Go north.</d> beside the sign “南门”, then stands screen right')
+        good = good.replace('summary:', 'summary:\n东方幻想三维角色渲染。')
+        self.assertNotIn('spatial_coordinates', [e['code'] for e in text_findings(good)])
+
+    def test_spatial_review_must_cover_each_shot_and_quote_that_shot(self):
+        prompt = ENGLISH.replace('overall_soundscape:', '[Shot 2] The empty gate stays open.\noverall_soundscape:')
+        first = {'shot': 1, 'prompt_quote': 'stands screen right', 'note': '人物保持门边位置。'}
+        second = {'shot': 2, 'prompt_quote': 'The empty gate stays open.', 'note': '切门口局部，不增加人物移动。'}
+        self.assertTrue(spatial_review_findings(prompt, {'shots': [first]}))
+        self.assertTrue(spatial_review_findings(prompt, {'shots': [first, first]}))
+        self.assertTrue(spatial_review_findings(prompt, {'shots': [first, dict(second, prompt_quote='stands screen right')]}))
+        self.assertEqual([], spatial_review_findings(prompt, {'shots': [first, second]}))
     def test_fl2v_uses_base_sections_and_checks_the_supplied_pair(self):
         self.assertEqual(text_findings(FL_ENGLISH, FL_CHINESE, {}, mode='fl2v', images={0, 1}, duration=4.46), [])
         for slots in ({0}, {1}, set(), {0, 1, 2}):
@@ -139,6 +161,7 @@ class ContentPreparationTests(unittest.IsolatedAsyncioTestCase):
             check['chinese_quote'] = '女子抬起的腿向前伸出一次'
             for source in check['sources']:
                 source.pop('sha256')
+        review['checks']['space_action']['shots'] = [{'shot': 1, 'prompt_quote': 'The woman extends her raised leg once', 'note': '单镜固定视点，抬腿向前伸出并停在接触姿势。'}]
         mapping['content_review'] = bind_review(self.project, workflow, {'groups': [review]})
         self.assertTrue(audit(self.project, workflow, mapping)['ok'])
         timeline['segments'][0]['refs'].pop()

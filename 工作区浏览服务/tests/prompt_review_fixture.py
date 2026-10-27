@@ -47,6 +47,9 @@ def attach_review(project, record, workflow, mapping):
                            'status': 'passed', 'note': '已核对门边人物位置、空通道视线及无声动作，与来源一致。',
                            'prompt_quote': '<Subject 1>陈甲', 'chinese_quote': '<Subject 1>陈甲',
                            'sources': [proof.copy()]} for item in REVIEW_ITEMS}})
+        groups[-1]['checks']['space_action']['shots'] = [{
+            'shot': 1, 'prompt_quote': 'stands screen right',
+            'note': '眼高固定机位，人物在画面右侧，转向敞开的门看空通道，结束仍在门边。'}]
     mapping['content_review'] = {'version': 1, 'groups': groups}
 
 

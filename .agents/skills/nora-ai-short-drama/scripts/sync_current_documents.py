@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import re
+import sys
 import tempfile
 from urllib.parse import unquote, urlsplit
 
@@ -176,7 +177,8 @@ def validate_storyboard_indexes(paths, pending, read):
         return
     # Use the same table and identity checks as the browser; no running server needed.
     source = Path(__file__).resolve().parents[4] / '工作区浏览服务/backend/parsers/project.py'
-    spec = importlib.util.spec_from_file_location('nora_project_parser', source)
+    sys.path.insert(0, str(source.parents[2]))
+    spec = importlib.util.spec_from_file_location('backend.parsers.project', source)
     parser = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(parser)
     for episode in sorted(episodes):
