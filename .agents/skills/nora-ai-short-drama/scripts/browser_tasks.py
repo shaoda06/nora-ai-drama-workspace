@@ -101,7 +101,7 @@ def main():
             item.add_argument('--image-plans', help='Explicit legacy repair only: JSON object from local task UUID to its image closeout plan; cannot replace an accepted association')
             item.add_argument('--image-repairs', help='JSON object from task UUID to reason/expected_updates/updates; repairs only existing record targets, never generation or approval')
             item.add_argument('--record-updates', help='UTF-8 JSON array of exact path/old/new updates for this batch progress or production checks; paths relative to the project')
-    commands.choices['report'].add_argument('--details', action='store_true', help='显式读取完整报告；正常图片／视频报告只返回成果、数量和审核入口，异常自动保留完整报告')
+    commands.choices['report'].add_argument('--details', action='store_true', help='显式读取完整报告；正常报告返回成果、审核入口和接续要求；读取不代表已交付用户，异常自动保留完整报告')
     item = commands.add_parser('resolve', help='Close an investigated needs_attention task; preserve its original exception')
     item.add_argument('--task-id', required=True, help='Backend local UUID, not remote prompt_id')
     item.add_argument('--resolution', required=True, help='UTF-8 JSON resolution file with original prompt ID, evidence and replacement IDs')
@@ -123,7 +123,8 @@ def main():
         result = service_call('notifications/' + args.notification_id + '/' + args.command, payload)
         if args.command == 'report' and not args.details and result.get('user_message_ready') and result.get('delivery') is not None:
             result = {name: result[name] for name in ('notification_id', 'status', 'reused', 'user_message_ready',
-                                                     'should_notify_user', 'new_task_ids', 'delivery') if name in result}
+                                                     'should_notify_user', 'new_task_ids', 'delivery', 'handoff',
+                                                     'business_sync') if name in result}
     elif args.command == 'repair-collection':
         payload = json.loads(Path(args.repair).read_text('utf-8-sig'))
         payload['thread_id'] = os.environ.get('CODEX_THREAD_ID')

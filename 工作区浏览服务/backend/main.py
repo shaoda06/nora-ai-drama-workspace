@@ -34,7 +34,7 @@ from backend.services.collection_repair import CollectionRepairInput, repair_col
 from backend.services.result_summary import summary as result_summary
 from backend.services.result_registration import closeout as result_closeout
 from websockets.exceptions import WebSocketException
-from backend.services.revision_notes import Episode, Scene, NoteInput, RevisionNote, SceneNotes, RevisionNotes, ExportChanges, NotesChangedError
+from backend.services.revision_notes import Episode, Scene, NoteChange, RevisionNote, SceneNotes, RevisionNotes, ExportChanges, NotesChangedError
 from backend.services.episode_revision_notes import EpisodeRevisionNotes, EpisodeNotes, EpisodeExportChanges
 
 TOOL = Path(__file__).resolve().parent.parent
@@ -580,6 +580,10 @@ def project_file(name: str, path: str, request: Request, v: str | None = None, d
         raise HTTPException(404, str(error)) from error
     response = FileResponse(target, filename=target.name if download else None,
                             media_type='application/octet-stream' if download else None)
+    if not download:
+        # Project documents may contain scripts. Keep previews interactive without
+        # granting them the workbench origin or access to its management APIs.
+        response.headers['Content-Security-Policy'] = "sandbox allow-scripts; connect-src 'none'; form-action 'none'; base-uri 'none'"
     if v and not download and target.suffix.lower() in {'.mp4', '.webm', '.mov'}:
         stat = target.stat()
         if v == f'{stat.st_mtime_ns}-{stat.st_size}':
@@ -627,11 +631,13 @@ def scene_revision_notes(name: str, episode: Episode, scene: Scene) -> SceneNote
 
 
 @app.put('/api/projects/{name}/revision-notes/{episode}/{scene}')
-def save_revision_note(name: str, episode: Episode, scene: Scene, value: NoteInput, request: Request) -> RevisionNote:
+def save_revision_note(name: str, episode: Episode, scene: Scene, value: NoteChange, request: Request) -> RevisionNote:
     if not local_write_request(request):
         raise HTTPException(403, '修改意见仅限本机或局域网地址，并要求同源请求')
     try:
         return EpisodeRevisionNotes(revision_notes).save_note(store.project(name), episode, scene, value)
+    except NotesChangedError as error:
+        raise HTTPException(409, str(error)) from error
     except FileNotFoundError as error:
         raise HTTPException(404, str(error)) from error
     except (OSError, ValueError, UnicodeError) as error:

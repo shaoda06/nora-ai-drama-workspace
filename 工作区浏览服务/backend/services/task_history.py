@@ -17,7 +17,8 @@ def task_history(store, url=None, search='', result='all', offset=0, limit=20):
             continue
         if result == 'resolved' and status != 'resolved':
             continue
-        if result == 'abnormal' and status in ('completed', 'cancelled', 'collecting', 'resolved'):
+        closeout_failed = state.get('closeout', {}).get('status') in ('registration_failed', 'browser_pending')
+        if result == 'abnormal' and status in ('completed', 'cancelled', 'collecting', 'resolved') and not (status == 'completed' and closeout_failed):
             continue
         if needle and not any(needle in (state.get(field) or '').casefold() for field in ('title', 'source_session_name')):
             continue
@@ -28,6 +29,8 @@ def task_history(store, url=None, search='', result='all', offset=0, limit=20):
               'started_at', 'ended_at', 'error', 'notification', 'collected', 'expected',
               'collection_auto_retry', 'collection_next_retry_at', 'resolution')
     items = [{**{field: row['state'][field] for field in fields if field in row['state']},
+              'closeout': {field: row['state'].get('closeout', {})[field] for field in ('status', 'error')
+                           if field in row['state'].get('closeout', {})},
               'remote_url': row['input'].url.rstrip('/'), 'queue': 'local', 'category': 'history'}
              for row in rows[offset:offset + limit]]
     next_offset = offset + len(items)

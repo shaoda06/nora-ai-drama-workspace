@@ -28,7 +28,7 @@ class EpisodeRevisionNotesTests(HttpTestCase):
             override.start()
         self.client = TestClient(main.app, base_url='http://localhost:8782')
         self.url = '/api/projects/示例项目/revision-notes/EP001/C001'
-        self.value = dict(segment='P001', stage='一采', run='R001', text='原文', fileRevision='fixture')
+        self.value = dict(segment='P001', stage='一采', run='R001', text='原文', fileRevision='fixture', expectedText='')
 
     def tearDown(self):
         self.client.close()
@@ -59,6 +59,19 @@ class EpisodeRevisionNotesTests(HttpTestCase):
         self.assertEqual(response.status_code, 200, response.text)
         self.assertEqual(response.json(), {'episode': 'EP001', 'rounds': {}, 'scenes': {}, 'combinations': {}})
         self.assertFalse((self.project / '09-剧集制作/EP001/其他资料').exists())
+
+    def test_episode_round_edit_and_clear_require_current_original(self):
+        self.shared_rounds()
+        original = self.value | {'roundNumber': 3}
+        self.assertEqual(self.put(original).status_code, 200)
+        updated = original | {'text': '另一设备的新意见', 'expectedText': original['text']}
+        self.assertEqual(self.put(updated).status_code, 200)
+        for text in ('本页修改', ''):
+            self.assertEqual(self.put(original | {'text': text, 'expectedText': original['text']}).status_code, 409)
+        note = self.client.get(self.url).json()['notes']['round/3/P001/一采/R001']
+        self.assertEqual(note['text'], updated['text'])
+        self.assertNotIn('expectedText', note)
+        self.assertEqual(self.put(original | {'text': '', 'expectedText': updated['text']}).status_code, 200)
 
     def test_episode_notes_do_not_invalidate_compiled_project_sources(self):
         from backend.parsers.project import live_revision_notes

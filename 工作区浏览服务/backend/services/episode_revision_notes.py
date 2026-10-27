@@ -12,7 +12,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from backend.parsers.scene_rounds import load_episode_rounds, rounds
 from backend.services.revision_notes import (
-    Episode, Scene, NoteChange, NoteInput, RevisionNote, OverallChange, OverallNote,
+    Episode, Scene, NoteChange, RevisionNote, OverallChange, OverallNote,
     SceneNotes, RevisionNotes, ExportChanges, NotesChangedError,
 )
 
@@ -111,13 +111,16 @@ class EpisodeRevisionNotes:
                 merged[scene] = value
             return EpisodeNotes(episode=episode, rounds=saved.rounds, scenes=merged, combinations=saved.combinations)
 
-    def save_note(self, project: Path, episode: str, scene: str, value: NoteInput) -> RevisionNote:
+    def save_note(self, project: Path, episode: str, scene: str, value: NoteChange) -> RevisionNote:
         with self.notes.lock:
             if value.roundNumber not in self.registered(project, episode):
                 return self.notes.save(project, episode, scene, value)
             rounds.referenced_round(project, f'{episode}-{scene}', value.roundNumber)
             saved = self.read_file(project, episode)
-            note = RevisionNote(**value.model_dump(), updatedAt=datetime.now().astimezone().isoformat(timespec='seconds'))
+            old = self.read_scene(project, episode, scene).notes.get(value.key())
+            if (old.text if old else '') != value.expectedText:
+                raise NotesChangedError('分段意见已在其他页面更新，请保留本页文字，核对最新意见后再保存。')
+            note = RevisionNote(**value.model_dump(exclude={'expectedText'}), updatedAt=datetime.now().astimezone().isoformat(timespec='seconds'))
             saved.notes.setdefault(scene, {})[value.key()] = note
             self.write(project, episode, saved)
             return note

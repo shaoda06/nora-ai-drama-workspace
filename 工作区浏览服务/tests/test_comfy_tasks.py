@@ -292,7 +292,7 @@ class TaskTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn('本地任务ID：task', args[5])
         self.assertEqual(self.store.rows['task']['state']['notification'], 'sent')
         event = json.loads(self.store.db.execute('SELECT event FROM task_events ORDER BY id DESC LIMIT 1').fetchone()[0])
-        self.assertEqual(event['receipt'], 'Queued message queue-id')
+        self.assertEqual(event['delivery_receipt'], 'Queued message queue-id')
         batch = self.store.rows['task']['state']['notices'][0]['batch_id']
         self.store.acknowledge(batch, self.data.thread_id)
         self.assertEqual(self.store.rows['task']['state']['notification'], 'acknowledged')

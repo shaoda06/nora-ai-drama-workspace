@@ -132,6 +132,69 @@ class ApprovalTests(unittest.TestCase):
         self.assertIsNone(tool.selected(self.root, 'EP001-C001-P001', '后处理'))
         self.assertIn('EP001-C001-P001 后处理未采用', tool.episode_missing(self.root, 'EP001'))
 
+    def test_completed_production_hands_retrospective_to_agent(self):
+        self.setup_stage(parts=('P001',))
+        result = self.run_plan()
+        self.assertTrue(result['episode_completed'])
+        self.assertEqual(result['next_action'], 'episode-retrospective')
+        self.assertEqual(result['retrospective']['status'], 'pending')
+        progress = (self.root / '项目进度.md').read_text()
+        self.assertIn('| 已完成 |', progress)
+        self.assertIn('完成本集复盘与经验归并', progress)
+        saved = json.loads(self.request.with_name(self.request.stem + '-结果.json').read_text())
+        self.assertEqual(saved['retrospective'], result['retrospective'])
+        self.assertEqual(saved['next_action'], 'episode-retrospective')
+
+    def test_main_compact_stdout_keeps_retrospective_handoff(self):
+        result = {'state': 'completed', 'phase': 'browser', 'episode_completed': True,
+                  'identities': ['EP001-C001-P001-R001-后处理'], 'next_action': 'episode-retrospective',
+                  'retrospective': {'status': 'pending', 'record': 'existing-summary.md'}}
+        output = io.StringIO()
+        with patch.object(tool, 'approve', return_value=result), \
+                patch.object(tool.sys, 'argv', ['video_approve.py', '--project', str(self.root), '--plan', 'mock.json', '--apply']), \
+                contextlib.redirect_stdout(output):
+            self.assertEqual(tool.main(), 0)
+        compact = json.loads(output.getvalue())
+        self.assertEqual(compact['next_action'], result['next_action'])
+        self.assertEqual(compact['retrospective'], result['retrospective'])
+
+    def test_repeated_approval_reuses_current_retrospective_completion(self):
+        self.setup_stage(parts=('P001',))
+        self.run_plan()
+        summary = self.fixture.extra / '工作稿/EP001-生成说明-工作稿.md'
+        summary.write_text(summary.read_text().replace('待完成本集复盘与经验归并。', '完集复盘与经验归并已完成。'))
+        before = summary.read_bytes()
+        result = self.run_plan()
+        self.assertTrue(result['reused'])
+        self.assertEqual(result['next_action'], 'deliver-completed')
+        saved = json.loads(self.request.with_name(self.request.stem + '-结果.json').read_text())
+        self.assertEqual(saved['retrospective']['status'], 'completed')
+        self.assertEqual(summary.read_bytes(), before)
+        # A fresh request for the same adopted identities must also preserve completion.
+        self.request = self.request.with_name('同版批准复核.json')
+        result = self.run_plan()
+        self.assertEqual(result['retrospective']['status'], 'completed')
+        self.assertNotIn('完成本集复盘与经验归并', (self.root / '项目进度.md').read_text())
+
+    def test_historical_retrospective_heading_does_not_finish_current_work(self):
+        self.setup_stage(parts=('P001',))
+        summary = self.fixture.extra / '工作稿/EP001-生成说明-工作稿.md'
+        summary.write_text(summary.read_text() + '\n### 完集复盘与经验归并-旧版\n- 状态：已完成\n')
+        self.assertEqual(self.run_plan()['retrospective']['status'], 'pending')
+
+    def test_historical_completion_fields_do_not_override_current_pending_summary(self):
+        self.setup_stage(parts=('P001',))
+        summary = self.fixture.extra / '工作稿/EP001-生成说明-工作稿.md'
+        summary.write_text('# EP001生成说明工作稿\n- 当前状态及待办：待完成本集复盘与经验归并。\n'
+                           '\n## 历史记录\n- 完集复盘状态：已完成\n'
+                           '- 当前状态及待办：完集复盘与经验归并已完成。\n')
+        self.assertEqual(tool.final.retrospective_status(summary)['status'], 'pending')
+        result = self.run_plan()
+        self.assertEqual(result['retrospective']['status'], 'pending')
+        self.assertEqual(result['next_action'], 'episode-retrospective')
+        self.assertIn('完成本集复盘与经验归并', (self.root / '项目进度.md').read_text())
+        self.assertIn('## 历史记录\n- 完集复盘状态：已完成', summary.read_text())
+
     def revision(self, original_item, revision='R002'):
         old_identity = original_item['identity']
         part = old_identity.split('-')[2]
@@ -289,7 +352,8 @@ class ApprovalTests(unittest.TestCase):
         self.assertEqual([c[0] for c in NativeClient.calls].count('export'), 0)
         self.assertIn('| 已完成 |', (self.root / '项目进度.md').read_text())
         cells = tool.project_progress.phase_row((self.root / '项目进度.md').read_text(), 'EP001')[1]
-        self.assertEqual(cells[4:], ['- 无', '- 无'])
+        self.assertEqual(cells[4], '- 无')
+        self.assertIn('完成本集复盘与经验归并', cells[5])
         self.assertNotIn('### 定稿留档-', (self.root / '项目进度.md').read_text())
         for path, data in original.items():
             self.assertEqual(path.read_bytes(), data)

@@ -2,8 +2,14 @@
 import re
 
 
+def row_pattern(name):
+    label = (re.escape(name[:-2].rstrip()) + r'[ \t]*制作'
+             if name.endswith('制作') else re.escape(name))
+    return r'^\|[ \t]*' + label + r'[ \t]*\|[^\n]*'
+
+
 def row(text, name):
-    rows = list(re.finditer(r'^\|\s*' + re.escape(name) + r'\s*\|[^\n]*', text, re.M))
+    rows = list(re.finditer(row_pattern(name), text, re.M))
     if len(rows) != 1:
         raise ValueError('项目进度缺少唯一的' + name + '行')
     row = rows[0]
@@ -32,8 +38,7 @@ def validate_update(before, after, episodes=(), *, phases=()):
     original, updated = before, after
     changed = False
     for phase in {episode + '制作' for episode in episodes} | set(phases):
-        name = re.escape(phase)
-        pattern = r'^\|\s*' + name + r'\s*\|[^\n]*'
+        pattern = row_pattern(phase)
         old_rows, new_rows = re.findall(pattern, before, re.M), re.findall(pattern, after, re.M)
         if old_rows == new_rows:
             continue

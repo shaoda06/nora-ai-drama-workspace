@@ -83,6 +83,17 @@ def episode_missing(root, episode):
     return missing
 
 
+def retrospective_status(summary):
+    """Use a current explicit decision, never infer completion from a history heading."""
+    text = summary.read_text('utf-8-sig')
+    text = re.split(r'^#{2,6}[ \t]+', text, maxsplit=1, flags=re.M)[0]
+    explicit = re.search(r'^- 完集复盘状态：([^\n]*)', text, re.M)
+    current = re.search(r'^- 当前状态及待办：([^\n]*)', text, re.M)
+    completed = (explicit[1].strip() == '已完成' if explicit else
+                 bool(current and '完集复盘与经验归并已完成' in current[1]))
+    return {'status': 'completed' if completed else 'pending', 'record': str(summary)}
+
+
 def update_progress(root, episode, scene, stage, summary, *, failure_record=None):
     path = root / '项目进度.md'
     pending, next_steps = [], []
@@ -111,6 +122,8 @@ def update_progress(root, episode, scene, stage, summary, *, failure_record=None
                 pending.append(reference + '定稿留档尚未齐备')
                 next_steps.append('补齐' + reference + '的定稿留档')
     complete = failure_record is None and not missing
+    if complete and retrospective_status(summary)['status'] == 'pending':
+        next_steps.append('完成本集复盘与经验归并，记录于[生成说明工作稿](' + adopt.link(path, summary) + ')')
     folder = root / '09-剧集制作' / episode / '06-阶段采用视频' / adopt.STAGES[stage] / (scene.split('-')[-1] + '-场次')
     outputs = '[' + scene + stage + '采用视频](' + adopt.link(path, folder) + ')、[制作与留档记录](' + adopt.link(path, summary) + ')'
     text = path.read_text('utf-8-sig')

@@ -159,6 +159,8 @@ class LocalQueue:
     def task_action(self, key, action):
         if key not in self.rows:
             raise ValueError('任务不存在')
+        if self.rows[key].get('_repreparing'):
+            raise ValueError('任务正在重新准备，请等待准备结束后再操作')
         state = self.rows[key]['state']
         if state['status'] not in LOCAL:
             raise ValueError('任务已经提交或结束，不能操作本地排队')
@@ -184,11 +186,15 @@ class LocalQueue:
                     notice['delivery'] = 'superseded'
             self.save(key, notification='not_required')
         self.record(key, action, 'accepted')
+        data = self.rows[key]['input']
+        if action == 'cancel' and data.task_type == 'image' and data.image_batch_id:
+            self.queue_notice(key, 'cancelled', 'terminal', '本批图片任务已取消')
         return {'local_task_id': key, 'status': state['status']}
 
     def can_transfer(self, key):
         state = self.rows[key]['state']
-        return state['status'] in LOCAL and not state.get('prompt_id') and not state.get('preparation_attempt', 0)
+        return (not self.rows[key].get('_repreparing') and state['status'] in LOCAL
+                and not state.get('prompt_id') and not state.get('preparation_attempt', 0))
 
     def transfer(self, key, url):
         if key not in self.rows:
@@ -456,6 +462,13 @@ class LocalQueue:
                 if not immediate:
                     for other in active:
                         await self.reconcile(other, background_collection=True)
+                # Reconciliation yields to queue controls. Honor the current node,
+                # order and pause/cancel decisions before prepare claims this task.
+                current = self.ordered(url)
+                current.sort(key=lambda item: not self.rows[item]['state'].get('immediate', False))
+                if self.active_drag(url) or not current or current[0] != key:
+                    return
+                immediate = row['state'].get('immediate', False)
                 try:
                     workflow = await self.prepare(key)
                     await self.remote_queues.refresh(url)

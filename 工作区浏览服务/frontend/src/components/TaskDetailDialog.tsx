@@ -23,6 +23,8 @@ interface Detail {
     collection_attempt: number | null; collection_auto_retry: number | null;
     collection_next_retry_at: string | null; collection_retry_stop: string | null;
     resolution?: { summary: string; resolved_at: string; original_status: string };
+    closeout?: { status?: string; error?: string };
+    closeout_next_retry_at?: string | null;
   };
   events: Event[];
   outputs: { path: string; name: string; identity: string | null; available: boolean; bytes: number | null;
@@ -44,7 +46,7 @@ const results: Record<string, string> = { accepted: '已接受', started: '开�
   scheduled: '等待自动重试', attempt_failed: '本轮取回失败', resolved: '已结案' };
 const notices: Record<string, string> = { not_required: '无需通知', waiting: '等待发送', waiting_idle: '等待会话空闲',
   waiting_connection: '等待会话连接', sending: '正在发送', sent: '已发送，等待 Agent 确认',
-  acknowledged: 'Agent 已确认', delivery_unknown: '送达状态待核对' };
+  acknowledged: 'Agent 已确认接收', delivery_unknown: '送达状态待核对' };
 const outputStatuses: Record<string, string> = { saved: '已保存', failed: '取回失败', missing: '本机文件缺失', pending: '未记录保存成功' };
 const taskGuidance: Record<string, { title: string; text: string }> = {
   submission_unknown: { title: '请来源 Agent 核对提交结果', text: '提交是否成功还没有确认。请来源 Agent 查看提交请求、响应和远端任务记录，确认这次任务是否已被接收。核对前不要再次提交，后台不会自动重发生成请求。' },
@@ -58,6 +60,7 @@ const notificationGuidance: Record<string, string> = {
   waiting_connection: '来源会话暂时无法连接，后台会继续重试发送保存的结果通知。',
   sending: '后台正在发送结果通知，请等待发送结果。',
   sent: '通知已经发出，正在等待来源 Agent 确认收到；无需重复生成或再次发送通知。',
+  acknowledged: '来源 Agent 已确认接收；当前报告读取也会登记此回执，旧通知可能只有接收确认。这不代表已经向用户交付，也不代表内容获批。尚未交付的本轮成果由来源 Agent 沿既有制作记录继续汇总。',
   delivery_unknown: '通知是否送达还没有确认，后台只核对接收确认，不自动重发。请来源 Agent 查看会话是否已收到这条结果通知，收到后确认接收；无需重新生成或取回成果。',
 };
 function date(value: string | null | undefined) {
@@ -118,6 +121,11 @@ export function TaskDetailDialog({ id, updatedAt, nodes, close, openTask }: {
       </section>}
       {summary.error && <section className="task-detail-problem"><h4>{summary.status === 'resolved' ? '原异常（已结案）' : '当前问题'} · {stages[summary.failure_stage || ''] || summary.failure_stage || '阶段未记录'}</h4>
         <p>{summary.error}</p><p>原任务保存记录：{summary.collected} / {summary.expected}</p></section>}
+      {summary.status === 'completed' && ['registration_failed', 'browser_pending'].includes(summary.closeout?.status || '') && <section className="task-detail-problem" aria-label="结果收尾问题">
+        <h4>{summary.closeout?.status === 'browser_pending' ? '网页同步尚未完成' : '结果登记尚未完成'}</h4>
+        <p>{summary.closeout?.error}</p><p>成果已经保存，恢复登记或网页核验即可，不重新生成或取回。</p>
+        <p>{summary.closeout_next_retry_at ? `后台将在 ${date(summary.closeout_next_retry_at)} 重试收尾。` : '请来源 Agent 查看结果收尾报告，按具体失败阶段接续。'}</p>
+      </section>}
       {guidance && <section className="task-detail-guidance" aria-label="任务处理提示">
         <h4>{guidance.title}</h4><p>{guidance.text}</p>
         {summary.status === 'collection_failed' && <p>已经保存的成果保留，只重试未保存的成果，不重新生成。具体文件见下方“成果”，失败原因见“当前问题”和“过程记录”。</p>}

@@ -321,6 +321,71 @@ async def closeout(store, projects, batch_id, thread_id, record_updates=(), imag
     return await closeout_tasks(store, projects, ids, record_updates, batch_id=batch_id)
 
 
+def business_updates(store, group):
+    """Sync objective results only when the current row names this execution batch."""
+    root = Path(store.rows[group[0][0]]['input'].project)
+    progress = root / '项目进度.md'
+    updates, entries = [], []
+    episodes = {item['episode'] for _, report in group for item in report['items'] if not item.get('image')}
+    for episode in sorted(episodes):
+        records = [Path(store.rows[key]['input'].record_dir) for key, report in group
+                   if any(item.get('episode') == episode and not item.get('image') for item in report['items'])]
+        draft = root / '09-剧集制作' / episode / '其他资料/工作稿' / (episode + '-生成说明-工作稿.md')
+        entry = {'episode': episode, 'paths': ['项目进度.md', draft.relative_to(root).as_posix()]}
+        formal = root / '09-剧集制作' / episode / '05-视频提示词' / (episode + '-生成说明.md')
+        if formal.is_file():
+            entry['paths'].append(formal.relative_to(root).as_posix())
+        entries.append(entry)
+        manifest = draft.with_name(episode + '-修改轮次.json')
+        if not progress.is_file() or not manifest.is_file():
+            entry.update(status='needs_attention', reason='缺少当前总表或修改轮次依据；由Agent核对本批业务摘要')
+            continue
+        if any(not (record / '输入映射.json').is_file() for record in records):
+            entry.update(status='needs_attention', reason='缺少本批输入映射，保留当前业务状态')
+            continue
+        rounds = json.loads(manifest.read_text('utf-8-sig'))['rounds']
+        if not rounds:
+            entry.update(status='needs_attention', reason='当前修改轮次为空，保留当前业务状态')
+            continue
+        latest = max(item['number'] for item in rounds)
+        mappings = [json.loads((record / '输入映射.json').read_text('utf-8-sig')) for record in records]
+        numbers = [mapping.get('scene_modification_round') for mapping in mappings]
+        if any(not isinstance(number, int) for number in numbers):
+            entry.update(status='needs_attention', reason='输入映射缺少有效修改轮次，保留当前业务状态')
+            continue
+        if any(number != latest for number in numbers):
+            entry.update(status='superseded' if all(number < latest for number in numbers) else 'needs_attention',
+                         reason='本批轮次与当前整集轮次不一致，保留当前业务状态')
+            continue
+        text = progress.read_text('utf-8-sig')
+        try:
+            row, cells = project_progress.phase_row(text, episode)
+        except ValueError as error:
+            entry.update(status='needs_attention', reason=str(error))
+            continue
+        links = [unquote(value.split('#', 1)[0]) for value in re.findall(r'\]\(([^)]+)\)', row[0])]
+        linked = any(any((root / value).resolve().is_relative_to(record.resolve()) for value in links)
+                     for record in records)
+        if not linked or cells[2] == '已完成':
+            entry.update(status='needs_attention', reason='当前总表未明确关联本批或已有制作完成决定，保留原文')
+            continue
+        count = sum(1 for _, report in group for item in report['items']
+                    if item.get('episode') == episode and not item.get('image'))
+        results = '、'.join('[本批结果](' + relative(progress, record / REPORT) + ')' for record in records)
+        fact = f'本批已取回{count}段；内容决定见各分段审阅区。' + results
+        cells[2] = '进行中'
+        # Replace this tool-owned current-result phrase; do not accumulate a round history in the row.
+        cells[3] = re.sub(r'；本批已取回\d+段；内容决定见各分段审阅区。'
+                          r'\[本批结果\]\([^)]+\)(?:、\[本批结果\]\([^)]+\))*', '', cells[3]) + '；' + fact
+        replacement = '| ' + ' | '.join(cells) + ' |'
+        updates.append({'path': '项目进度.md', 'old': row[0], 'new': replacement})
+        entry.update(status='updated', reason='已同步技术状态和成果入口；人工待决、后续授权及自由文字由Agent核对',
+                     fields=['当前状态', '成果入口'])
+    return updates, {'status': 'needs_attention' if any(e['status'] != 'superseded' for e in entries) else 'not_current',
+                     'needs_attention': any(e['status'] != 'superseded' for e in entries),
+                     'entries': entries, 'next_action': 'sync-current-business-summary' if any(e['status'] != 'superseded' for e in entries) else None}
+
+
 async def closeout_tasks(store, projects, ids, record_updates=(), *, batch_id=None):
     """Internal completion worker; no Agent acknowledgement is required to register."""
     if record_updates and len({store.rows[key]['state']['project'] for key in ids}) != 1:
@@ -345,14 +410,32 @@ async def closeout_tasks(store, projects, ids, record_updates=(), *, batch_id=No
         if journal.get('status') != 'applying' and all(
                 store.rows[task]['state'].get('closeout', {}).get('status') == 'completed'
                 and (not record_updates or store.rows[task]['state']['closeout'].get('record_updates') == fingerprint)
-                for task, _ in group):
+                and (all(item.get('image') for item in report['items'])
+                     or 'business_sync' in store.rows[task]['state']['closeout'])
+                for task, report in group):
             reports.extend({**report, 'browser': store.rows[task]['state']['closeout']['browser'], 'reused': True}
                            for task, report in group)
             continue
         try:
+            if journal.get('status') == 'completed' and 'business_sync' not in owner and any(
+                    not item.get('image') for item in combined['items']):
+                owner['business_sync'] = {'status': 'updated', 'needs_attention': False,
+                    'paths': sorted({item['path'] for item in journal['updates']}), 'next_action': None}
+            if not record_updates and not journal and 'business_sync' not in owner and any(
+                    not item.get('image') for item in combined['items']):
+                automatic, owner['business_sync'] = await asyncio.to_thread(business_updates, store, group)
+                if automatic:
+                    fingerprint = await asyncio.to_thread(apply_record_updates, store, key, automatic,
+                        {item['episode'] for item in combined['items'] if not item.get('image')}, owner)
+                else:
+                    write_json(Path(store.rows[key]['input'].record_dir) / REPORT, owner)
             if record_updates or journal.get('status') == 'applying':
                 fingerprint = await asyncio.to_thread(apply_record_updates, store, key, record_updates,
                                         {item['episode'] for item in combined['items'] if not item.get('image')}, owner)
+                if record_updates and any(not item.get('image') for item in combined['items']):
+                    owner['business_sync'] = {'status': 'updated', 'needs_attention': False,
+                        'paths': sorted({item['path'] for item in record_updates}), 'next_action': None}
+                    write_json(Path(store.rows[key]['input'].record_dir) / REPORT, owner)
         except (ValueError, OSError, KeyError, TypeError) as error:
             for task, report in group:
                 outcome = {'status': 'registration_failed', 'report': REPORT, 'error': str(error)}
@@ -371,6 +454,9 @@ async def closeout_tasks(store, projects, ids, record_updates=(), *, batch_id=No
             continue
         for task, report in group:
             outcome = {'status': 'completed', 'report': REPORT, 'browser': browser, 'record_updates': fingerprint}
+            if not any(item.get('image') for item in report['items']) and 'business_sync' in owner:
+                report['business_sync'] = outcome['business_sync'] = owner['business_sync']
+                write_json(Path(store.rows[task]['input'].record_dir) / REPORT, report)
             if any(item.get('image') for item in report['items']):
                 outcome['display_outputs'] = report['items']
             else:

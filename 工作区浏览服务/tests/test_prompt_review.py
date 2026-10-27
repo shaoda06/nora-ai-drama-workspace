@@ -54,8 +54,19 @@ class TextChecks(unittest.TestCase):
         chinese = CHINESE.replace('站在画面右侧', '站在画面右侧。东方幻想三维渲染')
         warnings = []
         self.assertEqual(text_findings(prompt, chinese, warnings=warnings), [])
-        self.assertTrue({'spatial_coordinates', 'role_alias', 'subtitle_rule'} <=
+        self.assertNotIn('spatial_coordinates', {item['code'] for item in warnings})
+        self.assertTrue({'role_alias', 'subtitle_rule'} <=
                         {item['code'] for item in warnings})
+
+    def test_style_names_do_not_hide_actual_coordinates_in_the_same_description(self):
+        english = ENGLISH.replace('stands screen right',
+            'stands east of the gate in an East Asian fantasy setting')
+        chinese = CHINESE.replace('站在画面右侧', '站在石门东侧，采用东方幻想画风')
+        warnings = semantic_warnings(english, chinese)
+        coordinates = [item['detail'] for item in warnings if item['code'] == 'spatial_coordinates']
+        self.assertTrue(any('模型正文' in detail and 'east' in detail for detail in coordinates))
+        self.assertTrue(any('中文参考' in detail and '东侧' in detail for detail in coordinates))
+        self.assertFalse(any('东方' in detail for detail in coordinates))
 
     def test_spatial_review_must_cover_each_shot_and_quote_that_shot(self):
         prompt = ENGLISH.replace('overall_soundscape:', '[Shot 2] The empty gate stays open.\noverall_soundscape:')

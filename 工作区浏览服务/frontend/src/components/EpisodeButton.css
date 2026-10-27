@@ -1,6 +1,6 @@
-.episode-button-with-duration{flex-wrap:wrap}
+.episode-button{flex-wrap:wrap}
 .episode-button-main{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
-.episode-button-with-duration>.episode-button-main{min-width:min(200px,100%)}
+.episode-button>.episode-button-main{min-width:min(200px,100%)}
 .episode-button-meta{display:flex;align-items:center;gap:8px;margin-left:auto;max-width:40%;min-width:0}
 .episode-button-meta-with-duration{flex:none;max-width:100%}
 .episode-button-meta>.episode-button-status{margin-left:0;max-width:100%;flex-shrink:1}

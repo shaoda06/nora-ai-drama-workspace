@@ -23,9 +23,12 @@ export interface LocalQueueTask {
   created_at: string; updated_at?: string; started_at?: string | null; ended_at?: string | null;
   collection_auto_retry?: number | null; collection_next_retry_at?: string | null;
   resolution?: { summary: string; resolved_at: string };
+  closeout?: { status?: string; error?: string };
 }
 
-export function collectionStatus(task: Pick<LocalQueueTask, 'status' | 'collection_auto_retry' | 'collection_next_retry_at'>) {
+export function collectionStatus(task: Pick<LocalQueueTask, 'status' | 'collection_auto_retry' | 'collection_next_retry_at' | 'closeout'>) {
+  if (task.status === 'completed' && task.closeout?.status === 'registration_failed') return '成果已保存 · 登记失败';
+  if (task.status === 'completed' && task.closeout?.status === 'browser_pending') return '成果已保存 · 网页待同步';
   if (task.status === 'collecting' && (task.collection_auto_retry || task.collection_next_retry_at)) {
     return `取回重试中 · ${(task.collection_auto_retry || 0) + (task.collection_next_retry_at ? 1 : 0)}/3`;
   }

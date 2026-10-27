@@ -20,9 +20,9 @@ const video = (scene, run, stage = '一采') => ({ key: `${scene}-${stage}-${run
   ] : [], prompts: {}, references: { common: [], segment: [] }, issues: [] } });
 const doc = title => ({ kind: 'document', name: title, key: title + '.md', version: 'v01', doc: { title, html: `<p>${title}</p>` } });
 const round = (scene, number) => ({ number, episodeRound: true, created_at: '2026-10-26T00:00:00+08:00', script: doc('剧本'), storyboard: doc(scene), issues: [],
-  segments: scene === 'C001' ? [{ id: 'P001', duration: 2, stage: '一采', run: 'R002' }, { id: 'P002', duration: 2, stage: '二采', run: 'R004' }]
-    : [{ id: 'P001', duration: 2, stage: '一采', run: number === 8 ? 'R002' : 'R003' }] });
-let legacy = false, conflict = false, failRead = false;
+  segments: (scene === 'C001' ? [{ id: 'P001', duration: 2, stage: '一采', run: 'R002' }, { id: 'P002', duration: 2, stage: '二采', run: 'R004' }]
+    : [{ id: 'P001', duration: 2, stage: '一采', run: number === 8 ? 'R002' : 'R003' }]).map(segment => ({ ...segment, scriptHtml: '<h4>SH001</h4><p><strong>起始画面：</strong>原始画面</p>', scriptUrl: '/fixture/board.md' })) });
+let legacy = false, conflict = false, failRead = false, holdNextSegmentSave = null;
 let saved, puts;
 function reset() {
   const note = (segment, stage, run, text, roundNumber = 9) => ({ roundNumber, segment, stage, run, text, fileRevision: 'original-file', updatedAt: '2026-10-26T00:00:00+08:00' });
@@ -39,7 +39,7 @@ const episode = () => ({ kind: 'group', name: 'EP001', title: '意见示例', ch
     C002: [{ id: 'P001', duration: 2, videos: [video('C002', 'R002'), video('C002', 'R003')] }] } });
 reset();
 const unexpected = [];
-const server = await createServer({ configFile: false, root: fileURLToPath(new URL('../frontend', import.meta.url)), define: { __APP_VERSION__: JSON.stringify('notes-fixture') }, server: { host: '127.0.0.1', port: 0 },
+const server = await createServer({ configFile: false, cacheDir: path.join(screenshots, 'vite-cache'), root: fileURLToPath(new URL('../frontend', import.meta.url)), define: { __APP_VERSION__: JSON.stringify('notes-fixture') }, server: { host: '127.0.0.1', port: 0 },
  plugins: [react(), { name: 'episode-notes-fixture', configureServer(vite) { vite.middlewares.use(async (req, res, next) => {
   const url = decodeURIComponent(new URL(req.url, 'http://fixture.invalid').pathname);
   if (url.startsWith('/fixture/')) { res.setHeader('Content-Type', 'video/webm'); return res.end(sample); }
@@ -66,8 +66,15 @@ const server = await createServer({ configFile: false, root: fileURLToPath(new U
         }
         data = saved;
       } else {
-        const scene = url.split('/').at(-1), note = { ...value, updatedAt: '' };
-        saved.scenes[scene].notes[key(note)] = note; data = note;
+        const scene = url.split('/').at(-1);
+        if ((saved.scenes[scene].notes[key(value)]?.text ?? '') !== value.expectedText) {
+          res.statusCode = 409; data = { detail: '意见已在其他页面更新，请核对最新意见。' };
+        } else {
+          const { expectedText, ...fields } = value;
+          const note = { ...fields, updatedAt: '' };
+          saved.scenes[scene].notes[key(note)] = note; data = note;
+          if (holdNextSegmentSave) { const pending = holdNextSegmentSave; holdNextSegmentSave = null; await pending; }
+        }
       }
     } else { const scene = url.split('/').at(-1); data = scene === 'EP001' ? saved : saved.scenes[scene]; }
   } else if (req.method !== 'GET') { unexpected.push(`${req.method} ${url}`); res.statusCode = 405; data = {}; }
@@ -155,6 +162,10 @@ try {
   assert.ok(copied.indexOf('SH004') < copied.indexOf('C002 / 第9轮 / P001'));
   assert.ok(!copied.includes('旧轮意见不可带入') && !copied.includes('组合外版本不可带入'));
   assert.ok(copied.includes('本轮汇总意见') && copied.includes('整集节奏自然，不要字幕'));
+  await summary.fill('未保存的复制内容');
+  await copy.click();
+  assert.ok((await page.evaluate(() => window.__copied)).startsWith('【未保存草稿：'));
+  assert.equal(saved.rounds[9].text, '整集节奏自然，不要字幕');
   conflict = true; await summary.fill('不能丢的输入');
   await dialog.getByRole('button', { name: '保存', exact: true }).click();
   await page.getByText(/未保存：.*其他位置更新/).waitFor();
@@ -181,8 +192,8 @@ try {
   await page.getByRole('button', { name: /^分段 P001，/ }).click();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
   const editor = page.getByRole('textbox', { name: '修改意见', exact: true });
-  const pass = page.getByRole('button', { name: '本镜通过', exact: true });
-  assert.deepEqual(await page.locator('.revision-note-label button').allTextContents(), ['本镜通过', '插入时间', '清空']);
+  const pass = page.getByRole('button', { name: '记录本镜无问题', exact: true });
+  assert.deepEqual(await page.locator('.revision-note-label button').allTextContents(), ['记录本镜无问题', '插入时间', '清空']);
   assert.equal(await page.locator('.revision-note-label label').count(), 0);
   await page.locator('.segment-video video').evaluate(video => video.play());
   await page.waitForFunction(() => document.querySelector('.segment-video video')?.currentTime >= 1.2);
@@ -209,10 +220,66 @@ try {
   await page.locator('.revision-note-state[data-state="saved"]').waitFor();
   await page.screenshot({ path: path.join(screenshots, `shot-pass-${width}.png`) });
   const box = await pass.boundingBox(); assert.ok(box.x >= 0 && box.x + box.width <= width);
+  // A second page's save wins; editing/clearing a conflicted draft must not retry blindly.
+  const noteId = 'round/8/P001/一采/R002';
+  saved.scenes.C001.notes[noteId].text = '其他页面的新意见';
+  await editor.fill('本页不能丢的草稿');
+  await page.getByRole('button', { name: '核对最新意见', exact: true }).waitFor();
+  assert.equal(await editor.inputValue(), '本页不能丢的草稿');
+  assert.equal(saved.scenes.C001.notes[noteId].text, '其他页面的新意见');
+  const countBeforeClear = puts.length;
+  await page.getByRole('button', { name: '清空', exact: true }).click();
+  await page.waitForTimeout(1200);
+  assert.equal(puts.length, countBeforeClear, '冲突后清空不能自动覆盖其他页面');
+  await page.getByRole('button', { name: '核对最新意见', exact: true }).click();
+  const reconcile = page.getByRole('dialog', { name: '核对修改意见', exact: true });
+  assert.equal(await reconcile.getByRole('textbox', { name: '项目中最新意见', exact: true }).inputValue(), '其他页面的新意见');
+  await reconcile.getByRole('textbox', { name: '本页待保存意见', exact: true }).fill('核对后的合并意见');
+  await page.screenshot({ path: path.join(screenshots, `conflict-${width}.png`) });
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+  await reconcile.getByRole('button', { name: '保存核对后的本页意见', exact: true }).click();
+  await page.locator('.revision-note-state[data-state="saved"]').waitFor();
+  assert.equal(saved.scenes.C001.notes[noteId].text, '核对后的合并意见');
+  assert.equal(puts.at(-1).value.expectedText, '其他页面的新意见');
+  let releaseSave;
+  holdNextSegmentSave = new Promise(resolve => { releaseSave = resolve; });
+  await editor.fill('请求中的第一版');
+  await page.locator('.revision-note-state[data-state="saving"]').waitFor();
+  await editor.fill('请求期间继续编辑的第二版');
+  releaseSave();
+  await page.locator('.revision-note-state[data-state="saved"]').waitFor();
+  assert.equal(saved.scenes.C001.notes[noteId].text, '请求期间继续编辑的第二版');
+  assert.equal(puts.at(-1).value.expectedText, '请求中的第一版');
+
+
   await page.getByRole('button', { name: /^场次 C002 ·/ }).click();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
   assert.equal(await pass.isDisabled(), true, '缺少当前候选分镜时长时不能猜测起点');
   assert.equal(await page.getByRole('button', { name: '插入时间', exact: true }).isDisabled(), false);
+  await choose.click(); await page.getByRole('option', { name: /^第9轮/ }).click();
+  await page.getByRole('button', { name: '分镜修改', exact: true }).click();
+  const story = page.getByRole('textbox', { name: /起始画面/ });
+  await story.fill('修改后的起始画面');
+  const countBeforeExport = puts.length;
+  await page.getByRole('button', { name: '导出分镜', exact: true }).click();
+  const storyExport = page.getByRole('textbox', { name: '导出分镜文本', exact: true });
+  assert.ok((await storyExport.inputValue()).includes('依据：第9轮 · C002.md · v01'));
+  assert.ok((await storyExport.inputValue()).includes('这是页签草稿，尚未写回项目分镜。'));
+  assert.ok((await storyExport.inputValue()).includes('修改后的起始画面'));
+  assert.equal(puts.length, countBeforeExport, '分镜编辑和导出不写服务端或发消息');
+  const stored = await page.evaluate(() => JSON.parse(sessionStorage.getItem('nora-storyboard-draft/意见示例/EP001/C002')));
+  assert.equal(stored.source, '第9轮 · C002.md · v01');
+  await page.getByRole('dialog').getByRole('button', { name: '关闭', exact: true }).click();
+  await page.getByRole('button', { name: '分段制作', exact: true }).click();
+  await page.evaluate(values => sessionStorage.setItem('nora-storyboard-draft/意见示例/EP001/C002', JSON.stringify(values)), stored.values);
+  await page.getByRole('button', { name: '分镜修改', exact: true }).click();
+  assert.equal(await page.getByRole('textbox', { name: /起始画面/ }).innerText(), '修改后的起始画面');
+  await page.getByRole('button', { name: '导出分镜', exact: true }).click();
+  assert.ok((await storyExport.inputValue()).includes('依据：旧页签草稿，依据版本未记录'));
+
+  await page.screenshot({ path: path.join(screenshots, `storyboard-handoff-${width}.png`) });
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+
   assert.deepEqual(errors, []); assert.deepEqual(unexpected, []);
   await context.close(); console.log(`PASS ${width}px: 整集汇总排序、候选身份、统一总体意见、跨场恢复、旧历史及冲突保留输入`);
  }

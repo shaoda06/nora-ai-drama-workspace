@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 from backend.services.projects import ProjectStore
 from backend.parsers.project import SourceChangedError, build_data
-from backend.services.revision_notes import NoteInput, RevisionNotes
+from backend.services.revision_notes import NoteChange, RevisionNotes
 
 
 class ProjectScanningTests(unittest.TestCase):
@@ -174,9 +174,11 @@ class ProjectScanningTests(unittest.TestCase):
         data, snapshot, revision = entry['data'], entry['snapshot'], entry['revision']
         notes = RevisionNotes()
         target = episode / '其他资料/工作稿/EP001-C001-视频修改意见.json'
+        expected = ''
         for text in ('动作需要调整。', '动作需要调整。\n再加一条意见。', ''):
-            notes.save(self.project, 'EP001', 'C001', NoteInput(
-                segment='P001', stage='一采', run='R001', text=text, fileRevision='123-456'))
+            notes.save(self.project, 'EP001', 'C001', NoteChange(
+                segment='P001', stage='一采', run='R001', text=text, fileRevision='123-456', expectedText=expected))
+            expected = text
             self.assertEqual(notes.read(self.project, 'EP001', 'C001').notes['P001/一采/R001'].text, text)
             self.assertEqual(self.store.snapshot(self.project), snapshot)
             entry['checked'] = 0

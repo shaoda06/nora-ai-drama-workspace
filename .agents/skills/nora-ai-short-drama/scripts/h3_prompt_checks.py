@@ -182,6 +182,8 @@ def text_findings(prompt, chinese=None, names=None, *, mode='r2v', images=None, 
             body = re.sub(r'<d>.*?</d>|“[^”]*”|「[^」]*」|"[^"\n]*"', '', body, flags=re.S)
             for name in sorted(definitions.values(), key=len, reverse=True):
                 body = body.replace(name, '')
+            # These established style names describe visual traditions, not positions.
+            body = re.sub(r'\bEast Asian\b|东方幻想', '', body, flags=re.I)
             found = list(dict.fromkeys(m[0] for m in CARDINAL.finditer(body)))
             if found:
                 issue('spatial_coordinates', f'{language}/{section}检测到方位词候选，需结合语义核对：' + '、'.join(found))

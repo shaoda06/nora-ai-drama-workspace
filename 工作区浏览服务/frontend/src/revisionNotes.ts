@@ -5,7 +5,7 @@ export interface NoteInput { roundNumber?: number | null; segment: string; stage
 export interface RevisionNote extends NoteInput { updatedAt: string }
 export interface OverallNote { number: number; text: string; updatedAt: string }
 export interface SavedSceneNotes { notes: Record<string, RevisionNote>; rounds: Record<string, OverallNote> }
-interface Draft { value: NoteInput; status: 'waiting' | 'saving' | 'saved' | 'error'; error?: string }
+interface Draft { value: NoteInput; expectedText: string; status: 'waiting' | 'saving' | 'saved' | 'error'; error?: string; conflict?: boolean }
 interface SceneState extends SavedSceneNotes { drafts: Record<string, Draft>; loaded: boolean; loading: boolean; error: string }
 const scenes = new Map<string, SceneState>();
 const listeners = new Set<() => void>();
@@ -62,8 +62,15 @@ export function editNote(url: string, value: NoteInput) {
   const timerKey = url + '/' + key;
   clearTimeout(timers.get(timerKey));
   const current = state(url);
-  publish(url, { ...current, drafts: { ...current.drafts, [key]: { value, status: 'waiting' } } });
-  timers.set(timerKey, setTimeout(() => { void saveNote(url, key); }, 1000));
+  const previous = current.drafts[key];
+  const expectedText = previous && previous.status !== 'saved' ? previous.expectedText : current.notes[key]?.text ?? '';
+  publish(url, { ...current, drafts: { ...current.drafts, [key]: { value, expectedText, status: previous?.conflict ? 'error' : 'waiting', conflict: previous?.conflict, error: previous?.conflict ? previous.error : undefined } } });
+  if (!previous?.conflict) timers.set(timerKey, setTimeout(() => { void saveNote(url, key); }, 1000));
+}
+export async function saveReviewedNote(url: string, key: string, expectedText: string) {
+  const current = state(url);
+  publish(url, { ...current, drafts: { ...current.drafts, [key]: { ...current.drafts[key], expectedText, status: 'waiting', conflict: false, error: undefined } } });
+  await saveNote(url, key);
 }
 export async function saveNote(url: string, key: string) {
   const requestKey = url + '/' + key;
@@ -71,22 +78,27 @@ export async function saveNote(url: string, key: string) {
   timers.delete(requestKey);
   const current = state(url);
   const draft = current.drafts[key];
-  if (!draft || draft.status === 'saved' || saving.has(requestKey)) return;
+  if (!draft || draft.status === 'saved' || draft.conflict || saving.has(requestKey)) return;
   const value = draft.value;
   saving.add(requestKey);
-  publish(url, { ...current, drafts: { ...current.drafts, [key]: { value, status: 'saving' } } });
+  publish(url, { ...current, drafts: { ...current.drafts, [key]: { ...draft, status: 'saving' } } });
   let succeeded = false;
+  let conflict = false;
   try {
-    const response = await fetch(url, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(value) });
-    if (!response.ok) throw new Error((await response.text()) || `保存失败（${response.status}）`);
+    const response = await fetch(url, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...value, expectedText: draft.expectedText }) });
+    if (!response.ok) {
+      conflict = response.status === 409;
+      const error = await response.json();
+      throw new Error(typeof error.detail === 'string' ? error.detail : `保存失败（${response.status}）`);
+    }
     const note: RevisionNote = await response.json();
     const latest = state(url);
     const unchanged = latest.drafts[key].value === value;
-    publish(url, { ...latest, notes: { ...latest.notes, [key]: note }, drafts: { ...latest.drafts, [key]: { value: latest.drafts[key].value, status: unchanged ? 'saved' : 'waiting' } } });
+    publish(url, { ...latest, notes: { ...latest.notes, [key]: note }, drafts: { ...latest.drafts, [key]: { value: latest.drafts[key].value, expectedText: note.text, status: unchanged ? 'saved' : 'waiting' } } });
     succeeded = true;
   } catch (error) {
     const latest = state(url);
-    publish(url, { ...latest, drafts: { ...latest.drafts, [key]: { value: latest.drafts[key].value, status: 'error', error: String(error) } } });
+    publish(url, { ...latest, drafts: { ...latest.drafts, [key]: { ...latest.drafts[key], status: 'error', error: error instanceof Error ? error.message : String(error), conflict } } });
   } finally {
     saving.delete(requestKey);
   }

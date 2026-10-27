@@ -35,7 +35,7 @@ function inlineMarkdown(node: Node): string {
   return text;
 }
 
-export function SceneStoryboardEditor({ scope, segments }: { scope: NoteScope; segments: NonNullable<FileItem['segments']>[string] }) {
+export function SceneStoryboardEditor({ scope, segments, source }: { scope: NoteScope; segments: NonNullable<FileItem['segments']>[string]; source: string }) {
   const rows = useMemo(() => segments.flatMap((segment, segmentIndex) => {
     const document = new DOMParser().parseFromString(segment.scriptHtml, 'text/html');
     const elements = Array.from(document.body.children);
@@ -59,13 +59,20 @@ export function SceneStoryboardEditor({ scope, segments }: { scope: NoteScope; s
     })];
   }), [segments]);
   const storageKey = `nora-storyboard-draft/${scope.project}/${scope.episode}/${scope.scene}`;
-  const [draft, setDraft] = useState<Record<string, string>>(() => JSON.parse(sessionStorage.getItem(storageKey) || '{}'));
+  const [savedDraft, setSavedDraft] = useState<{ values: Record<string, string>; source: string }>(() => {
+    const saved = JSON.parse(sessionStorage.getItem(storageKey) || 'null');
+    if (!saved) return { values: {}, source };
+    // Keep pre-versioned tab drafts, but never label their source as today's file.
+    return saved.values ? saved : { values: saved, source: '旧页签草稿，依据版本未记录，请与当前原文核对' };
+  });
+  const draft = savedDraft.values;
   const [exportText, setExportText] = useState<string | null>(null);
   const edit = (row: Row, text: string) => {
     const next = { ...draft };
     if (text === row.text) delete next[row.key]; else next[row.key] = text;
-    sessionStorage.setItem(storageKey, JSON.stringify(next));
-    setDraft(next);
+    const saved = { values: next, source: Object.keys(draft).length ? savedDraft.source : source };
+    sessionStorage.setItem(storageKey, JSON.stringify(saved));
+    setSavedDraft(saved);
   };
   const changed = rows.some(row => row.editable && draft[row.key] !== undefined && draft[row.key] !== row.text);
   const exportStoryboard = () => {
@@ -79,9 +86,11 @@ export function SceneStoryboardEditor({ scope, segments }: { scope: NoteScope; s
       if (shot !== writtenShot) { content.push(shot); writtenShot = shot; }
       content.push(row.label ? `${row.label}：${draft[row.key].trimEnd()}` : draft[row.key].trimEnd());
     }
-    setExportText(`以下是我对${scope.episode}-${scope.scene}-场次分镜的修改意见：\n\`\`\`\n${content.join('\n\n').replace(/\n{3,}/g, '\n\n')}\n\`\`\``);
+    setExportText(`以下是我对${scope.project} / ${scope.episode}-${scope.scene}-场次分镜的修改意见：\n依据：${savedDraft.source}\n这是页签草稿，尚未写回项目分镜。\n\`\`\`\n${content.join('\n\n').replace(/\n{3,}/g, '\n\n')}\n\`\`\``);
   };
   return <>
+    <p className="muted">修改仅保存在当前浏览器页签，关闭页签可能丢失，不会写回项目或发送给 Agent。请导出后复制到制作会话，或下载 Markdown 交给 Agent。</p>
+    <p className="muted">当前原文：{source}{changed && savedDraft.source !== source && <>。草稿依据：{savedDraft.source}，请先核对版本。</>}</p>
     <div className="scene-revision-layout" style={{ '--revision-rows': rows.length + 1 } as CSSProperties}>
       {[false, true].map(editable => <section className="scene-revision-pane" aria-label={editable ? '修改场次分镜正文' : '当前场次分镜正文'} key={String(editable)}>
         <div className="scene-revision-heading"><strong>{editable ? '修改内容' : '原文'}</strong>{editable && <button disabled={!changed} onClick={exportStoryboard}>导出分镜</button>}</div>
@@ -91,6 +100,7 @@ export function SceneStoryboardEditor({ scope, segments }: { scope: NoteScope; s
       </section>)}
     </div>
     {exportText !== null && <Dialog title={`${scope.episode} · ${scope.scene} 导出分镜`} close={() => setExportText(null)}>
+      <p className="muted">以下是本次导出的修改快照，只包含改动字段。复制或下载后，请交给制作会话中的 Agent 处理。</p>
       <div className="revision-export-actions"><CopyButton label="复制" text={exportText} /><DownloadButton url={null} file={{ text: exportText, name: `${scope.episode}-${scope.scene}-场次分镜-修改意见.md`, type: "text/markdown;charset=utf-8" }} label="下载 Markdown" title="分镜修改意见" /></div>
       <textarea className="revision-notes-export scene-revision-export" aria-label="导出分镜文本" readOnly value={exportText} />
     </Dialog>}

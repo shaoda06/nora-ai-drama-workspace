@@ -23,6 +23,9 @@ async def task_detail(store, key):
               'error', 'error_details', 'collected', 'expected', 'notification', 'dispatch_attempt', 'preparation_attempt',
               'collection_attempt', 'collection_auto_retry', 'collection_next_retry_at', 'collection_retry_stop', 'resolution')
     summary = {field: state.get(field) for field in fields}
+    summary['closeout'] = {field: state.get('closeout', {})[field] for field in ('status', 'error')
+                           if field in state.get('closeout', {})}
+    summary['closeout_next_retry_at'] = state.get('closeout_next_retry_at')
     summary.update(enqueued_url=state.get('enqueued_url', data.url), remote_url=data.url)
     collection = [event['time'] for event in events if event['stage'] == 'collection' and event['result'] == 'completed']
     summary['collected_at'] = collection[-1] if collection else None
@@ -93,6 +96,7 @@ def task_files(data, state, events):
                         'error': error})
     records = []
     for label, name in (('任务摘要', '后台任务状态.json'), ('完整过程记录', '后台过程记录.json'),
+                        ('结果收尾报告', '结果收尾报告.json'),
                         ('准备检查报告', '执行检查报告.json'),
                         ('远端执行结果', data.history_name)):
         info = file_info(Path(data.record_dir) / name)

@@ -33,6 +33,19 @@ class ProgressTests(unittest.TestCase):
             progress.validate_update(text, updated, {unit})
             self.assertEqual(progress.phase_row(updated, unit)[1][4:], ['- 无', '- 无'])
 
+    def test_spaced_phase_labels_preserve_label_and_validation_scope(self):
+        original = self.original.replace('EP001制作', 'EP001 制作')
+        updated = progress.update(original, 'EP001', status='待确认', outputs='当前结果')
+        progress.validate_update(original, updated, {'EP001'})
+        self.assertEqual(progress.phase_row(updated, 'EP001')[1][0], 'EP001 制作')
+        with self.assertRaisesRegex(ValueError, '对应阶段行'):
+            progress.validate_update(original, updated.replace('另一动作', '变化'), {'EP001'})
+
+    def test_spaced_and_unspaced_duplicate_phase_is_ambiguous(self):
+        text = self.original + '| EP001 制作 | 会话 | 进行中 | 原成果 | - 无 | - 无 |\n'
+        with self.assertRaisesRegex(ValueError, '唯一'):
+            progress.update(text, 'EP001', status='待确认', outputs='结果')
+
 
 if __name__ == '__main__':
     unittest.main()

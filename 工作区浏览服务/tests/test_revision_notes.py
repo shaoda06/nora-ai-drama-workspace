@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from tests.http_case import HttpTestCase
 from backend import main
 from backend.services.projects import ProjectStore
-from backend.services.revision_notes import NoteInput, RevisionNotes
+from backend.services.revision_notes import NoteChange, RevisionNotes
 
 
 class RevisionNotesTests(HttpTestCase):
@@ -26,7 +26,7 @@ class RevisionNotesTests(HttpTestCase):
             override.start()
         self.client = TestClient(main.app, base_url='http://localhost:8782')
         self.url = '/api/projects/示例项目/revision-notes/EP001/C001'
-        self.value = dict(segment='P001', stage='一采', run='R001', text='手指动作需要自然。\n保留原来的机位。', fileRevision='12345-100')
+        self.value = dict(segment='P001', stage='一采', run='R001', text='手指动作需要自然。\n保留原来的机位。', fileRevision='12345-100', expectedText='')
 
     def tearDown(self):
         self.client.close()
@@ -53,7 +53,7 @@ class RevisionNotesTests(HttpTestCase):
         fresh = RevisionNotes().read(self.project, 'EP001', 'C001')
         self.assertEqual(fresh.notes['P001/一采/R001'].text, self.value['text'])
         self.assertEqual(fresh.notes['P001/一采/R001'].fileRevision, '12345-100')
-        self.assertEqual(self.put(self.value | {'text': '', 'fileRevision': 'updated-200'}).status_code, 200)
+        self.assertEqual(self.put(self.value | {'text': '', 'fileRevision': 'updated-200', 'expectedText': self.value['text']}).status_code, 200)
         self.assertEqual(len(self.client.get(self.url).json()['notes']), 4)
         self.assertFalse(list(target.parent.glob('.revision-notes-*')))
 
@@ -93,7 +93,7 @@ class RevisionNotesTests(HttpTestCase):
         target = main.revision_notes.path(self.project, 'EP001', 'C001')
         original = target.read_bytes()
         with patch('backend.services.revision_notes.os.replace', side_effect=OSError('磁盘不可写')):
-            response = self.put(self.value | {'text': '新的意见'})
+            response = self.put(self.value | {'text': '新的意见', 'expectedText': self.value['text']})
         self.assertEqual(response.status_code, 503)
         self.assertIn('未保存', response.text)
         self.assertEqual(target.read_bytes(), original)
@@ -102,10 +102,30 @@ class RevisionNotesTests(HttpTestCase):
     def test_concurrent_segment_saves_do_not_lose_entries(self):
         service = main.revision_notes
         with ThreadPoolExecutor(max_workers=8) as executor:
-            results = list(executor.map(lambda number: service.save(self.project, 'EP001', 'C001', NoteInput(**(self.value | {'segment': f'P{number:03}'}))), range(1, 17)))
+            results = list(executor.map(lambda number: service.save(self.project, 'EP001', 'C001', NoteChange(**(self.value | {'segment': f'P{number:03}'}))), range(1, 17)))
         self.assertEqual(len(results), 16)
         self.assertEqual(len(service.read(self.project, 'EP001', 'C001').notes), 16)
         self.assertEqual(list(self.project.rglob('*.json')), [service.path(self.project, 'EP001', 'C001')])
+
+    def test_stale_edit_and_clear_do_not_overwrite_other_page(self):
+        self.assertEqual(self.put().status_code, 200)
+        other = self.value | {'text': '另一页面已保存', 'expectedText': self.value['text']}
+        self.assertEqual(self.put(other).status_code, 200)
+        for text in ('本页旧草稿', ''):
+            response = self.put(self.value | {'text': text, 'expectedText': self.value['text']})
+            self.assertEqual(response.status_code, 409, response.text)
+            self.assertEqual(self.client.get(self.url).json()['notes']['P001/一采/R001']['text'], other['text'])
+        reconciled = self.value | {'text': '核对后的合并意见', 'expectedText': other['text']}
+        self.assertEqual(self.put(reconciled).status_code, 200)
+        saved = self.client.get(self.url).json()['notes']['P001/一采/R001']
+        self.assertEqual(saved['text'], reconciled['text'])
+        self.assertNotIn('expectedText', saved)
+
+    def test_missing_original_is_rejected_instead_of_overwriting(self):
+        value = dict(self.value)
+        value.pop('expectedText')
+        self.assertEqual(self.put(value).status_code, 422)
+        self.assertEqual(self.client.get(self.url).json()['notes'], {})
 
     def round_manifest(self):
         path = self.project / '09-剧集制作/EP001/其他资料/工作稿/EP001-C001-场次修改轮次.json'
@@ -185,7 +205,7 @@ class RevisionNotesTests(HttpTestCase):
         self.round_manifest()
         self.put()
         self.put(self.value | {'segment': 'P002', 'text': '别动这一条'})
-        self.put(self.value | {'fileRevision': 'new-file-mark'})
+        self.put(self.value | {'fileRevision': 'new-file-mark', 'expectedText': self.value['text']})
         change = self.value | {'text': '改好的分段意见', 'expectedText': self.value['text']}
         response = self.export_put([change], [{'number': 1, 'text': '整场不要字幕', 'expectedText': ''}])
         self.assertEqual(response.status_code, 200, response.text)
@@ -206,7 +226,7 @@ class RevisionNotesTests(HttpTestCase):
         change = self.value | {'text': '新文字', 'expectedText': self.value['text']}
         self.assertEqual(self.export_put([change], [{'number': 1, 'text': '整体', 'expectedText': '过时的内容'}]).status_code, 409)
         self.assertEqual(self.client.get(self.url).json()['notes']['P001/一采/R001']['text'], self.value['text'])
-        self.put(self.value | {'text': '其他页面的新文字'})
+        self.put(self.value | {'text': '其他页面的新文字', 'expectedText': self.value['text']})
         self.assertEqual(self.export_put([change]).status_code, 409)
         change['expectedText'] = '其他页面的新文字'
         target = main.revision_notes.path(self.project, 'EP001', 'C001')

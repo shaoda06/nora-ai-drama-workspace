@@ -14,7 +14,7 @@ from backend import main
 from backend.services import comfy_tasks as t
 from backend.services.desktop_channel import DesktopChannel
 from backend.services.projects import ProjectStore
-from backend.services.result_registration import closeout, register, REPORT
+from backend.services.result_registration import closeout, register, business_updates, REPORT
 from backend.services.result_summary import summary
 from tests import test_comfy_tasks as base, test_submission_lifecycle as lifecycle
 
@@ -126,6 +126,93 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.store = t.TaskStore(self.root / 'runtime', self.root)
         self.assertEqual(register(self.store, 'task'), result)
         self.store.acknowledge(batch, self.data.thread_id)
+
+    async def test_automatic_business_sync_preserves_decisions_and_hands_summary_to_agent(self):
+        self.setup_video()
+        progress = self.project / '项目进度.md'
+        reference = self.record.relative_to(self.project).as_posix() + '/任务清单.json'
+        progress.write_text('| EP001 制作 | 会话 | 检查通过待入队 | [本批](' + reference +
+                            ') | 用户要求保留旧版 | 不做二采 |\n', 'utf-8')
+        batch = await self.collect_and_notice()
+        result = await closeout(self.store, self.projects, batch, self.data.thread_id)
+        text = progress.read_text()
+        self.assertNotIn('检查通过待入队', text)
+        self.assertIn('本批已取回1段', text)
+        self.assertIn('| 用户要求保留旧版 | 不做二采 |', text)
+        handoff = result['results'][0]['business_sync']
+        self.assertTrue(handoff['needs_attention'])
+        self.assertEqual(handoff['next_action'], 'sync-current-business-summary')
+        self.assertIn('项目进度.md', handoff['entries'][0]['paths'])
+        repeated = await closeout(self.store, self.projects, batch, self.data.thread_id)
+        self.assertTrue(repeated['results'][0]['reused'])
+        self.assertEqual(progress.read_text(), text)
+        # A subsequent technical update replaces the tool-owned current-result phrase.
+        updates, _ = business_updates(self.store, [('task', {'items': [{'episode': 'EP001'}]})])
+        self.assertEqual(updates[0]['new'].count('本批已取回'), 1)
+        self.assertIn('用户要求保留旧版', updates[0]['new'])
+
+    async def test_business_sync_does_not_overwrite_newer_round_or_unlinked_row(self):
+        self.setup_video()
+        progress = self.project / '项目进度.md'
+        relative = self.record.relative_to(self.project).as_posix()
+        current = '| EP001制作 | 会话 | 进行中 | [本批](' + relative + '/任务清单.json) | 原决定 | 原动作 |\n'
+        progress.write_text(current)
+        report = {'items': [{'episode': 'EP001'}]}
+        manifest = json.loads(self.scene_rounds_file.read_text())
+        manifest['rounds'].append({**manifest['rounds'][0], 'number': 2})
+        self.scene_rounds_file.write_text(json.dumps(manifest))
+        updates, outcome = business_updates(self.store, [('task', report)])
+        self.assertEqual(updates, [])
+        self.assertEqual(outcome['entries'][0]['status'], 'superseded')
+        self.assertFalse(outcome['needs_attention'])
+        manifest['rounds'].pop()
+        self.scene_rounds_file.write_text(json.dumps(manifest))
+        progress.write_text(current.replace(relative, '执行附件/另一任务'))
+        updates, outcome = business_updates(self.store, [('task', report)])
+        self.assertEqual(updates, [])
+        self.assertTrue(outcome['needs_attention'])
+
+    async def test_business_sync_missing_round_requires_agent_instead_of_claiming_superseded(self):
+        self.setup_video()
+        (self.project / '项目进度.md').write_text('| EP001制作 | 会话 | 进行中 | 原成果 | 原决定 | 原动作 |\n')
+        path = self.record / '输入映射.json'
+        mapping = json.loads(path.read_text())
+        mapping.pop('scene_modification_round')
+        path.write_text(json.dumps(mapping))
+        updates, outcome = business_updates(self.store, [('task', {'items': [{'episode': 'EP001'}]})])
+        self.assertEqual(updates, [])
+        self.assertEqual(outcome['entries'][0]['status'], 'needs_attention')
+
+    async def test_business_sync_preserves_already_completed_production(self):
+        self.setup_video()
+        progress = self.project / '项目进度.md'
+        reference = self.record.relative_to(self.project).as_posix()
+        original = '| EP001制作 | 会话 | 已完成 | [本批](' + reference + '/任务清单.json) | 原决定 | 复盘已完成 |\n'
+        progress.write_text(original)
+        updates, outcome = business_updates(self.store, [('task', {'items': [{'episode': 'EP001'}]})])
+        self.assertEqual(updates, [])
+        self.assertTrue(outcome['needs_attention'])
+        self.assertEqual(progress.read_text(), original)
+
+    async def test_legacy_completed_business_update_is_reused_without_current_row_rewrite(self):
+        self.setup_video()
+        batch = await self.collect_and_notice()
+        progress = self.project / '项目进度.md'
+        old = '| EP001制作 | 会话 | 进行中 | 原成果 | 原决定 | 原动作 |'
+        progress.write_text(old + '\n')
+        updates = [{'path': '项目进度.md', 'old': old, 'new': old.replace('原成果', '已核对成果')}]
+        await closeout(self.store, self.projects, batch, self.data.thread_id, updates)
+        path = self.record / REPORT
+        report = json.loads(path.read_text())
+        report.pop('business_sync')
+        path.write_text(json.dumps(report))
+        self.store.rows['task']['state']['closeout'].pop('business_sync')
+        before = progress.read_bytes()
+        restored = await closeout(self.store, self.projects, batch, self.data.thread_id)
+        self.assertFalse(restored['results'][0]['business_sync']['needs_attention'])
+        self.assertEqual(progress.read_bytes(), before)
+        repeated = await closeout(self.store, self.projects, batch, self.data.thread_id)
+        self.assertTrue(repeated['results'][0]['reused'])
 
     async def test_browser_failure_returns_source_report_and_can_resume(self):
         _, draft = self.setup_video()

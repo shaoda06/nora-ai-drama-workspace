@@ -124,13 +124,16 @@ class RevisionNotes:
                 del data.notes[key]
                 data.notes[assigned.key()] = assigned
 
-    def save(self, project: Path, episode: str, scene: str, value: NoteInput) -> RevisionNote:
+    def save(self, project: Path, episode: str, scene: str, value: NoteChange) -> RevisionNote:
         from backend.parsers.scene_rounds import rounds
         with self.lock:
             data = self.read(project, episode, scene)
             if value.roundNumber is not None:
                 rounds.referenced_round(project, f'{episode}-{scene}', value.roundNumber)
-            note = RevisionNote(**value.model_dump(), updatedAt=datetime.now().astimezone().isoformat(timespec='seconds'))
+            old = data.notes.get(value.key())
+            if (old.text if old else '') != value.expectedText:
+                raise NotesChangedError('分段意见已在其他页面更新，请保留本页文字，核对最新意见后再保存。')
+            note = RevisionNote(**value.model_dump(exclude={'expectedText'}), updatedAt=datetime.now().astimezone().isoformat(timespec='seconds'))
             data.notes[value.key()] = note
             self.write(project, episode, scene, data)
             return note
