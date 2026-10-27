@@ -241,6 +241,37 @@ class FinalizeTests(unittest.TestCase):
         self.assertEqual([g['id'] for g in timeline['segments']], ['项目-独立组-0', '项目-独立组-1'])
         self.assertEqual([g['prompt'] for g in timeline['segments']], ['P001 <Picture 1>', 'P002 <Picture 1>'])
 
+    def test_native_empty_group_defaults_preserve_configuration_checks(self):
+        self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
+        for item in self.plan['items']:
+            api = tool.adopt.load(Path(item['api']))
+            node = next(n for n in api.values() if n['class_type'] == 'MiniMaxH3Director')
+            timeline = json.loads(node['inputs']['timeline_data'])
+            for group in timeline['segments']:
+                group.pop('loras', None)
+                group.pop('refImageSize', None)
+            timeline['batchWorkspaces']['r2v']['segments'] = copy.deepcopy(timeline['segments'])
+            self.replace_timeline(item, timeline)
+        result = self.run_plan()
+        prepared = tool.prepare(self.root, self.plan)
+        with zipfile.ZipFile(result['pack']) as archive:
+            files = {name: archive.read(name) for name in archive.namelist()}
+        for extras, accepted in (({'loras': [], 'refImageSize': None}, True),
+                                 ({'loras': [{'name': 'unexpected.safetensors'}]}, False),
+                                 ({'refImageSize': '1536'}, False),
+                                 ({'unexpected': None}, False)):
+            with self.subTest(extras=extras):
+                with zipfile.ZipFile(result['pack'], 'w') as archive:
+                    for name, data in files.items():
+                        if name.startswith('asset_groups/') and name.endswith('/group.json'):
+                            data = json.dumps({**json.loads(data), **extras}).encode()
+                        archive.writestr(name, data)
+                if accepted:
+                    tool.verify_pack(prepared)
+                else:
+                    with self.assertRaisesRegex(ValueError, '包内分组与时间线不一致'):
+                        tool.verify_pack(prepared)
+
     def test_group_mapping_length_mismatch_stops_before_export(self):
         self.plan['items'] = [self.item(p) for p in ('P001', 'P002')]
         item = self.plan['items'][0]

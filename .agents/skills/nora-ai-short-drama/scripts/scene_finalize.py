@@ -441,7 +441,9 @@ def verify_pack(prepared):
             raise ValueError('导演包分组文件未完整覆盖整场')
         for group, filename in zip(portable['segments'], group_names):
             actual = client.strict_json(archive.read(filename))
-            if {k: group[k] for k in actual} != actual:
+            # Native group exports materialize these optional empty fields.
+            expected = {'loras': [], 'refImageSize': None, **group}
+            if any(k not in expected or expected[k] != value for k, value in actual.items()):
                 raise ValueError('包内分组与时间线不一致：' + filename)
 
 
