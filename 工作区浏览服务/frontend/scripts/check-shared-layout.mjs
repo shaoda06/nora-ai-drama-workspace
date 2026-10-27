@@ -335,6 +335,18 @@ try {
     assert.equal(await showcase.getByRole('link', { name: '查看原图 ↗', exact: true }).count(), 1);
     assert.equal(await showcase.getByRole('link', { name: '下载原图', exact: true }).count(), 1);
     await showcase.getByRole('button', { name: '选集与分段', exact: true }).click();
+    const episodeButtons = showcase.locator('.episode-grid-pairs .episode-button');
+    assert.equal(await episodeButtons.count(), 3);
+    assert.deepEqual(await episodeButtons.locator('.episode-button-duration').allTextContents(), ['1分20秒', '2分5.5秒*']);
+    const episodeBounds = await episodeButtons.evaluateAll(nodes => nodes.map(node => {
+      const box = node.getBoundingClientRect(); return { x: box.x, y: box.y, width: box.width };
+    }));
+    assert.equal(episodeBounds[0].y === episodeBounds[1].y, width > 700, '选集最多两列，手机换行');
+    assert.ok(episodeBounds[2].y > episodeBounds[0].y, '第三集另起一行');
+    for (const button of await episodeButtons.all()) {
+      await contained(button, `${width}px / 选集按钮及其时长`);
+      for (const meta of await button.locator('.episode-button-meta').all()) await contained(meta, `${width}px / 选集时长与状态`);
+    }
     for (const [titleStatus, background, color] of [
       ['待定集名', 'rgb(239, 241, 239)', 'rgb(105, 118, 111)'],
       ['临时集名', 'rgb(255, 241, 220)', 'rgb(162, 105, 22)'],

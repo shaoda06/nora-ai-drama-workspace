@@ -48,8 +48,8 @@ const server = await createServer({ configFile: false, root: fileURLToPath(new U
   else if (url.endsWith('/status')) data = { revision: 1, updating: false, checking: false };
   else if (url.endsWith('/overview')) data = { active: [], warnings: [], directories: [{ name: '00-项目定位', label: '项目定位' }, { name: '09-剧集制作', label: '剧集制作' }] };
   else if (url.endsWith('/sections/00-项目定位')) data = { exists: false, groups: [] };
-  else if (url.endsWith('/sections/09-剧集制作')) data = { statistics: { total: 2, completed: 0, notStarted: 0, running: 2 }, children: ['EP001', 'EP002'].map(name => ({ kind: 'group', name, key: name, title: '时长示例' })) };
-  else if (/\/episodes\/EP00[12]$/.test(url)) data = episode(url.slice(-5));
+  else if (url.endsWith('/sections/09-剧集制作')) data = { statistics: { total: 4, completed: 2, notStarted: 0, running: 2 }, children: ['EP001', 'EP002', 'EP003', 'EP004'].map(name => ({ kind: 'group', name, key: name, title: name === 'EP003' ? '很长的题名测试在手机中省略显示不能挤掉时长和制作状态' : '时长示例', titleStatus: '最终定名', statusHtml: '<span class="status-badge status-green">已完成</span>' })) };
+  else if (/\/episodes\/EP00[1-4]$/.test(url)) data = episode(url.slice(-5));
   else if (url.includes('/revision-notes/')) data = { rounds: {}, notes: {} };
   else { unexpected.push(url); res.statusCode = 404; data = {}; }
   res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(data));
@@ -112,6 +112,24 @@ try {
   await object.click(); await page.getByRole('option', { name: /^EP002/ }).click();
   await page.waitForFunction(() => document.querySelector('[aria-label="本集时长"]')?.textContent === '本集时长：1分5.5秒*');
   assert.equal(await scene('C001').textContent(), '场次 C001 · 1分5.5秒*');
+  await page.getByRole('navigation', { name: '当前位置' }).getByRole('link', { name: '剧集制作' }).click();
+  const list = page.getByRole('region', { name: '剧集制作', exact: true });
+  const buttons = list.locator('.episode-button');
+  await page.waitForFunction(() => document.querySelector('[data-episode="EP001"] .episode-button-duration')?.textContent === '8秒');
+  assert.deepEqual(await buttons.locator('.episode-button-duration').allTextContents(), ['8秒', '1分5.5秒*', '8秒', '8秒']);
+  const boxes = await buttons.evaluateAll(nodes => nodes.map(node => { const b = node.getBoundingClientRect(); return { x: b.x, y: b.y, right: b.right }; }));
+  assert.equal(boxes[0].y === boxes[1].y, width > 700);
+  assert.ok(boxes[2].y > boxes[0].y, '列表一行最多两集');
+  for (const button of await buttons.all()) {
+    const durationBox = await button.locator('.episode-button-duration').boundingBox();
+    const statusBox = await button.locator('.status-badge').boundingBox();
+    assert.ok(durationBox.x + durationBox.width <= statusBox.x + 1, '时长在制作状态之前');
+    assert.ok(await button.evaluate(node => node.scrollWidth <= node.clientWidth + 1));
+  }
+  assert.ok(boxes.every(box => box.x >= 0 && box.right <= width + 1));
+  await page.screenshot({ path: path.join(screenshots, `${width}-list.png`), fullPage: false });
+  await buttons.first().click();
+  assert.equal(await total.textContent(), '本集时长：8秒', '进入详情沿用相同实际时长');
   assert.deepEqual(errors, []);
   await context.close();
  }

@@ -7,7 +7,7 @@ import type { FileItem } from '../api';
 import { PreviewContext, Result, Rich } from '../components';
 import { TabNav } from './TabNav';
 import { Pagination } from './Pagination';
-import { EpisodeButton } from './EpisodeButton';
+import { ProductionEpisodeButton } from './ProductionEpisodeButton';
 import { SceneWorkspace, type EpisodePlayback } from './SceneWorkspace';
 import { useRefreshState } from '../refreshPosition';
 import { BreadcrumbActionsContext, BreadcrumbSelectorContext } from './Breadcrumbs';
@@ -197,11 +197,11 @@ export function EpisodeProduction({ project, items, statistics, selected, onSele
     </details>}
   </div> : <>
     <div ref={cards}>
-      <section aria-label="片头与片尾"><h2>片头与片尾</h2><div className="episode-grid">{shared.map(item => <EpisodeButton key={item.key} item={item} onSelect={open} />)}</div>
+      <section aria-label="片头与片尾"><h2>片头与片尾</h2><div className="episode-grid episode-grid-pairs">{shared.map(item => <ProductionEpisodeButton key={item.key} project={project} revision={revision} item={item} onSelect={open} />)}</div>
         {!shared.length && <p className="muted">片头、片尾尚未开始制作。</p>}</section>
       <section aria-label="剧集制作"><h2>剧集制作</h2>
         <div className="production-statistics" aria-label="剧集制作统计"><span>共 <strong>{statistics.total}</strong> 集</span><span>未开始 <strong>{statistics.notStarted}</strong> 集</span><span>进行中 <strong>{statistics.running}</strong> 集</span><span>已完成 <strong>{statistics.completed}</strong> 集</span></div>
-        <div className="episode-grid">{episodes.slice((page - 1) * 36, page * 36).map(item => <EpisodeButton key={item.key} item={item} onSelect={open} />)}</div>
+        <div className="episode-grid episode-grid-pairs">{episodes.slice((page - 1) * 36, page * 36).map(item => <ProductionEpisodeButton key={item.key} project={project} revision={revision} item={item} onSelect={open} />)}</div>
         {!episodes.length && <p className="muted">尚无剧集制作目录。</p>}
         <Pagination page={page} total={episodes.length} change={setPage} />
       </section>

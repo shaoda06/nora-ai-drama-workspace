@@ -155,8 +155,8 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
     </>}
     {category === 'production' && <>
-      <ComponentExample title="选集按钮" rule="点击只更新示例选集；集名状态采用灰色待定、黄色临时、绿色最终定名，与制作进度独立。" usage="分集大纲、剧集制作">
-        <div className="component-demo-stack">{(['待定集名', '临时集名', '最终定名'] as const).map((titleStatus, i) => <EpisodeButton key={titleStatus} item={{ kind: 'episode', name: `EP00${i + 1}`, title: titleStatus === '待定集名' ? '待定' : '组件演示集', titleStatus, statusHtml: '<span class="status-badge status-gray">未开始</span>' }} onSelect={setSelected} />)}</div><p>已选择：{selected === 'one' ? '尚未选集' : selected}</p>
+      <ComponentExample fullWidth title="选集按钮" rule="点击只更新示例选集；制作页最多两列，窄屏单列。可在制作状态前显示时长，*表示含计划值；大纲不显示时长。集名状态与制作进度独立。" usage="分集大纲、剧集制作">
+        <div className="episode-grid episode-grid-pairs">{(['待定集名', '临时集名', '最终定名'] as const).map((titleStatus, i) => <EpisodeButton key={titleStatus} duration={['1分20秒', '2分5.5秒*', undefined][i]} item={{ kind: 'episode', name: `EP00${i + 1}`, title: titleStatus === '待定集名' ? '待定' : '组件演示集与很长的题名显示检查', titleStatus, statusHtml: '<span class="status-badge status-gray">未开始</span>' }} onSelect={setSelected} />)}</div><p>已选择：{selected === 'one' ? '尚未选集' : selected}</p>
       </ComponentExample>
       <ComponentExample fullWidth title="分段与制作状态" rule="P001标记本轮新生成；可切换分段和横竖布局，悬停状态图标查看详情。" usage="分段制作、宽屏分段导航">
         <button onClick={() => setVertical(!vertical)}>{vertical ? '切换横排' : '切换竖排'}</button>
