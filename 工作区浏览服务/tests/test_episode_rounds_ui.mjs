@@ -61,6 +61,26 @@ try {
   const waitRun = async run => page.waitForFunction(run => document.querySelector('[aria-label="版本切换"]')?.getAttribute('data-value')?.endsWith(run), run);
   await choose.waitFor(); assert.equal(await choose.getAttribute('data-value'), '9');
   assert.equal(await page.getByRole('combobox', { name: '场次修改轮次', exact: true }).count(), 0);
+  const repeat = page.getByRole('checkbox', { name: '重复播放', exact: true });
+  const wide = () => page.getByRole('button', { name: /^(宽屏显示|恢复布局)$/ });
+  await repeat.check(); await wide().click();
+  await scene('C002').click(); await waitRun('R003');
+  assert.deepEqual({ repeat: await repeat.isChecked(), wide: await wide().getAttribute('aria-pressed') }, { repeat: true, wide: 'true' }, '手动跨场继承重复播放及宽屏');
+  assert.equal(await page.locator('.segment-video video').evaluate(video => video.loop), true);
+  await page.locator('.video-source-actions').screenshot({ path: path.join(screenshots, `${width}-inherited-preferences.png`) });
+  await candidate.click(); await page.getByRole('option').filter({ hasText: /^候选一/ }).click();
+  await page.waitForFunction(() => document.querySelector('[aria-label="修改轮次"]')?.getAttribute('data-value') === '8');
+  assert.equal(await repeat.isChecked(), true, '制作页换候选重建播放器不丢失重复偏好');
+  assert.equal(await wide().getAttribute('aria-pressed'), 'true');
+  await chooseRound(9); await waitRun('R003');
+  await scene('C001').click(); await waitRun('R002');
+  assert.equal(await repeat.isChecked(), true);
+  assert.equal(await wide().getAttribute('aria-pressed'), 'true');
+  await repeat.uncheck(); await wide().click();
+  await scene('C002').click(); await waitRun('R003');
+  assert.equal(await repeat.isChecked(), false, '用户关闭重复后切场不重新开启');
+  assert.equal(await wide().getAttribute('aria-pressed'), 'false', '恢复布局后切场保持普通布局');
+  await scene('C001').click();
   await scene('C002').click(); assert.equal(await choose.getAttribute('data-value'), '9'); await waitRun('R003');
   await chooseRound(8); await waitRun('R001');
   await scene('C001').click(); assert.equal(await choose.getAttribute('data-value'), '8'); await waitRun('R002');
@@ -74,10 +94,14 @@ try {
   await page.waitForFunction(() => document.querySelector('[aria-label="修改轮次"]')?.getAttribute('data-value') === '8');
   await scene('C001').click();
   const continuous = page.getByRole('checkbox', { name: '连续播放', exact: true });
+  await repeat.check(); await wide().click();
   await continuous.check(); await page.locator('.segment-video video').dispatchEvent('ended');
   await page.locator('[aria-label="场次 C002 内容"]').waitFor(); await waitRun('R001');
   assert.equal(await choose.getAttribute('data-value'), '8');
   assert.equal(await continuous.isChecked(), true);
+  assert.equal(await repeat.isChecked(), false);
+  assert.equal(await repeat.isDisabled(), true);
+  assert.equal(await wide().getAttribute('aria-pressed'), 'true', '自动跨场保持宽屏');
   await page.waitForFunction(() => { const v = document.querySelector('.segment-video video'); return v?.autoplay && !v.paused; });
   // A manual scene change keeps the armed episode queue but clears the old auto-arrival.
   await page.locator('.segment-video video').evaluate(video => video.pause());
@@ -90,13 +114,18 @@ try {
   await continuous.uncheck();
   await scene('C001').click(); await waitRun('R002');
   assert.equal(await continuous.isChecked(), false, '用户关闭后切场不会重新开启');
+  assert.equal(await repeat.isChecked(), false, '关闭连续播放不恢复重复播放');
+  assert.equal(await wide().getAttribute('aria-pressed'), 'true');
   await chooseRound(5); await waitRun('R001');
   await scene('C002').click(); await page.waitForFunction(() => document.querySelector('[aria-label="修改轮次"]')?.getAttribute('data-value') === '7');
   await chooseRound(9);
   // Different episodes have independent counters and retain their own selection.
   const object = page.getByRole('combobox', { name: '快速选择制作对象', exact: true });
+  await repeat.check();
   await object.click(); await page.getByRole('option', { name: /^EP002/ }).click();
   await page.waitForFunction(() => document.querySelector('[aria-label="修改轮次"]')?.getAttribute('data-value') === '1');
+  assert.equal(await repeat.isChecked(), false, '换集不继承上一集重复播放');
+  assert.equal(await wide().getAttribute('aria-pressed'), 'false', '换集不继承上一集宽屏');
   await object.click(); await page.getByRole('option', { name: /^EP001/ }).click();
   await page.waitForFunction(() => document.querySelector('[aria-label="修改轮次"]')?.getAttribute('data-value') === '9');
   const roundsBox = await choose.boundingBox(), sceneBox = await scene('C001').boundingBox();
@@ -115,7 +144,7 @@ try {
   assert.equal(await page.locator('.segment-video video').count(), 0, '缺片不能顶替旧视频');
   assert.deepEqual(errors, []); assert.deepEqual(unexpected, []); assert.deepEqual(writes, []);
   await context.close();
-  console.log(`PASS ${width}px: 单集共轮、历史候选联动、跨场实际自动播放、手动切场保留勾选并暂停、主动关闭不恢复、旧记录、跨集独立及缺片停止`);
+  console.log(`PASS ${width}px: 手动切场保持重复及宽屏、候选切换保持偏好、自动跨场宽屏、连续互斥及取消、换集隔离；原轮次、历史、连播、缺片检查通过`);
  }
  console.log('截图：'+screenshots);
 } finally { await browser.close(); await server.close(); }

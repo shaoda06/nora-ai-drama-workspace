@@ -124,18 +124,22 @@ export function watchVideoPlayback(element: HTMLVideoElement, recover: (reason: 
 }
 
 export interface SegmentVideoHandle { seekTo: (time: number) => void }
+export interface RepeatPlaybackControl { checked: boolean; onChange: (checked: boolean) => void }
 
-export function SegmentVideo({ current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, retainSource, wide, onToggleWide, continuous = false, continuousControl, selectorControl, playerRef }: {
+export function SegmentVideo({ repeatControl, current, onTimeChange, autoPlay = false, onEnded, onError, onFileRevision, cachedSource, retainSource, wide, onToggleWide, continuous = false, continuousControl, selectorControl, playerRef }: {
   current?: VideoItem; onTimeChange: (time: number) => void; autoPlay?: boolean;
   onEnded?: () => void; onError?: () => void;
   onFileRevision?: (revision: string) => void;
   cachedSource?: string; wide: boolean; onToggleWide: () => void; continuous?: boolean; continuousControl: ReactNode; selectorControl?: ReactNode;
+  repeatControl?: RepeatPlaybackControl;
   retainSource: (source: string) => () => void;
   playerRef: Ref<SegmentVideoHandle>;
 }) {
   const [error, setError] = useState(false);
-  const [repeat, setRepeat] = useState(false);
-  useEffect(() => { if (continuous) setRepeat(false); }, [continuous]);
+  const [localRepeat, setLocalRepeat] = useState(false);
+  const repeat = repeatControl?.checked ?? localRepeat;
+  const setRepeat = repeatControl?.onChange ?? setLocalRepeat;
+  useEffect(() => { if (continuous) setRepeat(false); }, [continuous, setRepeat]);
   const [detailId, setDetailId] = useState('');
   const queryClient = useQueryClient();
   const task = useQuery<VideoTaskState>({
