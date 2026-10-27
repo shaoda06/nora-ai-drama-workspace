@@ -225,7 +225,6 @@ export function SceneWorkspace({ wideVideo, onToggleWide, repeatControl, segment
       view === 'segments' && !productionRound && !viewingPrevious && !!currentSegment && { id: 'round-missing', content: '本场尚未登记整场轮次，不能连续播放。' },
       view === 'segments' && !!error && { id: 'playback', tone: error.unavailable ? 'error' : 'info', content: error.message },
       view === 'segments' && viewingPrevious && { id: 'previous-ending', content: <>上集末段{productionRound ? '（接续参考，不属于本场修改轮次）' : ''} · {previousEnding!.episode} · {previousEnding!.scene} · {currentSegment!.id}，点击本集分段返回</> },
-      view === 'segments' && segments.some((item, index) => index > 0 && Number(item.id.slice(1)) < Number(segments[index - 1].id.slice(1))) && { id: 'segment-order', content: '分段按分镜索引中的剧情顺序排列，编号保留原标识。' },
       view === 'storyboard' && !!productionRound && !storyboardDocument && { id: 'storyboard-missing', tone: 'error', content: '本轮分镜文件不可用，请核对轮次资料。' },
       view === 'dialogue' && !!productionRound && productionRound.number !== sceneRounds.at(-1)?.number && { id: 'historical-round', content: '当前为历史轮次，请切换到最新修改轮次后编辑。' },
     ]} />
