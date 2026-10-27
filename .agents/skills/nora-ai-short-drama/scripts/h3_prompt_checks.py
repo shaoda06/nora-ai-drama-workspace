@@ -117,10 +117,17 @@ def selected_groups(workflow):
             yield str(node_id), index, prompt, signature
 
 
-def text_findings(prompt, chinese=None, names=None, *, mode='r2v', images=None, duration=None):
+def text_findings(prompt, chinese=None, names=None, *, mode='r2v', images=None, duration=None, warnings=None):
+    """Return technical errors; collect heuristic cues for human review separately."""
     errors = []
     def issue(code, detail):
-        errors.append({'code': code, 'detail': detail})
+        item = {'code': code, 'detail': detail}
+        if code in {'spatial_coordinates', 'role_alias', 'subtitle_rule',
+                    'translation_numbers', 'translation_tags'}:
+            if warnings is not None:
+                warnings.append(item)
+        else:
+            errors.append(item)
     reference = mode in REFERENCE_MODES
     headings = SECTIONS if reference else BASE_SECTIONS
     english = sections(prompt, headings, allow_prefix=not reference)
@@ -173,18 +180,16 @@ def text_findings(prompt, chinese=None, names=None, *, mode='r2v', images=None, 
             if section in ('overall_soundscape', 'non_diegetic_music'):
                 continue
             body = re.sub(r'<d>.*?</d>|“[^”]*”|「[^」]*」|"[^"\n]*"', '', body, flags=re.S)
-            body = body.replace('东方幻想', '')  # Art direction, not a spatial coordinate.
             for name in sorted(definitions.values(), key=len, reverse=True):
                 body = body.replace(name, '')
             found = list(dict.fromkeys(m[0] for m in CARDINAL.finditer(body)))
             if found:
-                issue('spatial_coordinates', f'{language}/{section}存在未换算的地理方位：' + '、'.join(found))
-    # Only unequivocal named-role substitutions; ordinary pronouns and quoted dialogue
-    # are left to the semantic review, not rejected by a broad natural-language regex.
+                issue('spatial_coordinates', f'{language}/{section}检测到方位词候选，需结合语义核对：' + '、'.join(found))
+    # Role wording is a review cue, not proof that a subject was replaced.
     action = re.sub(r'<d>.*?</d>|“[^”]*”|"[^"\n]*"', '', english.get('detailed_description', ''), flags=re.S)
     role = re.search(r'\b(?:the\s+(?:(?:young|middle-aged|apron-wearing|bearded|male|female)\s+)*(?:man|woman|boy|girl|villager)|his\s+(?:wife|mother)|her\s+(?:husband|son))\b', action, re.I)
     if role:
-        issue('role_alias', '动作中以角色代称替换主体：' + role[0])
+        issue('role_alias', '检测到角色代称候选，需核对实际指代：' + role[0])
     subtitle_rules = [s for s in re.split(r'(?<=[.!?])\s+|\n', prompt)
                       if re.search(r'\b(?:no|without|never|prohibit\w*|forbid\w*)\b[^.\n]{0,200}\bsubtitles?\b', s, re.I)]
     full_span = r'\b(?:(?:throughout|entire|whole|full)[^.\n]{0,40}(?:video|clip|sequence)|all frames|first frame[^.\n]{0,40}last frame|start to (?:the )?end)\b'
@@ -192,7 +197,7 @@ def text_findings(prompt, chinese=None, names=None, *, mode='r2v', images=None, 
     visual_description = re.sub(r'<d>.*?</d>', '', visual_description, flags=re.S)
     chinese_subtitle_rule = re.search(r'(?:^|[\n。！？.!?])\s*全程不要出现字幕(?=[。！？.!?\s]|$)', visual_description)
     if not chinese_subtitle_rule and not any(re.search(full_span, s, re.I) for s in subtitle_rules):
-        issue('subtitle_rule', '缺少覆盖全片的无字幕指令（语义完整性仍需内容核对）')
+        issue('subtitle_rule', '未匹配到预设的全片无字幕表达，需人工核对指令及授权')
     if chinese is not None:
         translated = sections(chinese, headings, allow_prefix=not reference)
         if translated is None:
@@ -201,14 +206,14 @@ def text_findings(prompt, chinese=None, names=None, *, mode='r2v', images=None, 
             if not reference:
                 translated_prefix = chinese[:chinese.index(headings[0] + ':')]
                 if Counter(re.findall(r'\d+(?:\.\d+)?', prefix)) != Counter(re.findall(r'\d+(?:\.\d+)?', translated_prefix)):
-                    issue('translation_numbers', '首尾对齐说明的中英文数字不对应')
+                    issue('translation_numbers', '首尾对齐说明的中英文数字出现不同，需人工核对数值和译法')
             for section in headings:
                 if Counter(TAG.findall(english[section])) != Counter(TAG.findall(translated[section])):
-                    issue('translation_tags', section + '中英文标签或镜号不对应，不得用摘要替代')
+                    issue('translation_tags', section + '中英文标签或镜号出现次数不同，需人工核对对应关系')
                 english_numbers = english[section].replace('3D', '三维').replace('2D', '二维')
                 chinese_numbers = translated[section].replace('3D', '三维').replace('2D', '二维')
                 if Counter(re.findall(r'\d+(?:\.\d+)?', english_numbers)) != Counter(re.findall(r'\d+(?:\.\d+)?', chinese_numbers)):
-                    issue('translation_numbers', section + '中英文数字不对应')
+                    issue('translation_numbers', section + '中英文数字出现不同，需人工核对数值和译法')
                 if not translated[section]:
                     issue('translation_empty', section + '中文正文为空')
                 for match in SUBJECT.finditer(translated[section]):
@@ -300,14 +305,15 @@ def audit(project, workflow, mapping):
         if not isinstance(names, dict) or (mode in REFERENCE_MODES and not names) or any(not isinstance(n, str) or not HAN.search(n) for n in names.values()):
             issue('review_subjects', '缺少Subject编号到准确中文名称的主体表')
             names = None
+        warnings = []
         findings = text_findings(prompt, chinese, names, mode=mode,
-                                 images=keyframe_slots(group), duration=group['durationSec'])
+                                 images=keyframe_slots(group), duration=group['durationSec'], warnings=warnings)
         omission = row.get('subtitle_instruction_omission_authorization')
         if omission is not None:
             if not isinstance(omission, str) or not omission.strip():
                 issue('review_schema', '省略字幕指令必须记录用户对本组选中输入的明确授权')
             else:
-                findings = [item for item in findings if item['code'] != 'subtitle_rule']
+                warnings = [item for item in warnings if item['code'] != 'subtitle_rule']
         errors.extend(findings)
         checks = row.get('checks', {})
         if not isinstance(checks, dict):
@@ -352,7 +358,7 @@ def audit(project, workflow, mapping):
         results.append({'node': node, 'index': index, 'input_sha256': signature,
                         'chinese_sha256': chinese_signature,
                         'subtitle_instruction_omission_authorization': omission,
-                        'ok': not errors, 'issues': errors})
+                        'ok': not errors, 'issues': errors, 'warnings': warnings})
     if sorted((r.get('node', ''), r.get('index', -1)) for r in rows) != sorted(expected_keys):
         failures.append({'code': 'review_scope', 'detail': '核对记录必须准确覆盖本次选中原组，不含重复或未选中组'})
     return {'version': 1, 'ok': bool(results) and not failures and all(r['ok'] for r in results),
@@ -385,10 +391,11 @@ def main():
                 if not block:
                     raise ValueError(name + '缺少完整模型正文text围栏')
                 prompt = block[1].strip()
-                issues = text_findings(prompt, chinese_text(text), mode=args.mode)
+                warnings = []
+                issues = text_findings(prompt, chinese_text(text), mode=args.mode, warnings=warnings)
                 if len(prompt) > 7000:
                     issues.append({'code': 'prompt_length', 'detail': '完整模型正文超过7000字符'})
-                documents.append({'file': name, 'characters': len(prompt), 'ok': not issues, 'issues': issues})
+                documents.append({'file': name, 'characters': len(prompt), 'ok': not issues, 'issues': issues, 'warnings': warnings})
             result = {'ok': all(d['ok'] for d in documents), 'documents': documents,
                       'scope': '离线确定性正文检查；未检查输入绑定，不证明语义正确或已获生成授权'}
         else:

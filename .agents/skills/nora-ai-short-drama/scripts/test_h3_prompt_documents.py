@@ -23,7 +23,7 @@ N/A'''
 
 
 class DocumentCLI(unittest.TestCase):
-    def test_document_check_cannot_hide_bad_translation_or_overwrite_report(self):
+    def test_document_warnings_do_not_block_but_structure_and_output_conflicts_do(self):
         with tempfile.TemporaryDirectory() as temp:
             path, report = Path(temp) / 'prompt.md', Path(temp) / 'report.json'
             def run(text):
@@ -33,8 +33,11 @@ class DocumentCLI(unittest.TestCase):
             good = run(TEXT)
             self.assertEqual(good.returncode, 0, good.stderr)
             bad = run(TEXT.replace('在画面左侧', '在白台北3米'))
-            self.assertEqual(bad.returncode, 1)
-            self.assertIn('spatial_coordinates', [x['code'] for x in json.loads(bad.stdout)['documents'][0]['issues']])
+            self.assertEqual(bad.returncode, 0)
+            self.assertIn('spatial_coordinates', [x['code'] for x in json.loads(bad.stdout)['documents'][0]['warnings']])
+            malformed = run(TEXT.replace('summary:', 'missing_summary:'))
+            self.assertNotEqual(malformed.returncode, 0)
+            self.assertIn('translation_sections', [x['code'] for x in json.loads(malformed.stdout)['documents'][0]['issues']])
             report.write_text('keep existing report')
             result = subprocess.run([sys.executable, str(SCRIPT), '--document', str(path), '--output', str(report)], capture_output=True)
             self.assertNotEqual(result.returncode, 0)
