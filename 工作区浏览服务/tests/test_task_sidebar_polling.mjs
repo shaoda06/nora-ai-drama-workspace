@@ -31,7 +31,8 @@ test('task polling supports eight pages, pauses when hidden, deduplicates slow r
     require: name => name === 'react' ? react : name === '@tanstack/react-query' ? {
       useQuery(value) { options = value; return { data: undefined, isError: false, refetch() {} }; },
     } : name === 'react/jsx-runtime' ? { jsx() {}, jsxs() {} }
-      : name === './LocalQueueCard' ? { localQueueStates: { queued: '排队中', paused: '暂停中', history: '历史' } } : {},
+      : name === './LocalQueueCard' ? { localQueueStates: { queued: '排队中', paused: '暂停中', history: '历史' } }
+      : name === './Notifications' ? { useNotify: () => () => {} } : {},
     fetch: (url, { signal }) => {
       assert.equal(url, '/api/comfy/tasks?include_history=false');
       return new Promise((resolve, reject) => {

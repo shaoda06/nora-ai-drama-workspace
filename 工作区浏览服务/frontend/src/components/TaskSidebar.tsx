@@ -1,5 +1,5 @@
 import { UnderlineTabs } from './UnderlineTabs';
-import { FloatingMessage } from './Notifications';
+import { FloatingMessage, useNotify } from './Notifications';
 import { PointerTooltip } from './PointerTooltip';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -18,8 +18,11 @@ interface RemoteNode {
 }
 
 const nodeConnectionLabels = { connecting: '正在连接', connected: '已连接', reconnecting: '连接中断，正在自动重连' };
+const actionLabels: Record<string, string> = { immediate: '已接受立即提交请求', insert: '已移到队首', pause: '已暂停', resume: '已恢复排队', cancel: '已取消' };
 
 export function TaskSidebar() {
+  const notify = useNotify();
+  const sidebar = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const [editingNodes, setEditingNodes] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
@@ -31,11 +34,21 @@ export function TaskSidebar() {
   const dragUrl = useRef<string | null>(null);
   const dragTimer = useRef<number | undefined>(undefined);
   const [busy, setBusy] = useState(false);
-  const [actionError, setActionError] = useState('');
+  const [pendingAction, setPendingAction] = useState('');
+  const [dragError, setDragError] = useState('');
   const [nodes, setNodes] = useState<RemoteNode[]>([]);
   const [counts, setCounts] = useState<Record<string, { queued: number; paused: number; history: number }>>({});
   const [historyUpdates, setHistoryUpdates] = useState<Record<string, string | null>>({});
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (!open) return;
+    const outside = (event: PointerEvent) => {
+      const target = event.target as Element;
+      if (!dragToken.current && !sidebar.current!.contains(target) && !target.closest('dialog[open], [popover]:popover-open')) setOpen(false);
+    };
+    document.addEventListener('pointerdown', outside, true);
+    return () => document.removeEventListener('pointerdown', outside, true);
+  }, [open]);
   const taskQuery = useQuery({
     queryKey: ['task-sidebar'],
     queryFn: async ({ signal }) => {
@@ -118,20 +131,28 @@ export function TaskSidebar() {
     return snapshot.local_tasks as LocalQueueTask[];
   }, [refreshTasks]);
   const action = useCallback(async (id: string, operation: string) => {
-    setBusy(true); setActionError('');
-    try { await write(`/api/comfy/tasks/${id}/action`, { action: operation }); await reload(); }
-    catch (error) { setActionError((error as Error).message); }
-    finally { setBusy(false); }
-  }, [write, reload]);
+    setBusy(true); setPendingAction('正在处理任务操作…');
+    try {
+      await write(`/api/comfy/tasks/${id}/action`, { action: operation });
+      notify(`${localRef.current.find(task => task.id === id)?.title || id}：${actionLabels[operation]}`);
+      try { await reload(); } catch (error) { notify(`操作已完成，但列表刷新失败：${(error as Error).message}`, 'error'); }
+    }
+    catch (error) { notify(`操作失败：${(error as Error).message}`, 'error'); }
+    finally { setBusy(false); setPendingAction(''); }
+  }, [write, reload, notify]);
   const transfer = useCallback(async (id: string, url: string) => {
-    setBusy(true); setActionError('');
-    try { await write(`/api/comfy/tasks/${id}/transfer`, { url }); await reload(); }
-    catch (error) { setActionError((error as Error).message); }
-    finally { setBusy(false); }
-  }, [write, reload]);
+    setBusy(true); setPendingAction('正在转移任务…');
+    try {
+      await write(`/api/comfy/tasks/${id}/transfer`, { url });
+      notify(`${localRef.current.find(task => task.id === id)?.title || id}：已转移到${nodes.find(node => node.url === url)?.name || url}`);
+      try { await reload(); } catch (error) { notify(`操作已完成，但列表刷新失败：${(error as Error).message}`, 'error'); }
+    }
+    catch (error) { notify(`转移失败：${(error as Error).message}`, 'error'); }
+    finally { setBusy(false); setPendingAction(''); }
+  }, [write, reload, notify, nodes]);
   const startDrag = useCallback(async (id: string) => {
     if (dragToken.current) return false;
-    setBusy(true); setActionError('');
+    setBusy(true); setPendingAction('正在准备队列排序…'); setDragError('');
     try {
       const url = selectedNode!.url;
       const result = await write('/api/comfy/drag', { url });
@@ -144,35 +165,39 @@ export function TaskSidebar() {
         throw new Error('这项任务已经开始提交，请选择其他排队任务');
       }
       dragTimer.current = window.setInterval(() => {
-        void write('/api/comfy/drag', { token: dragToken.current }).catch(error => setActionError(error.message));
+        void write('/api/comfy/drag', { token: dragToken.current }).catch(error => setDragError(error.message));
       }, 5000);
       return true;
     } catch (error) {
       if (dragToken.current) {
         try { await write('/api/comfy/drag', { token: dragToken.current, release: true }); }
-        catch (releaseError) { setActionError((releaseError as Error).message); }
+        catch (releaseError) { notify(`排序保护解除失败：${(releaseError as Error).message}`, 'error'); }
         dragToken.current = null;
       }
       dragUrl.current = null;
-      setActionError((error as Error).message); return false;
-    } finally { setBusy(false); }
-  }, [write, reload, selectedNode?.url]);
+      notify(`无法开始排序：${(error as Error).message}`, 'error'); return false;
+    } finally { setBusy(false); setPendingAction(''); }
+  }, [write, reload, selectedNode?.url, notify]);
   const endDrag = useCallback(async () => {
     const token = dragToken.current;
     if (!token) return;
-    setBusy(true);
-    try { await write('/api/comfy/order', { token, ids: localRef.current.filter(task => task.status === 'local_queued' && task.remote_url === dragUrl.current).map(task => task.id) }, 'PUT'); }
-    catch (error) { setActionError((error as Error).message); }
+    setBusy(true); setPendingAction('正在保存队列顺序…');
+    try {
+      await write('/api/comfy/order', { token, ids: localRef.current.filter(task => task.status === 'local_queued' && task.remote_url === dragUrl.current).map(task => task.id) }, 'PUT');
+      notify('已更新队列顺序');
+    }
+    catch (error) { notify(`排序失败：${(error as Error).message}`, 'error'); }
     finally {
       window.clearInterval(dragTimer.current);
       try { await write('/api/comfy/drag', { token, release: true }); }
-      catch (error) { setActionError((error as Error).message); }
+      catch (error) { notify(`排序保护解除失败：${(error as Error).message}`, 'error'); }
       dragToken.current = null;
       dragUrl.current = null;
-      try { await reload(); } catch (error) { setActionError((error as Error).message); }
+      try { await reload(); } catch (error) { notify(`队列列表刷新失败：${(error as Error).message}`, 'error'); }
       setBusy(false);
+      setPendingAction('');
     }
-  }, [write, reload]);
+  }, [write, reload, notify]);
   const reorderLocal = useCallback((sourceId: string, targetId: string) => {
     const current = localRef.current;
     const source = current.findIndex(task => task.id === sourceId && task.status === 'local_queued' && task.remote_url === dragUrl.current);
@@ -183,7 +208,7 @@ export function TaskSidebar() {
     localRef.current = next;
     setLocalRows(next);
   }, []);
-  return <><aside className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
+  return <><aside ref={sidebar} className="comfy-sidebar" data-open={open} aria-label="生成任务进度">
     <button className="comfy-sidebar-toggle" aria-expanded={open} aria-controls="comfy-task-list"
       aria-label={open ? '收起任务进度' : '展开任务进度'} onClick={() => {
         setOpen(!open);
@@ -211,7 +236,7 @@ export function TaskSidebar() {
     <div id="comfy-task-list" className="comfy-task-content" data-view={editingNodes ? 'nodes' : 'tasks'} hidden={!open}>
       {editingNodes ? <NodeEditor close={() => setEditingNodes(false)} /> : <>
       <div className="comfy-node-heading"><UnderlineTabs scrollable label="远端节点" selected={selectedNode?.url || ''} disabled={busy || dragToken.current !== null}
-        onChange={url => { setSelectedUrl(url); setActionError(''); }} items={nodes.map(node => ({ value: node.url, label: node.name,
+        onChange={url => setSelectedUrl(url)} items={nodes.map(node => ({ value: node.url, label: node.name,
           tooltip: connection === 'connected' ? nodeConnectionLabels[node.connection] : '等待后台连接恢复',
           icon: <span className="comfy-node-dot" data-connection={connection === 'connected' ? node.connection : 'connecting'} aria-hidden="true" /> }))} /><button className="comfy-node-edit" disabled={busy || dragToken.current !== null}
         onClick={() => setEditingNodes(true)}>编辑</button></div>
@@ -236,7 +261,6 @@ export function TaskSidebar() {
         {localCategory === 'history' ? <TaskHistory
           updatedAt={historyUpdatedAt} total={localCounts.history} onDetails={setDetailId} /> :
         <div className="comfy-queue-body" key={`${selectedNode?.url}:${localCategory}`}>
-          {open && actionError && <FloatingMessage tone="error">{actionError}</FloatingMessage>}
           {localTasks.length === 0 && <p className="comfy-empty">暂无{localQueueStates[localCategory]}任务</p>}
           <div className="comfy-task-items">{localTasks.map(task => <LocalQueueCard key={task.id} task={task}
             position={localPositions.get(task.id)}
@@ -246,7 +270,9 @@ export function TaskSidebar() {
       </section>
       </>}
     </div>
-  </aside>{detailId && <TaskDetailDialog key={detailId} id={detailId}
+  </aside>{pendingAction && <FloatingMessage key={pendingAction}>{pendingAction}</FloatingMessage>}
+  {dragToken.current && dragError && <FloatingMessage tone="error">排序保护续期失败：{dragError}</FloatingMessage>}
+  {detailId && <TaskDetailDialog key={detailId} id={detailId}
     updatedAt={historyUpdatedAt ?? undefined}
     nodes={nodes} close={() => setDetailId(null)} openTask={setDetailId} />}</>;
 }

@@ -21,7 +21,7 @@ body:has(.local-queue-card-floating){cursor:grabbing}
 .local-queue-card-history{display:grid;grid-template-columns:minmax(0,1fr) max-content;align-items:baseline;gap:4px 12px;margin-top:4px;font-size:11px;color:var(--muted)}
 .local-queue-card-history .local-queue-card-session{margin:0}
 .local-queue-card-history>time,.local-queue-card-history>span{text-align:right;white-space:nowrap}
-.local-queue-card-actions{display:flex;flex:none;flex-wrap:wrap;gap:6px}
+.local-queue-card-actions{display:flex;flex:none;flex-wrap:wrap;gap:6px;max-width:100%}
 .local-queue-card-actions>select{width:auto;max-width:130px;padding:4px 6px;font-size:11px;line-height:1.6;border:1px solid var(--line);border-radius:5px;background:#f8faf7;color:var(--green);transition:background-color .15s,border-color .15s}
 .local-queue-card-actions>select:hover:not(:disabled){background:#eaf3ee;border-color:var(--green)}
 .local-queue-card-actions>select:disabled{opacity:.55;cursor:default}

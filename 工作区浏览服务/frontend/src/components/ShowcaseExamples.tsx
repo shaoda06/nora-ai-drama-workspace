@@ -175,7 +175,7 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
     </>}
     {category === 'coverage' && <>
-      <ComponentExample title="全站框架就在当前页面" rule="这些组件在当前页面已真实运行，不重复嵌套第二套页头或任务侧栏。" usage="所有页面">
+      <ComponentExample title="全站框架就在当前页面" rule="这些组件在当前页面已真实运行，不重复嵌套。任务侧栏点击外部收起，侧栏菜单、详情和通知操作不误关；本地队列保持排序滚动位置，处理进度及结果使用左下角公共消息。交互回归使用隔离队列，不以演示操作真实任务。" usage="所有页面">
         <ul><li>AppShell：顶部、正文与公共页脚。</li><li>ProjectSwitcher：左上角品牌旁的项目菜单。</li><li>TaskSidebar：左侧任务栏。</li><li>Notifications：左下角消息。</li><li>PageCheckStatus：页脚最近检查时间，使用实际查询结果。</li><li>BottomTools：页面向下滚动后出现的返回顶部按钮，并避让消息。</li></ul>
       </ComponentExample>
       <ComponentExample title="展示范围与业务模块" rule="可复用控件及业务卡片在各分类演示；下列整页业务模块需要真实资料，保留在原页面，不在这里启动真实业务。" usage="项目制作、任务管理与设置">
