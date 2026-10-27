@@ -63,6 +63,30 @@ class NativeClient:
 
 
 class FinalizeTests(unittest.TestCase):
+    def test_stale_editor_restored_from_verified_execution_without_rewriting_source(self):
+        item = self.item('P001')
+        path = Path(item['api'])
+        api = tool.adopt.load(path)
+        node = next(n for n in api.values() if n['class_type'] == 'MiniMaxH3Director')
+        timeline = json.loads(node['inputs']['timeline_data'])
+        timeline['batchWorkspaces']['r2v']['segments'][0]['prompt'] = 'stale editor text'
+        node['inputs']['timeline_data'] = json.dumps(timeline)
+        self.put(path, api)
+        self.put(Path(item['mapping']).parent / '请求.json', {'prompt': api})
+        before = path.read_bytes()
+        source = tool.source(self.root, item)
+        source['root'] = self.root
+        _, _, restored, group = tool.director(source, 'EP001-C001-P001')
+        self.assertEqual(restored['batchWorkspaces']['r2v']['segments'], restored['segments'])
+        self.assertNotEqual(group['prompt'], 'stale editor text')
+        self.assertTrue(source['restoration'])
+        self.assertEqual(path.read_bytes(), before)
+        # A stale editor is recoverable; a mismatch with the frozen executed text is not.
+        frozen = tool.adopt.local_path(self.root, source['context']['prompts']['english'])
+        frozen.write_text('different frozen prompt')
+        with self.assertRaisesRegex(ValueError, '冻结提示词不同'):
+            tool.director(source, 'EP001-C001-P001')
+
     def setUp(self):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)

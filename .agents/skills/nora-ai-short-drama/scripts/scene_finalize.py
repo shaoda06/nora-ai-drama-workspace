@@ -181,10 +181,9 @@ def director(source_item, part):
     if timeline.get('runSelectEnabled') and index not in timeline['runSelection']:
         raise ValueError('该分段不在来源任务实际执行范围：' + part)
     editor = timeline['batchWorkspaces']['r2v']
-    if (pairs.director_editor_state(editor['globalCommon'], True) != pairs.director_editor_state(timeline['global'], True)
-            or [pairs.director_editor_state(g) for g in editor['segments']]
-            != [pairs.director_editor_state(g) for g in timeline['segments']]):
-        raise ValueError('来源导演台根／编辑工作区不同步：' + part)
+    stale_editor = (pairs.director_editor_state(editor['globalCommon'], True) != pairs.director_editor_state(timeline['global'], True)
+                    or [pairs.director_editor_state(g) for g in editor['segments']]
+                    != [pairs.director_editor_state(g) for g in timeline['segments']])
     if timeline['keyframes'] or timeline['videoClips'] or timeline['video'].get('fileName'):
         raise ValueError('分组汇总不改写带源视频／关键帧时间轴的工程：' + part)
     prompt = '\n\n'.join(p.strip() for p in
@@ -193,6 +192,12 @@ def director(source_item, part):
     frozen = adopt.local_path(source_item['root'], source_item['context']['prompts']['english'])
     if frozen.read_text(encoding='utf-8-sig').strip() != prompt:
         raise ValueError('实际正文与冻结提示词不同：' + part)
+    if stale_editor:
+        # source() has verified the API against the actual submitted request.
+        # Restore only the parsed export copy; never alter submitted API/canvas evidence.
+        editor['globalCommon'] = copy.deepcopy(timeline['global'])
+        editor['segments'] = copy.deepcopy(timeline['segments'])
+        source_item['restoration'].append('按实际提交及冻结正文同步留档副本编辑区：' + part)
     return key, node, timeline, group
 
 
