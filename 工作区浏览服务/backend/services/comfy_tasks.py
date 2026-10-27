@@ -76,6 +76,7 @@ class TaskInput(BaseModel):
     start_paused: bool = False
     image_plan: dict | None = None
     video_plan: dict | None = None
+    submission_plan: str | None = None
     image_batch_id: str | None = None
     image_batch_size: int = Field(default=1, ge=1)
 
@@ -233,6 +234,8 @@ class TaskStore(LocalQueue, TaskNotifications):
                 resolved[value] = str(paths.project_file(project, value, recorded=recorded))
             return resolved[value]
         data.record_dir = local(data.record_dir)
+        if data.submission_plan:
+            data.submission_plan = local(data.submission_plan)
         for target in [*data.outputs, *(data.segment_plan.targets if data.segment_plan else [])]:
             target.path = local(target.path)
             if Path(target.path).is_relative_to(data.record_dir):

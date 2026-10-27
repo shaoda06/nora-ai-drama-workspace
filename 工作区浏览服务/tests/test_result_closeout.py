@@ -141,7 +141,8 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn('| 用户要求保留旧版 | 不做二采 |', text)
         handoff = result['results'][0]['business_sync']
         self.assertTrue(handoff['needs_attention'])
-        self.assertEqual(handoff['next_action'], 'sync-current-business-summary')
+        self.assertEqual(handoff['next_action'], 'resolve-business-fields')
+        self.assertEqual(handoff['actions'][0]['field'], '当前执行事实')
         self.assertIn('项目进度.md', handoff['entries'][0]['paths'])
         repeated = await closeout(self.store, self.projects, batch, self.data.thread_id)
         self.assertTrue(repeated['results'][0]['reused'])
@@ -191,7 +192,8 @@ class CloseoutTests(unittest.IsolatedAsyncioTestCase):
         progress.write_text(original)
         updates, outcome = business_updates(self.store, [('task', {'items': [{'episode': 'EP001'}]})])
         self.assertEqual(updates, [])
-        self.assertTrue(outcome['needs_attention'])
+        self.assertFalse(outcome['needs_attention'])
+        self.assertEqual(outcome['entries'][0]['status'], 'preserved')
         self.assertEqual(progress.read_text(), original)
 
     async def test_legacy_completed_business_update_is_reused_without_current_row_rewrite(self):

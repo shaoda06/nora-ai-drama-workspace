@@ -239,6 +239,11 @@ def apply_record_updates(store, key, updates, episodes, report=None):
         return fingerprint
     if journal.get('status') == 'applying' and journal.get('fingerprint') != fingerprint:
         raise ValueError('先恢复原业务更新，不接受另一份更新覆盖未完成记录')
+    for entry in report.get('business_sync', {}).get('entries', []):
+        if entry.get('status') == 'updated' and 'episode_round' in entry:
+            manifest = root / '09-剧集制作' / entry['episode'] / '其他资料/工作稿' / (entry['episode'] + '-修改轮次.json')
+            if max(r['number'] for r in json.loads(manifest.read_text('utf-8-sig'))['rounds']) != entry['episode_round']:
+                raise ValueError('业务同步期间当前轮次已改变，未覆盖新轮摘要')
     edits, before_digests = {}, {}
     for update in updates:
         if set(update) != {'path', 'old', 'new'} or not all(isinstance(value, str) and value for value in update.values()):
@@ -246,8 +251,18 @@ def apply_record_updates(store, key, updates, episodes, report=None):
         path = project_file(root, update['path'])
         if path != root / '项目进度.md' and (not any(
                 path.is_relative_to(root / '09-剧集制作' / ep) for ep in episodes) or not (
-                '01-制作前检查' in path.parts or path.name.endswith('生成说明-工作稿.md'))):
-            raise ValueError('业务更新仅用于本批项目进度、制作前检查及生成说明工作稿')
+                '01-制作前检查' in path.parts or path.name.endswith('生成说明-工作稿.md')
+                or path == root / '09-剧集制作' / path.relative_to(root).parts[1] / '05-视频提示词' / (path.relative_to(root).parts[1] + '-生成说明.md'))):
+            raise ValueError('业务更新仅用于本批项目进度、制作前检查及生成说明')
+        if path.name.endswith('-生成说明.md'):
+            # Formal preparation prose stays authoritative; only its factual-source link is maintained here.
+            def without_fact_link(value):
+                return [line for line in value.splitlines() if line.strip() and not line.startswith('- 当前执行事实入口：')]
+            draft = root / '09-剧集制作' / path.relative_to(root).parts[1] / '其他资料/工作稿' / (path.stem + '-工作稿.md')
+            expected = '- 当前执行事实入口：[生成说明工作稿](' + relative(path, draft) + ')'
+            if (without_fact_link(update['old']) != without_fact_link(update['new'])
+                    or [line for line in update['new'].splitlines() if line.startswith('- 当前执行事实入口：')] != [expected]):
+                raise ValueError('正式生成说明只允许维护当前执行事实入口，不改创作正文或批准')
         if path not in edits:
             before = path.read_text('utf-8-sig')
             edits[path] = before, before
@@ -322,7 +337,8 @@ async def closeout(store, projects, batch_id, thread_id, record_updates=(), imag
 
 
 def business_updates(store, group):
-    """Sync objective results only when the current row names this execution batch."""
+    """Maintain current execution facts once; preserve content decisions and mixed prose."""
+    from backend.services.round_results import round_results
     root = Path(store.rows[group[0][0]]['input'].project)
     progress = root / '项目进度.md'
     updates, entries = [], []
@@ -331,59 +347,122 @@ def business_updates(store, group):
         records = [Path(store.rows[key]['input'].record_dir) for key, report in group
                    if any(item.get('episode') == episode and not item.get('image') for item in report['items'])]
         draft = root / '09-剧集制作' / episode / '其他资料/工作稿' / (episode + '-生成说明-工作稿.md')
-        entry = {'episode': episode, 'paths': ['项目进度.md', draft.relative_to(root).as_posix()]}
         formal = root / '09-剧集制作' / episode / '05-视频提示词' / (episode + '-生成说明.md')
-        if formal.is_file():
-            entry['paths'].append(formal.relative_to(root).as_posix())
+        entry = {'episode': episode, 'paths': ['项目进度.md', draft.relative_to(root).as_posix()],
+                 'updated_fields': [], 'actions': []}
         entries.append(entry)
+
+        def action(path, field, reason):
+            entry['actions'].append(dict(path=path.relative_to(root).as_posix(), field=field,
+                                         reason=reason, owner='Agent'))
+
         manifest = draft.with_name(episode + '-修改轮次.json')
         if not progress.is_file() or not manifest.is_file():
-            entry.update(status='needs_attention', reason='缺少当前总表或修改轮次依据；由Agent核对本批业务摘要')
+            action(progress if not progress.is_file() else manifest, '当前轮次来源', '缺少总表或修改轮次，未更新当前事实')
+            entry.update(status='needs_attention', reason=entry['actions'][-1]['reason'])
             continue
         if any(not (record / '输入映射.json').is_file() for record in records):
-            entry.update(status='needs_attention', reason='缺少本批输入映射，保留当前业务状态')
+            action(draft, '当前轮次来源', '缺少本批输入映射，未更新当前事实')
+            entry.update(status='needs_attention', reason=entry['actions'][-1]['reason'])
             continue
         rounds = json.loads(manifest.read_text('utf-8-sig'))['rounds']
-        if not rounds:
-            entry.update(status='needs_attention', reason='当前修改轮次为空，保留当前业务状态')
-            continue
-        latest = max(item['number'] for item in rounds)
         mappings = [json.loads((record / '输入映射.json').read_text('utf-8-sig')) for record in records]
         numbers = [mapping.get('scene_modification_round') for mapping in mappings]
-        if any(not isinstance(number, int) for number in numbers):
-            entry.update(status='needs_attention', reason='输入映射缺少有效修改轮次，保留当前业务状态')
+        if not rounds or any(type(number) is not int for number in numbers):
+            action(manifest, '当前轮次来源', '修改轮次为空或输入映射没有有效轮次')
+            entry.update(status='needs_attention', reason=entry['actions'][-1]['reason'])
             continue
+        latest = max(item['number'] for item in rounds)
         if any(number != latest for number in numbers):
-            entry.update(status='superseded' if all(number < latest for number in numbers) else 'needs_attention',
-                         reason='本批轮次与当前整集轮次不一致，保留当前业务状态')
+            old = all(number < latest for number in numbers)
+            entry.update(status='superseded' if old else 'needs_attention', reason='本批不是当前轮次，保留当前业务状态')
+            if not old:
+                action(manifest, '当前轮次来源', entry['reason'])
             continue
         text = progress.read_text('utf-8-sig')
         try:
             row, cells = project_progress.phase_row(text, episode)
         except ValueError as error:
+            action(progress, '阶段行', str(error))
             entry.update(status='needs_attention', reason=str(error))
             continue
-        links = [unquote(value.split('#', 1)[0]) for value in re.findall(r'\]\(([^)]+)\)', row[0])]
-        linked = any(any((root / value).resolve().is_relative_to(record.resolve()) for value in links)
-                     for record in records)
-        if not linked or cells[2] == '已完成':
-            entry.update(status='needs_attention', reason='当前总表未明确关联本批或已有制作完成决定，保留原文')
+        if cells[2] == '已完成':
+            entry.update(status='preserved', reason='保留已有制作完成决定；本批事实见结果报告')
             continue
-        count = sum(1 for _, report in group for item in report['items']
-                    if item.get('episode') == episode and not item.get('image'))
-        results = '、'.join('[本批结果](' + relative(progress, record / REPORT) + ')' for record in records)
-        fact = f'本批已取回{count}段；内容决定见各分段审阅区。' + results
-        cells[2] = '进行中'
-        # Replace this tool-owned current-result phrase; do not accumulate a round history in the row.
+        scopes = round_results(store, [key for key, report in group
+            if any(item.get('episode') == episode for item in report['items'])])
+        known = [scope for scope in scopes if scope['status'] != 'needs_attention']
+        incomplete = [scope for scope in scopes if scope['status'] == 'needs_attention' and scope['source']]
+        if incomplete:
+            for scope in incomplete:
+                action(draft, '原清单范围', scope['reason'])
+            entry.update(status='needs_attention', reason='原清单范围不完整，保留业务摘要')
+            continue
+        links = [unquote(value.split('#', 1)[0]) for value in re.findall(r'\]\(([^)]+)\)', row[0])]
+        linked = any(any((root / value).resolve().is_relative_to(record.resolve()) for value in links) for record in records)
+        if not linked and not known:
+            action(progress, '本批关联', '总表未明确关联本批，且缺少可验证的原清单范围；保留原文')
+            entry.update(status='needs_attention', reason=entry['actions'][-1]['reason'])
+            continue
+        # A full source range includes earlier notices; a legacy batch remains explicitly local.
+        count = (sum(scope['collected_video_count'] for scope in known) if len(known) == len(scopes) else
+                 sum(1 for _, report in group for item in report['items'] if item.get('episode') == episode))
+        expected = sum(scope['expected_video_count'] for scope in known) if len(known) == len(scopes) else None
+        facts = f'第{latest}轮；本批已取回{count}段' + (f'／本次清单预期{expected}段' if expected is not None else '')
+        facts += '；内容决定见各分段审阅区。'
+        evidence = [project_file(root, scope['source']) for scope in known] if known else [record / REPORT for record in records]
+        draft_link = '[' + '当前执行事实' + '](' + relative(progress, draft) + ')'
+        result_links = '、'.join('[本批结果](' + relative(progress, record / REPORT) + ')' for record in records)
+        managed = f'；本批已取回{count}段；内容决定见各分段审阅区。' + result_links
         cells[3] = re.sub(r'；本批已取回\d+段；内容决定见各分段审阅区。'
-                          r'\[本批结果\]\([^)]+\)(?:、\[本批结果\]\([^)]+\))*', '', cells[3]) + '；' + fact
+                          r'\[本批结果\]\([^)]+\)(?:、\[本批结果\]\([^)]+\))*', '', cells[3])
+        safe_states = ('进行中', '检查通过待入队', '待提交', '待入队', '生成中', '取回中', '待审核', '待审', '完成待审')
+        if cells[2] in safe_states:
+            cells[2] = '进行中'  # Technical completion is not content approval or production completion.
+            entry['updated_fields'].append('项目进度.当前状态')
+        else:
+            action(progress, '当前状态', '保留非标准状态，需判断本次取回是否改变该状态：' + cells[2])
+        for field, value in zip(('待决事项', '下一步'), cells[4:6]):
+            if re.search(r'待(?:入队|提交|取回|下载)|尚未(?:提交|取回)|正在(?:生成|下载|取回)|生成中|准备中', value):
+                action(progress, field, '包含可能关联本批的执行待办，需确认后处理；原文：' + value)
+        if draft.is_file():
+            for document, label, value in [(draft, '当前执行事实', facts + '、'.join(
+                    '[执行来源](' + relative(draft, source) + ')' for source in evidence)),
+                    (formal, '当前执行事实入口', '[生成说明工作稿](' + relative(formal, draft) + ')')]:
+                if not document.is_file():
+                    continue
+                before = document.read_text('utf-8-sig')
+                header = re.split(r'^## ', before, maxsplit=1, flags=re.M)[0]
+                current = re.search(r'^- 当前状态及待办：([^\n]*)', header, re.M)
+                if current and re.search(r'待(?:入队|提交|取回|下载)|尚未(?:提交|取回)|正在(?:生成|下载|取回)|生成中|准备中', current[1]):
+                    action(document, '当前状态及待办', '保留混合业务摘要，只需核对该字段是否含本轮过期待办：' + current[1])
+                pattern = r'^- ' + label + r'：[^\n]*'
+                matches = list(re.finditer(pattern, header, re.M))
+                line = '- ' + label + '：' + value
+                if len(matches) > 1:
+                    action(document, label, '存在多个当前字段，未猜选覆盖')
+                    continue
+                after = (before[:matches[0].start()] + line + before[matches[0].end():] if matches else
+                         before[:len(header)].rstrip() + '\n' + line + '\n\n' + before[len(header):])
+                if after != before:
+                    updates.append(dict(path=document.relative_to(root).as_posix(), old=before, new=after))
+                entry['updated_fields'].append(document.relative_to(root).as_posix() + '.' + label)
+            # Summary projections link to one factual source rather than copying its counts.
+            if draft_link not in cells[3]:
+                cells[3] += '；' + draft_link
+        else:
+            action(draft, '当前执行事实', '缺少现有生成说明工作稿，不自动创建业务文档')
+        if not draft.is_file():
+            cells[3] += managed
         replacement = '| ' + ' | '.join(cells) + ' |'
-        updates.append({'path': '项目进度.md', 'old': row[0], 'new': replacement})
-        entry.update(status='updated', reason='已同步技术状态和成果入口；人工待决、后续授权及自由文字由Agent核对',
+        updates.insert(0, {'path': '项目进度.md', 'old': row[0], 'new': replacement})
+        entry.update(status='updated', episode_round=latest, reason='已同步确定的执行事实；只处理actions列出的具体未决字段',
                      fields=['当前状态', '成果入口'])
-    return updates, {'status': 'needs_attention' if any(e['status'] != 'superseded' for e in entries) else 'not_current',
-                     'needs_attention': any(e['status'] != 'superseded' for e in entries),
-                     'entries': entries, 'next_action': 'sync-current-business-summary' if any(e['status'] != 'superseded' for e in entries) else None}
+    actions = [a for entry in entries for a in entry['actions']]
+    return updates, {'status': 'needs_attention' if actions else 'not_current' if entries and all(
+                        e['status'] == 'superseded' for e in entries) else 'updated',
+                     'needs_attention': bool(actions), 'entries': entries, 'actions': actions,
+                     'next_action': 'resolve-business-fields' if actions else None}
 
 
 async def closeout_tasks(store, projects, ids, record_updates=(), *, batch_id=None):

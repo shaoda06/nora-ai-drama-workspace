@@ -79,8 +79,10 @@ def service_call(route, payload=None):
     try:
         with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(request, timeout=30) as response:
             result = json.load(response)
-        for item in result.get('delivery', {}).get('tasks', []):
-            item['review_url'] = config['url'] + item['review_path']
+        deliveries = [result.get('delivery'), *(scope.get('delivery') for scope in result.get('rounds', []))]
+        for delivery in deliveries:
+            for item in (delivery or {}).get('tasks', []):
+                item['review_url'] = config['url'] + item['review_path']
         return result
     except urllib.error.HTTPError as error:
         raise ValueError(str(json.load(error).get('detail'))) from error
@@ -124,7 +126,7 @@ def main():
         if args.command == 'report' and not args.details and result.get('user_message_ready') and result.get('delivery') is not None:
             result = {name: result[name] for name in ('notification_id', 'status', 'reused', 'user_message_ready',
                                                      'should_notify_user', 'new_task_ids', 'delivery', 'handoff',
-                                                     'business_sync') if name in result}
+                                                     'business_sync', 'rounds') if name in result}
     elif args.command == 'repair-collection':
         payload = json.loads(Path(args.repair).read_text('utf-8-sig'))
         payload['thread_id'] = os.environ.get('CODEX_THREAD_ID')

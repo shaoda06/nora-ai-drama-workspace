@@ -557,7 +557,8 @@ def build_video(root, spec, documents):
     from backend.services.video_records import prepare_records
     prepare_records(root, SKILL, spec, api, mapping, record, documents)
     return dict(project=str(root), task_type=spec['task_type'], title=spec['title'], workflow=api, record_dir=str(record),
-        video_plan={'metadata': 'ffprobe'}, uploads=uploads, outputs=outputs, segment_plan=segment_plan, attempt_name='提交尝试.json',
+        video_plan={'metadata': 'ffprobe'}, submission_plan=spec.get('submission_plan'),
+        uploads=uploads, outputs=outputs, segment_plan=segment_plan, attempt_name='提交尝试.json',
         request_name='请求.json', response_name='提交响应.json', history_name='执行结果.json')
 
 

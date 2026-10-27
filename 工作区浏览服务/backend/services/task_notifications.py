@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import uuid
 from backend.services.result_summary import summary, batch_tasks, image_delivery, video_delivery
+from backend.services.round_results import round_results
 
 
 class NotificationNotStarted(OSError):
@@ -122,7 +123,10 @@ class TaskNotifications:
         has_report = self.db.execute('SELECT 1 FROM notification_reports WHERE batch_id=?', (batch_id,)).fetchone()
         new_ids = []
         if has_report:
-            received_ids = [task['id'] for task in self.result_report(ids)['tasks']]
+            current = self.result_report(ids)
+            received_ids = list(dict.fromkeys([task['id'] for task in current['tasks']] + [
+                task['task_id'] for scope in current.get('rounds', []) for task in scope.get('tasks', [])
+                if task['task_id'] and (task['terminal'] or task['error'])]))
             if any(key not in self.rows or self.rows[key]['input'].thread_id != thread_id for key in received_ids):
                 raise ValueError('报告任务与来源会话不匹配')
             for key in received_ids:
@@ -243,6 +247,9 @@ class TaskNotifications:
         delivery = image_delivery(self, tasks) or video_delivery(self, tasks)
         if delivery is not None:
             report['delivery'] = delivery
+        rounds = round_results(self, ids)
+        if rounds:
+            report['rounds'] = rounds
         return report
 
     def notification_text(self, key):
@@ -321,11 +328,11 @@ class TaskNotifications:
             batch_id = str(uuid.uuid4())
             prompt = (f'后台任务结果通知。通知ID：{batch_id}；来源会话：{data.thread_id}。\n'
                       '请调用 browser_tasks.py report --notification-id 上述ID，读取后台已保存的最新结果；读取同时自动确认收到。\n'
-                      '先静默读取report；should_notify_user和new_task_ids只表示新增接收结果，读取回执不代表已交付用户。按既有共同工作记录接续本轮，记录已接收任务、未交付范围及负责会话；不新建通知台账。若结果此前已读，仍核对本轮是否尚待交付；已经交付的结果不重复汇报。\n'
-                      '同一次用户授权按整轮汇总：部分正常成功静默接收；整轮全部预期成果及技术收尾齐备后，汇总此前已读与本次新增结果，一次交付数量和审核入口，不限于new_task_ids。单份user_message_ready=true不代表整轮齐备；范围以既有提交清单和真实任务ID为准，不合并其他轮次。阻塞整轮的异常及时处理；最终部分失败、取消或停止时列清成功和未完成范围，不能无限等待。用户明确要求先看部分时按该要求交付。\n'
+                      '先静默读取report；should_notify_user和new_task_ids只表示新增接收结果，读取回执不代表已交付用户。接收数量和任务清单复用rounds；沿既有共同工作记录核对实际交付范围及负责会话，不逐任务抄写已有事实或新建通知台账。若结果此前已读，仍核对本轮是否尚待交付；已经交付的结果不重复汇报。\n'
+                      '同一次用户授权按整轮汇总：部分正常成功静默接收；优先使用rounds中的原清单范围、已完成、缺项和delivery，不重复拼路径或数文件。整轮全部预期成果及技术收尾齐备后，汇总此前已读与本次新增结果，一次交付数量和审核入口，不限于new_task_ids。单份user_message_ready=true不代表整轮齐备；多份清单按已明确授权范围分别核对，不靠会话或轮号猜测合并。review_ready不是内容批准或已交付，后处理仍按已有规则采用；delivered_to_user为null时沿原共同记录确认实际交付。阻塞整轮的异常及时处理；最终部分失败、取消或停止时列清成功和未完成范围，不能无限等待。用户明确要求先看部分时按该要求交付。\n'
                       '通知可能延迟送达，当前状态、异常是否已修复及成果清单以本次report为准，历史经过保留在过程记录。\n'
                       + '\n'.join(self.notification_text(task) for task in ids)
-                      + '\n图片、超分与视频的技术核验、分段成果登记及网页候选核验由后台执行，以报告结果为准；业务当前摘要按business_sync结果处理，needs_attention时由Agent接手报告列出的入口，不把技术登记完成当作所有业务资料已同步。正常成功只读取report并按上述整轮规则交付；不重复技术核验。正常超分静默；历史已发出的正常超分通知只读确认，不发处理进度、完成回复或图片。正常成功时不再调用ack、register-results或重复查文件／刷新网页。成果保存不等于内容获批。'
+                      + '\n图片、超分与视频的技术核验、分段成果登记及网页候选核验由后台执行，以报告结果为准；业务摘要按business_sync处理，needs_attention时只接手actions列出的path/field/reason，旧报告无actions才按原原因定位。不例行重写三份摘要，不把技术登记完成当作内容批准。正常成功只读取report并按上述整轮规则交付；不重复技术核验。正常超分静默；历史已发出的正常超分通知只读确认，不发处理进度、完成回复或图片。正常成功时不再调用ack、register-results或重复查文件／刷新网页。成果保存不等于内容获批。'
                       '失败请从报告中的失败阶段复查；已授权范围内的登记修复由Agent直接处理，可使用register-results补完已有结果的登记，不重新生成、不扩大批准范围，也不让用户决定内部命令。超出既有授权或不能保留用户修改时，再说明实际影响并请求决定；未知任务不自动重新生成。')
             self.db.execute('INSERT INTO notification_batches VALUES (?, ?, ?, ?, ?)',
                             (batch_id, data.thread_id, json.dumps(ids), prompt, 'sending'))

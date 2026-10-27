@@ -441,9 +441,14 @@ python "实际技能目录/scripts/browser_tasks.py" report --notification-id �
 
 后台在发送前已自动完成图片、超分及视频的技术收尾和网页核验，或保存具体失败结果。通知只提供任务身份和报告入口；命令按后台已有的最新任务状态刷新持久报告并自动记录收到，异常修复后的旧通知也返回当前结果，不重新收尾、扫描或发送。原通知和错误经过保留在过程记录。正常图片及超分默认返回通知身份、接收回执、交接信息及`delivery`，避免展开重复的状态／收尾内容；`delivery`包含完成任务数、图片数，以及每项标题、任务类型`task_type`、本地任务ID、成果绝对路径、候选路径、实际宽高／格式／字节数、工作稿／收尾报告绝对路径和可直接打开的`review_url`。普通图片按[批次通知规则](../../../nora-generation/references/ComfyUI-任务监控规范.md#图片批次通知与超分静默)集中展示，不再拼路径、数文件、翻记录或查网页；正常超分不发送通知，历史正常超分通知只读确认，不输出进度、完成消息或图片。`user_message_ready=true`表示本报告所含成果的入口可审；整轮汇报仍须满足上述交付条件，成功读取不表示用户批准。历史图片／超分缺少展示字段时保留完整报告，按任务类型处理，不补做收尾。正常视频同样返回这些精简字段及`delivery`：`video_count`为本报告所含实际完成数量，`tasks`含标题、阶段身份、文件绝对路径、媒体信息及可直接打开的审核链接；达到整轮交付条件后，一采、二采对话只汇报汇总数量和审核入口；后处理沿[自动采用](../流程规范/逐集目录与资产管理规范.md#后处理自动采用)完成收尾，并按[后处理完成汇报](../../../nora-generation/references/ComfyUI-任务监控规范.md#后处理完成汇报)汇总实际处理及配套交付；精简报告没有处理明细时复用本任务执行记录，必要时用下述--details读取现成完整报告。异常仍返回完整`tasks/results`，据失败阶段定位；显式追溯时可加`--details`读取完整报告，不触发重新核验或补做制作登记；仍按上方规则刷新报告并记录接收回执。未带展示清单的历史报告保留原格式。重复读取`reused=true`且不重复确认事件。
 
+视频报告的`rounds`为原任务清单范围汇总，直接使用`rounds[].delivery`中的成果及审核入口，不根据最后一份通知重复数文件。字段与整轮／已读／已交付边界见[跟进与通知](../../../nora-generation/references/ComfyUI-任务监控规范.md#3-跟进与通知)。原清单来源不完整时返回`status=needs_attention`及具体原因，不猜测合批。新任务的原清单关联由统一装配入口保存，Agent不手填后台字段；历史已登记任务不自动回填。报告读取只刷新已有任务事实和接收回执，不上传、生成、补登记或发送通知。
+
+`business_sync.entries[].updated_fields`列出工具维护的字段；`actions`列出需Agent处理的具体字段、原因及责任方，`next_action=resolve-business-fields`时只处理所列项。正常自动事实同步及正式说明引用方式见[技术记录与业务记录分工](../流程规范/会话与进度管理规范.md#技术记录与业务记录的分工)。
+
+
 精简及完整报告保留`handoff={receipt_only:true,scope:"notification",next_action:"resume-round-delivery",record_dirs:[项目相对执行附件路径]}`。它提供原记录入口，不建立新的交付台账。`should_notify_user`及`new_task_ids`只标识本次新接收结果，不能决定整轮是否可交付，也不能证明用户已收到；`false`或空列表仍需核对共同工作记录中的未交付范围。达到整轮条件时合并此前静默已读的结果，完成交付后在原共同记录注明范围与时间，已交付结果不重复汇报。
 
-各任务收尾保存`business_sync`，report按`[{task_id,...business_sync}]`汇总；状态可为`needs_attention`、`not_current`或`updated`。`entries`逐项给出`episode`、现有业务文件`paths`、`status`及`reason`，有实际更新时列`fields`。`needs_attention=true`及`next_action=sync-current-business-summary`要求Agent按[记录分工](../流程规范/会话与进度管理规范.md#技术记录与业务记录的分工)接手指定入口；`not_current`表示历史任务不覆盖当前摘要，不因取回成功将旧轮次恢复为当前状态。技术成功与业务摘要已同步分别判断，不重复已完成的文件核验和登记。
+各任务收尾保存`business_sync`，report按`[{task_id,...business_sync}]`汇总；状态可为`needs_attention`、`not_current`或`updated`。`entries`逐项给出`episode`、现有业务文件`paths`、`status`及`reason`；`updated_fields`列工具维护的字段，`actions`列需接手的具体字段。`not_current`表示历史任务不覆盖当前摘要；`entries[].status=preserved`表示保留已有制作完成决定，事实仍在原结果报告。技术成功与业务摘要已同步分别判断，接续按上方记录分工处理，不重复已完成的核验和登记。
 
 旧通知没有持久报告时返回已有摘要、`legacy_report=true`和`user_message_ready=false`，不会在读取时补做收尾；核对具体缺项后才使用兼容修复入口。
 

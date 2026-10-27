@@ -380,6 +380,11 @@ class SubmissionPlanTests(unittest.IsolatedAsyncioTestCase):
         result = await plans.execute(self.store, self.payload)
         self.assertEqual(result['status'], 'enqueued')
         data = next(iter(self.store.rows.values()))['input']
+        self.assertEqual(data.submission_plan, str(self.plan_file.resolve()))
+        from backend.services.round_results import submission_result
+        scoped = submission_result(self.store, result['tasks'][0]['local_task_id'])
+        self.assertEqual((scoped['expected_tasks'], scoped['expected_video_count']), (1, 1))
+        self.assertFalse(scoped['review_ready'])
         self.assertEqual(data.segment_plan.targets[0].index, 0)
         self.assertEqual(data.uploads[0]['json-path'], ['global','refs',0,'imageFile'])
         mapping = json.loads((self.record/'输入映射.json').read_text())
