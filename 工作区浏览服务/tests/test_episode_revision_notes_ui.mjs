@@ -192,8 +192,8 @@ try {
   await page.getByRole('button', { name: /^分段 P001，/ }).click();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
   const editor = page.getByRole('textbox', { name: '修改意见', exact: true });
-  const pass = page.getByRole('button', { name: '记录本镜无问题', exact: true });
-  assert.deepEqual(await page.locator('.revision-note-label button').allTextContents(), ['记录本镜无问题', '插入时间', '清空']);
+  const pass = page.getByRole('button', { name: '本镜通过', exact: true });
+  assert.deepEqual(await page.locator('.revision-note-label button').allTextContents(), ['本镜通过', '插入时间', '清空']);
   assert.equal(await page.locator('.revision-note-label label').count(), 0);
   await page.locator('.segment-video video').evaluate(video => video.play());
   await page.waitForFunction(() => document.querySelector('.segment-video video')?.currentTime >= 1.2);

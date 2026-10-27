@@ -46,10 +46,8 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
     });
   };
   return <div className="revision-note-editor">
-    <p className="revision-note-identity">{scope.project} / {scope.episode} / {scope.scene} / {roundNumber ? `第${roundNumber}轮 / ` : ''}{segment} / {current.stage} / {candidateLabel(current.candidateNumber, current.approved)} · {current.run}</p>
-    <p className="muted">意见自动保存到项目，不会发送给 Agent，也不代表批准采用。审看后请在制作会话中要求处理{roundNumber ? `第${roundNumber}轮` : '对应版本'}意见，或导出复制给 Agent。</p>
     <div className="revision-note-heading">
-      <div className="revision-note-label"><button className="link" disabled={!data.loaded || !current.url || shotStart === undefined} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={() => insertTime(true)}>记录本镜无问题</button><button className="link" disabled={!data.loaded || !current.url} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={() => insertTime()}>插入时间</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
+      <div className="revision-note-label"><button className="link" disabled={!data.loaded || !current.url || shotStart === undefined} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={() => insertTime(true)}>本镜通过</button><button className="link" disabled={!data.loaded || !current.url} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={() => insertTime()}>插入时间</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
       <div className="revision-note-status" role="status"><span className="revision-note-state" data-state={statusKind}>{data.error ? '读取失败' : data.loading ? '正在读取…' : status}</span>{note && <span className="muted">更新于 {new Date(note.updatedAt).toLocaleString('zh-CN')}</span>}</div>
     </div>
     <textarea ref={textarea} id="revision-note-text" aria-label="修改意见" placeholder="填写修改意见..." maxLength={20000} disabled={!data.loaded} value={text}
