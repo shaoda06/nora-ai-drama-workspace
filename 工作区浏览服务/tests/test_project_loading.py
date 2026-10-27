@@ -151,7 +151,7 @@ class ProjectLoadingTests(HttpTestCase):
         self.assertFalse(scene['formal'][0]['approved'])
         self.assertEqual(scene['auxiliary'], [])
         self.assertIsNone(scene['cover'])
-        self.assertEqual(json.loads(cache.read_text('utf-8'))['schema'], 20)
+        self.assertEqual(json.loads(cache.read_text('utf-8'))['schema'], 21)
         self.assertEqual(self.store.snapshot(self.project), snapshot)
         self.assertEqual(image.read_bytes(), b'unchanged scene image fixture')
 

@@ -39,6 +39,35 @@ STATUS_FIELDS = {"状态", "当前状态", "确认状态", "画风确认状态",
                  "agent 技术审查结论", "agent 内容审查状态", "agent 初审结论", "agent初审结论", "agent 画面初审结论", "用户采用状态", "用户决定"}
 
 
+def recovery_context_owner(key, identity, mappings):
+    """Follow declared recovery provenance; directory ancestry is legacy only."""
+    visited = set()
+    while mappings[key].get('recovery', {}).get('original_local_task_id'):
+        if key in visited:
+            raise ValueError('恢复来源循环：' + key)
+        visited.add(key)
+        source = mappings[key].get('execution_source', {}).get('mapping')
+        if source:
+            if source not in mappings:
+                raise ValueError('恢复来源映射不存在：' + source)
+            if not any(context['identity'] == identity
+                       for context in mappings[source].get('generation_contexts', [])):
+                # A new revision may reuse an earlier execution snapshot;
+                # provenance does not merge distinct candidate identities.
+                break
+        else:
+            # Older recovery records declared a task ID but no source path.
+            source = key
+            for parent in Path(key).parent.parents:
+                ancestor = (parent / '输入映射.json').as_posix()
+                if ancestor in mappings:
+                    source = ancestor
+            if source == key:
+                break
+        key = source
+    return key
+
+
 def live_task_record(relative):
     path = Path(relative)
     return (path.name in ("后台任务状态.json", "后台过程记录.json")
@@ -1293,20 +1322,13 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                 mappings[item['key']] = json.loads(mapping_text)
             context_sources = {}
             for key, mapping in mappings.items():
-                owner, priority = key, (False, 0.0)
-                if mapping.get('recovery', {}).get('original_local_task_id'):
-                    # Explicit recovery snapshots belong to their enclosing run;
-                    # keep both files, but display the latest frozen execution.
-                    for parent in Path(key).parent.parents:
-                        ancestor = (parent / '输入映射.json').as_posix()
-                        if ancestor in mappings:
-                            owner = ancestor
-                    if owner != key:
-                        priority = (True, datetime.fromisoformat(mapping['generation_contexts_recorded_at']).timestamp())
                 for context in mapping.get("generation_contexts", []):
                     identity = context["identity"]
                     if not re.fullmatch(re.escape(episode.name) + r"-C\d{3,}-P\d{3,}-R\d{3,}-(一采|二采|后处理)", identity):
                         raise ValueError(key + "：生成资料身份格式不正确")
+                    owner = recovery_context_owner(key, identity, mappings)
+                    priority = ((True, datetime.fromisoformat(mapping['generation_contexts_recorded_at']).timestamp())
+                                if owner != key else (False, 0.0))
                     if identity in generation_contexts:
                         previous_owner, previous_priority = context_sources[identity]
                         if generation_contexts[identity] != context and (
