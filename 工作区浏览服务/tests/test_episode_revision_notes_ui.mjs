@@ -192,8 +192,15 @@ try {
   await page.getByRole('button', { name: /^分段 P001，/ }).click();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
   const editor = page.getByRole('textbox', { name: '修改意见', exact: true });
-  const pass = page.getByRole('button', { name: '本镜通过', exact: true });
-  assert.deepEqual(await page.locator('.revision-note-label button').allTextContents(), ['本镜通过', '插入时间', '清空']);
+  const pass = page.getByRole('button', { name: 'SH003 本镜通过', exact: true });
+  assert.equal(await page.getByRole('button', { name: /SH\d+ 本镜通过/ }).count(), 3);
+  for (const cell of await page.locator('.shot-timeline-cell').all()) {
+    const top = await cell.locator('.shot-timeline-item').boundingBox();
+    const action = await cell.locator('.shot-timeline-pass').boundingBox();
+    assert.ok(Math.abs(top.x + top.width / 2 - action.x - action.width / 2) < 1, '逐镜按钮与分镜格居中对齐');
+    assert.ok(action.y >= top.y + top.height, '通过按钮位于进度条下方');
+  }
+  assert.deepEqual(await page.locator('.revision-note-label button').allTextContents(), ['插入时间', '清空']);
   assert.equal(await page.locator('.revision-note-label label').count(), 0);
   await page.locator('.segment-video video').evaluate(video => video.play());
   await page.waitForFunction(() => document.querySelector('.segment-video video')?.currentTime >= 1.2);
@@ -216,10 +223,16 @@ try {
   await page.waitForFunction(position => document.querySelector('#revision-note-text')?.selectionStart === position, ('前缀\n' + approved).length);
   await page.locator('.segment-video video').evaluate(video => { video.currentTime = 0; video.dispatchEvent(new Event('timeupdate')); });
   await pass.focus(); await pass.press('Enter');
-  assert.ok((await editor.inputValue()).endsWith('00.00.0秒，SH001：这个分镜没问题'), '键盘使用首镜真实0秒');
+  assert.ok((await editor.inputValue()).endsWith(approved), '播放已回第一镜，第三镜按钮仍绑定第三镜起始时间');
+  assert.equal(await page.locator('.segment-video video').evaluate(video => video.currentTime), 0, '通过操作不跳转或播放视频');
+  const firstPass = page.getByRole('button', { name: 'SH001 本镜通过', exact: true });
+  await firstPass.focus(); await firstPass.press('Enter');
+  assert.ok((await editor.inputValue()).endsWith('00.00.0秒，SH001：这个分镜没问题'), '第一镜按钮使用首镜真实0秒');
   await page.locator('.revision-note-state[data-state="saved"]').waitFor();
   await page.screenshot({ path: path.join(screenshots, `shot-pass-${width}.png`) });
-  const box = await pass.boundingBox(); assert.ok(box.x >= 0 && box.x + box.width <= width);
+  const box = await firstPass.boundingBox(); assert.ok(box.x >= 0 && box.x + box.width <= width, '刚操作的通过按钮在可视区内');
+  const timelineBox = await page.locator('.shot-timeline-scroll').boundingBox();
+  assert.ok(timelineBox.x >= 0 && timelineBox.x + timelineBox.width <= width, '窄屏分镜条内部滚动，不撑出视口');
   // A second page's save wins; editing/clearing a conflicted draft must not retry blindly.
   const noteId = 'round/8/P001/一采/R002';
   saved.scenes.C001.notes[noteId].text = '其他页面的新意见';
@@ -254,7 +267,7 @@ try {
 
   await page.getByRole('button', { name: /^场次 C002 ·/ }).click();
   await page.getByRole('button', { name: '修改意见', exact: true }).click();
-  assert.equal(await pass.isDisabled(), true, '缺少当前候选分镜时长时不能猜测起点');
+  assert.equal(await page.getByRole('button', { name: /SH\d+ 本镜通过/ }).count(), 0, '没有有效分镜条时不提供猜测起点的按钮');
   assert.equal(await page.getByRole('button', { name: '插入时间', exact: true }).isDisabled(), false);
   await choose.click(); await page.getByRole('option', { name: /^第9轮/ }).click();
   await page.getByRole('button', { name: '分镜修改', exact: true }).click();
