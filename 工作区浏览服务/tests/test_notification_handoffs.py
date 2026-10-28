@@ -5,6 +5,7 @@ import importlib.util
 import io
 import errno
 import json
+import shlex
 from pathlib import Path
 import subprocess
 import tempfile
@@ -138,9 +139,18 @@ class NotificationHandoffTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([item['id'] for item in report['tasks']], ['two'])
         self.assertEqual(self.store.read_report(second_batch, 'isolated-thread')['new_task_ids'], ['two'])
         prompt = sender.call_args.args[2]
-        self.assertIn('汇总此前已读与本次新增结果', prompt)
-        self.assertIn('不代表整轮齐备', prompt)
-        self.assertIn('needs_attention', prompt)
+        # Short notices still identify the exact receipt and point to the maintained rules.
+        command = prompt.split('```text\n', 1)[1].split('\n```', 1)[0]
+        self.assertEqual(shlex.split(command), ['python', str(self.root / '.agents/skills/nora-ai-short-drama/scripts/browser_tasks.py'),
+                                              'report', '--notification-id', second_batch])
+        user_text, agent_text = prompt.split('Agent接续信息', 1)
+        self.assertIn('隔离通知：two', user_text)
+        self.assertNotIn(second_batch, user_text)
+        self.assertNotIn('完成', user_text)
+        self.assertIn('来源会话：isolated-thread', agent_text)
+        self.assertIn(str(self.root / '.agents/skills/nora-generation/references/ComfyUI-任务监控规范.md') + '#后台通知接续', agent_text)
+        self.assertGreaterEqual(prompt.count('\n\n'), 5)
+        self.assertLess(len(prompt), 800)
 
     async def test_business_attention_and_handoff_survive_compact_cli_report(self):
         data = self.task('one', kind='video-first-pass')

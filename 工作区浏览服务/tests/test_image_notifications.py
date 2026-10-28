@@ -44,9 +44,9 @@ class ImageNotificationTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(self.store, 'desktop_call', AsyncMock(return_value={})) as send:
             await self.notify('upscale')
         prompt = next(call.args[2] for call in send.call_args_list if call.args[1] == 'send')
-        self.assertIn('正常成功时不再调用ack、register-results', prompt)
-        self.assertIn('已授权范围内的登记修复由Agent直接处理', prompt)
-        self.assertIn('不重新生成、不扩大批准范围', prompt)
+        # Repair instructions live at the linked rules entry; the report retains the failure facts.
+        self.assertIn('#后台通知接续', prompt)
+        self.assertNotIn('进度范围冲突', prompt.split('Agent接续信息')[0])
         self.assertEqual(self.reports()[0]['results'][0]['status'], 'registration_failed')
 
     async def test_staggered_images_wait_then_send_one_report_with_both(self):

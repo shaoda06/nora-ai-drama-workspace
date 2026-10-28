@@ -295,12 +295,25 @@ class TaskNotifications:
             report['rounds'] = rounds
         return report
 
-    def notification_text(self, key):
-        row = self.rows[key]
-        state, data = row['state'], row['input']
-        return (f'本地任务ID：{key}；项目：{state["project"]}；任务：{data.title}\n'
-                f'任务类型：{data.task_type}\n'
-                f'记录位置：{data.record_dir}\n')
+    def notification_prompt(self, notification_id, thread_id, report):
+        if report.get('groups'):
+            group = report['groups'][0]
+            scope = f'项目：{group["project"]}\n任务组：{group["title"]}'
+        else:
+            scope = '任务：\n' + '\n'.join(
+                f'- {self.rows[task["id"]]["state"]["project"]}：{self.rows[task["id"]]["input"].title}'
+                for task in report['tasks'])
+        script = self.workspace / '.agents/skills/nora-ai-short-drama/scripts/browser_tasks.py'
+        rules = self.workspace / '.agents/skills/nora-generation/references/ComfyUI-任务监控规范.md'
+        return ('后台任务有更新\n\n'
+                + scope + '\n\n'
+                'Agent将读取最新结果并继续处理。需要你决定的事项，会单独说明。\n\n'
+                'Agent接续信息\n'
+                f'通知编号：{notification_id}\n来源会话：{thread_id}\n\n'
+                '读取报告：\n```text\n'
+                f'python "{script}" report --notification-id {notification_id}\n```\n\n'
+                f'接续规范：[后台通知接续](<{rules}#后台通知接续>)\n'
+                '先读取该章节，再静默读取报告并按规范接续；以本次报告为准。')
 
     async def notify(self, key):
         from backend.services.desktop_channel import DesktopChannel
@@ -372,30 +385,7 @@ class TaskNotifications:
             # Use the selected group's connection, never another group's latest caller.
             data = self.rows[ids[0]]['input']
             batch_id = str(uuid.uuid4())
-            if report.get('groups'):
-                group = report['groups'][0]
-                prompt = (f'后台任务组交接。通知ID：{batch_id}；来源会话：{data.thread_id}。\n'
-                          f'任务组ID：{group["id"]}；项目：{group["project"]}；任务组：{group["title"]}。\n'
-                          '先静默调用 browser_tasks.py report --notification-id 上述ID，读取最新组报告并自动确认接收。\n'
-                          '以groups固定成员及tasks/results/delivery为准；异常按子任务ID和failure_stage处理，正常项继续执行。'
-                          '同组同类异常按groups[].issues合并处理，本消息是Agent交接，不是要求向用户逐条报错。'
-                          '先沿原授权、原任务ID自行修复可处理的资料、取回和登记问题；过程及已修复异常静默记入原记录。'
-                          '只有需要用户作决定、超出已有授权或现有工具内确实无法继续时，才合并说明影响、已完成范围和待决事项；'
-                          '不要仅因收到异常、should_notify_user=true或组终态就要求用户确认内部命令。'
-                          '处理完本次问题后查一次最新组状态，接续同类后到成员，不另建轮询或heartbeat。'
-                          '正常完成按组一次汇总；最终无法恢复、取消或结案的部分列清成功与未完成范围及审核入口，不无限等待。'
-                          '读取回执不代表内容批准或已交付用户；已读但未交付的整组仍须交付，已交付不重复。'
-                          '正常成功不重复核验、刷新网页或登记；业务摘要仅按business_sync.actions接手。'
-                          '正常超分静默；后处理按已有规则采用。不得自动重新生成、清缓存或重启远端。')
-            else:
-                prompt = (f'后台任务结果通知。通知ID：{batch_id}；来源会话：{data.thread_id}。\n'
-                          '请调用 browser_tasks.py report --notification-id 上述ID，读取后台已保存的最新结果；读取同时自动确认收到。\n'
-                          '先静默读取report；should_notify_user和new_task_ids只表示新增接收结果，读取回执不代表已交付用户。接收数量和任务清单复用rounds；沿既有共同工作记录核对实际交付范围及负责会话，不逐任务抄写已有事实或新建通知台账。若结果此前已读，仍核对本轮是否尚待交付；已经交付的结果不重复汇报。\n'
-                          '同一次用户授权按整轮汇总：部分正常成功静默接收；优先使用rounds中的原清单范围、已完成、缺项和delivery，不重复拼路径或数文件。整轮全部预期成果及技术收尾齐备后，汇总此前已读与本次新增结果，一次交付数量和审核入口，不限于new_task_ids。单份user_message_ready=true不代表整轮齐备；多份清单按已明确授权范围分别核对，不靠会话或轮号猜测合并。review_ready不是内容批准或已交付，后处理仍按已有规则采用；delivered_to_user为null时沿原共同记录确认实际交付。阻塞整轮的异常及时处理；最终部分失败、取消或停止时列清成功和未完成范围，不能无限等待。用户明确要求先看部分时按该要求交付。\n'
-                          '通知可能延迟送达，当前状态、异常是否已修复及成果清单以本次report为准，历史经过保留在过程记录。\n'
-                          + '\n'.join(self.notification_text(task) for task in ids)
-                          + '\n图片、超分与视频的技术核验、分段成果登记及网页候选核验由后台执行，以报告结果为准；业务摘要按business_sync处理，needs_attention时只接手actions列出的path/field/reason，旧报告无actions才按原原因定位。不例行重写三份摘要，不把技术登记完成当作内容批准。正常成功只读取report并按上述整轮规则交付；不重复技术核验。正常超分静默；历史已发出的正常超分通知只读确认，不发处理进度、完成回复或图片。正常成功时不再调用ack、register-results或重复查文件／刷新网页。成果保存不等于内容获批。'
-                          '失败请从报告中的失败阶段复查；已授权范围内的登记修复由Agent直接处理，可使用register-results补完已有结果的登记，不重新生成、不扩大批准范围，也不让用户决定内部命令。超出既有授权或不能保留用户修改时，再说明实际影响并请求决定；未知任务不自动重新生成。')
+            prompt = self.notification_prompt(batch_id, data.thread_id, report)
             self.db.execute('INSERT INTO notification_batches VALUES (?, ?, ?, ?, ?)',
                             (batch_id, data.thread_id, json.dumps(ids), prompt, 'sending'))
             self.db.execute('INSERT INTO notification_reports VALUES (?, ?)', (batch_id, json.dumps(report, ensure_ascii=False)))
