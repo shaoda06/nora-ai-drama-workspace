@@ -336,8 +336,8 @@ try {
     assert.equal(await showcase.getByRole('link', { name: '下载原图', exact: true }).count(), 1);
     await showcase.getByRole('button', { name: '选集与分段', exact: true }).click();
     const episodeButtons = showcase.locator('.episode-grid-pairs .episode-button');
-    assert.equal(await episodeButtons.count(), 3);
-    assert.deepEqual(await episodeButtons.locator('.episode-button-duration').allTextContents(), ['1分20秒', '2分5.5秒*']);
+    assert.equal(await episodeButtons.count(), 4);
+    assert.deepEqual(await episodeButtons.locator('.episode-button-duration').allTextContents(), ['1分20秒', '2分5.5秒*', '9.4秒']);
     const episodeBounds = await episodeButtons.evaluateAll(nodes => nodes.map(node => {
       const box = node.getBoundingClientRect(); return { x: box.x, y: box.y, width: box.width };
     }));

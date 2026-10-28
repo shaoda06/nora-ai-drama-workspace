@@ -117,6 +117,9 @@ try {
   const buttons = list.locator('.episode-button');
   await page.waitForFunction(() => document.querySelector('[data-episode="EP001"] .episode-button-duration')?.textContent === '8秒');
   assert.deepEqual(await buttons.locator('.episode-button-duration').allTextContents(), ['8秒', '1分5.5秒*', '8秒', '8秒']);
+  const sharedButtons = page.getByRole('region', { name: '片头与片尾', exact: true }).locator('.episode-button');
+  await page.waitForFunction(() => document.querySelector('[data-episode="片头"] .episode-button-duration')?.textContent === '4秒');
+  assert.deepEqual(await sharedButtons.locator('.episode-button-duration').allTextContents(), ['4秒', '4秒'], '片头片尾列表只统计默认打开的第一套方案，不累加独立方案');
   const boxes = await buttons.evaluateAll(nodes => nodes.map(node => { const b = node.getBoundingClientRect(); return { x: b.x, y: b.y, right: b.right }; }));
   assert.equal(boxes[0].y === boxes[1].y, width > 700);
   assert.ok(boxes[2].y > boxes[0].y, '列表一行最多两集');

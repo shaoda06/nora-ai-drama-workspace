@@ -12,7 +12,10 @@ export function ProductionEpisodeButton({ item, project, revision, onSelect }: {
     queryFn: () => get<FileItem>(`${projectUrl(project)}/episodes/${item.name}`) });
   const episode = detail.data;
   const latest = episode?.episodeRounds?.at(-1);
-  const entries = Object.fromEntries((latest?.scenes || episode?.scenes || []).map(scene => [scene,
+  const scenes = latest?.scenes || episode?.scenes || [];
+  // Opening/ending scenes are alternative schemes; opening a card defaults to the first.
+  const durationScenes = item.name === '片头' || item.name === '片尾' ? scenes.slice(0, 1) : scenes;
+  const entries = Object.fromEntries(durationScenes.map(scene => [scene,
     sceneDurationEntries(episode!, scene, latest?.number ?? episode?.sceneRounds?.[scene]?.at(-1)?.number)]));
   const durations = useEpisodeDurations(entries);
   return <>

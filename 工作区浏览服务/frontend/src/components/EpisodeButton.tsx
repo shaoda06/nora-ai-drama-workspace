@@ -11,7 +11,7 @@ export function EpisodeButton({ item, onSelect, duration }: { item: FileItem; on
       <EpisodeTitleStatus status={item.titleStatus} />
     </span>
     <span className={'episode-button-meta' + (duration === undefined ? '' : ' episode-button-meta-with-duration')}>
-      {duration !== undefined && <PointerTooltip text="最新轮次时长；* 表示含计划时长"><span className="episode-button-duration">{duration}</span></PointerTooltip>}
+      {duration !== undefined && <PointerTooltip text={item.name === '片头' || item.name === '片尾' ? '最新轮次默认打开方案的时长；* 表示含计划时长' : '最新轮次时长；* 表示含计划时长'}><span className="episode-button-duration">{duration}</span></PointerTooltip>}
       <PointerTooltip text={status.replace(/<[^>]+>/g, '')}><span className="episode-button-status" dangerouslySetInnerHTML={{ __html: status }} /></PointerTooltip>
     </span>
   </button>;
