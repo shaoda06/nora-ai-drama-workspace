@@ -61,3 +61,37 @@ class MaterialReviewTests(unittest.TestCase):
         items = self.parse(self.record.replace('当前制作适用性：适用；本场使用', '当前制作适用性：待核对；版本变化'))
         self.assertEqual(items[0]['materialGroup'], 'unknown')
         self.assertEqual(self.parse('```markdown\n' + self.record + '```')[0]['materialGroup'], 'unknown')
+
+    def test_closed_candidate_keeps_historical_pending_review(self):
+        text = self.record.replace('决定：批准采用', '决定：待确认').replace(
+            '### 生成记录-001\n',
+            '### 生成记录-001\n- 用户决定及具体候选、批准依据：已结束未采用；最终方案已选定，原意见保留\n')
+        items = self.parse(text)
+        self.assertEqual([x['materialGroup'] for x in items[:3]], ['history'] * 3)
+        self.assertEqual(items[1]['materialStatus'], '已结束未采用')
+        self.assertIn('待确认', items[1]['approvalHtml'])
+
+    def test_replaced_candidate_retains_original_approval(self):
+        text = self.record.replace('### 生成记录-001\n',
+            '### 生成记录-001\n- 用户决定及具体候选、批准依据：已被替换／归档；改用新版\n')
+        items = self.parse(text)
+        self.assertEqual(items[1]['materialGroup'], 'history')
+        self.assertEqual(items[1]['materialStatus'], '已被替换／归档')
+        self.assertIn('批准采用', items[1]['approvalHtml'])
+
+    def test_closing_one_generation_does_not_close_another_candidate(self):
+        text = self.record.replace('决定：批准采用', '决定：待确认').replace(
+            '### 生成记录-001\n',
+            '### 生成记录-001\n- 用户决定及具体候选、批准依据：已结束未采用；不再比较\n')
+        text += '''
+### 生成记录-002
+- 候选文件入口：[另一候选](素材/另一图-候选-v01.png)
+### 审阅-生成记录-002-001
+- 对应具体候选：[另一候选](素材/另一图-候选-v01.png)
+- 决定：待确认
+- 当前制作适用性：待核对
+'''
+        files = [dict(key=BASE + '其他资料/工作稿/素材/' + name)
+                 for name in ['图-候选-v02.png', '另一图-候选-v01.png']]
+        items = material_review_states(files, text, SOURCE)
+        self.assertEqual([x['materialGroup'] for x in items], ['history', 'pending'])
