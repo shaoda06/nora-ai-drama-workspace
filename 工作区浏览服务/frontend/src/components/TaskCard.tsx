@@ -1,4 +1,5 @@
 import { PointerTooltip } from './PointerTooltip';
+import { LinkButton } from './LinkButton';
 import { useEffect, useState } from 'react';
 import './TaskCard.css';
 
@@ -78,7 +79,7 @@ export function TaskCard({ task, onDetails }: { task: Task; onDetails?: (id: str
         </div>
         <div className="comfy-task-session-row">
           <PointerTooltip text={task.source_session_name}><p className="comfy-task-session">来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip>
-          {task.group_id && onDetails && <button className="link" aria-label={`查看${task.title}详情`} onClick={() => onDetails(task.id)}>任务详情 →</button>}
+          {task.group_id && onDetails && <LinkButton aria-label={`查看${task.title}任务组详情`} onClick={() => onDetails(task.id)}>任务组详情 →</LinkButton>}
         </div>
       </div>
       <details className="comfy-task-details"><summary>任务详情</summary>

@@ -35,9 +35,12 @@ try {
   await page.getByRole('button',{name:'展开任务进度',exact:true}).click();
   const remote=page.locator('.comfy-task'), local=page.locator('[data-local-task-id="one"]');
   await remote.getByRole('heading',{name:running.title,exact:true}).waitFor();
+  const linkStyles=[];
   for(const [card,container] of [[remote,'.comfy-task-session-row'],[local,'.local-queue-card-title']]){
     const button=card.getByRole('button',{name:/查看.*详情/});
-    assert.equal(await button.textContent(),'任务详情 →');
+    assert.equal(await button.textContent(),'任务组详情 →');
+    linkStyles.push(await button.evaluate(el=>{const s=getComputedStyle(el);return {font:s.fontSize,line:s.lineHeight,padding:s.padding,underline:s.textDecorationLine,color:s.color}}));
+    assert.match(linkStyles.at(-1).underline,/underline/);
     const bounds=await button.boundingBox(),row=await card.locator(container).boundingBox();
     assert.ok(Math.abs(bounds.x+bounds.width-row.x-row.width)<=1,'详情入口在卡片内容右侧');
     if(container==='.comfy-task-session-row'){
@@ -48,10 +51,11 @@ try {
     assert.ok(await card.evaluate(n=>n.scrollWidth<=n.clientWidth+1));
     await card.screenshot({path:`${screenshots}/${width}-${container.includes('session')?'running':'queued'}.png`});
   }
+  assert.deepEqual(linkStyles[0],linkStyles[1]);
   await remote.getByRole('button',{name:/查看.*详情/}).click();
   await page.getByRole('region',{name:'任务组进度'}).waitFor();
   await page.getByRole('dialog').getByRole('button',{name:'关闭',exact:true}).click();
-  await page.getByRole('button',{name:'查看片段1详情',exact:true}).click();
+  await page.getByRole('button',{name:'查看片段1任务组详情',exact:true}).click();
   const group=page.getByRole('region',{name:'任务组进度'});
   await group.waitFor();
   assert.match(await group.innerText(),/全组收尾：1 \/ 3/);

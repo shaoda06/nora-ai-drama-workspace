@@ -201,6 +201,9 @@ try {
     assert.ok(action.y >= top.y + top.height, '通过按钮位于进度条下方');
   }
   assert.deepEqual(await page.locator('.revision-note-label button').allTextContents(), ['插入时间', '清空']);
+  const linkStyle = el => { const s=getComputedStyle(el); return Object.fromEntries(['fontSize','lineHeight','color','padding','borderRadius','textDecorationLine'].map(k=>[k,s[k]])); };
+  assert.deepEqual(await pass.evaluate(linkStyle), await page.getByRole('button', {name:'插入时间',exact:true}).evaluate(linkStyle), '本镜通过与插入时间复用同一公共下划线链接规格');
+  assert.match((await pass.evaluate(linkStyle)).textDecorationLine, /underline/);
   assert.equal(await page.locator('.revision-note-label label').count(), 0);
   await page.locator('.segment-video video').evaluate(video => video.play());
   await page.waitForFunction(() => document.querySelector('.segment-video video')?.currentTime >= 1.2);

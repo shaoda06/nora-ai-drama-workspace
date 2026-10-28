@@ -10,6 +10,7 @@ import { TabSelect } from './TabSelect';
 import { candidateLabel, latestVideo, missingVideoState, SegmentVideo } from './SegmentVideo';
 import type { SegmentVideoHandle, RepeatPlaybackControl } from './SegmentVideo';
 import { CopyButton } from './CopyButton';
+import { LinkButton } from './LinkButton';
 import { PromptSections } from './PromptSections';
 import { RevisionNoteEditor } from './RevisionNotes';
 import type { NoteScope, NoteShotTimeline } from './RevisionNotes';
@@ -103,8 +104,8 @@ export function SegmentWorkspace({ repeatControl, scope, segment, revision, roun
               <span className="shot-timeline-title">{shot.id.match(/SH\d+$/)?.[0] || shot.id}</span>
               <span className="shot-timeline-track"><span style={{ transform: `scaleX(${Math.max(0, Math.min(1, (time - start) / shot.duration!))})` }} /></span>
             </button>
-              {passShot && <button type="button" className="link shot-timeline-pass" aria-label={`${shot.id.match(/SH\d+$/)?.[0] || shot.id} 本镜通过`} disabled={disabled} onPointerDown={preserveFocus}
-                onClick={() => passShot(shot.id.match(/SH\d+$/)?.[0] || shot.id, start)}>本镜通过</button>}
+              {passShot && <LinkButton className="shot-timeline-pass" aria-label={`${shot.id.match(/SH\d+$/)?.[0] || shot.id} 本镜通过`} disabled={disabled} onPointerDown={preserveFocus}
+                onClick={() => passShot(shot.id.match(/SH\d+$/)?.[0] || shot.id, start)}>本镜通过</LinkButton>}
             </div>)}
           </div>
         </div> : null;

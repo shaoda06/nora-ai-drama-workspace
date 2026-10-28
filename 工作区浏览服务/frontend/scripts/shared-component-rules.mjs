@@ -3,6 +3,7 @@ import postcss from 'postcss';
 
 // These are implementation owners, not page exemptions. Extend with a real shared component.
 const owners = {
+  LinkButton: 'components/LinkButton.tsx',
   AssetMediaCard: 'components/AssetMediaCard.tsx',
   Dialog: 'components.tsx', TabSelect: 'components/TabSelect.tsx',
   SearchField: 'components/SearchField.tsx', Switch: 'components/Switch.tsx',
@@ -12,6 +13,7 @@ const owners = {
   Notifications: 'components/Notifications.tsx', RoundNewDot: 'components/RoundNewDot.tsx',
 };
 const classes = {
+  'link-button': ['LinkButton', 'components/LinkButton.css'],
   'round-new-dot': ['RoundNewDot', 'components/RoundNewDot.css'],
   'asset-media-details': ['AssetMediaCard', 'style.css'],
   'dialog-close': ['Dialog', 'style.css'],

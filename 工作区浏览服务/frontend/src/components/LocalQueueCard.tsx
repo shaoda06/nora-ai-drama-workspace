@@ -1,5 +1,6 @@
 import { TabSelect } from './TabSelect';
 import { PointerTooltip } from './PointerTooltip';
+import { LinkButton } from './LinkButton';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { clockText, localDateTime, taskTypeLabels } from './TaskCard';
@@ -100,8 +101,8 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
     </div>
     <div className="local-queue-card-body">
       <div className="local-queue-card-title"><h2>{task.title}</h2>
-          {(history || task.group_id) && onDetails && <button type="button" className="local-queue-card-detail"
-            aria-label={`查看${task.title}详情`} onClick={() => onDetails(task.id)}>任务详情 →</button>}
+          {(history || task.group_id) && onDetails && <LinkButton className="local-queue-card-detail"
+            aria-label={`查看${task.title}${task.group_id ? '任务组' : ''}详情`} onClick={() => onDetails(task.id)}>{task.group_id ? '任务组详情' : '任务详情'} →</LinkButton>}
       </div>
       {!history && <div className="local-queue-card-description"><PointerTooltip text={task.source_session_name}><p className="local-queue-card-session" >来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip></div>}
       {['local_queued', 'queued', 'paused'].includes(task.status) && <div className="local-queue-card-actions" aria-label="本地任务操作">

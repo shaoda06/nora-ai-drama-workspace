@@ -118,3 +118,10 @@ test('download appearance and native anchors belong to DownloadControl', () => {
   assert.equal(errors('Page.css', '.workflow .download-control{font-size:13px}').length, 1);
   assert.equal(errors('components/DownloadControl.css', '.download-control{font-size:15px}').length, 0);
 });
+
+test('underlined action links belong to LinkButton', () => {
+  assert.equal(errors('components/LinkButton.tsx', '<button className="link-button" />').length, 0);
+  assert.equal(errors('Page.tsx', '<button className="link-button" />').length, 1);
+  assert.equal(errors('Page.css', '.task .link-button{font-size:12px}').length, 1);
+  assert.equal(errors('components/LinkButton.css', '.link-button{font-size:13px}').length, 0);
+});

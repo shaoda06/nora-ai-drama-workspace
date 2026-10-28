@@ -9,6 +9,7 @@ import { FloatingMessage, useNotify } from './Notifications';
 import { CopyButton } from './CopyButton';
 import { candidateLabel } from './SegmentVideo';
 import { TabNav } from './TabNav';
+import { LinkButton } from './LinkButton';
 
 export interface NoteScope { project: string; episode: string; scene: string }
 export type NoteShotTimeline = (passShot: (shot: string, start: number) => void, preserveFocus: (event: PointerEvent<HTMLButtonElement>) => void, disabled: boolean) => ReactNode;
@@ -52,7 +53,7 @@ export function RevisionNoteEditor({ scope, segment, current, fileRevision, time
   return <div className="revision-note-editor">
     {renderShotTimeline((id, start) => insertTime({ id, start }), preserveFocus, !data.loaded || !current.url)}
     <div className="revision-note-heading">
-      <div className="revision-note-label"><button className="link" disabled={!data.loaded || !current.url} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={() => insertTime()}>插入时间</button><button className="link" disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</button></div>
+      <div className="revision-note-label"><LinkButton disabled={!data.loaded || !current.url} onPointerDown={event => { if (document.activeElement === textarea.current) event.preventDefault(); }} onClick={() => insertTime()}>插入时间</LinkButton><LinkButton disabled={!data.loaded || !text} onClick={() => editNote(data.url, { ...identity, text: '', fileRevision })}>清空</LinkButton></div>
       <div className="revision-note-status" role="status"><span className="revision-note-state" data-state={statusKind}>{data.error ? '读取失败' : data.loading ? '正在读取…' : status}</span>{note && <span className="muted">更新于 {new Date(note.updatedAt).toLocaleString('zh-CN')}</span>}</div>
     </div>
     <textarea ref={textarea} id="revision-note-text" aria-label="修改意见" placeholder="填写修改意见..." maxLength={20000} disabled={!data.loaded} value={text}

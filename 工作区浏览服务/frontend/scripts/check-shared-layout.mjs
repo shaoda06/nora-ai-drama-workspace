@@ -360,9 +360,12 @@ try {
     await checkSharedNavigation(page, width, selfTest);
     await checkSharedPlayback(page, width);
     await showcase.getByRole('button', { name: '任务卡片', exact: true }).click();
+    const taskLinkStyles = [];
     for (const [selector, rowSelector] of [['.comfy-task', '.comfy-task-session-row'], ['.local-queue-card', '.local-queue-card-title']]) {
       const card = showcase.locator(selector), detail = card.getByRole('button', { name: /查看.*详情/ });
-      assert.equal(await detail.textContent(), '任务详情 →');
+      assert.equal(await detail.textContent(), '任务组详情 →');
+      taskLinkStyles.push(await styleOf(detail));
+      assert.match(await detail.evaluate(el => getComputedStyle(el).textDecorationLine), /underline/);
       const edges = await detail.evaluate(el => ({ button: el.getBoundingClientRect().right, row: el.parentElement.getBoundingClientRect().right }));
       assert.ok(Math.abs(edges.button - edges.row) <= 1, `${width}px / 任务详情入口右对齐`);
       await contained(card.locator(rowSelector), `${width}px / 任务详情行`);
@@ -370,6 +373,13 @@ try {
       await detail.click();
       await showcase.getByRole('status').filter({ hasText: '示例任务组：' }).waitFor();
     }
+    assert.deepEqual(taskLinkStyles[0], taskLinkStyles[1], '运行与排队的任务组详情使用同一链接外观');
+    await showcase.getByRole('button', { name: '按钮与切换', exact: true }).click();
+    const linkExample = showcase.getByRole('button', { name: '链接操作示例', exact: true });
+    await sameStyle(linkExample, taskLinkStyles[0], `${width}px / 公共下划线链接`);
+    assert.equal(await showcase.getByRole('button', { name: '禁用链接示例', exact: true }).isDisabled(), true);
+    await linkExample.focus(); await page.keyboard.press('Enter');
+    await showcase.getByRole('status').filter({ hasText: '链接示例已点击' }).waitFor();
     assert.deepEqual(forbidden, [], '测试不得访问API、外部网络或写入业务');
     assert.deepEqual(errors, [], '浏览器错误');
     console.log(`公共组件布局检查：${width}px普通/宽屏、最新/旧候选、展示页同规格样式、父容器及菜单边界通过。`);
