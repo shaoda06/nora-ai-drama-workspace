@@ -99,13 +99,11 @@ export function LocalQueueCard({ task, position, onReorder, onAction, onTransfer
       <strong className="local-queue-card-status" data-status={task.status}>{collectionStatus(task)}{position !== undefined && ` #${position}`}</strong>
     </div>
     <div className="local-queue-card-body">
-      <div className="local-queue-card-description">
-        <div className="local-queue-card-title"><h2>{task.title}</h2>
+      <div className="local-queue-card-title"><h2>{task.title}</h2>
           {(history || task.group_id) && onDetails && <button type="button" className="local-queue-card-detail"
-            aria-label={`查看${task.title}详情`} onClick={() => onDetails(task.id)}>详情 →</button>}
-        </div>
-        {!history && <PointerTooltip text={task.source_session_name}><p className="local-queue-card-session" >来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip>}
+            aria-label={`查看${task.title}详情`} onClick={() => onDetails(task.id)}>任务详情 →</button>}
       </div>
+      {!history && <div className="local-queue-card-description"><PointerTooltip text={task.source_session_name}><p className="local-queue-card-session" >来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip></div>}
       {['local_queued', 'queued', 'paused'].includes(task.status) && <div className="local-queue-card-actions" aria-label="本地任务操作">
         <button type="button" data-tone="green" disabled={busy || !onAction} onClick={() => onAction?.(task.id, 'immediate')}>立即提交</button>
         <button type="button" data-tone="blue" disabled={busy || !onAction} onClick={() => onAction?.(task.id, 'insert')}>插队</button>

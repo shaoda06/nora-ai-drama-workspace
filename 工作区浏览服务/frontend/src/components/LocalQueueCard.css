@@ -14,8 +14,8 @@ body:has(.local-queue-card-floating){cursor:grabbing}
 .local-queue-card-status{flex:none;white-space:nowrap;color:#976316}
 .local-queue-card-status[data-status=paused]{color:var(--muted)}
 .local-queue-card-status[data-status=completed]{color:var(--green)}
-.local-queue-card-body{display:flex;align-items:flex-end;gap:16px;margin-top:10px}
-.local-queue-card-description{flex:1;min-width:0}
+.local-queue-card-body{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:4px 16px;margin-top:10px}
+.local-queue-card-description{min-width:0}
 .local-queue-card h2{font-size:15px;line-height:1.5;margin:0}
 .local-queue-card-session{font-size:11px;color:var(--muted);margin:4px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .local-queue-card-history{display:grid;grid-template-columns:minmax(0,1fr) max-content;align-items:baseline;gap:4px 12px;margin-top:4px;font-size:11px;color:var(--muted)}
@@ -33,10 +33,10 @@ body:has(.local-queue-card-floating){cursor:grabbing}
 .local-queue-card-actions>button[data-tone=green]:hover:not(:disabled){background:#cce7d7;border-color:#247a48}
 .local-queue-card-actions>button[data-tone=blue]:hover:not(:disabled){background:#cfdef3;border-color:#386fb0}
 .local-queue-card-actions>button[data-tone=orange]:hover:not(:disabled){background:#ffe1ad;border-color:#a26916}
-@media(max-width:700px){.local-queue-card-body{flex-wrap:wrap;gap:10px}.local-queue-card-description{flex-basis:100%}}
+@media(max-width:700px){.local-queue-card-body{grid-template-columns:minmax(0,1fr);row-gap:10px}}
 
 .local-queue-card-error{font-size:12px;color:#ac493b;margin:8px 0 0;white-space:pre-wrap;max-height:100px;overflow:auto}
-.local-queue-card-title { display: flex; align-items: baseline; gap: 12px; }
+.local-queue-card-title { grid-column:1/-1;display: flex; align-items: baseline; gap: 12px; }
 .local-queue-card-title h2 { flex: 1; min-width: 0; }
 .local-queue-card-detail { flex: none; background: transparent; border: 0; color: var(--green); padding: 3px 0 3px 12px; cursor: pointer; font: inherit; font-size: 12px; white-space: nowrap; }
 .local-queue-card-detail:hover { text-decoration: underline; }

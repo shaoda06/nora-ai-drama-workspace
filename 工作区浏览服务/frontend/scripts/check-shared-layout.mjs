@@ -359,6 +359,17 @@ try {
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, '集名状态示例不可横向越界');
     await checkSharedNavigation(page, width, selfTest);
     await checkSharedPlayback(page, width);
+    await showcase.getByRole('button', { name: '任务卡片', exact: true }).click();
+    for (const [selector, rowSelector] of [['.comfy-task', '.comfy-task-session-row'], ['.local-queue-card', '.local-queue-card-title']]) {
+      const card = showcase.locator(selector), detail = card.getByRole('button', { name: /查看.*详情/ });
+      assert.equal(await detail.textContent(), '任务详情 →');
+      const edges = await detail.evaluate(el => ({ button: el.getBoundingClientRect().right, row: el.parentElement.getBoundingClientRect().right }));
+      assert.ok(Math.abs(edges.button - edges.row) <= 1, `${width}px / 任务详情入口右对齐`);
+      await contained(card.locator(rowSelector), `${width}px / 任务详情行`);
+      await contained(card, `${width}px / 任务卡片`);
+      await detail.click();
+      await showcase.getByRole('status').filter({ hasText: '示例任务组：' }).waitFor();
+    }
     assert.deepEqual(forbidden, [], '测试不得访问API、外部网络或写入业务');
     assert.deepEqual(errors, [], '浏览器错误');
     console.log(`公共组件布局检查：${width}px普通/宽屏、最新/旧候选、展示页同规格样式、父容器及菜单边界通过。`);

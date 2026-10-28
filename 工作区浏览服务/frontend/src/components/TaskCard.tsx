@@ -69,14 +69,16 @@ export function TaskCard({ task, onDetails }: { task: Task; onDetails?: (id: str
       <div className="comfy-local-title">
         <div className="comfy-task-description">
           <h2>{task.title}</h2>
-          {task.group_id && onDetails && <button className="link" onClick={() => onDetails(task.id)}>任务组进度 →</button>}
-          <PointerTooltip text={task.source_session_name}><p className="comfy-task-session" >来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip>
         </div>
         <div className="comfy-task-timing">
           {queued && submitted ? <>
             <time dateTime={task.submitted_at || task.created_at}>提交时间：{localDateTime(submitted)}</time>
             <span>等待时长：{clockText(Math.max(0, Math.floor((now - submitted.getTime()) / 1000)))}</span>
           </> : <PointerTooltip text={task.started_at ? undefined : '未保存该任务的执行开始事件，提交时间包含排队等待，不能作为运行开始时间'}><span >运行时长：{task.started_at ? clockText(Math.max(0, Math.floor((now - new Date(task.started_at).getTime()) / 1000))) : '开始时间未记录'}</span></PointerTooltip>}
+        </div>
+        <div className="comfy-task-session-row">
+          <PointerTooltip text={task.source_session_name}><p className="comfy-task-session">来源会话：{task.source_session_name || '会话名称暂不可用'}</p></PointerTooltip>
+          {task.group_id && onDetails && <button className="link" aria-label={`查看${task.title}详情`} onClick={() => onDetails(task.id)}>任务详情 →</button>}
         </div>
       </div>
       <details className="comfy-task-details"><summary>任务详情</summary>

@@ -63,7 +63,7 @@ try {
     if (viewport.width > 700) {
       assert.equal(first.timing.width, 182, 'reserve a stable timing column');
       assert.ok(first.copy.x + first.copy.width + 11 <= first.timing.x);
-    } else assert.ok(first.timing.y >= first.session.y + first.session.height, 'mobile timing sits below the description');
+    } else assert.ok(first.session.y >= first.timing.y + first.timing.height, 'mobile source row sits below timing');
     assert.equal(first.font, 'tabular-nums');
     for (const milliseconds of [1000, 9000, 40000, 3600000]) {
       await page.clock.fastForward(milliseconds);

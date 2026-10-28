@@ -166,10 +166,10 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
     </>}
     {category === 'tasks' && <>
-      <ComponentExample fullWidth title="运行任务卡片" rule="显示固定示例进度；任务组入口使用模拟回调。实际入口打开任务详情，查看全组进度与各成员；队列仍逐任务显示和执行。没有提交或轮询生成任务。" usage="全局任务进度">
+      <ComponentExample fullWidth title="运行任务卡片" rule="显示固定示例进度；“任务详情”与来源会话同排靠右，长会话名省略并保留悬停全文；入口使用模拟回调。实际入口打开任务详情，查看全组进度与各成员；队列仍逐任务显示和执行。没有提交或轮询生成任务。" usage="全局任务进度">
         <TaskCard task={{ id: 'showcase-running', group_id: 'showcase-group', project: '示例项目', title: '组件展示任务', task_type: 'image', prompt_id: null, status: 'running', connection: 'connected', node: '示例节点', remote_url: '', progress: { value: 3, max: 10 }, error: null, collected: 0, expected: 1, created_at: started, started_at: started, source_session_name: '本地组件演示' }} onDetails={() => setAction('示例任务组：已完成1 / 2项，真实入口显示各成员状态。')} />
       </ComponentExample>
-      <ComponentExample fullWidth title="排队任务卡片" rule="暂停、恢复、插队和提交按钮只更新演示状态，不操作真实队列。组成员的详情入口可从排队阶段查看全组；这里仅演示回调。" usage="全局待提交与暂停列表">
+      <ComponentExample fullWidth title="排队任务卡片" rule="“任务详情”在标题行右侧，与运行卡片统一命名；暂停、恢复、插队和提交按钮只更新演示状态，不操作真实队列。组成员的详情入口可从排队阶段查看全组；这里仅演示回调。" usage="全局待提交与暂停列表">
         <LocalQueueCard task={{ queue: 'local', id: 'showcase-queued', group_id: 'showcase-group', project: '示例项目', title: '本地演示队列', task_type: 'image', status: queueState, remote_url: '', created_at: started, source_session_name: '本地组件演示' }} position={1} onDetails={() => setAction('示例任务组：排队和执行仍按单任务进行。')} onAction={(_id, next) => { setAction(({ pause: '已暂停示例', resume: '已恢复示例', immediate: '已模拟立即提交', insert: '已模拟插队' } as Record<string, string>)[next]); if (next === 'pause' || next === 'resume') setQueueState(next === 'pause' ? 'paused' : 'local_queued'); }} />
         <p role="status">{action}</p>
       </ComponentExample>
