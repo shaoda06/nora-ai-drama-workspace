@@ -94,7 +94,7 @@ export function ComponentShowcase({ onImplementation }: { onImplementation: () =
         <p className="component-draft">已选择：{options.find(item => item.value === selection)!.label}</p>
       </Example>}
       {category === 'messages' && <>
-        <Example title="公共消息" rule="成功提示3秒消失，错误提示不定时消失；所有提示都可关闭。长消息最多520像素，手机上换行；关闭持续提示不会结束演示状态。" usage="保存、复制、下载进度、读取错误与更新提醒">
+        <Example title="公共消息" rule="成功提示3秒消失，错误提示不定时消失；所有提示都可关闭。距屏幕左边16像素；长消息最多520像素，手机上换行并保留两侧至少16像素；关闭持续提示不会结束演示状态。" usage="保存、复制、下载进度、读取错误与更新提醒">
           <div className="component-demo-row"><button onClick={() => showNotice('演示：操作成功')}>显示成功提示</button><button onClick={() => showNotice('演示：操作失败，请重试', 'error')}>显示错误提示</button><button onClick={() => showNotice(longSampleText, 'error')}>显示长错误提示</button><button disabled={pending} onClick={() => setPending(true)}>显示持续提示</button></div>
           <p>演示状态：{pending ? '进行中' : '未进行'}</p>
           <div className="component-demo-row"><button disabled={!pending} onClick={() => { setPending(false); showNotice('演示已结束'); }}>结束演示</button><button className="link" onClick={clearNotices}>清除演示消息</button></div>
