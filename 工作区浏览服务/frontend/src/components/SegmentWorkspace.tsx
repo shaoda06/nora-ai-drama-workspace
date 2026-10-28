@@ -57,7 +57,7 @@ export function SegmentWorkspace({ repeatControl, scope, segment, revision, roun
   const [productSelection, setProductSelection] = useState({ version: '', id: '' });
   const products = current?.products || [];
   const product = products.find(item => productSelection.version === current?.key && item.id === productSelection.id)
-    || products.find(item => item.role === '最终产物');
+    || products.find(item => item.default);
   const displayVideo = current && product ? { ...current, url: product.previewUrl || product.url,
     downloadUrl: product.url, previewNote: product.previewNote, reviewFileRevision: current.fileRevision,
     fileRevision: product.fileRevision + ':' + (product.previewRevision || '') } : current;
@@ -111,7 +111,7 @@ export function SegmentWorkspace({ repeatControl, scope, segment, revision, roun
   const selectors = <div className="segment-selectors">
       <TabSelect size="toolbar" highlightSelected label="画质选择" selected={stage} onChange={value => onSelectionChange({ stage: value, key: '' })} items={['一采', '二采', '后处理'].map(value => ({ value, label: value }))} />
       <TabSelect size="toolbar" highlightSelected label="版本切换" reselect disabled={!stage} selected={current?.key || ''} onChange={key => onSelectionChange({ stage, key })} items={versions.map(item => ({ value: item.key, label: candidateLabel(item.candidateNumber), badge: item.approved ? '已采用' : undefined }))} />
-      {products.length > 1 && <TabSelect size="toolbar" highlightSelected label="产物选择" selected={product!.id} onChange={id => setProductSelection({ version: current!.key, id })} items={products.map(item => ({ value: item.id, label: item.label, badge: item.role }))} />}
+      {products.length > 1 && <TabSelect size="toolbar" highlightSelected label="产物选择" selected={product!.id} onChange={id => setProductSelection({ version: current!.key, id })} items={products.map(item => ({ value: item.id, label: item.label, badge: item.default ? '默认' : undefined }))} />}
       <span className="production-latest">当前最新{latest ? selected !== latest.key && <>：{candidateLabel(latest.candidateNumber)}，<button className="production-latest-link" aria-label="切换到本段最新版本" onClick={() => onSelectionChange({ stage: latest.stage, key: latest.key })}>点击切换</button></> : '：暂无版本'}</span>
     </div>;
   return <>

@@ -122,7 +122,8 @@ class ApprovalTests(unittest.TestCase):
         target = directory / '配套交付' / (identity + '-透明.mov')
         self.fixture.put(target, b'alpha final')
         self.fixture.put(directory / '后处理产物.json', {'products': [
-            {'id': 'alpha', 'label': '透明 MOV', 'role': '最终产物', 'file': str(target.relative_to(self.root))}]})
+            {'id': 'alpha', 'label': '透明 MOV', 'role': '最终产物', 'file': str(target.relative_to(self.root))},
+            {'id': 'green', 'label': '绿底', 'role': '过程产物', 'file': str((self.fixture.ep / '06-阶段采用视频/03-后处理/C001-场次' / (identity + '.mp4')).relative_to(self.root))}]})
         draft = self.fixture.extra / '工作稿' / (part + '-视频制作-工作稿.md')
         text = draft.read_text(); row = tool.adopt.selected_row(text, '后处理')[2]
         reference = tool.adopt.link(draft, target)
@@ -148,6 +149,7 @@ class ApprovalTests(unittest.TestCase):
         items = self.setup_stage(parts=('P001',))
         _, final, process = self.prepare_products(items[0])
         result = self.run_plan()
+        final = process.parent / final.name
         self.assertEqual(result['state'], 'completed')
         self.assertTrue(result['episode_completed'])
         self.assertEqual(result['adoption']['selected_approved_counts']['后处理'], 1)
@@ -178,6 +180,7 @@ class ApprovalTests(unittest.TestCase):
         items = self.setup_stage(parts=('P001',))
         manifest, final, process = self.prepare_products(items[0])
         first = self.run_plan(browser_error='temporary browser error')
+        final = process.parent / final.name
         self.assertEqual(first['state'], 'browser_pending')
         for missing in (process, final):
             content = missing.read_bytes(); missing.unlink()
@@ -279,7 +282,8 @@ class ApprovalTests(unittest.TestCase):
         self.request = self.request.with_name('批准复核.json')
         result = self.run_plan()
         self.assertTrue(result['episode_completed'])
-        self.assertEqual(draft.read_text(), text)
+        target = self.fixture.ep / '06-阶段采用视频/03-后处理/C001-场次' / target.name
+        self.assertIn(str(target.name), draft.read_text())
         self.assertEqual(result['adoption']['items'][0]['selected_path'], str(target))
         self.assertEqual(result['adoption']['selected_approved_counts']['后处理'], 1)
         summary = self.fixture.extra / '工作稿/EP001-生成说明-工作稿.md'

@@ -31,8 +31,8 @@ const episode = name => name === 'EP002' ? { kind: 'group', name, title: '纯计
     C001: [{ id: 'P001', duration: 12, videos: [video('one'), video('unused-candidate', 'R002')] },
       { id: 'P002', duration: 13, videos: [video('two')] }, { id: 'P099', duration: 999, historical: true, videos: [] }],
     C002: [{ id: 'P001', duration: 20, videos: [video('three'), { ...video('primary', 'R003', '后处理'), products: [
-      { id: 'process', label: '过程', role: '过程产物', key: 'process', url: '/fixture/process.webm', fileRevision: '1' },
-      { id: 'final', label: '最终', role: '最终产物', key: 'final', url: '/fixture/final.webm', previewUrl: '/fixture/proxy.webm', fileRevision: '1' }] }] },
+      { id: 'process', label: '过程', default: false, key: 'process', url: '/fixture/process.webm', fileRevision: '1' },
+      { id: 'final', label: '最终', default: true, key: 'final', url: '/fixture/final.webm', previewUrl: '/fixture/proxy.webm', fileRevision: '1' }] }] },
       { id: 'P002', duration: 61, videos: [] }],
     C003: [{ id: 'P001', duration: 75, videos: [video('broken', 'R003')] }],
   },

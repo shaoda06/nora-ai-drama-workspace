@@ -1534,7 +1534,7 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                         name = Path(link['key']).name
                         if not re.fullmatch(re.escape(segment_identity + '-' + adopted['R编号'] + '-' + adopted['处理阶段'])
                                             + r'\.(?:mp4|webm|mov)', name) and not any(
-                                product['key'] == link['key'] and product['role'] == '最终产物'
+                                product['key'] == link['key']
                                 for product in products_for(adopted['R编号'], adopted['处理阶段'])):
                             continue
                         if video_adoption_approved(adopted, record, record_key, name):
@@ -1577,6 +1577,16 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                 for run, stage in sorted(revisions - present):
                     videos.append({"key": segment_identity + "-" + run + "-" + stage,
                                    "url": "", "run": run, "stage": stage, "approved": False, "fileRevision": ""})
+                # Several files in a manifest still represent one candidate.
+                seen_product_runs, unique_videos = set(), []
+                for video in videos:
+                    pair = (video['run'], video['stage'])
+                    if products_for(*pair):
+                        if pair in seen_product_runs:
+                            continue
+                        seen_product_runs.add(pair)
+                    unique_videos.append(video)
+                videos = unique_videos
                 videos.sort(key=lambda item: (int(item["run"][1:]), item["stage"], item["key"]))
                 for video in videos:
                     body = video_record_body(record, video["run"], video["stage"])
@@ -1599,8 +1609,10 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                     products = products_for(video['run'], video['stage'])
                     if products:
                         video['products'] = products
+                        primary = next(product for product in products if product['default'])
+                        video.update(key=primary['key'], url=primary.get('previewUrl', primary['url']), fileRevision=primary['fileRevision'])
                         video['approved'] = any(
-                            product['key'] in approved_keys and product['role'] == '最终产物' for product in products)
+                            product['key'] in approved_keys for product in products)
                     if episode_mode == 'full':
                         video["context"] = resolve_context(segment_identity + "-" + video["run"] + "-" + video["stage"],
                             generation_contexts, project, read, read_plain, text_previews)

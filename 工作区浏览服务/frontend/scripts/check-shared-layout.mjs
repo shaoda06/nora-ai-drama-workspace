@@ -106,15 +106,15 @@ try {
         assert.equal(await productSelect.count(), candidate === '候选二' ? 1 : 0);
         if (candidate === '候选二') {
           await sameStyle(productSelect, expected, `${context} / 产物选择`);
-          assert.match(await productSelect.innerText(), /最终产物/);
+          assert.match(await productSelect.innerText(), /默认/);
           await productSelect.click();
           const productMenu = page.getByRole('listbox', { name: '产物选择', exact: true });
           const productBounds = await productMenu.boundingBox();
           assert.ok(productBounds.x >= 0 && productBounds.x + productBounds.width <= width, '[产物菜单越界]');
-          await productMenu.getByRole('option', { name: /绿底 MP4 过程产物/ }).click();
+          await productMenu.getByRole('option', { name: /绿底 MP4/ }).click();
           assert.match(await business.getByRole('link', { name: /查看视频原文件/ }).getAttribute('href'), /process=1/);
           await productSelect.click();
-          await productMenu.getByRole('option', { name: /透明 MOV 最终产物/ }).click();
+          await productMenu.getByRole('option', { name: /透明 MOV 默认/ }).click();
           assert.match(await business.getByRole('link', { name: /查看视频原文件/ }).getAttribute('href'), /final=1/);
           assert.match(await business.locator('.segment-video video').getAttribute('src'), /preview=1/);
         }

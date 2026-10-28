@@ -439,6 +439,31 @@ class EpisodeDownloadTests(HttpTestCase):
         self.episode['productionIssues'] = [{'message': 'index invalid'}]
         self.assertEqual(self.completed_download().status_code, 409)
 
+    def test_round_download_includes_all_products_but_only_default_on_timeline(self):
+        self.video('后处理', 'C002', 'P001')
+        video = self.episode['segments']['C002'][0]['videos'][0]
+        products = []
+        for identifier, suffix in [('alpha', '.mov'), ('green', '.mp4'), ('checker', '.mp4')]:
+            path = self.source(f'outputs/{identifier}{suffix}', identifier.encode())
+            stat = path.stat()
+            products.append({'id': identifier, 'label': identifier, 'default': identifier == 'alpha',
+                             'key': path.relative_to(self.project).as_posix(),
+                             'fileRevision': f'{stat.st_mtime_ns}-{stat.st_size}'})
+        video['products'] = products
+        for archive_format in ('zip', 'jypack'):
+            response = self.client.get(self.url + '/后处理/videos', params={'scene': 'C002', 'format': archive_format})
+            self.assertEqual(response.status_code, 200)
+            payload = restore_package(response.content) if archive_format == 'jypack' else response.content
+            with ZipFile(BytesIO(payload)) as archive:
+                self.assertIsNone(archive.testzip())
+                names = [name for name in archive.namelist() if not name.endswith('.json')]
+                self.assertEqual(len(names), 3)
+                self.assertEqual({archive.read(name) for name in names}, {b'alpha', b'green', b'checker'})
+                content = json.loads(archive.read('draft_content.json'))
+                self.assertEqual(len(content['tracks'][0]['segments']), 1)
+                meta = json.loads(archive.read('draft_meta_info.json'))
+                self.assertEqual(len(next(g['value'] for g in meta['draft_materials'] if g['type'] == 0)), 3)
+
     def test_completed_download_missing_or_changed_file_does_not_return_partial_or_history_zip(self):
         self.video('后处理', 'C001', 'P001')
         self.video('后处理', 'C002', 'P001')

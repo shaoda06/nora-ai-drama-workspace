@@ -11,6 +11,7 @@ import sys
 import tempfile
 from project_paths import project_file, relative_file
 import project_progress
+from postprocess_products import product_rows
 from datetime import datetime
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'references' / 'comfyui-scripts'))
@@ -138,56 +139,33 @@ def approved_row(text, row, filename):
                 and exact_output)
 
 
-def postprocess_product(root, identity, available=None):
-    """Resolve the declared final deliverable; missing products remain explicitly incomplete."""
+def postprocess_product(root, identity, available=None, manifests=None):
+    """Resolve the whole revision and its default display, without approving it."""
     manifest = root / '09-剧集制作' / identity.split('-C', 1)[0] / '其他资料/执行附件' / identity / '后处理产物.json'
     if not manifest.is_file():
         return None
-    rows = load(manifest)['products']
-    if not isinstance(rows, list) or not rows:
-        raise ValueError('后处理产物须为非空数组：' + str(manifest))
-    ids, files, finals, missing = set(), set(), [], []
+    rows = product_rows((manifests or {}).get(manifest, load(manifest)))
+    missing = []
     for row in rows:
-        if not isinstance(row, dict) or any(not isinstance(row.get(k), str) or not row[k].strip()
-                                           for k in ('id', 'label', 'role', 'file')):
-            raise ValueError('后处理产物须填写id、label、role和file')
-        if row['role'] not in ('最终产物', '过程产物') or row['id'] in ids or row['file'] in files:
-            raise ValueError('后处理产物角色无效或id/file重复')
-        ids.add(row['id']); files.add(row['file'])
-        if Path(row['file']).is_absolute():
-            raise ValueError('后处理产物须使用项目相对路径')
-        path = local_path(root, row['file'])
-        if row['role'] == '最终产物':
-            finals.append(path)
-        paths = [path]
-        if row.get('preview'):
-            if not isinstance(row['preview'], str):
-                raise ValueError('后处理预览须使用项目相对路径')
-            if not isinstance(row.get('previewNote'), str) or not row['previewNote'].strip():
-                raise ValueError('后处理预览须填写previewNote')
-            if Path(row['preview']).is_absolute():
-                raise ValueError('后处理预览须使用项目相对路径')
-            paths.append(local_path(root, row['preview']))
-        for item in paths:
-            if available and item in available.values() and item not in available:
-                raise ValueError('后处理清单引用了本次将移动的候选文件，须填写阶段采用目标：' + str(item))
-            actual = (available or {}).get(item, item)
-            if not actual.is_file():
-                missing.append(str(item))
-    if len(finals) != 1:
-        raise ValueError('后处理产物清单须且只能指定一项最终产物：' + str(manifest))
-    return {'manifest': manifest, 'file': finals[0], 'missing': missing}
+        for value in [row['file']] + ([row['preview']] if row.get('preview') else []):
+            if not isinstance(value, str) or Path(value).is_absolute():
+                raise ValueError('后处理产物须使用项目相对路径')
+            path = local_path(root, value)
+            if not (available or {}).get(path, path).is_file():
+                missing.append(str(path))
+    return {'manifest': manifest, 'rows': rows,
+            'file': local_path(root, next(row['file'] for row in rows if row['default'])), 'missing': missing}
 
 
-def selected_output(root, draft, text, part, stage, available=None):
-    """Resolve the current approved file, including an explicitly registered final product."""
+def selected_output(root, draft, text, part, stage, available=None, manifests=None):
+    """Resolve the current approved revision through its recorded file entry."""
     row = selected_row(text, stage)[2]
     columns = [cell.strip() for cell in row.strip().strip('|').split('|')]
     run = columns[2]
     identity = part + '-' + run + '-' + stage
     if not IDENTITY.fullmatch(identity):
         return None
-    product = postprocess_product(root, identity, available) if stage == '后处理' else None
+    product = postprocess_product(root, identity, available, manifests) if stage == '后处理' else None
     if product and product['missing']:
         return None
     final_path = product['file'] if product else None
@@ -198,7 +176,7 @@ def selected_output(root, draft, text, part, stage, available=None):
     if not (available or {}).get(path, path).is_file():
         return None
     if final_path is not None:
-        if path != final_path:
+        if path not in [local_path(root, r['file']) for r in product['rows']]:
             return None
     elif path.stem != identity:
         return None
@@ -343,14 +321,40 @@ def adoption(args, *, plan=None):
             if product:
                 if product['missing']:
                     raise ValueError('后处理计划内产物未齐备：' + '；'.join(product['missing']))
-                target = product['file']
+                # Approval belongs to the revision: move every declared file,
+                # including media used for browser playback, in one checked plan.
+                relocated = {}
+                for output_row in product['rows']:
+                    old = local_path(root, output_row['file'])
+                    new = process_target.parent / old.name
+                    if old == source:
+                        new = process_target
+                    if old != new:
+                        if new.exists():
+                            raise ValueError('产物归位目标已存在：' + str(new))
+                        if (old, new) not in moves:
+                            moves.append((old, new))
+                        relocated[old] = new
+                    output_row['file'] = relative_file(root, new)
+                if process_target not in [local_path(root, r['file']) for r in product['rows']]:
+                    raise ValueError('后处理产物清单须包含本轮常规来源文件')
+                for output_row in product['rows']:
+                    if output_row.get('preview'):
+                        old = local_path(root, output_row['preview'])
+                        output_row['preview'] = relative_file(root, relocated.get(old, old))
+                maps[product['manifest']] = {'products': product['rows']}
+                target = relocated.get(product['file'], product['file'])
                 filename = target.name
+                for old, new in relocated.items():
+                    data = data.replace('](' + link(draft, old) + ')', '](' + link(draft, new) + ')')
+                start, end, row = selected_row(data, stage)
         selected_delivery = selected_output(root, draft, data, f'{ep}-{scene}-{part}', stage)
         if (stage == '后处理' and selected_delivery and selected_delivery['identity'] == identity
-                and selected_delivery['path'] == target and target != process_target):
+                and selected_delivery['path'] == target and target != process_target
+                and not moves and maps.get(product['manifest']) == load(product['manifest'])):
             results.append({'identity': identity, 'state': 'already_adopted', 'selected_path': str(selected_delivery['path'])})
             continue
-        already = approved_row(data, row, filename) and link(draft, target) in row
+        already = approved_row(data, row, filename) and link(draft, target) in row and not moves
         adoptions = mapped.get('adoptions', [])
         existing = [a for a in adoptions if a.get('identity') == identity and a.get('selected_path')
                     and a.get('prompt_id') == prompt and a.get('bytes') == receipt['bytes']]
@@ -363,21 +367,31 @@ def adoption(args, *, plan=None):
             continue
         old_links = [url for url in re.findall(r'\]\(([^)#]+\.[A-Za-z0-9]+)\)', row)
                      if IDENTITY.fullmatch(Path(url).stem)]
-        if old_links:
-            old = local_path(root, draft.parent / old_links[0].replace('%20', ' '))
-            if old != target and old != process_target:
-                # Changing an upstream selection must not silently invalidate approved downstream video.
-                later = list(STAGES)[list(STAGES).index(stage) + 1:]
-                for later_stage in later:
-                    _, _, downstream = selected_row(data, later_stage)
-                    if (any(IDENTITY.fullmatch(Path(url).stem) for url in re.findall(r'\]\(([^)#]+\.[A-Za-z0-9]+)\)', downstream))
-                            or selected_output(root, draft, data, f'{ep}-{scene}-{part}', later_stage)):
-                        raise ValueError(f'{identity}更换采用会影响已选定{later_stage}，须先明确下游处置')
-                previous = local_path(root, extra / '候选视频' / old.name)
-                if not old.is_file() or previous.exists():
-                    raise ValueError(f'旧采用文件缺失或退回候选时冲突：{old}')
-                moves.append((old, previous))
-                data = data.replace('](' + link(draft, old) + ')', '](' + link(draft, previous) + ')')
+        previous_delivery = selected_output(root, draft, data, f'{ep}-{scene}-{part}', stage)
+        old = previous_delivery['path'] if previous_delivery else (local_path(root, draft.parent / unquote(old_links[0])) if old_links else None)
+        if old and old != target and old != process_target and (not previous_delivery or previous_delivery['identity'] != identity):
+            later = list(STAGES)[list(STAGES).index(stage) + 1:]
+            for later_stage in later:
+                downstream = selected_row(data, later_stage)[2]
+                if (any(IDENTITY.fullmatch(Path(url).stem) for url in re.findall(r'\]\(([^)#]+\.[A-Za-z0-9]+)\)', downstream))
+                        or selected_output(root, draft, data, f'{ep}-{scene}-{part}', later_stage)):
+                    raise ValueError(f'{identity}更换采用会影响已选定{later_stage}，须先明确下游处置')
+            previous_product = postprocess_product(root, previous_delivery['identity']) if previous_delivery and stage == '后处理' else None
+            previous_paths = [local_path(root, r['file']) for r in previous_product['rows']] if previous_product else [old]
+            relocated_old = {}
+            for old_path in previous_paths:
+                previous = local_path(root, extra / '候选视频' / old_path.name)
+                if not old_path.is_file() or previous.exists():
+                    raise ValueError(f'旧采用文件缺失或退回候选时冲突：{old_path}')
+                moves.append((old_path, previous))
+                relocated_old[old_path] = previous
+                data = data.replace('](' + link(draft, old_path) + ')', '](' + link(draft, previous) + ')')
+            if previous_product:
+                for r in previous_product['rows']:
+                    r['file'] = relative_file(root, relocated_old[local_path(root, r['file'])])
+                    if r.get('preview'):
+                        r['preview'] = relative_file(root, relocated_old[local_path(root, r['preview'])])
+                maps[previous_product['manifest']] = {'products': previous_product['rows']}
         heading = item.get('execution_heading', revision + '-' + stage)
         a, b = section(data, heading)
         body = data[a:b]
@@ -389,8 +403,8 @@ def adoption(args, *, plan=None):
         reference = f'[本阶段人工审核决定](#{review.lower()})'
         body = field(body, '人工审阅记录入口', reference)
         body = field(body, '用户决定', '见' + reference + '。')
-        body = field(body, '输出当前入口及取回／展示情况', f'[已采用文件]({link(draft, target)})；常规来源按[取回凭据]({link(draft, receipt_path)})核对。' + (f'最终交付按[产物清单]({link(draft, product["manifest"])})登记。' if product else ''))
-        body = field(body, '取回核对状态', ('常规来源凭据与清单文件齐备检查通过；最终文件依批准范围采用，原下载凭据不作为定制文件字节凭据。' if product else '本次输出凭据与实际文件核对通过，已采用；人工决定见审阅入口。'))
+        body = field(body, '输出当前入口及取回／展示情况', f'[已采用文件]({link(draft, target)})；常规来源按[取回凭据]({link(draft, receipt_path)})核对。' + (f'本轮全套产物按[产物清单]({link(draft, product["manifest"])})登记。' if product else ''))
+        body = field(body, '取回核对状态', ('常规来源凭据与清单文件齐备检查通过；本轮全套文件依批准范围采用，原下载凭据不作为定制文件字节凭据。' if product else '本次输出凭据与实际文件核对通过，已采用；人工决定见审阅入口。'))
         body = field(body, '用户采用的具体输出、批准范围、时间与依据', '见' + reference + '。')
         movement_header = ('| 原位置 | 新位置 | 时间 | 用户决定／移动依据 | 替代关系及需同步的下游入口 |\n'
                            '| --- | --- | --- | --- | --- |\n')
@@ -398,7 +412,7 @@ def adoption(args, *, plan=None):
             body += '\n#### 位置变化及替代关系\n\n' + movement_header
         movement_rows = ''
         for old, new in moves:
-            if old.stem.endswith(f'-{stage}') and (old == source or old_links and old.name in row):
+            if old == source or (product and old.name.startswith(identity)) or (old_links and old.name in row):
                 movement_rows += f'| {link(draft, old)} | [文件]({link(draft, new)}) | {stamp} | {reference} | 原批准历史保留；当前关联见选定表 |\n'
         body = body.replace(movement_header, movement_header + movement_rows, 1)
         data = data[:a] + body + '\n' + data[b:]
@@ -408,7 +422,7 @@ def adoption(args, *, plan=None):
         data = data[:start] + new_row + data[end:]
         data = data.replace('](' + link(draft, source) + ')', '](' + link(draft, process_target) + ')')
         # Insert into the existing review area without adding a parallel approval ledger.
-        scope = item.get('approval_scope', f'本次明确指定的 {identity} 视频文件')
+        scope = item.get('approval_scope', f'{identity} 本轮产物清单中的全套文件' if product else f'本次明确指定的 {identity} 视频文件')
         if not isinstance(scope, str) or not scope.strip():
             raise ValueError('approval_scope 须填写实际批准范围')
         scope = scope.strip().replace('\n', '<br>')
@@ -421,7 +435,7 @@ def adoption(args, *, plan=None):
                            if product else f'[实际输出凭据]({link(draft, receipt_path)})')
                            + '；' + item.get('review_entry', '网页审核入口未记录'),
             '决定': '批准采用',
-            '对应具体输出': f'[{filename}]({link(draft, target)})',
+            '对应具体输出': ('；'.join(f'[{Path(r["file"]).name}]({link(draft, local_path(root, r["file"]))})' for r in product['rows']) if product else f'[{filename}]({link(draft, target)})'),
             '批准或要求修改的范围': scope,
             '决定时间与依据': decision_time + '；用户原话：' + basis,
             '当前候选／选定入口': f'[当前采用文件]({link(draft, target)})',
@@ -493,7 +507,7 @@ def adoption(args, *, plan=None):
             for stage in STAGES:
                 _, _, row = selected_row(text, stage)
                 if selected_output(root, draft, text, draft.stem.removesuffix('-视频制作-工作稿'), stage,
-                                   {new: old for old, new in moves}):
+                                   {new: old for old, new in moves}, maps):
                     counts[stage] += 1
     changed_maps = [str(path) for path, value in maps.items() if load(path) != value]
     if args.apply:

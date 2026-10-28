@@ -62,7 +62,7 @@ class VideoProductTests(HttpTestCase):
         self.approved_final()
         episode = self.parse(); videos = episode['segments']['C001'][0]['videos']; self.assertEqual(len(videos), 1)
         video = videos[0]; self.assertTrue(video['approved']); self.assertEqual(video['candidateNumber'], 1)
-        self.assertEqual([p['role'] for p in video['products']], ['最终产物', '过程产物'])
+        self.assertEqual([p['default'] for p in video['products']], [True, False, False])
         product = video['products'][0]
         self.assertEqual(self.client.get(product['url']).content, b'alpha')
         self.assertEqual(self.client.get(product['previewUrl']).content, b'checker')
@@ -70,7 +70,7 @@ class VideoProductTests(HttpTestCase):
         data = {'catalogues': {'09-剧集制作': {'children': [episode]}}}
         self.assertEqual(completed_episode_videos(self.store, '示例项目', 'EP001', data)[0][0], (self.project / self.final).resolve())
         self.assertEqual(resources(self.store, '示例项目', 'EP001', data)['后处理']['videos'][0][0], (self.project / self.final).resolve())
-        self.assertEqual(len(resources(self.store, '示例项目', 'EP001', data)['后处理']['videos']), 1)
+        self.assertEqual(len(resources(self.store, '示例项目', 'EP001', data)['后处理']['videos']), 3)
 
     def test_review_must_name_the_exact_final_file(self):
         self.approved_final()
@@ -114,10 +114,10 @@ class VideoProductTests(HttpTestCase):
         restart = ProjectStore(self.root, cache_directory=self.root / '.cache')
         data = restart.section('示例项目', '09-剧集制作', 'EP001', mode='playback')
         self.assertTrue(data['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos'][0]['approved'])
-        self.assertEqual(json.loads(cache.read_text())['schema'], 20)
+        self.assertEqual(json.loads(cache.read_text())['schema'], 22)
         self.assertEqual(restart.snapshot(self.project), snapshot)
 
-    def test_manifest_does_not_approve_a_new_final_from_process_approval(self):
+    def test_approved_round_is_not_limited_to_default_product(self):
         self.save_manifest()
         self.write(self.episode + '/其他资料/工作稿/EP001-C001-P001-视频制作-工作稿.md', """## 1. 当前选定结果
 | 处理阶段 | 当前选定文件 | R编号 | 人工批准依据 |
@@ -130,7 +130,31 @@ class VideoProductTests(HttpTestCase):
 - 对应具体输出：EP001-C001-P001-R001-后处理.mp4
 - 决定：批准采用
 """)
-        self.assertFalse(self.parse()['segments']['C001'][0]['videos'][0]['approved'])
+        self.assertTrue(self.parse()['segments']['C001'][0]['videos'][0]['approved'])
+
+    def test_round_schema_default_does_not_split_candidates_or_approval(self):
+        self.approved_final()
+        self.rows = [{k: v for k, v in row.items() if k != 'role'} | {'default': i == 0}
+                     for i, row in enumerate(self.rows)]
+        self.rows.append({'id': 'checker', 'label': '棋盘格', 'file': self.preview})
+        self.save_manifest()
+        videos = self.parse()['segments']['C001'][0]['videos']
+        self.assertEqual(len(videos), 1)
+        self.assertTrue(videos[0]['approved'])
+        self.assertEqual(len(videos[0]['products']), 3)
+        self.assertEqual(videos[0]['key'], self.final)
+        self.rows[0]['default'] = False
+        self.rows[1]['default'] = True
+        self.save_manifest()
+        refreshed = ProjectStore(self.root).section('示例项目', '09-剧集制作', 'EP001')
+        switched = refreshed['catalogues']['09-剧集制作']['children'][0]['segments']['C001'][0]['videos'][0]
+        self.assertTrue(switched['approved'])
+        self.assertEqual(switched['key'], self.base)
+        self.rows.append({'id': 'another', 'label': '第二默认', 'file': self.base + '.mov', 'default': True})
+        self.write(self.base + '.mov', 'extra')
+        self.save_manifest()
+        with self.assertRaisesRegex(ValueError, '只能指定一项默认'):
+            load_products(self.project, self.identity, lambda key, **kwargs: (self.project / key).read_text())
 
     def test_invalid_manifest_fails_with_specific_error(self):
         cases = [([], '非空数组'), ([{**r, 'role': '过程产物'} for r in self.rows], '只能指定一项'),

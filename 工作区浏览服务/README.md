@@ -330,4 +330,4 @@ HTTP接口测试继承 `tests.http_case.HttpTestCase`，覆写 `setUp` 时先调
 
 ### 后处理多产物接入
 
-Agent按[同轮次后处理产物](../.agents/skills/nora-ai-short-drama/references/流程规范/逐集目录与资产管理规范.md#同轮次后处理产物)填写本R执行附件中的`后处理产物.json`及采用依据。后端`parsers/video_products.py`读取清单；原版本旁多产物才显示选择器，默认最终产物，网页代理与原文件分开，已采用视频打包下载使用最终文件。旧单产物记录无需迁移。回归：`.venv/bin/python -m unittest tests.test_video_products tests.test_episode_downloads -q`（Windows使用`.venv/Scripts/python.exe`）。
+Agent按[同轮次后处理产物](../.agents/skills/nora-ai-short-drama/references/流程规范/逐集目录与资产管理规范.md#同轮次后处理产物)填写本R执行附件中的`后处理产物.json`及采用依据。后端`parsers/video_products.py`读取清单；原版本旁多产物才显示选择器，以default选择默认播放项，整轮共同采用；播放关联不增加类别，已采用视频打包下载包含该轮全部文件，剪映时间线只使用每段默认项。旧单产物记录无需迁移。回归：`.venv/bin/python -m unittest tests.test_video_products tests.test_episode_downloads -q`（Windows使用`.venv/Scripts/python.exe`）。

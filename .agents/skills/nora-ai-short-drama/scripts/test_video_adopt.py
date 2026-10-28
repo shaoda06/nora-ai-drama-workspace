@@ -101,7 +101,13 @@ class AdoptionTests(unittest.TestCase):
         self.assertEqual(dry['selected_approved_counts']['后处理'], 1)
         self.assertTrue(source.exists())
         self.assertFalse(process.exists())
+        original_final = final
+        final = process.parent / final.name
         result = self.run_plan()
+        self.assertFalse(original_final.exists())
+        rows = tool.load(manifest)['products']
+        self.assertEqual(len(rows), 3)
+        self.assertTrue(all((self.root / r['file']).parent == process.parent for r in rows))
         self.assertEqual(result['items'][0]['selected_path'], str(final))
         self.assertEqual(process.read_bytes(), content)
         self.assertFalse(source.exists())
@@ -114,6 +120,26 @@ class AdoptionTests(unittest.TestCase):
         repeat = self.run_plan()
         self.assertEqual(repeat['items'][0]['state'], 'already_adopted')
         self.assertEqual(before, {p: p.read_bytes() for p in before})
+
+    def test_round_schema_moves_all_and_replaces_previous_round_as_a_set(self):
+        item, draft, source, process = self.item(stage='后处理')
+        manifest, final, preview = self.products(item, process)
+        rows = tool.load(manifest)['products']
+        rows = [{k: v for k, v in r.items() if k != 'role'} | {'default': i == 0}
+                for i, r in enumerate(rows)]
+        rows[1]['file'] = str(source.relative_to(self.root))
+        rows.append({'id': 'checker', 'label': '棋盘格', 'file': str(preview.relative_to(self.root))})
+        self.write_json(manifest, {'products': rows})
+        self.run_plan()
+        old_paths = [self.root / r['file'] for r in tool.load(manifest)['products']]
+        self.assertEqual(len(old_paths), 3)
+        self.plan['items'] = []
+        second, _, _, second_process = self.item(stage='后处理', revision='R002')
+        self.products(second, second_process)
+        self.run_plan()
+        self.assertTrue(all(not path.exists() for path in old_paths))
+        self.assertTrue(all((self.extra / '候选视频' / path.name).exists() for path in old_paths))
+        self.assertTrue(all('候选视频' in r['file'] for r in tool.load(manifest)['products']))
 
     def test_postprocess_missing_or_conflicting_delivery_is_not_guessed(self):
         item, draft, source, process = self.item(stage='后处理')
@@ -156,20 +182,21 @@ class AdoptionTests(unittest.TestCase):
         self.run_plan()
         _, final, _ = self.products(item, process)
         self.run_plan()
+        final = process.parent / final.name
         self.assertTrue(process.exists())
         self.assertFalse(source.exists())
         self.assertEqual(tool.selected_output(self.root, draft, draft.read_text(), 'EP001-C001-P001', '后处理')['path'], final)
 
-    def test_products_cannot_keep_a_link_to_source_that_adoption_moves(self):
+    def test_products_source_links_are_relocated_with_the_whole_round(self):
         item, draft, source, process = self.item(stage='后处理')
         manifest, _, _ = self.products(item, process)
         data = tool.load(manifest)
         data['products'][1]['file'] = str(source.relative_to(self.root))
         self.write_json(manifest, data)
-        with self.assertRaisesRegex(ValueError, '将移动的候选文件'):
-            self.run_plan()
-        self.assertTrue(source.exists())
-        self.assertFalse(process.exists())
+        self.run_plan()
+        self.assertFalse(source.exists())
+        self.assertTrue(process.exists())
+        self.assertEqual(tool.load(manifest)['products'][1]['file'], str(process.relative_to(self.root)))
 
     def test_shared_units_adopt_each_stage_without_touching_numbered_episode(self):
         numbered_summary = self.summary

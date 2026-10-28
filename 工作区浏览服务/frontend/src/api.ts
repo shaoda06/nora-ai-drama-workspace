@@ -13,7 +13,7 @@ export interface GenerationContext {
 }
 // One recorded revision/stage; url and fileRevision are empty until a video exists.
 export interface VideoProduct {
-  id: string; label: string; role: '最终产物' | '过程产物'; key: string; url: string; fileRevision: string;
+  id: string; label: string; default: boolean; key: string; url: string; fileRevision: string;
   previewUrl?: string; previewRevision?: string; previewNote?: string;
 }
 export interface SegmentVideo {

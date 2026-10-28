@@ -19,20 +19,22 @@ from pymediainfo import MediaInfo
 DRAFT_PATH = '##_draftpath_placeholder_0E685133-18CE-45ED-8CB8-2904A212EC80_##/'
 
 
-def draft_files(files, name):
+def draft_files(files, name, timeline_members=None):
     """Use the caller's script order, original video duration and embedded audio."""
     materials = []
     for source, member in files:
         material = draft.VideoMaterial(str(source), material_name=member)
         material.path = DRAFT_PATH + member
         materials.append(material)
-    first = materials[0]
-    info = MediaInfo.parse(str(files[0][0]))
+    timeline = [(material, source) for material, (source, member) in zip(materials, files)
+                if timeline_members is None or member in timeline_members]
+    first = timeline[0][0]
+    info = MediaInfo.parse(str(timeline[0][1]))
     fps = float(info.video_tracks[0].frame_rate)
     script = draft.ScriptFile(first.width, first.height, fps, True)
     track = script.append_track(draft.TrackSpec(draft.TrackType.video))
     start = 0
-    for material in materials:
+    for material, _ in timeline:
         script.add_segment(draft.VideoSegment(
             material, draft.trange(start, material.duration),
             source_timerange=draft.trange(0, material.duration), speed=1.0, volume=1.0), track)

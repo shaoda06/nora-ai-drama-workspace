@@ -254,7 +254,7 @@ def approve(args):
             recorded = next(item for item in previous['adoption']['items'] if item['identity'] == identity)
             if (current is None or not current['path'].is_file()
                     or current['path'] != adopt.local_path(root, recorded['selected_path'])):
-                raise ValueError('后处理最终产物缺失或采用关联已变化，不能复用旧完成报告')
+                raise ValueError('后处理轮次产物缺失或采用关联已变化，不能复用旧完成报告')
     if previous.get('episode_completed') and (previous.get('local_completed')
                                              or previous.get('state') in ('completed', 'adopted_partial')):
         missing = episode_missing(root, episode)
