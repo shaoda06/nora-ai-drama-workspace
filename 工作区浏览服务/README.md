@@ -244,7 +244,7 @@ Agent通过[统一入口](../.agents/skills/nora-ai-short-drama/references/comfy
 
 ## 开发与验证
 
-准备测试夹具、真实链路或浏览器验收前，先执行[主技能的技术测试与隔离验证规则](../.agents/skills/nora-ai-short-drama/维护规范.md#技术测试与隔离验证)，再使用下方开发命令。
+准备测试夹具、真实链路或浏览器验收前，先执行[主技能的技术测试与隔离验证规则](../.agents/skills/nora-ai-short-drama/维护规范.md#技术测试与隔离验证)，再使用下方开发命令。涉及下载包核验时，结束后按[下载核验包清理](../.agents/skills/nora-ai-short-drama/references/共用规则/文件版本与工作稿规范.md#下载核验包清理)完成副本清理和记录收尾。
 
 ### 网页反馈与规则同步
 
