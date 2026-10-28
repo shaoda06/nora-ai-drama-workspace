@@ -118,6 +118,75 @@ class GroupNotificationTests(unittest.IsolatedAsyncioTestCase):
         self.store.wake_group('two')
         self.assertFalse(self.store.notification_pending('isolated-thread'))
 
+    async def attention(self, key, sender, message='当次资料已冻结，不可覆盖：/isolated/source.md'):
+        self.store.save(key, status='needs_attention', failure_stage='prepare', error=message)
+        with patch.object(self.store, 'desktop_call', sender), patch('backend.services.task_notifications.asyncio.sleep', AsyncMock()):
+            self.store.queue_notice(key, 'dispatch_issue', 'attention', message)
+            await self.store.notifiers[key]
+
+    async def test_same_issue_merges_into_unread_report_and_survives_restart(self):
+        for key in ('one', 'two', 'three'):
+            self.task(key, status='local_queued')
+        self.group('group', ['one', 'two', 'three'])
+        sender = AsyncMock(return_value={})
+        await self.attention('one', sender)
+        batch, report = self.reports()[0]
+        self.assertEqual(report['handoff']['next_action'], 'repair-group-silently')
+        await self.attention('two', sender, '当次资料已冻结，不可覆盖：/isolated/other.md')
+        self.assertEqual(sender.await_count, 1)
+        self.assertEqual(self.reports()[0][1]['groups'][0]['issues'][0]['task_ids'], ['one', 'two'])
+        await self.store.close()
+        self.store = t.TaskStore(self.root / 'runtime', self.root)
+        self.store.prepare_report = AsyncMock(side_effect=lambda ids: self.store.result_report(ids))
+        await self.attention('three', sender, '当次资料已冻结，不可覆盖：/isolated/third.md')
+        self.assertEqual(sender.await_count, 1)
+        report = self.store.read_report(batch, 'isolated-thread')
+        self.assertEqual(report['new_task_ids'], ['one', 'two', 'three'])
+        self.assertEqual(report['groups'][0]['issues'][0]['task_ids'], ['one', 'two', 'three'])
+        self.assertFalse(self.store.notification_pending('isolated-thread'))
+
+    async def test_new_peer_after_receipt_is_handed_back_for_silent_repair(self):
+        self.task('one', status='local_queued'); self.task('two', status='local_queued')
+        self.group('group', ['one', 'two'])
+        sender = AsyncMock(return_value={})
+        await self.attention('one', sender)
+        self.store.read_report(self.reports()[0][0], 'isolated-thread')
+        await self.attention('two', sender)
+        self.assertEqual(sender.await_count, 2)
+        report = self.reports()[-1][1]
+        self.assertEqual(len(report['groups'][0]['issues']), 1)
+        self.assertEqual(report['handoff']['next_action'], 'repair-group-silently')
+        self.assertEqual(report['handoff']['user_notification'], 'decision-or-blocker-only')
+
+    async def test_different_issue_or_group_is_not_hidden_by_unread_report(self):
+        for key in ('one', 'two', 'other'):
+            self.task(key, status='local_queued')
+        self.group('group', ['one', 'two']); self.group('other-group', ['other'])
+        sender = AsyncMock(return_value={})
+        await self.attention('one', sender)
+        await self.attention('two', sender, '素材不存在：/isolated/missing.png')
+        await self.attention('other', sender)
+        self.assertEqual(sender.await_count, 3)
+        self.assertEqual(len(self.reports()[1][1]['groups'][0]['issues']), 2)
+
+    async def test_unknown_send_coalesces_peers_but_completed_group_still_notifies(self):
+        self.task('one', status='local_queued'); self.task('two', status='local_queued')
+        self.group('group', ['one', 'two'])
+        sender = AsyncMock(side_effect=OSError('unknown delivery'))
+        await self.attention('one', sender)
+        await self.attention('two', sender)
+        self.assertEqual(sender.await_count, 1)
+        for key in ('one', 'two'):
+            self.store.save(key, status='completed', error=None, failure_stage=None,
+                            closeout=dict(status='completed', display_outputs=[]))
+        sender = AsyncMock(return_value={})
+        with patch.object(self.store, 'desktop_call', sender), patch('backend.services.task_notifications.asyncio.sleep', AsyncMock()):
+            self.store.wake_group('one')
+            await self.store.notifiers['one']
+        self.assertEqual(sender.await_count, 1)
+        self.assertEqual(self.reports()[-1][1]['handoff']['next_action'], 'resume-group-delivery')
+        self.assertEqual(self.reports()[-1][1]['groups'][0]['issues'], [])
+
     async def test_exception_early_then_final_partial_keeps_success(self):
         self.task('one', status='failed'); self.task('two', status='running')
         self.group('group', ['one', 'two'])

@@ -66,6 +66,8 @@ class TaskNotifications:
                 if state.get('notice_wait_reason') != reason:
                     self.record(key, 'notification', 'waiting_batch',
                                 _changes={'notice_wait_reason': reason})
+            elif group_id and not self.group_status(group_id)['terminal'] and self.merge_unread_issue(key, notice):
+                continue
             else:
                 ready.append((key, notice))
         if not ready:
@@ -81,6 +83,25 @@ class TaskNotifications:
                     and self.rows[key]['input'].image_batch_id == first.image_batch_id]
         return [(key, notice) for key, notice in ready
                 if not (self.rows[key]['input'].task_type == 'image' and self.rows[key]['input'].image_batch_id)]
+
+    def merge_unread_issue(self, key, notice):
+        issue = self.task_issue(key)
+        for member in self.group_members(key):
+            for previous in reversed(self.rows[member]['state'].get('notices', [])):
+                if previous.get('issue') != issue or previous['delivery'] not in ('sent', 'sending', 'delivery_unknown'):
+                    continue
+                batch_id = previous['batch_id']
+                delivery = self.db.execute('SELECT state FROM notification_batches WHERE id=?', (batch_id,)).fetchone()[0]
+                if delivery not in ('sent', 'sending', 'delivery_unknown'):
+                    continue
+                # The outstanding message points to a live group report. Merge
+                # peers until read; after receipt a new fault must wake the agent.
+                notice.update(delivery=delivery, batch_id=batch_id, issue=issue)
+                self.record(key, 'notification', 'merged', notification_id=batch_id,
+                            _changes={'notification': delivery, 'notice_wait_reason': None})
+                self.refresh_reports([key])
+                return True
+        return False
 
     def queue_notice(self, key, event_id, kind, message):
         state = self.rows[key]['state']
@@ -266,6 +287,9 @@ class TaskNotifications:
         if group_ids:
             report['groups'] = [self.group_status(group_id) for group_id in group_ids]
             report['handoff'].update(scope='task-group', next_action='resume-group-delivery')
+            if any(group['issues'] for group in report['groups']):
+                report['handoff'].update(next_action='repair-group-silently',
+                    user_notification='decision-or-blocker-only')
         rounds = round_results(self, [key for key in ids if not self.rows[key]['state'].get('group_id')])
         if rounds:
             report['rounds'] = rounds
@@ -350,11 +374,16 @@ class TaskNotifications:
             batch_id = str(uuid.uuid4())
             if report.get('groups'):
                 group = report['groups'][0]
-                prompt = (f'后台任务组结果通知。通知ID：{batch_id}；来源会话：{data.thread_id}。\n'
+                prompt = (f'后台任务组交接。通知ID：{batch_id}；来源会话：{data.thread_id}。\n'
                           f'任务组ID：{group["id"]}；项目：{group["project"]}；任务组：{group["title"]}。\n'
-                          '请调用 browser_tasks.py report --notification-id 上述ID，读取最新组报告并自动确认接收。\n'
+                          '先静默调用 browser_tasks.py report --notification-id 上述ID，读取最新组报告并自动确认接收。\n'
                           '以groups固定成员及tasks/results/delivery为准；异常按子任务ID和failure_stage处理，正常项继续执行。'
-                          '非终态异常只说明需处理事项；全组终态一次汇总成功及未完成范围和审核入口。'
+                          '同组同类异常按groups[].issues合并处理，本消息是Agent交接，不是要求向用户逐条报错。'
+                          '先沿原授权、原任务ID自行修复可处理的资料、取回和登记问题；过程及已修复异常静默记入原记录。'
+                          '只有需要用户作决定、超出已有授权或现有工具内确实无法继续时，才合并说明影响、已完成范围和待决事项；'
+                          '不要仅因收到异常、should_notify_user=true或组终态就要求用户确认内部命令。'
+                          '处理完本次问题后查一次最新组状态，接续同类后到成员，不另建轮询或heartbeat。'
+                          '正常完成按组一次汇总；最终无法恢复、取消或结案的部分列清成功与未完成范围及审核入口，不无限等待。'
                           '读取回执不代表内容批准或已交付用户；已读但未交付的整组仍须交付，已交付不重复。'
                           '正常成功不重复核验、刷新网页或登记；业务摘要仅按business_sync.actions接手。'
                           '正常超分静默；后处理按已有规则采用。不得自动重新生成、清缓存或重启远端。')
@@ -377,6 +406,8 @@ class TaskNotifications:
                 self.save_group(group_id)
             for task, notice in pending:
                 notice.update(delivery='sending', batch_id=batch_id)
+                if group_id and not report['groups'][0]['terminal']:
+                    notice['issue'] = self.task_issue(task)
                 self.record(task, 'notification', 'sending', notification_id=batch_id,
                             _changes={'notification': 'sending', 'notice_wait_reason': None})
             receipt = {}

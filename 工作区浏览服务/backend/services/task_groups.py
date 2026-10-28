@@ -6,6 +6,15 @@ import uuid
 
 
 class TaskGroups:
+    def task_issue(self, key):
+        state = self.rows[key]['state']
+        closeout = state.get('closeout') or {}
+        stage = state.get('failure_stage') or closeout.get('status') or state['status']
+        error = state.get('error') or closeout.get('error') or state['status']
+        # Local diagnostics put the varying file/field after a full-width colon.
+        # Keep the full error on each member; only the group heading is shared.
+        return [stage, error.split('\n', 1)[0].split('：', 1)[0]]
+
     def groups_init(self):
         self.db.execute('CREATE TABLE IF NOT EXISTS task_groups (id TEXT PRIMARY KEY, payload TEXT NOT NULL)')
         self.db.commit()
@@ -85,6 +94,12 @@ class TaskGroups:
                                 collected=state.get('collected', 0), expected=state.get('expected', 0),
                                 failure_stage=state.get('failure_stage')))
         completed = sum(item['completed'] for item in members)
+        issues = {}
+        for member in members:
+            if member['needs_attention']:
+                stage, reason = self.task_issue(member['task_id'])
+                issue = issues.setdefault((stage, reason), dict(stage=stage, reason=reason, task_ids=[]))
+                issue['task_ids'].append(member['task_id'])
         terminal = all(item['terminal'] for item in members)
         status = ('completed' if completed == len(members) else 'terminal_partial' if terminal else
                   'needs_attention' if any(item['needs_attention'] for item in members) else 'running')
@@ -94,7 +109,8 @@ class TaskGroups:
                     expected_tasks=len(members), completed_tasks=completed,
                     collected_outputs=sum(item['collected'] for item in members), expected_outputs=sum(item['expected'] for item in members),
                     terminal=terminal, review_ready=status == 'completed',
-                    missing_task_ids=[item['task_id'] for item in members if not item['completed']], tasks=members)
+                    missing_task_ids=[item['task_id'] for item in members if not item['completed']],
+                    issues=list(issues.values()), tasks=members)
 
     def group_members(self, key):
         group_id = self.rows[key]['state'].get('group_id')
