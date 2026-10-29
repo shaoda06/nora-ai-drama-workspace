@@ -47,7 +47,7 @@ class AccountParserTests(unittest.TestCase):
     def accounts(self):
         self.put(INDEX, '| 平台／账号代号 | 用途 | 正式文件 | 采用版本 | 实际规格 | 采用依据 | 处理记录 |\n'
                  '| --- | --- | --- | --- | --- | --- | --- |\n' + '\n'.join(self.rows))
-        return build_data(self.root, load_scope=DIRECTORY)['catalogues'][DIRECTORY]
+        return build_data(self.root, load_scope='10-社交媒体资料')['catalogues']['10-社交媒体资料']['accounts']
 
     def test_adopted_images_and_records_are_separate_and_format_independent(self):
         self.visual()
@@ -156,7 +156,7 @@ class AccountParserTests(unittest.TestCase):
     def test_unindexed_images_stay_out_of_current_adoption(self):
         self.visual()
         self.put(DIRECTORY + '/其他资料/历史版本/旧版.md', '# 旧版')
-        data = build_data(self.root, load_scope=DIRECTORY)['catalogues'][DIRECTORY]
+        data = build_data(self.root, load_scope='10-社交媒体资料')['catalogues']['10-社交媒体资料']['accounts']
         self.assertEqual(data['items'], [])
         self.assertIsNone(data['index'])
         groups = {group['name']: group['files'] for group in data['groups']}
@@ -167,7 +167,7 @@ class AccountParserTests(unittest.TestCase):
         self.assertNotIn(DIRECTORY, [item['name'] for item in build_data(self.root, load_scope='overview')['directories']])
         self.visual()
         overview = build_data(self.root, load_scope='overview')
-        self.assertEqual(next(item['label'] for item in overview['directories'] if item['name'] == DIRECTORY), '账号资料')
+        self.assertEqual(next(item['label'] for item in overview['directories'] if item['name'] == '10-社交媒体资料'), '社交媒体资料')
         self.assertNotIn(DIRECTORY, overview['catalogues'])
 
     @unittest.skipIf(os.name == 'nt', 'Creating symlinks requires extra privileges on Windows')

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nora 社交媒体运营"
+  short_description: "管理账号连接、主页与封面、发布交付、数据复盘和后续制作参考的模块化运营能力"
+  default_prompt: "使用 $nora-social-operations 处理当前项目的运营任务，并按实际阶段选择模块。"

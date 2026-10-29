@@ -18,7 +18,7 @@ class ReleaseFilmsTests(HttpTestCase):
         self.root = Path(temp.name)
         self.project = self.root / '示例项目'
         self.project.mkdir()
-        self.release = self.project / '98-发布成片'
+        self.release = self.project / '98-成片交付'
         self.store = ProjectStore(self.root, cache_directory=self.root / '.cache')
         override = patch.object(main, 'store', self.store)
         override.start()
@@ -33,7 +33,7 @@ class ReleaseFilmsTests(HttpTestCase):
         return target
 
     def tree(self):
-        return build_data(self.project, load_scope='98-发布成片')['catalogues']['98-发布成片']
+        return build_data(self.project, load_scope='98-成片交付')['catalogues']['98-成片交付']
 
     def test_directory_navigation_and_original_structure_without_index_or_approval(self):
         self.put('最终 成片.MP4')
@@ -42,16 +42,16 @@ class ReleaseFilmsTests(HttpTestCase):
         self.put('原工程.prproj')
         self.put('随附说明.md', b'\xff\xfe')  # Listing must not parse arbitrary user text.
         (self.release / '待导出/空子目录').mkdir(parents=True)
-        data = build_data(self.project, load_scope='98-发布成片')
-        self.assertEqual(data['directories'], [{'name': '98-发布成片', 'label': '发布成片', 'url': '98-%E5%8F%91%E5%B8%83%E6%88%90%E7%89%87/'}])
-        children = data['catalogues']['98-发布成片']['children']
+        data = build_data(self.project, load_scope='98-成片交付')
+        self.assertEqual(data['directories'], [{'name': '98-成片交付', 'label': '成片交付', 'url': '98-%E6%88%90%E7%89%87%E4%BA%A4%E4%BB%98/'}])
+        children = data['catalogues']['98-成片交付']['children']
         self.assertEqual([item['kind'] for item in children[:3]], ['file', 'video', 'document'])
         self.assertEqual([item['name'] for item in children[3:]], ['分平台', '待导出'])
         self.assertEqual(children[-1]['children'][0]['children'], [])
-        self.assertEqual(children[1]['key'], '98-发布成片/最终 成片.MP4')
+        self.assertEqual(children[1]['key'], '98-成片交付/最终 成片.MP4')
         self.assertNotIn('statusHtml', children[1])
         self.assertNotIn('prompts', children[1])
-        self.assertNotIn('98-发布成片/随附说明.md', data['sources'])
+        self.assertNotIn('98-成片交付/随附说明.md', data['sources'])
         self.assertEqual(children[3]['children'][1]['children'][0]['name'], '说明.srt')
 
     def test_missing_and_empty_directory_do_not_create_any_file(self):
@@ -65,8 +65,8 @@ class ReleaseFilmsTests(HttpTestCase):
         target = self.put('平台 A/最终版 #1.webm', bytes(range(64)))
         before = (target.read_bytes(), target.stat().st_mtime_ns)
         overview = self.client.get('/api/projects/示例项目/overview').json()
-        self.assertIn('98-发布成片', [item['name'] for item in overview['directories']])
-        response = self.client.get('/api/projects/示例项目/sections/98-发布成片')
+        self.assertIn('98-成片交付', [item['name'] for item in overview['directories']])
+        response = self.client.get('/api/projects/示例项目/sections/98-成片交付')
         self.assertEqual(response.status_code, 200)
         video = response.json()['children'][0]['children'][0]
         self.assertIn('/api/projects/', video['url'])
@@ -90,10 +90,10 @@ class ReleaseFilmsTests(HttpTestCase):
         changed = self.store.snapshot(self.project)
         self.assertNotEqual(initial, changed)
         self.store.get('示例项目')
-        self.assertEqual(self.store.section('示例项目', '98-发布成片')['catalogues']['98-发布成片']['children'][0]['name'], '空目录')
+        self.assertEqual(self.store.section('示例项目', '98-成片交付')['catalogues']['98-成片交付']['children'][0]['name'], '空目录')
         (self.release / '空目录').rmdir()
         self.store.refresh('示例项目', self.store.get('示例项目'), self.store.snapshot(self.project))
-        self.assertEqual(self.store.section('示例项目', '98-发布成片')['catalogues']['98-发布成片']['children'], [])
+        self.assertEqual(self.store.section('示例项目', '98-成片交付')['catalogues']['98-成片交付']['children'], [])
 
     def test_listing_excludes_hidden_files_and_symlink_escape_or_cycles(self):
         self.put('.temporary.mp4')
@@ -108,7 +108,7 @@ class ReleaseFilmsTests(HttpTestCase):
                 self.skipTest('Windows未授予创建符号链接权限')
             raise
         self.assertEqual(self.tree()['children'], [])
-        self.assertEqual(self.client.get('/api/projects/示例项目/files/98-发布成片/escape.mp4').status_code, 404)
+        self.assertEqual(self.client.get('/api/projects/示例项目/files/98-成片交付/escape.mp4').status_code, 404)
 
     def test_overview_does_not_walk_release_contents_or_parse_user_files(self):
         self.put('最终版.mp4')

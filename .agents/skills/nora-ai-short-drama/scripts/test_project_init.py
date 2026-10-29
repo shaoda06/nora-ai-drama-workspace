@@ -37,19 +37,17 @@ class ProjectInitializationTests(unittest.TestCase):
         index = self.project.parent / "项目总索引.md"
         self.assertEqual(report["project_index"], str(index.resolve()))
         self.assertEqual(index.read_text(encoding="utf-8"), "# 项目总索引\n\n| 编号 | 项目名称 |\n| --- | --- |\n| 01 | 测试 短片 |\n")
-        self.assertEqual(len(report["created"]), 25)
+        self.assertEqual(len(report["created"]), 22)
         self.assertEqual({path.name for path in self.project.iterdir()}, {
             "00-项目定位", "01-主旨与简介", "02-故事大纲", "03-人物资料",
             "04-场景资料", "05-道具资料", "06-分集大纲", "07-参考音频",
-            "08-参考视频", "09-剧集制作", "98-发布成片", "99-综合资料"})
+            "08-参考视频", "09-剧集制作", "98-成片交付", "99-综合资料"})
         general = self.project / "99-综合资料/其他资料"
         self.assertTrue((general / "工作稿/素材").is_dir())
         self.assertEqual({p.name for p in general.iterdir()}, {
             "跨阶段资料", "原稿", "待分类资料", "实验资料", "工作稿", "历史版本", "执行附件"})
         self.assertFalse(list((self.project / "09-剧集制作").iterdir()))
-        self.assertEqual({p.name for p in (self.project / "98-发布成片").iterdir()}, {"片头", "片尾", "成片"})
-        for name in ("片头", "片尾", "成片"):
-            self.assertIn("98-发布成片/" + name, report["created"])
+        self.assertEqual(list((self.project / "98-成片交付").iterdir()), [])
         self.assertFalse(any(p.is_file() for p in self.project.rglob("*")))
         second = subprocess.run(command, cwd=self.workspace, text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(second.stdout)["created"], [])
@@ -61,7 +59,7 @@ class ProjectInitializationTests(unittest.TestCase):
                 project = self.project.with_name(f"配套-{cover}-{intro}-{outro}")
                 selections = dict(cover=cover, intro=intro, outro=outro)
                 initialize(project, **selections)
-                self.assertEqual((project / "10-封面资料").exists(), cover)
+                self.assertEqual((project / "10-社交媒体资料/封面资料").exists(), cover)
                 for unit, selected in (("片头", intro), ("片尾", outro)):
                     path = project / "09-剧集制作" / unit
                     self.assertEqual(path.exists(), selected)
@@ -69,8 +67,8 @@ class ProjectInitializationTests(unittest.TestCase):
                         self.assertEqual({p.name for p in path.iterdir()}, {
                             "01-制作前检查", "02-剧集剧本", "03-分镜脚本",
                             "04-专用素材", "05-视频提示词"})
-                self.assertTrue((project / "98-发布成片").is_dir())
-                self.assertEqual({p.name for p in (project / "98-发布成片").iterdir()}, {"片头", "片尾", "成片"})
+                self.assertTrue((project / "98-成片交付").is_dir())
+                self.assertEqual(list((project / "98-成片交付").iterdir()), [])
                 self.assertFalse(any(p.is_file() for p in project.rglob("*")))
                 self.assertFalse((project / "09-剧集制作/EP001").exists())
                 self.assertEqual(initialize(project, **selections)["created"], [])
@@ -79,12 +77,12 @@ class ProjectInitializationTests(unittest.TestCase):
         initialize(self.project)
         result = initialize(self.project, cover=True, outro=True)
         self.assertTrue(result["created"])
-        export = self.project / "98-发布成片/用户剪辑导出.mp4"
+        export = self.project / "98-成片交付/用户剪辑导出.mp4"
         export.write_bytes(b"user export")
         source = self.project / "09-剧集制作/片尾/02-剧集剧本/片尾-本集剧本.md"
         source.write_text("已有内容", encoding="utf-8")
         self.assertEqual(initialize(self.project)["created"], [])
-        self.assertTrue((self.project / "10-封面资料").is_dir())
+        self.assertTrue((self.project / "10-社交媒体资料/封面资料").is_dir())
         self.assertEqual(source.read_text(encoding="utf-8"), "已有内容")
         self.assertEqual(export.read_bytes(), b"user export")
 
@@ -94,7 +92,7 @@ class ProjectInitializationTests(unittest.TestCase):
         result = subprocess.run(command + ["--cover", "--intro", "--outro"],
                                 text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(result.stdout)["mode"], "project")
-        self.assertTrue((self.project / "10-封面资料").is_dir())
+        self.assertTrue((self.project / "10-社交媒体资料/封面资料").is_dir())
         for unit in ("片头", "片尾"):
             self.assertTrue((self.project / "09-剧集制作" / unit / "05-视频提示词").is_dir())
         invalid = subprocess.run(command + ["--episode", "EP001", "--cover"],
@@ -105,16 +103,16 @@ class ProjectInitializationTests(unittest.TestCase):
 
     def test_release_directory_repair_preserves_user_exports_and_index(self):
         initialize(self.project)
-        release = self.project / "98-发布成片"
-        files = [release / "用户已有导出.mp4", release / "片头/片头.mp4", release / "成片/第1集.mp4"]
+        release = self.project / "98-成片交付"
+        files = [release / "用户已有导出.mp4", release / "片头/片头.mp4", release / "EP001/成片/第1集.mp4"]
         for file in files:
+            file.parent.mkdir(parents=True, exist_ok=True)
             file.write_bytes(b"user export")
         before = {file: file.stat().st_mtime_ns for file in files}
         index = self.project.parent / "项目总索引.md"
         index_before = index.stat().st_mtime_ns
-        (release / "片尾").rmdir()
-        result = initialize(self.project)
-        self.assertEqual(result["created"], ["98-发布成片/片尾"])
+        result = initialize(self.project, "EP001")
+        self.assertTrue((release / "EP001/成片").is_dir())
         self.assertFalse(initialize(self.project)["created"])
         for file in files:
             self.assertEqual(file.read_bytes(), b"user export")
@@ -122,12 +120,12 @@ class ProjectInitializationTests(unittest.TestCase):
         self.assertEqual(index.stat().st_mtime_ns, index_before)
 
     def test_release_subdirectory_file_conflict_stops_before_creating_directories(self):
-        release = self.project / "98-发布成片"
+        release = self.project / "98-成片交付"
         release.mkdir(parents=True)
-        conflict = release / "成片"
+        conflict = release / "EP001"
         conflict.write_bytes(b"keep")
         with self.assertRaises(FileExistsError):
-            initialize(self.project)
+            initialize(self.project, "EP001")
         self.assertEqual(list(self.project.iterdir()), [release])
         self.assertEqual(list(release.iterdir()), [conflict])
         self.assertEqual(conflict.read_bytes(), b"keep")
@@ -135,11 +133,12 @@ class ProjectInitializationTests(unittest.TestCase):
 
     def test_selected_directory_conflict_fails_before_creating_other_directories(self):
         self.project.mkdir(parents=True)
-        conflict = self.project / "10-封面资料"
+        conflict = self.project / "10-社交媒体资料/封面资料"
+        conflict.parent.mkdir()
         conflict.write_bytes(b"keep")
         with self.assertRaises(FileExistsError):
             initialize(self.project, cover=True, intro=True)
-        self.assertEqual(list(self.project.iterdir()), [conflict])
+        self.assertEqual(list(self.project.iterdir()), [conflict.parent])
         self.assertEqual(conflict.read_bytes(), b"keep")
 
     def test_new_project_appends_and_repeat_preserves_manual_order_and_text(self):
@@ -196,7 +195,8 @@ class ProjectInitializationTests(unittest.TestCase):
         episode = self.project / "09-剧集制作/EP002"
         self.assertEqual({p.name for p in episode.iterdir()}, {
             "01-制作前检查", "02-剧集剧本", "03-分镜脚本", "04-专用素材", "05-视频提示词"})
-        self.assertEqual(len(result["created"]), 6)
+        self.assertEqual(len(result["created"]), 7)
+        self.assertTrue((self.project / "98-成片交付/EP002/成片").is_dir())
         self.assertFalse((self.project / "09-剧集制作/EP001").exists())
         self.assertFalse((episode / "其他资料").exists())
         self.assertFalse((episode / "06-阶段采用视频").exists())

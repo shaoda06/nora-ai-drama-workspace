@@ -253,7 +253,7 @@ def choose_seed(root, spec, refs, documents, generation_link):
 
 
 def generation_record(skill, spec, generation, refs, seed, width, height, record, draft, candidate, api):
-    template = (skill / 'references/模板' / images.TEMPLATES[spec['kind']]).read_text('utf-8-sig')
+    template = images.template_path(skill, spec['kind']).read_text('utf-8-sig')
     template = re.search(r'````markdown\n(.*?)\n````', template, re.S)[1]
     body = images.section(template, '生成记录-001')[0].replace('### 生成记录-001', '### ' + generation, 1)
     names = re.findall(r'^- ([^：\n]+)：', body, re.M)
@@ -352,7 +352,7 @@ def build_image(root, skill, spec, documents, now):
     draft = project_file(root, spec['draft'])
     text = documents.read(draft)
     if text is None:
-        template = (skill / 'references/模板' / images.TEMPLATES[spec['kind']]).read_text('utf-8-sig')
+        template = images.template_path(skill, spec['kind']).read_text('utf-8-sig')
         text = re.search(r'````markdown\n(.*?)\n````', template, re.S)[1]
         text = '# ' + draft.stem + '\n' + text.split('\n', 1)[1]
         text = text[:text.index('### 生成记录-001')] + text[text.index('## 3. 讨论与修改'):text.index('### 审阅-生成记录-001-001')]

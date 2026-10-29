@@ -17,7 +17,7 @@ from project_index import read_index
 logger = logging.getLogger(__name__)
 
 # Increment only when the parsed project data or interpretation becomes incompatible.
-CACHE_SCHEMA = 23
+CACHE_SCHEMA = 24
 
 class ProjectStore:
     """Parse on demand; keep the last complete result while a change is read."""
@@ -66,7 +66,7 @@ class ProjectStore:
                         if (os.name == 'nt' and item.stat(follow_symlinks=False).st_file_attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT
                                 and not Path(item.path).resolve().is_relative_to(path)):
                             continue
-                        if key == '98-发布成片' or key.startswith('98-发布成片/'):
+                        if key == '98-成片交付' or key.startswith('98-成片交付/'):
                             result[key + '/'] = (0, 0)
                         pending.append((item.path, key + '/'))
                     elif item.name not in ('项目总览.html', 'index.html') and item.is_file():

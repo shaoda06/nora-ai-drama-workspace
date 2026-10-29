@@ -25,7 +25,7 @@ PEOPLE = "03-人物资料"
 SCENES = "04-场景资料"
 PROPS = "05-道具资料"
 FORMAL_SECTIONS = ("00-项目定位", "01-主旨与简介", "02-故事大纲", PEOPLE, SCENES, PROPS,
-                   "06-分集大纲", "07-参考音频", "08-参考视频", "09-剧集制作", "10-封面资料", "11-社交媒体资料", "98-发布成片")
+                   "06-分集大纲", "07-参考音频", "08-参考视频", "09-剧集制作", "10-社交媒体资料", "98-成片交付")
 TEXT_PREVIEW_LIMIT = 256 * 1024
 INLINE_PATTERN = r"(\x60+)(.+?)\1|!?\[([^\]]*)\]\((<[^>]+>|[^)\n]+)\)|\*\*(.+?)\*\*"
 STATUS_COLORS = {
@@ -1626,37 +1626,40 @@ def build_data(project, *, web_episode_navigation=False, load_scope=None, episod
                        "notStarted": counts["未开始"], "running": counts["进行中"]},
         "note": "选择剧集查看本集内容。"}
 
-    if load_scope in (None, "10-封面资料"):
+    def delivery_tree(folder):
+        node = {"kind": "group", "key": folder.relative_to(project).as_posix(),
+                "name": folder.name, "children": []}
+        for path in sorted(folder.iterdir(), key=lambda path: (path.is_dir(), path.name.casefold())):
+            if path.name.startswith('.') or not path.resolve().is_relative_to(project):
+                continue
+            if path.is_dir():
+                if not path.is_symlink():
+                    node["children"].append(delivery_tree(path))
+            elif item := file_entry(path, metadata_only=True):
+                node["children"].append(item)
+        node["children"].sort(key=file_order)
+        return node
+
+    if load_scope in (None, "10-社交媒体资料"):
         from backend.parsers.covers import build_covers
-        catalogues["10-封面资料"] = build_covers(project, read)
-        catalogues["10-封面资料"]["groups"] = collect_groups("10-封面资料")
-
-    if load_scope in (None, "11-社交媒体资料"):
         from backend.parsers.accounts import build_accounts
-        catalogues["11-社交媒体资料"] = build_accounts(project, read)
-        catalogues["11-社交媒体资料"]["groups"] = collect_groups("11-社交媒体资料")
+        covers = build_covers(project, read)
+        covers["groups"] = collect_groups(covers["key"])
+        accounts = build_accounts(project, read)
+        accounts["groups"] = collect_groups(accounts["key"])
+        folder = project / "10-社交媒体资料"
+        children = delivery_tree(folder)["children"] if folder.is_dir() and not folder.is_symlink() else []
+        catalogues[folder.name] = dict(kind="social", key=folder.name, name="社交媒体资料",
+                                      covers=covers, accounts=accounts,
+                                      children=[item for item in children if item["name"] not in ("封面资料", "个人页资料")])
 
-    if load_scope in (None, "98-发布成片"):
-        def release_tree(folder):
-            node = {"kind": "group", "key": folder.relative_to(project).as_posix(),
-                    "name": folder.name, "children": []}
-            for path in sorted(folder.iterdir(), key=lambda path: (path.is_dir(), path.name.casefold())):
-                if path.name.startswith('.') or not path.resolve().is_relative_to(project):
-                    continue
-                if path.is_dir():
-                    if not path.is_symlink():
-                        node["children"].append(release_tree(path))
-                elif item := file_entry(path, metadata_only=True):
-                    node["children"].append(item)
-            node["children"].sort(key=file_order)
-            return node
+    if load_scope in (None, "98-成片交付"):
+        folder = project / "98-成片交付"
+        catalogues[folder.name] = (delivery_tree(folder) if folder.is_dir() and not folder.is_symlink()
+                                   else {"kind": "group", "key": folder.name, "name": "成片交付", "children": []})
+        catalogues[folder.name]["note"] = "按集浏览最终成片和发布材料；文件存在不代表已发布或已审批。"
 
-        folder = project / "98-发布成片"
-        catalogues[folder.name] = (release_tree(folder) if folder.is_dir() and not folder.is_symlink()
-                                   else {"kind": "group", "key": folder.name, "name": "发布成片", "children": []})
-        catalogues[folder.name]["note"] = "按原目录只读浏览用户导出的成片及附属文件，不修改文件；文件存在不代表已发布或已审批。"
-
-    directories = [{"name": p.name, "label": "账号资料" if p.name == "11-社交媒体资料" else re.sub(r"^\d+-", "", p.name),
+    directories = [{"name": p.name, "label": re.sub(r"^\d+-", "", p.name),
                     "url": quote(p.name, safe="-._~") + "/"}
                    for p in sorted(project.iterdir())
                    if p.is_dir() and p.name in FORMAL_SECTIONS]

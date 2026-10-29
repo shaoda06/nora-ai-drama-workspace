@@ -1,5 +1,6 @@
 import { EpisodeTitleStatus } from './components/EpisodeTitleStatus';
 import { PageCheckStatus } from './components/PageCheckStatus';
+import { UnderlineTabs } from './components/UnderlineTabs';
 import { TabSelect } from './components/TabSelect';
 import { PointerTooltip } from './components/PointerTooltip';
 import { useContext, useEffect, useRef, useState } from 'react';
@@ -31,7 +32,7 @@ import { AccountLibrary } from './components/AccountLibrary';
 
 type AssetSelection = { id: string; name: string };
 type AssetNavigation = { asset: AssetSelection | null; onAssetChange: (asset: AssetSelection | null) => void };
-const releaseSections = ['11-社交媒体资料', '10-封面资料', '98-发布成片'];
+const releaseSections = ['10-社交媒体资料', '98-成片交付'];
 
 export default function Project() {
   const { name = '' } = useParams();
@@ -72,7 +73,7 @@ function ProjectPage({ name }: { name: string }) {
   const episodeItem = production.data?.children?.find((item: FileItem) => item.name === episode);
   const episodeTitle = episodeItem?.title || (episode === '片头' || episode === '片尾' ? '全剧通用' : '题名未记录');
   const overview = useQuery({ queryKey: ['overview', name, revision], queryFn: () => get<RecordData>(`${projectUrl(name)}/overview`), enabled: !!status.data, placeholderData: (previous, query) => query?.queryKey[1] === name ? previous : undefined });
-  const releaseCount = section === '98-发布成片' && production.data?.key === '98-发布成片' ? releaseVideos(production.data.children).length : null;
+  const releaseCount = section === '98-成片交付' && production.data?.key === '98-成片交付' ? releaseVideos(production.data.children).length : null;
   const sectionTitle = (overview.data?.directories.find((dir: RecordData) => dir.name === section)?.label || section.replace(/^\d+-/, '')) + (releaseCount === null ? '' : `（${releaseCount}）`);
   const episodeDetail = useQuery<FileItem>({ queryKey: ['episode', name, episode, revision], enabled: false });
   const episodeWarnings = section === '09-剧集制作' && episodeDetail.data?.name === episode
@@ -110,7 +111,8 @@ function SectionPane({ project, section, revision, active, episode, onEpisodeCha
 }
 function Section({ value, project, section, revision, active, episode, onEpisodeChange, asset, onAssetChange }: { value: RecordData; project: string; section: string; revision: number; active: boolean; episode: string | null; onEpisodeChange: (episode: string | null) => void } & AssetNavigation) {
   if (section === '09-剧集制作') return <EpisodeProduction project={project} statistics={value.statistics} items={value.children} selected={episode} onSelect={onEpisodeChange} revision={revision} />;
-  if (section === '98-发布成片') return <ReleaseFilms items={value.children} active={active} />;
+  if (section === '98-成片交付') return <ReleaseFilms items={value.children} active={active} />;
+  if (value.kind === 'social') return <SocialMaterials value={value} revision={revision} />;
   if (value.kind === 'covers') return <CoverLibrary value={value} revision={revision} />;
   if (value.kind === 'accounts') return <AccountLibrary value={value} revision={revision} />;
   if (section === '06-分集大纲') return <EpisodeOutlines value={value} />;
@@ -118,6 +120,14 @@ function Section({ value, project, section, revision, active, episode, onEpisode
   if (section === '07-参考音频' || section === '08-参考视频') return <ReferenceLibrary value={value} revision={revision} active={active} asset={asset} onAssetChange={onAssetChange} />;
   if ('exists' in value) return value.exists ? <Document value={value} /> : <><p className="muted">尚无正式文档。</p><Groups groups={value.groups} /></>;
   return <Catalogue value={value} section={section} />;
+}
+function SocialMaterials({ value, revision }: { value: RecordData; revision: number }) {
+  const [tab, setTab] = useState('资料与复盘');
+  return <><UnderlineTabs label="社交媒体资料分类" selected={tab} onChange={setTab}
+    items={['资料与复盘', '个人页资料', '封面资料'].map(name => ({ value: name, label: name }))} />
+    {tab === '封面资料' ? <CoverLibrary value={value.covers} revision={revision} />
+      : tab === '个人页资料' ? <AccountLibrary value={value.accounts} revision={revision} />
+        : <FileTree items={value.children} />}</>;
 }
 function Catalogue({ value, section }: { value: RecordData; section: string }) {
   const [search, setSearch] = useState('');

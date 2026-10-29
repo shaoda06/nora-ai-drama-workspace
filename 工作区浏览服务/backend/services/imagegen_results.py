@@ -44,7 +44,7 @@ def prepare(project, request_file):
         from backend.parsers.covers import cover_fields
         cover_metadata = cover_fields(cover_metadata, documents.read)
     text = documents.read(draft)
-    template = (SKILL / 'references/模板' / images.TEMPLATES[spec['kind']]).read_text('utf-8-sig')
+    template = images.template_path(SKILL, spec['kind']).read_text('utf-8-sig')
     template = re.search(r'````markdown\n(.*?)\n````', template, re.S)[1]
     if text is None:
         text = '# ' + draft.stem + '\n' + template.split('\n', 1)[1]

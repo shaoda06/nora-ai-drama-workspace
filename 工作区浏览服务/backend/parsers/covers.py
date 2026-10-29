@@ -6,7 +6,7 @@ from urllib.parse import unquote, urlsplit
 
 
 
-DIRECTORY = '10-封面资料'
+DIRECTORY = '10-社交媒体资料/封面资料'
 INDEX = DIRECTORY + '/封面索引.md'
 RECORD = DIRECTORY + '/其他资料/工作稿/封面制作-工作稿.md'
 

@@ -23,7 +23,7 @@
 | `AGENTS.md` | 工作区约定、默认依赖安装位置及本地Git提交规则 |
 | `.agents/skills/nora-ai-short-drama/` | 短剧主控、共用规则、模板、脚本及[配套工作流](.agents/skills/nora-ai-short-drama/references/comfyui-workflow)；视频工作流用途见[H3执行规范](.agents/skills/nora-generation/references/ComfyUI-H3视频执行规范.md#0-制作策略与工作流配置) |
 | 主控同级的7个业务技能 | [开发、写作、资产、分镜、视频提示词、生成执行、审查](.agents/skills/nora-ai-short-drama/SKILL.md#按任务读取)；现行规则归所属技能，四个适配short-drama技能随仓库保存 |
-| `.agents/skills/nora-social-visuals/` | Nora可选账号主页视觉专项，制作头像与主页背景图，独立于视频封面；生成衔接执行技能 |
+| `.agents/skills/nora-social-operations/` | Nora模块化运营子技能，管理账号、个人页、封面、发布包、复盘和制作反馈 |
 | `sd-combat-engine/`、`sd-xuanhuan-engine/`、`sd-real-engine/` | 位于 `.agents/skills/`，由业务技能按戏型选择通用、玄幻、写实打戏方法 |
 | 主技能内 `dependencies/` | 三个ComfyUI适配技能的真源；节点源码目录或ZIP安装包统一放在其 `ComfyUI节点资源/` 子目录，保留来源、版本与许可证 |
 | `.agents/skills/krea2-style-library/` | 风格库使用与维护指引 |
@@ -45,7 +45,7 @@
 
 ### 本工作区技能与风格资源
 
-[Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md)与[Krea2风格库技能](.agents/skills/krea2-style-library/SKILL.md)由本工作区维护并随仓库提供。Nora由主控、7个核心业务技能、可选社交媒体主页视觉专项和3个按需打戏专项组成；原18项登记包含4个适配业务技能和14个方法／工具依赖。Krea2技能是独立可选工具。[视频读取与分析](.agents/skills/video-study/SKILL.md)为本地独立专项，按任务读取字幕、转写讲解或抽帧分析，不增加核心制作阶段；主控与资产技能提供调用入口。[创作技法学习与维护](.agents/skills/creative-techniques/SKILL.md)统一承接技巧材料的学习收录、创作查用与真实反馈；表情拆解方法、表情参考表和镜头指南分别维护，分镜及图片／视频提示词按需调用。转场、特效与动作知识按主题归位，已有专业参考原位维护；`facial-expression`与`camera-language`仅保留旧引用兼容入口。
+[Nora短剧技能](.agents/skills/nora-ai-short-drama/SKILL.md)与[Krea2风格库技能](.agents/skills/krea2-style-library/SKILL.md)由本工作区维护并随仓库提供。Nora由主控、7个核心业务技能、模块化社交媒体运营子技能和3个按需打戏专项组成；原18项登记包含4个适配业务技能和14个方法／工具依赖。Krea2技能是独立可选工具。[视频读取与分析](.agents/skills/video-study/SKILL.md)为本地独立专项，按任务读取字幕、转写讲解或抽帧分析，不增加核心制作阶段；主控与资产技能提供调用入口。[创作技法学习与维护](.agents/skills/creative-techniques/SKILL.md)统一承接技巧材料的学习收录、创作查用与真实反馈；表情拆解方法、表情参考表和镜头指南分别维护，分镜及图片／视频提示词按需调用。转场、特效与动作知识按主题归位，已有专业参考原位维护；`facial-expression`与`camera-language`仅保留旧引用兼容入口。
 
 | 资源 | 来源与作者 |
 | --- | --- |

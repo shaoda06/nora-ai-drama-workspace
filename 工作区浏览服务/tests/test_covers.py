@@ -32,7 +32,7 @@ class CoverParserTests(unittest.TestCase):
         path.write_bytes(content) if isinstance(content, bytes) else path.write_text(content)
 
     def covers(self):
-        return build_data(self.root, load_scope=DIRECTORY)['catalogues'][DIRECTORY]
+        return build_data(self.root, load_scope='10-社交媒体资料')['catalogues']['10-社交媒体资料']['covers']
 
     def test_adopted_source_stays_in_details_not_history(self):
         data = self.covers()
@@ -225,7 +225,7 @@ class NativeCoverTests(unittest.TestCase):
         self.prepare()
         result = native.complete(self.project, self.job['manifest'], self.result, self.projects)
         self.assertTrue(result['user_message_ready'])
-        data = self.projects.section(self.project.name, DIRECTORY)['catalogues'][DIRECTORY]
+        data = self.projects.section(self.project.name, '10-社交媒体资料')['catalogues']['10-社交媒体资料']['covers']
         self.assertEqual(len(data['candidates']), 1)
         self.assertFalse(data['assets'][0]['current']['ready'])
         self.assertEqual(data['assets'][0]['rounds'][0]['id'], 'R001')

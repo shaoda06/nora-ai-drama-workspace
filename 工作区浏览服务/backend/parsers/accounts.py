@@ -6,7 +6,7 @@ from urllib.parse import unquote, urlsplit
 from PIL import Image
 
 
-DIRECTORY = '11-社交媒体资料'
+DIRECTORY = '10-社交媒体资料/个人页资料'
 INDEX = DIRECTORY + '/账号视觉索引.md'
 
 
@@ -23,7 +23,7 @@ def build_accounts(project, read):
         media = media_links[0]
         formal_directory = {'头像': '头像', '背景图': '背景图', '主页背景图': '背景图'}.get(row['用途'])
         parts = Path(media['key']).parts
-        if formal_directory is None or len(parts) != 3 or parts[:2] != (DIRECTORY, formal_directory):
+        if formal_directory is None or len(parts) != 4 or parts[:3] != (*Path(DIRECTORY).parts, formal_directory):
             issues.append(name + '：正式目录与用途不符，请核对索引。')
             continue
         path = (project / media['key']).resolve()

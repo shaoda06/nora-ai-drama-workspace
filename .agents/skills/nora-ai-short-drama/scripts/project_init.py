@@ -12,7 +12,7 @@ from project_index import INDEX_NAME, register_project
 PROJECT_DIRECTORIES = (
     "00-项目定位", "01-主旨与简介", "02-故事大纲", "03-人物资料",
     "04-场景资料", "05-道具资料", "06-分集大纲", "07-参考音频",
-    "08-参考视频", "09-剧集制作", "98-发布成片", "99-综合资料",
+    "08-参考视频", "09-剧集制作", "98-成片交付", "99-综合资料",
 )
 GENERAL_DIRECTORIES = (
     "其他资料", "其他资料/跨阶段资料", "其他资料/原稿",
@@ -31,10 +31,9 @@ def initialize(project, episode=None, *, cover=False, intro=False, outro=False):
     project = Path(project).expanduser().resolve()
     if episode is None:
         directories = (".", *PROJECT_DIRECTORIES,
-                       "98-发布成片/片头", "98-发布成片/片尾", "98-发布成片/成片",
                        *("99-综合资料/" + item for item in GENERAL_DIRECTORIES))
         if cover:
-            directories += ("10-封面资料",)
+            directories += ("10-社交媒体资料/封面资料",)
         for unit, selected in (("片头", intro), ("片尾", outro)):
             if selected:
                 root = "09-剧集制作/" + unit
@@ -46,11 +45,17 @@ def initialize(project, episode=None, *, cover=False, intro=False, outro=False):
             raise FileNotFoundError("开始单集前须已有项目目录：" + str(project))
         root = "09-剧集制作/" + episode
         directories = ("09-剧集制作", root,
-                       *(root + "/" + item for item in EPISODE_DIRECTORIES))
+                       *(root + "/" + item for item in EPISODE_DIRECTORIES),
+                       "98-成片交付/" + episode + ("/成片" if episode.startswith("EP") else ""))
 
     targets = [(item, project_file(project, item)) for item in directories]
     # A file occupying a directory name must be reported before creating anything.
     for _, path in targets:
+        for parent in path.parents:
+            if parent == project.parent:
+                break
+            if parent.exists() and not parent.is_dir():
+                raise FileExistsError("目录父路径已有文件，未覆盖：" + str(parent))
         if path.exists() and not path.is_dir():
             raise FileExistsError("目录位置已有文件，未覆盖：" + str(path))
 
@@ -76,9 +81,9 @@ def main(argv=None):
     parser.add_argument("--project", required=True,
                         help="项目根目录，例如projects/剧名；相对路径从当前工作目录解析，支持绝对路径。")
     parser.add_argument("--episode",
-                        help="可选制作对象EP001至EP999、片头或片尾；只建立该对象的五个准备目录，项目根必须已存在。")
+                        help="可选制作对象EP001至EP999、片头或片尾；建立该对象的五个准备目录及98号对应交付目录，项目根必须已存在。")
     parser.add_argument("--cover", action="store_true",
-                        help="项目初始化时已确定需要封面，建立10-封面资料；默认不建。")
+                        help="项目初始化时已确定需要封面，建立10-社交媒体资料/封面资料；默认不建。")
     parser.add_argument("--intro", action="store_true",
                         help="项目初始化时已确定需要片头，建立片头及五个准备目录；默认不建。")
     parser.add_argument("--outro", action="store_true",

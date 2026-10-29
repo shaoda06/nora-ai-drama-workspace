@@ -21,6 +21,12 @@ TEMPLATES = {'人物': '人物参考图工作稿模板.md', '场景': '场景参
              '封面': '封面制作工作稿模板.md'}
 
 
+def template_path(skill, kind):
+    folder = (skill.parent / 'nora-social-operations/modules/03-封面制作/templates'
+              if kind == '封面' else skill / 'references/模板')
+    return folder / TEMPLATES[kind]
+
+
 def progress_phases(root, drafts):
     phases = set()
     for draft in drafts:
@@ -31,7 +37,7 @@ def progress_phases(root, drafts):
             phases.update({'03-人物资料': ('人物资料卡', '人物参考图'),
                            '04-场景资料': ('场景资料卡', '场景参考图'),
                            '05-道具资料': ('道具资料卡', '道具参考图'),
-                           '10-封面资料': ('封面制作',)}[parts[0]])
+                           '10-社交媒体资料': ('封面制作',)}[parts[0]])
     return phases
 
 
@@ -315,7 +321,7 @@ def validate_plan(data, *, check_records=True):
 
 
 def review_text(skill, plan, generation, links, specs, evidence, stamp):
-    template = (skill / 'references/模板' / TEMPLATES[plan['kind']]).read_text('utf-8-sig')
+    template = template_path(skill, plan['kind']).read_text('utf-8-sig')
     template = re.search(r'````markdown\n(.*?)\n````', template, re.S)[1]
     review = section(template, '审阅-生成记录-001-001')[0]
     review = review.replace('### 审阅-生成记录-001-001', '### ' + plan['review'], 1)

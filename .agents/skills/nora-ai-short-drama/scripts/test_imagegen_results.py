@@ -66,11 +66,11 @@ class CandidateNamingTests(unittest.TestCase):
         self.assertFalse((self.root / self.spec['draft']).exists())
 
     def test_social_native_and_sized_names_are_checked_without_writes(self):
-        self.spec.update(kind='社交媒体', formal='11-社交媒体资料/头像/平台-账号-头像.png',
-                         draft='11-社交媒体资料/其他资料/工作稿/平台-账号-主页视觉-工作稿.md')
+        self.spec.update(kind='社交媒体', formal='10-社交媒体资料/个人页资料/头像/平台-账号-头像.png',
+                         draft='10-社交媒体资料/个人页资料/其他资料/工作稿/平台-账号-主页视觉-工作稿.md')
         for suffix in ['原生', '1080x1080', '原生-imagegen']:
             with self.subTest(suffix=suffix):
-                self.spec['output'] = '11-社交媒体资料/其他资料/工作稿/素材/平台-账号-头像-候选-v01-' + suffix + '.png'
+                self.spec['output'] = '10-社交媒体资料/个人页资料/其他资料/工作稿/素材/平台-账号-头像-候选-v01-' + suffix + '.png'
                 self.request.write_text(json.dumps(self.spec, ensure_ascii=False))
                 result = subprocess.run([sys.executable, '-B', str(CLI), 'check-name', '--project', str(self.root),
                                          '--request', str(self.request)], capture_output=True, text=True)
@@ -150,7 +150,7 @@ class CandidateNamingTests(unittest.TestCase):
                 self.assertEqual(scene['cover'] is not None, formal)
 
     def test_cover_revision_decision_remains_visible_without_becoming_approval(self):
-        folder = self.root / '10-封面资料'
+        folder = self.root / '10-社交媒体资料/封面资料'
         draft = folder / '其他资料/工作稿/封面制作-工作稿.md'
         candidate = draft.parent / '素材/系列通用-通用-竖版封面-候选-v01.png'
         candidate.parent.mkdir(parents=True)
@@ -166,7 +166,7 @@ class CandidateNamingTests(unittest.TestCase):
             '- 用户决定及具体候选、批准依据：修改后再审；标题需要调整\n'
             '## 4. 审阅区\n### 审阅-生成记录-001-001\n#### 4. 用户确认\n'
             f'- 决定：修改后再审\n- 对应具体候选：[候选](素材/{candidate.name})\n')
-        data = build_data(self.root.resolve(), load_scope='10-封面资料')['catalogues']['10-封面资料']
+        data = build_data(self.root.resolve(), load_scope='10-社交媒体资料')['catalogues']['10-社交媒体资料']['covers']
         self.assertEqual(data['candidates'][0]['status'], '修改后再审')
         self.assertFalse(data['items'][0]['approved'])
         self.assertFalse(data['items'][0]['ready'])

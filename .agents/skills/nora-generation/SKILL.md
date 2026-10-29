@@ -13,8 +13,8 @@ description: 为 Nora 调用固定工具按任务组准备和提交图片视频�
 
 | 本次动作 | 必要入口 |
 | --- | --- |
-| 封面生成、采用后的规格处理 | [封面专项](../nora-drama-assets/references/封面资料与制作规范.md)；默认Imagegen、Qwen备用，登记类型为“封面”，后处理只为达到目标规格 |
-| 社交媒体头像／主页背景图生成、结果保存及尺寸处理 | [社交图片生成与记录](../nora-social-visuals/references/生成与记录规范.md)；按本批选定能力进入对应执行分支，按该用途交接与记录，不冒充旧登记类型 |
+| 封面生成、采用后的规格处理 | [封面专项](../nora-social-operations/modules/03-封面制作/封面制作与管理规范.md)；默认Imagegen、Qwen备用，登记类型为“封面”，后处理只为达到目标规格 |
+| 社交媒体头像／主页背景图生成、结果保存及尺寸处理 | [社交图片生成与记录](../nora-social-operations/modules/02-个人页准备/个人页视觉制作与管理规范.md)；按本批选定能力进入对应执行分支，按该用途交接与记录，不冒充旧登记类型 |
 | 已明确选用Imagegen生成／编辑 | [Imagegen子代理执行](references/Imagegen生成与尺寸处理规范.md#子代理执行与父代理交付)；主控准备，固定6 Luna／medium执行；收尾按图片用途进入固定脚本或社交专项，不装配为Qwen任务 |
 | 已备内容的ComfyUI图片或超分提交 | [一次装配入队](../nora-ai-short-drama/references/comfyui-scripts/README.md#一次装配与批量入队)、[图片执行分工](references/ComfyUI-服务配置与任务提交规范.md#图片执行分工)；当前任务数据与授权 |
 | 已备内容的视频提交 | 按[逐张参考职责与当前采用核对](../nora-video-prompts/references/视频提示词制作规范.md#逐张参考职责与当前采用核对)完成或复用选图及绑定结论；先按[整段生成与剪辑授权](references/视频阶段与返修执行规范.md#整段生成与剪辑授权)确定本次制作方式；已有任务的局部返修再读[执行快照与素材路径](references/ComfyUI-MiniMaxH3导演台节点使用规范.md#611-局部返修的执行快照与素材路径)并落实来源副本和素材绑定；标准版按[标准版配置选择](references/ComfyUI-H3视频执行规范.md#标准版四种配置与生成前询问)确定项目默认与本批覆盖后的实际配置，仅在该节规定的选择条件下询问四选一，再用同一装配工具及[视频执行分工](references/ComfyUI-服务配置与任务提交规范.md#视频执行分工)；不重新读节点全规范 |
