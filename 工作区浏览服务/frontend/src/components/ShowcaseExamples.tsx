@@ -90,7 +90,7 @@ export function ShowcaseExamples({ category }: { category: string }) {
       </ComponentExample>
     </>}
     {category === 'files' && <>
-      <ComponentExample fullWidth title="成片交付选集与播放" rule="按实际一级目录提供片头、片尾、EP编号等标签；根目录文件显示在其他文件，不猜集数、不移动文件。下方文件树提供该集发布说明、文案及封面入口。各类递归读取视频，沿用原路径自然数字排序及片头／片尾同名视频优先规则，每页5个实际文件名（不带扩展名）。分类不超过5个视频时只显示文件名，超过5个才显示上一页和下一页，末页不足5个也保留翻页。切类卸载原播放器并回到第一页。选集靠左，右侧下载当前选集；窄屏可换行，文件名单行滚动。项目标题显示全部视频总数；视频居中保留原比例，不自动播放。这里只播放和下载固定示例媒体。" usage="项目成片交付；UnderlineTabs、Pagination、TabNav和DownloadButton的既有规格">
+      <ComponentExample fullWidth title="成片交付选集与播放" rule="按实际一级目录提供分类标签，片头、片尾固定排在各集前面；根目录文件显示在其他文件，不猜集数、不移动文件。下方文件树提供该集发布说明、文案及封面入口。各类递归读取视频，沿用原路径自然数字排序及片头／片尾同名视频优先规则，每页5个实际文件名（不带扩展名）。分类不超过5个视频时只显示文件名，超过5个才显示上一页和下一页，末页不足5个也保留翻页。切类卸载原播放器并回到第一页。选集靠左，右侧下载当前选集；窄屏可换行，文件名单行滚动。项目标题显示全部视频总数；视频居中保留原比例，不自动播放。这里只播放和下载固定示例媒体。" usage="项目成片交付；UnderlineTabs、Pagination、TabNav和DownloadButton的既有规格">
         <ReleaseFilms items={[
           { kind: 'group', name: '片头', children: [{ ...video, name: '先导版.webm', key: '示例/片头/先导版.webm' }] },
           { kind: 'group', name: '片尾', children: [{ ...video, name: '结束版.webm', key: '示例/片尾/结束版.webm' }] },

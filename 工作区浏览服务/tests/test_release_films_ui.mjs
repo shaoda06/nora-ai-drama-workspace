@@ -15,7 +15,7 @@ const file = (name, parent) => ({ kind: 'video', name, key: `98-成片交付/${p
 const group = (name, children) => ({kind:'group', name, children});
 const doc = {kind:'document', name:'发布文案.md', key:'98-成片交付/EP003/发布文案.md', url:'/api/projects/fixture/files/发布文案.md'};
 const children = [group('片头',[file('片头.webm','片头')]),group('片尾',[]),
- group('EP003',[group('成片',Array.from({length:6},(_,i)=>file(`版本${i+1}.webm`,'EP003/成片'))),doc]),group('EP004',[group('成片',[])])];
+ group('EP003',[group('成片',Array.from({length:6},(_,i)=>file(`版本${i+1}.webm`,'EP003/成片'))),doc]),group('EP004',[group('成片',[])])].reverse();
 const social = {kind:'social', children:[], accounts:{items:[],groups:[],issues:[]}, covers:{assets:[],unassigned:[],groups:[]}};
 let mode='normal', writes=[], unexpected=[];
 const server = await createServer({configFile:false, root:fileURLToPath(new URL('../frontend',import.meta.url)),
@@ -52,7 +52,7 @@ try{
   await socialTabs.getByRole('button',{name:'封面资料',exact:true}).click();await page.getByText('通用暂无已登记的封面。').waitFor();
   await open('成片交付');
   const categories=page.getByRole('navigation',{name:'成片交付分类',exact:true});await categories.waitFor();
-  assert.deepEqual(await categories.getByRole('button').allTextContents(),['片头','片尾','EP003','EP004']);
+  assert.deepEqual(await categories.getByRole('button').allTextContents(),['片头','片尾','EP004','EP003']);
   const panel=page.locator('section.panel:not([hidden])'), player=panel.locator('video.release-films-player');
   await player.waitFor();assert.equal(await player.getAttribute('autoplay'),null);
   await categories.getByRole('button',{name:'EP003',exact:true}).click();

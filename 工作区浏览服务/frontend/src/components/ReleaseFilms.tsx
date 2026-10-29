@@ -22,7 +22,7 @@ export function ReleaseFilms({ items, active = true }: { items: FileItem[]; acti
     const groups = items.filter(item => item.children || item.files).map(item => ({
       value: item.name, label: item.name, files: item.children || item.files!,
       videos: releaseVideos(item.children || item.files!),
-    }));
+    })).sort((a, b) => (releaseOrder.get(a.value) ?? 2) - (releaseOrder.get(b.value) ?? 2));
     const loose = items.filter(item => !item.children && !item.files);
     if (loose.length) groups.push({ value: '其他文件', label: '其他文件', files: loose, videos: releaseVideos(loose) });
     return groups;
